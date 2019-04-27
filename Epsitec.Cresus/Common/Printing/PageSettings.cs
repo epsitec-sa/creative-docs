@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Printing
 {
 	/// <summary>
-	/// La classe PageSettings décrit une page (dimensions imprimables, marges, taille
+	/// La classe PageSettings dÃ©crit une page (dimensions imprimables, marges, taille
 	/// et type de papier, orientation, source du papier, etc.)
 	/// </summary>
 	public class PageSettings

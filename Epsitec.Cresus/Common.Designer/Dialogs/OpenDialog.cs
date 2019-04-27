@@ -7,7 +7,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir le module à ouvrir.
+	/// Dialogue permettant de choisir le module Ã  ouvrir.
 	/// </summary>
 	public class OpenDialog : AbstractDialog
 	{
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window ()
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkLocked = new CheckButton (footer)
 				{
 					AutoToggle        = false,
-					Text              = "Modules bloqués",
+					Text              = "Modules bloquÃ©s",
 					PreferredWidth    = 115,
 					Dock              = DockStyle.Left,
 					Margins           = new Margins (0, 0, 0, 0),
@@ -186,13 +186,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void SetResourcePrefix(string prefix)
 		{
-			//	Choix du préfixe à utiliser pour liste des modules.
+			//	Choix du prÃ©fixe Ã  utiliser pour liste des modules.
 			this.resourcePrefix = prefix;
 		}
 
 		public ResourceModuleId SelectedModule
 		{
-			//	Retourne les informations sur le module à ouvrir.
+			//	Retourne les informations sur le module Ã  ouvrir.
 			get
 			{
 				if (this.moduleInfosShowed.CurrentPosition == -1)
@@ -210,14 +210,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateModules(bool scan)
 		{
-			//	Met à jour la liste des modules ouvrables/ouverts/bloqués.
+			//	Met Ã  jour la liste des modules ouvrables/ouverts/bloquÃ©s.
 			if (scan)
 			{
 				this.designerApplication.ResourceManagerPool.ScanForAllModules ();
 				this.moduleInfosAll = Collection.ToList (this.designerApplication.ResourceManagerPool.Modules);
 			}
 
-			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.
+			//	Construit une liste rÃ©duite contenant uniquement les modules visibles dans la liste.
 			using (this.moduleInfosShowed.DeferRefresh ())
 			{
 				this.moduleInfosLive.Clear ();
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateButtons()
 		{
-			//	Met à jour tous les boutons.
+			//	Met Ã  jour tous les boutons.
 			ResourceModuleInfo info = this.moduleInfosShowed.CurrentItem as ResourceModuleInfo;
 
 			if (info == null)
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (state == ModuleState.Locked)
 				{
-					text = "Bloqué";
+					text = "BloquÃ©";
 				}
 			}
 
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (state == ModuleState.Openable)
 				{
-					text = Misc.Image("Open");  // dossier avec flèche
+					text = Misc.Image("Open");  // dossier avec flÃ¨che
 				}
 				else if (state == ModuleState.OpeningAndDirty)
 				{
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private ModuleState GetModuleState(ResourceModuleInfo info)
 		{
-			//	Retourne l'état d'un module.
+			//	Retourne l'Ã©tat d'un module.
 			Module module = this.designerApplication.SearchModuleId(info.FullId);
 
 			if (module == null)
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
 		{
-			//	La ligne sélectionnée dans le tableau a changé.
+			//	La ligne sÃ©lectionnÃ©e dans le tableau a changÃ©.
 			this.UpdateButtons();
 		}
 

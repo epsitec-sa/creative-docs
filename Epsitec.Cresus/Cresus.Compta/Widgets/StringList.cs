@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public Color ColorSelection
 		{
-			//	Couleur utilisée pour les lignes sélectionnées.
+			//	Couleur utilisÃ©e pour les lignes sÃ©lectionnÃ©es.
 			get
 			{
 				return this.colorSelection;
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public Color ColorHilite
 		{
-			//	Couleur utilisée pour les lignes mises en évidence.
+			//	Couleur utilisÃ©e pour les lignes mises en Ã©vidence.
 			get
 			{
 				return this.colorHilite;
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public double RelativeWidth
 		{
-			//	Largeur relative (dans n'importe quelle unité) de la colonne.
+			//	Largeur relative (dans n'importe quelle unitÃ©) de la colonne.
 			get
 			{
 				return this.relativeWidth;
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public TextBreakMode BreakMode
 		{
-			//	Césure des textes pour la colonne.
+			//	CÃ©sure des textes pour la colonne.
 			get
 			{
 				return this.breakMode;
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineString(int index, string text)
 		{
-			//	Spécifie le texte contenu dans une ligne.
+			//	SpÃ©cifie le texte contenu dans une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineTooltip(int index, string text)
 		{
-			//	Spécifie le tooltip d'une ligne.
+			//	SpÃ©cifie le tooltip d'une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineState(int index, CellState state)
 		{
-			//	Spécifie l'état d'une ligne.
+			//	SpÃ©cifie l'Ã©tat d'une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public CellState GetLineState(int index)
 		{
-			//	Retourne l'état d'une ligne.
+			//	Retourne l'Ã©tat d'une ligne.
 			if ( this.cells == null )  return CellState.Normal;
 			if ( index < 0 || index >= this.cells.Length )  return CellState.Normal;
 			return this.cells[index].State;
@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineColor(int index, Color color)
 		{
-			//	Spécifie la couleur de fond d'une ligne.
+			//	SpÃ©cifie la couleur de fond d'une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -313,9 +313,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public bool AllowMultipleSelection
 		{
-			//	Indique si les sélections multiples sont possibles.
-			//	En mode 'true' la sélection multiple est forcée, c'est-à-dire qu'il
-			//	n'est pas nécessaire d'utiliser la touche Ctrl.
+			//	Indique si les sÃ©lections multiples sont possibles.
+			//	En mode 'true' la sÃ©lection multiple est forcÃ©e, c'est-Ã -dire qu'il
+			//	n'est pas nÃ©cessaire d'utiliser la touche Ctrl.
 			get
 			{
 				return this.allowMultipleSelection;
@@ -329,9 +329,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public int SelectedCell
 		{
-			//	Cellule sélectionnée.
-			//	Attention, les cellules sont comptés ici à partir de zéro, contraitement à
-			//	StringArray qui compte des lignes en tenant compte de la première ligne
+			//	Cellule sÃ©lectionnÃ©e.
+			//	Attention, les cellules sont comptÃ©s ici Ã  partir de zÃ©ro, contraitement Ã 
+			//	StringArray qui compte des lignes en tenant compte de la premiÃ¨re ligne
 			//	visible.
 			get
 			{
@@ -347,9 +347,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public List<int> SelectedCells
 		{
-			//	Cellules sélectionnées.
-			//	Attention, les cellules sont comptés ici à partir de zéro, contraitement à
-			//	StringArray qui compte des lignes en tenant compte de la première ligne
+			//	Cellules sÃ©lectionnÃ©es.
+			//	Attention, les cellules sont comptÃ©s ici Ã  partir de zÃ©ro, contraitement Ã 
+			//	StringArray qui compte des lignes en tenant compte de la premiÃ¨re ligne
 			//	visible.
 			get
 			{
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetHilitedLines(int firstLine, int countLine)
 		{
-			//	Met en évidence un groupe de lignes.
+			//	Met en Ã©vidence un groupe de lignes.
 			if (this.hilitedFirstLine != firstLine ||
 				this.hilitedCountLine != countLine)
 			{
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public bool IsDynamicToolTips
 		{
-			//	Faut-il générer les tooltips dynamiques ?
+			//	Faut-il gÃ©nÃ©rer les tooltips dynamiques ?
 			get
 			{
 				return this.isDynamicToolTips;
@@ -556,7 +556,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private int Detect(Point pos, bool margins)
 		{
-			//	Détecte la cellule visée par la souris.
+			//	DÃ©tecte la cellule visÃ©e par la souris.
 			Rectangle box = this.Client.Bounds;
 			
 			if (margins)
@@ -573,7 +573,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			int length = (int) (this.Client.Bounds.Height/this.lineHeight);
@@ -619,7 +619,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private bool IsSelectedCell(int cell)
 		{
-			//	Indique si une cellule doit être sélectionnée.
+			//	Indique si une cellule doit Ãªtre sÃ©lectionnÃ©e.
 			if (this.allowMultipleSelection)
 			{
 				return this.selectedCells != null && this.selectedCells.Contains(cell);
@@ -702,19 +702,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					graphics.AddFilledRectangle(cell);
 					//?graphics.RenderSolid(adorner.ColorText(WidgetPaintState.None));
-					graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0, 0, 0));  // gris très clair
+					graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0, 0, 0));  // gris trÃ¨s clair
 				}
 
 				if (this.cells[i].State == CellState.Unused)
 				{
 					graphics.AddFilledRectangle(cell);
-					graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0, 0, 0));  // gris très clair
+					graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0, 0, 0));  // gris trÃ¨s clair
 				}
 
 				if (i == this.searchLocatorLine)
 				{
 					graphics.AddFilledRectangle (cell);
-					graphics.RenderSolid (UIBuilder.BackInsideSearchColor);  // jaune pétant
+					graphics.RenderSolid (UIBuilder.BackInsideSearchColor);  // jaune pÃ©tant
 				}
 
 				var text = this.cells[i].TextLayout.Text;
@@ -762,7 +762,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				rect.Offset(0, -h);
 			}
 
-			//	Dessine les traits de séparations horizontaux.
+			//	Dessine les traits de sÃ©parations horizontaux.
 			rect = this.Client.Bounds;
 			rect.Bottom = rect.Top-h;
 
@@ -799,7 +799,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void PaintGraphicValue(Graphics graphics, Rectangle rect, string text)
 		{
-			//	Dessine une valeur numérique dans une cellule.
+			//	Dessine une valeur numÃ©rique dans une cellule.
 			//	Le format est "$${_graphic_}$$;row".
 			this.graphEngine.PaintRow (this.cube, this.graphOptions, graphics, rect, text);
 		}
@@ -840,7 +840,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		#region Events handler
 		protected virtual void OnCellCountChanged()
 		{
-			//	Génère un événement pour dire que le nombre de cellules a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le nombre de cellules a changÃ©.
 			var handler = this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
@@ -863,7 +863,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected virtual void OnDraggingCellSelectionChanged()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			var handler = this.GetUserEventHandler("DraggingCellSelectionChanged");
 			if (handler != null)
 			{
@@ -886,7 +886,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected virtual void OnFinalCellSelectionChanged(MessageEventArgs e)
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			var handler = this.GetUserEventHandler<MessageEventArgs>("FinalCellSelectionChanged");
 			if (handler != null)
 			{

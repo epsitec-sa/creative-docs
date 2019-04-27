@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.BooleanType))]
@@ -6,7 +6,7 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe BooleanType décrit des valeurs de type System.Boolean.
+	/// La classe BooleanType dÃ©crit des valeurs de type System.Boolean.
 	/// </summary>
 	public class BooleanType : AbstractNumericType
 	{

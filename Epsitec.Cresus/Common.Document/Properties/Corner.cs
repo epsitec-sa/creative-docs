@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum CornerType
 	{
 		None      = 0,
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Corner représente une propriété d'un objet graphique.
+	/// La classe Corner reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Corner : Abstract
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(Corner.GetName(this.cornerType));
@@ -151,8 +151,8 @@ namespace Epsitec.Common.Document.Properties
 
 		public static CornerType ConvType(int index)
 		{
-			//	Cherche le type correspondant à un index donné.
-			//	Ceci détermine l'ordre dans le TextFieldCombo du panneau.
+			//	Cherche le type correspondant Ã  un index donnÃ©.
+			//	Ceci dÃ©termine l'ordre dans le TextFieldCombo du panneau.
 			CornerType type = CornerType.None;
 			switch ( index )
 			{
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(CornerType type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(CornerType type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case CornerType.Right:      return "CornerRight";
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Document.Properties
 										  out bool enable1, out double effect1, out double min1, out double max1,
 										  out bool enable2, out double effect2, out double min2, out double max2)
 		{
-			//	Retourne les valeurs par défaut et les min/max pour un type donné.
+			//	Retourne les valeurs par dÃ©faut et les min/max pour un type donnÃ©.
 			enableRadius = true;
 			enable1 = true;  effect1 = 0.5;  min1 = -1.0;  max1 = 2.0;
 			enable2 = true;  effect2 = 0.5;  min2 = -1.0;  max2 = 2.0;
@@ -301,14 +301,14 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
 		public override int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignées.
+			//	Nombre de poignÃ©es.
 			if (obj is Objects.Rectangle ||
 				obj is Objects.Image)
 			{
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignée est visible.
+			//	Indique si une poignÃ©e est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignée.
+			//	Retourne la position d'une poignÃ©e.
 			Point pos = new Point();
 
 			if ( obj is Objects.Rectangle )
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignée.
+			//	Modifie la position d'une poignÃ©e.
 			if (obj is Objects.Rectangle)
 			{
 				var polygon = obj.PropertyHandleSupport;
@@ -439,7 +439,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Corner p = property as Corner;
 			p.cornerType = this.cornerType;
@@ -450,7 +450,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Corner p = property as Corner;
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Corner(document);
 		}
@@ -472,14 +472,14 @@ namespace Epsitec.Common.Document.Properties
 
 		public void PathCorner(Path path, Point p1, Point c, Point p2, double radius)
 		{
-			//	Crée le chemin d'un coin.
-			//	Le rayon donné est plus petit ou égal à this.radius et correspond à la
+			//	CrÃ©e le chemin d'un coin.
+			//	Le rayon donnÃ© est plus petit ou Ã©gal Ã  this.radius et correspond Ã  la
 			//	distance p1/c ou p2/c.
 			//	o p1
 			//	|
 			//	| c
 			//	o-----o p2
-			//	Paramètres passés à PathDot:
+			//	ParamÃ¨tres passÃ©s Ã  PathDot:
 			this.p1 = p1;
 			this.c  = c;
 			this.p2 = p2;
@@ -604,7 +604,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void MoveGlobalStarting()
 		{
-			//	Début du déplacement global de la propriété.
+			//	DÃ©but du dÃ©placement global de la propriÃ©tÃ©.
 			if (this.document.Modifier.ActiveViewer.SelectorAdaptLine)
 			{
 				this.InsertOpletProperty();
@@ -615,7 +615,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void MoveGlobalProcess(Selector selector)
 		{
-			//	Effectue le déplacement global de la propriété.
+			//	Effectue le dÃ©placement global de la propriÃ©tÃ©.
 			if (this.document.Modifier.ActiveViewer.SelectorAdaptLine)
 			{
 				double scale = selector.GetTransformScale;
@@ -629,7 +629,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("CornerType", this.cornerType);
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Corner(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.cornerType = (CornerType) info.GetValue("CornerType", typeof(CornerType));
 			if ( this.cornerType != CornerType.Right )
 			{

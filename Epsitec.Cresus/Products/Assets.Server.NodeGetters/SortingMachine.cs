@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -8,15 +8,15 @@ using Epsitec.Cresus.Assets.Data;
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	/// <summary>
-	/// Trie une énumération générique selon des instructions contenant un tri
-	/// primaire et éventuellement un tri secondaire.
+	/// Trie une Ã©numÃ©ration gÃ©nÃ©rique selon des instructions contenant un tri
+	/// primaire et Ã©ventuellement un tri secondaire.
 	/// </summary>
 	public static class SortingMachine<T>
 		where T : struct
 	{
 		public static IEnumerable<T> Sorts
 		(
-			//	Retourne une énumération de noeuds triée.
+			//	Retourne une Ã©numÃ©ration de noeuds triÃ©e.
 			//	T est une structure ParentNode ou OrderNode.
 			SortingInstructions				instructions,
 			IEnumerable<T>					nodes,
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			var result = nodes;
 
-			//	1) On trie en premier selon le critère secondaire.
+			//	1) On trie en premier selon le critÃ¨re secondaire.
 			if (getSecondaryData != null && instructions.SecondaryField != ObjectField.Unknown)
 			{
 				if (instructions.SecondaryType == SortedType.Ascending)
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			//	2) On trie en deuxième selon le critère principal.
+			//	2) On trie en deuxiÃ¨me selon le critÃ¨re principal.
 			if (getPrimaryData != null && instructions.PrimaryField != ObjectField.Unknown)
 			{
 				if (instructions.PrimaryType == SortedType.Ascending)

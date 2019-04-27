@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -7,14 +7,14 @@ namespace Epsitec.Common.Widgets
 {
 	public enum ScrollShowMode
 	{
-		Extremity,		// déplacement minimal aux extrémités
-		Center,			// déplacement central
+		Extremity,		// dÃ©placement minimal aux extrÃ©mitÃ©s
+		Center,			// dÃ©placement central
 	}
 
 	public enum ScrollAdjustMode
 	{
-		MoveTop,		// déplace le haut
-		MoveBottom,		// déplace le bas
+		MoveTop,		// dÃ©place le haut
+		MoveBottom,		// dÃ©place le bas
 	}
 
 
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 	public delegate string TextProviderCallback(int row, int column);
 
 	/// <summary>
-	///	La classe ScrollArray réalise une liste déroulante optimisée à deux dimensions,
+	///	La classe ScrollArray rÃ©alise une liste dÃ©roulante optimisÃ©e Ã  deux dimensions,
 	///	ne pouvant contenir que des textes fixes.
 	/// </summary>
 	public class ScrollArray : Widget, Support.Data.IStringSelection
@@ -67,12 +67,12 @@ namespace Epsitec.Common.Widgets
 
 		public TextProviderCallback TextProviderCallback
 		{
-			//	Spécifie le délégué pour remplir les cellules.
-			//	En mode sans FillText, la liste est remplie à l'avance avec SetText.
+			//	SpÃ©cifie le dÃ©lÃ©guÃ© pour remplir les cellules.
+			//	En mode sans FillText, la liste est remplie Ã  l'avance avec SetText.
 			//	Une copie de tous les strings est alors contenue dans this.array.
 			//	En mode FillText, c'est ScrollArray qui demande le contenu de chaque
-			//	cellule au fur et à mesure à l'aide du délégué FillText. Ce mode
-			//	est particulièrement efficace pour de grandes quantités de données.
+			//	cellule au fur et Ã  mesure Ã  l'aide du dÃ©lÃ©guÃ© FillText. Ce mode
+			//	est particuliÃ¨rement efficace pour de grandes quantitÃ©s de donnÃ©es.
 
 			get
 			{
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Widgets
 					if ((this.textProviderCallback == null) &&
 						(this.textArrayStore == null))
 					{
-						//	Met à jour le nombre de lignes dans la table. Si la table est trop longue, on
+						//	Met Ã  jour le nombre de lignes dans la table. Si la table est trop longue, on
 						//	va la tronquer; si elle est trop courte, on va l'allonger.
 
 						int n = this.textArray.Count;
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Widgets
 			}
 			if (this.editionRow < row)
 			{
-				//	La ligne se trouve après la zone d'édition; il faut donc la décaler vers
+				//	La ligne se trouve aprÃ¨s la zone d'Ã©dition; il faut donc la dÃ©caler vers
 				//	le bas :
 
 				return row + this.editionAddRows;
@@ -515,15 +515,15 @@ namespace Epsitec.Common.Widgets
 			}
 			if (this.editionRow + this.editionAddRows < row)
 			{
-				//	La ligne se trouve après la zone d'édition; il faut donc la décaler vers
+				//	La ligne se trouve aprÃ¨s la zone d'Ã©dition; il faut donc la dÃ©caler vers
 				//	le haut :
 
 				return row - this.editionAddRows;
 			}
 			if (this.editionRow < row)
 			{
-				//	La ligne se trouve dans la zone d'édition; il faut donc retourner le début
-				//	de la zone d'édition :
+				//	La ligne se trouve dans la zone d'Ã©dition; il faut donc retourner le dÃ©but
+				//	de la zone d'Ã©dition :
 
 				return this.editionRow;
 			}
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Widgets
 
 			if (!changed)
 			{
-				//	Vérifie si la nouvelle ligne est identique à la version originale dans
+				//	VÃ©rifie si la nouvelle ligne est identique Ã  la version originale dans
 				//	la table :
 
 				string[] original = this.GetRowTexts (row);
@@ -774,7 +774,7 @@ namespace Epsitec.Common.Widgets
 			if ((lastRow >= this.firstVirtvisRow) &&
 				(firstRow < this.firstVirtvisRow + this.nVisibleRows))
 			{
-				//	La ligne spécifiée est (en tout cas partiellement) visible; calcule sa
+				//	La ligne spÃ©cifiÃ©e est (en tout cas partiellement) visible; calcule sa
 				//	position dans la liste :
 
 				firstRow = System.Math.Max (firstRow, this.firstVirtvisRow);
@@ -838,7 +838,7 @@ namespace Epsitec.Common.Widgets
 			if ((lastRow >= this.firstVirtvisRow) &&
 				(firstRow < this.firstVirtvisRow + this.nVisibleRows))
 			{
-				//	La ligne spécifiée est (en tout cas partiellement) visible; calcule sa
+				//	La ligne spÃ©cifiÃ©e est (en tout cas partiellement) visible; calcule sa
 				//	position dans la liste :
 
 				firstRow = System.Math.Max (firstRow, this.firstVirtvisRow);
@@ -1087,15 +1087,15 @@ namespace Epsitec.Common.Widgets
 
 					if (row < top)
 					{
-						//	La ligne était en-dessus du sommet de la liste. Utilise comme
-						//	sommet la ligne sélectionnée...
+						//	La ligne Ã©tait en-dessus du sommet de la liste. Utilise comme
+						//	sommet la ligne sÃ©lectionnÃ©e...
 
 						first = row;
 					}
 
 					if (row > top + this.nFullyVisibleRows - height)
 					{
-						//	La ligne était en-dessous du bas de la liste :
+						//	La ligne Ã©tait en-dessous du bas de la liste :
 
 						first = row - (this.nFullyVisibleRows - height);
 					}
@@ -1141,16 +1141,16 @@ namespace Epsitec.Common.Widgets
 
 					if (x2 > maxX)
 					{
-						//	La colonne dépasse à droite, on ajuste l'offset pour que la colonne
-						//	soit alignée sur son bord droit; ceci peut être corrigé ensuite si
-						//	du coup la colonne dépasse à gauche.
+						//	La colonne dÃ©passe Ã  droite, on ajuste l'offset pour que la colonne
+						//	soit alignÃ©e sur son bord droit; ceci peut Ãªtre corrigÃ© ensuite si
+						//	du coup la colonne dÃ©passe Ã  gauche.
 
 						x2 = maxX;
 						x1 = maxX - dx;
 					}
 					if (x1 < minX)
 					{
-						//	La colonne dépasse à gauche, on ajuste l'offset pour que la colonne
+						//	La colonne dÃ©passe Ã  gauche, on ajuste l'offset pour que la colonne
 						//	soit juste visible.
 
 						x1 = 0;
@@ -1261,7 +1261,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool AdjustHeightToRows(ScrollAdjustMode mode, int count)
 		{
-			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spécifié.
+			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spÃ©cifiÃ©.
 			
 			this.Update ();
 			
@@ -1633,8 +1633,8 @@ namespace Epsitec.Common.Widgets
 		{
 			double v = this.innerBounds.Height / this.rowHeight;
 
-			this.nVisibleRows       = (int) System.Math.Ceiling (v);	//	compte la dernière ligne partielle
-			this.nFullyVisibleRows = (int) System.Math.Floor (v);	//	nb de lignes entières
+			this.nVisibleRows       = (int) System.Math.Ceiling (v);	//	compte la derniÃ¨re ligne partielle
+			this.nFullyVisibleRows = (int) System.Math.Floor (v);	//	nb de lignes entiÃ¨res
 		}
 
 		protected virtual void UpdateLayoutCache()
@@ -1656,7 +1656,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void UpdateHeaderGeometry()
 		{
-			//	Positionne l'en-tête :
+			//	Positionne l'en-tÃªte :
 
 			Drawing.Rectangle rect = this.tableBounds;
 
@@ -1665,7 +1665,7 @@ namespace Epsitec.Common.Widgets
 
 			this.header.SetManualBounds (rect);
 
-			//	Place les boutons dans l'en-tête :
+			//	Place les boutons dans l'en-tÃªte :
 
 			rect.Bottom = 0;
 			rect.Top    = this.header.ActualHeight;
@@ -1683,7 +1683,7 @@ namespace Epsitec.Common.Widgets
 				rect.Left  = rect.Right;
 			}
 
-			//	Place les sliders dans l'en-tête :
+			//	Place les sliders dans l'en-tÃªte :
 
 			rect.Bottom = 0;
 			rect.Top    = this.header.ActualHeight;
@@ -1730,7 +1730,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateTagWidget ();
 
-			//	Met à jour l'ascenseur vertical :
+			//	Met Ã  jour l'ascenseur vertical :
 
 			int rows = this.VirtualRowCount;
 
@@ -1755,7 +1755,7 @@ namespace Epsitec.Common.Widgets
 
 			this.UpdateTextLayouts ();
 
-			//	Met à jour l'ascenseur horizontal :
+			//	Met Ã  jour l'ascenseur horizontal :
 
 			double width = this.totalWidth;
 
@@ -2096,7 +2096,7 @@ namespace Epsitec.Common.Widgets
 
 			graphics.SetClippingRectangle (tableClip);
 
-			//	Dessine le contenu du tableau, constitué des textes :
+			//	Dessine le contenu du tableau, constituÃ© des textes :
 
 			this.Update ();
 
@@ -2113,12 +2113,12 @@ namespace Epsitec.Common.Widgets
 			}
 
 			int top    = this.FromVirtualRow (this.firstVirtvisRow);						//	index de la ligne en haut
-			int delta  = this.firstVirtvisRow - this.ToVirtualRow (top);					//	0 si complètement visible, n => déborde n 'lignes'
+			int delta  = this.firstVirtvisRow - this.ToVirtualRow (top);					//	0 si complÃ¨tement visible, n => dÃ©borde n 'lignes'
 			Drawing.Point pos    = new Drawing.Point (this.innerBounds.Left, this.innerBounds.Top);
 			double limit  = totalWidth - this.offset + this.innerBounds.Left + 1;
 			double right  = System.Math.Min (this.innerBounds.Right, limit);
 
-			//	Détermine le nombre de lignes (virtuelles) actuellement affichables. Ceci est limité
+			//	DÃ©termine le nombre de lignes (virtuelles) actuellement affichables. Ceci est limitÃ©
 			//	par la place disponible et par le nombre total de lignes :
 
 			int virtTop    = this.firstVirtvisRow;
@@ -2127,8 +2127,8 @@ namespace Epsitec.Common.Widgets
 
 			int nRows = System.Math.Min (virtBottom, virtEnd) - virtTop;
 
-			//	Peint toutes les lignes (virtuelles) en sautant celles qui correspondent à la ligne
-			//	réelle en cours d'édition :
+			//	Peint toutes les lignes (virtuelles) en sautant celles qui correspondent Ã  la ligne
+			//	rÃ©elle en cours d'Ã©dition :
 
 			for (int row = 0; row < nRows; row++)
 			{
@@ -2182,7 +2182,7 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid (color);
 
 			{
-				//	Dessine les lignes de séparation horizontales :
+				//	Dessine les lignes de sÃ©paration horizontales :
 
 				double x1 = this.innerBounds.Left;
 				double x2 = right - 0.5;
@@ -2206,7 +2206,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			{
-				//	Dessine les lignes de séparation verticales :
+				//	Dessine les lignes de sÃ©paration verticales :
 
 				limit = this.VirtualRowCount * this.rowHeight;
 				limit = this.innerBounds.Top - (limit - top * this.rowHeight);

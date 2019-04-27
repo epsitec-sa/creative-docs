@@ -1,4 +1,4 @@
-//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -12,13 +12,13 @@ namespace Epsitec.Common.Widgets
 		Slider,							// bouton pour Slider
 		Combo,							// bouton pour TextFieldCombo
 		UpDown,							// bouton pour TextFieldUpDown
-		ExListLeft,						// bouton pour TextFieldExList, à gauche
+		ExListLeft,						// bouton pour TextFieldExList, Ã  gauche
 		ExListMiddle,					// bouton pour TextFieldExList, au milieu
-		ExListRight,					// bouton pour TextFieldExList, à droite (cf Combo)
+		ExListRight,					// bouton pour TextFieldExList, Ã  droite (cf Combo)
 		Tab,							// bouton pour TabButton
-		Icon,							// bouton pour une icône
-		ActivableIcon,					// bouton pour une icône activable
-		ToolItem,						// bouton pour barre d'icône
+		Icon,							// bouton pour une icÃ´ne
+		ActivableIcon,					// bouton pour une icÃ´ne activable
+		ToolItem,						// bouton pour barre d'icÃ´ne
 		ComboItem,						// bouton pour menu-combo
 		ListItem,						// bouton pour liste
 		HeaderSlider,					// bouton pour modifier une largeur de colonne

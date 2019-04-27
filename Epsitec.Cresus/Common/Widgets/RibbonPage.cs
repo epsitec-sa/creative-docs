@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe RibbonPage représente une page du RibbonBook.
+	/// La classe RibbonPage reprÃ©sente une page du RibbonBook.
 	/// </summary>
 	public class RibbonPage : AbstractGroup, Collections.IWidgetCollectionHost<RibbonSection>
 	{

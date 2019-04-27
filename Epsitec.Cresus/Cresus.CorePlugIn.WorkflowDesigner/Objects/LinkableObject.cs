@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public ObjectComment Comment
 		{
-			//	Commentaire lié.
+			//	Commentaire liÃ©.
 			get
 			{
 				return this.comment;
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public ObjectInfo Info
 		{
-			//	Information liée.
+			//	Information liÃ©e.
 			get
 			{
 				return this.info;
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public bool IsExtended
 		{
-			//	Etat de la boîte (compact ou étendu).
+			//	Etat de la boÃ®te (compact ou Ã©tendu).
 			get
 			{
 				return this.isExtended;
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				this.bounds = value;
 				Point p2 = this.bounds.TopLeft;
 
-				//	S'il existe un commentaire associé, il doit aussi être déplacé.
+				//	S'il existe un commentaire associÃ©, il doit aussi Ãªtre dÃ©placÃ©.
 				if (this.comment != null)
 				{
 					Rectangle rect = this.comment.InternalBounds;
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 					this.comment.Bounds = rect;
 				}
 
-				//	S'il existe une information associée, elle doit aussi être déplacée.
+				//	S'il existe une information associÃ©e, elle doit aussi Ãªtre dÃ©placÃ©e.
 				if (this.info != null)
 				{
 					Rectangle rect = this.info.InternalBounds;
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 	
 		public override ColorItem BackgroundColorItem
 		{
-			//	Couleur de fond de la boîte.
+			//	Couleur de fond de la boÃ®te.
 			get
 			{
 				return this.colorFactory.ColorItem;
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				{
 					this.colorFactory.ColorItem = value;
 
-					//	Change la couleur de toutes les connexions liées.
+					//	Change la couleur de toutes les connexions liÃ©es.
 					foreach (var obj in this.objectLinks)
 					{
 						obj.BackgroundColorItem = this.colorFactory.ColorItem;
@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		protected double ComputeBestStumpAngle()
 		{
 			//	Calcul le meilleur angle possible pour une nouvelle connexion. En tenant compte de toutes
-			//	les connexions qui partent et qui arrivent, on se place à l'opposé.
+			//	les connexions qui partent et qui arrivent, on se place Ã  l'opposÃ©.
 			var angles = new List<double> ();
 
 			if (this.objectLinks != null)
@@ -303,11 +303,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			if (angles.Count == 0)
 			{
 				//?return 270;  // de haut en bas
-				return 0;  // de gauche à droite
+				return 0;  // de gauche Ã  droite
 			}
 			else
 			{
-				return Geometry.AngleAvg (angles) - 180;  // à l'opposé
+				return Geometry.AngleAvg (angles) - 180;  // Ã  l'opposÃ©
 			}
 		}
 
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			var commentList = new List<Point> ();
 
-			//	Mémorise la position de tous les liens qui partent.
+			//	MÃ©morise la position de tous les liens qui partent.
 			foreach (var obj in this.objectLinks)
 			{
 				if (obj.Comment != null)
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Mémorise la position de tous les liens qui arrivent.
+			//	MÃ©morise la position de tous les liens qui arrivent.
 			foreach (var obj in this.ArrivalObjectLinks)
 			{
 				if (obj.Comment != null)
@@ -336,14 +336,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			Point center = Point.GridAlign (this.editor.MagnetConstrainCenter (pos-this.draggingOffset, this));
 			this.Bounds = new Rectangle (center.X-this.Bounds.Width/2, center.Y-this.Bounds.Height/2, this.Bounds.Width, this.Bounds.Height);
 			this.editor.UpdateLinks ();
 
 			int i = 0;
 
-			//	Déplace tous les liens qui partent.
+			//	DÃ©place tous les liens qui partent.
 			foreach (var obj in this.objectLinks)
 			{
 				if (obj.Comment != null)
@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Déplace tous les liens qui arrivent.
+			//	DÃ©place tous les liens qui arrivent.
 			foreach (var obj in this.ArrivalObjectLinks)
 			{
 				if (obj.Comment != null)

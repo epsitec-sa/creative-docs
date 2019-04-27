@@ -1,18 +1,18 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
-/// Problèmes non résolus:
+/// ProblÃ¨mes non rÃ©solus:
 /// 1)
-///		Pour les tags html sup, sub et u les paramètres supplémentaires sont hardcodées de la même façon
+///		Pour les tags html sup, sub et u les paramÃ¨tres supplÃ©mentaires sont hardcodÃ©es de la mÃªme faÃ§on
 ///		que dans la classe Epsitec.Common.Document.Wappers du fichier Common.Text/Wrappers.cs,
 ///		chercher commentaires [HARDCODE]
-///		D'ailleurs les méthodes Fill*Definition(...) ont été copiées depuis Common.Text/Wrappers.cs
+///		D'ailleurs les mÃ©thodes Fill*Definition(...) ont Ã©tÃ© copiÃ©es depuis Common.Text/Wrappers.cs
 ///		
 ///	2)
 ///		Il faut voir si on ne peux pas simplifier l'usage des multiples SuspendSynchronizations()/ResumeSynchronizations()
 ///		
 ///	3)
-///		Dans la fonction ProcessIt () il faut voir si les divers Clear...() sont appelées correctement
+///		Dans la fonction ProcessIt () il faut voir si les divers Clear...() sont appelÃ©es correctement
 ///		
 	
 using System;
@@ -23,8 +23,8 @@ using Epsitec.Common.Text.Exchange.HtmlParser;
 namespace Epsitec.Common.Text.Exchange
 {
 	/// <summary>
-	/// La classe HtmlToTextWriter s'occupe d'écrire un texte html sous forme de HtmlDocument (arbre html parsé)
-	/// dans un pavé de text par son Wrapper.TextWrapper
+	/// La classe HtmlToTextWriter s'occupe d'Ã©crire un texte html sous forme de HtmlDocument (arbre html parsÃ©)
+	/// dans un pavÃ© de text par son Wrapper.TextWrapper
 	/// </summary>
 	/// 
 	class HtmlToTextWriter
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessItalic(HtmlElement element)
 		{
-#if false	// voir avec Pierre si c'est mieux de faire comme ça
+#if false	// voir avec Pierre si c'est mieux de faire comme Ã§a
 			using (CresusWrapper w = new CresusWrapper (this))
 			{
 				w.InvertItalic = true;
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.ResumeSynchronizations ();
 
 			this.ProcessNodes (element.Nodes);
-#if true // c'est là que ça foire
+#if true // c'est lÃ  que Ã§a foire
 			this.textWrapper.SuspendSynchronizations ();
 			this.RestoreFontProps (oldfontprops);
 			this.textWrapper.ResumeSynchronizations ();
@@ -491,7 +491,7 @@ namespace Epsitec.Common.Text.Exchange
 							break;
 
 						default :
-							// element html inconnu, on traite l'intérieur sans s'occuper de l'élément lui même
+							// element html inconnu, on traite l'intÃ©rieur sans s'occuper de l'Ã©lÃ©ment lui mÃªme
 							this.ProcessNodes (element.Nodes);
 							break;
 					}

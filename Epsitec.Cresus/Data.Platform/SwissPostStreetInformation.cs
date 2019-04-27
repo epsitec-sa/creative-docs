@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -401,7 +401,7 @@ namespace Epsitec.Data.Platform
 		/// <summary>
 		/// Creates a root name based on a short name; this strips any accents and changes
 		/// all characters to upper case. Moreover, it replaces any "Y" with "I" to avoid
-		/// mismatches based on erros found in MAT[CH] files (Pré Fleury == Pré Fleuri).
+		/// mismatches based on erros found in MAT[CH] files (PrÃ© Fleury == PrÃ© Fleuri).
 		/// </summary>
 		/// <param name="name">The short name.</param>
 		/// <returns>The root name of the street.</returns>

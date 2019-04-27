@@ -12,16 +12,16 @@ namespace Epsitec.Common.FormEngine
 
 
 	/// <summary>
-	/// Générateur de masques de saisie.
+	/// GÃ©nÃ©rateur de masques de saisie.
 	/// </summary>
 	public sealed class Engine
 	{
 		public Engine(IFormResourceProvider resourceProvider)
 		{
 			//	Constructeur.
-			//	FindFormDescription permet de retrouver le FormDescription correspondant à un Druid,
-			//	lorsque les ressources ne sont pas sérialisées. Pour un usage hors de Designer, avec
-			//	des ressources sérialisées, ce paramètre peut être null.
+			//	FindFormDescription permet de retrouver le FormDescription correspondant Ã  un Druid,
+			//	lorsque les ressources ne sont pas sÃ©rialisÃ©es. Pour un usage hors de Designer, avec
+			//	des ressources sÃ©rialisÃ©es, ce paramÃ¨tre peut Ãªtre null.
 			this.resourceProvider = resourceProvider;
 
 			this.arrange = new Arrange(this.resourceProvider);
@@ -71,9 +71,9 @@ namespace Epsitec.Common.FormEngine
 
 		public UI.Panel CreateForm(Druid formId, ref Size defaultSize)
 		{
-			//	Crée un masque de saisie.
-			//	Si le Druid correspond à un Form delta, il est fusionné jusqu'au Form de base parent.
-			//	Cette méthode est utilisée par une application finale pour construire un masque.
+			//	CrÃ©e un masque de saisie.
+			//	Si le Druid correspond Ã  un Form delta, il est fusionnÃ© jusqu'au Form de base parent.
+			//	Cette mÃ©thode est utilisÃ©e par une application finale pour construire un masque.
 			string xml = this.resourceProvider.GetFormXmlSource(formId);
 			
 			if (string.IsNullOrEmpty(xml))
@@ -112,9 +112,9 @@ namespace Epsitec.Common.FormEngine
 
 		public UI.Panel CreateForm(List<FieldDescription> fields, Druid entityId, bool forDesigner)
 		{
-			//	Crée un masque de saisie.
-			//	La liste de FieldDescription doit être plate (pas de Node).
-			//	Cette méthode est utilisée par Designer pour construire un masque.
+			//	CrÃ©e un masque de saisie.
+			//	La liste de FieldDescription doit Ãªtre plate (pas de Node).
+			//	Cette mÃ©thode est utilisÃ©e par Designer pour construire un masque.
 			this.forDesigner = forDesigner;
 			this.resourceProvider.ClearCache();
 
@@ -143,32 +143,32 @@ namespace Epsitec.Common.FormEngine
 
 			if (this.entityData == null)
 			{
-				//	Personne n'a défini de données à associer avec l'interface utilisateur
-				//	que nous allons créer, alors on crée nous-même une entité vide pour
+				//	Personne n'a dÃ©fini de donnÃ©es Ã  associer avec l'interface utilisateur
+				//	que nous allons crÃ©er, alors on crÃ©e nous-mÃªme une entitÃ© vide pour
 				//	permettre d'utiliser correctement le binding par la suite.
 
 				entityData = this.entityContext.CreateEntity (entityId);
 			}
 			else
 			{
-				//	Utilise les données de l'entité fournies par l'appelant pour réaliser
+				//	Utilise les donnÃ©es de l'entitÃ© fournies par l'appelant pour rÃ©aliser
 				//	le binding par la suite.
 
 				entityData = this.entityData;
 			}
 
-			//	Crée le panneau racine, le seul à définir DataSource. Les autres panneaux
-			//	enfants héritent de cette propriété.
+			//	CrÃ©e le panneau racine, le seul Ã  dÃ©finir DataSource. Les autres panneaux
+			//	enfants hÃ©ritent de cette propriÃ©tÃ©.
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			root.CaptionResolver = this.resourceProvider;
 			root.DataSource = new DataSource();
 			root.DataSource.AddDataSource(DataSource.DataName, entityData);
 
-			//	Crée un gestionnaire de styles pour le panneau dans son entier; un tel
-			//	gestionnaire doit être attaché au panneau racine au moment de sa création
+			//	CrÃ©e un gestionnaire de styles pour le panneau dans son entier; un tel
+			//	gestionnaire doit Ãªtre attachÃ© au panneau racine au moment de sa crÃ©ation
 			UI.TextStyleManager textStyleManager = new UI.TextStyleManager(root);
-			textStyleManager.Attach(root);  // active les styles pour le panneau spécifié et tous ses enfants
+			textStyleManager.Attach(root);  // active les styles pour le panneau spÃ©cifiÃ© et tous ses enfants
 
 			this.tabIndex = 1;
 			this.CreateFormBox(root, entityId, fields2, 0);
@@ -179,21 +179,21 @@ namespace Epsitec.Common.FormEngine
 
 		private StructuredType GetEntityDefinition(Druid entityId)
 		{
-			//	Trouve la définition de l'entité spécifiée par son id.
+			//	Trouve la dÃ©finition de l'entitÃ© spÃ©cifiÃ©e par son id.
 			return this.resourceProvider.GetStructuredType(entityId);
 		}
 
 		private enum FieldEditionMode
 		{
 			Unknown,
-			Data,							//	le champ contient des données
-			Search							//	le champ sert à réaliser des recherches
+			Data,							//	le champ contient des donnÃ©es
+			Search							//	le champ sert Ã  rÃ©aliser des recherches
 		}
 
 		private FieldEditionMode GetFieldEditionMode(Druid entityId, IList<Druid> fieldIds)
 		{
-			//	Détermine comment un champ doit être traité. Il peut soit être
-			//	considéré comme une donnée, soit comme un critère de recherche.
+			//	DÃ©termine comment un champ doit Ãªtre traitÃ©. Il peut soit Ãªtre
+			//	considÃ©rÃ© comme une donnÃ©e, soit comme un critÃ¨re de recherche.
 			foreach (Druid fieldId in fieldIds)
 			{
 				StructuredType entityDef = this.GetEntityDefinition(entityId);
@@ -226,10 +226,10 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateFormBox(Widget root, Druid entityId, List<FieldDescription> fields, int index)
 		{
-			//	Crée tous les champs dans une boîte.
-			//	Cette méthode est appelée récursivement pour chaque BoxBegin/BoxEnd.
+			//	CrÃ©e tous les champs dans une boÃ®te.
+			//	Cette mÃ©thode est appelÃ©e rÃ©cursivement pour chaque BoxBegin/BoxEnd.
 
-			//	Première passe pour déterminer quelles colonnes contiennent des labels.
+			//	PremiÃ¨re passe pour dÃ©terminer quelles colonnes contiennent des labels.
 			int column = 0, row = 0;
 			int level = 0;
 			List<int> labelsId = new List<int>();
@@ -255,7 +255,7 @@ namespace Epsitec.Common.FormEngine
 						isGlueAfter = true;
 					}
 
-					if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
+					if (field.Type == FieldDescription.FieldType.BoxBegin ||  // dÃ©but de boÃ®te ?
 					field.Type == FieldDescription.FieldType.SubForm)
 					{
 						if (level == 0)
@@ -265,7 +265,7 @@ namespace Epsitec.Common.FormEngine
 
 						level++;
 					}
-					else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boîte ?
+					else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boÃ®te ?
 					{
 						level--;
 
@@ -297,11 +297,11 @@ namespace Epsitec.Common.FormEngine
 					}
 					else if (field.Type == FieldDescription.FieldType.Node)
 					{
-						throw new System.InvalidOperationException("Type incorrect (la liste de FieldDescription devrait être aplatie).");
+						throw new System.InvalidOperationException("Type incorrect (la liste de FieldDescription devrait Ãªtre aplatie).");
 					}
 				}
 
-				//	Crée les différentes colonnes, en fonction des résultats de la première passe.
+				//	CrÃ©e les diffÃ©rentes colonnes, en fonction des rÃ©sultats de la premiÃ¨re passe.
 				grid = new Widgets.Layouts.GridLayoutEngine();
 				for (int i=0; i<labelsId.Count; i++)
 				{
@@ -348,7 +348,7 @@ namespace Epsitec.Common.FormEngine
 				Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
 			}
 
-			//	Deuxième passe pour générer le contenu.
+			//	DeuxiÃ¨me passe pour gÃ©nÃ©rer le contenu.
 			column = 0;
 			row = 0;
 			level = 0;
@@ -376,8 +376,8 @@ namespace Epsitec.Common.FormEngine
 					isLastOfBox = true;
 				}
 
-				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
-				//	La valeur -1 par défaut indique un widget non identifié.
+				//	Assigne l'identificateur unique, qui ira dans la propriÃ©tÃ© Index des widgets.
+				//	La valeur -1 par dÃ©faut indique un widget non identifiÃ©.
 				System.Guid guid;
 				if (field.Source == null)
 				{
@@ -385,12 +385,12 @@ namespace Epsitec.Common.FormEngine
 				}
 				else
 				{
-					//	Un champ d'un sous-masque reçoit l'identificateur du SubForm qui l'a initié,
-					//	afin que sa sélection dans l'éditeur sélectionne le SubForm dans la liste.
+					//	Un champ d'un sous-masque reÃ§oit l'identificateur du SubForm qui l'a initiÃ©,
+					//	afin que sa sÃ©lection dans l'Ã©diteur sÃ©lectionne le SubForm dans la liste.
 					guid = field.Source.Guid;
 				}
 
-				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
+				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // dÃ©but de boÃ®te ?
 					field.Type == FieldDescription.FieldType.SubForm)
 				{
 					if (level == 0)
@@ -401,7 +401,7 @@ namespace Epsitec.Common.FormEngine
 
 					level++;
 				}
-				else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boîte ?
+				else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boÃ®te ?
 				{
 					level--;
 
@@ -432,7 +432,7 @@ namespace Epsitec.Common.FormEngine
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Title ||
-						 field.Type == FieldDescription.FieldType.Line)  // séparateur ?
+						 field.Type == FieldDescription.FieldType.Line)  // sÃ©parateur ?
 				{
 					if (level == 0)
 					{
@@ -446,9 +446,9 @@ namespace Epsitec.Common.FormEngine
 
 		private void PreprocessBoxBegin(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
 		{
-			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
-			//	Un BoxBegin ne contient jamais de label, mais il faut tout de même faire évoluer
-			//	le numéro de la colonne.
+			//	DÃ©termine quelles colonnes contiennent des labels, lors de la premiÃ¨re passe.
+			//	Un BoxBegin ne contient jamais de label, mais il faut tout de mÃªme faire Ã©voluer
+			//	le numÃ©ro de la colonne.
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
@@ -465,7 +465,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void PreprocessField(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
 		{
-			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
+			//	DÃ©termine quelles colonnes contiennent des labels, lors de la premiÃ¨re passe.
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			if (columnsRequired == 1)
@@ -490,7 +490,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void PreprocessCommand(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
 		{
-			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
+			//	DÃ©termine quelles colonnes contiennent des labels, lors de la premiÃ¨re passe.
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
@@ -507,7 +507,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void PreprocessGlue(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
 		{
-			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
+			//	DÃ©termine quelles colonnes contiennent des labels, lors de la premiÃ¨re passe.
 			int columnsRequired = field.ColumnsRequired;
 
 			for (int i=0; i<columnsRequired; i++)
@@ -521,7 +521,7 @@ namespace Epsitec.Common.FormEngine
 		static private void LabelIdUse(List<int> labelsId, int labelId, int column, int count)
 		{
 			//	Indique que les colonnes comprises entre column et column+count-1 ont un contenu commun,
-			//	c'est-à-dire qui ne nécessite qu'une colonne physique dans GridLayoutEngine, si cela est
+			//	c'est-Ã -dire qui ne nÃ©cessite qu'une colonne physique dans GridLayoutEngine, si cela est
 			//	en accord avec les autres lignes.
 			//
 			//	Contenu initial:				0 0 0 0 0 0 0 0 0 0
@@ -533,7 +533,7 @@ namespace Epsitec.Common.FormEngine
 			//	labelId=7, column=3, count=1:	1 6 6 7 4 4 2 2 2 2  (cas I)
 			//	labelId=8, column=4, count=6:	1 6 6 7 4 4 2 2 2 2  (cas N)
 			//
-			//	Après cette initialisation, il faudra créer 5 colonnes physiques:
+			//	AprÃ¨s cette initialisation, il faudra crÃ©er 5 colonnes physiques:
 			//	1) 1
 			//	2) 6 6
 			//	3) 7
@@ -595,8 +595,8 @@ namespace Epsitec.Common.FormEngine
 
 		static private int GetColumnIndex(List<int> labelsId, int column)
 		{
-			//	Conversion d'un numéro de colonne virtuelle (0..9) en un index pour une colonne physique.
-			//	Les colonnes physiques peuvent être moins nombreuses que les virtuelles.
+			//	Conversion d'un numÃ©ro de colonne virtuelle (0..9) en un index pour une colonne physique.
+			//	Les colonnes physiques peuvent Ãªtre moins nombreuses que les virtuelles.
 			int index = column;
 			int last = int.MinValue;
 			for (int i=0; i<=column; i++)
@@ -622,7 +622,7 @@ namespace Epsitec.Common.FormEngine
 
 		private Widget CreateBox(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)
 		{
-			//	Crée les widgets pour une boîte dans la grille, lors de la deuxième passe.
+			//	CrÃ©e les widgets pour une boÃ®te dans la grille, lors de la deuxiÃ¨me passe.
 			Widget box;
 
 			if (field.BoxLayout == FieldDescription.BoxLayoutType.Grid)
@@ -668,7 +668,7 @@ namespace Epsitec.Common.FormEngine
 			box.DrawFrameWidth = field.BoxFrameWidth;
 			box.PreferredWidth = field.PreferredWidth;
 			box.Margins = new Margins(mLeft, mRight, mTop, mBottom);
-			box.TabIndex = this.tabIndex;  // pas besoin d'incrémenter, pour que le groupe ne fasse pas perdre un numéro
+			box.TabIndex = this.tabIndex;  // pas besoin d'incrÃ©menter, pour que le groupe ne fasse pas perdre un numÃ©ro
 			box.Name = guid.ToString();
 			this.ApplyTextStyle(box, field);
 
@@ -699,7 +699,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateField(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)
 		{
-			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
+			//	CrÃ©e les widgets pour un champ dans la grille, lors de la deuxiÃ¨me passe.
 			UI.Placeholder placeholder = this.CreatePlaceholder(root, entityId, field);
 			placeholder.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			placeholder.TabIndex = this.tabIndex++;
@@ -709,8 +709,8 @@ namespace Epsitec.Common.FormEngine
 			placeholder.Verbosity = field.Verbosity;
 			this.ApplyTextStyle(placeholder, field);
 
-			//	Détermine si le placeholder doit être utilisé pour saisir du texte ou pour
-			//	saisir un critère de recherche et le configure en conséquence.
+			//	DÃ©termine si le placeholder doit Ãªtre utilisÃ© pour saisir du texte ou pour
+			//	saisir un critÃ¨re de recherche et le configure en consÃ©quence.
 			FieldEditionMode editionMode = this.GetFieldEditionMode(entityId, field.FieldIds);
 			switch (editionMode)
 			{
@@ -767,9 +767,9 @@ namespace Epsitec.Common.FormEngine
 
 		private UI.Placeholder CreatePlaceholder(Widget root, Druid entityId, FieldDescription field)
 		{
-			//	Crée le bon type de placeholder, en fonction du champ qui doit être
-			//	représenté. Les champs normaux sont gérés par la classe Placeholder
-			//	alors que les références sont gérées par la classe ReferencPlaceholder.
+			//	CrÃ©e le bon type de placeholder, en fonction du champ qui doit Ãªtre
+			//	reprÃ©sentÃ©. Les champs normaux sont gÃ©rÃ©s par la classe Placeholder
+			//	alors que les rÃ©fÃ©rences sont gÃ©rÃ©es par la classe ReferencPlaceholder.
 
 			EntityFieldPath fieldPath = field.GetFieldPath ();
 			Druid  leafEntityId;
@@ -818,7 +818,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateCommand(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)
 		{
-			//	Crée les widgets pour une commande dans la grille, lors de la deuxième passe.
+			//	CrÃ©e les widgets pour une commande dans la grille, lors de la deuxiÃ¨me passe.
 			UI.MetaButton button = new UI.MetaButton();
 			button.SetParent(root);
 			button.TabIndex = this.tabIndex++;
@@ -861,7 +861,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateGlue(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
-			//	Crée les widgets pour un collage dans la grille, lors de la deuxième passe.
+			//	CrÃ©e les widgets pour un collage dans la grille, lors de la deuxiÃ¨me passe.
 			int columnsRequired = field.ColumnsRequired;
 
 			if (grid == null)
@@ -886,7 +886,7 @@ namespace Epsitec.Common.FormEngine
 
 					if (columnsRequired == 0)
 					{
-						glue.Index = Engine.GlueNull;  // pour feinter les dimensions lors des détections et du dessin de la sélection
+						glue.Index = Engine.GlueNull;  // pour feinter les dimensions lors des dÃ©tections et du dessin de la sÃ©lection
 						glue.PreferredWidth = 0; // pour ne pas perturber le calcul de la largeur d'une colonne contenant un label
 
 						int i = Engine.GetColumnIndex(labelsId, column);
@@ -911,7 +911,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateSeparator(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, FieldDescription nextField, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, ref List<Druid> lastTitle)
 		{
-			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
+			//	CrÃ©e les widgets pour un sÃ©parateur dans la grille, lors de la deuxiÃ¨me passe.
 			FieldDescription.FieldType type = field.Type;
 
 			double m = FieldDescription.GetRealSeparator(field.SeparatorBottom, true)+2;
@@ -933,7 +933,7 @@ namespace Epsitec.Common.FormEngine
 					{
 						Druid druid = druids[i];
 
-						if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)  // label déjà mis précédemment ?
+						if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)  // label dÃ©jÃ  mis prÃ©cÃ©demment ?
 						{
 							continue;
 						}
@@ -988,7 +988,7 @@ namespace Epsitec.Common.FormEngine
 					}
 				}
 
-				lastTitle = druids;  // pour se rappeler du titre précédent
+				lastTitle = druids;  // pour se rappeler du titre prÃ©cÃ©dent
 			}
 
 			if (type == FieldDescription.FieldType.Line ||
@@ -1039,7 +1039,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void ApplyTextStyle(Widget widget, FieldDescription field)
 		{
-			//	Applique les différents styles de texte définis, s'ils existent, pour le widget et ses enfants.
+			//	Applique les diffÃ©rents styles de texte dÃ©finis, s'ils existent, pour le widget et ses enfants.
 			if (!field.HasTextStyle)
 			{
 				return;
@@ -1085,7 +1085,7 @@ namespace Epsitec.Common.FormEngine
 				textStyleManager.TextFieldStyle = style;
 			}
 
-			//	Active les styles pour le widget spécifié et tous ses enfants.
+			//	Active les styles pour le widget spÃ©cifiÃ© et tous ses enfants.
 			textStyleManager.Attach(widget);
 		}
 
@@ -1132,11 +1132,11 @@ namespace Epsitec.Common.FormEngine
 
 		private void GenerateForwardTab(Widget root, List<FieldDescription> fields)
 		{
-			//	Initialise les propriétés ForwardTabOverride et BackwardTabOverride aux widgets du masque
-			//	qui sont définis par des exceptions FieldDescription.ForwardTabGuid pour la navigation.
+			//	Initialise les propriÃ©tÃ©s ForwardTabOverride et BackwardTabOverride aux widgets du masque
+			//	qui sont dÃ©finis par des exceptions FieldDescription.ForwardTabGuid pour la navigation.
 			foreach (FieldDescription srcField in fields)
 			{
-				if (srcField.ForwardTabGuid != System.Guid.Empty)  // définition d'une exception pour la navigation ?
+				if (srcField.ForwardTabGuid != System.Guid.Empty)  // dÃ©finition d'une exception pour la navigation ?
 				{
 					FieldDescription dstField = this.SearchField(fields, srcField.ForwardTabGuid);
 					if (dstField != null)
@@ -1156,7 +1156,7 @@ namespace Epsitec.Common.FormEngine
 
 		private Widget SearchWidget(Widget parent, System.Guid guid)
 		{
-			//	Cherche un widget défini par son System.Guid dans tout le masque.
+			//	Cherche un widget dÃ©fini par son System.Guid dans tout le masque.
 			foreach (Widget widget in parent.Children.Widgets)
 			{
 				if (!string.IsNullOrEmpty(widget.Name))
@@ -1180,7 +1180,7 @@ namespace Epsitec.Common.FormEngine
 
 		private FieldDescription SearchField(List<FieldDescription> fields, System.Guid guid)
 		{
-			//	Cherche un champ défini par son System.Guid dans la liste des champs.
+			//	Cherche un champ dÃ©fini par son System.Guid dans la liste des champs.
 			foreach (FieldDescription field in fields)
 			{
 				if (field.Guid == guid)
@@ -1195,7 +1195,7 @@ namespace Epsitec.Common.FormEngine
 
 		static private int CountFields(List<FieldDescription> fields, int index)
 		{
-			//	Compte le nombre de descriptions de types champ, séparateur ou titre.
+			//	Compte le nombre de descriptions de types champ, sÃ©parateur ou titre.
 			int count = 0;
 
 			for (int i=index; i<fields.Count; i++)
@@ -1218,7 +1218,7 @@ namespace Epsitec.Common.FormEngine
 
 		static private FieldDescription SearchNextElement(List<FieldDescription> fields, int index)
 		{
-			//	Cherche le prochain élément.
+			//	Cherche le prochain Ã©lÃ©ment.
 			if (fields[index].Type == FieldDescription.FieldType.BoxBegin ||
 				fields[index].Type == FieldDescription.FieldType.SubForm)
 			{
@@ -1257,7 +1257,7 @@ namespace Epsitec.Common.FormEngine
 
 		static private FieldDescription SearchNextField(List<FieldDescription> fields, int index)
 		{
-			//	Cherche la prochaine description de champ (pas de séparateur).
+			//	Cherche la prochaine description de champ (pas de sÃ©parateur).
 			for (int i=index+1; i<fields.Count; i++)
 			{
 				if (fields[i].Type == FieldDescription.FieldType.Field)

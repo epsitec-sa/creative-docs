@@ -6,16 +6,16 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// La classe Misc contient quelques routines générales.
+	/// La classe Misc contient quelques routines gÃ©nÃ©rales.
 	/// </summary>
 	public class Misc
 	{
 		[System.Flags] public enum StringSearch
 		{
 			IgnoreMaj    = 0x00000001,	// m = M
-			IgnoreAccent = 0x00000002,	// é = e
+			IgnoreAccent = 0x00000002,	// Ã© = e
 			WholeWord    = 0x00000004,	// mot entier
-			EndToStart   = 0x00000008,	// sens inverse (en arrière)
+			EndToStart   = 0x00000008,	// sens inverse (en arriÃ¨re)
 		}
 
 
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document
 
 		static public void ConvertStringToDouble(out double value, out Text.Properties.SizeUnits units, string text, double min, double max, double defaultValue)
 		{
-			//	Conversion d'une chaîne en nombre réel.
+			//	Conversion d'une chaÃ®ne en nombre rÃ©el.
 			if ( text == "" )
 			{
 				value = 0;
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document
 
 		static public double ConvertStringToDouble(string text, double min, double max, double defaultValue)
 		{
-			//	Conversion d'une chaîne en nombre réel.
+			//	Conversion d'une chaÃ®ne en nombre rÃ©el.
 			double value = defaultValue;
 				
 			if ( text != "" )
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document
 
 		static public string ConvertDoubleToString(double value, Text.Properties.SizeUnits units, double fracDigits)
 		{
-			//	Conversion d'un nombre réel en chaîne.
+			//	Conversion d'un nombre rÃ©el en chaÃ®ne.
 			if ( units == Text.Properties.SizeUnits.Percent )
 			{
 				return Misc.ConvertDoubleToString(value, fracDigits) + "%";
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Document
 
 		static public string ConvertDoubleToString(double value, double fracDigits)
 		{
-			//	Conversion d'un nombre réel en chaîne.
+			//	Conversion d'un nombre rÃ©el en chaÃ®ne.
 			if ( fracDigits > 0 )
 			{
 				return value.ToString(string.Format("F{0}", fracDigits));
@@ -106,11 +106,11 @@ namespace Epsitec.Common.Document
 
 		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
-			//	Retourne des hachures à 45 degrés remplissant sans déborder un rectangle.
-			//	Une hachure passe toujours par le point de référence.
+			//	Retourne des hachures Ã  45 degrÃ©s remplissant sans dÃ©border un rectangle.
+			//	Une hachure passe toujours par le point de rÃ©fÃ©rence.
 			Path path = new Path();
 
-			//	Déplace le point de référence sur le bord gauche du rectangle.
+			//	DÃ©place le point de rÃ©fÃ©rence sur le bord gauche du rectangle.
 			reference.Y += rect.Left - reference.X;
 			reference.X = rect.Left;
 			double d = reference.Y - rect.Bottom;
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Document
 		
 		static public string GetColorNiceName(RichColor color)
 		{
-			//	Donne le nom d'une couleur d'après ses composantes.
+			//	Donne le nom d'une couleur d'aprÃ¨s ses composantes.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			if ( color.ColorSpace == ColorSpace.Cmyk )
@@ -208,8 +208,8 @@ namespace Epsitec.Common.Document
 
 		static public string FaceInvariantToInvariant(string face, string style)
 		{
-			//	Conversion d'un nom de famille en filtrant en plus d'éventuels
-			//	"Black" qui traineraient derrière un "Arial Black".
+			//	Conversion d'un nom de famille en filtrant en plus d'Ã©ventuels
+			//	"Black" qui traineraient derriÃ¨re un "Arial Black".
 #if false
 			if (face == null || style == null)
 			{
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Document
 		static public string FaceInvariantToLocale(string face, string style)
 		{
 			//	Conversion d'un nom de famille dans la culture locale, en
-			//	filtrant en plus d'éventuels "Black" qui traineraient derrière
+			//	filtrant en plus d'Ã©ventuels "Black" qui traineraient derriÃ¨re
 			//	un "Arial Black".
 			if (face == null || style == null)
 			{
@@ -273,12 +273,12 @@ namespace Epsitec.Common.Document
 
 		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, bool quickOnly, string selectedFaceName, out int quickCount)
 		{
-			//	Crée une liste qui contient les polices rapides au début.
-			//	En mode quickOnly (liste courte), la police selectedFaceName apparaît même si elle
+			//	CrÃ©e une liste qui contient les polices rapides au dÃ©but.
+			//	En mode quickOnly (liste courte), la police selectedFaceName apparaÃ®t mÃªme si elle
 			//	ne fait pas partie des polices rapides.
 			//	inList: tous les OpenType.FontIdentity connus
-			//	quickFaceNames: strings des FaceNames fréquement utilisés, dans n'importe quel ordre
-			//	outList (liste retournée): OpenType.FontIdentity
+			//	quickFaceNames: strings des FaceNames frÃ©quement utilisÃ©s, dans n'importe quel ordre
+			//	outList (liste retournÃ©e): OpenType.FontIdentity
 			System.Collections.ArrayList outList = new System.Collections.ArrayList();
 			System.Collections.ArrayList begin   = new System.Collections.ArrayList();
 
@@ -287,9 +287,9 @@ namespace Epsitec.Common.Document
 			//	Copie la liste en enlevant toutes les polices rapides.
 			foreach ( Common.OpenType.FontIdentity id in inList )
 			{
-				if ( quickFaceNames.Contains(id.InvariantFaceName) )  // police fréquement utilisée ?
+				if ( quickFaceNames.Contains(id.InvariantFaceName) )  // police frÃ©quement utilisÃ©e ?
 				{
-					begin.Add(id);  // begin <- polices fréquentes dans le même ordre que inList
+					begin.Add(id);  // begin <- polices frÃ©quentes dans le mÃªme ordre que inList
 
 					if ( selectedFaceName == id.InvariantFaceName )
 					{
@@ -303,20 +303,20 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			//	Remet les polices rapides au début.
+			//	Remet les polices rapides au dÃ©but.
 			int ii = 0;
 			foreach ( Common.OpenType.FontIdentity id in begin )
 			{
 				outList.Insert(ii++, id);
 			}
 
-			quickCount = begin.Count;  // quickCount <- nombre de polices fréquement utilisées
+			quickCount = begin.Count;  // quickCount <- nombre de polices frÃ©quement utilisÃ©es
 			return outList;
 		}
 
 		static public void ClearFontList()
 		{
-			//	Met à zéro les listes des polices connues. Cela forcera à les refaire.
+			//	Met Ã  zÃ©ro les listes des polices connues. Cela forcera Ã  les refaire.
 			Misc.fontListWithSymbols    = null;
 			Misc.fontListWithoutSymbols = null;
 		}
@@ -324,8 +324,8 @@ namespace Epsitec.Common.Document
 		static public System.Collections.ArrayList GetFontList(bool enableSymbols)
 		{
 			//	Donne la liste de tous les OpenType.FontIdentity des polices connues.
-			//	Cette liste est déjà triée par ordre alphabétique.
-			if ( Misc.fontListWithSymbols == null )  // cache à créer ?
+			//	Cette liste est dÃ©jÃ  triÃ©e par ordre alphabÃ©tique.
+			if ( Misc.fontListWithSymbols == null )  // cache Ã  crÃ©er ?
 			{
 				Misc.fontListWithSymbols    = new System.Collections.ArrayList();
 				Misc.fontListWithoutSymbols = new System.Collections.ArrayList();
@@ -335,11 +335,11 @@ namespace Epsitec.Common.Document
 					OpenType.FontIdentity id = Misc.DefaultFontIdentityStyle(face);
 					if ( id != null )
 					{
-						Misc.fontListWithSymbols.Add(id);  // Misc.fontListWithSymbols <- caractères + symboles
+						Misc.fontListWithSymbols.Add(id);  // Misc.fontListWithSymbols <- caractÃ¨res + symboles
 
 						if ( !id.IsSymbolFont )
 						{
-							Misc.fontListWithoutSymbols.Add(id);  // Misc.fontListWithoutSymbols <- seulement les caractères
+							Misc.fontListWithoutSymbols.Add(id);  // Misc.fontListWithoutSymbols <- seulement les caractÃ¨res
 						}
 					}
 				}
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Document
 
 		static public bool IsExistingFont(OpenType.FontName fontName)
 		{
-			//	Indique si une police existe, c'est-à-dire si elle est installée.
+			//	Indique si une police existe, c'est-Ã -dire si elle est installÃ©e.
 			if (fontName.StyleName == "")
 			{
 				OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
@@ -366,7 +366,7 @@ namespace Epsitec.Common.Document
 
 		static public string DefaultFontStyle(string face)
 		{
-			//	Cherche le FontStyle par défaut pour un FontFace donné.
+			//	Cherche le FontStyle par dÃ©faut pour un FontFace donnÃ©.
 			OpenType.FontIdentity id = Misc.DefaultFontIdentityStyle(face);
 			if ( id == null )  return "";
 			return id.InvariantStyleName;
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Document
 
 		static public OpenType.FontIdentity DefaultFontIdentityStyle(string face)
 		{
-			//	Cherche le FontStyle par défaut pour un FontFace donné.
+			//	Cherche le FontStyle par dÃ©faut pour un FontFace donnÃ©.
 			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
 
 			foreach ( OpenType.FontIdentity id in list )
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Document
 
 		static public bool IsExistingFontStyle(string face, string style)
 		{
-			//	Cherche si un FontStyle existe pour un FontFace donné.
+			//	Cherche si un FontStyle existe pour un FontFace donnÃ©.
 			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
 
 			foreach ( OpenType.FontIdentity id in list )
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Document
 
 		static public Font GetFont(string fontName)
 		{
-			//	Donne une police d'après son nom.
+			//	Donne une police d'aprÃ¨s son nom.
 			Font font = Font.GetFont(fontName, "Regular");
 
 			if ( font == null )
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Document
 
 		static public string GetUnicodeName(int code, string fontFace, string fontStyle)
 		{
-			//	Retourne le nom d'un caractère Unicode ou du glyph d'une police de symboles.
+			//	Retourne le nom d'un caractÃ¨re Unicode ou du glyph d'une police de symboles.
 			Common.OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
 			if ( font != null && font.FontIdentity.IsSymbolFont )
 			{
@@ -460,7 +460,7 @@ namespace Epsitec.Common.Document
 
 		static public string GetUnicodeName(int code)
 		{
-			//	Retourne le nom d'un caractère Unicode.
+			//	Retourne le nom d'un caractÃ¨re Unicode.
 			if ( code == 0 )  return "";
 
 			string text = TextBreak.GetUnicodeName (code);
@@ -477,7 +477,7 @@ namespace Epsitec.Common.Document
 
 			if ( !minus )  // aucune minuscule dans le texte ?
 			{
-				//	Première lettre en majuscule, le reste en minuscules.
+				//	PremiÃ¨re lettre en majuscule, le reste en minuscules.
 				text = string.Format("{0}{1}", text.Substring(0, 1).ToUpper(), text.Substring(1, text.Length-1).ToLower());
 			}
 
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Document
 
 		static public string[] DefaultFeatures()
 		{
-			//	Donne la liste des "features" communs à toutes les polices.
+			//	Donne la liste des "features" communs Ã  toutes les polices.
 			string[] list = new string[2];
 			int i=0;
 			list[i++] = "liga";
@@ -520,7 +520,7 @@ namespace Epsitec.Common.Document
 		static public int IndexOf(string text, string value, int startIndex, StringSearch mode)
 		{
 			int count;
-			if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
+			if ( (mode&StringSearch.EndToStart) != 0 )  // en arriÃ¨re ?
 			{
 				count = startIndex+1;
 			}
@@ -535,12 +535,12 @@ namespace Epsitec.Common.Document
 		static public int IndexOf(string text, string value, int startIndex, int count, StringSearch mode)
 		{
 			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
-			//	options supplémentaires.
-			//	Lorsqu'on recule (StringSearch.EndToStart), 'startIndex' est à la fin (sur le premier
-			//	caractère cherché) et 'count' est positif (mais compte de droite à gauche).
-			//	Cette façon absurde de procéder est celle de string.LastIndexOf !
+			//	options supplÃ©mentaires.
+			//	Lorsqu'on recule (StringSearch.EndToStart), 'startIndex' est Ã  la fin (sur le premier
+			//	caractÃ¨re cherchÃ©) et 'count' est positif (mais compte de droite Ã  gauche).
+			//	Cette faÃ§on absurde de procÃ©der est celle de string.LastIndexOf !
 			//	TODO: optimiser la vitesse !
-			if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
+			if ( (mode&StringSearch.EndToStart) != 0 )  // en arriÃ¨re ?
 			{
 				startIndex = System.Math.Min(startIndex, text.Length);
 				count = System.Math.Min(count, startIndex+1);
@@ -559,7 +559,7 @@ namespace Epsitec.Common.Document
 				value = value.ToLower();
 			}
 
-			if ( (mode&StringSearch.IgnoreAccent) != 0 )  // é = e ?
+			if ( (mode&StringSearch.IgnoreAccent) != 0 )  // Ã© = e ?
 			{
 				text = StringUtils.RemoveDiacritics(text);
 				value = StringUtils.RemoveDiacritics(value);
@@ -567,7 +567,7 @@ namespace Epsitec.Common.Document
 
 			if ( (mode&StringSearch.WholeWord) != 0 )  // mot entier ?
 			{
-				if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
+				if ( (mode&StringSearch.EndToStart) != 0 )  // en arriÃ¨re ?
 				{
 					int begin = startIndex-count+1;
 					while ( true )
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
+				if ( (mode&StringSearch.EndToStart) != 0 )  // en arriÃ¨re ?
 				{
 					return text.LastIndexOf(value, startIndex, count);
 				}
@@ -609,7 +609,7 @@ namespace Epsitec.Common.Document
 
 		static protected bool IsWholeWord(string text, int index, int count)
 		{
-			//	Vérifie si un mot et précédé et suivi d'un caractère séparateur de mots.
+			//	VÃ©rifie si un mot et prÃ©cÃ©dÃ© et suivi d'un caractÃ¨re sÃ©parateur de mots.
 			if ( index > 0 )
 			{
 				char c1 = text[index-1];
@@ -630,13 +630,13 @@ namespace Epsitec.Common.Document
 
 		static public string Resume(string text)
 		{
-			//	Retourne une version résumée à environ 20 caractères au maximum.
+			//	Retourne une version rÃ©sumÃ©e Ã  environ 20 caractÃ¨res au maximum.
 			return Misc.Resume(text, 20);
 		}
 		
 		static public string Resume(string text, int max)
 		{
-			//	Retourne une version résumée à environ 'max' caractères au maximum.
+			//	Retourne une version rÃ©sumÃ©e Ã  environ 'max' caractÃ¨res au maximum.
 			System.Diagnostics.Debug.Assert(max > 2);
 			if ( text.Length > max )
 			{
@@ -694,7 +694,7 @@ namespace Epsitec.Common.Document
 
 		static public Size IconPreferredSize(string iconSize)
 		{
-			//	Retourne la taille préférée pour une icône. Si la taille réelle de l'icône n'est
+			//	Retourne la taille prÃ©fÃ©rÃ©e pour une icÃ´ne. Si la taille rÃ©elle de l'icÃ´ne n'est
 			//	pas exactement identique, ce n'est pas important. Drawing.Canvas cherche au mieux.
 			if ( iconSize == "Small" )  return new Size(14, 14);
 			if ( iconSize == "Large" )  return new Size(31, 31);
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Document
 
 		static public string Icon(string icon)
 		{
-			//	Retourne le nom complet d'une icône.
+			//	Retourne le nom complet d'une icÃ´ne.
 			if (string.IsNullOrEmpty(icon))
 			{
 				return null;
@@ -717,13 +717,13 @@ namespace Epsitec.Common.Document
 
 		static public string IconDyn(string name, string parameter)
 		{
-			//	Retourne le nom complet d'une icône dynamique.
+			//	Retourne le nom complet d'une icÃ´ne dynamique.
 			return string.Format("dyn:{0}/{1}", name, parameter);
 		}
 
 		static public string GetShortcut(Command command)
 		{
-			//	Retourne le nom des touches associées à une commande.
+			//	Retourne le nom des touches associÃ©es Ã  une commande.
 			if ( command == null || command.HasShortcuts == false )  return null;
 
 			return command.PreferredShortcut.ToString();
@@ -738,7 +738,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Donne le nom complet du fichier.
 			//	Si le nom n'existe pas, donne "sans titre".
-			//	Si le fichier doit être sérialisé, donne le nom en gras.
+			//	Si le fichier doit Ãªtre sÃ©rialisÃ©, donne le nom en gras.
 			string name = "";
 			if ( dirtySerialize )  name += "<b>";
 
@@ -759,7 +759,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
 			//	Si le nom n'existe pas, donne "sans titre".
-			//	Si le fichier doit être sérialisé, donne le nom en gras.
+			//	Si le fichier doit Ãªtre sÃ©rialisÃ©, donne le nom en gras.
 			string name = "";
 			if ( dirtySerialize )  name += "<b>";
 
@@ -785,20 +785,20 @@ namespace Epsitec.Common.Document
 
 		static public bool IsExtension(string filename, string ext)
 		{
-			//	Indique si un fichier utilise une extension donnée.
+			//	Indique si un fichier utilise une extension donnÃ©e.
 			string fileExt = System.IO.Path.GetExtension(filename);
 			return string.Equals(fileExt, ext, System.StringComparison.OrdinalIgnoreCase);
 		}
 
 		static public bool IsTextStyleName(string name)
 		{
-			//	Indique s'il s'agit d'un nom de style de paragraphe ou de caractère.
+			//	Indique s'il s'agit d'un nom de style de paragraphe ou de caractÃ¨re.
 			return name.StartsWith("P.") || name.StartsWith("C.");
 		}
 
 		static public string UserTextStyleName(string name)
 		{
-			//	Retourne le nom d'un style de paragraphe ou de caractère pour l'utilisateur.
+			//	Retourne le nom d'un style de paragraphe ou de caractÃ¨re pour l'utilisateur.
 			if ( Misc.IsTextStyleName(name) )
 			{
 				return name.Substring(2);

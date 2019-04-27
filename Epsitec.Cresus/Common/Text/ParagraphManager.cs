@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe ParagraphManager implémente l'ossature de base de toute les
-	/// classes d'implémentation de IParagraphManager.
+	/// La classe ParagraphManager implÃ©mente l'ossature de base de toute les
+	/// classes d'implÃ©mentation de IParagraphManager.
 	/// </summary>
 	public abstract class ParagraphManager : IParagraphManager
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets.Validators
 {
 	/// <summary>
-	/// La classe NumRangeValidator permet de vérifier que la valeur est dans les
+	/// La classe NumRangeValidator permet de vÃ©rifier que la valeur est dans les
 	/// bornes requises.
 	/// </summary>
 	public class NumRangeValidator : AbstractValidator

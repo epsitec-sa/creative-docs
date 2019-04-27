@@ -1,4 +1,4 @@
-//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -14,7 +14,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// La classe <c>DocumentInfo</c> donne accès aux informations (statistiques)
+	/// La classe <c>DocumentInfo</c> donne accÃ¨s aux informations (statistiques)
 	/// sur un document.
 	/// </summary>
 	[System.Serializable]
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document
 
 		public double							PageWidth
 		{
-			//	Dimensions d'une page en unités internes.
+			//	Dimensions d'une page en unitÃ©s internes.
 			get
 			{
 				return this.pageWidth;
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document
 
 		public double							PageHeight
 		{
-			//	Dimensions d'une page en unités internes.
+			//	Dimensions d'une page en unitÃ©s internes.
 			get
 			{
 				return this.pageHeight;
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document
 
 		public string							PageFormat
 		{
-			//	Format d'une page en clair ("A4" ou "123 × 456").
+			//	Format d'une page en clair ("A4" ou "123 Ã— 456").
 			get
 			{
 				return this.pageFormat;
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document
 
 		public int								ComplexObjectCount
 		{
-			//	Nombre total d'objets dégradés ou transparents.
+			//	Nombre total d'objets dÃ©gradÃ©s ou transparents.
 			get
 			{
 				return this.complexCount;
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document
 		
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			info.AddValue ("Version", 4);
 			info.AddValue ("PageSize", this.PageSize);
 			info.AddValue ("PageWidth", this.pageWidth);
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document
 
 		protected DocumentInfo(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 			this.version = info.GetInt32 ("Version");
 
 			try

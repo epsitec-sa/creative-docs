@@ -8,7 +8,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
 	/// <summary>
-	/// Dialogue général d'exportation.
+	/// Dialogue gÃ©nÃ©ral d'exportation.
 	/// </summary>
 	public class Export : Abstract
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void Show(string filename)
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -29,7 +29,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += this.HandleWindowExportCloseClicked;
 
-				//	Crée les onglets.
+				//	CrÃ©e les onglets.
 				TabBook bookDoc = new TabBook(this.window.Root);
 				bookDoc.Name = "Book";
 				bookDoc.Arrows = TabBookArrows.Stretch;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("Export");
 		}
 

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe Font représente une propriété d'un objet graphique.
+	/// La classe Font reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Font : Abstract
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool IsComplexPrinting
 		{
-			//	Indique si une impression complexe est nécessaire.
+			//	Indique si une impression complexe est nÃ©cessaire.
 			get
 			{
 				if ( this.fontColor.A > 0.0 && this.fontColor.A < 1.0 )  return true;
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(this.fontName);
@@ -111,13 +111,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Font p = property as Font;
 			p.fontName  = this.fontName;
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Font p = property as Font;
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Font(document);
 		}
@@ -148,14 +148,14 @@ namespace Epsitec.Common.Document.Properties
 
 		public Drawing.Font GetFont()
 		{
-			//	Retourne la fonte à utiliser.
+			//	Retourne la fonte Ã  utiliser.
 			return Misc.GetFont(this.fontName);
 		}
 
 
 		public override void MoveGlobalStarting()
 		{
-			//	Début du déplacement global de la propriété.
+			//	DÃ©but du dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			this.InsertOpletProperty();
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void MoveGlobalProcess(Selector selector)
 		{
-			//	Effectue le déplacement global de la propriété.
+			//	Effectue le dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			double scale = selector.GetTransformScale;
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("FontName", this.fontName);
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Font(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.fontName = info.GetString("FontName");
 			this.fontSize = info.GetDouble("FontSize");
 

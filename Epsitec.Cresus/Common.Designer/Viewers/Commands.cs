@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public class Commands : AbstractCaptions
 	{
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 			MyWidgets.ResetBox leftResetBox, rightResetBox;
 
-			//	Séparateur.
+			//	SÃ©parateur.
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
 			//	Aspect (pour DefaultParameter).
@@ -41,21 +41,21 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Dock = DockStyle.Left;
 
 			this.primaryAspectFlat = new IconButton(leftResetBox.GroupBox);
-			this.primaryAspectFlat.MinSize = this.primaryAspectFlat.PreferredSize;  // attention, très important !
+			this.primaryAspectFlat.MinSize = this.primaryAspectFlat.PreferredSize;  // attention, trÃ¨s important !
 			this.primaryAspectFlat.CommandId = Res.Values.Widgets.ButtonClass.FlatButton.Id;
 			this.primaryAspectFlat.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectFlat.Dock = DockStyle.Left;
 			this.primaryAspectFlat.Clicked += this.HandlePrimaryAspectClicked;
 
 			this.primaryAspectDialog = new IconButton(leftResetBox.GroupBox);
-			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
+			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, trÃ¨s important !
 			this.primaryAspectDialog.CommandId = Res.Values.Widgets.ButtonClass.DialogButton.Id;
 			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += this.HandlePrimaryAspectClicked;
 
 			this.primaryAspectRichDialog = new IconButton(leftResetBox.GroupBox);
-			this.primaryAspectRichDialog.MinSize = this.primaryAspectRichDialog.PreferredSize;  // attention, très important !
+			this.primaryAspectRichDialog.MinSize = this.primaryAspectRichDialog.PreferredSize;  // attention, trÃ¨s important !
 			this.primaryAspectRichDialog.CommandId = Res.Values.Widgets.ButtonClass.RichDialogButton.Id;
 			this.primaryAspectRichDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectRichDialog.Dock = DockStyle.Left;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryStatefull.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.primaryEnableMode = new CheckButton (leftResetBox.GroupBox);
-			this.primaryEnableMode.Text = "Commande inactive par défaut (CommandDefaultEnableMode.Disabled)"; //Res.Strings.Viewers.Commands.EnableMode.CheckButton;
+			this.primaryEnableMode.Text = "Commande inactive par dÃ©faut (CommandDefaultEnableMode.Disabled)"; //Res.Strings.Viewers.Commands.EnableMode.CheckButton;
 			this.primaryEnableMode.PreferredWidth = 250;
 			this.primaryEnableMode.Margins = new Margins (40, 0, 0, 0);
 			this.primaryEnableMode.Dock = DockStyle.Top;
@@ -136,16 +136,16 @@ namespace Epsitec.Common.Designer.Viewers
 
 			label = new StaticText(leftResetBox.GroupBox);
 			label.Text = Res.Strings.Viewers.Commands.Group.Title;
-			label.MinHeight = 20;  // attention, très important !
+			label.MinHeight = 20;  // attention, trÃ¨s important !
 			label.PreferredHeight = 20;
-			label.PreferredWidth = 89;  // calqué sur ShortcutEditor
+			label.PreferredWidth = 89;  // calquÃ© sur ShortcutEditor
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
 			this.primaryGroup = new TextFieldCombo(leftResetBox.GroupBox);
-			this.primaryGroup.MinHeight = 20;  // attention, très important !
-			this.primaryGroup.PreferredWidth = 216;  // calqué sur ShortcutEditor
+			this.primaryGroup.MinHeight = 20;  // attention, trÃ¨s important !
+			this.primaryGroup.PreferredWidth = 216;  // calquÃ© sur ShortcutEditor
 			this.primaryGroup.HorizontalAlignment = HorizontalAlignment.Left;
 			this.primaryGroup.Dock = DockStyle.Left;
 			this.primaryGroup.TextChanged += this.HandleGroupTextChanged;
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabIndex = this.tabIndex++;
 			this.primaryGroup.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			//	Résumé des paramètres.
+			//	RÃ©sumÃ© des paramÃ¨tres.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
 			this.buttonSuiteExtendLeft = leftContainer.ExtendButton;
 			this.buttonSuiteExtendRight = rightContainer.ExtendButton;
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void UpdateEdit()
 		{
-			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			//	Met Ã  jour les lignes Ã©ditables en fonction de la sÃ©lection dans le tableau.
 			base.UpdateEdit();
 
 			bool iic = this.ignoreChange;
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, shortcuts);
 			}
 
-			//	Met à jour le résumé en fonction des widgets éditables.
+			//	Met Ã  jour le rÃ©sumÃ© en fonction des widgets Ã©ditables.
 			this.primarySuiteSummary.Text = this.GetSuiteSummary(this.primaryShortcut1, this.primaryShortcut2, this.primaryGroup);
 			this.secondarySuiteSummary.Text = this.GetSuiteSummary(this.secondaryShortcut1, this.secondaryShortcut2, this.primaryGroup);
 
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected string GetSuiteSummary(ShortcutEditor editor1, ShortcutEditor editor2, TextFieldCombo group)
 		{
-			//	Retourne le texte de la 2ème partie du résumé en fonction des widgets éditables.
+			//	Retourne le texte de la 2Ã¨me partie du rÃ©sumÃ© en fonction des widgets Ã©ditables.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			string s;
 
@@ -387,7 +387,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateGroupCombo()
 		{
-			//	Met à jour le menu du combo des groupes.
+			//	Met Ã  jour le menu du combo des groupes.
 			List<string> list = new List<string>();
 
 			foreach (CultureMap item in this.access.Accessor.Collection)
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Designer.Viewers
 					list.Add(group);
 				}
 			}
-			list.Sort();  // trie par ordre alphabétique
+			list.Sort();  // trie par ordre alphabÃ©tique
 
 			this.primaryGroup.Items.Clear();
 			foreach (string name in list)
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Designer.Viewers
 		
 		private void HandlePrimaryAspectClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton 'aspect' pressé.
+			//	Bouton 'aspect' pressÃ©.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item == null)
 			{
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleStatefullActiveStateChanged(object sender)
 		{
-			//	Bouton à cocher 'Statefull' pressé.
+			//	Bouton Ã  cocher 'Statefull' pressÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -471,7 +471,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleEnableModeActiveStateChanged(object sender)
 		{
-			//	Bouton à cocher 'EnableMode' pressé.
+			//	Bouton Ã  cocher 'EnableMode' pressÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleShortcutEditedShortcutChanged(object sender)
 		{
-			//	Un raccourci clavier a été changé.
+			//	Un raccourci clavier a Ã©tÃ© changÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -530,7 +530,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (editor == this.primaryShortcut2)
 			{
 				row = 0;  // culture principale
-				rank = 1;  // raccourci supplémentaire
+				rank = 1;  // raccourci supplÃ©mentaire
 				editor1 = this.primaryShortcut1;
 				editor2 = this.primaryShortcut2;
 			}
@@ -546,7 +546,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (editor == this.secondaryShortcut2)
 			{
 				row = 1;  // culture secondaire
-				rank = 1;  // raccourci supplémentaire
+				rank = 1;  // raccourci supplÃ©mentaire
 				editor1 = this.secondaryShortcut1;
 				editor2 = this.secondaryShortcut2;
 			}
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (shortcuts.Count == 0)
 				{
-					shortcuts.Add(scData);  // insère le raccourci principal
+					shortcuts.Add(scData);  // insÃ¨re le raccourci principal
 				}
 				else
 				{
@@ -580,19 +580,19 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			if (rank == 1)  // raccourci supplémentaire ?
+			if (rank == 1)  // raccourci supplÃ©mentaire ?
 			{
 				if (shortcuts.Count == 0)
 				{
 					StructuredData scNone = shortcutBroker.CreateData(item);
 					scNone.SetValue(Support.Res.Fields.Shortcut.KeyCode, "None");
-					shortcuts.Add(scNone);  // insère un raccourci principal inexistant
+					shortcuts.Add(scNone);  // insÃ¨re un raccourci principal inexistant
 
-					shortcuts.Add(scData);  // insère le raccourci supplémentaire
+					shortcuts.Add(scData);  // insÃ¨re le raccourci supplÃ©mentaire
 				}
 				else if (shortcuts.Count == 1)
 				{
-					shortcuts.Add(scData);  // insère le raccourci supplémentaire
+					shortcuts.Add(scData);  // insÃ¨re le raccourci supplÃ©mentaire
 				}
 				else
 				{
@@ -619,8 +619,8 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			//	Si des raccourcis inexistants ont été supprimés, il faut réinitialiser les
-			//	widgets, pour éviter d'avoir un trou (KeyCode.None puis KeyCode.AlphaA).
+			//	Si des raccourcis inexistants ont Ã©tÃ© supprimÃ©s, il faut rÃ©initialiser les
+			//	widgets, pour Ã©viter d'avoir un trou (KeyCode.None puis KeyCode.AlphaA).
 			if (removed)
 			{
 				this.ignoreChange = true;
@@ -634,13 +634,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleGroupComboOpening(object sender, CancelEventArgs e)
 		{
-			//	Le combo pour le groupe va être ouvert.
+			//	Le combo pour le groupe va Ãªtre ouvert.
 			this.UpdateGroupCombo();
 		}
 
 		private void HandleGroupTextChanged(object sender)
 		{
-			//	Le texte éditable pour le groupe a changé.
+			//	Le texte Ã©ditable pour le groupe a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;

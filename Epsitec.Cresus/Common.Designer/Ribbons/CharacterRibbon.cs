@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Character permet de choisir la typographie des caractères.
+	/// La classe Character permet de choisir la typographie des caractÃ¨res.
 	/// </summary>
 	public class CharacterRibbon : AbstractRibbon
 	{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonBold == null )  return;

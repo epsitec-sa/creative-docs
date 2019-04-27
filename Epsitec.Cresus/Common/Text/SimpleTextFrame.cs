@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe SimpleTextFrame permet de décrire une zone dans laquelle
+	/// La classe SimpleTextFrame permet de dÃ©crire une zone dans laquelle
 	/// coule du texte.
 	/// </summary>
 	public class SimpleTextFrame : ITextFrame
@@ -166,14 +166,14 @@ namespace Epsitec.Common.Text
 		
 		public bool ConstrainLineBox(double yDist, double ascender, double descender, double height, double leading, bool syncToGrid, out double ox, out double oy, out double width, out double nextYDist)
 		{
-			//	A partir d'une position suggérée :
+			//	A partir d'une position suggÃ©rÃ©e :
 			//
 			//	  - distance verticale depuis le sommet du cadre,
 			//	  - hauteurs au-dessus/en-dessous de la ligne de base,
 			//	  - hauteur de la ligne y compris interligne,
 			//
-			//	détermine la position exacte de la ligne ainsi que la largeur
-			//	disponible et la position suggérée pour la prochaine ligne.
+			//	dÃ©termine la position exacte de la ligne ainsi que la largeur
+			//	disponible et la position suggÃ©rÃ©e pour la prochaine ligne.
 			
 			double lineDy = leading;
 			double textDy = ascender - descender;
@@ -189,8 +189,8 @@ namespace Epsitec.Common.Text
 			if ((syncToGrid) &&
 				(this.gridStep != 0))
 			{
-				//	Les coordonnées verticales (oy) commencent à zéro au sommet du cadre
-				//	et vont vers des valeurs négatives, plus on descend. L'arrondi doit
+				//	Les coordonnÃ©es verticales (oy) commencent Ã  zÃ©ro au sommet du cadre
+				//	et vont vers des valeurs nÃ©gatives, plus on descend. L'arrondi doit
 				//	donc toujours se faire vers une valeur plus basse :
 				
 				oy += this.originY;

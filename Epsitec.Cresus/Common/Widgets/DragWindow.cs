@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -9,8 +9,8 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe DragWindow implémente une surface transparente dans laquelle on
-	/// peut placer un widget pendant une opération de drag & drop.
+	/// La classe DragWindow implÃ©mente une surface transparente dans laquelle on
+	/// peut placer un widget pendant une opÃ©ration de drag & drop.
 	/// </summary>
 	public class DragWindow : Window
 	{

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Document
 
 	public enum Type
 	{
-		Undefined,		// indéfini
+		Undefined,		// indÃ©fini
 		Surface,		// surface
 		Stroke,			// trait
 		Text,			// texte
@@ -16,12 +16,12 @@ namespace Epsitec.Common.Document
 	public enum Aspect
 	{
 		Normal,			// forme normale
-		Hilited,		// forme mise en évidence par un survol de la souris
-		OverDashed,		// forme pointillée lorsque le trait n'existe pas
-		Support,		// trait de support des points secondaires d'une courbe de Bézier
+		Hilited,		// forme mise en Ã©vidence par un survol de la souris
+		OverDashed,		// forme pointillÃ©e lorsque le trait n'existe pas
+		Support,		// trait de support des points secondaires d'une courbe de BÃ©zier
 		Additional,		// objet additionnel pour le polygone quelconque
-		InvisibleBox,	// utile juste pour calculer la bbox et pour la détection
-		OnlyDetect,		// utile juste pour la détection
+		InvisibleBox,	// utile juste pour calculer la bbox et pour la dÃ©tection
+		OnlyDetect,		// utile juste pour la dÃ©tection
 	}
 
 	/// <summary>
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document
 
 		public Path Path
 		{
-			//	Chemin associé à la forme.
+			//	Chemin associÃ© Ã  la forme.
 			get
 			{
 				return this.path;
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsLinkWithNext
 		{
-			//	Indique si la forme est liée à la suivante.
+			//	Indique si la forme est liÃ©e Ã  la suivante.
 			get
 			{
 				return this.isLinkWithNext;
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document
 
 		public void SetTextObject(Objects.Abstract obj)
 		{
-			//	Spécifie l'objet texte.
+			//	SpÃ©cifie l'objet texte.
 			this.obj = obj;
 			this.Type = Type.Text;
 			this.IsVisible = true;
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document
 
 		public void SetImageObject(Objects.Abstract obj)
 		{
-			//	Spécifie l'objet image.
+			//	SpÃ©cifie l'objet image.
 			this.obj = obj;
 			this.Type = Type.Image;
 			this.IsVisible = true;
@@ -160,21 +160,21 @@ namespace Epsitec.Common.Document
 		
 		public void SetPropertySurface(IPaintPort port, Properties.Abstract surface)
 		{
-			//	Donne la propriété pour une surface.
+			//	Donne la propriÃ©tÃ© pour une surface.
 			//	Type Properties.Gradient ou Properties.Font.
 			this.propertySurface = surface;
 			this.Type = Type.Surface;
-			this.fillMode = FillMode.EvenOdd;  // mode par défaut pour les surfaces
+			this.fillMode = FillMode.EvenOdd;  // mode par dÃ©faut pour les surfaces
 			this.PropertyVisibility(port);
 		}
 
 		public void SetPropertyStroke(IPaintPort port, Properties.Line stroke, Properties.Gradient surface)
 		{
-			//	Donne les propriétés pour un trait.
+			//	Donne les propriÃ©tÃ©s pour un trait.
 			this.propertyStroke = stroke;
 			this.propertySurface = surface;
 			this.Type = Type.Stroke;
-			this.fillMode = FillMode.NonZero;  // mode par défaut pour les traits
+			this.fillMode = FillMode.NonZero;  // mode par dÃ©faut pour les traits
 			this.PropertyVisibility(port);
 		}
 
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Document
 
 		protected void PropertyVisibility(IPaintPort port)
 		{
-			//	Met la visibilité définie selon les propriétés.
+			//	Met la visibilitÃ© dÃ©finie selon les propriÃ©tÃ©s.
 			if ( this.Type == Type.Surface )
 			{
 				if ( this.propertySurface == null )
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Document
 		
 		protected void PropertyVisibilityInvert(IPaintPort port)
 		{
-			//	Met la visibilité définie selon les propriétés.
+			//	Met la visibilitÃ© dÃ©finie selon les propriÃ©tÃ©s.
 			if ( this.Type == Type.Surface )
 			{
 				if ( this.propertySurface == null )
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document
 
 		public static void Hilited(IPaintPort port, Shape[] shapes)
 		{
-			//	Modifie une liste de formes pour mettre en évidence.
+			//	Modifie une liste de formes pour mettre en Ã©vidence.
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null )  continue;
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Document
 		
 		public static void OverDashed(IPaintPort port, Shape[] shapes)
 		{
-			//	Modifie une liste de formes pour mettre en pointillé forcé.
+			//	Modifie une liste de formes pour mettre en pointillÃ© forcÃ©.
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null )  continue;

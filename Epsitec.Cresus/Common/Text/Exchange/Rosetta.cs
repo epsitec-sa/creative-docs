@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
 #define USE_SPAN
@@ -9,14 +9,14 @@ using System.Collections.Generic;
 using Epsitec.Common.Text.Exchange.HtmlParser;
 
 
-// Il faudrait trouver comment accéder à Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0) 
+// Il faudrait trouver comment accÃ©der Ã  Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0) 
 //
 
 
 namespace Epsitec.Common.Text.Exchange
 {
 	/// <summary>
-	/// La classe Rosetta joue le rôle de plate-forme centrale pour la conversion
+	/// La classe Rosetta joue le rÃ´le de plate-forme centrale pour la conversion
 	/// de formats de texte (la "pierre de Rosette").
 	/// </summary>
 	public class Rosetta
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
 
-			// ne gère pas les sélections disjointes pour le moment
+			// ne gÃ¨re pas les sÃ©lections disjointes pour le moment
 			System.Diagnostics.Debug.Assert (selectedPositions.Length == 2);
 
 			int selectionLength = selectedPositions[1] - selectedPositions[0];
@@ -135,11 +135,11 @@ namespace Epsitec.Common.Text.Exchange
 				if (runLength == 1 && runText[0] == (char) Unicode.Code.ParagraphSeparator)
 				{
 					finishParagraph = true;
-					// on est tombé sur un séparateur de paragraphe
+					// on est tombÃ© sur un sÃ©parateur de paragraphe
 				}
 				else
 				{
-#if false	// n'utilise plus les "invertxxx" mais utilise ce qui est réellement affiché
+#if false	// n'utilise plus les "invertxxx" mais utilise ce qui est rÃ©ellement affichÃ©
 					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
 #else
@@ -162,14 +162,14 @@ namespace Epsitec.Common.Text.Exchange
 				// avance au run suivant
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
-				// avance encore d'un seul caractère afin de se trouver véritablement dans
+				// avance encore d'un seul caractÃ¨re afin de se trouver vÃ©ritablement dans
 				// le contexte du run
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
 
 				if (cpContext.Navigator.GetRunLength (1) == 0)
-					break; // arrête si on est à la fin
+					break; // arrÃªte si on est Ã  la fin
 
-				// recule au début du run
+				// recule au dÃ©but du run
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 
 				if (finishParagraph)
@@ -190,10 +190,10 @@ namespace Epsitec.Common.Text.Exchange
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
 
-			// ne gère pas les sélections disjointes pour le moment
+			// ne gÃ¨re pas les sÃ©lections disjointes pour le moment
 			System.Diagnostics.Debug.Assert (selectedPositions.Length == 2);
 
-			// ATTENTION: BUG: lorsqu'on sélectionne une ligne avec des puces
+			// ATTENTION: BUG: lorsqu'on sÃ©lectionne une ligne avec des puces
 			// la longueur (selectionLength) est trop grande
 			int selectionLength = selectedPositions[1] - selectedPositions[0];
 			int selectionStart = selectedPositions[0];
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Text.Exchange
 				bool paragraphSep = false;
 				if (runLength == 1 && runText[0] == (char) Unicode.Code.ParagraphSeparator)
 				{
-					// on est tombé sur un séparateur de paragraphe
+					// on est tombÃ© sur un sÃ©parateur de paragraphe
 					paragraphSep = true;
 				}
 
@@ -242,13 +242,13 @@ namespace Epsitec.Common.Text.Exchange
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
 				if (cpContext.Navigator.GetRunLength (1) == 0)
-					break; // arrête si on est à la fin
+					break; // arrÃªte si on est Ã  la fin
 
-				// avance encore d'un seul caractère afin de se trouver véritablement dans
+				// avance encore d'un seul caractÃ¨re afin de se trouver vÃ©ritablement dans
 				// le contexte du run
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
 
-				// recule au début du run
+				// recule au dÃ©but du run
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 			}
 
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Text.Exchange
 				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
 
-				//	La façon "haut niveau" de faire :
+				//	La faÃ§on "haut niveau" de faire :
 
 				TextContext context = story.TextContext;
 
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-		// test de création de styles
+		// test de crÃ©ation de styles
 
 		public static void TestCode6(TextStory story, TextNavigator navigator)
 		{
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 #endif
-			context.StyleList.StyleMap.SetCaption (null /*this.document.Modifier.OpletQueue*/, style, "Style créé par MW");
+			context.StyleList.StyleMap.SetCaption (null /*this.document.Modifier.OpletQueue*/, style, "Style crÃ©Ã© par MW");
 			context.StyleList.StyleMap.SetRank (null, style, rank);
 
 			//this.document.SetSelectedTextStyle (this.category, rank);

@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -157,20 +157,20 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 		public VMenu CreateHistoryMenu()
 		{
-			//	Crée le menu pour choisir un dossier visité.
+			//	CrÃ©e le menu pour choisir un dossier visitÃ©.
 			VMenu menu = new VMenu ();
 
 			int max   = 10;  // +/-, donc 20 lignes au maximum
 			int end   = System.Math.Min (this.visitedIndex+max, this.visitedFolderItems.Count-1);
 			int start = System.Math.Max (end-max*2, 0);
 
-			if (start > 0)  // commence après le début ?
+			if (start > 0)  // commence aprÃ¨s le dÃ©but ?
 			{
 				menu.Items.Add (this.CreateHistoryMenuItem (0));  // met "1: dossier"
 
 				if (start > 1)
 				{
-					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
+					menu.Items.Add (new MenuSeparator ());  // met sÃ©parateur "------"
 				}
 			}
 
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 			{
 				if (i-1 == this.visitedIndex)
 				{
-					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
+					menu.Items.Add (new MenuSeparator ());  // met sÃ©parateur "------"
 				}
 
 				menu.Items.Add (this.CreateHistoryMenuItem (i));  // met "n: dossier"
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 			{
 				if (end < this.visitedFolderItems.Count-2)
 				{
-					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
+					menu.Items.Add (new MenuSeparator ());  // met sÃ©parateur "------"
 				}
 
 				menu.Items.Add (this.CreateHistoryMenuItem (this.visitedFolderItems.Count-1));  // met "n: dossier"
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 		private MenuItem CreateHistoryMenuItem(int index)
 		{
-			//	Crée une case du menu pour choisir un dossier visité.
+			//	CrÃ©e une case du menu pour choisir un dossier visitÃ©.
 			if (index == -1)
 			{
 				return new MenuItem ("ChangeVisitedDirectory", "", "...", null);

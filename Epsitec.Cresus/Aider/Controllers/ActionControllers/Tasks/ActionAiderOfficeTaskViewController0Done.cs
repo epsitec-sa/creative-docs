@@ -1,4 +1,4 @@
-//	Copyright © 2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Terminer la tâche");
+			return Resources.Text ("Terminer la tÃ¢che");
 		}
 
 		public override ActionExecutor GetExecutor()

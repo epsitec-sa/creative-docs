@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// La classe DirtyRegion permet de représenter une région simple qui
+	/// La classe DirtyRegion permet de reprÃ©senter une rÃ©gion simple qui
 	/// consiste en un petit nombre de rectangles.
 	/// </summary>
 	public class DirtyRegion
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Drawing
 		
 		public void Add(Rectangle rectangle)
 		{
-			//	Le rectangle est-il déjà entièrement contenu dans la région ?
+			//	Le rectangle est-il dÃ©jÃ  entiÃ¨rement contenu dans la rÃ©gion ?
 			
 			for (int i = 0; i < this.used; i++)
 			{
@@ -57,8 +57,8 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
-			//	Vérifie si notre rectangle couvre complètement un des éléments
-			//	composant la région :
+			//	VÃ©rifie si notre rectangle couvre complÃ¨tement un des Ã©lÃ©ments
+			//	composant la rÃ©gion :
 			
 			int j = 0;
 			
@@ -82,8 +82,8 @@ namespace Epsitec.Common.Drawing
 			
 			if (j == n)
 			{
-				//	Problème: il n'y a plus de place dans la table des rectangles pour
-				//	stocker ce rectangle. Il faut par conséquent fusionner deux rectangles
+				//	ProblÃ¨me: il n'y a plus de place dans la table des rectangles pour
+				//	stocker ce rectangle. Il faut par consÃ©quent fusionner deux rectangles
 				//	pour faire de la place.
 				
 				Rectangle[] rects = new Rectangle[n+1];
@@ -106,8 +106,8 @@ namespace Epsitec.Common.Drawing
 				
 				this.used = j;
 				
-				//	Si la table des rectangles a rétréci, il faut encore vider les rectangles
-				//	qui traînent :
+				//	Si la table des rectangles a rÃ©trÃ©ci, il faut encore vider les rectangles
+				//	qui traÃ®nent :
 				
 				while (j < firstEmpty)
 				{
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Drawing
 				if ((i == indexA) ||
 					(i == indexB))
 				{
-					//	Saute les rectangles fusionnés.
+					//	Saute les rectangles fusionnÃ©s.
 				}
 				else
 				{
@@ -176,9 +176,9 @@ namespace Epsitec.Common.Drawing
 			
 			System.Diagnostics.Debug.Assert (j == n-2);
 			
-			//	Comme nous avons fusionné deux rectangles de manière à couvrir le moins de
+			//	Comme nous avons fusionnÃ© deux rectangles de maniÃ¨re Ã  couvrir le moins de
 			//	surface possible, on a l'assurance qu'aucun autre rectangle n'est couvert
-			//	entièrement par leur union; on peut donc économiser ici une deuxième passe :
+			//	entiÃ¨rement par leur union; on peut donc Ã©conomiser ici une deuxiÃ¨me passe :
 			
 			result[j] = Rectangle.Union (rectangles[indexA], rectangles[indexB]);
 			
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Drawing
 				return rectangles;
 			}
 			
-			//	Détermine la position des frontières horizontales :
+			//	DÃ©termine la position des frontiÃ¨res horizontales :
 			
 			double[] ys = new double[n*2];
 			
@@ -206,12 +206,12 @@ namespace Epsitec.Common.Drawing
 				ys[i*2+1] = rectangles[i].Top;
 			}
 			
-			//	Trie les frontières horizontales de manière ascendante :
+			//	Trie les frontiÃ¨res horizontales de maniÃ¨re ascendante :
 			
 			System.Array.Sort (ys);
 			
-			//	Trie les rectangles de manière à avoir les bords gauches triés par
-			//	coordonnées croissantes :
+			//	Trie les rectangles de maniÃ¨re Ã  avoir les bords gauches triÃ©s par
+			//	coordonnÃ©es croissantes :
 			
 			System.Array.Sort (rectangles, new DirtyRegion.LeftXSorter ());
 			
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Drawing
 			
 			for (int i = 0; i < n*2-1; i++)
 			{
-				//	Génère les rectangles compris entre deux horizontales :
+				//	GÃ©nÃ¨re les rectangles compris entre deux horizontales :
 				
 				double yBot = ys[i+0];
 				double yTop = ys[i+1];
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Drawing
 					continue;
 				}
 				
-				//	Commence par déterminer les segments horizontaux qui sont couverts
+				//	Commence par dÃ©terminer les segments horizontaux qui sont couverts
 				//	par des rectangles, en profitant de l'occasion pour fusionner deux
 				//	segments adjacents :
 				

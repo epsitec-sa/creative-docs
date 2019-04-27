@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widget.
+			//	Propri√©t√© -> widget.
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			int sel = context.CurrentLayer;
 
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			int sel = context.CurrentLayer;
 
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.field == null )  return;
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTextChanged(object sender)
 		{
-			//	Une valeur a ÈtÈ changÈe.
+			//	Une valeur a √©t√© chang√©e.
 			if ( this.ignoreChanged )  return;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Panels
 
 		public void SetDefaultFocus()
 		{
-			//	Met le focus par dÈfaut.
+			//	Met le focus par d√©faut.
 			this.field.SelectAll();
 			this.field.Focus();
 		}

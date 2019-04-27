@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	{
 		None			= 0,
 
-		Due				= 1,					//	montant dû
-		Paid			= 2,					//	montant payé ou encaissé
-		Discount		= 3,					//	montant escompté
+		Due				= 1,					//	montant dÃ»
+		Paid			= 2,					//	montant payÃ© ou encaissÃ©
+		Discount		= 3,					//	montant escomptÃ©
 	}
 }

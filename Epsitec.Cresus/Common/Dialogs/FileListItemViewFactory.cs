@@ -1,4 +1,4 @@
-//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Dialogs
 
 			fileIcon.PreferredHeight = size;
 
-			if (size > 64 && shape == ItemViewShape.Tile)  // trËs grande icÙne ?
+			if (size > 64 && shape == ItemViewShape.Tile)  // tr√®s grande ic√¥ne ?
 			{
 				Widgets.FrameBox frame = new FrameBox();  // dessine un cadre autour
 				frame.DrawFullFrame = true;

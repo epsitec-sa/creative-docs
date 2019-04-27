@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -37,7 +37,7 @@ namespace Epsitec.Aider.Rules
 				}
 				else
 				{
-					Logic.BusinessRuleException (town, Resources.Text ("Le numéro postal n'est pas connu par La Poste suisse."));
+					Logic.BusinessRuleException (town, Resources.Text ("Le numÃ©ro postal n'est pas connu par La Poste suisse."));
 				}
 			}
 			else
@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Rules
 		{
 			if (town.Country.IsNull ())
 			{
-				Logic.BusinessRuleException (town, Resources.Text ("Le pays doit être spécifié."));
+				Logic.BusinessRuleException (town, Resources.Text ("Le pays doit Ãªtre spÃ©cifiÃ©."));
 				return;
 			}
 
@@ -63,7 +63,7 @@ namespace Epsitec.Aider.Rules
 
 				if (zip.IsInteger () == false)
 				{
-					Logic.BusinessRuleException (town, Resources.Text ("Un numéro postal en Suisse est composé uniquement de chiffres."));
+					Logic.BusinessRuleException (town, Resources.Text ("Un numÃ©ro postal en Suisse est composÃ© uniquement de chiffres."));
 					return;
 				}
 
@@ -72,14 +72,14 @@ namespace Epsitec.Aider.Rules
 				if ((zipNum < 1000) ||
 					(zipNum > 9999))
 				{
-					Logic.BusinessRuleException (town, Resources.Text ("Un numéro postal en Suisse est compris entre 1000 et 9999."));
+					Logic.BusinessRuleException (town, Resources.Text ("Un numÃ©ro postal en Suisse est compris entre 1000 et 9999."));
 					return;
 				}
 			}
 
 			if (town.Name.Length < 1)
 			{
-				Logic.BusinessRuleException (town, Resources.Text ("Le nom de la ville ne peut pas être vide."));
+				Logic.BusinessRuleException (town, Resources.Text ("Le nom de la ville ne peut pas Ãªtre vide."));
 				return;
 			}
 		}

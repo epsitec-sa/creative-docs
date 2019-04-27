@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe TextLine représente une propriété d'un objet graphique.
+	/// La classe TextLine reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class TextLine : Abstract
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				if ( this.horizontal == JustifHorizontal.Left    )  return "|ab |";
@@ -93,13 +93,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			TextLine p = property as TextLine;
 			p.horizontal = this.horizontal;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			TextLine p = property as TextLine;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.TextLine(document);
 		}
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Horizontal", this.horizontal);
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected TextLine(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.horizontal = (JustifHorizontal) info.GetValue("Horizontal", typeof(JustifHorizontal));
 			this.offset = info.GetDouble("Offset");
 			this.add = info.GetDouble("Add");

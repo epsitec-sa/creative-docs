@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe StatusBar représente une barre de statuts en bas d'une fenêtre.
+	/// La classe StatusBar reprÃ©sente une barre de statuts en bas d'une fenÃªtre.
 	/// </summary>
 	public class StatusBar : Widget, Collections.IWidgetCollectionHost<Widget>
 	{

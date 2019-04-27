@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.UnitTesting;
+using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Tests.Vs.Helpers;

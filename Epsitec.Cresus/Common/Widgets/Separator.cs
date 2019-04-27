@@ -4,7 +4,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Separator permet de dessiner des séparations.
+	/// La classe Separator permet de dessiner des sÃ©parations.
 	/// </summary>
 	public class Separator : Widget
 	{
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Widgets
 		public bool IsHorizontalLine
 		{
 			//	Force un trait horizontal.
-			//	Si IsHorizontalLine=false et IsVerticalLine=false, tout le rectangle est dessiné.
+			//	Si IsHorizontalLine=false et IsVerticalLine=false, tout le rectangle est dessinÃ©.
 			get
 			{
 				return this.isHorizontalLine;
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets
 		public bool IsVerticalLine
 		{
 			//	Force un trait vertical.
-			//	Si IsHorizontalLine=false et IsVerticalLine=false, tout le rectangle est dessiné.
+			//	Si IsHorizontalLine=false et IsVerticalLine=false, tout le rectangle est dessinÃ©.
 			get
 			{
 				return this.isVerticalLine;

@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
-	/// Gestion de la liste des poignées pour PanelEditor.
+	/// Gestion de la liste des poignÃ©es pour PanelEditor.
 	/// </summary>
 	public class HandlesList
 	{
@@ -19,12 +19,12 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void UpdateSelection()
 		{
-			//	Met à jour les poignées après un changement de sélection.
-			//	Les poignées ne sont visibles que s'il existe un seul objet sélectionné.
-			//	Dans tous les autres cas, il n'y a aucune poignée.
+			//	Met Ã  jour les poignÃ©es aprÃ¨s un changement de sÃ©lection.
+			//	Les poignÃ©es ne sont visibles que s'il existe un seul objet sÃ©lectionnÃ©.
+			//	Dans tous les autres cas, il n'y a aucune poignÃ©e.
 			List<Widget> sel = this.editor.SelectedObjects;
 
-			if (sel.Count == 1)  // un seul objet sélectionné ?
+			if (sel.Count == 1)  // un seul objet sÃ©lectionnÃ© ?
 			{
 				this.widget = sel[0];
 				this.list.Clear();
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void UpdateGeometry()
 		{
-			//	Mise à jour des poignées après une modification géométrique de l'objet.
+			//	Mise Ã  jour des poignÃ©es aprÃ¨s une modification gÃ©omÃ©trique de l'objet.
 			foreach (Handle handle in this.list)
 			{
 				this.HandleUpdatePosition(handle);
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Handle.Type HandleDetect(Point mouse)
 		{
-			//	Détecte la poignée visée par la souris.
+			//	DÃ©tecte la poignÃ©e visÃ©e par la souris.
 			for (int i=this.list.Count-1; i>=0; i--)
 			{
 				Handle handle = this.list[i];
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void DraggingStart(Point pos, Handle.Type type, bool isHorizontalSymetry, bool isVerticalSymetry)
 		{
-			//	Débute un déplacement de poignée.
+			//	DÃ©bute un dÃ©placement de poignÃ©e.
 			this.draggingRect = this.editor.GetObjectPreferredBounds(this.widget);
 			this.draggingMinSize = this.widget.RealMinSize;
 			this.draggingType = type;
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Rectangle DraggingMove(Point pos)
 		{
-			//	Effectue un déplacement de poignée.
+			//	Effectue un dÃ©placement de poignÃ©e.
 			pos += this.draggingOffset;
 			this.editor.ConstrainsList.Activate(new Rectangle(pos, pos), 0, this.editor.SelectedObjects.ToArray());
 			this.editor.Invalidate();
@@ -205,7 +205,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void DraggingStop(Point pos)
 		{
-			//	Termine un déplacement de poignée.
+			//	Termine un dÃ©placement de poignÃ©e.
 			Rectangle bounds = this.DraggingMove(pos);
 			this.editor.SetObjectPreferredBounds(this.widget, bounds);
 
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool IsDragging
 		{
-			//	Indique si un déplacement de poignée est en cours.
+			//	Indique si un dÃ©placement de poignÃ©e est en cours.
 			get
 			{
 				return (this.draggingType != Handle.Type.None);
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void Hilite(Point mouse)
 		{
-			//	Met à jour la poignée survolée par la souris.
+			//	Met Ã  jour la poignÃ©e survolÃ©e par la souris.
 			if (this.IsDragging)
 			{
 				return;
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		public bool IsFinger
 		{
 			//	Indique s'il faut utiliser le doigt comme curseur pour la souris, car
-			//	une poignée est survolée.
+			//	une poignÃ©e est survolÃ©e.
 			get
 			{
 				return this.IsDragging || this.isFinger;
@@ -267,8 +267,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void Draw(Graphics graphics)
 		{
-			//	Dessine toutes les poignées.
-			//	Pendant un drag, aucune poignée n'est affichée.
+			//	Dessine toutes les poignÃ©es.
+			//	Pendant un drag, aucune poignÃ©e n'est affichÃ©e.
 			if (!this.IsDragging)
 			{
 				foreach (Handle handle in this.list)
@@ -281,8 +281,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Handle CreateHandle(Handle.Type type)
 		{
-			//	Crée une poignée d'un objet, si elle existe.
-			//	Selon le type de l'objet, toutes les poignées n'existent pas !
+			//	CrÃ©e une poignÃ©e d'un objet, si elle existe.
+			//	Selon le type de l'objet, toutes les poignÃ©es n'existent pas !
 			if (type == Handle.Type.None)
 			{
 				return null;
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void HandleUpdatePosition(Handle handle)
 		{
-			//	Met à jour la position et la forme d'une poignée selon l'objet.
+			//	Met Ã  jour la position et la forme d'une poignÃ©e selon l'objet.
 			Rectangle bounds = this.editor.GetObjectPreferredBounds(this.widget);
 			Point center = bounds.Center;
 
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Handle GetHandle(Handle.Type type)
 		{
-			//	Retourne une poignée d'après son type.
+			//	Retourne une poignÃ©e d'aprÃ¨s son type.
 			foreach (Handle handle in this.list)
 			{
 				if (handle.HandleType == type)

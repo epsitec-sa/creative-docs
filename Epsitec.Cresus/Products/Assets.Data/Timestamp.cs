@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				var now = System.DateTime.Now;
 
-				//	Il faut absolument forcer l'heure à 00:00:00 !
+				//	Il faut absolument forcer l'heure Ã  00:00:00 !
 
 				return Timestamp.FromDate (
 					now.Year,
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			get
 			{
-				//	Il ne faut surtout pas utiliser System.DateTime.MaxValue de façon brute (avec
+				//	Il ne faut surtout pas utiliser System.DateTime.MaxValue de faÃ§on brute (avec
 				//	l'heure), car il faut toujours avoir 00:00:00 et non 23:59:59 !
 
 				return Timestamp.FromDate (
@@ -139,8 +139,8 @@ namespace Epsitec.Cresus.Assets.Data
 		#region IEquatable<Timestamp> Members
 		public bool Equals(Timestamp other)
 		{
-			//	La comparaison ne doit pas tenir compte de l'heure. En effet, la sérialisation ne la sérialise pas.
-			//	On a donc parfois un timestamp désérialisé qui n'a pas la même heure, avec l'emploi de
+			//	La comparaison ne doit pas tenir compte de l'heure. En effet, la sÃ©rialisation ne la sÃ©rialise pas.
+			//	On a donc parfois un timestamp dÃ©sÃ©rialisÃ© qui n'a pas la mÃªme heure, avec l'emploi de
 			//	System.DateTime.MaxValue !
 
 			return this.date.Year  == other.date.Year

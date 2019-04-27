@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ using Epsitec.Cresus.Assets.Data.Serialization;
 namespace Epsitec.Cresus.Assets.Data
 {
 	/// <summary>
-	/// C'est ici que sont concentrés tous les réglages globaux de l'application liés
-	/// au mandat, mais non liés à l'utilisateur ni à la UI.
+	/// C'est ici que sont concentrÃ©s tous les rÃ©glages globaux de l'application liÃ©s
+	/// au mandat, mais non liÃ©s Ã  l'utilisateur ni Ã  la UI.
 	/// </summary>
 	public class GlobalSettings
 	{

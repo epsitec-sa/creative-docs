@@ -5,29 +5,29 @@ using System.Linq;
 namespace Epsitec.Cresus.ComptaNG.Common.RecordAccessor
 {
 	/// <summary>
-	/// Cette énumération permet de désigner les champs de tous les Record.
+	/// Cette Ã©numÃ©ration permet de dÃ©signer les champs de tous les Record.
 	/// </summary>
 	public enum FieldType
 	{
 		//	Champs d'un compte:
-		Numéro,
+		NumÃ©ro,
 		Titre,
 		Commentaire,
-		Catégorie,
+		CatÃ©gorie,
 		Parent,
 		Enfants,
 		Niveau,
-		CodeTvaParDéfaut,
+		CodeTvaParDÃ©faut,
 		CodesTvaPossibles,
 		CompteOuvBoucl,
 		IndexOuvBoucl,
 		Monnaie,
 		Budgets,
 
-		//	Champs d'une écriture:
+		//	Champs d'une Ã©criture:
 		Date,
-		Pièce,
-		Libellé,
+		PiÃ¨ce,
+		LibellÃ©,
 
 		//	etc.
 	}

@@ -8,9 +8,9 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 {
 	/// <summary>
 	/// La classe GlyphArray permet de choisir le glyphe Unicode d'une police
-	/// dans un tableau avec un ascenseur vertical. Afin d'éviter de créer un
-	/// grand nombre de widgets, les différentes cellules ne sont pas programmées
-	/// avec des instances de widgets, mais directement dessinées ici.
+	/// dans un tableau avec un ascenseur vertical. Afin d'Ã©viter de crÃ©er un
+	/// grand nombre de widgets, les diffÃ©rentes cellules ne sont pas programmÃ©es
+	/// avec des instances de widgets, mais directement dessinÃ©es ici.
 	/// </summary>
 	public class GlyphArray : Epsitec.Common.Widgets.Widget, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 		public double CellSize
 		{
 			//	Taille d'une cellule. GlyphArray s'arrange pour que les cellules
-			//	soient à peu près carrées. La taille d'une cellule détermine le
+			//	soient Ã  peu prÃ¨s carrÃ©es. La taille d'une cellule dÃ©termine le
 			//	nombre de cellules qu'il sera possible de placer horizontalement
 			//	et verticalement.
 			get
@@ -86,7 +86,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		public void SetGlyphAlternates(OpenType.Font font, int code, int glyph, ushort[] alternates)
 		{
-			//	Choix d'une liste de glyphes (caractères alternatifs).
+			//	Choix d'une liste de glyphes (caractÃ¨res alternatifs).
 			this.code = code;
 			this.glyphsMode = true;
 
@@ -162,7 +162,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		public int SelectedGlyph
 		{
-			//	Glyph sélectionné à insérer.
+			//	Glyph sÃ©lectionnÃ© Ã  insÃ©rer.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.glyphsMode);
@@ -174,7 +174,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		public int SelectedItemIndex
 		{
-			//	Choix de l'index du glyphe sélectionné.
+			//	Choix de l'index du glyphe sÃ©lectionnÃ©.
 			get
 			{
 				return this.selectedIndex;
@@ -193,7 +193,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		public int IndexToUnicode(int index)
 		{
-			//	Retourne le caractère Unicode correspondant à un index.
+			//	Retourne le caractÃ¨re Unicode correspondant Ã  un index.
 			System.Diagnostics.Debug.Assert(!this.glyphsMode);
 			System.Diagnostics.Debug.Assert(this.unicodes != null);
 			if ( index < 0 || index >= this.unicodes.Length )  return 0;
@@ -202,7 +202,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		public int UnicodeToIndex(int code)
 		{
-			//	Retourne l'index correspondant à un caractère Unicode.
+			//	Retourne l'index correspondant Ã  un caractÃ¨re Unicode.
 			if (code < 0)
 			{
 				return -1;
@@ -223,7 +223,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected void UpdateUnicodes()
 		{
-			//	Met à jour la liste des glyphes Unicode en fonction de la fonte.
+			//	Met Ã  jour la liste des glyphes Unicode en fonction de la fonte.
 			this.unicodes = null;
 
 			Drawing.Font font = GlyphArray.GetFont(this.fontFace, this.fontStyle);
@@ -248,36 +248,36 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 					if ( !isSymbol )
 					{
 						if ( i >= 0x0400 && i <= 0x04FF )  continue;  // cyrillique ?
-						if ( i >= 0x0500 && i <= 0x05FF )  continue;  // araménien et hébreu ?
+						if ( i >= 0x0500 && i <= 0x05FF )  continue;  // aramÃ©nien et hÃ©breu ?
 						if ( i >= 0x0600 && i <= 0x06FF )  continue;  // arabe ?
 						if ( i >= 0x0900 && i <= 0x09FF )  continue;  // bengali ?
 						if ( i >= 0x0A00 && i <= 0x0AFF )  continue;  // pendjabi ?
 						if ( i >= 0x0B00 && i <= 0x0BFF )  continue;  // tamoul ?
-						if ( i >= 0x0C00 && i <= 0x0CFF )  continue;  // télougou ?
+						if ( i >= 0x0C00 && i <= 0x0CFF )  continue;  // tÃ©lougou ?
 						if ( i >= 0x0D00 && i <= 0x0DFF )  continue;  // malayalam ?
-						if ( i >= 0x0E00 && i <= 0x0EFF )  continue;  // thaï ?
-						if ( i >= 0x1000 && i <= 0x10FF )  continue;  // géorgien ?
+						if ( i >= 0x0E00 && i <= 0x0EFF )  continue;  // thaÃ¯ ?
+						if ( i >= 0x1000 && i <= 0x10FF )  continue;  // gÃ©orgien ?
 						if ( i >= 0x1100 && i <= 0x11FF )  continue;  // jamos ?
 						if ( i >= 0x3000 && i <= 0x30FF )  continue;  // katakana ?
 						if ( i >= 0x3100 && i <= 0x31FF )  continue;  // bopomofo ?
-						if ( i >= 0xE000 && i <= 0xF0FF )  continue;  // réservé ?
+						if ( i >= 0xE000 && i <= 0xF0FF )  continue;  // rÃ©servÃ© ?
 					}
 
 					int glyph = font.GetGlyphIndex(i);
 					if ( glyph != 0 )
 					{
-						if ( pass == 0 )  // 1ère passe ?
+						if ( pass == 0 )  // 1Ã¨re passe ?
 						{
 							total ++;  // compte le nombre de glyphes existants
 						}
-						if ( pass == 1 )  // 2ème passe ?
+						if ( pass == 1 )  // 2Ã¨me passe ?
 						{
 							this.unicodes[ii++] = i;  // remplit le tableau
 						}
 					}
 				}
 
-				if ( pass == 0 )  // fin de la 1ère passe ?
+				if ( pass == 0 )  // fin de la 1Ã¨re passe ?
 				{
 					this.unicodes = new int[total];  // alloue le tableau
 				}
@@ -288,7 +288,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie de l'ascenseur.
+			//	Met Ã  jour la gÃ©omÃ©trie de l'ascenseur.
 			base.UpdateClientGeometry();
 
 			if ( this.scroller != null )
@@ -300,7 +300,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 		
 		private void HandleScrollerValueChanged(object sender)
 		{
-			//	Appelé lorsque l'ascenseur est déplacé.
+			//	AppelÃ© lorsque l'ascenseur est dÃ©placÃ©.
 			System.Diagnostics.Debug.Assert(this.scroller == sender);
 			this.Invalidate();  // redessine le tableau de glyphes
 		}
@@ -308,7 +308,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//	Gestion des événements.
+			//	Gestion des Ã©vÃ©nements.
 			if ( !this.IsEnabled )  return;
 
 			switch ( message.MessageType )
@@ -350,7 +350,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected virtual bool ProcessKeyEvent(Message message)
 		{
-			//	Gestion d'une touche clavier pressée.
+			//	Gestion d'une touche clavier pressÃ©e.
 			switch ( message.KeyCode )
 			{
 				case KeyCode.ArrowLeft:   return this.MoveSelectedCell(-1);
@@ -365,7 +365,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected bool MoveSelectedCell(int move)
 		{
-			//	Déplace la cellule sélectionnée.
+			//	DÃ©place la cellule sÃ©lectionnÃ©e.
 			int sel = this.selectedIndex;
 			if ( sel == -1 )  return false;
 
@@ -392,7 +392,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		public void ShowSelectedCell()
 		{
-			//	Si nécessaire, bouge l'ascenseur pour montrer la cellule sélectionnée.
+			//	Si nÃ©cessaire, bouge l'ascenseur pour montrer la cellule sÃ©lectionnÃ©e.
 			int sel = this.selectedIndex;
 			if ( sel == -1 )  return;
 
@@ -421,7 +421,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected int Detect(Point pos)
 		{
-			//	Détection du glyphe visé.
+			//	DÃ©tection du glyphe visÃ©.
 			Rectangle area = this.DrawingArea();
 			if ( !area.Contains(pos) )  return -1;
 
@@ -592,7 +592,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected Rectangle DrawingArea()
 		{
-			//	Rectangle où dessiner les cellules.
+			//	Rectangle oÃ¹ dessiner les cellules.
 			Rectangle rect = this.Client.Bounds;
 			rect.Right -= this.scroller.ActualWidth+1.0;
 			return rect;
@@ -618,7 +618,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected static Drawing.Font GetFont(string fontFace, string fontStyle)
 		{
-			//	Donne une fonte d'après son nom.
+			//	Donne une fonte d'aprÃ¨s son nom.
 			Drawing.Font font = Drawing.Font.GetFont(fontFace, fontStyle);
 
 			if ( font == null )
@@ -654,7 +654,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 		protected virtual void OnChangeSelected()
 		{
-			//	Appelé lorsque le glyphe sélectionné change.
+			//	AppelÃ© lorsque le glyphe sÃ©lectionnÃ© change.
 			if ( this.ChangeSelected != null )
 			{
 				this.ChangeSelected(this);

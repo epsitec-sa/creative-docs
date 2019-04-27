@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ColorSample permet de représenter une couleur rgb.
+	/// La classe ColorSample permet de reprÃ©senter une couleur rgb.
 	/// </summary>
 	public partial class ColorSample : AbstractButton, Behaviors.IDragBehaviorHost
 	{
@@ -117,8 +117,8 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 
-			//	Crée un échantillon utilisable pour l'opération de drag & drop (il
-			//	va représenter visuellement l'échantillon de couleur). On le place
+			//	CrÃ©e un Ã©chantillon utilisable pour l'opÃ©ration de drag & drop (il
+			//	va reprÃ©senter visuellement l'Ã©chantillon de couleur). On le place
 			//	dans un DragWindow et hop.
 
 			ColorSample widget = new ColorSample ();
@@ -252,14 +252,14 @@ namespace Epsitec.Common.Widgets
 		{
 			ColorSample dragHost = this.DragHost;
 
-			//	Est-ce que l'événement clavier est reçu dans un échantillon en
+			//	Est-ce que l'Ã©vÃ©nement clavier est reÃ§u dans un Ã©chantillon en
 			//	cours de drag dans un DragWindow ? C'est possible, car le focus
 			//	clavier change quand on montre le DragWindow.
 
 			if (dragHost != null &&
 				message.IsKeyType)
 			{
-				//	Signalons l'événement clavier à l'auteur du drag :
+				//	Signalons l'Ã©vÃ©nement clavier Ã  l'auteur du drag :
 
 				dragHost.ProcessMessage (message, pos);
 			}
@@ -387,8 +387,8 @@ namespace Epsitec.Common.Widgets
 
 		private static Color GetHiliteColor(Color color)
 		{
-			//	Trouve une couleur qui contraste avec la couleur spécifiée,
-			//	pour faire une mise en évidence.
+			//	Trouve une couleur qui contraste avec la couleur spÃ©cifiÃ©e,
+			//	pour faire une mise en Ã©vidence.
 
 			double h, s, v;
 			color.GetHsv (out h, out s, out v);
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateSwapping()
 		{
-			//	Mise à jour après un changement de mode swap d'un drag & drop.
+			//	Mise Ã  jour aprÃ¨s un changement de mode swap d'un drag & drop.
 			if (this.dragInfo != null)
 			{
 				if (this.dragInfo.Target != null)
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Widgets
 
 		private static void DragHilite(ColorSample dst, ColorSample src, bool enable)
 		{
-			//	Met en évidence le widget ColorSample destinataire du drag & drop.
+			//	Met en Ã©vidence le widget ColorSample destinataire du drag & drop.
 			
 			if ((dst == null) ||
 				(src == null) ||

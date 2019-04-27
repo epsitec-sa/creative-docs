@@ -82,8 +82,8 @@ namespace Epsitec.Common.Tests.Support
 			Assert.IsFalse (v3.Enable);
 			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
 
-			//	En créant un stateB dans contextB, on va se trouver plus près de v3
-			//	dans la chaîne des contextes des commandes. Du coup, c'est l'état de
+			//	En crÃ©ant un stateB dans contextB, on va se trouver plus prÃ¨s de v3
+			//	dans la chaÃ®ne des contextes des commandes. Du coup, c'est l'Ã©tat de
 			//	stateB (enabled) qui l'emportera sur stateA (disabled) :
 
 			stateB = contextB.GetCommandState (command);

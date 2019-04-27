@@ -1,11 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
 	/// La classe NativeTextRenderer permet d'afficher rapidement du texte natif
-	/// pour autant que le pixmap utilisé soit compatible.
+	/// pour autant que le pixmap utilisÃ© soit compatible.
 	/// </summary>
 	public sealed class NativeTextRenderer
 	{

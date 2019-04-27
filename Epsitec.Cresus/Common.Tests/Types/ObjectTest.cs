@@ -20,9 +20,9 @@ namespace Epsitec.Common.Tests.Types
 		[Test]
 		public void CheckAttachedProperties()
 		{
-			//	Test coupÈ en morceaux, car NUnit et son analyse du code provoque
-			//	l'exÈcution du .cctor de la classe Test1 avant que le DependencyObjectType
-			//	relatif ‡ Test1 ne soit instanciÈ.
+			//	Test coup√© en morceaux, car NUnit et son analyse du code provoque
+			//	l'ex√©cution du .cctor de la classe Test1 avant que le DependencyObjectType
+			//	relatif √† Test1 ne soit instanci√©.
 
 			TestAttachedProperties.TestA ();
 			TestAttachedProperties.TestB ();
@@ -32,8 +32,8 @@ namespace Epsitec.Common.Tests.Types
 		[Test]
 		public void CheckAttachedPropertiesEventNotification()
 		{
-			//	VÈrifie que les ÈvÈnements sont gÈnÈrÈs aussi pour des propriÈtÈs attachÈes,
-			//	pas seulement pour des propriÈtÈs normales.
+			//	V√©rifie que les √©v√©nements sont g√©n√©r√©s aussi pour des propri√©t√©s attach√©es,
+			//	pas seulement pour des propri√©t√©s normales.
 			
 			Test2 t2 = new Test2 ();
 
@@ -45,14 +45,14 @@ namespace Epsitec.Common.Tests.Types
 			t2.AddEventHandler (Test2.StandardProperty, handler.RecordEvent);
 			t2.AddEventHandler (Test1.AttachedProperty, handler.RecordEvent);
 
-			//	Modifie la propriÈtÈ normale de "x" en "y"
+			//	Modifie la propri√©t√© normale de "x" en "y"
 			
 			t2.SetValue (Test2.StandardProperty, "y");
 			Assert.AreEqual ("Standard:x,y.", handler.Log);
 			
 			handler.Clear ();
 			
-			//	Modifie la propriÈtÈ attachÈe de "a" en "b"
+			//	Modifie la propri√©t√© attach√©e de "a" en "b"
 			
 			Test1.SetAttached (t2, "b");
 			Assert.AreEqual ("Attached:a,b.", handler.Log);
@@ -217,11 +217,11 @@ namespace Epsitec.Common.Tests.Types
 
 			myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
 
-			//	myTarget -+-> binding { source=*, path=Xyz } sur propriÈtÈ Xyz
+			//	myTarget -+-> binding { source=*, path=Xyz } sur propri√©t√© Xyz
 			//	          +-> bindingContext { source=mySource1, path=Sibling }
 			//
-			//	Donc myTarget.Xyz sera dÈfini selon le contenu obtenu par
-			//	la source mySource1, via un path concatÈnÈ de Sibling.Xyz,
+			//	Donc myTarget.Xyz sera d√©fini selon le contenu obtenu par
+			//	la source mySource1, via un path concat√©n√© de Sibling.Xyz,
 			//	soit :
 			//
 			//		mySource1 --Sibling--> myData1 --Xyz--> 999
@@ -436,29 +436,29 @@ namespace Epsitec.Common.Tests.Types
 			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Xyz --> Data3.Foo
 			myData4.SetBinding (MyObject.XyzProperty, binding2);	//	Data2.Foo --> Data4.Xyz
 
-			Assert.AreEqual ("1", myData3.Foo);				//	rÈsultat de la conversion de Data1.Xyz
-			Assert.AreEqual (2, myData4.Xyz);				//	rÈsultat de la conversion de Data2.Foo
+			Assert.AreEqual ("1", myData3.Foo);				//	r√©sultat de la conversion de Data1.Xyz
+			Assert.AreEqual (2, myData4.Xyz);				//	r√©sultat de la conversion de Data2.Foo
 
 			myData1.Xyz = 10;
 			myData2.Foo = "20";
 
-			Assert.AreEqual ("10", myData3.Foo);			//	rÈsultat de la conversion de Data1.Xyz
-			Assert.AreEqual (20, myData4.Xyz);				//	rÈsultat de la conversion de Data2.Foo
+			Assert.AreEqual ("10", myData3.Foo);			//	r√©sultat de la conversion de Data1.Xyz
+			Assert.AreEqual (20, myData4.Xyz);				//	r√©sultat de la conversion de Data2.Foo
 
 			myData3.Foo = "-1";
 			myData4.Xyz = -2;
 
-			Assert.AreEqual (-1, myData1.Xyz);				//	rÈsultat de la conversion de Data3.Foo
-			Assert.AreEqual ("-2", myData2.Foo);			//	rÈsultat de la conversion de Data4.Xyz
+			Assert.AreEqual (-1, myData1.Xyz);				//	r√©sultat de la conversion de Data3.Foo
+			Assert.AreEqual ("-2", myData2.Foo);			//	r√©sultat de la conversion de Data4.Xyz
 			
 			myData1.ClearValue (MyObject.XyzProperty);
 			myData2.ClearValue (MyObject.FooProperty);
 
-			Assert.AreEqual (null, myData1.GetValue (MyObject.XyzProperty));		//	aberration (voulue) pour cette propriÈtÈ -- int est null !
+			Assert.AreEqual (null, myData1.GetValue (MyObject.XyzProperty));		//	aberration (voulue) pour cette propri√©t√© -- int est null !
 			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
 			
 			Assert.AreEqual (null, myData3.Foo);			//	Data1.Xyz est null car la conversion vers string de null donne null !
-			Assert.AreEqual (-2, myData4.Xyz);				//	inchangÈ car Data2.Foo invalide
+			Assert.AreEqual (-2, myData4.Xyz);				//	inchang√© car Data2.Foo invalide
 		}
 
 		[Test]
@@ -481,29 +481,29 @@ namespace Epsitec.Common.Tests.Types
 			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Abc --> Data3.Foo
 			myData4.SetBinding (MyObject.AbcProperty, binding2);	//	Data2.Foo --> Data4.Abc
 
-			Assert.AreEqual ("1", myData3.Foo);				//	rÈsultat de la conversion de Data1.Abc
-			Assert.AreEqual (2, myData4.Abc);				//	rÈsultat de la conversion de Data2.Foo
+			Assert.AreEqual ("1", myData3.Foo);				//	r√©sultat de la conversion de Data1.Abc
+			Assert.AreEqual (2, myData4.Abc);				//	r√©sultat de la conversion de Data2.Foo
 
 			myData1.Abc = 10;
 			myData2.Foo = "20";
 
-			Assert.AreEqual ("10", myData3.Foo);			//	rÈsultat de la conversion de Data1.Abc
-			Assert.AreEqual (20, myData4.Abc);				//	rÈsultat de la conversion de Data2.Foo
+			Assert.AreEqual ("10", myData3.Foo);			//	r√©sultat de la conversion de Data1.Abc
+			Assert.AreEqual (20, myData4.Abc);				//	r√©sultat de la conversion de Data2.Foo
 
 			myData3.Foo = "-1";
 			myData4.Abc = -2;
 
-			Assert.AreEqual (-1, myData1.Abc);				//	rÈsultat de la conversion de Data3.Foo
-			Assert.AreEqual ("-2", myData2.Foo);			//	rÈsultat de la conversion de Data4.Abc
+			Assert.AreEqual (-1, myData1.Abc);				//	r√©sultat de la conversion de Data3.Foo
+			Assert.AreEqual ("-2", myData2.Foo);			//	r√©sultat de la conversion de Data4.Abc
 
 			myData1.ClearValue (MyObject.AbcProperty);
 			myData2.ClearValue (MyObject.FooProperty);
 
-			Assert.AreEqual (Binding.DoNothing, myData1.GetValue (MyObject.AbcProperty));	//	valeur par dÈfaut pas un int !
+			Assert.AreEqual (Binding.DoNothing, myData1.GetValue (MyObject.AbcProperty));	//	valeur par d√©faut pas un int !
 			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
 
-			Assert.AreEqual ("-1", myData3.Foo);			//	inchangÈ car Data1.Abc invalide
-			Assert.AreEqual (-2, myData4.Abc);				//	inchangÈ car Data2.Foo invalide
+			Assert.AreEqual ("-1", myData3.Foo);			//	inchang√© car Data1.Abc invalide
+			Assert.AreEqual (-2, myData4.Abc);				//	inchang√© car Data2.Foo invalide
 		}
 
 		private class ResourceBoundData : IResourceBoundSource
@@ -577,7 +577,7 @@ namespace Epsitec.Common.Tests.Types
 			b.Xyz = 2;
 
 			//	Copie a.NativeXyz --> b.NativeXyz mais comme a.Xyz n'existe
-			//	pas, b.Xyz n'est pas modifiÈ :
+			//	pas, b.Xyz n'est pas modifi√© :
 			
 			DependencyObject.CopyDefinedProperty (a, b, MyObject.XyzProperty);
 			DependencyObject.CopyDefinedProperty (a, b, MyObject.NativeXyzProperty);
@@ -1003,8 +1003,8 @@ namespace Epsitec.Common.Tests.Types
 			c2.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
 			c3.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
 
-			//	La modification d'une propriÈtÈ hÈritÈe qui est dÈfinie localement
-			//	ne provoque qu'une notification locale (et Èvtl. des enfants, mais
+			//	La modification d'une propri√©t√© h√©rit√©e qui est d√©finie localement
+			//	ne provoque qu'une notification locale (et √©vtl. des enfants, mais
 			//	il n'y en a pas dans ce cas) :
 			
 			c2.Cascade = "C";
@@ -1012,9 +1012,9 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual ("c2-Cascade:C2,C.", handler.Log);
 			handler.Clear ();
 
-			//	La modification d'une propriÈtÈ ‡ la racine va Ítre rÈpercutÈe ‡
-			//	travers tout l'arbre; on poursuit par une redÈfinition (en fait,
-			//	on dÈfinit une valeur locale) :
+			//	La modification d'une propri√©t√© √† la racine va √™tre r√©percut√©e √†
+			//	travers tout l'arbre; on poursuit par une red√©finition (en fait,
+			//	on d√©finit une valeur locale) :
 			
 			a.Cascade = "a";
 			c3.Cascade = "c";
@@ -1022,16 +1022,16 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual ("a-Cascade:A,a.b-Cascade:A,a.c1-Cascade:A,a.c3-Cascade:A,a.c3-Cascade:a,c.", handler.Log);
 			handler.Clear ();
 
-			//	Supprime une valeur locale pour vÈrifier que l'on reprend bien 
-			//	la valeur hÈritÈe :
+			//	Supprime une valeur locale pour v√©rifier que l'on reprend bien 
+			//	la valeur h√©rit√©e :
 			
 			c3.ClearValue (TreeTest.CascadeProperty);
 
 			Assert.AreEqual ("c3-Cascade:c,a.", handler.Log);
 			handler.Clear ();
 
-			//	Modifie l'hÈritage ‡ un niveau intermÈdiaire de l'arbre, puis
-			//	restaure l'arbre dans l'Ètat initial.
+			//	Modifie l'h√©ritage √† un niveau interm√©diaire de l'arbre, puis
+			//	restaure l'arbre dans l'√©tat initial.
 			
 			b.Cascade = "b";
 			
@@ -1083,8 +1083,8 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual ("y-Cascade:a,y.", handler.Log);
 			handler.Clear ();
 			
-			//	Change le parent de 'b' : a-->y-->b-->c1/c2/c3. Comme 'y' dÈfinit
-			//	sa propre valeur hÈritÈe, cela affecte b, c1 et c3.
+			//	Change le parent de 'b' : a-->y-->b-->c1/c2/c3. Comme 'y' d√©finit
+			//	sa propre valeur h√©rit√©e, cela affecte b, c1 et c3.
 
 			//	L'arbre devient :
 			//
@@ -1164,7 +1164,7 @@ namespace Epsitec.Common.Tests.Types
 			public static void TestA()
 			{
 				//	Aucune analyse de la classe Test1 n'a encore eu lieu; il y
-				//	a donc 0 propriÈtÈs attachÈes connues.
+				//	a donc 0 propri√©t√©s attach√©es connues.
 
 				int n = DependencyProperty.GetAllAttachedProperties ().Count;
 				Test2 t2 = new Test2 ();
@@ -1175,7 +1175,7 @@ namespace Epsitec.Common.Tests.Types
 				Test2 t2 = new Test2 ();
 				int n = DependencyProperty.GetAllAttachedProperties ().Count;
 				
-				//	Les types sont crÈÈs ‡ la demande s'ils ne sont pas encore
+				//	Les types sont cr√©√©s √† la demande s'ils ne sont pas encore
 				//	connus; c'est le cas de ot1 :
 
 				DependencyObjectType ot1 = DependencyObjectType.FromSystemType (typeof (Test1));
@@ -1185,15 +1185,15 @@ namespace Epsitec.Common.Tests.Types
 				Assert.IsNotNull (ot2);
 
 				//	L'analyse de la classe Test1 a eu lieu; il y a donc 1
-				//	propriÈtÈ attachÈe; celle de Test1 !
+				//	propri√©t√© attach√©e; celle de Test1 !
 
 				Assert.AreEqual (n+1, DependencyProperty.GetAllAttachedProperties ().Count);
 				Assert.AreEqual ("Attached", DependencyProperty.GetAllAttachedProperties ()[n].Name);
 			}
 			public static void TestC()
 			{
-				//	VÈrifie que l'utilisation d'une propriÈtÈ attachÈe produit
-				//	aussi des ÈvÈnements, comme si c'Ètait une propriÈtÈ normale
+				//	V√©rifie que l'utilisation d'une propri√©t√© attach√©e produit
+				//	aussi des √©v√©nements, comme si c'√©tait une propri√©t√© normale
 				//	de l'objet Test2 :
 				
 				Test2 t2 = new Test2 ();
@@ -1435,7 +1435,7 @@ namespace Epsitec.Common.Tests.Types
 			System.Console.WriteLine ("Set local int Xyz [native/same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
 			System.Console.Out.Flush ();
 
-			//	-------- mesurÈ inc. 560ns, get 130ns, set 430ns sur PC 3GHz, Pentium D (dual core)
+			//	-------- mesur√© inc. 560ns, get 130ns, set 430ns sur PC 3GHz, Pentium D (dual core)
 			
 			stopwatch.Reset ();
 			stopwatch.Start ();
@@ -1847,8 +1847,8 @@ namespace Epsitec.Common.Tests.Types
 			{
 			}
 
-			//	Ne provoque pas d'exception ‡ l'initialisation, car "Attached", bien que
-			//	hÈritÈ de Test1, n'est pas incompatible (c'est une propriÈtÈ attachÈe).
+			//	Ne provoque pas d'exception √† l'initialisation, car "Attached", bien que
+			//	h√©rit√© de Test1, n'est pas incompatible (c'est une propri√©t√© attach√©e).
 
 			public static new DependencyProperty AttachedProperty = DependencyProperty.RegisterAttached ("Attached", typeof (string), typeof (Test1b));
 		}
@@ -1858,9 +1858,9 @@ namespace Epsitec.Common.Tests.Types
 			{
 			}
 
-			//	Ne provoque pas d'exception ‡ l'initialisation, car "Attached", bien que
-			//	hÈritÈ de Test1, n'est pas incompatible (dans Test1, c'est une propriÈtÈ
-			//	attachÈe).
+			//	Ne provoque pas d'exception √† l'initialisation, car "Attached", bien que
+			//	h√©rit√© de Test1, n'est pas incompatible (dans Test1, c'est une propri√©t√©
+			//	attach√©e).
 
 			public static new DependencyProperty AttachedProperty = DependencyProperty.Register ("Attached", typeof (string), typeof (Test1c));
 			public static new DependencyProperty StandardProperty = DependencyProperty.RegisterAttached ("Standard", typeof (string), typeof (Test1c));
@@ -1879,7 +1879,7 @@ namespace Epsitec.Common.Tests.Types
 			{
 			}
 			
-			//	Provoque une exception ‡ l'initialisation, car "Standard" est hÈritÈ
+			//	Provoque une exception √† l'initialisation, car "Standard" est h√©rit√©
 			//	de Test2.
 			
 			public static new DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2b));

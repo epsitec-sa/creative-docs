@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Clipboard permet de gérer le presse-papiers.
+	/// La classe Clipboard permet de gÃ©rer le presse-papiers.
 	/// </summary>
 	public class Clipboard : Abstract
 	{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonCut == null )  return;

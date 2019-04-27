@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe GeometryRenderer permet de générer l'information de géométrie
+	/// La classe GeometryRenderer permet de gÃ©nÃ©rer l'information de gÃ©omÃ©trie
 	/// d'une ligne.
 	/// </summary>
 	internal class GeometryRenderer : ITextRenderer
@@ -100,8 +100,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Render(Layout.Context layout, OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
-			//	Enregistre la position des divers caractères qui composent le texte
-			//	avec la fonte courante. Peuple la liste des éléments à cet effet.
+			//	Enregistre la position des divers caractÃ¨res qui composent le texte
+			//	avec la fonte courante. Peuple la liste des Ã©lÃ©ments Ã  cet effet.
 			
 			if (glyphs.Length == 0)
 			{
@@ -136,8 +136,8 @@ namespace Epsitec.Common.Text.Internal
 				
 				double ax = dx / mapChar.Length;
 				
-				//	S'il y a plusieurs caractères pour un glyphe donné (ligature),
-				//	on répartit la largeur de manière égale entre les caractères.
+				//	S'il y a plusieurs caractÃ¨res pour un glyphe donnÃ© (ligature),
+				//	on rÃ©partit la largeur de maniÃ¨re Ã©gale entre les caractÃ¨res.
 				
 				for (int i = 0; i < mapChar.Length; i++, ox += ax)
 				{
@@ -149,8 +149,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (isLastRun)
 			{
-				//	Pour la dernière ligne, on enregistre encore un élément pour
-				//	représenter la marque de fin de paragraphe :
+				//	Pour la derniÃ¨re ligne, on enregistre encore un Ã©lÃ©ment pour
+				//	reprÃ©senter la marque de fin de paragraphe :
 				
 				double ox = x[glyphIndex];
 				double oy = y[glyphIndex-1];

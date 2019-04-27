@@ -1,11 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'énumération ModifierKeys définit les touches super-shift connues.
-	/// Plusieurs touches super-shift peuvent être combinées.
+	/// L'Ã©numÃ©ration ModifierKeys dÃ©finit les touches super-shift connues.
+	/// Plusieurs touches super-shift peuvent Ãªtre combinÃ©es.
 	/// </summary>
 	[System.Flags] public enum ModifierKeys
 	{

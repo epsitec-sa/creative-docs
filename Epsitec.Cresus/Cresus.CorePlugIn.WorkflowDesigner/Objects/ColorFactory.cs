@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -46,19 +46,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public Color GetColorMain()
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			return this.GetColorMain (1.0);
 		}
 
 		public Color GetColorMain(double alpha)
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			return this.GetColorMain (this.colorItem, alpha);
 		}
 
 		public Color GetColorMain(ColorItem colorItem, double alpha)
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			Color color = Color.FromAlphaRgb (alpha, 128.0/255.0, 128.0/255.0, 128.0/255.0);
 
 			switch (colorItem)
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public Color GetColorAdjusted(Color color, double factor)
 		{
-			//	Retourne une couleur ajustée, sans changer la transparence.
+			//	Retourne une couleur ajustÃ©e, sans changer la transparence.
 			if (this.IsDarkColorMain)
 			{
 				return this.GetColorDarker (color, factor);
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsDarkColorMain
 		{
-			//	Indique si la couleur pour les mises en évidence est foncée.
+			//	Indique si la couleur pour les mises en Ã©vidence est foncÃ©e.
 			get
 			{
 				return false;
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private Color GetColorLighter(Color color, double factor)
 		{
-			//	Retourne une couleur éclaircie, sans changer la transparence.
+			//	Retourne une couleur Ã©claircie, sans changer la transparence.
 			return Color.FromAlphaRgb (color.A, 1-(1-color.R)*factor, 1-(1-color.G)*factor, 1-(1-color.B)*factor);
 		}
 

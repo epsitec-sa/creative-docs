@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Widgets
 
 		public string Title
 		{
-			//	Texte du label placé à gauche.
+			//	Texte du label placÃ© Ã  gauche.
 			get
 			{
 				return this.label.Text;
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateFields()
 		{
-			//	Met à jour les TextFieldCombo en fonction du raccourci courant.
+			//	Met Ã  jour les TextFieldCombo en fonction du raccourci courant.
 			this.isIgnoreChanging = true;
 
 			this.fieldModifier.Text = ShortcutEditor.GetModifierText(this.shortcut.KeyCode);
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateFieldModifier()
 		{
-			//	Met à jour le combo pour les touches modificatrices.
+			//	Met Ã  jour le combo pour les touches modificatrices.
 			this.fieldModifier.Items.Add(Res.Strings.ShortcutEditor.Modifier.None);
 
 			this.listModifier = new List<KeyCode>();
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateFieldCode()
 		{
-			//	Met à jour le combo pour les touches principales.
+			//	Met Ã  jour le combo pour les touches principales.
 			this.fieldCode.Items.Add(Res.Strings.ShortcutEditor.Code.None);
 
 			this.listCode = new List<KeyCode>();
@@ -254,9 +254,9 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				code |= KeyCode.AlphaX;  // pour ne pas avoir "+None" à la fin
+				code |= KeyCode.AlphaX;  // pour ne pas avoir "+None" Ã  la fin
 				string text = Message.GetKeyName(code);
-				return text.Substring(0, text.Length-2);  // supprime le "+X" à la fin !
+				return text.Substring(0, text.Length-2);  // supprime le "+X" Ã  la fin !
 			}
 		}
 
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Widgets
 
 				if (text == this.fieldModifier.Text)
 				{
-					return this.listModifier[i-1];  // -1 pour sauter "Aucun" en tête de liste
+					return this.listModifier[i-1];  // -1 pour sauter "Aucun" en tÃªte de liste
 				}
 			}
 
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Widgets
 
 				if (text == this.fieldCode.Text)
 				{
-					return this.listCode[i-1];  // -1 pour sauver "Aucun" en tête de liste
+					return this.listCode[i-1];  // -1 pour sauver "Aucun" en tÃªte de liste
 				}
 			}
 

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.LongIntegerType))]
@@ -6,7 +6,7 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe LongIntegerType décrit une valeur de type System.Int64.
+	/// La classe LongIntegerType dÃ©crit une valeur de type System.Int64.
 	/// </summary>
 	public class LongIntegerType : AbstractNumericType
 	{

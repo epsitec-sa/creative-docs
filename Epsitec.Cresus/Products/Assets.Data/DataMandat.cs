@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private string							SoftwareKey
 		{
-			//	Retourne le numéro d'identification du logiciel (parfois appelé clé).
+			//	Retourne le numÃ©ro d'identification du logiciel (parfois appelÃ© clÃ©).
 			get
 			{
 				return "02600-300001-3876-123456";  // TODO: obtenir le vrai !
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private string							SoftwareVersion
 		{
-			//	Retourne le numéro de version (celle du projet Assets.Data).
+			//	Retourne le numÃ©ro de version (celle du projet Assets.Data).
 			get
 			{
 				return typeof (DataMandat).Assembly.FullName.Split (',')[1].Split ('=')[1];
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Assets.Data
 					return this.arguments;
 
 				default:
-					// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
+					// Il vaut mieux retourner un dictionnaire vide, plutÃ´t que null.
 					return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#region Accounts
 		public IEnumerable<DateRange>			AccountsDateRanges
 		{
-			//	Retourne la liste des périodes de tous les plans comptables connus.
+			//	Retourne la liste des pÃ©riodes de tous les plans comptables connus.
 			get
 			{
 				return this.rangeAccounts.Select (x => x.Key);
@@ -231,15 +231,15 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public BaseType GetAccountsBase(System.DateTime date)
 		{
-			//	Retourne la base correspondant à une date.
-			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			//	Retourne la base correspondant Ã  une date.
+			//	Si plusieurs pÃ©riodes se recouvrent, on prend la derniÃ¨re dÃ©finie.
 			var range = this.GetBestAccountsDateRange (date);
 			return new BaseType (BaseTypeKind.Accounts, range);
 		}
 
 		public GuidDictionary<DataObject> GetAccounts(DateRange range)
 		{
-			//	Retourne le plan comptable correspondant à une période.
+			//	Retourne le plan comptable correspondant Ã  une pÃ©riode.
 			GuidDictionary<DataObject> accounts;
 			if (!range.IsEmpty && this.rangeAccounts.TryGetValue (range, out accounts))
 			{
@@ -247,21 +247,21 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 			else
 			{
-				// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
+				// Il vaut mieux retourner un dictionnaire vide, plutÃ´t que null.
 				return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}
 
 		public void AddAccounts(DateRange dateRange, GuidDictionary<DataObject> accounts)
 		{
-			//	Prend connaissance d'un nouveau plan comptable, qui est ajouté ou
-			//	qui remplace un existant, selon sa période.
+			//	Prend connaissance d'un nouveau plan comptable, qui est ajoutÃ© ou
+			//	qui remplace un existant, selon sa pÃ©riode.
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
 		public void DeleteAccounts(DateRange dateRange)
 		{
-			//	Oublie un plan comptable d'une période donnée.
+			//	Oublie un plan comptable d'une pÃ©riode donnÃ©e.
 			GuidDictionary<DataObject> accounts;
 			if (this.rangeAccounts.TryGetValue (dateRange, out accounts))
 			{
@@ -271,8 +271,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DateRange GetBestAccountsDateRange(System.DateTime date)
 		{
-			//	Retourne la période comptable correspondant à une date donnée.
-			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			//	Retourne la pÃ©riode comptable correspondant Ã  une date donnÃ©e.
+			//	Si plusieurs pÃ©riodes se recouvrent, on prend la derniÃ¨re dÃ©finie.
 			return this.AccountsDateRanges
 				.Reverse ()
 				.Where (x => x.IsInside (date))
@@ -284,13 +284,13 @@ namespace Epsitec.Cresus.Assets.Data
 		#region Accounts filenames
 		public void AddAccountsFilename(DateRange dateRange, string filename)
 		{
-			//	Prend connaissance du nom de fichier d'un plan comptable importé.
+			//	Prend connaissance du nom de fichier d'un plan comptable importÃ©.
 			this.rangeAccountsFilenames[dateRange] = filename;
 		}
 
 		public void DeleteAccountsFilename(DateRange dateRange)
 		{
-			//	Oublie un nom de fichier d'un plan comptable importé.
+			//	Oublie un nom de fichier d'un plan comptable importÃ©.
 			string filename;
 			if (this.rangeAccountsFilenames.TryGetValue (dateRange, out filename))
 			{
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public string GetAccountsFilename(DateRange dateRange)
 		{
-			//	Retourne le nom du plan comptable d'une période.
+			//	Retourne le nom du plan comptable d'une pÃ©riode.
 			string filename;
 
 			if (this.rangeAccountsFilenames.TryGetValue (dateRange, out filename))
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#region VatCodes
 		public IEnumerable<DateRange> VatCodesDateRanges
 		{
-			//	Retourne la liste des périodes de tous les codes TVA connus.
+			//	Retourne la liste des pÃ©riodes de tous les codes TVA connus.
 			get
 			{
 				return this.rangeVatCodes.Select (x => x.Key);
@@ -327,15 +327,15 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public BaseType GetVatCodesBase(System.DateTime date)
 		{
-			//	Retourne la base correspondant à une date.
-			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			//	Retourne la base correspondant Ã  une date.
+			//	Si plusieurs pÃ©riodes se recouvrent, on prend la derniÃ¨re dÃ©finie.
 			var range = this.GetBestVatCodesDateRange (date);
 			return new BaseType (BaseTypeKind.VatCodes, range);
 		}
 
 		public GuidDictionary<DataObject> GetVatCodes(DateRange range)
 		{
-			//	Retourne le code TVA correspondant à une période.
+			//	Retourne le code TVA correspondant Ã  une pÃ©riode.
 			GuidDictionary<DataObject> vatCodes;
 			if (!range.IsEmpty && this.rangeVatCodes.TryGetValue (range, out vatCodes))
 			{
@@ -343,21 +343,21 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 			else
 			{
-				// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
+				// Il vaut mieux retourner un dictionnaire vide, plutÃ´t que null.
 				return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}
 
 		public void AddVatCodes(DateRange dateRange, GuidDictionary<DataObject> vatCodes)
 		{
-			//	Prend connaissance d'un nouveau code TVA, qui est ajouté ou
-			//	qui remplace un existant, selon sa période.
+			//	Prend connaissance d'un nouveau code TVA, qui est ajoutÃ© ou
+			//	qui remplace un existant, selon sa pÃ©riode.
 			this.rangeVatCodes[dateRange] = vatCodes;
 		}
 
 		public void DeleteVatCodes(DateRange dateRange)
 		{
-			//	Oublie un code TVA d'une période donnée.
+			//	Oublie un code TVA d'une pÃ©riode donnÃ©e.
 			GuidDictionary<DataObject> vatCodes;
 			if (this.rangeVatCodes.TryGetValue (dateRange, out vatCodes))
 			{
@@ -367,8 +367,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private DateRange GetBestVatCodesDateRange(System.DateTime date)
 		{
-			//	Retourne la période comptable correspondant à une date donnée.
-			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			//	Retourne la pÃ©riode comptable correspondant Ã  une date donnÃ©e.
+			//	Si plusieurs pÃ©riodes se recouvrent, on prend la derniÃ¨re dÃ©finie.
 			return this.VatCodesDateRanges
 				.Reverse ()
 				.Where (x => x.IsInside (date))
@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#region Centers
 		public IEnumerable<DateRange> CentersDateRanges
 		{
-			//	Retourne la liste des périodes de tous les centres de charge connus.
+			//	Retourne la liste des pÃ©riodes de tous les centres de charge connus.
 			get
 			{
 				return this.rangeCenters.Select (x => x.Key);
@@ -389,15 +389,15 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public BaseType GetCentersBase(System.DateTime date)
 		{
-			//	Retourne la base correspondant à une date.
-			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			//	Retourne la base correspondant Ã  une date.
+			//	Si plusieurs pÃ©riodes se recouvrent, on prend la derniÃ¨re dÃ©finie.
 			var range = this.GetBestCentersDateRange (date);
 			return new BaseType (BaseTypeKind.Centers, range);
 		}
 
 		public GuidDictionary<DataObject> GetCenters(DateRange range)
 		{
-			//	Retourne le centre de charge correspondant à une période.
+			//	Retourne le centre de charge correspondant Ã  une pÃ©riode.
 			GuidDictionary<DataObject> centers;
 			if (!range.IsEmpty && this.rangeCenters.TryGetValue (range, out centers))
 			{
@@ -405,21 +405,21 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 			else
 			{
-				// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
+				// Il vaut mieux retourner un dictionnaire vide, plutÃ´t que null.
 				return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}
 
 		public void AddCenters(DateRange dateRange, GuidDictionary<DataObject> centers)
 		{
-			//	Prend connaissance d'un nouveau centres de charge, qui est ajouté ou
-			//	qui remplace un existant, selon sa période.
+			//	Prend connaissance d'un nouveau centres de charge, qui est ajoutÃ© ou
+			//	qui remplace un existant, selon sa pÃ©riode.
 			this.rangeCenters[dateRange] = centers;
 		}
 
 		public void DeleteCenters(DateRange dateRange)
 		{
-			//	Oublie un centres de charge d'une période donnée.
+			//	Oublie un centres de charge d'une pÃ©riode donnÃ©e.
 			GuidDictionary<DataObject> centers;
 			if (this.rangeCenters.TryGetValue (dateRange, out centers))
 			{
@@ -429,8 +429,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private DateRange GetBestCentersDateRange(System.DateTime date)
 		{
-			//	Retourne la période comptable correspondant à une date donnée.
-			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			//	Retourne la pÃ©riode comptable correspondant Ã  une date donnÃ©e.
+			//	Si plusieurs pÃ©riodes se recouvrent, on prend la derniÃ¨re dÃ©finie.
 			return this.CentersDateRanges
 				.Reverse ()
 				.Where (x => x.IsInside (date))

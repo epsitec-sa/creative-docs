@@ -6,10 +6,10 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// La classe IconArray permet de choisir une icône dans un tableau avec un
-	/// ascenseur vertical. Afin d'éviter de créer un grand nombre de widgets,
-	/// les différentes cellules ne sont pas programmées avec des instances de
-	/// widgets, mais directement dessinées ici.
+	/// La classe IconArray permet de choisir une icÃ´ne dans un tableau avec un
+	/// ascenseur vertical. Afin d'Ã©viter de crÃ©er un grand nombre de widgets,
+	/// les diffÃ©rentes cellules ne sont pas programmÃ©es avec des instances de
+	/// widgets, mais directement dessinÃ©es ici.
 	/// </summary>
 	public class IconArray : Widget, Widgets.Helpers.IToolTipHost
 	{
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public double CellSize
 		{
 			//	Taille d'une cellule. IconArray s'arrange pour que les cellules
-			//	soient à peu près carrées. La taille d'une cellule détermine le
+			//	soient Ã  peu prÃ¨s carrÃ©es. La taille d'une cellule dÃ©termine le
 			//	nombre de cellules qu'il sera possible de placer horizontalement
 			//	et verticalement.
 			get
@@ -72,14 +72,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetIcons(List<string> list)
 		{
-			//	Choix de la liste des icônes.
+			//	Choix de la liste des icÃ´nes.
 			this.icons = list;
 			this.Invalidate();
 		}
 
 		public int SelectedIndex
 		{
-			//	Choix de l'index de l'icône sélectionnée.
+			//	Choix de l'index de l'icÃ´ne sÃ©lectionnÃ©e.
 			get
 			{
 				return this.selectedIndex;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie de l'ascenseur.
+			//	Met Ã  jour la gÃ©omÃ©trie de l'ascenseur.
 			base.UpdateClientGeometry();
 
 			if ( this.scroller != null )
@@ -111,15 +111,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		
 		private void HandleScrollerValueChanged(object sender)
 		{
-			//	Appelé lorsque l'ascenseur est déplacé.
+			//	AppelÃ© lorsque l'ascenseur est dÃ©placÃ©.
 			System.Diagnostics.Debug.Assert(this.scroller == sender);
-			this.Invalidate();  // redessine le tableau des icônes
+			this.Invalidate();  // redessine le tableau des icÃ´nes
 		}
 		
 		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//	Gestion des événements.
+			//	Gestion des Ã©vÃ©nements.
 			if ( !this.IsEnabled )  return;
 
 			switch ( message.MessageType )
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual bool ProcessKeyEvent(Message message)
 		{
-			//	Gestion d'une touche clavier pressée.
+			//	Gestion d'une touche clavier pressÃ©e.
 			switch ( message.KeyCode )
 			{
 				case KeyCode.ArrowLeft:   return this.MoveSelectedCell(-1);
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected bool MoveSelectedCell(int move)
 		{
-			//	Déplace la cellule sélectionnée.
+			//	DÃ©place la cellule sÃ©lectionnÃ©e.
 			int sel = this.selectedIndex;
 			if ( sel == -1 )  return false;
 
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void ShowSelectedCell()
 		{
-			//	Si nécessaire, bouge l'ascenseur pour montrer la cellule sélectionnée.
+			//	Si nÃ©cessaire, bouge l'ascenseur pour montrer la cellule sÃ©lectionnÃ©e.
 			int sel = this.selectedIndex;
 			if ( sel == -1 )  return;
 
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected int Detect(Point pos)
 		{
-			//	Détection de l'icône visée.
+			//	DÃ©tection de l'icÃ´ne visÃ©e.
 			Rectangle area = this.DrawingArea();
 			if ( !area.Contains(pos) )  return -1;
 
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.AddFilledRectangle(area);
 			graphics.RenderSolid(adorner.ColorTextBackground);
 
-			//	Dessine les icônes.
+			//	Dessine les icÃ´nes.
 			if ( this.icons != null )
 			{
 				TextLayout layout = new TextLayout();
@@ -297,7 +297,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 						if ( first < this.TotalCell )
 						{
-							if (first == 0)  // pas d'icône ?
+							if (first == 0)  // pas d'icÃ´ne ?
 							{
 								layout.Text = null;
 								layout.Paint(rect.BottomLeft, graphics);
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int First()
 		{
 			//	En fonction de la position de l'ascenseur (0..1), retourne la
-			//	première icône visible.
+			//	premiÃ¨re icÃ´ne visible.
 			if ( this.icons == null )  return 0;
 
 			int dx = this.TotalCellVisibleX();
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Rectangle DrawingArea()
 		{
-			//	Rectangle où dessiner les cellules.
+			//	Rectangle oÃ¹ dessiner les cellules.
 			Rectangle rect = this.Client.Bounds;
 			rect.Right -= this.scroller.ActualWidth+1.0;
 			return rect;
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected static Drawing.Font GetFont(string fontFace, string fontStyle)
 		{
-			//	Donne une fonte d'après son nom.
+			//	Donne une fonte d'aprÃ¨s son nom.
 			Drawing.Font font = Drawing.Font.GetFont(fontFace, fontStyle);
 
 			if ( font == null )
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Donne le texte du tooltip en fonction de la position.
 			int index = this.Detect(pos);
 
-			if (index == 0)  // pas d'icône ?
+			if (index == 0)  // pas d'icÃ´ne ?
 			{
 				return Res.Strings.Dialog.Icon.None;
 			}
@@ -467,7 +467,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnChangeSelected()
 		{
-			//	Appelé lorsque l'icône sélectionnée change.
+			//	AppelÃ© lorsque l'icÃ´ne sÃ©lectionnÃ©e change.
 			if ( this.ChangeSelected != null )
 			{
 				this.ChangeSelected(this);

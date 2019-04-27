@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer
 {
 	/// <summary>
-	/// Contient le contexte commun à tous les Viewers.
+	/// Contient le contexte commun Ã  tous les Viewers.
 	/// </summary>
 	public class PanelsContext
 	{
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Designer
 		#region ExtendedProxies
 		public bool IsExtendedProxies(string name)
 		{
-			//	Indique si un panneau pour un proxy est étendu ou non.
+			//	Indique si un panneau pour un proxy est Ã©tendu ou non.
 			bool defaultState;
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window)
 			{
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer
 
 		public void SetExtendedProxies(string name, bool extended)
 		{
-			//	Modifie l'état étendu ou non d'un panneau pour un proxy.
+			//	Modifie l'Ã©tat Ã©tendu ou non d'un panneau pour un proxy.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window)
 			{
 				name = string.Concat("W.", name);
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Designer
 		#region Static colors
 		static public Color ColorHiliteOutline
 		{
-			//	Couleur lorsqu'un objet est survolé par la souris.
+			//	Couleur lorsqu'un objet est survolÃ© par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorHiliteSurface
 		{
-			//	Couleur lorsqu'un objet est survolé par la souris.
+			//	Couleur lorsqu'un objet est survolÃ© par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorHiliteParent
 		{
-			//	Couleur lorsqu'un objet parent est survolé par la souris.
+			//	Couleur lorsqu'un objet parent est survolÃ© par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorGridCellOutline
 		{
-			//	Couleur pour représenter une mise en évidence de cellule.
+			//	Couleur pour reprÃ©senter une mise en Ã©vidence de cellule.
 			get
 			{
 				return Color.FromRgb(0.0/255.0, 0.0/255.0, 0.0/255.0);
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorGridCellSurface
 		{
-			//	Couleur pour représenter une mise en évidence de cellule.
+			//	Couleur pour reprÃ©senter une mise en Ã©vidence de cellule.
 			get
 			{
 				return Color.FromAlphaRgb(0.2, 255.0/255.0, 255.0/255.0, 0.0/255.0);
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorAttachment
 		{
-			//	Couleur pour représenter un ressort.
+			//	Couleur pour reprÃ©senter un ressort.
 			get
 			{
 				return Color.FromRgb(0, 0, 1);
@@ -377,7 +377,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorGrid1
 		{
-			//	Couleur pour la grille magnétique primaire (division principale).
+			//	Couleur pour la grille magnÃ©tique primaire (division principale).
 			get
 			{
 				return Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorGrid2
 		{
-			//	Couleur pour la grille magnétique secondaire (subdivision).
+			//	Couleur pour la grille magnÃ©tique secondaire (subdivision).
 			get
 			{
 				return Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorHandleNormal
 		{
-			//	Couleur pour une poignée.
+			//	Couleur pour une poignÃ©e.
 			get
 			{
 				return Color.FromRgb(1, 0, 0);
@@ -404,7 +404,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorHandleHilited
 		{
-			//	Couleur lorsqu'un objet est survolé par la souris.
+			//	Couleur lorsqu'un objet est survolÃ© par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorSizeMarkLight
 		{
-			//	Couleur pour un marqueur de taille préférentielle.
+			//	Couleur pour un marqueur de taille prÃ©fÃ©rentielle.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorSizeMarkDark
 		{
-			//	Couleur pour un marqueur de taille préférentielle.
+			//	Couleur pour un marqueur de taille prÃ©fÃ©rentielle.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorSizeMarkLine
 		{
-			//	Couleur pour un marqueur de taille préférentielle.
+			//	Couleur pour un marqueur de taille prÃ©fÃ©rentielle.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color ColorOutsideForeground
 		{
-			//	Couleur superposée à une DragWindow lorsqu'on est hors de la fenêtre.
+			//	Couleur superposÃ©e Ã  une DragWindow lorsqu'on est hors de la fenÃªtre.
 			get
 			{
 				return Color.FromAlphaRgb(0.3, 1,0,0);

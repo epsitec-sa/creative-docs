@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	using ContentAlignment=Drawing.ContentAlignment;
 
 	/// <summary>
-	/// La classe CheckButton réalise un bouton cochable.
+	/// La classe CheckButton rÃ©alise un bouton cochable.
 	/// </summary>
 	public class CheckButton : AbstractButton
 	{

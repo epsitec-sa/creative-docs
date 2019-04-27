@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Rules
 				var error = "";
 				if (!entity.IsCurrentEventValid (out error))
 				{
-					Logic.BusinessRuleException ("L'acte n'est pas validable en l'état:\n" + error);
+					Logic.BusinessRuleException ("L'acte n'est pas validable en l'Ã©tat:\n" + error);
 				}
 			}
 

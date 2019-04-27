@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe Property sert de base aux diverses propriétés.
+	/// La classe Property sert de base aux diverses propriÃ©tÃ©s.
 	/// </summary>
 	public abstract class Property : IContentsSignature, IContentsSignatureUpdater, IContentsComparer, ISerializableAsText
 	{
@@ -118,8 +118,8 @@ namespace Epsitec.Common.Text
 				
 				int signature = (int) checksum.Value;
 				
-				//	La signature calculée pourrait être nulle; dans ce cas, on
-				//	l'ajuste pour éviter d'interpréter cela comme une absence
+				//	La signature calculÃ©e pourrait Ãªtre nulle; dans ce cas, on
+				//	l'ajuste pour Ã©viter d'interprÃ©ter cela comme une absence
 				//	de signature :
 				
 				this.contentsSignature = (signature == 0) ? 1 : signature;
@@ -404,8 +404,8 @@ namespace Epsitec.Common.Text
 			
 			if (template == null)
 			{
-				//	Nous n'avons pas encore de propriété modèle que l'on puisse
-				//	clôner; il faut donc l'instancier dynamiquement :
+				//	Nous n'avons pas encore de propriÃ©tÃ© modÃ¨le que l'on puisse
+				//	clÃ´ner; il faut donc l'instancier dynamiquement :
 				
 				string typeName = string.Concat ("Epsitec.Common.Text.Properties.", propName, "Property");
 				

@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La propriété ImageProperty décrit quelle image associer avec un
-	/// caractère Unicode ObjectReplacement (uFFFC).
+	/// La propriÃ©tÃ© ImageProperty dÃ©crit quelle image associer avec un
+	/// caractÃ¨re Unicode ObjectReplacement (uFFFC).
 	/// </summary>
 	public class ImageProperty : Property, IGlyphRenderer
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Tests.Types
 			Record[] records = Collection.ToArray<Record> (view.Items);
 
 			Assert.AreEqual (3, records.Length);
-			Assert.AreEqual ("Clé M3", records[0].Article);
+			Assert.AreEqual ("ClÃ© M3", records[0].Article);
 			Assert.AreEqual ("Tournevis", records[1].Article);
 			Assert.AreEqual ("Tournevis", records[2].Article);
 		}
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual ("Vis M3", records[0].Article);
 			Assert.AreEqual ("Ecrou M3", records[1].Article);
 			Assert.AreEqual ("Rondelle", records[2].Article);
-			Assert.AreEqual ("Clé M3", records[3].Article);
+			Assert.AreEqual ("ClÃ© M3", records[3].Article);
 			Assert.AreEqual ("Tournevis", records[4].Article);
 			Assert.AreEqual ("Tournevis", records[5].Article);
 
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Tests.Types
 			records = Collection.ToArray<Record> (view.Items);
 
 			Assert.AreEqual (6, records.Length);
-			Assert.AreEqual ("Clé M3", records[0].Article);
+			Assert.AreEqual ("ClÃ© M3", records[0].Article);
 			Assert.AreEqual ("Ecrou M3", records[1].Article);
 			Assert.AreEqual ("Rondelle", records[2].Article);
 			Assert.AreEqual ("Tournevis", records[3].Article);
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Tests.Types
 			records = Collection.ToArray<Record> (view.Items);
 
 			Assert.AreEqual (6, records.Length);
-			Assert.AreEqual ("Clé M3", records[0].Article);
+			Assert.AreEqual ("ClÃ© M3", records[0].Article);
 			Assert.AreEqual ("Ecrou M3", records[1].Article);
 			Assert.AreEqual ("Rondelle", records[2].Article);
 			Assert.AreEqual ("Tournevis", records[3].Article);
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual ("Ecrou M3", records[1].Article);
 			Assert.AreEqual ("Vis M3", records[2].Article);
 			Assert.AreEqual ("Tournevis", records[3].Article);
-			Assert.AreEqual ("Clé M3", records[4].Article);
+			Assert.AreEqual ("ClÃ© M3", records[4].Article);
 			Assert.AreEqual ("Tournevis", records[5].Article);
 
 			Assert.AreEqual (2, records[3].Stock);
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual (2, view.Items.IndexOf (records[4]));
 			Assert.AreEqual (-1, view.Items.IndexOf (new Record ("*", 1, 1, Category.Unknown)));
 
-			Assert.AreEqual ("Clé M3",    ((Record) view.Items[0]).Article);
+			Assert.AreEqual ("ClÃ© M3",    ((Record) view.Items[0]).Article);
 			Assert.AreEqual ("Ecrou M3",  ((Record) view.Items[1]).Article);
 			Assert.AreEqual ("Rondelle",  ((Record) view.Items[2]).Article);
 			Assert.AreEqual ("Tournevis", ((Record) view.Items[3]).Article);
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Tests.Types
 
 			records = Collection.ToArray<Record> (group1.Items);
 
-			Assert.AreEqual ("Clé M3", records[0].Article);
+			Assert.AreEqual ("ClÃ© M3", records[0].Article);
 			Assert.AreEqual ("Tournevis", records[1].Article);
 			Assert.AreEqual ("Tournevis", records[2].Article);
 
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Tests.Types
 			CollectionViewGroup subgroup1 = group1.Subgroups[0];
 			CollectionViewGroup subgroup2 = group1.Subgroups[1];
 
-			Assert.AreEqual ("Clé M3", subgroup1.Name);
+			Assert.AreEqual ("ClÃ© M3", subgroup1.Name);
 			Assert.AreEqual ("Tournevis", subgroup2.Name);
 
 			path = CollectionView.GetGroupPath (view, source[0]);
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Tests.Types
 			list.Add (new Article ("Vis M4"));
 			list.Add (new Article ("Boulon M3"));
 			list.Add (new Article ("Tournevis"));
-			list.Add (new Article ("Clé M4"));
+			list.Add (new Article ("ClÃ© M4"));
 
 			data.SetValue ("Articles", list);
 			data.SetValue ("InvoiceId", "abc");
@@ -566,7 +566,7 @@ namespace Epsitec.Common.Tests.Types
 			list.Add (new Article ("Vis M4"));
 			list.Add (new Article ("Boulon M3"));
 			list.Add (new Article ("Tournevis"));
-			list.Add (new Article ("Clé M4"));
+			list.Add (new Article ("ClÃ© M4"));
 
 			data.SetValue ("Articles", list);
 			data.SetValue ("InvoiceId", "abc");
@@ -594,7 +594,7 @@ namespace Epsitec.Common.Tests.Types
 			list.Add (new Article ("Vis M4"));
 			list.Add (new Article ("Boulon M3"));
 			list.Add (new Article ("Tournevis"));
-			list.Add (new Article ("Clé M4"));
+			list.Add (new Article ("ClÃ© M4"));
 
 			data.SetValue ("Articles", list);
 			data.SetValue ("InvoiceId", "abc");
@@ -1153,7 +1153,7 @@ namespace Epsitec.Common.Tests.Types
 			source.Add (new Record ("Vis M3", 10, 0.15M, Category.Part));
 			source.Add (new Record ("Ecrou M3", 19, 0.10M, Category.Part));
 			source.Add (new Record ("Rondelle", 41, 0.05M, Category.Part));
-			source.Add (new Record ("Clé M3", 7, 15.00M, Category.Tool));
+			source.Add (new Record ("ClÃ© M3", 7, 15.00M, Category.Tool));
 			source.Add (new Record ("Tournevis", 2, 8.45M, Category.Tool));
 			source.Add (new Record ("Tournevis", 7, 25.70M, Category.Tool));
 		}

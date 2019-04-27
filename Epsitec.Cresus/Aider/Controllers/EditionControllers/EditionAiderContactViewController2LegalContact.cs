@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -17,7 +17,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title (Resources.Text ("Identité de la personne de contact"))
+				.Title (Resources.Text ("IdentitÃ© de la personne de contact"))
 				.Icon (AiderPersonEntity.GetIconName ("Data", this.Entity.LegalPersonContactMrMrs, this.Entity.LegalPerson.Language))
 				.Input ()
 					.Field (x => x.LegalPersonContactMrMrs)

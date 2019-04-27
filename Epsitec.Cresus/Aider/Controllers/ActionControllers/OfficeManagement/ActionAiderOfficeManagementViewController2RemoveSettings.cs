@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -22,12 +22,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Supprimer l'expéditeur");
+			return Resources.Text ("Supprimer l'expÃ©diteur");
 		}
 
 		public FormattedText GetText()
 		{
-			return "Voulez-vous vraiment supprimer cet expéditeur ?";
+			return "Voulez-vous vraiment supprimer cet expÃ©diteur ?";
 		}
 
 		public override ActionExecutor GetExecutor()

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// La classe Graphics encapsule le contexte graphique utilisé pour peindre.
+	/// La classe Graphics encapsule le contexte graphique utilisÃ© pour peindre.
 	/// </summary>
 	public class Graphics : System.IDisposable, IPaintPort
 	{
@@ -37,8 +37,8 @@ namespace Epsitec.Common.Drawing
 		public double							AlphaMutiplier
 		{
 			//	Facteur multiplicatif pour la transparence, valable pour SolidRenderer et GradientRenderer.
-			//	Malheureusement, ImageRenderer n'en tient pas compte, ce qui fait que les icônes ne sont
-			//	pas influencées par la transparence.
+			//	Malheureusement, ImageRenderer n'en tient pas compte, ce qui fait que les icÃ´nes ne sont
+			//	pas influencÃ©es par la transparence.
 			get
 			{
 				return this.solidRenderer.AlphaMutiplier;
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Drawing
 
 		public void PaintDashedOutline(Path path, double width, double dash, double gap, CapStyle capStyle, Color color)
 		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			//	Dessine un traitillÃ© simple (dash/gap) le long d'un chemin.
 			if (path.IsEmpty)
 			{
 				return;
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Drawing
 				return 0;
 			}
 
-			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
+			//	TODO: dÃ©placer ce code dans la librairie AGG; faire en sorte que Ã§a marche aussi
 			//	si ClassId != ClassId.Space...
 			
 			for (int i = 0; i < infos.Length; i++)
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Drawing
 			if (ix1 >= idx) return;
 			if (iy1 >= idy) return;
 			
-			if (ix1 < 0)			//	Clipping à gauche.
+			if (ix1 < 0)			//	Clipping Ã  gauche.
 			{
 				fillX     -= ix1;
 				fillWidth += ix1;
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Drawing
 				iy1 = 0;
 			}
 			
-			if (ix2 > idx)			//	Clipping à droite
+			if (ix2 > idx)			//	Clipping Ã  droite
 			{
 				fillWidth -= ix2 - idx;
 				ix2 = idx;
@@ -690,7 +690,7 @@ namespace Epsitec.Common.Drawing
 			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
 			t = t.Translate (center);
 			this.GradientRenderer.Transform = t;
-			this.RenderGradient ();  // dégradé de gauche à droite
+			this.RenderGradient ();  // dÃ©gradÃ© de gauche Ã  droite
 			this.GradientRenderer.Transform = ot;
 		}
 
@@ -707,7 +707,7 @@ namespace Epsitec.Common.Drawing
 			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
 			t = t.Translate (center);
 			this.GradientRenderer.Transform = t;
-			this.RenderGradient ();  // dégradé circulaire
+			this.RenderGradient ();  // dÃ©gradÃ© circulaire
 			this.GradientRenderer.Transform = ot;
 		}
 
@@ -999,7 +999,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.rasterizer.Transform = this.transform;
 			
-			//	Lorsque la matrice de transformation change, il faut aussi mettre à jour les
+			//	Lorsque la matrice de transformation change, il faut aussi mettre Ã  jour les
 			//	transformations des renderers qui en ont...
 			
 			Transform tImage    = this.imageRenderer.Transform;

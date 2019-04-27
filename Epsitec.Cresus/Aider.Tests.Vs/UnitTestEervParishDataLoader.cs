@@ -1,4 +1,4 @@
-﻿using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;

@@ -1,4 +1,4 @@
-//	Copyright © 2005-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -9,8 +9,8 @@ using System.Linq;
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// La classe GenericDeserializationBinder permet de désérialiser des données
-	/// en ignorant explicitement la révision du type correspondant.
+	/// La classe GenericDeserializationBinder permet de dÃ©sÃ©rialiser des donnÃ©es
+	/// en ignorant explicitement la rÃ©vision du type correspondant.
 	/// </summary>
 	public sealed class GenericDeserializationBinder : System.Runtime.Serialization.SerializationBinder
 	{

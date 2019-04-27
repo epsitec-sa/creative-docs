@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -73,11 +73,11 @@ namespace Epsitec.Common.Designer
 			this.accessForms    = new ResourceAccess(ResourceAccess.Type.Forms,    this, this.moduleId);
 			this.Load();
 
-			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields !
+			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de crÃ©er this.accessFields !
 			this.accessFields   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleId);
 			this.accessFields.Load(this);
 
-			//	Attention: il faut avoir fait le this.accessTypes.Load() avant de créer this.accessValues !
+			//	Attention: il faut avoir fait le this.accessTypes.Load() avant de crÃ©er this.accessValues !
 			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleId);
 			this.accessValues.Load(this);
 
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Designer
 
 		public string InitialMessage
 		{
-			//	Retourne le message initial donnant des informations sur le déroulement
+			//	Retourne le message initial donnant des informations sur le dÃ©roulement
 			//	de l'ouverture du module.
 			get
 			{
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer
 
 		public ResourceAccess GetAccess(ResourceAccess.Type type)
 		{
-			//	Cherche un accès d'après son type.
+			//	Cherche un accÃ¨s d'aprÃ¨s son type.
 			switch (type)
 			{
 				case ResourceAccess.Type.Strings:
@@ -344,9 +344,9 @@ namespace Epsitec.Common.Designer
 
 		public ResourceAccess.Type GetCaptionType(Druid id)
 		{
-			//	Cherche à quel type 'caption' appartient un Druid.
+			//	Cherche Ã  quel type 'caption' appartient un Druid.
 			//	Il ne peut pas s'agir d'un type ResourceAccess.Type.Strings, car les Druids 'string' et 'caption'
-			//	peuvent être identiques !
+			//	peuvent Ãªtre identiques !
 			if (this.accessCaptions.Accessor.Collection[id] != null)
 			{
 				return ResourceAccess.Type.Captions;
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Designer
 
 		public void Save()
 		{
-			//	Enregistre toutes les ressources et met à jour le fichier module.info.
+			//	Enregistre toutes les ressources et met Ã  jour le fichier module.info.
 			this.SaveResources ();
 
 #if false
@@ -431,10 +431,10 @@ namespace Epsitec.Common.Designer
 
 		public string CheckMessage()
 		{
-			//	Retourne l'éventuel rapport.
+			//	Retourne l'Ã©ventuel rapport.
 			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
 
-			//	Vérifie l'éventuel usage à double des raccourcis clavier.
+			//	VÃ©rifie l'Ã©ventuel usage Ã  double des raccourcis clavier.
 			foreach (ResourceAccess access in this.Accesses)
 			{
 				access.AddShortcuts(list);
@@ -443,14 +443,14 @@ namespace Epsitec.Common.Designer
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			ResourceAccess.CheckShortcuts(builder, list);
 
-			//	Vérifie les Forms.
+			//	VÃ©rifie les Forms.
 			this.accessForms.CheckForms(builder);
 
 			string message = builder.ToString();
 			if (message.EndsWith("<br/>"))
 			{
 				//	Pour compenser un bug dans TextLayout. Si le texte se termine par "<br/>", le calcul
-				//	de la hauteur est incorrect (la dernière ligne n'est pas comptée). En revanche, si
+				//	de la hauteur est incorrect (la derniÃ¨re ligne n'est pas comptÃ©e). En revanche, si
 				//	le texte se termine par "<br/> ", tout semble fonctionner !
 				//	TODO: corriger TextLayout et supprimer cette magouille !
 				message += " ";
@@ -461,7 +461,7 @@ namespace Epsitec.Common.Designer
 
 		public void Check()
 		{
-			//	Vérifie toutes les ressources et affiche un rapport.
+			//	VÃ©rifie toutes les ressources et affiche un rapport.
 			string message = this.CheckMessage();
 
 			if (string.IsNullOrEmpty(message))  // aucune anomalie ?
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Designer
 
 		public void RunPanel(int index)
 		{
-			//	Montre une ressource 'Panel' dans une fenêtre.
+			//	Montre une ressource 'Panel' dans une fenÃªtre.
 			string name = this.accessPanels.GetField(index, null, ResourceAccess.FieldType.Name).String;
 			UI.Panel panel = this.accessPanels.GetPanel(index);
 
@@ -499,11 +499,11 @@ namespace Epsitec.Common.Designer
 
 		public void RunForm(int index)
 		{
-			//	Montre une ressource 'Form' dans une fenêtre.
+			//	Montre une ressource 'Form' dans une fenÃªtre.
 			string name = this.accessForms.GetField(index, null, ResourceAccess.FieldType.Name).String;
 			Druid druid = this.accessForms.AccessDruid(index);
 			
-			Size size = new Size (800, 600);  // dimensions par défaut
+			Size size = new Size (800, 600);  // dimensions par dÃ©faut
 			
 			FormEngine.Engine engine = new FormEngine.Engine(this.FormResourceProvider);
 			UI.Panel panel = engine.CreateForm(druid, ref size);
@@ -573,7 +573,7 @@ namespace Epsitec.Common.Designer
 
 				if (module == null)
 				{
-					//	Pas trouvé de module chargé pour le masque spécifié, alors on va
+					//	Pas trouvÃ© de module chargÃ© pour le masque spÃ©cifiÃ©, alors on va
 					//	passer par le gestionnaire de ressources standard :
 					return this.defaultProvider.GetFormXmlSource(formId);
 				}
@@ -587,8 +587,8 @@ namespace Epsitec.Common.Designer
 					
 					if (accessor.BasedOnPatchModule)
 					{
-						//	Oups: c'est un module de patch. La vue "réelle" des données est
-						//	synthétisée par Designer, à partir du Form du module de référence
+						//	Oups: c'est un module de patch. La vue "rÃ©elle" des donnÃ©es est
+						//	synthÃ©tisÃ©e par Designer, Ã  partir du Form du module de rÃ©fÃ©rence
 						//	et du Form du module de patch.
 
 						string value;
@@ -596,9 +596,9 @@ namespace Epsitec.Common.Designer
 						switch (item.Source)
 						{
 							case CultureMapSource.DynamicMerge:
-								//	On va forcer la re-génération du "merge", comme ça je suis
-								//	sûr que les données avec lesquelles on travaille sont bien
-								//	à jour, même si l'utilisateur a édité une ressource provenant
+								//	On va forcer la re-gÃ©nÃ©ration du "merge", comme Ã§a je suis
+								//	sÃ»r que les donnÃ©es avec lesquelles on travaille sont bien
+								//	Ã  jour, mÃªme si l'utilisateur a Ã©ditÃ© une ressource provenant
 								//	d'un autre module.
 								module.accessForms.FormMerge(item);
 								value = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
@@ -622,8 +622,8 @@ namespace Epsitec.Common.Designer
 					}
 					else
 					{
-						//	Si c'est un module normal, pas de problème: on peut simplement lire
-						//	le XML source tel qu'il est stocké dans les ressources :
+						//	Si c'est un module normal, pas de problÃ¨me: on peut simplement lire
+						//	le XML source tel qu'il est stockÃ© dans les ressources :
 						return data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 					}
 				}
@@ -641,13 +641,13 @@ namespace Epsitec.Common.Designer
 
 				if (module == null)
 				{
-					//	Pas trouvé de module chargé pour le caption spécifié, alors on va
+					//	Pas trouvÃ© de module chargÃ© pour le caption spÃ©cifiÃ©, alors on va
 					//	passer par le gestionnaire de ressources standard :
 					return this.defaultProvider.GetCaption(captionId);
 				}
 
 				//	Cherche le caption dans tous les accesseurs possibles et imaginables
-				//	qui représentent les données sous la forme de captions :
+				//	qui reprÃ©sentent les donnÃ©es sous la forme de captions :
 
 				CultureMap item = null;
 				AbstractCaptionResourceAccessor accessor = null;
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Designer
 
 				if (module == null)
 				{
-					//	Pas trouvé de module chargé pour le type spécifié, alors on va
+					//	Pas trouvÃ© de module chargÃ© pour le type spÃ©cifiÃ©, alors on va
 					//	passer par le gestionnaire de ressources standard :
 					Caption caption = this.module.resourceManager.GetCaption (id);
 
@@ -831,7 +831,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			//	Passe en revue les bundles tels que les accesseurs les ont
-			//	préparés pour les optimiser :
+			//	prÃ©parÃ©s pour les optimiser :
 			foreach (ResourceBundle bundle in this.batchSaver.GetLiveBundles())
 			{
 				this.OptimizeBundles(bundle);
@@ -842,8 +842,8 @@ namespace Epsitec.Common.Designer
 			
 			if ((this.AccessForms.AccessCount > 0) && (this.IsPatch == false))
 			{
-				//	Il y a des masques de saisie définis pour ce module; il faut donc encore
-				//	générer le code C# correspondant.
+				//	Il y a des masques de saisie dÃ©finis pour ce module; il faut donc encore
+				//	gÃ©nÃ©rer le code C# correspondant.
 
 				List<ResourceBundle> bundles = new List<ResourceBundle>();
 				
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Designer
 			if (bundle.BasedOnPatchModule && !this.isMergingModules)
 			{
 				//	N'optimise pas les ressources d'un module de patch, car
-				//	l'optimisation ne peut se faire qu'après fusion.
+				//	l'optimisation ne peut se faire qu'aprÃ¨s fusion.
 
 				return;
 			}
@@ -911,8 +911,8 @@ namespace Epsitec.Common.Designer
 					if (field.About == "" || ResourceBundle.Field.IsNullString(field.About))
 					{
 						//	Si un champ contient un commentaire vide et qu'il
-						//	s'agit d'une ressource d'un module de référence,
-						//	alors on peut supprimer complètement son contenu.
+						//	s'agit d'une ressource d'un module de rÃ©fÃ©rence,
+						//	alors on peut supprimer complÃ¨tement son contenu.
 
 						field.SetAbout(null);
 					}
@@ -922,7 +922,7 @@ namespace Epsitec.Common.Designer
 						System.Diagnostics.Debug.Assert(field.Name == null);
 
 						//	Si une ressource est vide dans un bundle autre que le bundle
-						//	par défaut, il faut la supprimer.
+						//	par dÃ©faut, il faut la supprimer.
 						if (ResourceBundle.Field.IsNullString(field.AsString) &&
 							ResourceBundle.Field.IsNullString(field.About))
 						{
@@ -1078,7 +1078,7 @@ namespace Epsitec.Common.Designer
 
 		private void HandleAccessDirtyChanged(object sender)
 		{
-			//	Appelé lorsque l'état IsDirty d'un accès a changé.
+			//	AppelÃ© lorsque l'Ã©tat IsDirty d'un accÃ¨s a changÃ©.
 			if (this.designerApplication != null)
 			{
 				this.designerApplication.GetCommandState("Save").Enable = this.IsGlobalDirty;
@@ -1097,7 +1097,7 @@ namespace Epsitec.Common.Designer
 
 		protected IEnumerable<ResourceAccess> Accesses
 		{
-			//	Enumère tous les accès.
+			//	EnumÃ¨re tous les accÃ¨s.
 			get
 			{
 				yield return accessStrings;

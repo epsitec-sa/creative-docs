@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DataGraph fournit une implémentation de base de
+	/// La classe DataGraph fournit une implÃ©mentation de base de
 	/// l'interface IDataGraph
 	/// </summary>
 	public class DataGraph : IDataGraph
@@ -152,8 +152,8 @@ namespace Epsitec.Common.Types
 				
 				ok = true;
 				
-				//	Les noeuds pourraient aussi être des valeurs (IDataValue), alors on
-				//	ne s'arrête pas immédiatement en cas de succès, mais on vérifie que
+				//	Les noeuds pourraient aussi Ãªtre des valeurs (IDataValue), alors on
+				//	ne s'arrÃªte pas immÃ©diatement en cas de succÃ¨s, mais on vÃ©rifie que
 				//	les valeurs correspondent aussi, s'il y en a.
 			}
 
@@ -179,11 +179,11 @@ namespace Epsitec.Common.Types
 		
 		public static int CopyValues(IDataItem src, IDataItem dst)
 		{
-			//	Copie les valeurs de la source à la destination. Cela ne va pas créer
-			//	des noeuds et/ou feuilles supplémentaires dans la destination, mais
-			//	uniquement copier les données qui existaient déjà dans la destination.
+			//	Copie les valeurs de la source Ã  la destination. Cela ne va pas crÃ©er
+			//	des noeuds et/ou feuilles supplÃ©mentaires dans la destination, mais
+			//	uniquement copier les donnÃ©es qui existaient dÃ©jÃ  dans la destination.
 			
-			//	Retourne le nombre valeurs copiées.
+			//	Retourne le nombre valeurs copiÃ©es.
 			
 			int count = 0;
 			
@@ -276,12 +276,12 @@ namespace Epsitec.Common.Types
 				
 				if (name == "*")
 				{
-					//	Considérons tout d'abord le cas où "*" ne correspond à aucun élément :
+					//	ConsidÃ©rons tout d'abord le cas oÃ¹ "*" ne correspond Ã  aucun Ã©lÃ©ment :
 					
 					this.Select (query, offset+1, root);
 					
-					//	Ensuite, considérons le cas où "*" correspond à l'élément en cours, sans
-					//	puis avec descente récursive.
+					//	Ensuite, considÃ©rons le cas oÃ¹ "*" correspond Ã  l'Ã©lÃ©ment en cours, sans
+					//	puis avec descente rÃ©cursive.
 					
 					foreach (IDataItem item in root)
 					{
@@ -295,8 +295,8 @@ namespace Epsitec.Common.Types
 						
 						if ((item.Classes & DataItemClasses.Folder) != 0)
 						{
-							this.Select (query, offset+1, item as IDataFolder);		//	sans descente récursive
-							this.Select (query, offset, item as IDataFolder);		//	avec descente récursive
+							this.Select (query, offset+1, item as IDataFolder);		//	sans descente rÃ©cursive
+							this.Select (query, offset, item as IDataFolder);		//	avec descente rÃ©cursive
 						}
 					}
 					

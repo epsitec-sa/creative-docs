@@ -5,25 +5,25 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Objects
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum HandleType
 	{
-		Primary      = 0,		// poignée principale
-		Secondary    = 1,		// poignée secondaire
-		Bezier       = 2,		// poignée secondaire pour courbe de Bézier
-		Starting     = 3,		// poignée de départ
-		Ending       = 4,		// poignée d'arrivée
-		Hide         = 5,		// poignée invisible
-		Property     = 6,		// poignée d'une propriété
-		Center       = 7,		// poignée du centre de rotation
-		Rotate       = 8,		// poignée de l'angle de rotation
-		Add          = 9,		// poignée à ajouter
-		PropertyMove = 10,		// poignée d'une propriété pour déplacer
+		Primary      = 0,		// poignÃ©e principale
+		Secondary    = 1,		// poignÃ©e secondaire
+		Bezier       = 2,		// poignÃ©e secondaire pour courbe de BÃ©zier
+		Starting     = 3,		// poignÃ©e de dÃ©part
+		Ending       = 4,		// poignÃ©e d'arrivÃ©e
+		Hide         = 5,		// poignÃ©e invisible
+		Property     = 6,		// poignÃ©e d'une propriÃ©tÃ©
+		Center       = 7,		// poignÃ©e du centre de rotation
+		Rotate       = 8,		// poignÃ©e de l'angle de rotation
+		Add          = 9,		// poignÃ©e Ã  ajouter
+		PropertyMove = 10,		// poignÃ©e d'une propriÃ©tÃ© pour dÃ©placer
 	}
 
 	public enum HandleConstrainType
 	{
-		Symmetric  = 0,		// symétrique
+		Symmetric  = 0,		// symÃ©trique
 		Smooth     = 1,		// lisse
 		Corner     = 2,		// anguleux
 		Simply     = 3,		// simple (sans coin fantaisie)
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Objects
 	}
 
 	/// <summary>
-	/// La classe Handle représente une poignée d'un objet graphique.
+	/// La classe Handle reprÃ©sente une poignÃ©e d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Handle : ISerializable
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Point Position
 		{
-			//	Position de la poignée.
+			//	Position de la poignÃ©e.
 			get
 			{
 				if ( this.document.IsSurfaceRotation )
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Point InitialPosition
 		{
-			//	Position initiale de la poignée.
+			//	Position initiale de la poignÃ©e.
 			get
 			{
 				return this.initialPosition;
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public HandleType Type
 		{
-			//	Type de la poignée.
+			//	Type de la poignÃ©e.
 			get
 			{
 				return this.type;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public HandleConstrainType ConstrainType
 		{
-			//	Type de la contrainte de la poignée.
+			//	Type de la contrainte de la poignÃ©e.
 			get
 			{
 				return this.constrainType;
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public void Modify(bool isVisible, bool isGlobalSelected, bool isManySelected, bool isShaperDeselected)
 		{
-			//	Modifie l'état d'une poignée.
+			//	Modifie l'Ã©tat d'une poignÃ©e.
 			if ( this.isVisible          != isVisible          ||
 				 this.isGlobalSelected   != isGlobalSelected   ||
 				 this.isManySelected     != isManySelected     ||
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool IsVisible
 		{
-			//	Etat "visible" de la poignée.
+			//	Etat "visible" de la poignÃ©e.
 			get
 			{
 				return this.isVisible;
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool IsHilited
 		{
-			//	Etat "survolé" de la poignée.
+			//	Etat "survolÃ©" de la poignÃ©e.
 			get
 			{
 				return this.isHilited;
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool IsGlobalSelected
 		{
-			//	Etat "sélectionné global" de la poignée.
+			//	Etat "sÃ©lectionnÃ© global" de la poignÃ©e.
 			get
 			{
 				return this.isGlobalSelected;
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool IsManySelected
 		{
-			//	Etat "sélectionné global avec beaucoup d'objets" de la poignée (caché).
+			//	Etat "sÃ©lectionnÃ© global avec beaucoup d'objets" de la poignÃ©e (cachÃ©).
 			get
 			{
 				return this.isManySelected;
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool IsShaperDeselected
 		{
-			//	Etat "modeleur désélectionné" de la poignée.
+			//	Etat "modeleur dÃ©sÃ©lectionnÃ©" de la poignÃ©e.
 			get
 			{
 				return this.isShaperDeselected;
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Properties.Type PropertyType
 		{
-			//	Type de la propriété liée à la poignée.
+			//	Type de la propriÃ©tÃ© liÃ©e Ã  la poignÃ©e.
 			get
 			{
 				return this.propertyType;
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public int PropertyRank
 		{
-			//	Rang de la poignée dans la propriété.
+			//	Rang de la poignÃ©e dans la propriÃ©tÃ©.
 			get
 			{
 				return this.propertyRank;
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void NotifyArea()
 		{
-			//	Notifie un changement de la poignée.
+			//	Notifie un changement de la poignÃ©e.
 			if ( this.document == null )  return;
 			if ( this.document.Notifier == null )  return;
 			if ( !this.isVisible )  return;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public void CopyTo(Handle dst)
 		{
-			//	Copie la poignée courante dans une poignée destination.
+			//	Copie la poignÃ©e courante dans une poignÃ©e destination.
 			dst.position           = this.position;
 			dst.initialPosition    = this.initialPosition;
 			dst.type               = this.type;
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public void SwapSelection(Handle h)
 		{
-			//	Permute les informations de sélections entre 2 poignées.
+			//	Permute les informations de sÃ©lections entre 2 poignÃ©es.
 			Misc.Swap (ref this.isVisible,          ref h.isVisible         );
 			Misc.Swap (ref this.isGlobalSelected,   ref h.isGlobalSelected  );
 			Misc.Swap (ref this.isManySelected,     ref h.isManySelected    );
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool Detect(Point pos)
 		{
-			//	Détecte si la souris est dans la poignée.
+			//	DÃ©tecte si la souris est dans la poignÃ©e.
 			if ( !this.isVisible || this.isGlobalSelected || this.isManySelected )  return false;
 			if ( this.type == HandleType.Hide )  return false;
 
@@ -330,9 +330,9 @@ namespace Epsitec.Common.Document.Objects
 
 		public Drawing.Rectangle BoundingBox
 		{
-			//	Retourne la bbox d'une poignée.
-			//	Il n'est pas nécessaire de tenir compte des dimensions de la poignée,
-			//	car la zone à repeindre est toujours engraissée en conséquence juste
+			//	Retourne la bbox d'une poignÃ©e.
+			//	Il n'est pas nÃ©cessaire de tenir compte des dimensions de la poignÃ©e,
+			//	car la zone Ã  repeindre est toujours engraissÃ©e en consÃ©quence juste
 			//	avant le Invalidate !
 			get
 			{
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public void Draw(Graphics graphics, DrawingContext context)
 		{
-			//	Dessine la poignée.
+			//	Dessine la poignÃ©e.
 			if ( !this.isVisible )  return;
 			if ( this.isManySelected )  return;
 
@@ -568,7 +568,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public static Color Adapt(Color color, DrawingContext context)
 		{
-			//	Adapte une couleur au mode d'aperçu avant impression.
+			//	Adapte une couleur au mode d'aperÃ§u avant impression.
 			if ( context.PreviewActive )
 			{
 				color = Color.FromAlphaColor(0.3, color);
@@ -580,7 +580,7 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la poignée.
+			//	SÃ©rialise la poignÃ©e.
 			info.AddValue("Position", this.position);
 			info.AddValue("Type", this.type);
 			info.AddValue("ConstrainType", this.constrainType);
@@ -588,7 +588,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Handle(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise la poignée.
+			//	Constructeur qui dÃ©sÃ©rialise la poignÃ©e.
 			this.document = Document.ReadDocument;
 			this.position = (Point) info.GetValue("Position", typeof(Point));
 			this.type = (HandleType) info.GetValue("Type", typeof(HandleType));

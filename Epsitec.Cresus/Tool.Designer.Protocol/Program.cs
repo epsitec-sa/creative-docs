@@ -6,7 +6,7 @@ namespace Epsitec.Designer.Protocol
 {
 	/// <summary>
 	/// This program handles the designer:xyz protocol, which is used to link
-	/// between Visual Studio and Crésus Designer.
+	/// between Visual Studio and CrÃ©sus Designer.
 	/// </summary>
 	static class Program
 	{
@@ -29,7 +29,7 @@ namespace Epsitec.Designer.Protocol
 
 			if (designerProcess == null)
 			{
-				System.Diagnostics.Debug.WriteLine ("No Crésus Designer found");
+				System.Diagnostics.Debug.WriteLine ("No CrÃ©sus Designer found");
 				return;
 			}
 

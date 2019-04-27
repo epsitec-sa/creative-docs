@@ -1,10 +1,10 @@
-//	Copyright © 2005-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// La classe DeflateCompressor permet de réaliser une compression compatible
+	/// La classe DeflateCompressor permet de rÃ©aliser une compression compatible
 	/// avec ZLIB/DEFLATE (RFC 1951).
 	/// </summary>
 	public static class DeflateCompressor

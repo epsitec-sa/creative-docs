@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe CellList représente une liste de cellules (tableau à une
+	/// La classe CellList reprÃ©sente une liste de cellules (tableau Ã  une
 	/// colonne).
 	/// </summary>
 	public class CellList : AbstractCellArray

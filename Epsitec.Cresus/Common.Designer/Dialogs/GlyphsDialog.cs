@@ -5,8 +5,8 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir un caractère quelconque à insérer dans
-	/// un texte en édition.
+	/// Dialogue permettant de choisir un caractÃ¨re quelconque Ã  insÃ©rer dans
+	/// un texte en Ã©dition.
 	/// </summary>
 	public class GlyphsDialog : AbstractDialog
 	{
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void EditInsert()
 		{
-			//	Insère le glyphe sélectionné dans le tableau dans la ligne éditable
+			//	InsÃ¨re le glyphe sÃ©lectionnÃ© dans le tableau dans la ligne Ã©ditable
 			//	qui avait le focus.
 			if ( this.array.SelectedIndex == -1 )  return;
 
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleArraySelected(object sender)
 		{
-			//	Le glyphe dans le tableau est sélectionné.
+			//	Le glyphe dans le tableau est sÃ©lectionnÃ©.
 			string text = "";
 			if ( this.array.SelectedIndex != -1 )
 			{
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleDoubleClicked(object sender, MessageEventArgs e)
 		{
-			//	Le glyphe est double-cliqué.
+			//	Le glyphe est double-cliquÃ©.
 			this.EditInsert();
 		}
 

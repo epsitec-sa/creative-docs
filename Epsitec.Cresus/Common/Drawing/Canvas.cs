@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// La classe Canvas permet de représenter une image vectorielle.
+	/// La classe Canvas permet de reprÃ©senter une image vectorielle.
 	/// </summary>
 	public class Canvas : Image
 	{
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert(iks != null && iks.Length > 0);
 
 			this.debugDeep = 0;
-			this.firstPageKey = iks[0];  // clé pour la première page
+			this.firstPageKey = iks[0];  // clÃ© pour la premiÃ¨re page
 
 			this.keys = new KeyTable();
 			foreach ( IconKey ik in iks )
@@ -37,8 +37,8 @@ namespace Epsitec.Common.Drawing
 		
 		protected Canvas(Canvas original, IconKey key)
 		{
-			//	Version selon IconKey du même dessin.
-			//	On partage les données avec le modèle original.
+			//	Version selon IconKey du mÃªme dessin.
+			//	On partage les donnÃ©es avec le modÃ¨le original.
 			this.data = original.data;
 			this.debugDeep = 1;
 
@@ -55,8 +55,8 @@ namespace Epsitec.Common.Drawing
 
 		protected Canvas(Canvas original, GlyphPaintStyle style)
 		{
-			//	Version "normal", "disabled" ou "selected" du même dessin.
-			//	On partage les données avec le modèle original.
+			//	Version "normal", "disabled" ou "selected" du mÃªme dessin.
+			//	On partage les donnÃ©es avec le modÃ¨le original.
 			this.data = original.data;
 			this.debugDeep = 2;
 
@@ -124,10 +124,10 @@ namespace Epsitec.Common.Drawing
 
 		public Image GetImageForIconKey(IconKey key)
 		{
-			//	Cherche l'image correspondant le mieux possible à une clé.
+			//	Cherche l'image correspondant le mieux possible Ã  une clÃ©.
 			System.Diagnostics.Debug.Assert(this.keys != null);
 
-			//	Cherche une image correspondant le mieux possible à la langue et à la taille demandée.
+			//	Cherche une image correspondant le mieux possible Ã  la langue et Ã  la taille demandÃ©e.
 			if ( (key.Size.Width != 0 && key.Size.Height != 0) || key.Language != null || key.Style != null )
 			{
 				double min = 1000000;
@@ -138,8 +138,8 @@ namespace Epsitec.Common.Drawing
 				foreach ( System.Collections.DictionaryEntry dict in this.keys )
 				{
 					// ATTENTION:
-					// L'ordre dans lequel ces clés est retourné par le dictionnaire est non défini
-					// et il se trouve qu'en exécutant avec le debugger attaché, il est différent de
+					// L'ordre dans lequel ces clÃ©s est retournÃ© par le dictionnaire est non dÃ©fini
+					// et il se trouve qu'en exÃ©cutant avec le debugger attachÃ©, il est diffÃ©rent de
 					// quand on lance l'application avec F5.
 
 					IconKey candidate = dict.Key as IconKey;
@@ -164,13 +164,13 @@ namespace Epsitec.Common.Drawing
 				if ( diff && best != null )  return best;
 			}
 
-			//	Cherche l'image correspondant à la clé de la première page.
+			//	Cherche l'image correspondant Ã  la clÃ© de la premiÃ¨re page.
 			if ( this.firstPageKey != null )
 			{
 				return this.keys[this.firstPageKey];
 			}
 
-			//	En désespoir de cause, retourne n'importe quelle image.
+			//	En dÃ©sespoir de cause, retourne n'importe quelle image.
 			foreach ( System.Collections.DictionaryEntry dict in this.keys )
 			{
 				return dict.Value as Canvas;
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Drawing
 		protected static double Delta(IconKey search, IconKey candidate)
 		{
 			//	Calcule une valeur 'delta' aussi petite que possible lorsque le candidat
-			//	est bon, et même nulle si le candidat est parfait. A l'inverse, la valeur
+			//	est bon, et mÃªme nulle si le candidat est parfait. A l'inverse, la valeur
 			//	est grande si le candidat est mauvais.
 			double delta = 0;
 
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 
-			if ( !string.IsNullOrEmpty(search.Language) )  // cherche une langue précise ?
+			if ( !string.IsNullOrEmpty(search.Language) )  // cherche une langue prÃ©cise ?
 			{
 				if ( string.IsNullOrEmpty(candidate.Language) )
 				{
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 
-			if ( search.Size.Width != 0 && search.Size.Height != 0 )  // cherche une taille précise ?
+			if ( search.Size.Width != 0 && search.Size.Height != 0 )  // cherche une taille prÃ©cise ?
 			{
 				if ( candidate.Size.Width != 0 && candidate.Size.Height != 0 )
 				{
@@ -240,10 +240,10 @@ namespace Epsitec.Common.Drawing
 		
 		protected static double Delta(Size search, Size candidate)
 		{
-			//	Calcule la valeur 'delta' entre une taille cherchée et une tailla candidate.
-			//	Si la taille candidate est plus grande que la taille cherchée, on retourne le
-			//	plus grand delta (donc la valeur la plus défavorable), car on ne doit jamais
-			//	essayer de caser une icône dans une surface trop petite (même d'un seul pixel).
+			//	Calcule la valeur 'delta' entre une taille cherchÃ©e et une tailla candidate.
+			//	Si la taille candidate est plus grande que la taille cherchÃ©e, on retourne le
+			//	plus grand delta (donc la valeur la plus dÃ©favorable), car on ne doit jamais
+			//	essayer de caser une icÃ´ne dans une surface trop petite (mÃªme d'un seul pixel).
 			if (candidate.Width > search.Width || candidate.Height > search.Height)
 			{
 				return 100;
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Drawing
 
 		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
-			//	Cherche l'image correspondant à un style.
+			//	Cherche l'image correspondant Ã  un style.
 			System.Diagnostics.Debug.Assert(this.effects != null);
 			return this.effects[style];
 		}
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override Size			Size
 		{
-			//	Taille de l'image, selon les préférences.
+			//	Taille de l'image, selon les prÃ©fÃ©rences.
 			get
 			{
 				this.ValidateGeometry();
@@ -335,7 +335,7 @@ namespace Epsitec.Common.Drawing
 		
 		protected void ValidateCache()
 		{
-			//	Met le bitmap de l'image en cache, à la taille selon les préférences.
+			//	Met le bitmap de l'image en cache, Ã  la taille selon les prÃ©fÃ©rences.
 			if ( this.cache == null )
 			{
 				Size size = this.Size;
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Drawing
 
 		public class IconKey
 		{
-			//	Informations sur l'icône contenue dans une page du document.
+			//	Informations sur l'icÃ´ne contenue dans une page du document.
 			public Size				Size = new Size(0, 0);
 			public string			Language = null;
 			public string			Style = null;
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Drawing
 
 		protected class KeyTable : System.Collections.IDictionary
 		{
-			//	Collection de Canvas, accessibles par une clé IconKey.
+			//	Collection de Canvas, accessibles par une clÃ© IconKey.
 			//	Les Canvas de cette collection on un debugDeep = 1.
 			public KeyTable()
 			{
@@ -561,7 +561,7 @@ namespace Epsitec.Common.Drawing
 
 		protected class EffectTable : System.Collections.IDictionary
 		{
-			//	Collection de Canvas, accessibles par une clé GlyphPaintStyle.
+			//	Collection de Canvas, accessibles par une clÃ© GlyphPaintStyle.
 			//	Les Canvas de cette collection on un debugDeep = 2.
 			public EffectTable()
 			{

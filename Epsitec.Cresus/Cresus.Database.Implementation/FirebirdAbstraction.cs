@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database.Exceptions;
@@ -46,8 +46,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			if (this.dbAccess.CreateDatabase)
 			{
-				//	Si l'appelant a demandé la création de la base, commence par tenter d'ouvrir une
-				//	base existante. Si celle-ci existe, c'est considéré comme une erreur, et on génère
+				//	Si l'appelant a demandÃ© la crÃ©ation de la base, commence par tenter d'ouvrir une
+				//	base existante. Si celle-ci existe, c'est considÃ©rÃ© comme une erreur, et on gÃ©nÃ¨re
 				//	une exception.
 
 				if (this.CheckDatabaseExistence ())
@@ -575,7 +575,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		public void ReleaseConnection()
 		{
-			//	Ferme la connexion à la base de données, en mettant un fanion pour ré-établir
+			//	Ferme la connexion Ã  la base de donnÃ©es, en mettant un fanion pour rÃ©-Ã©tablir
 			//	automatiquement la connexion en cas de besoin.
 			
 			if (this.dbConnection.State != System.Data.ConnectionState.Closed)

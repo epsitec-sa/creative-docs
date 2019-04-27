@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer
 	{
 		public static UI.Panel CreateEmptyPanel()
 		{
-			//	Crée un panneau "UI" vide pour expérimenter.
+			//	CrÃ©e un panneau "UI" vide pour expÃ©rimenter.
 
 			var panel = new Epsitec.Common.UI.Panel();
 			var sources = new Epsitec.Common.Types.DataSource();
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Designer
 		
 		private class CustomerRecord : Types.DependencyObject
 		{
-			//	Class "bidon" pour avoir au moins un source de données disponible.
+			//	Class "bidon" pour avoir au moins un source de donnÃ©es disponible.
 			
 			public CustomerRecord()
 			{

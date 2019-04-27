@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
-	/// Description d'une poignée pour PanelEditor.
+	/// Description d'une poignÃ©e pour PanelEditor.
 	/// </summary>
 	public class Handle
 	{
@@ -34,14 +34,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Handle(Type type)
 		{
-			//	Crée une poignée, sans préciser la position.
+			//	CrÃ©e une poignÃ©e, sans prÃ©ciser la position.
 			this.type = type;
 			this.isHilite = false;
 		}
 
 		public Type HandleType
 		{
-			//	Retourne le type d'une poignée.
+			//	Retourne le type d'une poignÃ©e.
 			get
 			{
 				return this.type;
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Glyph GlyphType
 		{
-			//	Forme de la poignée.
+			//	Forme de la poignÃ©e.
 			get
 			{
 				return this.glyph;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Point Position
 		{
-			//	Position du centre de la poignée.
+			//	Position du centre de la poignÃ©e.
 			get
 			{
 				return this.position;
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool IsHilite
 		{
-			//	Poignée survolée par la souris ?
+			//	PoignÃ©e survolÃ©e par la souris ?
 			get
 			{
 				return this.isHilite;
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool Detect(Point mouse)
 		{
-			//	Indique si la souris est dans la poignée.
+			//	Indique si la souris est dans la poignÃ©e.
 			if (this.glyph == Glyph.Hide)
 			{
 				return false;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void Draw(Graphics graphics)
 		{
-			//	Dessine la poignée.
+			//	Dessine la poignÃ©e.
 			if (this.glyph == Glyph.Hide)
 			{
 				return;
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected static void PaintTriangle(Graphics graphics, Rectangle rect, Glyph glyph, Color color)
 		{
-			//	Dessine un triangle orienté.
+			//	Dessine un triangle orientÃ©.
 			Path path = new Path();
 
 			if (glyph == Glyph.ArrowLeft)
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Rectangle Bounds
 		{
-			//	Retourne le rectangle de la poignée.
+			//	Retourne le rectangle de la poignÃ©e.
 			get
 			{
 				Rectangle bounds = new Rectangle(this.position, this.position);

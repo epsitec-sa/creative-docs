@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void UpdateSelection()
 		{
-			//	Met à jour les cotes après un changement de sélection.
+			//	Met Ã  jour les cotes aprÃ¨s un changement de sÃ©lection.
 			this.hilited = null;
 			this.dragging = null;
 
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			List<Widget> sel = this.editor.SelectedObjects;
 			bool slave = false;
-			if (sel.Count != 0)  // un ou plusieurs objets sélectionnés ?
+			if (sel.Count != 0)  // un ou plusieurs objets sÃ©lectionnÃ©s ?
 			{
 				foreach (Widget obj in sel)
 				{
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool Hilite(Point mouse)
 		{
-			//	Met en évidence la cote survolée par la souris.
+			//	Met en Ã©vidence la cote survolÃ©e par la souris.
 			Dimension dim = this.Detect(mouse);
 
 			if (this.hilited != dim)
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool Wheel(int direction)
 		{
-			//	Modifie la cote survolée selon la molette de la souris.
+			//	Modifie la cote survolÃ©e selon la molette de la souris.
 			if (this.hilited != null)
 			{
 				this.undoAction = this.editor.ViewersPanels.UndoCurrentSnapshot(null);
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool DraggingStart(Point mouse, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Début de la modification interactive d'une cote.
+			//	DÃ©but de la modification interactive d'une cote.
 			this.dragging = this.Detect(mouse);
 			if (this.dragging == null)
 			{
@@ -142,18 +142,18 @@ namespace Epsitec.Common.Designer.PanelEditor
 					int index = this.dragging.ColumnOrRow;
 
 					int search = gs.Search(unit, index);
-					if (search == -1)  // pas encore sélectionné ?
+					if (search == -1)  // pas encore sÃ©lectionnÃ© ?
 					{
 						if (!isControlPressed && !isShiftPressed)
 						{
 							gs.Clear();
 						}
 
-						gs.Add(unit, index);  // sélectionne
+						gs.Add(unit, index);  // sÃ©lectionne
 					}
 					else
 					{
-						gs.RemoveAt(search);  // désélectionne
+						gs.RemoveAt(search);  // dÃ©sÃ©lectionne
 					}
 
 					this.editor.UpdateAfterSelectionGridChanged();
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 						value = System.Math.Floor((value+0.5)*0.5);
 					}
 
-					if (isShiftPressed)  // Shift = grille magnétique ?
+					if (isShiftPressed)  // Shift = grille magnÃ©tique ?
 					{
 						double step = 5;
 						value += this.initialValue;
@@ -455,7 +455,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				if (merge && this.editor.ViewersPanels.IsUndoSameLastSnapshot(actionName))
 				{
-					// Conserve le dernier état mémorisé.
+					// Conserve le dernier Ã©tat mÃ©morisÃ©.
 				}
 				else
 				{
@@ -491,10 +491,10 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void CreateDimensions(Widget obj, bool slave)
 		{
-			//	Crée toutes les cotes pour un objet donné.
+			//	CrÃ©e toutes les cotes pour un objet donnÃ©.
 			Dimension dim;
 
-			//	Crée les cotes de ligne/colonne en premier, pour qu'elles viennent par dessous
+			//	CrÃ©e les cotes de ligne/colonne en premier, pour qu'elles viennent par dessous
 			//	toutes les autres.
 			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid && !slave)
 			{
@@ -696,7 +696,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 			}
 
-			//	Crée les cotes de padding en dernier, pour qu'elles viennent par dessus
+			//	CrÃ©e les cotes de padding en dernier, pour qu'elles viennent par dessus
 			//	toutes les autres.
 			if (this.objectModifier.HasPadding(obj))
 			{
@@ -720,7 +720,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Dimension Detect(Point pos)
 		{
-			//	Retourne la cote contenant une position donnée.
+			//	Retourne la cote contenant une position donnÃ©e.
 			for (int i=this.list.Count-1; i>=0; i--)  // du dernier (dessus) au premier (dessous)
 			{
 				Dimension dim = this.list[i];
@@ -735,8 +735,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected bool IsSkipping(Dimension dim)
 		{
-			//	Indique si une cote doit être ignorée. C'est le cas des cotes autres
-			//	que celles pour les lignes/colonnes lorsque la touche Shift est pressée.
+			//	Indique si une cote doit Ãªtre ignorÃ©e. C'est le cas des cotes autres
+			//	que celles pour les lignes/colonnes lorsque la touche Shift est pressÃ©e.
 			if (this.isShiftPressed)
 			{
 				if (dim.DimensionType != Dimension.Type.GridColumn &&
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void Invalidate(Dimension dim)
 		{
-			//	Invalide la zone occupée par une cote.
+			//	Invalide la zone occupÃ©e par une cote.
 			if (dim != null)
 			{
 				Rectangle bounds = dim.GetBounds(true);

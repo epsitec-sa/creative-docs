@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextFieldSlider implémente la ligne éditable numérique avec slider.
+	/// La classe TextFieldSlider implÃ©mente la ligne Ã©ditable numÃ©rique avec slider.
 	/// </summary>
 	public class TextFieldSlider : TextFieldUpDown
 	{
@@ -37,9 +37,9 @@ namespace Epsitec.Common.Widgets
 
 		static TextFieldSlider()
 		{
-			//	Toute modification de la propriété BackColor doit être répercutée
+			//	Toute modification de la propriÃ©tÃ© BackColor doit Ãªtre rÃ©percutÃ©e
 			//	sur le slider. Le plus simple est d'utiliser un override callback
-			//	sur la propriété BackColor :
+			//	sur la propriÃ©tÃ© BackColor :
 
 			Types.DependencyPropertyMetadata metadata = Visual.BackColorProperty.DefaultMetadata.Clone ();
 			
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnValueChanged()
 		{
-			//	Valeur numérique éditée.
+			//	Valeur numÃ©rique Ã©ditÃ©e.
 			base.OnValueChanged ();
 
 			if (this.Text != "")

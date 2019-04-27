@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -130,8 +130,8 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateText(string iconUri)
 		{
-			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
-			//	suivi des différentes préférences (taille et langue).
+			//	Met Ã  jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
+			//	suivi des diffÃ©rentes prÃ©fÃ©rences (taille et langue).
 			
 			this.Text = IconButton.GetSourceForIconText (iconUri, this.PreferredIconSize, this.PreferredIconLanguage, this.PreferredIconStyle);
 		}
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					//	TODO: définir clairement quelles valeurs DefaultParameter peut prendre
+					//	TODO: dÃ©finir clairement quelles valeurs DefaultParameter peut prendre
 
 					switch (command.CommandParameters["ButtonStyle"])
 					{

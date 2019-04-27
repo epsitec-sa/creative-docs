@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Database
 		// designing the importation/exportation stuff. So I create this property in order to remove
 		// the suffix in some cases. As the name implies, this is an ugly hack designed to bypass all
 		// that stuff. It is not definitive and I will fix all this stuff properly once I come back
-		// to work in Crésus.Core. I promise ;-P
+		// to work in CrÃ©sus.Core. I promise ;-P
 		// Marc
 		public bool EnableUglyHackInOrderToRemoveSuffixFromTableName
 		{

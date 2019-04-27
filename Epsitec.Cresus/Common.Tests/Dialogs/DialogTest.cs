@@ -90,7 +90,7 @@ namespace Epsitec.Common.Tests.Dialogs
 			//	Mask with :
 			//	- Rue
 			//	- CasePostale
-			//	- LocalitÈ.RÈsumÈ
+			//	- Localit√©.R√©sum√©
 
 			HintListController     hintListController = new HintListController ();
 			DialogSearchController searchController   = hintListController.SearchController;
@@ -102,11 +102,11 @@ namespace Epsitec.Common.Tests.Dialogs
 			
 			searchController.Resolver = resolver;
 			
-			LocalitÈEntity yverdon = null;
+			Localit√©Entity yverdon = null;
 
-			foreach (LocalitÈEntity loc in resolver.LocalitÈSuggestions)
+			foreach (Localit√©Entity loc in resolver.Localit√©Suggestions)
 			{
-				if (loc.RÈsumÈ == "CH 1400 Yverdon-les-Bains")
+				if (loc.R√©sum√© == "CH 1400 Yverdon-les-Bains")
 				{
 					yverdon = loc;
 					break;
@@ -196,25 +196,25 @@ namespace Epsitec.Common.Tests.Dialogs
 			AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity> ();
 
 			adresse.Rue = "Ch. du Fontenay 6";
-			adresse.LocalitÈ.Nom = "Yverdon-les-Bains";
-			adresse.LocalitÈ.NumÈro = "1400";
-			adresse.LocalitÈ.Pays.Code = "CH";
-			adresse.LocalitÈ.Pays.Nom = "Suisse";
+			adresse.Localit√©.Nom = "Yverdon-les-Bains";
+			adresse.Localit√©.Num√©ro = "1400";
+			adresse.Localit√©.Pays.Code = "CH";
+			adresse.Localit√©.Pays.Nom = "Suisse";
 
 			return adresse;
 		}
 
-		internal static AdresseEntity CreateDefaultAdresseEntity(EntityContext entityContext, LocalitÈEntity loc)
+		internal static AdresseEntity CreateDefaultAdresseEntity(EntityContext entityContext, Localit√©Entity loc)
 		{
 			AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity> ();
 
 			adresse.Rue = "Ch. du Fontenay 6";
-			adresse.LocalitÈ = loc;
+			adresse.Localit√© = loc;
 
 			return adresse;
 		}
 
-		internal static DialogData CreateDefaultDialogData(EntityContext entityContext, LocalitÈEntity loc)
+		internal static DialogData CreateDefaultDialogData(EntityContext entityContext, Localit√©Entity loc)
 		{
 			return new DialogData (DialogTest.CreateDefaultAdresseEntity (entityContext, loc), DialogDataMode.Isolated);
 		}
@@ -246,41 +246,41 @@ namespace Epsitec.Common.Tests.Dialogs
 			resolver.PaysSuggestions.Add (countryDe);
 
 #if false
-			resolver.LocalitÈSuggestions.Add (new LocalitÈEntity ()
+			resolver.Localit√©Suggestions.Add (new Localit√©Entity ()
 			{
 				Nom = "Yverdon-les-Bains",
-				NumÈro = "1400",
+				Num√©ro = "1400",
 				Pays = countryCh
 			});
 
-			resolver.LocalitÈSuggestions.Add (new LocalitÈEntity ()
+			resolver.Localit√©Suggestions.Add (new Localit√©Entity ()
 			{
-				Nom = "SuscÈvaz",
-				NumÈro = "1437",
+				Nom = "Susc√©vaz",
+				Num√©ro = "1437",
 				Pays = countryCh
 			});
 
-			resolver.LocalitÈSuggestions.Add (new LocalitÈEntity ()
+			resolver.Localit√©Suggestions.Add (new Localit√©Entity ()
 			{
 				Nom = "Treycovagnes",
-				NumÈro = "1436",
+				Num√©ro = "1436",
 				Pays = countryCh
 			});
 
-			resolver.LocalitÈSuggestions.Add (new LocalitÈEntity ()
+			resolver.Localit√©Suggestions.Add (new Localit√©Entity ()
 			{
 				Nom = "Yvonand",
-				NumÈro = "1462",
+				Num√©ro = "1462",
 				Pays = countryCh
 			});
 #else
-			List<LocalitÈEntity> locs = new List<LocalitÈEntity> (DialogTest.ReadNuPost ());
+			List<Localit√©Entity> locs = new List<Localit√©Entity> (DialogTest.ReadNuPost ());
 
 			locs.Sort ((a, b) => string.Compare (a.Nom, b.Nom));
 			
-			foreach (LocalitÈEntity loc in locs)
+			foreach (Localit√©Entity loc in locs)
 			{
-				resolver.LocalitÈSuggestions.Add (loc);
+				resolver.Localit√©Suggestions.Add (loc);
 			}
 #endif
 			
@@ -297,22 +297,22 @@ namespace Epsitec.Common.Tests.Dialogs
 			pays.Code = "CH";
 			pays.Nom = "Suisse";
 
-			LocalitÈEntity localitÈ = context.CreateEmptyEntity<LocalitÈEntity> ();
+			Localit√©Entity localit√© = context.CreateEmptyEntity<Localit√©Entity> ();
 
-			localitÈ.NumÈro = "1400";
-			localitÈ.Nom = "Yverdon-les-Bains";
-			localitÈ.Pays = pays;
+			localit√©.Num√©ro = "1400";
+			localit√©.Nom = "Yverdon-les-Bains";
+			localit√©.Pays = pays;
 
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 
 			int n = 1000*1000;
-			string result = localitÈ.RÈsumÈ;
+			string result = localit√©.R√©sum√©;
 
 			watch.Start ();
 
 			for (int i = 0; i < n; i++)
 			{
-				if (localitÈ.RÈsumÈ != result)
+				if (localit√©.R√©sum√© != result)
 				{
 					break;
 				}
@@ -323,13 +323,13 @@ namespace Epsitec.Common.Tests.Dialogs
 			System.Console.WriteLine ("{1} iterations: {0} ms --> {2}", watch.ElapsedMilliseconds, n, result);
 			watch.Reset ();
 			
-			result = localitÈ.Nom;
+			result = localit√©.Nom;
 
 			watch.Start ();
 
 			for (int i = 0; i < n; i++)
 			{
-				if (localitÈ.Nom != result)
+				if (localit√©.Nom != result)
 				{
 					break;
 				}
@@ -345,15 +345,15 @@ namespace Epsitec.Common.Tests.Dialogs
 		{
 			public TestResolver()
 			{
-				this.localitÈSuggestions = new List<LocalitÈEntity> ();
+				this.localit√©Suggestions = new List<Localit√©Entity> ();
 				this.paysSuggestions = new List<PaysEntity> ();
 			}
 
-			public IList<LocalitÈEntity> LocalitÈSuggestions
+			public IList<Localit√©Entity> Localit√©Suggestions
 			{
 				get
 				{
-					return this.localitÈSuggestions;
+					return this.localit√©Suggestions;
 				}
 			}
 
@@ -374,18 +374,18 @@ namespace Epsitec.Common.Tests.Dialogs
 			
 			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
 			{
-				LocalitÈEntity loc  = AbstractEntity.Resolve<LocalitÈEntity> (template);
+				Localit√©Entity loc  = AbstractEntity.Resolve<Localit√©Entity> (template);
 				PaysEntity     pays = AbstractEntity.Resolve<PaysEntity> (template);
 
 				if (loc != null)
 				{
-					System.Diagnostics.Debug.WriteLine ("Search for LocalitÈ :\n" + loc.Dump ());
+					System.Diagnostics.Debug.WriteLine ("Search for Localit√© :\n" + loc.Dump ());
 					
-					foreach (LocalitÈEntity item in this.localitÈSuggestions)
+					foreach (Localit√©Entity item in this.localit√©Suggestions)
 					{
-						if ((TestResolver.Match (item.NumÈro, loc.NumÈro)) &&
+						if ((TestResolver.Match (item.Num√©ro, loc.Num√©ro)) &&
 							(TestResolver.Match (item.Nom, loc.Nom)) &&
-							(TestResolver.Match (item.RÈsumÈ, loc.RÈsumÈ)))
+							(TestResolver.Match (item.R√©sum√©, loc.R√©sum√©)))
 						{
 							yield return item;
 						}
@@ -420,11 +420,11 @@ namespace Epsitec.Common.Tests.Dialogs
 
 			#endregion
 
-			private readonly List<LocalitÈEntity> localitÈSuggestions;
+			private readonly List<Localit√©Entity> localit√©Suggestions;
 			private readonly List<PaysEntity> paysSuggestions;
 		}
 
-		public static IEnumerable<LocalitÈEntity> ReadNuPost()
+		public static IEnumerable<Localit√©Entity> ReadNuPost()
 		{
 			PaysEntity countryCh = new PaysEntity ()
 			{
@@ -436,11 +436,11 @@ namespace Epsitec.Common.Tests.Dialogs
 			{
 				string[] values = line.Split ('\t');
 
-				LocalitÈEntity loc = new LocalitÈEntity ();
+				Localit√©Entity loc = new Localit√©Entity ();
 
 				using (loc.DefineOriginalValues ())
 				{
-					loc.NumÈro = values[2];
+					loc.Num√©ro = values[2];
 					loc.Nom = values[5];
 					loc.Pays = countryCh;
 				}

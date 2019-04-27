@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe FontFaceCombo implémente la ligne éditable avec bouton "v" pour
+	/// La classe FontFaceCombo implÃ©mente la ligne Ã©ditable avec bouton "v" pour
 	/// choisir une police.
 	/// </summary>
 	public class FontFaceCombo : TextFieldCombo
@@ -96,9 +96,9 @@ namespace Epsitec.Common.Document.Widgets
 			menu.Contents = this.fontSelector;
 			menu.AdjustSize();
 			
-			//	On n'a pas le droit de définir le "SelectedFontFace" avant d'avoir fait
-			//	cette mise à jour du contenu avec la nouvelle taille ajustée, sinon on
-			//	risque d'avoir un offset incorrect pour le début...
+			//	On n'a pas le droit de dÃ©finir le "SelectedFontFace" avant d'avoir fait
+			//	cette mise Ã  jour du contenu avec la nouvelle taille ajustÃ©e, sinon on
+			//	risque d'avoir un offset incorrect pour le dÃ©but...
 			this.fontSelector.UpdateContents();
 			this.fontSelector.SelectedFontFace = this.Text;
 			this.fontSelector.SelectionChanged += this.HandleSelectorSelectionChanged;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Widgets
 		
 		private void HandleSelectorSelectionChanged(object sender)
 		{
-			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
+			//	L'utilisateur a cliquÃ© dans la liste pour terminer son choix.
 			string text = this.fontSelector.SelectedFontFace;
 			if ( this.Text != text )
 			{

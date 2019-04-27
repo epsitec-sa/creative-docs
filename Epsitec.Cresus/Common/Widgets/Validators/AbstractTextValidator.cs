@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Validators
 {
 	/// <summary>
-	/// La classe AbstractTextValidator permet de simplifier l'implémentation de
-	/// l'interface IValidator dans les cas où le texte sert de source pour la
+	/// La classe AbstractTextValidator permet de simplifier l'implÃ©mentation de
+	/// l'interface IValidator dans les cas oÃ¹ le texte sert de source pour la
 	/// validation.
 	/// </summary>
 	public abstract class AbstractTextValidator : AbstractValidator

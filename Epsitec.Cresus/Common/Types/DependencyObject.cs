@@ -1,4 +1,4 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Types
 					yield return new PropertyValuePair (property, this.properties[property]);
 				}
 				
-				//	Passe encore en revue les propriétés qui ne sont pas définies
+				//	Passe encore en revue les propriÃ©tÃ©s qui ne sont pas dÃ©finies
 				//	dans la variable 'properties' mais directement au moyen de
 				//	callbacks GetValueOverrideCallback :
 
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Types
 					yield return property;
 				}
 
-				//	Passe encore en revue les propriétés qui ne sont pas définies
+				//	Passe encore en revue les propriÃ©tÃ©s qui ne sont pas dÃ©finies
 				//	dans la variable 'properties' mais directement au moyen de
 				//	callbacks GetValueOverrideCallback :
 
@@ -204,8 +204,8 @@ namespace Epsitec.Common.Types
 		{
 			object value = this.GetLocalValue (property);
 			
-			//	Si la valeur n'est pas définie localement, il faut déterminer la
-			//	valeur réelle (par défaut, héritée, etc.)
+			//	Si la valeur n'est pas dÃ©finie localement, il faut dÃ©terminer la
+			//	valeur rÃ©elle (par dÃ©faut, hÃ©ritÃ©e, etc.)
 			
 			if (value == UndefinedValue.Value)
 			{
@@ -439,8 +439,8 @@ namespace Epsitec.Common.Types
 		{
 			object value = this.GetLocalValue (property);
 
-			//	Si la valeur n'est pas définie localement, il faut déterminer la
-			//	valeur réelle (par défaut, héritée, etc.)
+			//	Si la valeur n'est pas dÃ©finie localement, il faut dÃ©terminer la
+			//	valeur rÃ©elle (par dÃ©faut, hÃ©ritÃ©e, etc.)
 
 			if (value == UndefinedValue.Value)
 			{
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Types
 
 				if (DependencyObject.EqualObjectValues (oldValue, newValue))
 				{
-					//	C'est exactement la même valeur -- on ne signale donc rien ici.
+					//	C'est exactement la mÃªme valeur -- on ne signale donc rien ici.
 				}
 				else
 				{
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Types
 
 				if (DependencyObject.EqualObjectValues (oldValue, newValue))
 				{
-					//	C'est exactement la même valeur -- on ne signale donc rien ici.
+					//	C'est exactement la mÃªme valeur -- on ne signale donc rien ici.
 				}
 				else
 				{

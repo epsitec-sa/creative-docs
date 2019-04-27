@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe AbstractSlider implÈmente la classe de base des potentiomËtres linÈaires
+	/// La classe AbstractSlider impl√©mente la classe de base des potentiom√®tres lin√©aires
 	/// HSlider et VSlider.
 	/// </summary>
 	public abstract class AbstractSlider : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
@@ -103,10 +103,10 @@ namespace Epsitec.Common.Widgets
 		public bool							IsInverted
 		{
 			//	Inversion du fonctionnement.
-			//	Ascenseur vertical:   false -> zÈro en bas
-			//	Ascenseur vertical:   true  -> zÈro en haut
-			//	Ascenseur horizontal: false -> zÈro ‡ gauche
-			//	Ascenseur horizontal: true  -> zÈro ‡ droite
+			//	Ascenseur vertical:   false -> z√©ro en bas
+			//	Ascenseur vertical:   true  -> z√©ro en haut
+			//	Ascenseur horizontal: false -> z√©ro √† gauche
+			//	Ascenseur horizontal: true  -> z√©ro √† droite
 			
 			get
 			{
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool ShowMinMaxButtons
 		{
-			//	Boutons min/max aux extrÈmitÈs du slider.
+			//	Boutons min/max aux extr√©mit√©s du slider.
 			get
 			{
 				return this.showMinMaxButtons;
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool ShowScrollButtons
 		{
-			//	Boutons pour incrÈmenter/dÈcrÈmenter
+			//	Boutons pour incr√©menter/d√©cr√©menter
 			get
 			{
 				return this.showScrollButtons;
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Widgets
 		
 		public decimal						SmallChange
 		{
-			//	Valeur avancÈe par les boutons.
+			//	Valeur avanc√©e par les boutons.
 			get
 			{
 				return this.buttonStep;
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Widgets
 		
 		public decimal						LargeChange
 		{
-			//	Valeur avancÈe en cliquant hors de la cabine.
+			//	Valeur avanc√©e en cliquant hors de la cabine.
 			get
 			{
 				return this.pageStep;
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Widgets
 					if (arrowLength < AbstractSlider.minimalArrow)
 					{
 						//	S'il n'y a plus assez de place pour afficher un bouton visible,
-						//	autant les cacher complËtement !
+						//	autant les cacher compl√®tement !
 						arrowLength = 0;
 					}
 				}

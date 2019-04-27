@@ -1,4 +1,4 @@
-//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -15,7 +15,7 @@ using System.Linq;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Widget implémente la classe de base dont dérivent tous les
+	/// La classe Widget implÃ©mente la classe de base dont dÃ©rivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
 	public partial class Widget : Visual, Collections.IShortcutCollectionHost, Support.IIsDisposed, Support.IDisposed
@@ -73,8 +73,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static void Initialize()
 		{
-			//	En appelant cette méthode statique, on peut garantir que le constructeur
-			//	statique de Widget a bien été exécuté.
+			//	En appelant cette mÃ©thode statique, on peut garantir que le constructeur
+			//	statique de Widget a bien Ã©tÃ© exÃ©cutÃ©.
 		}
 		
 		
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.AutoMnemonic)
 			{
-				//	Supprime le flag 'auto mnemonic' sans altérer le raccourci,
-				//	ce qui évite de générer un événement ShortcutChanged avant
+				//	Supprime le flag 'auto mnemonic' sans altÃ©rer le raccourci,
+				//	ce qui Ã©vite de gÃ©nÃ©rer un Ã©vÃ©nement ShortcutChanged avant
 				//	l'heure :
 				
 				this.internalState &= ~WidgetInternalState.AutoMnemonic;
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Widgets
 				
 				lock (Widget.aliveWidgets)
 				{
-					//	Passe en revue tous les widgets connus (même les décédés) et reconstruit
+					//	Passe en revue tous les widgets connus (mÃªme les dÃ©cÃ©dÃ©s) et reconstruit
 					//	une liste ne contenant que les widgets vivants :
 					
 					foreach (System.WeakReference weakRef in Widget.aliveWidgets)
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 					
-					//	Remplace la liste des widgets connus par la liste à jour qui vient d'être
+					//	Remplace la liste des widgets connus par la liste Ã  jour qui vient d'Ãªtre
 					//	construite :
 					
 					Widget.aliveWidgets = alive;
@@ -320,8 +320,8 @@ namespace Epsitec.Common.Widgets
 		
 		public bool								IsEmbedded
 		{
-			//	Un widget qui retourne IsEmbedded = true n'a pas besoin d'être sérialisé
-			//	quand son parent est sérialisé, car il est construit et géré par le parent.
+			//	Un widget qui retourne IsEmbedded = true n'a pas besoin d'Ãªtre sÃ©rialisÃ©
+			//	quand son parent est sÃ©rialisÃ©, car il est construit et gÃ©rÃ© par le parent.
 			//	Voir le constructeur Widget(Widget) et Widget.SetEmbedder.
 			get
 			{
@@ -527,8 +527,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				//	Retourne la position dans la "pile" des widgets, en ne considérant que les
-				//	frères et soeurs. 0 => widget sur le sommet de la pile des widgets.
+				//	Retourne la position dans la "pile" des widgets, en ne considÃ©rant que les
+				//	frÃ¨res et soeurs. 0 => widget sur le sommet de la pile des widgets.
 				
 				if (this.Parent == null)
 				{
@@ -795,7 +795,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.AutoMnemonic)
 				{
-					//	Le code mnémonique est encapsulé par des tags <m>..</m>.
+					//	Le code mnÃ©monique est encapsulÃ© par des tags <m>..</m>.
 					
 					return TextLayout.ExtractMnemonic (this.Text);
 				}
@@ -1246,7 +1246,7 @@ namespace Epsitec.Common.Widgets
 		internal void SetFocused(bool focused)
 		{
 			//	Utiliser Focus() en lieu et place de SetFocused(true), pour
-			//	avoir une gestion complète des conditions de focus.
+			//	avoir une gestion complÃ¨te des conditions de focus.
 			
 			bool oldFocus = this.KeyboardFocus;
 			bool newFocus = focused;
@@ -1693,7 +1693,7 @@ namespace Epsitec.Common.Widgets
 
 			Widget parent = this.Parent;
 			
-			//	Le plus simple est d'utiliser la récursion, afin de commencer la conversion depuis la
+			//	Le plus simple est d'utiliser la rÃ©cursion, afin de commencer la conversion depuis la
 			//	racine, puis d'enfant en enfant jusqu'au widget final.
 			
 			if (parent != null)
@@ -1706,8 +1706,8 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Point MapClientToRoot(Drawing.Point point, System.Predicate<Widget> isRoot = null)
 		{
-			//	Transforme des coordonnées client d'un widget en coordonnées relatives à la
-			//	racine de la fenêtre. Le point inférieur gauche d'un widget, en coordonnées
+			//	Transforme des coordonnÃ©es client d'un widget en coordonnÃ©es relatives Ã  la
+			//	racine de la fenÃªtre. Le point infÃ©rieur gauche d'un widget, en coordonnÃ©es
 			//	client, est en principe [0;0].
 			if (this.IsDisposing)
 			{
@@ -1716,8 +1716,8 @@ namespace Epsitec.Common.Widgets
 			
 			Widget iter = this;
 
-			//	On a le choix entre une solution récursive et une solution itérative. La version
-			//	itérative devrait être un petit peu plus rapide ici.
+			//	On a le choix entre une solution rÃ©cursive et une solution itÃ©rative. La version
+			//	itÃ©rative devrait Ãªtre un petit peu plus rapide ici.
 
 			while (iter != null)
 			{
@@ -1791,8 +1791,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle MapClientToRoot(Drawing.Rectangle rect)
 		{
-			//	Transforme des coordonnées client d'un widget en coordonnées relatives à la
-			//	racine de la fenêtre. Le point inférieur gauche d'un widget, en coordonnées
+			//	Transforme des coordonnÃ©es client d'un widget en coordonnÃ©es relatives Ã  la
+			//	racine de la fenÃªtre. Le point infÃ©rieur gauche d'un widget, en coordonnÃ©es
 			//	client, est en principe [0;0].
 			//	Pour obtenir les "bounds" d'un widget, il faut donc convertir [0;0;width;height]
 			//	comme ceci:
@@ -2026,18 +2026,18 @@ namespace Epsitec.Common.Widgets
 				{
 					if ((mode & WidgetChildFindMode.SkipTransparent) != 0)
 					{
-						//	TODO: vérifier que le point en question n'est pas transparent
+						//	TODO: vÃ©rifier que le point en question n'est pas transparent
 					}
 					
 					if ((mode & WidgetChildFindMode.Deep) != 0)
 					{
-						//	Si on fait une recherche en profondeur, on regarde si le point correspond à
-						//	un descendant du widget trouvé...
+						//	Si on fait une recherche en profondeur, on regarde si le point correspond Ã 
+						//	un descendant du widget trouvÃ©...
 						
 						Widget deep = widget.FindChild (widget.MapParentToClient (point), ignore, mode);
 						
-						//	Si oui, pas de test supplémentaire: on s'arrête et on retourne le widget
-						//	terminal trouvé lors de la descente récursive :
+						//	Si oui, pas de test supplÃ©mentaire: on s'arrÃªte et on retourne le widget
+						//	terminal trouvÃ© lors de la descente rÃ©cursive :
 						
 						if (deep != null)
 						{
@@ -2047,10 +2047,10 @@ namespace Epsitec.Common.Widgets
 					
 					if ((mode & WidgetChildFindMode.SkipEmbedded) != 0)
 					{
-						//	Si l'appelant a demandé de sauter les widgets spéciaux, marqués comme étant
-						//	"embedded" dans un parent, on vérifie que l'on ne retourne pas un tel widget.
-						//	Ce test doit se faire en dernier, parce qu'une descente récursive dans un
-						//	widget "embedded" peut éventuellement donner des résultats positifs :
+						//	Si l'appelant a demandÃ© de sauter les widgets spÃ©ciaux, marquÃ©s comme Ã©tant
+						//	"embedded" dans un parent, on vÃ©rifie que l'on ne retourne pas un tel widget.
+						//	Ce test doit se faire en dernier, parce qu'une descente rÃ©cursive dans un
+						//	widget "embedded" peut Ã©ventuellement donner des rÃ©sultats positifs :
 						
 						if (widget.IsEmbedded)
 						{
@@ -2121,18 +2121,18 @@ namespace Epsitec.Common.Widgets
 				{
 					if ((mode & WidgetChildFindMode.SkipTransparent) != 0)
 					{
-						//	TODO: vérifier que le point en question n'est pas transparent
+						//	TODO: vÃ©rifier que le point en question n'est pas transparent
 					}
 					
 					if ((mode & WidgetChildFindMode.Deep) != 0)
 					{
-						//	Si on fait une recherche en profondeur, on regarde si le point correspond à
-						//	un descendant du widget trouvé...
+						//	Si on fait une recherche en profondeur, on regarde si le point correspond Ã 
+						//	un descendant du widget trouvÃ©...
 						
 						Widget deep = widget.FindChild (widget.MapParentToClient (rect), mode);
 						
-						//	Si oui, pas de test supplémentaire: on s'arrête et on retourne le widget
-						//	terminal trouvé lors de la descente récursive :
+						//	Si oui, pas de test supplÃ©mentaire: on s'arrÃªte et on retourne le widget
+						//	terminal trouvÃ© lors de la descente rÃ©cursive :
 						
 						if (deep != null)
 						{
@@ -2142,10 +2142,10 @@ namespace Epsitec.Common.Widgets
 					
 					if ((mode & WidgetChildFindMode.SkipEmbedded) != 0)
 					{
-						//	Si l'appelant a demandé de sauter les widgets spéciaux, marqués comme étant
-						//	"embedded" dans un parent, on vérifie que l'on ne retourne pas un tel widget.
-						//	Ce test doit se faire en dernier, parce qu'une descente récursive dans un
-						//	widget "embedded" peut éventuellement donner des résultats positifs :
+						//	Si l'appelant a demandÃ© de sauter les widgets spÃ©ciaux, marquÃ©s comme Ã©tant
+						//	"embedded" dans un parent, on vÃ©rifie que l'on ne retourne pas un tel widget.
+						//	Ce test doit se faire en dernier, parce qu'une descente rÃ©cursive dans un
+						//	widget "embedded" peut Ã©ventuellement donner des rÃ©sultats positifs :
 						
 						if (widget.IsEmbedded)
 						{
@@ -2349,7 +2349,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (focused != null)
 			{
-				//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
+				//	Il y a un widget avec le focus. Ca peut Ãªtre nous, un de nos descendants
 				//	ou un autre widget sans aucun lien.
 				
 				if (this.KeyboardFocus)
@@ -2407,7 +2407,7 @@ namespace Epsitec.Common.Widgets
 		public static Widget[]	FindAllFullPathWidgets(System.Text.RegularExpressions.Regex regex)
 		{
 			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
-			//	une commande qui correspond au critère spécifié.
+			//	une commande qui correspond au critÃ¨re spÃ©cifiÃ©.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
@@ -2416,12 +2416,12 @@ namespace Epsitec.Common.Widgets
 			{
 				foreach (System.WeakReference weakRef in Widget.aliveWidgets)
 				{
-					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
-					//	à tous les widgets sans nécessiter de descente récursive :
+					//	On utilise la liste des widgets connus qui permet d'avoir accÃ¨s immÃ©diatement
+					//	Ã  tous les widgets sans nÃ©cessiter de descente rÃ©cursive :
 					
 					if (weakRef.IsAlive)
 					{
-						//	Le widget trouvé existe (encore) :
+						//	Le widget trouvÃ© existe (encore) :
 						
 						Widget widget = weakRef.Target as Widget;
 						
@@ -2543,9 +2543,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessTab(TabNavigationDir dir, TabNavigationMode mode)
 		{
-			//	Une classe qui désire gérer l'événement de déplacement de manière interne,
-			//	par exemple dans le cas d'un widget gérant lui-même plusieurs zones sensibles,
-			//	a la possibilité de le faire ici; si l'événement a été consommé de manière
+			//	Une classe qui dÃ©sire gÃ©rer l'Ã©vÃ©nement de dÃ©placement de maniÃ¨re interne,
+			//	par exemple dans le cas d'un widget gÃ©rant lui-mÃªme plusieurs zones sensibles,
+			//	a la possibilitÃ© de le faire ici; si l'Ã©vÃ©nement a Ã©tÃ© consommÃ© de maniÃ¨re
 			//	interne, il faut retourner 'true'.
 			
 			return false;
@@ -2584,9 +2584,9 @@ namespace Epsitec.Common.Widgets
 				(this.ActiveState != ActiveState.Yes) &&
 				(mode == TabNavigationMode.ActivateOnTab))
 			{
-				//	Ce n'est pas ce bouton radio qui est allumé. TAB voudrait nous
-				//	donner le focus, mais ce n'est pas adéquat; mieux vaut mettre
-				//	le focus sur le frère qui est actuellement activé :
+				//	Ce n'est pas ce bouton radio qui est allumÃ©. TAB voudrait nous
+				//	donner le focus, mais ce n'est pas adÃ©quat; mieux vaut mettre
+				//	le focus sur le frÃ¨re qui est actuellement activÃ© :
 				
 				GroupController controller    = GroupController.GetGroupController (this);
 				Widget          activeWidget = controller.FindActiveWidget ();
@@ -2934,8 +2934,8 @@ namespace Epsitec.Common.Widgets
 				
 				if (graphics.HasEmptyClippingRectangle)
 				{
-					//	Optimisation du cas où la région de clipping devient vide: on restaure
-					//	la région précédente et on ne fait rien de plus.
+					//	Optimisation du cas oÃ¹ la rÃ©gion de clipping devient vide: on restaure
+					//	la rÃ©gion prÃ©cÃ©dente et on ne fait rien de plus.
 					
 					graphics.RestoreClippingRectangle (originalClipping);
 					return;
@@ -2952,8 +2952,8 @@ namespace Epsitec.Common.Widgets
 					
 					PaintEventArgs localPaintArgs = new PaintEventArgs (graphics, repaint);
 					
-					//	Peint l'arrière-plan du widget. En principe, tout va dans l'arrière plan, sauf
-					//	si l'on désire réaliser des effets de transparence par dessus le dessin des
+					//	Peint l'arriÃ¨re-plan du widget. En principe, tout va dans l'arriÃ¨re plan, sauf
+					//	si l'on dÃ©sire rÃ©aliser des effets de transparence par dessus le dessin des
 					//	widgets enfants.
 					
 					if ((paintFilter == null) ||
@@ -2968,8 +2968,8 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 					
-					//	Peint tous les widgets enfants, en commençant par le numéro 0, lequel se trouve
-					//	derrière tous les autres, etc. On saute les widgets qui ne sont pas visibles.
+					//	Peint tous les widgets enfants, en commenÃ§ant par le numÃ©ro 0, lequel se trouve
+					//	derriÃ¨re tous les autres, etc. On saute les widgets qui ne sont pas visibles.
 					
 					if (this.HasChildren)
 					{
@@ -2990,8 +2990,8 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				
-					//	Peint l'avant-plan du widget, à n'utiliser que pour faire un "effet" spécial
-					//	après coup.
+					//	Peint l'avant-plan du widget, Ã  n'utiliser que pour faire un "effet" spÃ©cial
+					//	aprÃ¨s coup.
 					
 					if ((paintFilter == null) ||
 						(paintFilter.IsWidgetPaintDiscarded (this) == false))
@@ -3034,12 +3034,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			//	Implémenter le dessin du fond dans cette méthode.
+			//	ImplÃ©menter le dessin du fond dans cette mÃ©thode.
 		}
 		
 		protected virtual void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			//	Implémenter le dessin des enjoliveurs additionnels dans cette méthode.
+			//	ImplÃ©menter le dessin des enjoliveurs additionnels dans cette mÃ©thode.
 		}
 		
 		protected virtual bool PaintCheckClipping(Drawing.Rectangle repaint)
@@ -3097,7 +3097,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			//	En premier lieu, si le message peut être transmis aux descendants de ce widget, passe
+			//	En premier lieu, si le message peut Ãªtre transmis aux descendants de ce widget, passe
 			//	en revue ceux-ci dans l'ordre inverse de leur affichage (commence par le widget qui est
 			//	visuellement au sommet).
 			
@@ -3126,7 +3126,7 @@ namespace Epsitec.Common.Widgets
 						{
 							if (message.IsMouseType)
 							{
-								//	C'est un message souris. Vérifions d'abord si le widget contenait déjà
+								//	C'est un message souris. VÃ©rifions d'abord si le widget contenait dÃ©jÃ 
 								//	la souris auparavant.
 
 								if ((!childEntered) &&
@@ -3190,8 +3190,8 @@ namespace Epsitec.Common.Widgets
 							return;
 						}
 						
-						//	Le bouton a été relâché. Ceci génère l'événement 'Released' pour signaler
-						//	ce relâchement, mais aussi un événement 'Clicked' ou 'DoubleClicked' en
+						//	Le bouton a Ã©tÃ© relÃ¢chÃ©. Ceci gÃ©nÃ¨re l'Ã©vÃ©nement 'Released' pour signaler
+						//	ce relÃ¢chement, mais aussi un Ã©vÃ©nement 'Clicked' ou 'DoubleClicked' en
 						//	fonction du nombre de clics.
 						
 						this.OnReleased (new MessageEventArgs (message, pos));
@@ -3250,7 +3250,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool PreProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	...appelé avant que l'événement ne soit traité...
+			//	...appelÃ© avant que l'Ã©vÃ©nement ne soit traitÃ©...
 			
 			if (this.PreProcessing != null)
 			{
@@ -3309,12 +3309,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	...appelé pour traiter l'événement...
+			//	...appelÃ© pour traiter l'Ã©vÃ©nement...
 		}
 		
 		protected virtual bool PostProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	...appelé après que l'événement ait été traité...
+			//	...appelÃ© aprÃ¨s que l'Ã©vÃ©nement ait Ã©tÃ© traitÃ©...
 			
 			if (this.PostProcessing != null)
 			{
@@ -3527,7 +3527,7 @@ namespace Epsitec.Common.Widgets
 #if false //#fix
 		protected void HandleParentChanged()
 		{
-			//	Cette méthode est appelée chaque fois qu'un widget change de parent.
+			//	Cette mÃ©thode est appelÃ©e chaque fois qu'un widget change de parent.
 			
 			this.OnParentChanged ();
 			

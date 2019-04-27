@@ -8,7 +8,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
 	/// <summary>
-	/// Dialogue "Télécharger une mise à jour".
+	/// Dialogue "TÃ©lÃ©charger une mise Ã  jour".
 	/// </summary>
 	public class Download : Abstract
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void SetInfo(string version, string url)
 		{
-			//	Spécifie les informations pour la mise à jour.
+			//	SpÃ©cifie les informations pour la mise Ã  jour.
 			if ( version.EndsWith(".0") )
 			{
 				version = version.Substring(0, version.Length-2);
@@ -29,7 +29,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -97,7 +97,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("Download");
 		}
 

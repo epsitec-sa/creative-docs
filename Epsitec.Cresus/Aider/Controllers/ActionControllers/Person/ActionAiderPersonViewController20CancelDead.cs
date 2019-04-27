@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Annuler le décès");
+			return Resources.Text ("Annuler le dÃ©cÃ¨s");
 		}
 
 		public override ActionExecutor GetExecutor()

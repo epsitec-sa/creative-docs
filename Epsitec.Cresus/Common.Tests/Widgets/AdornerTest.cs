@@ -25,9 +25,9 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private bool DynamicImageXyz(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
 		{
-			//	Méthode de test pour peindre une image dynamique selon un
-			//	modèle nommé "Xyz"; l'argument reçu en entrée permet de
-			//	déterminer exactement ce qui doit être peint.
+			//	MÃ©thode de test pour peindre une image dynamique selon un
+			//	modÃ¨le nommÃ© "Xyz"; l'argument reÃ§u en entrÃ©e permet de
+			//	dÃ©terminer exactement ce qui doit Ãªtre peint.
 
 			switch (style)
 			{
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Tests.Widgets
 			tip_check1.Dock    = DockStyle.Top;
 			tip_check1.Margins = new Margins (4, 4, 4, 0);
 			
-			tip_check2.Text    = "aide détaillée";
+			tip_check2.Text    = "aide dÃ©taillÃ©e";
 			tip_check2.Dock    = DockStyle.Top;
 			tip_check2.Margins = new Margins (4, 4, 1, 0);
 			
@@ -575,11 +575,11 @@ namespace Epsitec.Common.Tests.Widgets
 			combo.Items.Add("Mai");
 			combo.Items.Add("Juin");
 			combo.Items.Add("Juillet");
-			combo.Items.Add("Août");
+			combo.Items.Add("AoÃ»t");
 			combo.Items.Add("Septembre");
 			combo.Items.Add("Octobre");
 			combo.Items.Add("Novembre");
-			combo.Items.Add("Décembre");
+			combo.Items.Add("DÃ©cembre");
 			combo.Items.Add("Lundi");
 			combo.Items.Add("Mardi");
 			combo.Items.Add("Mercredi");
@@ -669,7 +669,7 @@ namespace Epsitec.Common.Tests.Widgets
 			Rectangle inside = tab.Client.Bounds;
 			inside.Deflate (tab.GetInternalPadding ());
 
-			//	Crée l'onglet 1.
+			//	CrÃ©e l'onglet 1.
 			TabPage page1 = new TabPage();
 //			page1.SetManualBounds(inside);
 			page1.TabTitle = "<m>P</m>remier";
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Tests.Widgets
 			sl.Items.Add("Decembre");
 			sl.MaxSize = new Size (90, 100);
 			sl.PreferredSize = sl.GetBestFitSize ();
-			sl.SelectedItemIndex = 5;  // sélectionne juin
+			sl.SelectedItemIndex = 5;  // sÃ©lectionne juin
 			sl.ShowSelected(ScrollShowMode.Center);
 			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.Margins = new Margins(10, 0, 10, 10);
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 			StaticText st2 = new StaticText();
 			st2.PreferredWidth = 90;
-			st2.Text = "Non éditable :";
+			st2.Text = "Non Ã©ditable :";
 			st2.Anchor = AnchorStyles.TopLeft;
 			st2.Margins = new Margins(160, 0, 30, 0);
 			page1.Children.Add(st2);
@@ -736,10 +736,10 @@ namespace Epsitec.Common.Tests.Widgets
 			combofix.ButtonShowCondition = ButtonShowCondition.Always;
 			page1.Children.Add(combofix);
 
-			//	Crée l'onglet 2.
+			//	CrÃ©e l'onglet 2.
 			TabPage page2 = new TabPage();
 //			page2.SetManualBounds(inside);
-			page2.TabTitle = "<m>D</m>euxième";
+			page2.TabTitle = "<m>D</m>euxiÃ¨me";
 			page2.TabIndex = 2;
 			page2.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page2);
@@ -782,10 +782,10 @@ namespace Epsitec.Common.Tests.Widgets
 			table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			page2.Children.Add(table);
 
-			//	Crée l'onglet 3.
+			//	CrÃ©e l'onglet 3.
 			TabPage page3 = new TabPage();
 			page3.SetManualBounds(inside);
-			page3.TabTitle = "<m>T</m>roisième";
+			page3.TabTitle = "<m>T</m>roisiÃ¨me";
 			
 			TextFieldEx text_ex_1 = new TextFieldEx();
 			text_ex_1.SetParent (page3);
@@ -847,10 +847,10 @@ namespace Epsitec.Common.Tests.Widgets
 			page3.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page3);
 
-			//	Crée l'onglet 4.
+			//	CrÃ©e l'onglet 4.
 			TabPage page4 = new TabPage();
 			page4.SetManualBounds(inside);
-			page4.TabTitle = "<m>Q</m>uatrième";
+			page4.TabTitle = "<m>Q</m>uatriÃ¨me";
 			page4.TabIndex = 4;
 			page4.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page4);
@@ -863,10 +863,10 @@ namespace Epsitec.Common.Tests.Widgets
 			text_up_down.TextChanged += AdornerTest.HandleTextUpDownTextChanged;
 			
 
-			//	Crée l'onglet 5.
+			//	CrÃ©e l'onglet 5.
 			TabPage page5 = new TabPage();
 			page5.SetManualBounds(inside);
-			page5.TabTitle = "<m>C</m>inquième";
+			page5.TabTitle = "<m>C</m>inquiÃ¨me";
 			page5.TabIndex = 5;
 			page5.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page5);
@@ -891,10 +891,10 @@ namespace Epsitec.Common.Tests.Widgets
 			text_4.SetManualBounds(new Rectangle(10, page5.ActualHeight-30-28-28-28, 120, text_4.PreferredHeight+2));
 			text_4.TabIndex = 4;
 
-			//	Crée l'onglet 6.
+			//	CrÃ©e l'onglet 6.
 			TabPage page6 = new TabPage();
 			page6.SetManualBounds(inside);
-			page6.TabTitle = "<m>S</m>ixième";
+			page6.TabTitle = "<m>S</m>ixiÃ¨me";
 			page6.TabIndex = 6;
 			page6.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page6);
@@ -957,12 +957,12 @@ namespace Epsitec.Common.Tests.Widgets
 			string s = "";
 #if true
 			s += "<br/>";
-			s += "<b>FIN</b><br/><br/>aaaaaaaaaaaaaaaaaaaaaaaVoici une image <img src=\"file:images/icon.png\"/> intégrée dans le texte.";
+			s += "<b>FIN</b><br/><br/>aaaaaaaaaaaaaaaaaaaaaaaVoici une image <img src=\"file:images/icon.png\"/> intÃ©grÃ©e dans le texte.";
 #else
-			s += "On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête. Par hasard on vint à parler de la devise de la maison de Solar, qui était sur la tapisserie avec les armoiries: <i>Tel fiert qui ne tue pas</i>. Comme les Piémontais ne sont pas pour l'ordinaire consommés par la langue française, quelqu'un trouva dans cette devise une faute d'orthographe, et dit qu'au mot <i>fiert</i> il ne fallait point de <i>t</i>.<br/>";
-			s += "Le vieux comte de Gouvon allait répondre; mais ayant jeté les yeux sur moi, il vit que je souriait sans oser rien dire: il m'ordonna de parler. Alors je dis que je ne croyait pas que le <i>t</i> fût de trop, que <i>fiert</i> était un vieux mots français qui ne venait pas du nom <i>ferus</i>, fier, menaçant, mais du verbe <i>ferit</i>, il frappe, il blesse; qu'ainsi la devise ne me paraissait pas dire: Tel menace, mais <i>tel frappe qui ne tue pas</i>.<br/>";
-			s += "Tout le monde me regardait et se regardait sans rien dire. On ne vit de la vie un pareil étonnement. Mais ce qui me flatta davantage fut de voir clairement sur le visage de Mlle de Breil un air de satisfaction. Cette personne si dédaigneuse daigna me jeter un second regard qui valait tout au moins le premier; puis, tournant les yeux vers son grand-papa, elle semblait attendre avec une sorte d'impatience la louange qu'il me devait, et qu'il me donna en effet si pleine et entière et d'un air si content, que toute la table s'empressa de faire chorus. Ce moment fut court, mais délicieux à tous égards. Ce fut un de ces moments trop rares qui replacent les choses dans leur ordre naturel, et vengent le mérite avili des outrages de la fortune.<br/>";
-			s += "<b>FIN</b><br/><br/>Voici une image <img src=\"file:images/icon.png\"/> intégrée dans le texte.";
+			s += "On donnait ce jour-lÃ  un grand dÃ®ner, oÃ¹, pour la premiÃ¨re fois, je vis avec beaucoup d'Ã©tonnement le maÃ®tre d'hÃ´tel servir l'Ã©pÃ©e au cÃ´tÃ© et le chapeau sur la tÃªte. Par hasard on vint Ã  parler de la devise de la maison de Solar, qui Ã©tait sur la tapisserie avec les armoiries: <i>Tel fiert qui ne tue pas</i>. Comme les PiÃ©montais ne sont pas pour l'ordinaire consommÃ©s par la langue franÃ§aise, quelqu'un trouva dans cette devise une faute d'orthographe, et dit qu'au mot <i>fiert</i> il ne fallait point de <i>t</i>.<br/>";
+			s += "Le vieux comte de Gouvon allait rÃ©pondre; mais ayant jetÃ© les yeux sur moi, il vit que je souriait sans oser rien dire: il m'ordonna de parler. Alors je dis que je ne croyait pas que le <i>t</i> fÃ»t de trop, que <i>fiert</i> Ã©tait un vieux mots franÃ§ais qui ne venait pas du nom <i>ferus</i>, fier, menaÃ§ant, mais du verbe <i>ferit</i>, il frappe, il blesse; qu'ainsi la devise ne me paraissait pas dire: Tel menace, mais <i>tel frappe qui ne tue pas</i>.<br/>";
+			s += "Tout le monde me regardait et se regardait sans rien dire. On ne vit de la vie un pareil Ã©tonnement. Mais ce qui me flatta davantage fut de voir clairement sur le visage de Mlle de Breil un air de satisfaction. Cette personne si dÃ©daigneuse daigna me jeter un second regard qui valait tout au moins le premier; puis, tournant les yeux vers son grand-papa, elle semblait attendre avec une sorte d'impatience la louange qu'il me devait, et qu'il me donna en effet si pleine et entiÃ¨re et d'un air si content, que toute la table s'empressa de faire chorus. Ce moment fut court, mais dÃ©licieux Ã  tous Ã©gards. Ce fut un de ces moments trop rares qui replacent les choses dans leur ordre naturel, et vengent le mÃ©rite avili des outrages de la fortune.<br/>";
+			s += "<b>FIN</b><br/><br/>Voici une image <img src=\"file:images/icon.png\"/> intÃ©grÃ©e dans le texte.";
 #endif
 			multi.Text = s;
 
@@ -1223,7 +1223,7 @@ namespace Epsitec.Common.Tests.Widgets
 			window.Root.Children.Add(tb);
 			this.tabBook = tb;
 
-			//	Crée l'onglet 1.
+			//	CrÃ©e l'onglet 1.
 			TabPage page1 = new TabPage();
 			page1.Name = "p1";
 			page1.TabTitle = "<m>P</m>remier";
@@ -1245,15 +1245,15 @@ namespace Epsitec.Common.Tests.Widgets
 			TextFieldMulti multi = new TextFieldMulti();
 			multi.Name = "Multi";
 			multi.SetManualBounds(new Rectangle (10, 45, 350, 200));
-			multi.Text = "1. Introduction<br/><br/>Les onglets permettent de mettre beaucoup de widgets sur une petite surface, ce qui s'avère extrèmement utile et diablement pratique.<br/><br/>2. Conclusion<br/><br/>Un truc chouette, qui sera certainement très utile dans le nouveau Crésus !";
+			multi.Text = "1. Introduction<br/><br/>Les onglets permettent de mettre beaucoup de widgets sur une petite surface, ce qui s'avÃ¨re extrÃ¨mement utile et diablement pratique.<br/><br/>2. Conclusion<br/><br/>Un truc chouette, qui sera certainement trÃ¨s utile dans le nouveau CrÃ©sus !";
 			multi.Anchor = AnchorStyles.All;
 			multi.Margins = new Margins(10, 10, 20, 40);
 			page1.Children.Add(multi);
 
-			//	Crée l'onglet 2.
+			//	CrÃ©e l'onglet 2.
 			TabPage page2 = new TabPage();
 			page2.Name = "p2";
-			page2.TabTitle = "<m>D</m>euxième";
+			page2.TabTitle = "<m>D</m>euxiÃ¨me";
 			tb.Items.Add(page2);
 
 			VScroller scrollv = new VScroller();
@@ -1266,10 +1266,10 @@ namespace Epsitec.Common.Tests.Widgets
 			scrollv.LargeChange = 2;
 			page2.Children.Add(scrollv);
 
-			//	Crée l'onglet 3.
+			//	CrÃ©e l'onglet 3.
 			TabPage page3 = new TabPage();
 			page3.Name = "p3";
-			page3.TabTitle = "<m>T</m>roisième";
+			page3.TabTitle = "<m>T</m>roisiÃ¨me";
 			tb.Items.Add(page3);
 
 			StaticText st = new StaticText();
@@ -1278,7 +1278,7 @@ namespace Epsitec.Common.Tests.Widgets
 			st.Text = "<b>Onglet</b> volontairement <i>vide</i> !";
 			page3.Children.Add(st);
 
-			//	Crée l'onglet 4.
+			//	CrÃ©e l'onglet 4.
 			TabPage page4 = new TabPage();
 			page4.Name = "p4";
 			page4.TabTitle = "<m>L</m>ook";
@@ -1292,7 +1292,7 @@ namespace Epsitec.Common.Tests.Widgets
 			link.Text = "Voir sur <a href=\"www.epsitec.ch\">www.epsitec.ch</a> !";
 			page4.Children.Add(link);
 
-			//	Crée l'onglet 5.
+			//	CrÃ©e l'onglet 5.
 			TabPage page5 = new TabPage();
 			page5.Name = "p5";
 			page5.TabTitle = "<m>A</m>dd";
@@ -1307,19 +1307,19 @@ namespace Epsitec.Common.Tests.Widgets
 			page5.Children.Add(add);
 
 #if true
-			//	Crée l'onglet 6.
+			//	CrÃ©e l'onglet 6.
 			TabPage page6 = new TabPage();
 			page6.Name = "p6";
 			page6.TabTitle = "Titre long";
 			tb.Items.Add(page6);
 
-			//	Crée l'onglet 7.
+			//	CrÃ©e l'onglet 7.
 			TabPage page7 = new TabPage();
 			page7.Name = "p7";
 			page7.TabTitle = "Titre assez long";
 			tb.Items.Add(page7);
 
-			//	Crée l'onglet 8.
+			//	CrÃ©e l'onglet 8.
 			TabPage page8 = new TabPage();
 			page8.Name = "p8";
 			page8.TabTitle = "Titre encore plus long";
@@ -1361,7 +1361,7 @@ namespace Epsitec.Common.Tests.Widgets
 			StaticText title = new StaticText();
 			title.PreferredWidth = 280;
 			title.PreferredHeight = 15;
-			title.Text = "Sélections possibles avec Ctrl et/ou Shift :";
+			title.Text = "SÃ©lections possibles avec Ctrl et/ou Shift :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
 			window.Root.Children.Add(title);
@@ -1523,7 +1523,7 @@ namespace Epsitec.Common.Tests.Widgets
 			StaticText title = new StaticText();
 			title.PreferredWidth = 280;
 			title.PreferredHeight = 15;
-			title.Text = "Tableau redimensionnable non éditable :";
+			title.Text = "Tableau redimensionnable non Ã©ditable :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
 			window.Root.Children.Add(title);
@@ -1648,7 +1648,7 @@ namespace Epsitec.Common.Tests.Widgets
 		
 		public static void CreateListLook(Widget parent, double mx, double my, ToolTip tooltip, int tab)
 		{
-			//	Crée la liste pour changer de look.
+			//	CrÃ©e la liste pour changer de look.
 			ScrollList sl = new ScrollList();
 			
 			sl.SetParent (parent);
@@ -1896,7 +1896,7 @@ namespace Epsitec.Common.Tests.Widgets
 			StaticText text = new StaticText ();
 			text.PreferredHeight = 20;
 			text.Dock = DockStyle.Top;
-			text.Text = "Docking utilisé: Left + Fill + Right";
+			text.Text = "Docking utilisÃ©: Left + Fill + Right";
 			window.Root.Children.Add (text);
 
 			Button button;
@@ -1948,7 +1948,7 @@ namespace Epsitec.Common.Tests.Widgets
 			StaticText text = new StaticText ();
 			text.PreferredHeight = 20;
 			text.Dock = DockStyle.Top;
-			text.Text = "Docking utilisé: Left + Left + Fill";
+			text.Text = "Docking utilisÃ©: Left + Left + Fill";
 			window.Root.Children.Add (text);
 
 			Button button;
@@ -2000,7 +2000,7 @@ namespace Epsitec.Common.Tests.Widgets
 			StaticText text = new StaticText ();
 			text.PreferredHeight = 20;
 			text.Dock = DockStyle.Top;
-			text.Text = "Docking utilisé: Left + Left + Left";
+			text.Text = "Docking utilisÃ©: Left + Left + Left";
 			window.Root.Children.Add (text);
 
 			Button button;
@@ -2052,7 +2052,7 @@ namespace Epsitec.Common.Tests.Widgets
 			StaticText text = new StaticText ();
 			text.PreferredHeight = 20;
 			text.Dock = DockStyle.Top;
-			text.Text = "Docking utilisé: Top + Fill + Bottom";
+			text.Text = "Docking utilisÃ©: Top + Fill + Bottom";
 			window.Root.Children.Add (text);
 
 			Button button;

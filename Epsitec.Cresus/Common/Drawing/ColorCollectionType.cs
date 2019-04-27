@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -11,7 +11,7 @@ namespace Epsitec.Common.Drawing
 		Default,			//	palette standard
 		Rainbow,			//	palette arc-en-ciel
 		Light,				//	palette pastel
-		Dark,				//	palette foncée
+		Dark,				//	palette foncÃ©e
 		Gray,				//	palette monochrome
 	}
 }

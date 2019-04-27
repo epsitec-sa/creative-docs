@@ -1,10 +1,10 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
 {
 	/// <summary>
-	/// L'énumération Attachment définit à quoi un Wrapper est connecté.
+	/// L'Ã©numÃ©ration Attachment dÃ©finit Ã  quoi un Wrapper est connectÃ©.
 	/// </summary>
 	public enum Attachment
 	{

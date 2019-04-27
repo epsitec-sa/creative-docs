@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer
 
 		public void FixStarting(SearchingMode mode, List<int> filter, int row, int field, int subfield, AbstractTextField edit, string secondaryCulture, bool lastActionIsReplace)
 		{
-			//	Fixe la position de départ de la recherche.
+			//	Fixe la position de dÃ©part de la recherche.
 			this.mode = mode;
 			this.filter = filter;
 			this.secondaryCulture = secondaryCulture;
@@ -38,14 +38,14 @@ namespace Epsitec.Common.Designer
 			{
 				if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 				{
-					this.starting.Row      = 0;  // au début
+					this.starting.Row      = 0;  // au dÃ©but
 					this.starting.Field    = 0;
 					this.starting.Subfield = 0;
 					this.starting.Index    = -1;
 				}
-				else  // en arrière ?
+				else  // en arriÃ¨re ?
 				{
-					this.starting.Row      = this.access.AccessCount-1;  // à la fin
+					this.starting.Row      = this.access.AccessCount-1;  // Ã  la fin
 					this.starting.Field    = 10-1;
 					this.starting.Subfield = 10-1;
 					this.starting.Index    = 1000000;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer
 				{
 					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 					{
-						if (lastActionIsReplace)  // saute la sélection ?
+						if (lastActionIsReplace)  // saute la sÃ©lection ?
 						{
 							this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Max(edit.CursorFrom, edit.CursorTo), false);
 						}
@@ -71,9 +71,9 @@ namespace Epsitec.Common.Designer
 							this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), true);
 						}
 					}
-					else  // en arrière ?
+					else  // en arriÃ¨re ?
 					{
-						if (lastActionIsReplace)  // saute la séleciton ?
+						if (lastActionIsReplace)  // saute la sÃ©leciton ?
 						{
 							this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), true);
 						}
@@ -98,11 +98,11 @@ namespace Epsitec.Common.Designer
 			{
 				if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 				{
-					this.current.Index++;  // commence par avancer d'un caractère
+					this.current.Index++;  // commence par avancer d'un caractÃ¨re
 				}
-				else  // en arrière ?
+				else  // en arriÃ¨re ?
 				{
-					this.current.Index--;  // commence par reculer d'un caractère
+					this.current.Index--;  // commence par reculer d'un caractÃ¨re
 				}
 
 				if (this.Find())  return true;
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer
 			this.InitSearching(searching);
 
 			this.mode &= ~SearchingMode.Reverse;
-			this.starting.Row      = 0;  // au début
+			this.starting.Row      = 0;  // au dÃ©but
 			this.starting.Field    = 0;
 			this.starting.Subfield = 0;
 			this.starting.Index    = -1;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer
 			{
 				while (true)
 				{
-					this.current.Index++;  // commence par avancer d'un caractère
+					this.current.Index++;  // commence par avancer d'un caractÃ¨re
 					if (this.Find())
 					{
 						count++;
@@ -147,13 +147,13 @@ namespace Epsitec.Common.Designer
 
 		public bool Replace(string searching, bool fromBeginning)
 		{
-			//	Effectue la recherche pour la substitution, mais pas la substitution elle-même.
+			//	Effectue la recherche pour la substitution, mais pas la substitution elle-mÃªme.
 			this.InitSearching(searching);
 
 			if (fromBeginning)
 			{
 				this.mode &= ~SearchingMode.Reverse;
-				this.starting.Row      = 0;  // au début
+				this.starting.Row      = 0;  // au dÃ©but
 				this.starting.Field    = 0;
 				this.starting.Subfield = 0;
 				this.starting.Index    = -1;
@@ -169,11 +169,11 @@ namespace Epsitec.Common.Designer
 			{
 				if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 				{
-					this.current.Index++;  // commence par avancer d'un caractère
+					this.current.Index++;  // commence par avancer d'un caractÃ¨re
 				}
-				else  // en arrière ?
+				else  // en arriÃ¨re ?
 				{
-					this.current.Index--;  // commence par reculer d'un caractère
+					this.current.Index--;  // commence par reculer d'un caractÃ¨re
 				}
 
 				if (this.Find())
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Designer
 
 		public void Skip(int length)
 		{
-			//	Saute les caractères sélectionnés, après un Replace, pendant le ReplaceAll.
+			//	Saute les caractÃ¨res sÃ©lectionnÃ©s, aprÃ¨s un Replace, pendant le ReplaceAll.
 			this.current.Index += length;
 		}
 
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Designer
 
 		public int Field
 		{
-			//	Champ éditable atteint.
+			//	Champ Ã©ditable atteint.
 			get
 			{
 				return this.current.Field;
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Designer
 
 		public int Subfield
 		{
-			//	Sous-champ éditable atteint.
+			//	Sous-champ Ã©ditable atteint.
 			get
 			{
 				return this.current.Subfield;
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Designer
 
 		public int Length
 		{
-			//	Longueur de la chaîne trouvée.
+			//	Longueur de la chaÃ®ne trouvÃ©e.
 			get
 			{
 				return this.searching.Length;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Designer
 
 		private bool Find()
 		{
-			//	Cherche si la chaîne est trouvé à la position du curseur.
+			//	Cherche si la chaÃ®ne est trouvÃ© Ã  la position du curseur.
 			string text = this.ResourceText;
 			if (text != null)
 			{
@@ -262,11 +262,11 @@ namespace Epsitec.Common.Designer
 						if (index != -1)
 						{
 							this.current.Index = index;
-							return true;  // trouvé
+							return true;  // trouvÃ©
 						}
 					}
 				}
-				else  // en arrière ?
+				else  // en arriÃ¨re ?
 				{
 					this.current.Index = System.Math.Min(this.current.Index, text.Length);
 
@@ -276,7 +276,7 @@ namespace Epsitec.Common.Designer
 						if (index != -1)
 						{
 							this.current.Index = index;
-							return true;  // trouvé
+							return true;  // trouvÃ©
 						}
 					}
 				}
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Designer
 		private bool MoveCurrentCursor()
 		{
 			//	Avance le curseur sur le row/field/index suivant.
-			//	Retourne false si on atteint de nouveau le début (et donc que la recherche est terminée).
+			//	Retourne false si on atteint de nouveau le dÃ©but (et donc que la recherche est terminÃ©e).
 			if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 			{
 				this.current.Index = -1;
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Designer
 				}
 				return (!this.limitOverflow || Cursor.Compare(this.current, this.starting) < 0);
 			}
-			else  // en arrière ?
+			else  // en arriÃ¨re ?
 			{
 				this.current.Index = 1000000;
 				this.current.Subfield--;
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer
 
 		private string ResourceText
 		{
-			//	Retourne le texte à la position du curseur courant (en fonction de row/field/subfield).
+			//	Retourne le texte Ã  la position du curseur courant (en fonction de row/field/subfield).
 			get
 			{
 				if (!this.filter.Contains(this.current.Field))
@@ -380,7 +380,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Cherche l'index de 'value' dans 'text'.
 			int count;
-			if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+			if ((mode&SearchingMode.Reverse) != 0)  // en arriÃ¨re ?
 			{
 				count = startIndex+1;
 			}
@@ -395,11 +395,11 @@ namespace Epsitec.Common.Designer
 		static private int IndexOf(string text, string value, int startIndex, int count, SearchingMode mode)
 		{
 			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
-			//	options supplémentaires.
-			//	Lorsqu'on recule (SearchingMode.Reverse), 'startIndex' est à la fin (sur le premier
-			//	caractère cherché) et 'count' est positif (mais compte de droite à gauche).
-			//	Cette façon absurde de procéder est celle de string.LastIndexOf !
-			if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+			//	options supplÃ©mentaires.
+			//	Lorsqu'on recule (SearchingMode.Reverse), 'startIndex' est Ã  la fin (sur le premier
+			//	caractÃ¨re cherchÃ©) et 'count' est positif (mais compte de droite Ã  gauche).
+			//	Cette faÃ§on absurde de procÃ©der est celle de string.LastIndexOf !
+			if ((mode&SearchingMode.Reverse) != 0)  // en arriÃ¨re ?
 			{
 				startIndex = System.Math.Min(startIndex, text.Length);
 				count = System.Math.Min(count, startIndex+1);
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Designer
 
 			if ((mode&SearchingMode.WholeWord) != 0)  // mot entier ?
 			{
-				if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+				if ((mode&SearchingMode.Reverse) != 0)  // en arriÃ¨re ?
 				{
 					int begin = startIndex-count+1;
 					while (true)
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+				if ((mode&SearchingMode.Reverse) != 0)  // en arriÃ¨re ?
 				{
 					return text.LastIndexOf(value, startIndex, count);
 				}
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Designer
 
 		static private bool IsWholeWord(string text, int index, int count)
 		{
-			//	Vérifie si un mot et précédé et suivi d'un caractère séparateur de mots.
+			//	VÃ©rifie si un mot et prÃ©cÃ©dÃ© et suivi d'un caractÃ¨re sÃ©parateur de mots.
 			if (index > 0)
 			{
 				char c1 = text[index-1];
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Designer
 		#region Accents
 		static public string RemoveAccent(string s)
 		{
-			//	Retourne la même chaîne sans accent (é -> e).
+			//	Retourne la mÃªme chaÃ®ne sans accent (Ã© -> e).
 			System.Text.StringBuilder builder;
 				
 			builder = new System.Text.StringBuilder(s.Length);
@@ -500,46 +500,46 @@ namespace Epsitec.Common.Designer
 
 		static private char RemoveAccent(char c)
 		{
-			//	Retourne le même caractère sans accent (é -> e).
+			//	Retourne le mÃªme caractÃ¨re sans accent (Ã© -> e).
 			//	TODO: traiter tous les accents unicode ?
 			char lower = System.Char.ToLower(c);
 			char cc = lower;
 
 			switch ( cc )
 			{
-				case 'á':
-				case 'à':
-				case 'â':
-				case 'ä':
-				case 'ã':  cc = 'a';  break;
+				case 'Ã¡':
+				case 'Ã ':
+				case 'Ã¢':
+				case 'Ã¤':
+				case 'Ã£':  cc = 'a';  break;
 
-				case 'ç':  cc = 'c';  break;
+				case 'Ã§':  cc = 'c';  break;
 
-				case 'é':
-				case 'è':
-				case 'ê':
-				case 'ë':  cc = 'e';  break;
+				case 'Ã©':
+				case 'Ã¨':
+				case 'Ãª':
+				case 'Ã«':  cc = 'e';  break;
 
-				case 'í':
-				case 'ì':
-				case 'î':
-				case 'ï':  cc = 'i';  break;
+				case 'Ã­':
+				case 'Ã¬':
+				case 'Ã®':
+				case 'Ã¯':  cc = 'i';  break;
 
-				case 'ñ':  cc = 'n';  break;
+				case 'Ã±':  cc = 'n';  break;
 
-				case 'ó':
-				case 'ò':
-				case 'ô':
-				case 'ö':
-				case 'õ':  cc = 'o';  break;
+				case 'Ã³':
+				case 'Ã²':
+				case 'Ã´':
+				case 'Ã¶':
+				case 'Ãµ':  cc = 'o';  break;
 
-				case 'ú':
-				case 'ù':
-				case 'û':
-				case 'ü':  cc = 'u';  break;
+				case 'Ãº':
+				case 'Ã¹':
+				case 'Ã»':
+				case 'Ã¼':  cc = 'u';  break;
 			}
 
-			if ( lower != c )  // a-t-on utilisé une majuscule transformée en minuscule ?
+			if ( lower != c )  // a-t-on utilisÃ© une majuscule transformÃ©e en minuscule ?
 			{
 				cc = System.Char.ToUpper(cc);  // remet en majuscule
 			}

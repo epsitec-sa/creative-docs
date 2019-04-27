@@ -1,4 +1,4 @@
-//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -579,7 +579,7 @@ namespace Epsitec.Common.Types
 							delegate ()
 							{
 								Caption caption = (manager ?? Support.Resources.DefaultManager).GetCaption (typeId);
-								if (caption != null)  // ajouté par DR, sans savoir si c'est juste !
+								if (caption != null)  // ajoutÃ© par DR, sans savoir si c'est juste !
 								{
 									field.DefineType (TypeRosetta.GetTypeObject (caption));
 								}

@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Data
 {
 	/// <summary>
-	/// L'interface INumValue définit les propriétés de base nécessaires à un
-	/// widget qui exporte une valeur numérique.
+	/// L'interface INumValue dÃ©finit les propriÃ©tÃ©s de base nÃ©cessaires Ã  un
+	/// widget qui exporte une valeur numÃ©rique.
 	/// </summary>
 	public interface INumValue
 	{

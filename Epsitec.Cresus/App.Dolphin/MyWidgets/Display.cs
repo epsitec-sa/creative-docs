@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Simule un petit écran bitmap monochrome.
-	/// Optimisé pour 32x24 pixels, avec une taille physique de 258x202.
+	/// Simule un petit Ã©cran bitmap monochrome.
+	/// OptimisÃ© pour 32x24 pixels, avec une taille physique de 258x202.
 	/// </summary>
 	public class Display : Widget
 	{
@@ -36,7 +36,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void SetMemory(Components.Memory memory, int firstAddress, int dx, int dy)
 		{
-			//	Initialise la zone mémoire correspondant à l'écran.
+			//	Initialise la zone mÃ©moire correspondant Ã  l'Ã©cran.
 			System.Diagnostics.Debug.Assert(memory != null);
 			System.Diagnostics.Debug.Assert(dx != 0);
 			System.Diagnostics.Debug.Assert(dy != 0);
@@ -49,7 +49,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public Type Technology
 		{
-			//	Choix de la technologie simulée.
+			//	Choix de la technologie simulÃ©e.
 			get
 			{
 				return this.type;
@@ -113,7 +113,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected bool Detect(Point pos, out int x, out int y)
 		{
-			//	Détecte le point visé par la souris.
+			//	DÃ©tecte le point visÃ© par la souris.
 			Rectangle rect = this.Client.Bounds;
 			pos.Y = rect.Height-pos.Y-1;
 			rect.Deflate(17);
@@ -311,7 +311,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							int value = this.memory.ReadForDebug(address++);
 							for (int b=0; b<8; b++)
 							{
-								if ((value & (1 << (7-b))) != 0)  // bit allumé ?
+								if ((value & (1 << (7-b))) != 0)  // bit allumÃ© ?
 								{
 									if (!state)
 									{
@@ -319,7 +319,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 										start = x+b;
 									}
 								}
-								else  // bit éteint ?
+								else  // bit Ã©teint ?
 								{
 									if (state)
 									{
@@ -349,20 +349,20 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							int value = this.memory.ReadForDebug(address++);
 							for (int b=0; b<8; b++)
 							{
-								//?if ((value & (1 << (7-b))) != 0)  // bit allumé ?
-								if ((value & (1 << (7-b))) == 0)  // bit éteint ?
+								//?if ((value & (1 << (7-b))) != 0)  // bit allumÃ© ?
+								if ((value & (1 << (7-b))) == 0)  // bit Ã©teint ?
 								{
 									Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
-									graphics.AddFilledRectangle(pixel);  // dessine un pixel carré
+									graphics.AddFilledRectangle(pixel);  // dessine un pixel carrÃ©
 								}
 							}
 						}
 					}
-					graphics.RenderSolid(Color.FromRgb(1.0, 0.9, 0.6));  // ambre (jaune-orange pâle)
+					graphics.RenderSolid(Color.FromRgb(1.0, 0.9, 0.6));  // ambre (jaune-orange pÃ¢le)
 				}
 			}
 
-			//	Dessine le pixel survolé par la souris.
+			//	Dessine le pixel survolÃ© par la souris.
 			if (this.hx != -1 && this.hy != -1)
 			{
 				Rectangle pixel = this.GetPixel(this.hx, this.hy);
@@ -385,9 +385,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void DrawPixelLine(Graphics graphics, Rectangle rect, int x1, int x2, int y)
 		{
-			//	Dessine une ligne horizontale de pixels allumés.
-			//	On simule le faisceau d'électrons qui s'allume sur le premier point de gauche, pour 
-			//	s'éteindre seulement sur le dernier point de droite.
+			//	Dessine une ligne horizontale de pixels allumÃ©s.
+			//	On simule le faisceau d'Ã©lectrons qui s'allume sur le premier point de gauche, pour 
+			//	s'Ã©teindre seulement sur le dernier point de droite.
 			double px = rect.Width/this.dx;
 			double py = rect.Height/this.dy;
 

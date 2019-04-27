@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	/// <summary>
-	/// Cette classe permet de sérialiser et désérialiser sous forme d'une string
+	/// Cette classe permet de sÃ©rialiser et dÃ©sÃ©rialiser sous forme d'une string
 	/// une liste de variables nom/valeur de type string, bool, int, decimal,
 	/// Timestamp ou Guid.
 	/// </summary>
@@ -170,8 +170,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void SetData(string data)
 		{
-			//	Ventille les données sérialisées 'data' dans le dictionnaire interne,
-			//	en vue d'une désérialisation.
+			//	Ventille les donnÃ©es sÃ©rialisÃ©es 'data' dans le dictionnaire interne,
+			//	en vue d'une dÃ©sÃ©rialisation.
 			this.data.Clear ();
 
 			if (!string.IsNullOrEmpty (data))
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private string GetData()
 		{
 			//	Converti le dictionnaire interne en une string 'data',
-			//	en vue d'une sérialisation.
+			//	en vue d'une sÃ©rialisation.
 			var builder = new System.Text.StringBuilder ();
 
 			foreach (var pair in this.data)
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static string ExtToInt(string text)
 		{
-			//	Conversion d'une chaîne venant de l'extérieur en sa représentation
+			//	Conversion d'une chaÃ®ne venant de l'extÃ©rieur en sa reprÃ©sentation
 			//	interne.
 			if (!string.IsNullOrEmpty (text))
 			{
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static string IntToExt(string text)
 		{
-			//	Conversion d'une chaîne interne pour sortir à l'extérieur.
+			//	Conversion d'une chaÃ®ne interne pour sortir Ã  l'extÃ©rieur.
 			if (!string.IsNullOrEmpty (text))
 			{
 				return text.Replace ("&eq;", "=")
@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 #if false
-		//	Le constructeur statique implémente un "auto-test" de la classe.
+		//	Le constructeur statique implÃ©mente un "auto-test" de la classe.
 		static NameValueListSerializer()
 		{
 			{

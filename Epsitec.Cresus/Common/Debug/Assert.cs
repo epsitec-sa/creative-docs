@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Debug
 {
 	/// <summary>
-	/// La classe Assert offre des facilités pour le debugging.
+	/// La classe Assert offre des facilitÃ©s pour le debugging.
 	/// </summary>
 	public sealed class Assert
 	{

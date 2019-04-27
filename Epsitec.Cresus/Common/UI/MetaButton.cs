@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -228,7 +228,7 @@ namespace Epsitec.Common.UI
 			adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
 			adorner.PaintButtonBullet (graphics, rect, state, this.BulletColor);
 
-			//	Dessine l'icône.
+			//	Dessine l'icÃ´ne.
 			if (this.iconLayout != null)
 			{
 				rect = this.GetIconBounds ();
@@ -317,8 +317,8 @@ namespace Epsitec.Common.UI
 
 		private void UpdateIcon()
 		{
-			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
-			//	suivi des différentes préférences (taille, langue et style).
+			//	Met Ã  jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
+			//	suivi des diffÃ©rentes prÃ©fÃ©rences (taille, langue et style).
 
 			string iconUri = this.IconUri;
 
@@ -358,7 +358,7 @@ namespace Epsitec.Common.UI
 
 		private void UpdateButtonClass(ButtonClass aspect)
 		{
-			//	Met à jour le bouton lorsque son aspect a changé.
+			//	Met Ã  jour le bouton lorsque son aspect a changÃ©.
 			switch (aspect)
 			{
 				case ButtonClass.DialogButton:
@@ -380,7 +380,7 @@ namespace Epsitec.Common.UI
 		
 		private Drawing.Rectangle GetIconBounds()
 		{
-			//	Donne le rectangle carré à utiliser pour l'icône du bouton.
+			//	Donne le rectangle carrÃ© Ã  utiliser pour l'icÃ´ne du bouton.
 			if (this.iconLayout == null)
 			{
 				return Drawing.Rectangle.Empty;
@@ -432,7 +432,7 @@ namespace Epsitec.Common.UI
 
 		private Drawing.Rectangle GetTextBounds()
 		{
-			//	Donne le rectangle à utiliser pour le texte du bouton.
+			//	Donne le rectangle Ã  utiliser pour le texte du bouton.
 			Drawing.Rectangle rect = this.GetInnerBounds ();
 			ButtonClass buttonClass = this.ButtonClass;
 
@@ -458,7 +458,7 @@ namespace Epsitec.Common.UI
 				case Drawing.ContentAlignment.BottomLeft:
 				case Drawing.ContentAlignment.MiddleLeft:
 				case Drawing.ContentAlignment.TopLeft:
-					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+					rect.Left += 5;  // espace entre le bord gauche ou l'icÃ´ne et le texte
 					break;
 				
 				case Drawing.ContentAlignment.BottomRight:
@@ -473,7 +473,7 @@ namespace Epsitec.Common.UI
 
 		private Drawing.Rectangle GetInnerBounds()
 		{
-			//  Donne le rectangle utilisable à l'intérieur du cadre du bouton.
+			//  Donne le rectangle utilisable Ã  l'intÃ©rieur du cadre du bouton.
 			Drawing.Rectangle bounds = IconButtonMark.GetFrameBounds (this.Client.Bounds, this.MarkDisposition, this.MarkLength);
 
 			if (!this.BulletColor.IsEmpty)

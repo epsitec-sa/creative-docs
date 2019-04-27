@@ -9,13 +9,13 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Identity correspond aux commandes de choix d'identité.
+	/// La classe Identity correspond aux commandes de choix d'identitÃ©.
 	/// </summary>
 	public class IdentityRibbon : AbstractRibbon
 	{
 		public IdentityRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
-			this.Title = "Identité";
+			this.Title = "IdentitÃ©";
 			this.PreferredWidth = 8 + 48;
 
 			this.widget = new IdentityCardWidget(this);
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		private void HandleIdentityClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton pour changer d'identité a été cliqué.
+			//	AppelÃ© lorsque le bouton pour changer d'identitÃ© a Ã©tÃ© cliquÃ©.
 			IdentityCard nullCard = new IdentityCard("Anonyme", -1, null);
 			List<IdentityCard> cards = new List<IdentityCard>(IdentityRepository.Default.IdentityCards);
 			cards.Add(nullCard);

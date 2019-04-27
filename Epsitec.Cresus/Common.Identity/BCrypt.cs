@@ -1,4 +1,4 @@
-﻿//	Copyright © 2006 Damien Miller <djm@mindrot.org>
+//	Copyright © 2006 Damien Miller <djm@mindrot.org>
 //	Copyright © 2007 Derek Slager
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //

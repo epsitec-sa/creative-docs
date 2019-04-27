@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text
 	using OpletEventArgs	= Epsitec.Common.Support.OpletEventArgs;
 	
 	/// <summary>
-	/// La classe TextStory représente un texte complet, avec tous ses attributs
+	/// La classe TextStory reprÃ©sente un texte complet, avec tous ses attributs
 	/// typographiques, ses curseurs, sa gestion du undo, etc.
 	/// </summary>
 	public class TextStory : System.IDisposable
@@ -93,10 +93,10 @@ namespace Epsitec.Common.Text
 		
 		public int								TextChangeMarkStart
 		{
-			//	Les marques de changement qui sont activées dans le texte à la moindre
-			//	modification sont toujours situées dans une plage comprise entre 'start'
-			//	et 'end'. La version permet de savoir quand les marques ont changé pour
-			//	la dernière fois.
+			//	Les marques de changement qui sont activÃ©es dans le texte Ã  la moindre
+			//	modification sont toujours situÃ©es dans une plage comprise entre 'start'
+			//	et 'end'. La version permet de savoir quand les marques ont changÃ© pour
+			//	la derniÃ¨re fois.
 			
 			get
 			{
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Text
 		
 		public void RecycleCursor(ICursor cursor)
 		{
-			//	ATTENTION: la suppression d'un curseur doit être gérée avec
-			//	prudence, car les mécanismes de Undo/Redo doivent pouvoir y
-			//	faire référence en tout temps via ICursor.
+			//	ATTENTION: la suppression d'un curseur doit Ãªtre gÃ©rÃ©e avec
+			//	prudence, car les mÃ©canismes de Undo/Redo doivent pouvoir y
+			//	faire rÃ©fÃ©rence en tout temps via ICursor.
 			
 			int pos = this.text.GetCursorPosition (cursor.CursorId);
 			int dir = this.text.GetCursorDirection (cursor.CursorId);
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Text
 			{
 				if (Unicode.DefaultBreakAnalyzer.IsControl (c))
 				{
-					//	Saute les caractères de contrôle.
+					//	Saute les caractÃ¨res de contrÃ´le.
 				}
 				else if (c >= ' ')
 				{
@@ -439,8 +439,8 @@ namespace Epsitec.Common.Text
 			int direction = this.text.GetCursorDirection (cursor.CursorId);
 			int length    = text.Length;
 			
-			//	Passe en revue tous les caractères et met à jour les compteurs
-			//	d'utilisation pour les styles associés :
+			//	Passe en revue tous les caractÃ¨res et met Ã  jour les compteurs
+			//	d'utilisation pour les styles associÃ©s :
 			
 			this.IncrementUserCount (text, length);
 			
@@ -501,10 +501,10 @@ namespace Epsitec.Common.Text
 		
 		public bool ReplaceText(ICursor cursor, int length, string simpleText)
 		{
-			//	Cette méthode permet de remplacer un texte par un autre, sur place,
-			//	en conservant les mêmes attributs typographiques.
+			//	Cette mÃ©thode permet de remplacer un texte par un autre, sur place,
+			//	en conservant les mÃªmes attributs typographiques.
 			//	Retourne true en cas de modification.
-			//	Contrairement à InPlaceReplaceText, cette méthode est annulable.
+			//	Contrairement Ã  InPlaceReplaceText, cette mÃ©thode est annulable.
 			
 			System.Diagnostics.Debug.Assert (length > 0);
 			System.Diagnostics.Debug.Assert (simpleText.Length > 0);
@@ -559,9 +559,9 @@ namespace Epsitec.Common.Text
 		{
 			//	Voir ReplaceText ci-avant.
 			
-			//	Cette version applique une série de textes qui peuvent avoir des
-			//	propriétés associées. On conserve les styles et la propriété du
-			//	générateur dans l'opération.
+			//	Cette version applique une sÃ©rie de textes qui peuvent avoir des
+			//	propriÃ©tÃ©s associÃ©es. On conserve les styles et la propriÃ©tÃ© du
+			//	gÃ©nÃ©rateur dans l'opÃ©ration.
 			
 			System.Diagnostics.Debug.Assert (length > 0);
 			System.Diagnostics.Debug.Assert (ranges.Length > 0);
@@ -637,12 +637,12 @@ namespace Epsitec.Common.Text
 		
 		internal bool InPlaceReplaceText(ICursor cursor, int length, ulong[] text)
 		{
-			//	Remplace le texte sans mettre à jour les informations de undo
+			//	Remplace le texte sans mettre Ã  jour les informations de undo
 			//	et de redo. Retourne true si une modification a eu lieu.
 			
-			//	Le texte de remplacement n'a pas besoin d'avoir la même longueur
-			//	que le texte qui est remplacé (contrairement à WriteText qui se
-			//	contente d'écraser le texte sur place).
+			//	Le texte de remplacement n'a pas besoin d'avoir la mÃªme longueur
+			//	que le texte qui est remplacÃ© (contrairement Ã  WriteText qui se
+			//	contente d'Ã©craser le texte sur place).
 			
 			int position = this.text.GetCursorPosition (cursor.CursorId);
 			
@@ -710,11 +710,11 @@ namespace Epsitec.Common.Text
 		
 		public int WriteText(ICursor cursor, int offset, ulong[] newText)
 		{
-			//	Remplace du texte existant par un nouveau texte; cette opération
-			//	écrase l'ancien texte, lequel est remplacé caractère par caractère.
+			//	Remplace du texte existant par un nouveau texte; cette opÃ©ration
+			//	Ã©crase l'ancien texte, lequel est remplacÃ© caractÃ¨re par caractÃ¨re.
 			
 			//	Comparer avec ReplaceText qui peut travailler avec des longueurs
-			//	différentes.
+			//	diffÃ©rentes.
 			
 			int length  = newText.Length;
 			int changes = 0;
@@ -742,9 +742,9 @@ namespace Epsitec.Common.Text
 				return length;
 			}
 			
-			//	Met à jour les compteurs pour le texte de remplacement. Le texte
-			//	ancien ne doit pas être "décrémenté" pour le moment, car il va
-			//	être mémorisé dans l'oplet ci-après :
+			//	Met Ã  jour les compteurs pour le texte de remplacement. Le texte
+			//	ancien ne doit pas Ãªtre "dÃ©crÃ©mentÃ©" pour le moment, car il va
+			//	Ãªtre mÃ©morisÃ© dans l'oplet ci-aprÃ¨s :
 			
 			this.IncrementUserCount (newText, length);
 			
@@ -761,7 +761,7 @@ namespace Epsitec.Common.Text
 		
 		public int ChangeAllMarkers(ulong marker, bool set)
 		{
-			//	Cette opération n'est pas annulable.
+			//	Cette opÃ©ration n'est pas annulable.
 			
 			this.text.SetCursorPosition (this.tempCursor.CursorId, 0);
 			
@@ -776,12 +776,12 @@ namespace Epsitec.Common.Text
 		
 		public int ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
 		{
-			//	Modifie les marqueurs associés à une tranche de texte; voir aussi
+			//	Modifie les marqueurs associÃ©s Ã  une tranche de texte; voir aussi
 			//	Text.TextContext.Marker pour des marqueurs "standard".
 			//
-			//	Retourne le nombre de caractères modifiés.
+			//	Retourne le nombre de caractÃ¨res modifiÃ©s.
 			//
-			//	Cette opération n'est pas annulable.
+			//	Cette opÃ©ration n'est pas annulable.
 			
 			return this.text.ChangeMarkers (cursor.CursorId, length, marker, set);
 		}
@@ -789,8 +789,8 @@ namespace Epsitec.Common.Text
 		
 		public void NotifyTextChanged()
 		{
-			//	Indique que les réglages internes du texte entier ont changé sans notre
-			//	connaissance. On doit considérer le texte complet comme "sale".
+			//	Indique que les rÃ©glages internes du texte entier ont changÃ© sans notre
+			//	connaissance. On doit considÃ©rer le texte complet comme "sale".
 			
 			this.textChangeMarkStart = 0;
 			this.textChangeMarkEnd   = this.TextLength;
@@ -1010,8 +1010,8 @@ namespace Epsitec.Common.Text
 		
 		public void ConvertToStyledText(string simpleText, TextStyle textStyle, out ulong[] styledText)
 		{
-			//	Génère un texte en lui appliquant les propriétés qui définissent
-			//	le style et les réglages associés.
+			//	GÃ©nÃ¨re un texte en lui appliquant les propriÃ©tÃ©s qui dÃ©finissent
+			//	le style et les rÃ©glages associÃ©s.
 			
 			TextStyle[] textStyles = { textStyle };
 			
@@ -1056,9 +1056,9 @@ namespace Epsitec.Common.Text
 		
 		public void ConvertToStyledText(System.Collections.ICollection properties, out ulong style)
 		{
-			//	Trie les propriétés selon leur type; certaines vont servir à
-			//	définir le style, d'autres à définir les réglages locaux et
-			//	spéciaux :
+			//	Trie les propriÃ©tÃ©s selon leur type; certaines vont servir Ã 
+			//	dÃ©finir le style, d'autres Ã  dÃ©finir les rÃ©glages locaux et
+			//	spÃ©ciaux :
 			
 			int length = properties == null ? 0 : properties.Count;
 			
@@ -1104,8 +1104,8 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			//	S'il y a des propriétés polymorphes, décide encore dans quelle
-			//	catégorie les placer (utilisé pour StylesProperty).
+			//	S'il y a des propriÃ©tÃ©s polymorphes, dÃ©cide encore dans quelle
+			//	catÃ©gorie les placer (utilisÃ© pour StylesProperty).
 			
 			if (polymorph != null)
 			{
@@ -1119,7 +1119,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			//	Génère le style et les réglages en fonction des propriétés :
+			//	GÃ©nÃ¨re le style et les rÃ©glages en fonction des propriÃ©tÃ©s :
 			
 			coreAcc.Done ();
 			localAcc.Done ();
@@ -1127,7 +1127,7 @@ namespace Epsitec.Common.Text
 			
 			style = 0;
 			
-			//	Attache le style et les réglages; réutilise de manière interne
+			//	Attache le style et les rÃ©glages; rÃ©utilise de maniÃ¨re interne
 			//	un style existant, si possible :
 			
 			this.StyleList.InternalSettingsTable.Attach (ref style, searchCore, searchLocal, searchExtra);
@@ -1158,8 +1158,8 @@ namespace Epsitec.Common.Text
 				
 				this.TextContext.GetFlatProperties (textStyles, out flatStyles, out flatProperties);
 				
-				//	Crée une propriété StylesProperty qui résume les styles dont
-				//	les propriétés viennent d'être mises à plat ci-dessus :
+				//	CrÃ©e une propriÃ©tÃ© StylesProperty qui rÃ©sume les styles dont
+				//	les propriÃ©tÃ©s viennent d'Ãªtre mises Ã  plat ci-dessus :
 				
 				list.AddRange (flatProperties);
 				
@@ -1172,14 +1172,14 @@ namespace Epsitec.Common.Text
 			if ((properties != null) &&
 				(properties.Count > 0))
 			{
-				//	Les propriétés "manuelles" viennent s'ajouter à la fin de la
-				//	liste, après les propriétés du/des styles.
+				//	Les propriÃ©tÃ©s "manuelles" viennent s'ajouter Ã  la fin de la
+				//	liste, aprÃ¨s les propriÃ©tÃ©s du/des styles.
 				
 				list.AddRange (properties);
 				
-				//	Prend note (sous une forme sérialisée) de toutes ces propriétés
+				//	Prend note (sous une forme sÃ©rialisÃ©e) de toutes ces propriÃ©tÃ©s
 				//	additionnelles. Sans PropertiesProperty, il serait impossible de
-				//	reconstituer les propriétés "manuelles" dans certains cas.
+				//	reconstituer les propriÃ©tÃ©s "manuelles" dans certains cas.
 				
 				if (this.TextContext.IsPropertiesPropertyEnabled)
 				{
@@ -1202,8 +1202,8 @@ namespace Epsitec.Common.Text
 		
 		public void Deserialize(byte[] data)
 		{
-			//	Commence par remettre les compteurs à zéro pour ce qui était
-			//	utilisé pour le texte :
+			//	Commence par remettre les compteurs Ã  zÃ©ro pour ce qui Ã©tait
+			//	utilisÃ© pour le texte :
 			
 			int     length = this.TextLength;
 			ulong[] text   = new ulong[length];
@@ -1211,15 +1211,15 @@ namespace Epsitec.Common.Text
 			this.ReadText (0, length, text);
 			this.DecrementUserCount (text, length);
 			
-			//	Désérialise à partir d'un memory stream :
+			//	DÃ©sÃ©rialise Ã  partir d'un memory stream :
 			
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (data, 0, data.Length, false);
 			
 			Internal.CursorTable cursorTable = this.text.CursorTable;
 			ICursor[]            cursorArray = cursorTable.GetCursorArray ();
 			
-			//	Dans un texte fraîchement créé, il y a un curseur temporaire qui
-			//	appartient à TextStory, un curseur normal qui appartient au navi-
+			//	Dans un texte fraÃ®chement crÃ©Ã©, il y a un curseur temporaire qui
+			//	appartient Ã  TextStory, un curseur normal qui appartient au navi-
 			//	gateur, ainsi qu'un curseur temporaire (pour le navigateur) :
 			
 			System.Diagnostics.Debug.Assert (cursorArray.Length == 3);
@@ -1230,7 +1230,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			//	Le plus simple est de tuer l'ancienne TextTable pour la remplacer
-			//	par une toute fraîche et toute propre. Elle n'a aucun curseur :
+			//	par une toute fraÃ®che et toute propre. Elle n'a aucun curseur :
 			
 			this.text = new Internal.TextTable ();
 			
@@ -1243,7 +1243,7 @@ namespace Epsitec.Common.Text
 			this.textLength = this.text.TextLength - 1;
 			this.undoLength = 0;
 			
-			//	Restitue les curseurs; ils seront placés en début de document,
+			//	Restitue les curseurs; ils seront placÃ©s en dÃ©but de document,
 			//	ce qui convient parfaitement :
 			
 			foreach (ICursor cursor in cursorArray)
@@ -1251,7 +1251,7 @@ namespace Epsitec.Common.Text
 				this.text.NewCursor (cursor);
 			}
 			
-			//	Met à jour les compteurs d'utilisation pour les "styles" et les
+			//	Met Ã  jour les compteurs d'utilisation pour les "styles" et les
 			//	tabulateurs :
 			
 			length = this.TextLength;
@@ -1260,8 +1260,8 @@ namespace Epsitec.Common.Text
 			this.ReadText (0, length, text);
 			this.IncrementUserCount (text, length);
 			
-			//	Met à jour les marqueurs dans le texte; supprime toutes traces
-			//	liées à d'anciennes sélections ou erreurs d'orthographe.
+			//	Met Ã  jour les marqueurs dans le texte; supprime toutes traces
+			//	liÃ©es Ã  d'anciennes sÃ©lections ou erreurs d'orthographe.
 			
 			ulong markers = 0;
 			
@@ -1270,7 +1270,7 @@ namespace Epsitec.Common.Text
 			
 			this.ChangeAllMarkers (markers, false);
 			
-			//	Prend note qu'il faudra tout vérifier au correcteur :
+			//	Prend note qu'il faudra tout vÃ©rifier au correcteur :
 			
 			markers  = this.TextContext.Markers.RequiresSpellChecking;
 			
@@ -1369,9 +1369,9 @@ namespace Epsitec.Common.Text
 				
 				this.NotifyAddingOplet (oplet);
 				
-				//	Vérifie si quelqu'un a généré des oplets en réponse à notre
-				//	événement. Si c'est le cas, on ne peut plus rien fusionner;
-				//	ajoute simplement l'oplet à la liste, puis valide l'action :
+				//	VÃ©rifie si quelqu'un a gÃ©nÃ©rÃ© des oplets en rÃ©ponse Ã  notre
+				//	Ã©vÃ©nement. Si c'est le cas, on ne peut plus rien fusionner;
+				//	ajoute simplement l'oplet Ã  la liste, puis valide l'action :
 				
 				if (this.opletQueue.PendingOpletCount > 0)
 				{
@@ -1463,18 +1463,18 @@ namespace Epsitec.Common.Text
 		
 		internal static bool MergeOplets(Common.Support.IOplet last, Common.Support.IOplet oplet)
 		{
-			//	Retourne true si l'oplet peut être fusionné avec le précédent.
+			//	Retourne true si l'oplet peut Ãªtre fusionnÃ© avec le prÃ©cÃ©dent.
 			
 			if (last.GetType () == oplet.GetType ())
 			{
-				//	L'oplet qui doit être inséré est du même type que celui qui
-				//	a été inséré auparavant. Peut-être peut-on les fusionner ?
+				//	L'oplet qui doit Ãªtre insÃ©rÃ© est du mÃªme type que celui qui
+				//	a Ã©tÃ© insÃ©rÃ© auparavant. Peut-Ãªtre peut-on les fusionner ?
 				
 				if (oplet is CursorMoveOplet)
 				{
-					//	Un déplacement du curseur suivant un autre --> on ne
-					//	conserve que la position de départ; pour autant que
-					//	les deux oplets concernent le même curseur.
+					//	Un dÃ©placement du curseur suivant un autre --> on ne
+					//	conserve que la position de dÃ©part; pour autant que
+					//	les deux oplets concernent le mÃªme curseur.
 					
 					CursorMoveOplet op1 = oplet as CursorMoveOplet;
 					CursorMoveOplet op2 = last as CursorMoveOplet;
@@ -1516,8 +1516,8 @@ namespace Epsitec.Common.Text
 				}
 				else if (oplet is TextNavigator.DefineSelectionOplet)
 				{
-					//	Deux sélections sont toujours combinables; on prend la
-					//	première comme référence.
+					//	Deux sÃ©lections sont toujours combinables; on prend la
+					//	premiÃ¨re comme rÃ©fÃ©rence.
 					
 					return true;
 				}
@@ -1570,7 +1570,7 @@ namespace Epsitec.Common.Text
 		protected Common.Support.IOplet[] FindTextOplets(System.Collections.ICollection oplets)
 		{
 			//	Trouve tous les oplets qui appartiennent au projet Common.Text
-			//	parmi la liste passée en entrée.
+			//	parmi la liste passÃ©e en entrÃ©e.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			System.Reflection.Assembly assembly = this.GetType ().Assembly;
@@ -1588,8 +1588,8 @@ namespace Epsitec.Common.Text
 		
 		protected void UpdateTextBreakInformation(int position, int length)
 		{
-			//	Met à jour l'information relative à la coupure des lignes autour
-			//	du passage modifié.
+			//	Met Ã  jour l'information relative Ã  la coupure des lignes autour
+			//	du passage modifiÃ©.
 			
 			System.Diagnostics.Debug.Assert (position <= this.TextLength);
 			
@@ -1603,8 +1603,8 @@ namespace Epsitec.Common.Text
 				this.text.SetCursorPosition (this.tempCursor.CursorId, areaStart);
 				this.text.ReadText (this.tempCursor.CursorId, areaEnd - areaStart, text);
 				
-				//	S'il y a des sauts de lignes "forcés" dans le texte avant et
-				//	après le passage modifié, on recadre la fenêtre :
+				//	S'il y a des sauts de lignes "forcÃ©s" dans le texte avant et
+				//	aprÃ¨s le passage modifiÃ©, on recadre la fenÃªtre :
 				
 				int fromPos = areaStart;
 				int toPos   = areaEnd;
@@ -1627,8 +1627,8 @@ namespace Epsitec.Common.Text
 					}
 				}
 				
-				//	Cherche les frontières de mots les plus proches, avant/après le
-				//	passage considéré :
+				//	Cherche les frontiÃ¨res de mots les plus proches, avant/aprÃ¨s le
+				//	passage considÃ©rÃ© :
 				
 				int wordStart = fromPos;
 				int wordEnd   = toPos;
@@ -1657,8 +1657,8 @@ namespace Epsitec.Common.Text
 				System.Diagnostics.Debug.Assert (wordStart >= fromPos);
 				System.Diagnostics.Debug.Assert (wordEnd <= toPos);
 				
-				//	Demande une analyse du passage considéré et recopie les
-				//	informations dans le texte lui-même :
+				//	Demande une analyse du passage considÃ©rÃ© et recopie les
+				//	informations dans le texte lui-mÃªme :
 				
 				int textOffset = wordStart - areaStart;
 				int textLength = wordEnd - wordStart;
@@ -1672,7 +1672,7 @@ namespace Epsitec.Common.Text
 				
 				this.text.WriteText (this.tempCursor.CursorId, areaEnd - areaStart, text);
 				
-				//	Agrandit la plage dans laquelle il y a eu des modifications signalées
+				//	Agrandit la plage dans laquelle il y a eu des modifications signalÃ©es
 				//	par des marques telles que RequiresSpellChecking. On s'arrange pour
 				//	toujours couvrir des paragraphes complets :
 				
@@ -1716,8 +1716,8 @@ namespace Epsitec.Common.Text
 		{
 			if (bookKeeping)
 			{
-				//	Passe en revue tous les caractères et met à jour les compteurs
-				//	d'utilisation pour les styles associés :
+				//	Passe en revue tous les caractÃ¨res et met Ã  jour les compteurs
+				//	d'utilisation pour les styles associÃ©s :
 				
 				this.IncrementUserCount (text, text.Length);
 			}
@@ -1730,8 +1730,8 @@ namespace Epsitec.Common.Text
 		{
 			if (bookKeeping)
 			{
-				//	Passe en revue tous les caractères et met à jour les compteurs
-				//	d'utilisation pour les styles associés :
+				//	Passe en revue tous les caractÃ¨res et met Ã  jour les compteurs
+				//	d'utilisation pour les styles associÃ©s :
 				
 				ulong[] text = new ulong[length];
 				
@@ -1747,7 +1747,7 @@ namespace Epsitec.Common.Text
 		
 		protected bool InternalReplaceText(int position, int length, ulong[] text)
 		{
-			//	Remplace du texte sans gestion du undo/redo ni mise à jour des
+			//	Remplace du texte sans gestion du undo/redo ni mise Ã  jour des
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
 			//	des curseurs.
 			
@@ -1790,7 +1790,7 @@ namespace Epsitec.Common.Text
 		
 		protected bool InternalReplaceText(int position, int length, uint[] utf32)
 		{
-			//	Remplace du texte sans gestion du undo/redo ni mise à jour des
+			//	Remplace du texte sans gestion du undo/redo ni mise Ã  jour des
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
 			//	des curseurs.
 			
@@ -1841,12 +1841,12 @@ namespace Epsitec.Common.Text
 		
 		protected void InternalMoveText(int fromPos, int toPos, int length)
 		{
-			//	Déplace le texte sans gestion du undo/redo ni mise à jour des
+			//	DÃ©place le texte sans gestion du undo/redo ni mise Ã  jour des
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
 			//	des curseurs.
 			
 			//	L'appelant fournit une position de destination qui est valide
-			//	seulement après la suppression (temporaire) du texte.
+			//	seulement aprÃ¨s la suppression (temporaire) du texte.
 			
 			this.text.SetCursorPosition (this.tempCursor.CursorId, fromPos);
 			
@@ -1863,9 +1863,9 @@ namespace Epsitec.Common.Text
 			if ((infos != null) &&
 				(infos.Length > 0))
 			{
-				//	La liste des curseurs affectés contient peut-être des curseurs
-				//	temporaires; on commence par les filtrer, puis on déplace tous
-				//	les curseurs restants à la nouvelle position :
+				//	La liste des curseurs affectÃ©s contient peut-Ãªtre des curseurs
+				//	temporaires; on commence par les filtrer, puis on dÃ©place tous
+				//	les curseurs restants Ã  la nouvelle position :
 				
 				infos = this.text.FilterCursors (infos, new CursorInfo.Filter (this.FilterSaveCursors));
 				
@@ -1875,7 +1875,7 @@ namespace Epsitec.Common.Text
 		
 		protected void InternalReadText(int position, ulong[] buffer)
 		{
-			//	Lit le texte à la position donnée.
+			//	Lit le texte Ã  la position donnÃ©e.
 			
 			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
 			
@@ -1887,7 +1887,7 @@ namespace Epsitec.Common.Text
 		
 		protected void InternalWriteText(int position, ulong[] text)
 		{
-			//	Ecrit le texte à la position donnée.
+			//	Ecrit le texte Ã  la position donnÃ©e.
 			
 			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
 			
@@ -2207,8 +2207,8 @@ namespace Epsitec.Common.Text
 			public override void Dispose()
 			{
 				//	Lorsque l'on supprime une information permettant d'annuler
-				//	une insertion, il n'y a rien à faire. Par contre, si l'oplet
-				//	est dans l'état "redoable", il faudra supprimer le texte de
+				//	une insertion, il n'y a rien Ã  faire. Par contre, si l'oplet
+				//	est dans l'Ã©tat "redoable", il faudra supprimer le texte de
 				//	la "undo area".
 				
 				System.Diagnostics.Debug.Assert (this.length > 0);
@@ -2221,8 +2221,8 @@ namespace Epsitec.Common.Text
 					CursorInfo[] infos;
 					this.story.InternalDeleteText (undoStart, this.length, out infos, true);
 					
-					//	TODO: gérer la suppression des curseurs...
-					//	TODO: gérer la suppression des styles...
+					//	TODO: gÃ©rer la suppression des curseurs...
+					//	TODO: gÃ©rer la suppression des styles...
 					
 					this.story.undoLength -= this.length;
 					this.cursors = null;
@@ -2236,7 +2236,7 @@ namespace Epsitec.Common.Text
 			
 			private void RememberText()
 			{
-				//	Génère le texte simple qui représente ce qui a été inséré.
+				//	GÃ©nÃ¨re le texte simple qui reprÃ©sente ce qui a Ã©tÃ© insÃ©rÃ©.
 				
 				ulong[] buffer = new ulong[this.length];
 				this.story.ReadText (this.position, this.length, buffer);
@@ -2279,9 +2279,9 @@ namespace Epsitec.Common.Text
 			{
 				if (this.position == other.position)
 				{
-					//	Les deux tranches sont déjà stockées dans le bon ordre dans
+					//	Les deux tranches sont dÃ©jÃ  stockÃ©es dans le bon ordre dans
 					//	le buffer d'annulation; on peut simplement allonger le texte
-					//	à annuler :
+					//	Ã  annuler :
 					
 					this.length += other.length;
 					this.text    = string.Concat (this.text, other.text);
@@ -2291,8 +2291,8 @@ namespace Epsitec.Common.Text
 				
 				if (this.position == other.position + other.length)
 				{
-					//	Le texte doit encore être permuté dans le buffer d'annulation
-					//	avant de pouvoir allonger le texte à annuler :
+					//	Le texte doit encore Ãªtre permutÃ© dans le buffer d'annulation
+					//	avant de pouvoir allonger le texte Ã  annuler :
 					
 					int undoStart = this.story.textLength + 1;
 					int undoEnd   = undoStart + this.story.undoLength;
@@ -2401,8 +2401,8 @@ namespace Epsitec.Common.Text
 			public override void Dispose()
 			{
 				//	Lorsque l'on supprime une information permettant de refaire
-				//	une destruction, il n'y a rien à faire. Par contre, si l'oplet
-				//	est dans l'état "undoable", il faudra supprimer le texte de
+				//	une destruction, il n'y a rien Ã  faire. Par contre, si l'oplet
+				//	est dans l'Ã©tat "undoable", il faudra supprimer le texte de
 				//	la "undo area".
 				
 				if (this.cursors != null)
@@ -2416,8 +2416,8 @@ namespace Epsitec.Common.Text
 						this.story.InternalDeleteText (undoEnd - this.length, this.length, out infos, true);
 					}
 					
-					//	TODO: gérer la suppression des curseurs...
-					//	TODO: gérer la suppression des styles...
+					//	TODO: gÃ©rer la suppression des curseurs...
+					//	TODO: gÃ©rer la suppression des styles...
 					
 					this.story.undoLength -= this.length;
 					this.cursors = null;
@@ -2431,7 +2431,7 @@ namespace Epsitec.Common.Text
 			
 			private void RememberText()
 			{
-				//	Génère le texte simple qui représente ce qui a été détruit.
+				//	GÃ©nÃ¨re le texte simple qui reprÃ©sente ce qui a Ã©tÃ© dÃ©truit.
 				
 				int undoStart = this.story.textLength + 1;
 				int undoEnd   = undoStart + this.story.undoLength;
@@ -2500,7 +2500,7 @@ namespace Epsitec.Common.Text
 			public override void Dispose()
 			{
 				//	Lorsque l'on supprime une information permettant de refaire
-				//	ou défaire une modification, il suffit de mettre à jour les
+				//	ou dÃ©faire une modification, il suffit de mettre Ã  jour les
 				//	compteurs d'utilisation des styles.
 				
 				System.Diagnostics.Debug.Assert (this.length > 0);

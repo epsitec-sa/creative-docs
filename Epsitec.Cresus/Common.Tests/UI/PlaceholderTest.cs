@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Tests.UI
 
 			Assert.AreEqual ("Pierre", placeholder.Value);
 			Assert.AreEqual (2, placeholder.Children.Count);
-			Assert.AreEqual ("Prénom", ((Widget) placeholder.Children[0]).Text);
+			Assert.AreEqual ("PrÃ©nom", ((Widget) placeholder.Children[0]).Text);
 			Assert.AreEqual ("Pierre", ((Widget) placeholder.Children[1]).Text);
 		}
 
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Tests.UI
 
 			Assert.AreEqual ("Cathi", placeholder.Value);
 			Assert.AreEqual (2, placeholder.Children.Count);
-			Assert.AreEqual ("Prénom", ((Widget) placeholder.Children[0]).Text);
+			Assert.AreEqual ("PrÃ©nom", ((Widget) placeholder.Children[0]).Text);
 			Assert.AreEqual ("Cathi", ((Widget) placeholder.Children[1]).Text);
 
 			//	And now, bind to the collection... which will need to magically instanciate

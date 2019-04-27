@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				//	Retourne la description à afficher dans une liste.
+				//	Retourne la description Ã  afficher dans une liste.
 				FormattedText text;
 
 				if (this.DisplayName == this.LoginName)

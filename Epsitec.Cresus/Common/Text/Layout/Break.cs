@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// La classe Break stocke des informations sur un point de découpe dans la
+	/// La classe Break stocke des informations sur un point de dÃ©coupe dans la
 	/// ligne.
 	/// </summary>
 	public class Break

@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -6,9 +6,9 @@ namespace Epsitec.Common.Text
 	public delegate void VersionChangedEventHandler(TextVersion sender);
 	
 	/// <summary>
-	/// La classe TextVersion permet de déterminer simplement s'il y a eu des
-	/// modifications depuis la dernière consultation, mais aussi de générer
-	/// des événements spécifiques, par un appel explicite à Update.
+	/// La classe TextVersion permet de dÃ©terminer simplement s'il y a eu des
+	/// modifications depuis la derniÃ¨re consultation, mais aussi de gÃ©nÃ©rer
+	/// des Ã©vÃ©nements spÃ©cifiques, par un appel explicite Ã  Update.
 	/// </summary>
 	public sealed class TextVersion
 	{

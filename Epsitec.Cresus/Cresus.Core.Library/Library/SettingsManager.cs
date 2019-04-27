@@ -1,4 +1,4 @@
-//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		public void MergeSettings(string startKey, SettingsCollection settings)
 		{
-			//	Met à jour tous les réaglages d'une catégorie donnée.
+			//	Met Ã  jour tous les rÃ©aglages d'une catÃ©gorie donnÃ©e.
 
 			bool changed = false;
 

@@ -17,8 +17,8 @@ namespace Epsitec.Common.Widgets
 	}
 
 	/// <summary>
-	/// La classe TextFieldReal implémente la ligne éditable numérique
-	/// avec slider et unité réelle.
+	/// La classe TextFieldReal implÃ©mente la ligne Ã©ditable numÃ©rique
+	/// avec slider et unitÃ© rÃ©elle.
 	/// </summary>
 	public class TextFieldReal : TextFieldSlider
 	{
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Widgets
 
 		public decimal							FactorResolution
 		{
-			//	Modification de la résolution (10 = une décimale de moins).
+			//	Modification de la rÃ©solution (10 = une dÃ©cimale de moins).
 			get
 			{
 				return this.factorResolution;

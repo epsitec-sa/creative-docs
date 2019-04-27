@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private void Swap(int index)
 		{
 			//	Annule une action et remplace les informations qui ont permis de la
-			//	faire par les informations pour la défaire.
+			//	faire par les informations pour la dÃ©faire.
 			var item = this.items[index];
 			this.items[index] = item.undoOperation (item.undoData);
 		}

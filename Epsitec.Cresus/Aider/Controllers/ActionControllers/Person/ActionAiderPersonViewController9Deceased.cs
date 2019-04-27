@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("La personne est décédée");
+			return Resources.Text ("La personne est dÃ©cÃ©dÃ©e");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -51,14 +51,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var uncertain = true;
 
 			form
-				.Title ("Marque la personne comme décédée")
-				.Text ("Attention: cette opération est irréversible.")
+				.Title ("Marque la personne comme dÃ©cÃ©dÃ©e")
+				.Text ("Attention: cette opÃ©ration est irrÃ©versible.")
 				.Field<Date> ()
-					.Title ("Date du décès")
+					.Title ("Date du dÃ©cÃ¨s")
 					.InitialValue (date)
 				.End ()
 				.Field<bool> ()
-					.Title ("Date du décès incertaine")
+					.Title ("Date du dÃ©cÃ¨s incertaine")
 					.InitialValue (uncertain)
 				.End ()
 			.End ();

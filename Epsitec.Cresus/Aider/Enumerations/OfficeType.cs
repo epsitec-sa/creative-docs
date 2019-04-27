@@ -1,4 +1,4 @@
-//	Copyright © 2014-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -12,9 +12,9 @@ namespace Epsitec.Aider.Enumerations
 
 		Parish			= 1,
 		
-		Region			= 2,					//	global - région proprement dite
+		Region			= 2,					//	global - rÃ©gion proprement dite
 		RegionFA		= 3,					//	Formation & accompagnement
-		RegionPS		= 4,					//	Présence & solidarité
+		RegionPS		= 4,					//	PrÃ©sence & solidaritÃ©
 		RegionCI		= 5,					//	Coordination & information
 		RegionVCC		= 6,					//	Vie Communautaire & cultuelle
 		

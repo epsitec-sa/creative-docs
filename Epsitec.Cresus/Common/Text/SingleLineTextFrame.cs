@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe SingleLineTextFrame permet de décrire une ligne unique dans laquelle
+	/// La classe SingleLineTextFrame permet de dÃ©crire une ligne unique dans laquelle
 	/// coule du texte.
 	/// </summary>
 	public class SingleLineTextFrame : ITextFrame
@@ -53,21 +53,21 @@ namespace Epsitec.Common.Text
 		
 		public bool ConstrainLineBox(double yDist, double ascender, double descender, double height, double leading, bool syncToGrid, out double ox, out double oy, out double width, out double nextYDist)
 		{
-			//	A partir d'une position suggérée :
+			//	A partir d'une position suggÃ©rÃ©e :
 			//
 			//	  - distance verticale depuis le sommet du cadre,
 			//	  - hauteurs au-dessus/en-dessous de la ligne de base,
 			//	  - hauteur de la ligne y compris interligne,
 			//
-			//	détermine la position exacte de la ligne ainsi que la largeur
-			//	disponible et la position suggérée pour la prochaine ligne.
+			//	dÃ©termine la position exacte de la ligne ainsi que la largeur
+			//	disponible et la position suggÃ©rÃ©e pour la prochaine ligne.
 
 			ox    = 0;
 			oy    = 0;
 			width = this.width;
 			nextYDist = -1;
 
-			if ( yDist == 0 )  // première ligne ?
+			if ( yDist == 0 )  // premiÃ¨re ligne ?
 			{
 				return true;
 			}

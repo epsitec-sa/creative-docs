@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -6,13 +6,13 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'énumération <c>TextFieldMultiExPreserveMode</c> défini la position de l'ascenseur et des
-	/// boutons accept/cancel lorsqu'ils sont visibles simultanéments.
+	/// L'Ã©numÃ©ration <c>TextFieldMultiExPreserveMode</c> dÃ©fini la position de l'ascenseur et des
+	/// boutons accept/cancel lorsqu'ils sont visibles simultanÃ©ments.
 	/// </summary>
 	public enum TextFieldMultiExPreferredLayout
 	{
 		/// <summary>
-		/// Ascenseur et boutons accept/cancel les uns à côté des autres.
+		/// Ascenseur et boutons accept/cancel les uns Ã  cÃ´tÃ© des autres.
 		/// </summary>
 		PreserveScrollerHeight,
 

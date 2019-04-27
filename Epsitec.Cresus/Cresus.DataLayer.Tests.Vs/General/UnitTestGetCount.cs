@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;

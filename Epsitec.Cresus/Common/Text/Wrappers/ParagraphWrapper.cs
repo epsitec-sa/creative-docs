@@ -1,10 +1,10 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
 {
 	/// <summary>
-	/// La classe ParagraphWrapper simplifie l'accès aux réglages liés à
+	/// La classe ParagraphWrapper simplifie l'accÃ¨s aux rÃ©glages liÃ©s Ã 
 	/// la disposition d'un paragraphe (justification, marges, etc.)
 	/// </summary>
 	public class ParagraphWrapper : AbstractWrapper
@@ -532,10 +532,10 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			if (this.Attachment == Attachment.Style)
 			{
-				//	Les tabulateurs ne sont éditables par le ParagraphWrapper que
-				//	s'ils sont attachés à un style.
+				//	Les tabulateurs ne sont Ã©ditables par le ParagraphWrapper que
+				//	s'ils sont attachÃ©s Ã  un style.
 				
-				//	Pour éditer les tabulateurs associés à du texte normal, il faut
+				//	Pour Ã©diter les tabulateurs associÃ©s Ã  du texte normal, il faut
 				//	passer par TextNavigator et TabList directement.
 				
 				int defines = 0;
@@ -1313,10 +1313,10 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			public ParagraphManagers.ItemListManager.Parameters	ItemListParameters
 			{
-				//	Cette propriété encapsule simplement ManagedParagraph pour que l'accès
+				//	Cette propriÃ©tÃ© encapsule simplement ManagedParagraph pour que l'accÃ¨s
 				//	soit plus simple.
 				//	Il faut utiliser IsManagedParagraphDefined et ClearManagedParagraph,
-				//	car il n'y a pas d'équivalent pour ItemListParameters.
+				//	car il n'y a pas d'Ã©quivalent pour ItemListParameters.
 				get
 				{
 					ParagraphWrapper wrapper = this.Wrapper as ParagraphWrapper;

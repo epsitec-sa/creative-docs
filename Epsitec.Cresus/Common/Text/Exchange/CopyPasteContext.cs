@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-// La classe CopyPasetContext définit un context nécessaire au copier/coller
-// c-à-d:
+// La classe CopyPasetContext dÃ©finit un context nÃ©cessaire au copier/coller
+// c-Ã -d:
 //  - TextWrapper 
 //  - ParagraphWrapper
 //  - TextNavigator
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Text.Exchange
 				}
 				else
 				{
-					System.Diagnostics.Debug.Assert (false, "La classe CopyPasteContext a été utilisé sans using");
+					System.Diagnostics.Debug.Assert (false, "La classe CopyPasteContext a Ã©tÃ© utilisÃ© sans using");
 				}
 			}
 			this.isDisposed = true;

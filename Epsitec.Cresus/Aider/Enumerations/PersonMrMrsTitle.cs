@@ -1,4 +1,4 @@
-//	Copyright © 2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -18,8 +18,8 @@ namespace Epsitec.Aider.Enumerations
 		ChefService_Madame		= 0x032,
 		Directeur_Monsieur		= 0x041,
 		Directeur_Madame		= 0x042,
-		Président_Monsieur		= 0x051,
-		Président_Madame		= 0x052,
+		PrÃ©sident_Monsieur		= 0x051,
+		PrÃ©sident_Madame		= 0x052,
 
 		Recteur_Monsieur		= 0x101,
 		Recteur_Madame			= 0x102,

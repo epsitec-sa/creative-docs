@@ -6,8 +6,8 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Comparers
 {
 	/// <summary>
-	///	Compare deux widgets pour permettre de les trier selon leurs positions géographiques.
-	///	Le premier sera en haut à gauche et le dernier en bas à droite.
+	///	Compare deux widgets pour permettre de les trier selon leurs positions gÃ©ographiques.
+	///	Le premier sera en haut Ã  gauche et le dernier en bas Ã  droite.
 	/// </summary>
 	public class WidgetDisposition : IComparer<Widget>
 	{
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Comparers
 			int comp = c2.Y.CompareTo(c1.Y);  // de haut en bas !
 			if (comp == 0)
 			{
-				comp = c1.X.CompareTo(c2.X);  // de gauche à droite
+				comp = c1.X.CompareTo(c2.X);  // de gauche Ã  droite
 			}
 			return comp;
 		}

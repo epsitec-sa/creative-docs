@@ -1,4 +1,4 @@
-//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		public void Clear()
 		{
 			//	On n'a pas le droit de faire un Dispose de l'objet 'commande', car il peut encore
-			//	être utilisé par un appelant. C'est le cas lorsque l'on est en mode AutoClear.
+			//	Ãªtre utilisÃ© par un appelant. C'est le cas lorsque l'on est en mode AutoClear.
 			
 			this.expectMore    = false;
 			this.commandCache  = null;
@@ -977,7 +977,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				int fieldIndex = 0;
 				
-				//	Construit l'objet commande en se basant sur les paramètres définis pour
+				//	Construit l'objet commande en se basant sur les paramÃ¨tres dÃ©finis pour
 				//	celle-ci.
 				
 				foreach (SqlField field in this.commandParams)
@@ -1016,7 +1016,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 
 				//	Pour l'instant, la commande est toujours de type texte et construite par les
-				//	diverses méthodes publiques.
+				//	diverses mÃ©thodes publiques.
 				
 				this.commandCache.CommandType = System.Data.CommandType.Text;
 				this.commandCache.CommandText = this.buffer.ToString ();
@@ -1025,8 +1025,8 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		private string MakeCommandParam(SqlField field)
 		{
-			//	Ajoute un champ SQL comme paramètre de la commande. C'est la méthode UpdateCommand qui
-			//	va faire le lien entre le num du paramètre (@PARAM_n) et sa valeur, telle que définie
+			//	Ajoute un champ SQL comme paramÃ¨tre de la commande. C'est la mÃ©thode UpdateCommand qui
+			//	va faire le lien entre le num du paramÃ¨tre (@PARAM_n) et sa valeur, telle que dÃ©finie
 			//	dans le champ SqlField.
 			
 			string name = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", this.commandParams.Count);
@@ -1566,7 +1566,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			if (isFirstField)
 			{
-				//	Aucun champ n'a été spécifié. On ne peut pas faire un SELECT vide.
+				//	Aucun champ n'a Ã©tÃ© spÃ©cifiÃ©. On ne peut pas faire un SELECT vide.
 
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("No field specified in SELECT"));
 			}
@@ -1599,7 +1599,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			if (isFirstField)
 			{
-				//	Aucune table n'a été spécifiée. On ne peut pas faire un SELECT sans tables.
+				//	Aucune table n'a Ã©tÃ© spÃ©cifiÃ©e. On ne peut pas faire un SELECT sans tables.
 
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("No table specified in SELECT"));
 			}
@@ -1687,7 +1687,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 
 				//	S'il y a plusieurs tables dans sqlQuery.Tables,  on va refuser les noms non
-				//	qualifiés.
+				//	qualifiÃ©s.
 				
 				this.Append (field.AsFunction, onlyAcceptQualifiedNames);
 			}

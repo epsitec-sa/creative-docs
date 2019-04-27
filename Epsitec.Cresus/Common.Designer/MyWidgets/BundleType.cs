@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant de choisir une catégorie de bundle.
+	/// Widget permettant de choisir une catÃ©gorie de bundle.
 	/// </summary>
 	public class BundleType : Widget
 	{
@@ -135,14 +135,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Events handler
 		protected virtual void OnTypeChanged(ResourceAccess.Type oldType)
 		{
-			//	Génère un événement pour dire que le type a été changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le type a Ã©tÃ© changÃ©.
 			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs>("TypeChanged");
 			if (handler != null)
 			{
 				CancelEventArgs e = new CancelEventArgs();
 				handler(this, e);
 
-				if (e.Cancel)  // annule le changement de sélection ?
+				if (e.Cancel)  // annule le changement de sÃ©lection ?
 				{
 					this.currentType = oldType;
 					this.UpdateButtons();

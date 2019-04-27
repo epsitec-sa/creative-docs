@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 				yield return new MandatFactory
 				{
-					Name = "Pour collectivité publique (MCH2)",
+					Name = "Pour collectivitÃ© publique (MCH2)",
 					IsDefault = true,
 					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate, bool withSamples)
 					{

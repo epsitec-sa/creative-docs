@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Daniel Roux
 
 using Epsitec.Common.Drawing;
@@ -20,10 +20,10 @@ namespace Epsitec.Common.Dialogs
 		/// <summary>
 		/// Constructeur du dialogue pour demander confirmation avec plusieurs gros boutons.
 		/// </summary>
-		/// <param name="title">Titre du dialogue, dans la barre de titre de la fenêtre.</param>
-		/// <param name="header">Question posée en haut du dialogue.</param>
-		/// <param name="questions">Liste de questions, formatées avec ConfirmationButton.FormatContent().</param>
-		/// <param name="hasCancelButton">Présente optionnelle d'un bouton "Annuler" dans une bande grise en bas.</param>
+		/// <param name="title">Titre du dialogue, dans la barre de titre de la fenÃªtre.</param>
+		/// <param name="header">Question posÃ©e en haut du dialogue.</param>
+		/// <param name="questions">Liste de questions, formatÃ©es avec ConfirmationButton.FormatContent().</param>
+		/// <param name="hasCancelButton">PrÃ©sente optionnelle d'un bouton "Annuler" dans une bande grise en bas.</param>
 		public ConfirmationDialog(string title, string header, IEnumerable<string> questions, bool hasCancelButton)
 		{
 			this.title = title;

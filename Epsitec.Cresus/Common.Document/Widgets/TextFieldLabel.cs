@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Widgets
 #if false
 		public override double DefaultWidth
 		{
-			//	Largeur par défaut.
+			//	Largeur par dÃ©faut.
 			get
 			{
 				return TextFieldLabel.ShortWidth;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool ButtonUnitEnable
 		{
-			//	Etat du bouton pour changer d'unité.
+			//	Etat du bouton pour changer d'unitÃ©.
 			get
 			{
 				if ( this.buttonUnit == null )  return false;
@@ -175,19 +175,19 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void SetRangeDimension(Document document, double min, double max, double def, double step)
 		{
-			//	Spécifie les bornes pour une dimension.
+			//	SpÃ©cifie les bornes pour une dimension.
 			this.textFieldReal.FactorMinRange     = (decimal) min;
 			this.textFieldReal.FactorMaxRange     = (decimal) max;
 			this.textFieldReal.FactorDefaultRange = (decimal) def;
 			this.textFieldReal.FactorStep         = (decimal) step;
-			this.textFieldReal.FactorResolution   = 10.0M;  // une décimale de moins
+			this.textFieldReal.FactorResolution   = 10.0M;  // une dÃ©cimale de moins
 
 			document.Modifier.AdaptTextFieldRealDimension(this.textFieldReal);
 		}
 
 		public void SetRangeFontSize(Document document)
 		{
-			//	Spécifie les bornes pour une taille de fonte.
+			//	SpÃ©cifie les bornes pour une taille de fonte.
 			this.textFieldReal.UnitType = RealUnitType.Scalar;
 			this.textFieldReal.Scale = (decimal) Modifier.FontSizeScale;
 			if ( document.Type == DocumentType.Pictogram )
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void SetRangePercents(Document document, double min, double max, double def, double step)
 		{
-			//	Spécifie les bornes pour une valeur en pourcents.
+			//	SpÃ©cifie les bornes pour une valeur en pourcents.
 			TextFieldReal field = (this.type == Type.TextFieldUnit) ? this.textFieldPercent : this.textFieldReal;
 
 			document.Modifier.AdaptTextFieldRealPercent(field);
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsUnitPercent
 		{
-			//	Indique l'unité en cours pour le type TextFieldUnit.
+			//	Indique l'unitÃ© en cours pour le type TextFieldUnit.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.type == Type.TextFieldUnit);
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool LabelVisibility
 		{
-			//	Visibilité du label.
+			//	VisibilitÃ© du label.
 			get
 			{
 				return this.labelVisibility;
@@ -342,7 +342,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public Button ButtonUnit
 		{
-			//	Donne le widget pour choisir l'unité.
+			//	Donne le widget pour choisir l'unitÃ©.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.buttonUnit != null);
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public static double DefaultLabelWidth
 		{
-			//	Largeur par défaut du label.
+			//	Largeur par dÃ©faut du label.
 			get
 			{
 				return 10;
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public static double DefaultMarginWidth
 		{
-			//	Largeur par défaut de la marge entre le label et le texte.
+			//	Largeur par dÃ©faut de la marge entre le label et le texte.
 			get
 			{
 				return 2;
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public static double DefaultTextWidth
 		{
-			//	Largeur par défaut du texte.
+			//	Largeur par dÃ©faut du texte.
 			get
 			{
 				return 48;

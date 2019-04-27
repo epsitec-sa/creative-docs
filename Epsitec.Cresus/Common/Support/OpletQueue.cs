@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe OpletQueue implémente l'infrastructure pour le UNDO/REDO
-	/// généralisé; chaque action se décompose en "oplets" (cf. IOplet).
+	/// La classe OpletQueue implÃ©mente l'infrastructure pour le UNDO/REDO
+	/// gÃ©nÃ©ralisÃ©; chaque action se dÃ©compose en "oplets" (cf. IOplet).
 	/// </summary>
 	public class OpletQueue
 	{
@@ -527,8 +527,8 @@ namespace Epsitec.Common.Support
 			
 			if (this.fenceId == 0)
 			{
-				//	Toutes les actions "ouvertes" ont été validées. On peut donc copier les oplets
-				//	(avec leurs frontières) dans la liste officielle.
+				//	Toutes les actions "ouvertes" ont Ã©tÃ© validÃ©es. On peut donc copier les oplets
+				//	(avec leurs frontiÃ¨res) dans la liste officielle.
 				
 				System.Diagnostics.Debug.Assert (this.action == null);
 				
@@ -536,15 +536,15 @@ namespace Epsitec.Common.Support
 				
 				if (this.tempQueue.Count > 0)
 				{
-					//	N'insère un élément dans la liste que si des oplets seront effectivement
-					//	ajoutés; une insertion vide ne va pas apparaître dans la queue !
+					//	N'insÃ¨re un Ã©lÃ©ment dans la liste que si des oplets seront effectivement
+					//	ajoutÃ©s; une insertion vide ne va pas apparaÃ®tre dans la queue !
 					
 					if (this.disableMerge)
 					{
 						if (this.liveIndex > 0)
 						{
-							//	Empêche la fusion de cette série d'oplets avec la série précédente;
-							//	il faut donc marquer la séquence précédente :
+							//	EmpÃªche la fusion de cette sÃ©rie d'oplets avec la sÃ©rie prÃ©cÃ©dente;
+							//	il faut donc marquer la sÃ©quence prÃ©cÃ©dente :
 							
 							Fence fence = this.queue[this.liveIndex-1] as Fence;
 							

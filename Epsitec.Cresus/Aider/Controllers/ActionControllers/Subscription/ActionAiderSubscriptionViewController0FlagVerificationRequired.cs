@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				case Enumerations.SubscriptionFlag.Suspended:
 				case Enumerations.SubscriptionFlag.None:
-					return Resources.Text ("Marquer pour vérification");
+					return Resources.Text ("Marquer pour vÃ©rification");
 				case Enumerations.SubscriptionFlag.VerificationRequired:
 					return Resources.Text ("Marquer comme valide");
 				default:

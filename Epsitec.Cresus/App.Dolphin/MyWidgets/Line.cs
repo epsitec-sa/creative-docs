@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Séparateur qui dessine simplement un trait noir.
+	/// SÃ©parateur qui dessine simplement un trait noir.
 	/// </summary>
 	public class Line : Widget
 	{

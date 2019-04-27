@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Renderers
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 			set
 			{
-				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
+				//	Note: on recalcule la transformation Ã  tous les coups, parce que l'appelant peut Ãªtre
 				//	Graphics.UpdateTransform...
 
 				if (this.handle.IsInvalid)

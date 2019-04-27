@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;

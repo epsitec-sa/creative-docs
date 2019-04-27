@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Annuler la dérogation");
+			return Resources.Text ("Annuler la dÃ©rogation");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (!user.IsAdmin ())
 			{
-				throw new BusinessRuleException ("Vos droits ne vous permettent pas d'annuler une dérogation");
+				throw new BusinessRuleException ("Vos droits ne vous permettent pas d'annuler une dÃ©rogation");
 			}
 
 			var oldParishGroup = AiderGroupEntity.FindGroups (this.BusinessContext, this.Entity.GeoParishGroupPathCache).Single ();

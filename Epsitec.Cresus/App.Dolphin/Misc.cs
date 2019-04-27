@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.App.Dolphin
 {
 	/// <summary>
-	/// La classe Misc contient quelques routines générales.
+	/// La classe Misc contient quelques routines gÃ©nÃ©rales.
 	/// </summary>
 	public class Misc
 	{
@@ -72,13 +72,13 @@ namespace Epsitec.App.Dolphin
 
 		static public int ParseHexa(string hexa)
 		{
-			//	Analyse une chaîne hexadécimale et retourne sa valeur.
+			//	Analyse une chaÃ®ne hexadÃ©cimale et retourne sa valeur.
 			return Misc.ParseHexa(hexa, 0, 0);
 		}
 
 		static public int ParseHexa(string hexa, int defaultValue, int errorValue)
 		{
-			//	Analyse une chaîne hexadécimale et retourne sa valeur.
+			//	Analyse une chaÃ®ne hexadÃ©cimale et retourne sa valeur.
 			if (string.IsNullOrEmpty(hexa))
 			{
 				return defaultValue;
@@ -97,13 +97,13 @@ namespace Epsitec.App.Dolphin
 
 		static public int ParseBin(string bin)
 		{
-			//	Analyse une chaîne binaire et retourne sa valeur.
+			//	Analyse une chaÃ®ne binaire et retourne sa valeur.
 			return Misc.ParseBin(bin, 0, 0);
 		}
 
 		static public int ParseBin(string bin, int defaultValue, int errorValue)
 		{
-			//	Analyse une chaîne binaire et retourne sa valeur.
+			//	Analyse une chaÃ®ne binaire et retourne sa valeur.
 			if (string.IsNullOrEmpty(bin))
 			{
 				return defaultValue;
@@ -132,7 +132,7 @@ namespace Epsitec.App.Dolphin
 
 		static public string GetVersion()
 		{
-			//	Donne le numéro de version.
+			//	Donne le numÃ©ro de version.
 			string version = typeof(DolphinApplication).Assembly.FullName.Split(',')[1].Split('=')[1];
 			if ( version.EndsWith(".0") )
 			{
@@ -143,7 +143,7 @@ namespace Epsitec.App.Dolphin
 
 		static public int CompareVersions(string v1, string v2)
 		{
-			//	Compare deux numéros de version.
+			//	Compare deux numÃ©ros de version.
 			if (v1 == v2)
 			{
 				return 0;
@@ -168,11 +168,11 @@ namespace Epsitec.App.Dolphin
 
 		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
-			//	Retourne des hachures à 45 degrés remplissant sans déborder un rectangle.
-			//	Une hachure passe toujours par le point de référence.
+			//	Retourne des hachures Ã  45 degrÃ©s remplissant sans dÃ©border un rectangle.
+			//	Une hachure passe toujours par le point de rÃ©fÃ©rence.
 			Path path = new Path();
 
-			//	Déplace le point de référence sur le bord gauche du rectangle.
+			//	DÃ©place le point de rÃ©fÃ©rence sur le bord gauche du rectangle.
 			reference.Y += rect.Left - reference.X;
 			reference.X = rect.Left;
 			double d = reference.Y - rect.Bottom;
@@ -211,7 +211,7 @@ namespace Epsitec.App.Dolphin
 
 		static public void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, Color color)
 		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			//	Dessine un traitillÃ© simple (dash/gap) le long d'un chemin.
 			if (path.IsEmpty)  return;
 
 			DashedPath dp = new DashedPath();
@@ -289,7 +289,7 @@ namespace Epsitec.App.Dolphin
 
 		static public Size IconPreferredSize(string iconSize)
 		{
-			//	Retourne la taille préférée pour une icône. Si la taille réelle de l'icône n'est
+			//	Retourne la taille prÃ©fÃ©rÃ©e pour une icÃ´ne. Si la taille rÃ©elle de l'icÃ´ne n'est
 			//	pas exactement identique, ce n'est pas important. Drawing.Canvas cherche au mieux.
 			if ( iconSize == "Small" )  return new Size(14, 14);
 			if ( iconSize == "Large" )  return new Size(31, 31);
@@ -298,13 +298,13 @@ namespace Epsitec.App.Dolphin
 
 		static public string Icon(string icon)
 		{
-			//	Retourne le nom complet d'une icône.
+			//	Retourne le nom complet d'une icÃ´ne.
 			return string.Format("manifest:Epsitec.App.Dolphin.Images.{0}.icon", icon);
 		}
 
 		static public string IconDyn(string name, string parameter)
 		{
-			//	Retourne le nom complet d'une icône dynamique.
+			//	Retourne le nom complet d'une icÃ´ne dynamique.
 			return string.Format("dyn:{0}/{1}", name, parameter);
 		}
 

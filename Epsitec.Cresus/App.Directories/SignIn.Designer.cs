@@ -1,4 +1,4 @@
-﻿namespace App.Directories
+namespace App.Directories
 {
 	partial class SignIn
 	{

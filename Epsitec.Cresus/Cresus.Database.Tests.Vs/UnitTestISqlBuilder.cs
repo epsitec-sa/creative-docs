@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				field2.Alias = "Cr_REV";
 				fields.Add (field2);
 
-				SqlField field3 = SqlField.CreateConstant ("Test © Copyright 2003", DbRawType.String);
+				SqlField field3 = SqlField.CreateConstant ("Test Â© Copyright 2003", DbRawType.String);
 				field3.Alias = "StringDynamic";
 				fields.Add (field3);
 

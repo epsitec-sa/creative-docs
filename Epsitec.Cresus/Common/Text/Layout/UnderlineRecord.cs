@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// La classe XlineRecord représente un changement de soulignement, biffé,
+	/// La classe XlineRecord reprÃ©sente un changement de soulignement, biffÃ©,
 	/// etc. au sein d'un paragraphe.
 	/// </summary>
 	public class XlineRecord

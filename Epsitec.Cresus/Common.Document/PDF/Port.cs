@@ -1,4 +1,4 @@
-//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.PDF
 	}
 
 	/// <summary>
-	/// La classe Port permet d'exporter en PDF des éléments graphiques simples.
+	/// La classe Port permet d'exporter en PDF des Ã©lÃ©ments graphiques simples.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
 	public class Port : IPaintPort
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public void Reset()
 		{
-			//	Réinitialise le port, mais surtout pas le stack des modificateurs
+			//	RÃ©initialise le port, mais surtout pas le stack des modificateurs
 			//	de couleurs.
 			this.colorForce = ColorForce.Default;
 			this.defaultDecimals = 2;
@@ -80,14 +80,14 @@ namespace Epsitec.Common.Document.PDF
 
 		public int DefaultDecimals
 		{
-			//	Indique le nombre de décimales par défaut.
+			//	Indique le nombre de dÃ©cimales par dÃ©faut.
 			get { return this.defaultDecimals; }
 			set { this.defaultDecimals = value; }
 		}
 
 		public double LineWidth
 		{
-			//	Spécifie un trait continu.
+			//	SpÃ©cifie un trait continu.
 			get { return this.lineWidth; }
 
 			set
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public void SetLineDash(double width, double pen1, double gap1, double pen2, double gap2, double pen3, double gap3)
 		{
-			//	Spécifie un traitillé.
+			//	SpÃ©cifie un traitillÃ©.
 			this.lineWidth = width;
 			this.lineDash = true;
 			this.lineDashPen1 = pen1;
@@ -616,9 +616,9 @@ namespace Epsitec.Common.Document.PDF
 		#region PaintImage
 		public void PaintImage(Image bitmap, Rectangle fill)
 		{
-			//	Cette classe implémente une version restreinte de PaintImage.
-			//	La position et les dimensions de l'image doivent être définies par
-			//	une transformation, et le rectangle doit être égal à (0,0,1,1).
+			//	Cette classe implÃ©mente une version restreinte de PaintImage.
+			//	La position et les dimensions de l'image doivent Ãªtre dÃ©finies par
+			//	une transformation, et le rectangle doit Ãªtre Ã©gal Ã  (0,0,1,1).
 			this.PaintImage(bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
 		}
 		
@@ -678,7 +678,7 @@ namespace Epsitec.Common.Document.PDF
 		
 		public StringBuffer GetPDF()
 		{
-			//	Donne tout le texte PDF généré.
+			//	Donne tout le texte PDF gÃ©nÃ©rÃ©.
 
 			try
 			{
@@ -692,8 +692,8 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void Init()
 		{
-			//	Initialise tous les paramètres graphiques à des valeurs différentes
-			//	des valeurs utilisées par la suite, ou aux valeurs par défaut.
+			//	Initialise tous les paramÃ¨tres graphiques Ã  des valeurs diffÃ©rentes
+			//	des valeurs utilisÃ©es par la suite, ou aux valeurs par dÃ©faut.
 			this.stringBuilder = new StringBuffer ();
 			this.currentWidth = -1.0;
 			this.currentCap = (CapStyle) 999;
@@ -712,7 +712,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetStrokeColor(RichColor color)
 		{
-			//	Spécifie la couleur de trait.
+			//	SpÃ©cifie la couleur de trait.
 			if ( this.currentStrokeColor != color || this.currentComplexSurfaceId != this.complexSurfaceId )
 			{
 				if ( this.currentComplexSurfaceId != -1 )
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetFillColor(RichColor color)
 		{
-			//	Spécifie la couleur de surface.
+			//	SpÃ©cifie la couleur de surface.
 			this.SearchComplexSurfaceByColor();
 
 			if ( this.currentFillColor != color || this.currentComplexSurfaceId != this.complexSurfaceId )
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void DoFill(Path path)
 		{
-			//	Rempli la surface du chemin défini.
+			//	Rempli la surface du chemin dÃ©fini.
 			this.SearchComplexSurfaceByColor();
 
 			if ( this.complexSurfaceId == -1 || this.complexType != PdfComplexSurfaceType.ExtGState )
@@ -876,8 +876,8 @@ namespace Epsitec.Common.Document.PDF
 		protected void SearchComplexSurfaceByColor()
 		{
 			//	S'il n'existe pas d'identificateur de surface complexe connu et que
-			//	la couleur est transparente, cherche un identificateur d'après la couleur.
-			//	C'est le cas des textes transparents, qui définissent les couleurs avec
+			//	la couleur est transparente, cherche un identificateur d'aprÃ¨s la couleur.
+			//	C'est le cas des textes transparents, qui dÃ©finissent les couleurs avec
 			//	port.Color au lieu de port.SetColoredComplexSurface !
 			if ( this.complexSurfaceId != -1 )  return;
 			if ( this.color.A == 1.0 )  return;
@@ -889,7 +889,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetWidth(double width)
 		{
-			//	Spécifie l'épaisseur des traits.
+			//	SpÃ©cifie l'Ã©paisseur des traits.
 			if ( this.currentWidth != width )
 			{
 				this.currentWidth = width;
@@ -901,7 +901,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetCap(CapStyle cap)
 		{
-			//	Spécifie l'extrémité des traits.
+			//	SpÃ©cifie l'extrÃ©mitÃ© des traits.
 			if ( this.currentCap != cap )
 			{
 				this.currentCap = cap;
@@ -918,7 +918,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetJoin(JoinStyle join)
 		{
-			//	Spécifie les coins des traits.
+			//	SpÃ©cifie les coins des traits.
 			if ( this.currentJoin != join )
 			{
 				this.currentJoin = join;
@@ -936,7 +936,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetDash(bool dash, double pen1, double gap1, double pen2, double gap2, double pen3, double gap3)
 		{
-			//	Spécifie le mode de traitillé.
+			//	SpÃ©cifie le mode de traitillÃ©.
 			if ( this.currentDash != dash ||
 				 this.currentPen1 != pen1 ||
 				 this.currentGap1 != gap1 ||
@@ -980,7 +980,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetLimit(double limit)
 		{
-			//	Spécifie la limite pour JoinMiter.
+			//	SpÃ©cifie la limite pour JoinMiter.
 			if ( this.currentLimit != limit )
 			{
 				this.currentLimit = limit;
@@ -992,7 +992,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void SetTransform(Transform transform)
 		{
-			//	Spécifie la matrice de transformation.
+			//	SpÃ©cifie la matrice de transformation.
 			if ( this.currentTransform != transform )
 			{
 				Transform t = Transform.Inverse(this.currentTransform);
@@ -1084,7 +1084,7 @@ namespace Epsitec.Common.Document.PDF
 				 matrix.YX != 0.0 ||
 				 matrix.YY != 1.0 ||
 				 matrix.TX != 0.0 ||
-				 matrix.TY != 0.0 )  // autre que matrice identité ?
+				 matrix.TY != 0.0 )  // autre que matrice identitÃ© ?
 			{
 				//	Attention: inversion de XY et YX !
 				this.PutValue(matrix.XX, -1);
@@ -1185,7 +1185,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public void PutValue(double num)
 		{
-			//	Met une valeur avec 2 décimales.
+			//	Met une valeur avec 2 dÃ©cimales.
 			this.PutValue(num, this.defaultDecimals);
 		}
 
@@ -1233,7 +1233,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected void PutCommandStroke()
 		{
-			//	Met une commande de tracé.
+			//	Met une commande de tracÃ©.
 			if ( this.fillMode == FillMode.NonZero )
 			{
 				this.PutCommand("W ");  // nonzero stroke, voir [*] page 205
@@ -1271,18 +1271,18 @@ namespace Epsitec.Common.Document.PDF
 
 		public static string StringValue(double num)
 		{
-			//	Met une valeur avec 2 décimales.
+			//	Met une valeur avec 2 dÃ©cimales.
 			return Port.StringValue(num, 2);
 		}
 
 		public static string StringValue(double num, int decimals)
 		{
 			//	Met une valeur.
-			if ( decimals == -1 )  // précision automatique ?
+			if ( decimals == -1 )  // prÃ©cision automatique ?
 			{
 				double log = System.Math.Log10(System.Math.Abs(num));
 				log = (log >= 0) ? System.Math.Ceiling(log) : -System.Math.Ceiling(-log);
-				decimals = 4 - (int)log;  // 4 digits de précision
+				decimals = 4 - (int)log;  // 4 digits de prÃ©cision
 				decimals = System.Math.Max(decimals, 1);
 			}
 
@@ -1307,7 +1307,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public int SearchComplexSurface(Objects.Abstract obj, Properties.Abstract property)
 		{
-			//	Cherche la surface complexe à utiliser pour un objet et une propriété.
+			//	Cherche la surface complexe Ã  utiliser pour un objet et une propriÃ©tÃ©.
 			if ( this.complexSurfaceList == null )  return -1;
 
 			foreach ( ComplexSurface cs in this.complexSurfaceList )
@@ -1322,7 +1322,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected ComplexSurface GetComplexSurface(int id)
 		{
-			//	Cherche la surface complexe d'après son identificateur.
+			//	Cherche la surface complexe d'aprÃ¨s son identificateur.
 			if ( this.complexSurfaceList == null )  return null;
 
 			foreach ( ComplexSurface cs in this.complexSurfaceList )
@@ -1337,7 +1337,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected int SearchComplexColor(RichColor color)
 		{
-			//	Cherche la surface complexe à utiliser pour une couleur transparente.
+			//	Cherche la surface complexe Ã  utiliser pour une couleur transparente.
 			if ( this.complexSurfaceList == null )  return -1;
 
 			foreach ( ComplexSurface cs in this.complexSurfaceList )
@@ -1357,7 +1357,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
 		{
-			//	Cherche l'image à utiliser.
+			//	Cherche l'image Ã  utiliser.
 			if (this.imageSurfaceList == null)
 			{
 				this.lastImageSurface = null;

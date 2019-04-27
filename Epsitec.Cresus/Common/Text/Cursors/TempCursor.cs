@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Cursors
 {
 	/// <summary>
-	/// La classe TempCursor décrit un curseur temporaire (réservé à un usage
-	/// interne, les modifications d'un curseur temporaire ne sont pas sauvées
+	/// La classe TempCursor dÃ©crit un curseur temporaire (rÃ©servÃ© Ã  un usage
+	/// interne, les modifications d'un curseur temporaire ne sont pas sauvÃ©es
 	/// pour le undo/redo).
 	/// </summary>
 	public class TempCursor : ICursor

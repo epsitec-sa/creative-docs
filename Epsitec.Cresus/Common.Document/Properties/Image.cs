@@ -8,7 +8,7 @@ using Epsitec.Common.Drawing.Platform;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe Image reprÈsente une propriÈtÈ d'un objet graphique.
+	/// La classe Image repr√©sente une propri√©t√© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Image : Abstract
@@ -17,9 +17,9 @@ namespace Epsitec.Common.Document.Properties
 		public enum Rotation
 		{
 			Angle0,		// droit
-			Angle90,	// quart de tour ‡ gauche
+			Angle90,	// quart de tour √† gauche
 			Angle180,	// demi-tour
-			Angle270,	// quart de tour ‡ droite
+			Angle270,	// quart de tour √† droite
 		}
 
 
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Properties
 			this.mirrorH        = false;
 			this.mirrorV        = false;
 			this.homo           = true;
-			this.filterCategory = 0;  // catÈgorie A
+			this.filterCategory = 0;  // cat√©gorie A
 			this.cropMargins    = Margins.Zero;
 		}
 
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public string FileName
 		{
-			//	Nom du fichier original avec le chemin d'accËs complet.
+			//	Nom du fichier original avec le chemin d'acc√®s complet.
 			get
 			{
 				return this.filename;
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public System.DateTime FileDate
 		{
-			//	Date de derniËre modification de l'image.
+			//	Date de derni√®re modification de l'image.
 			get
 			{
 				return this.date;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public string ShortName
 		{
-			//	Nom court de l'image, ‡ l'intÈrieur du fichier Zip.
+			//	Nom court de l'image, √† l'int√©rieur du fichier Zip.
 			get
 			{
 				return this.shortName;
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool InsideDoc
 		{
-			//	DÈtermine si les donnÈes de l'images sont incorporÈes au fichier crdoc.
+			//	D√©termine si les donn√©es de l'images sont incorpor√©es au fichier crdoc.
 			get
 			{
 				return this.insideDoc;
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool FromClipboard
 		{
-			//	Indique si les donnÈes de l'images proviennent du clipboard.
+			//	Indique si les donn√©es de l'images proviennent du clipboard.
 			get
 			{
 				return this.fromClipboard;
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public int FilterCategory
 		{
-			//	CatÈgorie du filtre ‡ utiliser.
+			//	Cat√©gorie du filtre √† utiliser.
 			//	-1 = aucun, 0 = groupe A, 1 = groupe B
 			get
 			{
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les Èchantillons.
+			//	Donne le petit texte pour les √©chantillons.
 			get
 			{
 				return Misc.ExtractName(this.filename);
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte rÈsumÈ d'un style pour une propriÈtÈ.
+			//	Construit le texte r√©sum√© d'un style pour une propri√©t√©.
 			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(this.filename);
@@ -273,25 +273,25 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriÈtÈ modifie la bbox de l'objet.
+			//	Indique si un changement de cette propri√©t√© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
 		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	DÈbut du dÈplacement d'une poignÈe.
+			//	D√©but du d√©placement d'une poign√©e.
 		}
 
 		public override int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignÈes.
+			//	Nombre de poign√©es.
 			return 1;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignÈe est visible.
+			//	Indique si une poign√©e est visible.
 			if (obj.IsSelected && !string.IsNullOrEmpty (this.filename))
 			{
 				double sum = this.cropMargins.Left + this.cropMargins.Right + this.cropMargins.Bottom + this.cropMargins.Top;
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignÈe.
+			//	Retourne la position d'une poign√©e.
 			this.UpdateCropLogic (obj);
 			Point pos = new Point ();
 
@@ -326,7 +326,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignÈe.
+			//	Modifie la position d'une poign√©e.
 			this.UpdateCropLogic (obj);
 
 			if (rank == 0)  // position ?
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Popup interface
 		public override void OpenOrClosePopupInterface(Objects.Abstract obj)
 		{
-			if (obj.IsSelected && !obj.IsGlobalSelected && !Image.DisablePopupInterface)  // objet sÈlectionnÈ ?
+			if (obj.IsSelected && !obj.IsGlobalSelected && !Image.DisablePopupInterface)  // objet s√©lectionn√© ?
 			{
 				var viewer = this.document.Modifier.ActiveViewer;
 
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Document.Properties
 				{
 					if (obj.PopupInterfaceFrame == null)
 					{
-						//	CrÈe l'interface popup.
+						//	Cr√©e l'interface popup.
 						this.UpdateCropLogic (obj);
 
 						obj.PopupInterfaceFrame = this.CreatePopupInterface (obj);
@@ -429,7 +429,7 @@ namespace Epsitec.Common.Document.Properties
 			this.popupInterfaceRotateButton.Enable = hasImage;
 			this.popupInterfaceSlider.Enable = hasImage;
 
-			//	Met ‡ jour le bouton 'fill'.
+			//	Met √† jour le bouton 'fill'.
 			if (this.cropLogic.IsFillMode)
 			{
 				this.popupInterfaceFillModeButton.IconUri = Misc.Icon ("ImageShowAll");
@@ -441,13 +441,13 @@ namespace Epsitec.Common.Document.Properties
 				ToolTip.Default.SetToolTip (this.popupInterfaceFillModeButton, Res.Strings.Action.ImageFillMode);
 			}
 
-			//	Met ‡ jour le slider.
+			//	Met √† jour le slider.
 			var value = (decimal) this.cropLogic.RelativeZoom;
 
 			if (this.popupInterfaceSlider.Value != value)
 			{
 				this.popupInterfaceSlider.Value = value;
-				this.popupInterfaceSlider.Invalidate ();  // TODO: devrait Ítre inutile
+				this.popupInterfaceSlider.Invalidate ();  // TODO: devrait √™tre inutile
 			}
 		}
 
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriÈtÈ.
+			//	Effectue une copie de la propri√©t√©.
 			base.CopyTo(property);
 			Image p = property as Image;
 			p.filename        = this.filename;
@@ -649,7 +649,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriÈtÈs.
+			//	Compare deux propri√©t√©s.
 			if ( !base.Compare(property) )  return false;
 
 			Image p = property as Image;
@@ -670,7 +670,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	CrÈe le panneau permettant d'Èditer la propriÈtÈ.
+			//	Cr√©e le panneau permettant d'√©diter la propri√©t√©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Image(document);
 		}
@@ -712,7 +712,7 @@ namespace Epsitec.Common.Document.Properties
 				case 1:   return "Bilinear";  // filtrage simple et rapide
 				case 2:   return "Blackman";  // normal
 				case 3:   return "Bicubic";   // flou
-				case 4:   return "Sinc";      // accentuÈ
+				case 4:   return "Sinc";      // accentu√©
 				default:  return null;
 			}
 		}
@@ -720,7 +720,7 @@ namespace Epsitec.Common.Document.Properties
 		public static string FilterNameToText(string name)
 		{
 			//	Conversion du nom du filtre en texte clair pour l'utilisateur.
-			//	Par exemple: "Bilinear" -> "Rapide (bilinÈaire)"
+			//	Par exemple: "Bilinear" -> "Rapide (bilin√©aire)"
 			switch (name)
 			{
 				case "None":      return Res.Strings.Panel.Image.Filter.None;
@@ -734,9 +734,9 @@ namespace Epsitec.Common.Document.Properties
 
 		public static ImageFilter CategoryToFilter(DrawingContext context, int filterCategory, bool resampling)
 		{
-			//	Retourne le filtre dÈfini dans un DrawingContext en fonction de la catÈgorie
+			//	Retourne le filtre d√©fini dans un DrawingContext en fonction de la cat√©gorie
 			//	(-1=aucun, 0=groupe A, 1=groupe B) et de mode de redimensionnement.
-			//	resampling = true lorsqu'on effectue une rÈduction, pour Èviter les moirÈs.
+			//	resampling = true lorsqu'on effectue une r√©duction, pour √©viter les moir√©s.
 			if (filterCategory < 0)
 			{
 				return NameToFilter("None", resampling);
@@ -750,7 +750,7 @@ namespace Epsitec.Common.Document.Properties
 		protected static ImageFilter NameToFilter(string name, bool resampling)
 		{
 			//	Retourne le filtre en fonction du nom et du mode de redimensionnement.
-			//	resampling = true lorsqu'on effectue une rÈduction, pour Èviter les moirÈs.
+			//	resampling = true lorsqu'on effectue une r√©duction, pour √©viter les moir√©s.
 			switch (name)
 			{
 				case "None":      return new ImageFilter(ImageFilteringMode.None);
@@ -776,11 +776,11 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	SÈrialise la propriÈtÈ.
+			//	S√©rialise la propri√©t√©.
 			base.GetObjectData(info, context);
 
-			//	Si le dossier d'accËs ‡ l'image est le mÍme que le dossier dans
-			//	lequel est sÈrialisÈ le fichier, sÈrialise juste le nom (relatif).
+			//	Si le dossier d'acc√®s √† l'image est le m√™me que le dossier dans
+			//	lequel est s√©rialis√© le fichier, s√©rialise juste le nom (relatif).
 			string filename = this.filename;
 			if ( filename != "" &&
 				 this.document.IoDirectory != "" &&
@@ -808,7 +808,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Image(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui dÈsÈrialise la propriÈtÈ.
+			//	Constructeur qui d√©s√©rialise la propri√©t√©.
 			this.filename = info.GetString("Filename");
 			this.mirrorH = info.GetBoolean("MirrorH");
 			this.mirrorV = info.GetBoolean("MirrorV");
@@ -824,7 +824,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			//	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
-			//	ajoute le nom du dossier dans lequel est dÈsÈrialisÈ le fichier
+			//	ajoute le nom du dossier dans lequel est d√©s√©rialis√© le fichier
 			//	(pour le rendre absolu).
 			if ( this.filename != "" &&
 				 this.document.IoDirectory != "" &&
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Document.Properties
 
 			if (this.date.Ticks == 0)
 			{
-				//	Met une date spÈciale diffÈrente de System.DateTime.MinValue pour les anciens fichiers.
+				//	Met une date sp√©ciale diff√©rente de System.DateTime.MinValue pour les anciens fichiers.
 				this.date = System.DateTime.MinValue.AddSeconds(1);
 			}
 		}

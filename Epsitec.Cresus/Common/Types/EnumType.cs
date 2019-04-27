@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Types
     using System.Reflection;
 
     /// <summary>
-    /// La classe EnumType décrit des valeurs de type System.Enum.
+    /// La classe EnumType dÃ©crit des valeurs de type System.Enum.
     /// </summary>
     public class EnumType : AbstractType, IEnumType
 	{

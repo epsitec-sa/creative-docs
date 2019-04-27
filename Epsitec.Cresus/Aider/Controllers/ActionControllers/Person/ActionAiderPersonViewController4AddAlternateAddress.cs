@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			form
 				.Title ("Ajouter une adresse alternative")
 				.Text (
-					TextFormatter.FormatText ("Vous êtes sur le point de créer une adresse alternative pour",
+					TextFormatter.FormatText ("Vous Ãªtes sur le point de crÃ©er une adresse alternative pour",
 				/**/						  person.GetFullName (), ".\n \n",
 					/**/					  "Choisissez le type d'adresse correspondant:"))
 				.Field<Enumerations.AddressType> ()

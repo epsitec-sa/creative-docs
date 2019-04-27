@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer
 {
 	/// <summary>
-	/// Accès généralisé aux ressources.
+	/// AccÃ¨s gÃ©nÃ©ralisÃ© aux ressources.
 	/// </summary>
 	public class ResourceAccess
 	{
@@ -46,16 +46,16 @@ namespace Epsitec.Common.Designer
 
 		public enum ModificationState
 		{
-			Normal,			//	défini normalement
-			Empty,			//	vide ou indéfini (fond rouge)
-			Modified,		//	modifié (fond jaune)
+			Normal,			//	dÃ©fini normalement
+			Empty,			//	vide ou indÃ©fini (fond rouge)
+			Modified,		//	modifiÃ© (fond jaune)
 		}
 
 
 		public ResourceAccess(Type type, Module module, ResourceModuleId moduleInfo)
 		{
-			//	Constructeur unique pour accéder aux ressources d'un type donné.
-			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
+			//	Constructeur unique pour accÃ©der aux ressources d'un type donnÃ©.
+			//	Par la suite, l'instance crÃ©Ã©e accÃ©dera toujours aux ressources de ce type,
 			//	sauf pour les ressources Captions, Commands, Types et Values.
 			this.type = type;
 			this.resourceManager = module.ResourceManager;
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Designer
 
 		public Type ResourceType
 		{
-			//	Type des ressources accédées.
+			//	Type des ressources accÃ©dÃ©es.
 			get
 			{
 				return this.type;
@@ -148,13 +148,13 @@ namespace Epsitec.Common.Designer
 
 		public static string TypeDisplayName(Type type)
 		{
-			//	Retourne le nom au pluriel correspondant à un type.
+			//	Retourne le nom au pluriel correspondant Ã  un type.
 			return ResourceAccess.TypeDisplayName(type, true);
 		}
 
 		public static string TypeDisplayName(Type type, bool many)
 		{
-			//	Retourne le nom au singulier ou au pluriel correspondant à un type.
+			//	Retourne le nom au singulier ou au pluriel correspondant Ã  un type.
 			switch (type)
 			{
 				case Type.Strings:
@@ -280,7 +280,7 @@ namespace Epsitec.Common.Designer
 
 		public void AddShortcuts(List<ShortcutItem> list)
 		{
-			//	Ajoute tous les raccourcis définis dans la liste.
+			//	Ajoute tous les raccourcis dÃ©finis dans la liste.
 			if (this.type == Type.Commands)
 			{
 				List<string> cultures = this.GetSecondaryCultureNames();
@@ -311,27 +311,27 @@ namespace Epsitec.Common.Designer
 
 		public static void CheckShortcuts(System.Text.StringBuilder builder, List<ShortcutItem> list)
 		{
-			//	Vérifie les raccourcis, en construisant un message d'avertissement
-			//	pour tous les raccourcis utilisés plus d'une fois.
+			//	VÃ©rifie les raccourcis, en construisant un message d'avertissement
+			//	pour tous les raccourcis utilisÃ©s plus d'une fois.
 			string culture = null;
 			List<ShortcutItem> uses = new List<ShortcutItem>();
 
 			for (int i=0; i<list.Count; i++)
 			{
-				if (ShortcutItem.Contains(uses, list[i]))  // raccourci déjà traité ?
+				if (ShortcutItem.Contains(uses, list[i]))  // raccourci dÃ©jÃ  traitÃ© ?
 				{
 					continue;
 				}
 
 				List<int> indexes = ShortcutItem.IndexesOf(list, i);
-				if (indexes == null)  // utilisé une seule fois ?
+				if (indexes == null)  // utilisÃ© une seule fois ?
 				{
 					continue;
 				}
 
 				if (culture == null || culture != list[i].Culture)  // autre culture ?
 				{
-					if (builder.Length > 0)  // déjà d'autres avertissements ?
+					if (builder.Length > 0)  // dÃ©jÃ  d'autres avertissements ?
 					{
 						builder.Append("<br/>");
 					}
@@ -357,19 +357,19 @@ namespace Epsitec.Common.Designer
 				}
 				builder.Append("<br/>");
 
-				uses.Add(list[i]);  // ajoute à la liste des raccourcis traités
+				uses.Add(list[i]);  // ajoute Ã  la liste des raccourcis traitÃ©s
 			}
 		}
 
 
 		public void CheckForms(System.Text.StringBuilder builder)
 		{
-			//	Vérifie les Forms, en construisant un message d'avertissement.
+			//	VÃ©rifie les Forms, en construisant un message d'avertissement.
 			System.Diagnostics.Debug.Assert(this.type == Type.Forms);
 			FormEngine.Engine engine = new FormEngine.Engine(this.ownerModule.FormResourceProvider);
 			bool first;
 
-			//	Vérifie la structure des Forms.
+			//	VÃ©rifie la structure des Forms.
 			first = true;
 			foreach (CultureMap item in this.accessor.Collection)
 			{
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Designer
 					{
 						first = false;
 
-						if (builder.Length > 0)  // déjà d'autres avertissements ?
+						if (builder.Length > 0)  // dÃ©jÃ  d'autres avertissements ?
 						{
 							builder.Append("<br/>");
 						}
@@ -393,14 +393,14 @@ namespace Epsitec.Common.Designer
 						builder.Append("</font><br/>");
 					}
 
-					//	Génère une erreur explicite.
+					//	GÃ©nÃ¨re une erreur explicite.
 					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
 					builder.Append(string.Format("<b>{0}</b>: {1}", item.FullName, error));
 					builder.Append("<br/>");
 				}
 			}
 
-			//	Vérifie les liens DeltaAttachGuid.
+			//	VÃ©rifie les liens DeltaAttachGuid.
 			first = true;
 			foreach (CultureMap item in this.accessor.Collection)
 			{
@@ -412,14 +412,14 @@ namespace Epsitec.Common.Designer
 				}
 
 				//	Fusionne le masque de base selon les indications du masque delta, pour
-				//	déterminer les éventuelles erreurs, qui sont directement insérées dans
-				//	les éléments FieldDescription de form. Donc, les deux listes générées
+				//	dÃ©terminer les Ã©ventuelles erreurs, qui sont directement insÃ©rÃ©es dans
+				//	les Ã©lÃ©ments FieldDescription de form. Donc, les deux listes gÃ©nÃ©rÃ©es
 				//	baseFields et finalFields ne sont pas utiles !
 				List<FormEngine.FieldDescription> baseFields, finalFields;
 				Druid entityId;
 				engine.Arrange.Build(form, null, out baseFields, out finalFields, out entityId);
 
-				//	Compte le nombre de liens cassés.
+				//	Compte le nombre de liens cassÃ©s.
 				List<string> errors = new List<string>();
 				foreach (FormEngine.FieldDescription field in form.Fields)
 				{
@@ -436,23 +436,23 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (errors.Count > 0)  // au moins un lien cassé ?
+				if (errors.Count > 0)  // au moins un lien cassÃ© ?
 				{
 					if (first)  // premier avertissement de Form ?
 					{
 						first = false;
 
-						if (builder.Length > 0)  // déjà d'autres avertissements ?
+						if (builder.Length > 0)  // dÃ©jÃ  d'autres avertissements ?
 						{
 							builder.Append("<br/>");
 						}
 
 						builder.Append("<font size=\"120%\">");
-						builder.Append("Ces masques contiennent des références indéfinies :");
+						builder.Append("Ces masques contiennent des rÃ©fÃ©rences indÃ©finies :");
 						builder.Append("</font><br/>");
 					}
 
-					//	Génère une erreur explicite.
+					//	GÃ©nÃ¨re une erreur explicite.
 					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
 					builder.Append(string.Format("<b>{0}</b>: ", item.FullName));
 
@@ -481,7 +481,7 @@ namespace Epsitec.Common.Designer
 
 		public void ClearGlobalDirty()
 		{
-			//	Met les ressources dans l'état "propre", c'est-à-dire "non modifiées".
+			//	Met les ressources dans l'Ã©tat "propre", c'est-Ã -dire "non modifiÃ©es".
 			if (this.isGlobalDirty || this.isLocalDirty)
 			{
 				this.isGlobalDirty = false;
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Designer
 
 		public void SetGlobalDirty()
 		{
-			//	Met les ressources dans l'état "sale", c'est-à-dire "modifiées".
+			//	Met les ressources dans l'Ã©tat "sale", c'est-Ã -dire "modifiÃ©es".
 			if (!this.isGlobalDirty)
 			{
 				this.isGlobalDirty = true;
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Designer
 
 		public bool IsGlobalDirty
 		{
-			//	Est-ce que les ressources ont été modifiées ?
+			//	Est-ce que les ressources ont Ã©tÃ© modifiÃ©es ?
 			get
 			{
 				return this.isGlobalDirty;
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Designer
 
 		public void ClearLocalDirty()
 		{
-			//	Met les ressources dans l'état "propre", c'est-à-dire "non modifiées".
+			//	Met les ressources dans l'Ã©tat "propre", c'est-Ã -dire "non modifiÃ©es".
 			if (this.isLocalDirty)
 			{
 				this.isLocalDirty = false;
@@ -521,7 +521,7 @@ namespace Epsitec.Common.Designer
 
 		public void SetLocalDirty()
 		{
-			//	Met les ressources dans l'état "sale", c'est-à-dire "modifiées".
+			//	Met les ressources dans l'Ã©tat "sale", c'est-Ã -dire "modifiÃ©es".
 			if (!this.isLocalDirty || !this.isGlobalDirty)
 			{
 				this.isLocalDirty = true;
@@ -532,7 +532,7 @@ namespace Epsitec.Common.Designer
 
 		public bool IsLocalDirty
 		{
-			//	Est-ce que les ressources ont été modifiées ?
+			//	Est-ce que les ressources ont Ã©tÃ© modifiÃ©es ?
 			get
 			{
 				return this.isLocalDirty;
@@ -552,7 +552,7 @@ namespace Epsitec.Common.Designer
 
 		public bool Duplicate(string newName, bool duplicateContent)
 		{
-			//	Duplique la ressource courante. Retourne false si rien n'a été créé.
+			//	Duplique la ressource courante. Retourne false si rien n'a Ã©tÃ© crÃ©Ã©.
 			CultureMap newItem = null;
 			bool generateMissingValues = false;
 
@@ -635,7 +635,7 @@ namespace Epsitec.Common.Designer
 				bool isNullable = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				//	Demande le type (interface, héritage, etc.).
+				//	Demande le type (interface, hÃ©ritage, etc.).
 				var result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
@@ -649,7 +649,7 @@ namespace Epsitec.Common.Designer
 				data.SetValue(Support.Res.Fields.ResourceStructuredType.BaseType, druid);
 				data.SetValue(Support.Res.Fields.ResourceStructuredType.Class, typeClass);
 
-				//	Demande les paramètres (fanions et espérance de vie).
+				//	Demande les paramÃ¨tres (fanions et espÃ©rance de vie).
 				var lifetime = DataLifetimeExpectancy.Stable;
 				var flags    = StructuredTypeFlags.None;
 				result = this.designerApplication.DlgEntityParameters (null, ref lifetime, ref flags);
@@ -679,7 +679,7 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer1)  // normal ?
 				{
-					//	On demande l'entité sur laquelle sera basée le masque.
+					//	On demande l'entitÃ© sur laquelle sera basÃ©e le masque.
 					Druid entityId = Druid.Empty;
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
@@ -704,7 +704,7 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // delta (correctif) ?
 				{
-					//	On demande le masque sur lequel sera basé le masque delta.
+					//	On demande le masque sur lequel sera basÃ© le masque delta.
 					Druid deltaBaseformId = Druid.Empty;
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
@@ -715,8 +715,8 @@ namespace Epsitec.Common.Designer
 						return false;
 					}
 
-					//	On demande ensuite l'entité sur laquelle sera basée le masque. Le dialogue ne montrera
-					//	que les entités qui héritent de l'entité de base du masque choisi précédemment.
+					//	On demande ensuite l'entitÃ© sur laquelle sera basÃ©e le masque. Le dialogue ne montrera
+					//	que les entitÃ©s qui hÃ©ritent de l'entitÃ© de base du masque choisi prÃ©cÃ©demment.
 					Druid entityId = Druid.Empty;
 					isNullable = false;
 					typeClass = StructuredTypeClass.Entity;
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Designer
 
 			if (duplicateContent)
 			{
-				//	Construit la liste des cultures à copier
+				//	Construit la liste des cultures Ã  copier
 				List<string> cultures = this.GetSecondaryCultureNames();
 				cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
 				
@@ -761,10 +761,10 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			//	Ici, si c'est un type, on a forcément TypeCode qui a été initialisé soit
+			//	Ici, si c'est un type, on a forcÃ©ment TypeCode qui a Ã©tÃ© initialisÃ© soit
 			//	explicitement avec un SetValue, soit par recopie de l'original via CopyData;
-			//	c'est indispensable que TypeCode soit défini avant de faire le Add :
-			this.neverExcludedByFilterItem = newItem;  // cet item ne devra jamais être exclu par le filtre
+			//	c'est indispensable que TypeCode soit dÃ©fini avant de faire le Add :
+			this.neverExcludedByFilterItem = newItem;  // cet item ne devra jamais Ãªtre exclu par le filtre
 			this.accessor.Collection.Add (newItem);
 			this.collectionView.MoveCurrentTo(newItem);
 
@@ -780,8 +780,8 @@ namespace Epsitec.Common.Designer
 
 		private static void CopyData(IResourceAccessor accessor, CultureMap dstItem, StructuredData src, StructuredData dst)
 		{
-			//	Copie les données d'un StructuredData vers un autre, en tenant
-			//	compte des collections de données qui ne peuvent pas être copiées
+			//	Copie les donnÃ©es d'un StructuredData vers un autre, en tenant
+			//	compte des collections de donnÃ©es qui ne peuvent pas Ãªtre copiÃ©es
 			//	sans autre.
 			Types.IStructuredType type = src.StructuredType;
 			foreach (string fieldId in type.GetFieldIds())
@@ -797,11 +797,11 @@ namespace Epsitec.Common.Designer
 
 		public static void SetStructuredDataValue(IResourceAccessor accessor, CultureMap map, StructuredData data, string id, object value)
 		{
-			//	Réalise un StructuredData.SetValue qui tienne compte des cas
-			//	particuliers où les données à copier sont dans une collection.
+			//	RÃ©alise un StructuredData.SetValue qui tienne compte des cas
+			//	particuliers oÃ¹ les donnÃ©es Ã  copier sont dans une collection.
 			if (data.IsValueLocked(id))
 			{
-				//	La donnée que l'on cherche à modifier est verrouillée; c'est
+				//	La donnÃ©e que l'on cherche Ã  modifier est verrouillÃ©e; c'est
 				//	sans doute parce que c'est une collection et que l'on n'a pas
 				//	le droit de la remplacer...
 				ResourceAccess.AttemptCollectionCopy<string>(accessor, map, data, id, value, null);
@@ -817,7 +817,7 @@ namespace Epsitec.Common.Designer
 
 		private static StructuredData CopyStructuredData(IResourceAccessor accessor, CultureMap map, StructuredData container, string fieldId, StructuredData source)
 		{
-			//	Copie (récursivement) les données au niveau actuel en demandant au
+			//	Copie (rÃ©cursivement) les donnÃ©es au niveau actuel en demandant au
 			//	broker de s'occuper de l'allocation du StructuredData.
 			IDataBroker broker = accessor.GetDataBroker(container, fieldId);
 			StructuredData copy = broker.CreateData(map);
@@ -854,7 +854,7 @@ namespace Epsitec.Common.Designer
 
 		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
 		{
-			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
+			//	Initialise un masque de saisie avec tous les champs de l'entitÃ© de base associÃ©e.
 			//	S'il s'agit d'un masque delta, on laisse vide la liste des champs.
 			if (form.IsDelta)
 			{
@@ -878,14 +878,14 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
+				//	Utilise comme nom du masque le nom de l'entitÃ©, Ã©ventuellement complÃ©tÃ© d'un numÃ©ro.
 				newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
 			}
 		}
 
 		public Druid FormSearch(Druid typeId)
 		{
-			//	Cherche un Form défini pour un certain type.
+			//	Cherche un Form dÃ©fini pour un certain type.
 			foreach (CultureMap item in this.accessor.Collection)
 			{
 				if (this.FormSearch(item, typeId))
@@ -899,26 +899,26 @@ namespace Epsitec.Common.Designer
 
 		public bool FormSearch(CultureMap item, Druid typeId)
 		{
-			//	Indique si un Form est défini pour un certain type.
+			//	Indique si un Form est dÃ©fini pour un certain type.
 			FormEngine.FormDescription form = this.GetForm(item);
 			return form.EntityId == typeId;
 		}
 
 		public bool FormSearch(CultureMap item, List<Druid> typeIds)
 		{
-			//	Indique si un Form est défini pour un certain type.
+			//	Indique si un Form est dÃ©fini pour un certain type.
 			FormEngine.FormDescription form = this.GetForm(item);
 			return typeIds.Contains(form.EntityId);
 		}
 
 		public Druid FormRelationEntity(Druid entityId, string druidsPath)
 		{
-			//	Retourne le Druid de l'entité utilisée par un champ de type relation.
-			//	Par exemple, si entityId correspond à l'entité Affaire et que druidsPath correspond
-			//	aux champs Facture.AdresseFacturation, on retourne le Druid de l'entité Adresse.
-			//	Pour cela, on parcourt tous les champs de l'entité Affaire à la recherche du champ
-			//	Facture. Puis, dans l'entité Facture, on parcourt tous les champs à la recherche du
-			//	champ AdresseFacturation. Lorsqu'il est trouvé, son TypeId est le Druid de l'entité
+			//	Retourne le Druid de l'entitÃ© utilisÃ©e par un champ de type relation.
+			//	Par exemple, si entityId correspond Ã  l'entitÃ© Affaire et que druidsPath correspond
+			//	aux champs Facture.AdresseFacturation, on retourne le Druid de l'entitÃ© Adresse.
+			//	Pour cela, on parcourt tous les champs de l'entitÃ© Affaire Ã  la recherche du champ
+			//	Facture. Puis, dans l'entitÃ© Facture, on parcourt tous les champs Ã  la recherche du
+			//	champ AdresseFacturation. Lorsqu'il est trouvÃ©, son TypeId est le Druid de l'entitÃ©
 			//	Adresse. Ouf !
 			string[] druids = druidsPath.Split('.');
 			return this.FormRelationEntity(entityId, druids, 0);
@@ -980,7 +980,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le nom complet d'un champ. Par exemple:
 			//	druidsPath = [63063].[630A]
-			//	retour = Monnaie.Désignation
+			//	retour = Monnaie.DÃ©signation
 			if (druidsPath == null)
 			{
 				return null;
@@ -1058,10 +1058,10 @@ namespace Epsitec.Common.Designer
 
 		public List<Druid> GetInheritedEntitiesBack(Druid entityId)
 		{
-			//	Retourne la liste de toutes les entités qui héritent d'une entité.
+			//	Retourne la liste de toutes les entitÃ©s qui hÃ©ritent d'une entitÃ©.
 			//	Par exemple:
-			//		AdressePlus hérite de Adresse
-			//		Adresse n'hérite de personne
+			//		AdressePlus hÃ©rite de Adresse
+			//		Adresse n'hÃ©rite de personne
 			//	Si entityId = Adresse, retourne les Druids de AdressePlus et Adresse
 			System.Diagnostics.Debug.Assert(this.type == Type.Entities);
 			List<Druid> list = new List<Druid>();
@@ -1086,10 +1086,10 @@ namespace Epsitec.Common.Designer
 
 		public List<Druid> GetInheriedEntities(Druid entityId)
 		{
-			//	Retourne la liste de toutes les entités dont hérite une entité, à commencer par elle-même.
+			//	Retourne la liste de toutes les entitÃ©s dont hÃ©rite une entitÃ©, Ã  commencer par elle-mÃªme.
 			//	Par exemple:
-			//		AdressePlus hérite de Adresse
-			//		Adresse n'hérite de personne
+			//		AdressePlus hÃ©rite de Adresse
+			//		Adresse n'hÃ©rite de personne
 			//	Si entityId = AdressePlus, retourne les Druids de AdressePlus et Adresse
 			System.Diagnostics.Debug.Assert(this.type == Type.Entities);
 			List<Druid> list = new List<Druid>();
@@ -1118,7 +1118,7 @@ namespace Epsitec.Common.Designer
 
 		public string GetEntityName(Druid entityId)
 		{
-			//	Retourne le nom d'une entité.
+			//	Retourne le nom d'une entitÃ©.
 			CultureMap item = this.GetEntityItem(entityId);
 			if (item == null)
 			{
@@ -1132,7 +1132,7 @@ namespace Epsitec.Common.Designer
 
 		public IList<StructuredData> GetEntityDruidsPath(Druid entityId)
 		{
-			//	Retourne la liste des chemins de Druids des champs d'une entité.
+			//	Retourne la liste des chemins de Druids des champs d'une entitÃ©.
 			CultureMap item = this.GetEntityItem(entityId);
 			if (item == null)
 			{
@@ -1150,7 +1150,7 @@ namespace Epsitec.Common.Designer
 
 		private CultureMap GetEntityItem(Druid entityId)
 		{
-			//	Retourne le CultureMap d'une entité.
+			//	Retourne le CultureMap d'une entitÃ©.
 			Module module = this.designerApplication.SearchModule(entityId);
 			if (module == null)
 			{
@@ -1163,7 +1163,7 @@ namespace Epsitec.Common.Designer
 
 		public string GetEnumBaseName(System.Type stype)
 		{
-			//	Retourne le nom de base à utiliser pour une énumération native C#.
+			//	Retourne le nom de base Ã  utiliser pour une Ã©numÃ©ration native C#.
 			return stype.FullName.Replace('+', '.');
 		}
 
@@ -1196,7 +1196,7 @@ namespace Epsitec.Common.Designer
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			this.neverExcludedByFilterItem = null;  // plus de privilégié si le filtre change
+			this.neverExcludedByFilterItem = null;  // plus de privilÃ©giÃ© si le filtre change
 
 			if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
 			{
@@ -1234,24 +1234,24 @@ namespace Epsitec.Common.Designer
 
 		private bool CollectionViewFilter(object obj)
 		{
-			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
-			//	Retourne false si la ressource doit être exclue.
+			//	MÃ©thode passÃ© comme paramÃ¨tre System.Predicate<object> Ã  CollectionView.Filter.
+			//	Retourne false si la ressource doit Ãªtre exclue.
 			CultureMap item = obj as CultureMap;
 
-			//	Vérifie si on est en présence de "la" ressource privilégiée, jamais exclue.
+			//	VÃ©rifie si on est en prÃ©sence de "la" ressource privilÃ©giÃ©e, jamais exclue.
 			if (item == this.neverExcludedByFilterItem)
 			{
-				return true;  // on garde cette ressource, même si elle ne correspond pas au filtre
+				return true;  // on garde cette ressource, mÃªme si elle ne correspond pas au filtre
 			}
 
-			//	Si la ressource en cours est modifiée, il faut toujours l'inclure au filtre !
+			//	Si la ressource en cours est modifiÃ©e, il faut toujours l'inclure au filtre !
 			if (this.isLocalDirty)
 			{
 				CultureMap currentItem = this.collectionView.CurrentItem as CultureMap;
 
 				if (item == currentItem)
 				{
-					return true;  // on garde cette ressource, même si elle ne correspond pas au filtre
+					return true;  // on garde cette ressource, mÃªme si elle ne correspond pas au filtre
 				}
 			}
 			
@@ -1306,7 +1306,7 @@ namespace Epsitec.Common.Designer
 
 		public int TotalCount
 		{
-			//	Retourne le nombre total de données (donc sans tenir compte du filtre).
+			//	Retourne le nombre total de donnÃ©es (donc sans tenir compte du filtre).
 			get
 			{
 				if (string.IsNullOrEmpty(this.collectionViewFilter))
@@ -1325,7 +1325,7 @@ namespace Epsitec.Common.Designer
 
 		public int AccessCount
 		{
-			//	Retourne le nombre de données accessibles, à travers le filtre.
+			//	Retourne le nombre de donnÃ©es accessibles, Ã  travers le filtre.
 			get
 			{
 				return this.collectionView.Count;
@@ -1334,7 +1334,7 @@ namespace Epsitec.Common.Designer
 
 		public Druid AccessDruid(int index)
 		{
-			//	Retourne le druid d'un index donné.
+			//	Retourne le druid d'un index donnÃ©.
 			if (index < 0 || index >= this.CollectionView.Items.Count)
 			{
 				return Druid.Empty;
@@ -1360,7 +1360,7 @@ namespace Epsitec.Common.Designer
 
 		public int AccessIndex
 		{
-			//	Index de l'accès en cours.
+			//	Index de l'accÃ¨s en cours.
 			get
 			{
 				return this.collectionView.CurrentPosition;
@@ -1382,17 +1382,17 @@ namespace Epsitec.Common.Designer
 
 		public bool IsCorrectNewName(ref string name)
 		{
-			//	Retourne true s'il est possible de créer cette nouvelle ressource.
+			//	Retourne true s'il est possible de crÃ©er cette nouvelle ressource.
 			return (this.CheckNewName(null, ref name) == null);
 		}
 
 		public string CheckNewName(string prefix, ref string name)
 		{
-			//	Retourne l'éventuelle erreur si on tente de créer cette nouvelle ressource.
+			//	Retourne l'Ã©ventuelle erreur si on tente de crÃ©er cette nouvelle ressource.
 			//	Retourne null si tout est correct.
-			//	Le préfixe permet de distinguer les champs des ressources de type 'Field'.
-			//	Par exemple, le champ Client de l'entité Facture (donc 'Facture.Client') ne doit
-			//	pas être confondu avec les champs d'une autre entité comme 'Adresse.Client'.
+			//	Le prÃ©fixe permet de distinguer les champs des ressources de type 'Field'.
+			//	Par exemple, le champ Client de l'entitÃ© Facture (donc 'Facture.Client') ne doit
+			//	pas Ãªtre confondu avec les champs d'une autre entitÃ© comme 'Adresse.Client'.
 			if (string.IsNullOrEmpty(name))
 			{
 				return "Nom inexistant !";
@@ -1414,7 +1414,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			//	Cherche si le nom existe déjà.
+			//	Cherche si le nom existe dÃ©jÃ .
 			CollectionView cv = new CollectionView(this.accessor.Collection);
 			foreach (CultureMap item in cv.Items)
 			{
@@ -1424,7 +1424,7 @@ namespace Epsitec.Common.Designer
 					fullName = string.Concat(prefix, ".", name);
 				}
 
-				//	item.FullName inclu le préfixe s'il exite !
+				//	item.FullName inclu le prÃ©fixe s'il exite !
 				string err = ResourceAccess.CheckNames(item.FullName, fullName);
 				if (err != null)
 				{
@@ -1470,7 +1470,7 @@ namespace Epsitec.Common.Designer
 
 		public string GetDuplicateName(string baseName)
 		{
-			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
+			//	Retourne le nom Ã  utiliser lorsqu'un nom existant est dupliquÃ©.
 			int numberLength = 0;
 			while (baseName.Length > 0)
 			{
@@ -1513,10 +1513,10 @@ namespace Epsitec.Common.Designer
 
 		public static string GetCaptionNiceDescription(StructuredData data, double availableHeight)
 		{
-			//	Construit un texte d'après les labels et la description.
-			//	Les différents labels sont séparés par des virgules.
-			//	La description vient sur une deuxième ligne (si la hauteur
-			//	disponible le permet), mais seulement si elle est différente
+			//	Construit un texte d'aprÃ¨s les labels et la description.
+			//	Les diffÃ©rents labels sont sÃ©parÃ©s par des virgules.
+			//	La description vient sur une deuxiÃ¨me ligne (si la hauteur
+			//	disponible le permet), mais seulement si elle est diffÃ©rente
 			//	de tous les labels.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
@@ -1533,9 +1533,9 @@ namespace Epsitec.Common.Designer
 
 				if (description != null)
 				{
-					if (description == label)  // description identique à un label ?
+					if (description == label)  // description identique Ã  un label ?
 					{
-						description = null;  // pas nécessaire de montrer la description
+						description = null;  // pas nÃ©cessaire de montrer la description
 					}
 				}
 			}
@@ -1546,11 +1546,11 @@ namespace Epsitec.Common.Designer
 				{
 					if (availableHeight >= 30)  // assez de place pour 2 lignes ?
 					{
-						builder.Append("<br/>");  // sur une deuxième ligne
+						builder.Append("<br/>");  // sur une deuxiÃ¨me ligne
 					}
 					else
 					{
-						builder.Append(". ");  // sur la même ligne
+						builder.Append(". ");  // sur la mÃªme ligne
 					}
 				}
 				builder.Append(description);
@@ -1579,8 +1579,8 @@ namespace Epsitec.Common.Designer
 
 		public Field GetField(int index, string cultureName, FieldType fieldType)
 		{
-			//	Retourne les données d'un champ.
-			//	Si cultureName est nul, on accède à la culture de base.
+			//	Retourne les donnÃ©es d'un champ.
+			//	Si cultureName est nul, on accÃ¨de Ã  la culture de base.
 			if (index < 0 || index >= this.CollectionView.Items.Count)
 			{
 				return null;
@@ -1628,8 +1628,8 @@ namespace Epsitec.Common.Designer
 
 		public void SetField(int index, string cultureName, FieldType fieldType, Field field)
 		{
-			//	Modifie les données d'un champ.
-			//	Si cultureName est nul, on accède à la culture de base.
+			//	Modifie les donnÃ©es d'un champ.
+			//	Si cultureName est nul, on accÃ¨de Ã  la culture de base.
 			if (index < 0 || index >= this.CollectionView.Items.Count)
 			{
 				return;
@@ -1726,7 +1726,7 @@ namespace Epsitec.Common.Designer
 
 		public ModificationState GetModification(int index, string cultureName)
 		{
-			//	Donne l'état 'modifié'.
+			//	Donne l'Ã©tat 'modifiÃ©'.
 			if (index >= 0 && index < this.CollectionView.Items.Count)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
@@ -1738,7 +1738,7 @@ namespace Epsitec.Common.Designer
 
 		public ModificationState GetModification(CultureMap item, string cultureName)
 		{
-			//	Donne l'état 'modifié'.
+			//	Donne l'Ã©tat 'modifiÃ©'.
 			if (cultureName == null)
 			{
 				cultureName = Resources.DefaultTwoLetterISOLanguageName;
@@ -1791,7 +1791,7 @@ namespace Epsitec.Common.Designer
 
 		public void ModificationClear(int index, string cultureName)
 		{
-			//	Considère une ressource comme 'à jour' dans une culture.
+			//	ConsidÃ¨re une ressource comme 'Ã  jour' dans une culture.
 			if (index < 0 || index >= this.CollectionView.Items.Count)
 			{
 				return;
@@ -1809,7 +1809,7 @@ namespace Epsitec.Common.Designer
 
 		public void ModificationSetAll(int index)
 		{
-			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
+			//	ConsidÃ¨re une ressource comme 'modifiÃ©e' dans toutes les cultures.
 			if (index < 0 || index >= this.CollectionView.Items.Count)
 			{
 				return;
@@ -1826,7 +1826,7 @@ namespace Epsitec.Common.Designer
 
 		public bool IsModificationAll(int index)
 		{
-			//	Donne l'état de la commande ModificationAll.
+			//	Donne l'Ã©tat de la commande ModificationAll.
 			if (index < 0 || index >= this.CollectionView.Items.Count)
 			{
 				return false;
@@ -1875,7 +1875,7 @@ namespace Epsitec.Common.Designer
 
 		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out FieldType fieldType)
 		{
-			//	Conversion d'un index de champ (0..n) en l'information nécessaire pour Get/SetField.
+			//	Conversion d'un index de champ (0..n) en l'information nÃ©cessaire pour Get/SetField.
 			if (this.type == Type.Strings)
 			{
 				switch (field)
@@ -1999,9 +1999,9 @@ namespace Epsitec.Common.Designer
 
 		public string GetCultureName(string twoLettersCode)
 		{
-			//	Retourne le nom standard (Français, Deutsch, English, etc.) d'une culture.
-			//	null -> "(indéfini)"
-			//	"00" -> "Français"
+			//	Retourne le nom standard (FranÃ§ais, Deutsch, English, etc.) d'une culture.
+			//	null -> "(indÃ©fini)"
+			//	"00" -> "FranÃ§ais"
 			//	"de" -> "Deutsch"
 			if (twoLettersCode == Resources.DefaultTwoLetterISOLanguageName)
 			{
@@ -2021,7 +2021,7 @@ namespace Epsitec.Common.Designer
 
 		public List<string> GetSecondaryCultureNames()
 		{
-			//	Retourne la liste des cultures secondaires, triés par ordre alphabétique (twoLettersCode).
+			//	Retourne la liste des cultures secondaires, triÃ©s par ordre alphabÃ©tique (twoLettersCode).
 			List<string> list = new List<string>();
 			
 			foreach (string name in this.cultures)
@@ -2041,7 +2041,7 @@ namespace Epsitec.Common.Designer
 
 		public void CreateCulture(string cultureName)
 		{
-			//	Crée un nouveau bundle pour une culture donnée.
+			//	CrÃ©e un nouveau bundle pour une culture donnÃ©e.
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 
 			if (!this.cultures.Contains(cultureName))
@@ -2066,9 +2066,9 @@ namespace Epsitec.Common.Designer
 			System.Globalization.CultureInfo culture = this.GetCulture(cultureName);
 			if (this.cultures.Contains(cultureName))
 			{
-				//	ATTENTION: Il faudra rajouter ici un garde-fou pour éviter de
-				//	détruire un bundle partagé entre plusieurs accesseurs (par ex.
-				//	suppression dans Commandes --> Caption sera affecté)
+				//	ATTENTION: Il faudra rajouter ici un garde-fou pour Ã©viter de
+				//	dÃ©truire un bundle partagÃ© entre plusieurs accesseurs (par ex.
+				//	suppression dans Commandes --> Caption sera affectÃ©)
 
 				foreach (CultureMap item in this.accessor.Collection)
 				{
@@ -2080,7 +2080,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		#region Méthodes de manipulation bas niveau de ResourceBundle
+		#region MÃ©thodes de manipulation bas niveau de ResourceBundle
 
 		private void DeleteBundle(System.Globalization.CultureInfo culture, string bundleName)
 		{
@@ -2167,8 +2167,8 @@ namespace Epsitec.Common.Designer
 
 		public int SortDefer(int index)
 		{
-			//	Empêche tous les tris jusqu'au Undefer.
-			//	Retourne l'index pour accéder à une ressource après la suppression du tri. En effet,
+			//	EmpÃªche tous les tris jusqu'au Undefer.
+			//	Retourne l'index pour accÃ©der Ã  une ressource aprÃ¨s la suppression du tri. En effet,
 			//	comme il n'y aura plus de tri, l'index change !
 			if (this.collectionView != null && index >= 0 && index < this.CollectionView.Items.Count)
 			{
@@ -2183,7 +2183,7 @@ namespace Epsitec.Common.Designer
 		public int SortUndefer(int index)
 		{
 			//	Permet de nouveau les tris.
-			//	Retourne l'index pour accéder à une ressource après la remise du tri. En effet,
+			//	Retourne l'index pour accÃ©der Ã  une ressource aprÃ¨s la remise du tri. En effet,
 			//	avec le nouveau tri, l'index change !
 			if (this.collectionView != null && index >= 0 && index < this.CollectionView.Items.Count)
 			{
@@ -2197,7 +2197,7 @@ namespace Epsitec.Common.Designer
 
 		public void SortDefer()
 		{
-			//	Empêche tous les tris jusqu'au Undefer.
+			//	EmpÃªche tous les tris jusqu'au Undefer.
 			if (this.collectionView != null)
 			{
 				System.Diagnostics.Debug.Assert(this.collectionViewInitialSorts == null);
@@ -2220,16 +2220,16 @@ namespace Epsitec.Common.Designer
 
 		public string TypesCreateMissingValueItems(string moduleName)
 		{
-			//	Passe en revue toutes les énumérations à la recherche des énumérations système à compléter.
-			//	Ceci peut se produire lorsqu'une énumération C# reflètée par une ressource a été complétée.
-			//	Retourne un éventuel message donnant les noms des énumérations complétées.
+			//	Passe en revue toutes les Ã©numÃ©rations Ã  la recherche des Ã©numÃ©rations systÃ¨me Ã  complÃ©ter.
+			//	Ceci peut se produire lorsqu'une Ã©numÃ©ration C# reflÃ¨tÃ©e par une ressource a Ã©tÃ© complÃ©tÃ©e.
+			//	Retourne un Ã©ventuel message donnant les noms des Ã©numÃ©rations complÃ©tÃ©es.
 			List<CultureMap> missingList = new List<CultureMap>();
 
 			foreach (CultureMap item in this.accessor.Collection)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				object value = data.GetValue(Support.Res.Fields.ResourceEnumType.Values);
-				if (!UndefinedValue.IsUndefinedValue(value))  // est-ce une énumération ?
+				if (!UndefinedValue.IsUndefinedValue(value))  // est-ce une Ã©numÃ©ration ?
 				{
 					IList<StructuredData> list = value as IList<StructuredData>;
 					if (list != null)
@@ -2256,11 +2256,11 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (missingList.Count == 0)  // toutes les énumérations sont complètes ?
+			if (missingList.Count == 0)  // toutes les Ã©numÃ©rations sont complÃ¨tes ?
 			{
 				return null;
 			}
-			else  // une ou plusieurs énumérations incomplètes ?
+			else  // une ou plusieurs Ã©numÃ©rations incomplÃ¨tes ?
 			{
 				this.PersistChanges();
 
@@ -2281,7 +2281,7 @@ namespace Epsitec.Common.Designer
 		#region Panel
 		public void SetPanel(Druid druid, UI.Panel panel)
 		{
-			//	Sérialise le UI.Panel dans les ressources.
+			//	SÃ©rialise le UI.Panel dans les ressources.
 			if (druid.IsValid)
 			{
 				string xml = UI.Panel.SerializePanel(panel);
@@ -2307,8 +2307,8 @@ namespace Epsitec.Common.Designer
 
 		public UI.Panel GetPanel(Druid druid)
 		{
-			//	Retourne le UI.Panel associé à une ressource.
-			//	Si nécessaire, il est créé la première fois.
+			//	Retourne le UI.Panel associÃ© Ã  une ressource.
+			//	Si nÃ©cessaire, il est crÃ©Ã© la premiÃ¨re fois.
 			return this.GetPanel(this.accessor.Collection[druid]);
 		}
 
@@ -2346,7 +2346,7 @@ namespace Epsitec.Common.Designer
 
 		public UI.Panel CreateEmptyPanel()
 		{
-			//	Crée un nouveau panneau vide.
+			//	CrÃ©e un nouveau panneau vide.
 			UI.Panel panel = UI.Panel.CreateEmptyPanel(null, this.resourceManager);
 			this.InitializePanel(panel);
 			return panel;
@@ -2367,8 +2367,8 @@ namespace Epsitec.Common.Designer
 		#region Form
 		public bool SetForm(Druid druid, FormEngine.FormDescription form)
 		{
-			//	Sérialise le masque de saisie dans les ressources.
-			//	Retourne false si le Druid ne correspond plus à une ressource existante.
+			//	SÃ©rialise le masque de saisie dans les ressources.
+			//	Retourne false si le Druid ne correspond plus Ã  une ressource existante.
 			if (!druid.IsValid)
 			{
 				this.ClearLocalDirty();
@@ -2409,8 +2409,8 @@ namespace Epsitec.Common.Designer
 
 		public void GetForm(Druid druid, FormEngine.FormDescription inputForm, out FormEngine.FormDescription workingForm, out List<FormEngine.FieldDescription> baseFields, out List<FormEngine.FieldDescription> finalFields, out Druid entityId)
 		{
-			//	Désérialise le masque de saisie dans les ressources.
-			//	Si inputForm != null, il s'agit du Form que l'on désire retrouver après un undo/redo.
+			//	DÃ©sÃ©rialise le masque de saisie dans les ressources.
+			//	Si inputForm != null, il s'agit du Form que l'on dÃ©sire retrouver aprÃ¨s un undo/redo.
 			CultureMap item = this.accessor.Collection[druid];
 
 			if (item == null)
@@ -2477,7 +2477,7 @@ namespace Epsitec.Common.Designer
 							break;
 
 						case CultureMapSource.DynamicMerge:
-							this.FormMerge(item);  // utile si un autre module a changé
+							this.FormMerge(item);  // utile si un autre module a changÃ©
 
 							baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
 
@@ -2556,13 +2556,13 @@ namespace Epsitec.Common.Designer
 
 		public FormEngine.FormDescription GetForm(Druid druid)
 		{
-			//	Retourne le masque de saisie associé à une ressource.
+			//	Retourne le masque de saisie associÃ© Ã  une ressource.
 			return this.GetForm(this.accessor.Collection[druid]);
 		}
 
 		private FormEngine.FormDescription GetForm(CultureMap item)
 		{
-			//	Désérialise un masque.
+			//	DÃ©sÃ©rialise un masque.
 			if (item != null)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2573,7 +2573,7 @@ namespace Epsitec.Common.Designer
 					switch (item.Source)
 					{
 						case CultureMapSource.DynamicMerge:
-							this.FormMerge(item);  // utile si un autre module a changé
+							this.FormMerge(item);  // utile si un autre module a changÃ©
 							xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
 							break;
 
@@ -2605,7 +2605,7 @@ namespace Epsitec.Common.Designer
 
 		internal void FormsMerge()
 		{
-			//	Génère la ressource XmlSourceMerge de tous les masques si nécessaire.
+			//	GÃ©nÃ¨re la ressource XmlSourceMerge de tous les masques si nÃ©cessaire.
 			if (this.accessor.BasedOnPatchModule)
 			{
 				foreach (CultureMap item in this.accessor.Collection)
@@ -2634,7 +2634,7 @@ namespace Epsitec.Common.Designer
 
 		internal void FormMerge(CultureMap item)
 		{
-			//	Génère la ressource XmlSourceMerge d'un masque si nécessaire.
+			//	GÃ©nÃ¨re la ressource XmlSourceMerge d'un masque si nÃ©cessaire.
 			if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2717,7 +2717,7 @@ namespace Epsitec.Common.Designer
 
 		private static string LastName(string name)
 		{
-			//	Retourne la dernière partie d'un nom séparé par des points.
+			//	Retourne la derniÃ¨re partie d'un nom sÃ©parÃ© par des points.
 			//	"Toto.Titi.Tutu" retourne "Tutu".
 			int i = name.LastIndexOf('.');
 			if (i != -1)
@@ -2749,7 +2749,7 @@ namespace Epsitec.Common.Designer
 
 			public string Name
 			{
-				//	Nom du Command associé (normalement "Cap.*").
+				//	Nom du Command associÃ© (normalement "Cap.*").
 				get
 				{
 					return this.name;
@@ -2758,7 +2758,7 @@ namespace Epsitec.Common.Designer
 
 			public string Culture
 			{
-				//	Nom standard de la culture associée.
+				//	Nom standard de la culture associÃ©e.
 				get
 				{
 					return this.culture;
@@ -2767,7 +2767,7 @@ namespace Epsitec.Common.Designer
 
 			static public bool IsEqual(ShortcutItem item1, ShortcutItem item2)
 			{
-				//	Indique si deux raccourcis sont identiques (mêmes raccourcis pour la même culture).
+				//	Indique si deux raccourcis sont identiques (mÃªmes raccourcis pour la mÃªme culture).
 				return (item1.Shortcut == item2.Shortcut && item1.Culture == item2.Culture);
 			}
 
@@ -2786,7 +2786,7 @@ namespace Epsitec.Common.Designer
 
 			static public List<int> IndexesOf(List<ShortcutItem> list, int index)
 			{
-				//	Retourne la liste des index du raccourci dont on spécifie l'index,
+				//	Retourne la liste des index du raccourci dont on spÃ©cifie l'index,
 				//	seulement s'il y en a plus d'un.
 				ShortcutItem item = list[index];
 
@@ -2828,7 +2828,7 @@ namespace Epsitec.Common.Designer
 
 		#region Class Field
 		/// <summary>
-		/// Permet d'accéder à un champ de n'importe quel type.
+		/// Permet d'accÃ©der Ã  un champ de n'importe quel type.
 		/// </summary>
 		public class Field
 		{
@@ -2888,7 +2888,7 @@ namespace Epsitec.Common.Designer
 		#region Events handler
 		protected virtual void OnDirtyChanged()
 		{
-			if (this.DirtyChanged != null)  // qq'un écoute ?
+			if (this.DirtyChanged != null)  // qq'un Ã©coute ?
 			{
 				this.DirtyChanged(this);
 			}

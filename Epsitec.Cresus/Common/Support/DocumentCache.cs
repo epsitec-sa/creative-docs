@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -16,8 +16,8 @@ namespace Epsitec.Common.Support
 	{
 		public static void Add(string path)
 		{
-			//	Ajoute une miniature et une statistique dans le cache, si elles n'y sont pas déjà.
-			//	Si la miniature ou la statistique ont changé, il faut au préalable exécuter Remove.
+			//	Ajoute une miniature et une statistique dans le cache, si elles n'y sont pas dÃ©jÃ .
+			//	Si la miniature ou la statistique ont changÃ©, il faut au prÃ©alable exÃ©cuter Remove.
 			path = DocumentCache.GetCleanPath (path);
 
 			lock (DocumentCache.cache)
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support
 			}
 
 			//	Pour l'instant, le cache ne contient aucune information pour ce document; on va
-			//	le charger, extraire l'image et les statistiques, puis mettre à jour le cache.
+			//	le charger, extraire l'image et les statistiques, puis mettre Ã  jour le cache.
 
 			IDocumentInfo info = DocumentManager.GetDocumentInfo (path);
 
@@ -37,8 +37,8 @@ namespace Epsitec.Common.Support
 			{
 				lock (DocumentCache.cache)
 				{
-					//	Il faut encore s'assurer que le cache n'a pas été mis à jour entre temps
-					//	par quelqu'un d'autre, auquel cas on peut simplement mettre à la poubelle
+					//	Il faut encore s'assurer que le cache n'a pas Ã©tÃ© mis Ã  jour entre temps
+					//	par quelqu'un d'autre, auquel cas on peut simplement mettre Ã  la poubelle
 					//	les informations (item) :
 
 					if (!DocumentCache.cache.ContainsKey (path))
@@ -90,10 +90,10 @@ namespace Epsitec.Common.Support
 		{
 			path = path.ToLower ();
 
-			//	Il faut considérer 'Abc' = 'abc' à cause de certaines anomalies.
+			//	Il faut considÃ©rer 'Abc' = 'abc' Ã  cause de certaines anomalies.
 			//	Par exemple, Document.DirectoryMySamples retourne :
-			//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus Documents\Mes exemples
-			//	'Crésus Documents' au lieu de 'Crésus documents' qui est le vrai nom !
+			//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\CrÃ©sus Documents\Mes exemples
+			//	'CrÃ©sus Documents' au lieu de 'CrÃ©sus documents' qui est le vrai nom !
 
 			return path;
 		}

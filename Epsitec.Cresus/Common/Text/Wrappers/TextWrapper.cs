@@ -1,11 +1,11 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
 {
 	/// <summary>
-	/// La classe TextWrapper simplifie l'accès aux réglages liés à la fonte
-	/// (FontFace, FontStyle, taille, etc.) et au texte en général.
+	/// La classe TextWrapper simplifie l'accÃ¨s aux rÃ©glages liÃ©s Ã  la fonte
+	/// (FontFace, FontStyle, taille, etc.) et au texte en gÃ©nÃ©ral.
 	/// </summary>
 	public class TextWrapper : AbstractWrapper
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public State								Active
 		{
-			//	Etat réellement utilisé dans le contexte courant, qui dépend de l'état défini
+			//	Etat rÃ©ellement utilisÃ© dans le contexte courant, qui dÃ©pend de l'Ã©tat dÃ©fini
 			//	directement (Defined) et des wrappers sous-jacents.
 			//	On peut ainsi avoir un Defined="Arial/Regular/120%" et un Active="Arial/Bold/14.4pt"
 			//	par exemple, si le style sous-jacent du paragraphe disait qu'il faut inverser le gras
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public State								Defined
 		{
-			//	Etat défini directement dans le wrapper courant.
+			//	Etat dÃ©fini directement dans le wrapper courant.
 			get
 			{
 				return this.defined_state;
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Text.Wrappers
 						string tag_data = user_tags[i];
 						long   id       = 0;
 						
-						//	TODO: gérer correctement TagType et TagData
+						//	TODO: gÃ©rer correctement TagType et TagData
 						
 						properties[i] = new Properties.UserTagProperty (tag_type, tag_data, id);
 					}
@@ -1133,7 +1133,7 @@ namespace Epsitec.Common.Text.Wrappers
 					user_tags[i] = (p_user_tags[i] as Properties.UserTagProperty).TagData;
 				}
 				
-				//	TODO: gérer correctement TagData et TagType
+				//	TODO: gÃ©rer correctement TagData et TagType
 				
 				state.DefineValue (State.UserTagsProperty, user_tags);
 			}

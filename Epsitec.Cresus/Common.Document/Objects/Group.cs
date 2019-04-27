@@ -31,22 +31,22 @@ namespace Epsitec.Common.Document.Objects
 
 		public override string IconUri
 		{
-			//	Nom de l'icÙne.
+			//	Nom de l'ic√¥ne.
 			get { return Misc.Icon("ObjectGroup"); }
 		}
 
 
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	DÈbut du dÈplacement une poignÈe.
+			//	D√©but du d√©placement une poign√©e.
 			this.InsertOpletGeometry();
 			this.initialBBox = this.BoundingBox.Size;
 		}
 
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	DÈplace une poignÈe.
-			if ( rank >= this.handles.Count )  // poignÈe d'une propriÈtÈ ?
+			//	D√©place une poign√©e.
+			if ( rank >= this.handles.Count )  // poign√©e d'une propri√©t√© ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void MoveHandleSoon(UndoableList objects, Selector selector)
 		{
-			//	DÈplace tous les objets du groupe.
+			//	D√©place tous les objets du groupe.
 			foreach ( Objects.Abstract obj in this.document.Deep(this) )
 			{
 				obj.MoveGlobalStarting();
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void UpdateDim(Drawing.Rectangle bbox)
 		{
-			//	Met ‡ jour la bbox du groupe.
+			//	Met √† jour la bbox du groupe.
 			this.InsertOpletGeometry();
 
 			if ( this.handles.Count == 0 )
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathRectangle()
 		{
-			//	CrÈe le chemin d'un rectangle.
+			//	Cr√©e le chemin d'un rectangle.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = this.Handle(2).Position;
 			Point p3 = this.Handle(1).Position;
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathCorners()
 		{
-			//	CrÈe le chemin des coins d'un rectangle.
+			//	Cr√©e le chemin des coins d'un rectangle.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = this.Handle(2).Position;
 			Point p3 = this.Handle(1).Position;
@@ -258,13 +258,13 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	SÈrialise l'objet.
+			//	S√©rialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
 		protected Group(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui dÈsÈrialise l'objet.
+			//	Constructeur qui d√©s√©rialise l'objet.
 		}
 		#endregion
 

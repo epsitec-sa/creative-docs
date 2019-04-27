@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Replace gère les commandes chercher/remplacer.
+	/// La classe Replace gÃ¨re les commandes chercher/remplacer.
 	/// </summary>
 	public class Replace : Abstract
 	{
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonReplace == null )  return;

@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 				Parent = this.search.MessageContainerStateEmpty,
 				Dock = DockStyle.Fill,
 				ContentAlignment = ContentAlignment.MiddleCenter,
-				FormattedText = new FormattedText ("<i>Aucun résultat</i>"),
+				FormattedText = new FormattedText ("<i>Aucun rÃ©sultat</i>"),
 			};
 
 			var messageError = new StaticText ()
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 				Parent = this.search.MessageContainerStateError,
 				Dock = DockStyle.Fill,
 				ContentAlignment = ContentAlignment.MiddleCenter,
-				FormattedText = new FormattedText ("<i>Trop de résultats</i>"),
+				FormattedText = new FormattedText ("<i>Trop de rÃ©sultats</i>"),
 			};
 			
 			var button = new Button ()

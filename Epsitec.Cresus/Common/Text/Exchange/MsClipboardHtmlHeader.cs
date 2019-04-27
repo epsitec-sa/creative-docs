@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 namespace Epsitec.Common.Text.Exchange
 {
 	/// <summary>
-	/// La classe MSClipboardHtmlHeader gère la création de l'en-tête pour le format html du presse-papiers
+	/// La classe MSClipboardHtmlHeader gÃ¨re la crÃ©ation de l'en-tÃªte pour le format html du presse-papiers
 	/// </summary>
 	public class MSClipboardHtmlHeader
 	{

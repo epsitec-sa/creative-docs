@@ -9,7 +9,7 @@ using Epsitec.Common.Designer.PanelEditor;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public class Panels : Abstract
 	{
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Viewers
 			surface.Margins = new Margins(0, 0, 5, 0);
 			surface.Dock = DockStyle.Fill;
 
-			//	Crée le groupe central.
+			//	CrÃ©e le groupe central.
 			this.middle = new FrameBox(isWindow ? (Widget) this.designerApplication.ViewersWindow.Root : surface);
 			double m1 = isWindow ? 0 : 2;
 			double m2 = isWindow ? 0 : 5;
@@ -82,9 +82,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelContainer = this.access.CreateEmptyPanel();
 			this.panelContainer.SetParent(this.panelContainerParent);
 
-			//	Le PanelEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
-			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
-			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
+			//	Le PanelEditor est par-dessus le UI.Panel. Il occupe toute la surface (il dÃ©borde
+			//	donc des marges) et tient compte lui-mÃªme du dÃ©calage. C'est le seul moyen pour
+			//	pouvoir dessiner dans les marges ET y dÃ©tecter les Ã©vÃ©nements souris.
 			this.panelEditor = new PanelEditor.Editor(container);
 			this.panelEditor.Initialize(this, this.module, this.context, this.panelContainer);
 			this.panelEditor.MinWidth = 100;
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.ChildrenGeometryChanged += this.HandlePanelEditorChildrenGeometryChanged;
 			this.panelEditor.UpdateCommands += this.HandlePanelEditorUpdateCommands;
 
-			//	Crée le groupe droite.
+			//	CrÃ©e le groupe droite.
 			this.right = new FrameBox(surface);
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = 240;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.Padding = new Margins(5, 5, 5, 5);
 			this.right.Dock = isWindow ? DockStyle.Fill : DockStyle.Right;
 
-			//	Crée la toolbar horizontale, au dessus des onglets.
+			//	CrÃ©e la toolbar horizontale, au dessus des onglets.
 			this.hToolBar = new HToolBar(this.right);
 			this.hToolBar.Margins = new Margins(0, 0, 0, 5);
 			this.hToolBar.Dock = DockStyle.Top;
@@ -117,14 +117,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.staticType.Margins = new Margins(8, 0, 0, 0);
 			this.hToolBar.Items.Add(this.staticType);
 
-			//	Crée le tabbook pour les onglets.
+			//	CrÃ©e le tabbook pour les onglets.
 			this.tabBook = new TabBook(this.right);
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Dock = DockStyle.Fill;
 			this.tabBook.Padding = new Margins(1, 1, 1, 1);
 			this.tabBook.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 
-			//	Crée l'onglet 'propriétés'.
+			//	CrÃ©e l'onglet 'propriÃ©tÃ©s'.
 			this.tabPageProperties = new TabPage();
 			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.propertiesScrollable.PaintViewportFrame = true;
 			this.propertiesScrollable.ViewportPadding = new Margins (-1);
 
-			//	Crée l'onglet 'objets'.
+			//	CrÃ©e l'onglet 'objets'.
 			this.tabPageObjects = new TabPage();
 			this.tabPageObjects.TabTitle = Res.Strings.Viewers.Panels.TabObjects;
 			this.tabPageObjects.Padding = new Margins(4, 4, 4, 4);
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.objectsScrollable.PaintViewportFrame = true;
 			this.objectsScrollable.ViewportPadding = new Margins (-1);
 
-			//	Crée l'onglet 'cultures'.
+			//	CrÃ©e l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
 			this.tabPageCultures.Padding = new Margins(10, 10, 10, 10);
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override bool HasUsefulViewerWindow
 		{
-			//	Indique si cette vue a l'utilité d'une fenêtre supplémentaire.
+			//	Indique si cette vue a l'utilitÃ© d'une fenÃªtre supplÃ©mentaire.
 			get
 			{
 				return true;
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override double GetColumnWidth(int column)
 		{
-			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			//	Retourne la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				return Panels.columnWidthHorizontal[column];
@@ -297,7 +297,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void SetColumnWidth(int column, double value)
 		{
-			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			//	MÃ©morise la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				Panels.columnWidthHorizontal[column] = value;
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void DoCommand(string name)
 		{
-			//	Exécute une commande.
+			//	ExÃ©cute une commande.
 			if (name == "PanelRun")
 			{
 				this.module.DesignerApplication.ActiveButton("PanelRun", true);
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsDeleteOrDuplicateForViewer
 		{
-			//	Indique s'il faut aiguiller ici une opération delete ou duplicate.
+			//	Indique s'il faut aiguiller ici une opÃ©ration delete ou duplicate.
 			get
 			{
 				return (this.panelEditor.SelectedObjects.Count != 0);
@@ -365,14 +365,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void PrepareForDelete()
 		{
-			//	Préparation en vue de la suppression de l'interface.
+			//	PrÃ©paration en vue de la suppression de l'interface.
 			this.panelEditor.PrepareForDelete();
 		}
 
 
 		protected override void UpdateEdit()
 		{
-			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			//	Met Ã  jour les lignes Ã©ditables en fonction de la sÃ©lection dans le tableau.
 			base.UpdateEdit();
 
 			bool iic = this.ignoreChange;
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region UndoRedo
 		public override void Undo()
 		{
-			//	Annule la dernière action.
+			//	Annule la derniÃ¨re action.
 			Undo.Shapshot snapshot = this.undoEngine.Undo(this.UndoCurrentSnapshot(null));
 			this.UndoRestore(snapshot);
 			this.UpdateUndoRedoCommands();
@@ -393,7 +393,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void Redo()
 		{
-			//	Refait la dernière action.
+			//	Refait la derniÃ¨re action.
 			Undo.Shapshot snapshot = this.undoEngine.Redo();
 			this.UndoRestore(snapshot);
 			this.UpdateUndoRedoCommands();
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override VMenu UndoRedoCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
-			//	Crée le menu undo/redo.
+			//	CrÃ©e le menu undo/redo.
 			return this.undoEngine.CreateMenu(message);
 		}
 
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsUndoEnable
 		{
-			//	Retourne true si la commande "Undo" doit être active.
+			//	Retourne true si la commande "Undo" doit Ãªtre active.
 			get
 			{
 				return this.undoEngine.IsUndoEnable;
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsRedoEnable
 		{
-			//	Retourne true si la commande "Redo" doit être active.
+			//	Retourne true si la commande "Redo" doit Ãªtre active.
 			get
 			{
 				return this.undoEngine.IsRedoEnable;
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsUndoRedoListEnable
 		{
-			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
+			//	Retourne true si la commande "UndoRedoList" pour le menu doit Ãªtre active.
 			get
 			{
 				return this.undoEngine.IsUndoRedoListEnable;
@@ -449,36 +449,36 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public bool IsUndoSameLastSnapshot(string snapshotName)
 		{
-			//	Indique si la dernière action mémorisée était du même type.
+			//	Indique si la derniÃ¨re action mÃ©morisÃ©e Ã©tait du mÃªme type.
 			return this.undoEngine.IsSameLastShapshot(snapshotName);
 		}
 
 		public void UndoMemorize(string snapshotName, bool merge)
 		{
-			//	Mémorise l'état actuel, avant d'effectuer une modification.
-			//	Si merge = true et que la dernière photographie avait le même nom, on conserve la dernière
-			//	photographie mémorisée.
+			//	MÃ©morise l'Ã©tat actuel, avant d'effectuer une modification.
+			//	Si merge = true et que la derniÃ¨re photographie avait le mÃªme nom, on conserve la derniÃ¨re
+			//	photographie mÃ©morisÃ©e.
 			this.undoEngine.Memorize(this.UndoCurrentSnapshot(snapshotName), merge);
 			this.UpdateUndoRedoCommands();
 		}
 
 		public void UndoMemorize(Undo.Shapshot snapshot, string snapshotName)
 		{
-			//	Mémorise et nomme un état donné, avant d'effectuer une modification.
+			//	MÃ©morise et nomme un Ã©tat donnÃ©, avant d'effectuer une modification.
 			snapshot.Name = snapshotName;
 			this.UndoMemorize(snapshot);
 		}
 
 		public void UndoMemorize(Undo.Shapshot snapshot)
 		{
-			//	Mémorise un état donné, avant d'effectuer une modification.
+			//	MÃ©morise un Ã©tat donnÃ©, avant d'effectuer une modification.
 			this.undoEngine.Memorize(snapshot);
 			this.UpdateUndoRedoCommands();
 		}
 
 		public Undo.Shapshot UndoCurrentSnapshot(string snapshotName)
 		{
-			//	Retourne la photographie courante, prête à être mémorisée dans this.undoEngine.
+			//	Retourne la photographie courante, prÃªte Ã  Ãªtre mÃ©morisÃ©e dans this.undoEngine.
 			Undo.Shapshot snapshot = new Undo.Shapshot();
 
 			snapshot.Name = snapshotName;
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UndoRestore(Undo.Shapshot snapshot)
 		{
-			//	Remet l'éditeur de panneaux dans un état précédent.
+			//	Remet l'Ã©diteur de panneaux dans un Ã©tat prÃ©cÃ©dent.
 			UI.Panel panel = this.XmlToPanel(snapshot.SerializedData);
 			this.SetPanel(panel, this.druidToSerialize);
 
@@ -504,8 +504,8 @@ namespace Epsitec.Common.Designer.Viewers
 	
 		public override bool Terminate(bool soft)
 		{
-			//	Termine le travail sur une ressource, avant de passer à une autre.
-			//	Si soft = true, on sérialise temporairement sans poser de question.
+			//	Termine le travail sur une ressource, avant de passer Ã  une autre.
+			//	Si soft = true, on sÃ©rialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
 			
 			base.Terminate(soft);
@@ -531,7 +531,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void PersistChanges()
 		{
-			//	Stocke la version XML (sérialisée) du panneau dans l'accesseur
+			//	Stocke la version XML (sÃ©rialisÃ©e) du panneau dans l'accesseur
 			//	s'il y a eu des modifications.
 			this.access.SetPanel(this.druidToSerialize, this.GetPanel());
 			base.PersistChanges();
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void Deserialize()
 		{
-			//	Désérialise les données sérialisées.
+			//	DÃ©sÃ©rialise les donnÃ©es sÃ©rialisÃ©es.
 			int sel = this.access.AccessIndex;
 			this.druidToSerialize = Druid.Empty;
 
@@ -586,13 +586,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected UI.Panel GetPanel()
 		{
-			//	Retourne le UI.Panel en cours d'édition.
+			//	Retourne le UI.Panel en cours d'Ã©dition.
 			return this.panelContainer;
 		}
 
 		protected void SetPanel(UI.Panel panel, Druid druid)
 		{
-			//	Spécifie le UI.Panel en cours d'édition.
+			//	SpÃ©cifie le UI.Panel en cours d'Ã©dition.
 			if (this.panelContainer != null)
 			{
 				this.panelContainer.SetParent(null);
@@ -618,7 +618,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void Update()
 		{
-			//	Met à jour le contenu du Viewer.
+			//	Met Ã  jour le contenu du Viewer.
 			this.UpdateArray();
 			this.UpdateEdit();
 			this.UpdateType();
@@ -627,7 +627,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateButtons()
 		{
-			//	Met à jour les boutons de la toolbar horizontale.
+			//	Met Ã  jour les boutons de la toolbar horizontale.
 			this.hButtonDefault.ActiveState = (this.panelMode == UI.PanelMode.Default) ? ActiveState.Yes : ActiveState.No;
 			this.hButtonEdition.ActiveState = (this.panelMode == UI.PanelMode.Edition) ? ActiveState.Yes : ActiveState.No;
 			this.hButtonSearch.ActiveState = (this.panelMode == UI.PanelMode.Search) ? ActiveState.Yes : ActiveState.No;
@@ -635,7 +635,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateType()
 		{
-			//	Met à jour le nom de la structure de données à droite du bouton 'link'.
+			//	Met Ã  jour le nom de la structure de donnÃ©es Ã  droite du bouton 'link'.
 			string text = "";
 
 			if (this.panelContainer != null)
@@ -653,7 +653,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void CreateCultureButtons()
 		{
-			//	Crée tous les boutons pour les cultures.
+			//	CrÃ©e tous les boutons pour les cultures.
 			this.cultureButtonList = new List<IconButton>();
 
 			int tabIndex = 1;
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		void HandleCultureButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Un bouton pour changer de culture a été cliqué.
+			//	Un bouton pour changer de culture a Ã©tÃ© cliquÃ©.
 			IconButton button = sender as IconButton;
 			this.module.ResourceManager.ActiveCulture = Resources.FindSpecificCultureInfo(button.Name);
 			this.panelContainer.UpdateDisplayCaptions();
@@ -689,7 +689,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateCultureButtons()
 		{
-			//	Met à jour les boutons pour les cultures.
+			//	Met Ã  jour les boutons pour les cultures.
 			string culture = Misc.CultureBaseName(this.module.ResourceManager.ActiveCulture);
 			foreach (IconButton button in this.cultureButtonList)
 			{
@@ -701,10 +701,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected Widget VToolBarAdd(Command command)
 		{
-			//	Ajoute une icône dans la toolbar verticale.
+			//	Ajoute une icÃ´ne dans la toolbar verticale.
 			if (command == null)
 			{
-				//	N'utilise pas un IconSeparator, afin d'éviter les confusions
+				//	N'utilise pas un IconSeparator, afin d'Ã©viter les confusions
 				//	avec les objets HSeparator et VSeparator !
 				Widget sep = new Widget();
 				sep.PreferredWidth = 20;
@@ -738,8 +738,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void UpdateViewer(Viewers.Changing oper)
 		{
-			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
-			//	Met également à jour l'arbre des objets, s'il est visible.
+			//	Met Ã  jour le statut du visualisateur en cours, en fonction de la sÃ©lection.
+			//	Met Ã©galement Ã  jour l'arbre des objets, s'il est visible.
 			this.UpdateStatusViewer();
 
 			if (this.tabPageObjects.Visibility)  // onglet 'Objets' visible ?
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region StatusBar
 		protected void UpdateStatusViewer()
 		{
-			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
+			//	Met Ã  jour le statut du visualisateur en cours, en fonction de la sÃ©lection.
 			this.StatusBarDispose();
 			this.statusBar.Children.Clear();  // supprime tous les boutons
 
@@ -771,7 +771,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				//	Crée une liste de tous les parents.
+				//	CrÃ©e une liste de tous les parents.
 				this.StatusBarButton(null, "DeselectAll", 0, Res.Strings.Viewers.Panels.StatusBar.DeselectAll);
 
 				if (ObjectModifier.GetObjectType(selection[0]) != ObjectModifier.ObjectType.MainPanel)
@@ -796,21 +796,21 @@ namespace Epsitec.Common.Designer.Viewers
 					parents.Add(obj);
 				}
 
-				//	Crée la chaîne de widgets pour les parents.
+				//	CrÃ©e la chaÃ®ne de widgets pour les parents.
 				for (int i=parents.Count-1; i>=0; i--)
 				{
 					this.StatusBarButton(parents[i], "Parent", i+1, (i==parents.Count-1) ? Res.Strings.Viewers.Panels.StatusBar.Root : Res.Strings.Viewers.Panels.StatusBar.Parent);
 					this.StatusBarArrow("Next", i, Res.Strings.Viewers.Panels.StatusBar.Next);
 				}
 
-				//	Crée la série des widgets sélectionnés.
+				//	CrÃ©e la sÃ©rie des widgets sÃ©lectionnÃ©s.
 				for (int i=0; i<selection.Count; i++)
 				{
 					this.StatusBarButton(selection[i], "Selected", i, Res.Strings.Viewers.Panels.StatusBar.This);
 				}
 
-				//	Crée la série des enfants.
-				obj = selection[0];  // premier objet sélectionné
+				//	CrÃ©e la sÃ©rie des enfants.
+				obj = selection[0];  // premier objet sÃ©lectionnÃ©
 				if (selection.Count == 1 && obj.Children.Count > 0 && ObjectModifier.IsAbstractGroup(obj))
 				{
 					this.StatusBarArrow("All", 0, Res.Strings.Viewers.Panels.StatusBar.All);
@@ -832,7 +832,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void StatusBarButton(Widget obj, string type, int rank, string tooltip)
 		{
-			//	Ajoute un bouton représentant un objet.
+			//	Ajoute un bouton reprÃ©sentant un objet.
 			string name = string.Concat(type, ".Level", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			string icon;
 
@@ -883,7 +883,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void StatusBarArrow(string type, int rank, string tooltip)
 		{
-			//	Ajoute une flèche de séparation ">".
+			//	Ajoute une flÃ¨che de sÃ©paration ">".
 			string name = string.Concat(type, ".Level", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 			GlyphButton arrow = new GlyphButton(this.statusBar);
@@ -900,7 +900,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void StatusBarOverflow()
 		{
-			//	Ajoute un marqueur de débordement "...".
+			//	Ajoute un marqueur de dÃ©bordement "...".
 			StaticText overflow = new StaticText(this.statusBar);
 			overflow.Text = "...";
 			overflow.PreferredWidth = 20;
@@ -937,7 +937,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void StatusBarSelect(string type, int rank)
 		{
-			//	Effectue une opération de sélection.
+			//	Effectue une opÃ©ration de sÃ©lection.
 			List<Widget> list = this.StatusBarSearch(type, rank);
 			if (list.Count == 0)
 			{
@@ -951,7 +951,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected List<Widget> StatusBarSearch(string type, int rank)
 		{
-			//	Cherche le widget correspondant à une opération de sélection.
+			//	Cherche le widget correspondant Ã  une opÃ©ration de sÃ©lection.
 			List<Widget> list = new List<Widget>();
 
 			if (type == "Parent")
@@ -1044,14 +1044,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void TreeClear()
 		{
-			//	Supprime et libère l'arbre des objets.
+			//	Supprime et libÃ¨re l'arbre des objets.
 			this.TreeDispose();
 			this.objectsScrollable.Viewport.Children.Clear();  // supprime tous les boutons
 		}
 
 		protected void TreeUpdateSelection(Widgets.Collections.FlatChildrenCollection childrens)
 		{
-			//	Met à jour les objets sélectionnés dans l'arbre.
+			//	Met Ã  jour les objets sÃ©lectionnÃ©s dans l'arbre.
 			foreach (Widget children in childrens)
 			{
 				if (children is IconButton)
@@ -1068,31 +1068,31 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void TreeCreateChildren(List<Widget> bands, List<MyWidgets.TreeBranches> branches, List<double> positions, int deep, Widget obj)
 		{
-			//	Crée le bouton d'un objet, puis appelle de nouveau cette méthode récursivement
+			//	CrÃ©e le bouton d'un objet, puis appelle de nouveau cette mÃ©thode rÃ©cursivement
 			//	pour les boutons des enfants.
 			if (deep >= bands.Count)
 			{
-				//	Crée le conteneur horizonal pour les boutons.
+				//	CrÃ©e le conteneur horizonal pour les boutons.
 				FrameBox band = new FrameBox(this.objectsScrollable.Viewport);
 				band.Dock = DockStyle.Top;
 				bands.Add(band);
 
-				//	Crée le conteneur horizontal pour les liaisons.
+				//	CrÃ©e le conteneur horizontal pour les liaisons.
 				MyWidgets.TreeBranches tb = new MyWidgets.TreeBranches(this.objectsScrollable.Viewport);
 				tb.PreferredHeight = Panels.treeBranchesHeight;
 				tb.Dock = DockStyle.Top;
 				branches.Add(tb);
 
-				//	Crée le remplissage en X du contenur horizontal.
+				//	CrÃ©e le remplissage en X du contenur horizontal.
 				positions.Add(0);
 			}
 
 			if (deep > 0)
 			{
 				double shift = positions[deep-1] - positions[deep] - Panels.treeButtonWidth;
-				if (shift > 0)  // parent en retrait à gauche ?
+				if (shift > 0)  // parent en retrait Ã  gauche ?
 				{
-					//	Crée un séparateur pour aligner le premier enfant sur le parent.
+					//	CrÃ©e un sÃ©parateur pour aligner le premier enfant sur le parent.
 					Widget sep = new Widget(bands[deep]);
 					sep.PreferredWidth = shift;
 					sep.Dock = DockStyle.Left;
@@ -1100,7 +1100,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			//	Crée le bouton pour l'objet.
+			//	CrÃ©e le bouton pour l'objet.
 			this.TreeCreateButton(obj, bands[deep]);
 			positions[deep] += Panels.treeButtonWidth;
 
@@ -1116,7 +1116,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (obj.Children.Count > 0)
 				{
-					//	Crée le séparateur entre des enfants de parents différents.
+					//	CrÃ©e le sÃ©parateur entre des enfants de parents diffÃ©rents.
 					Widget sep = new Widget(bands[deep+1]);
 					sep.PreferredWidth = 8;
 					sep.Dock = DockStyle.Left;
@@ -1127,7 +1127,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void TreeCreateButton(Widget obj, Widget parent)
 		{
-			//	Ajoute un bouton représentant un objet.
+			//	Ajoute un bouton reprÃ©sentant un objet.
 			string icon = ObjectModifier.GetObjectIcon(obj);
 			System.Diagnostics.Debug.Assert(icon != null);
 
@@ -1147,7 +1147,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTreeButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Le bouton d'un objet dans l'arbre a été cliqué.
+			//	Le bouton d'un objet dans l'arbre a Ã©tÃ© cliquÃ©.
 			IconButton button = sender as IconButton;
 			Widget obj = button.GetValue(Panels.TreeObjectProperty) as Widget;
 			this.panelEditor.SelectOneObject(obj);
@@ -1155,7 +1155,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTreeButtonEntered(object sender, MessageEventArgs e)
 		{
-			//	La souris est entrée (survol) dans un bouton d'un objet de l'arbre.
+			//	La souris est entrÃ©e (survol) dans un bouton d'un objet de l'arbre.
 			IconButton button = sender as IconButton;
 			Widget obj = button.GetValue(Panels.TreeObjectProperty) as Widget;
 			List<Widget> list = new List<Widget>();
@@ -1185,7 +1185,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void TreeDispose()
 		{
-			//	Libère tout l'arbre des objets.
+			//	LibÃ¨re tout l'arbre des objets.
 			this.TreeDispose(this.objectsScrollable.Viewport.Children);
 		}
 
@@ -1213,35 +1213,35 @@ namespace Epsitec.Common.Designer.Viewers
 		#region Proxies
 		protected void DefineProxies()
 		{
-			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
+			//	CrÃ©e les proxies et l'interface utilisateur pour les widgets sÃ©lectionnÃ©s.
 			this.propertiesScrollable.Viewport.Children.Clear();  // supprime les panneaux existants
 			this.proxyManager.CreateInterface(this.propertiesScrollable.Viewport, this.panelEditor.SelectedObjects);
 		}
 
 		protected void UpdateProxies()
 		{
-			//	Met à jour les proxies et l'interface utilisateur (panneaux), sans changer
-			//	le nombre de propriétés visibles par panneau.
+			//	Met Ã  jour les proxies et l'interface utilisateur (panneaux), sans changer
+			//	le nombre de propriÃ©tÃ©s visibles par panneau.
 			this.proxyManager.UpdateInterface();
 		}
 
 		public void RegenerateProxies()
 		{
-			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
-			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
+			//	RÃ©gÃ©nÃ¨re la liste des proxies et met Ã  jour les panneaux de l'interface
+			//	utilisateur s'il y a eu un changement dans le nombre de propriÃ©tÃ©s visibles
 			//	par panneau.
 			this.DefineProxies();
 		}
 
 		public void RegenerateDimensions()
 		{
-			//	Régénère les cotes s'il y a eu un changement.
+			//	RÃ©gÃ©nÃ¨re les cotes s'il y a eu un changement.
 			this.panelEditor.RegenerateDimensions();
 		}
 
 		public void RegenerateProxiesAndDimensions()
 		{
-			//	Régénère les proxies et les cotes.
+			//	RÃ©gÃ©nÃ¨re les proxies et les cotes.
 			this.DefineProxies();
 			this.panelEditor.RegenerateDimensions();
 		}
@@ -1350,7 +1350,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Changement de l'onglet visible.
 			if (this.tabPageObjects.Visibility)  // arbre des objets visible ?
 			{
-				this.TreeUpdate(Viewers.Changing.Show);  // met à jour l'arbre
+				this.TreeUpdate(Viewers.Changing.Show);  // met Ã  jour l'arbre
 			}
 			else
 			{

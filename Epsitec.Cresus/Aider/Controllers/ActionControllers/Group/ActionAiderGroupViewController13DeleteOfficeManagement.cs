@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var office = businessContext.GetByExample (example).FirstOrDefault ();
 			if (office.IsNull ())
 			{
-				Logic.BusinessRuleException ("Ce groupe n'est pas associé a une gestion");
+				Logic.BusinessRuleException ("Ce groupe n'est pas associÃ© a une gestion");
 			}
 			else
 			{

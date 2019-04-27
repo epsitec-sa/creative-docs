@@ -1,4 +1,4 @@
-//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			else
 			{
 				// Il ne faut absolument pas utiliser TextConverter.ConvertToTaggedText, car le texte peut
-				// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
+				// contenir des tags <br/>, <b>, etc. qui doivent Ãªtre Ã©ditÃ©s par le widget !
 
 				if (this.widget.FormattedText == text)
 				{
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTextFieldMultilingualEditionCalled(object sender)
 		{
-			//	Appelé lorsque le commande 'MultilingualEdition' est exécutée, par exemple
+			//	AppelÃ© lorsque le commande 'MultilingualEdition' est exÃ©cutÃ©e, par exemple
 			//	depuis le menu contextuel de AbstractTextField.
 			var textField = sender as AbstractTextField;
 

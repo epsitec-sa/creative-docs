@@ -1,12 +1,12 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'interface IContentsSignature donne accès à un mécanisme de vérification
+	/// L'interface IContentsSignature donne accÃ¨s Ã  un mÃ©canisme de vÃ©rification
 	/// du contenu d'un objet au moyen d'une signature (dans les faits, c'est une
-	/// somme de contrôle ou CRC).
+	/// somme de contrÃ´le ou CRC).
 	/// </summary>
 	public interface IContentsSignature
 	{

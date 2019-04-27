@@ -10,7 +10,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.FormEngine
 {
 	/// <summary>
-	/// Description complète d'un masque de saisie.
+	/// Description complÃ¨te d'un masque de saisie.
 	/// </summary>
 	public sealed class FormDescription : System.IEquatable<FormDescription>
 	{
@@ -33,7 +33,7 @@ namespace Epsitec.Common.FormEngine
 
 		public Druid EntityId
 		{
-			//	Druid de l'entité de base du masque de saisie, utilisé pour un masque normal/delta.
+			//	Druid de l'entitÃ© de base du masque de saisie, utilisÃ© pour un masque normal/delta.
 			get
 			{
 				return this.entityId;
@@ -42,14 +42,14 @@ namespace Epsitec.Common.FormEngine
 
 		public Druid DeltaBaseFormId
 		{
-			//	Druid du masque de base à fusionner. Il s'agit normalement d'un masque de base complet.
+			//	Druid du masque de base Ã  fusionner. Il s'agit normalement d'un masque de base complet.
 			//	Mais il peut s'agit d'un masque delta. Dans ce cas, il faudra remonter jusqu'au masque
 			//	de base (IsDelta = false) pour construire le masque final.
 			//	Par exemple:
 			//	- Form1 est un masque de base
-			//	- Form2 est un masque delta basé sur Form1
-			//	- Form3 est un masque delta basé sur Form2
-			//	Si on cherche à construire Form3, il faut utiliser FormEngine.Arrange.Merge ainsi:
+			//	- Form2 est un masque delta basÃ© sur Form1
+			//	- Form3 est un masque delta basÃ© sur Form2
+			//	Si on cherche Ã  construire Form3, il faut utiliser FormEngine.Arrange.Merge ainsi:
 			//	final = Merge(Merge(Form1, Form2), Form3);
 			get
 			{
@@ -59,8 +59,8 @@ namespace Epsitec.Common.FormEngine
 
 		public Size DefaultSize
 		{
-			//	Taille par défaut du masque. La largeur et/ou la hauteur peuvent être définis avec NaN
-			//	s'il n'y a pas de dimension par défaut.
+			//	Taille par dÃ©faut du masque. La largeur et/ou la hauteur peuvent Ãªtre dÃ©finis avec NaN
+			//	s'il n'y a pas de dimension par dÃ©faut.
 			get
 			{
 				return this.defaultSize;
@@ -73,10 +73,10 @@ namespace Epsitec.Common.FormEngine
 
 		public List<FieldDescription> Fields
 		{
-			//	Liste des champs, séparateurs, etc.
-			//	S'il s'agit d'un masque de base, il s'agit directement de la liste des éléments du masque.
-			//	S'il s'agit d'un masque delta, il s'agit de la liste des modifications à appliquer au
-			//	masque de base défini dans DeltaBaseFormId.
+			//	Liste des champs, sÃ©parateurs, etc.
+			//	S'il s'agit d'un masque de base, il s'agit directement de la liste des Ã©lÃ©ments du masque.
+			//	S'il s'agit d'un masque delta, il s'agit de la liste des modifications Ã  appliquer au
+			//	masque de base dÃ©fini dans DeltaBaseFormId.
 			get
 			{
 				return this.fields;
@@ -94,9 +94,9 @@ namespace Epsitec.Common.FormEngine
 
 		public bool IsForceDelta
 		{
-			//	Force ce masque a apparaître comme un masque delta. C'est utile pour un masque dans un
+			//	Force ce masque a apparaÃ®tre comme un masque delta. C'est utile pour un masque dans un
 			//	module de patch, qui est vu comme un masque normal, mais qui agit bien comme un delta.
-			//	Cette information n'est pas sérialisée.
+			//	Cette information n'est pas sÃ©rialisÃ©e.
 			get
 			{
 				return this.isForceDelta;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.FormEngine
 		
 		public static bool Equals(FormDescription a, FormDescription b)
 		{
-			//	Retourne true si les deux objets sont égaux.
+			//	Retourne true si les deux objets sont Ã©gaux.
 			if ((a == null) != (b == null))
 			{
 				return false;
@@ -177,7 +177,7 @@ namespace Epsitec.Common.FormEngine
 		#region Serialization
 		public string Serialize()
 		{
-			//	Sérialise le masque et retourne le résultat dans un string.
+			//	SÃ©rialise le masque et retourne le rÃ©sultat dans un string.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
 			XmlWriterSettings settings = new XmlWriterSettings();
@@ -194,7 +194,7 @@ namespace Epsitec.Common.FormEngine
 
 		public void Deserialize(string data)
 		{
-			//	Désérialise le masque à partir d'un string de données.
+			//	DÃ©sÃ©rialise le masque Ã  partir d'un string de donnÃ©es.
 			System.IO.StringReader stringReader = new System.IO.StringReader(data);
 			XmlTextReader reader = new XmlTextReader(stringReader);
 			
@@ -205,7 +205,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise tout le masque.
+			//	SÃ©rialise tout le masque.
 			writer.WriteStartDocument();
 
 			writer.WriteStartElement(Xml.Form);
@@ -223,12 +223,12 @@ namespace Epsitec.Common.FormEngine
 
 		private void ReadXml(XmlReader reader)
 		{
-			//	Désérialise tout le masque.
+			//	DÃ©sÃ©rialise tout le masque.
 			this.fields.Clear();
 
 			reader.Read();
 
-			//	TODO: attention, la logique de désérialisation est fausse, mais ça marche provisoirement !
+			//	TODO: attention, la logique de dÃ©sÃ©rialisation est fausse, mais Ã§a marche provisoirement !
 			while (true)
 			{
 				if (reader.NodeType == XmlNodeType.Element)
@@ -284,7 +284,7 @@ namespace Epsitec.Common.FormEngine
 				this.fields.Add(field);
 			}
 
-			// TODO: désérialiser this.entityId !
+			// TODO: dÃ©sÃ©rialiser this.entityId !
 #endif
 		}
 		#endregion

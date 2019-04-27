@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// La classe PropertyContainer contient une série de propriétés de type
+	/// La classe PropertyContainer contient une sÃ©rie de propriÃ©tÃ©s de type
 	/// Property.
 	/// </summary>
 	public abstract class PropertyContainer : IContentsSignature, IContentsSignatureUpdater, System.Collections.IEnumerable
@@ -72,9 +72,9 @@ namespace Epsitec.Common.Text.Styles
 						return this.properties[i];
 					}
 					
-					//	On peut s'arrêter dès que l'on trouve une propriété avec
-					//	un WellKnownType plus grand que celui recherché, car la
-					//	table est triée :
+					//	On peut s'arrÃªter dÃ¨s que l'on trouve une propriÃ©tÃ© avec
+					//	un WellKnownType plus grand que celui recherchÃ©, car la
+					//	table est triÃ©e :
 					
 					if (found > type)
 					{
@@ -136,13 +136,13 @@ namespace Epsitec.Common.Text.Styles
 		
 		internal void Initialize(System.Collections.ICollection properties)
 		{
-			//	Insère les propriétés dans notre table interne. Les propriétés
-			//	sont toujours triées en s'appuyant sur leur WellKnownType, ce
+			//	InsÃ¨re les propriÃ©tÃ©s dans notre table interne. Les propriÃ©tÃ©s
+			//	sont toujours triÃ©es en s'appuyant sur leur WellKnownType, ce
 			//	qui permet une comparaison rapide.
 			
-			//	De plus, les propriétés les plus souvent utilisées ont une
-			//	valeur WellKnownType plus faible, ce qui les place en tête du
-			//	tableau et accélère la recherche.
+			//	De plus, les propriÃ©tÃ©s les plus souvent utilisÃ©es ont une
+			//	valeur WellKnownType plus faible, ce qui les place en tÃªte du
+			//	tableau et accÃ©lÃ¨re la recherche.
 			
 			if (properties == null)
 			{
@@ -241,8 +241,8 @@ namespace Epsitec.Common.Text.Styles
 				
 				if (found == search)
 				{
-					//	Trouvé une propriété du même type. Il faut encore vérifier
-					//	que le contenu coïncide :
+					//	TrouvÃ© une propriÃ©tÃ© du mÃªme type. Il faut encore vÃ©rifier
+					//	que le contenu coÃ¯ncide :
 					
 					if ((property.GetContentsSignature () == this.properties[i].GetContentsSignature ()) &&
 						(property.CompareEqualContents (this.properties[i])))
@@ -251,9 +251,9 @@ namespace Epsitec.Common.Text.Styles
 					}
 				}
 				
-				//	On peut s'arrêter dès que l'on trouve une propriété avec
-				//	un WellKnownType plus grand que celui recherché, car la
-				//	table est triée :
+				//	On peut s'arrÃªter dÃ¨s que l'on trouve une propriÃ©tÃ© avec
+				//	un WellKnownType plus grand que celui recherchÃ©, car la
+				//	table est triÃ©e :
 				
 				if (found > search)
 				{
@@ -280,9 +280,9 @@ namespace Epsitec.Common.Text.Styles
 					return true;
 				}
 				
-				//	On peut s'arrêter dès que l'on trouve une propriété avec
-				//	un WellKnownType plus grand que celui recherché, car la
-				//	table est triée :
+				//	On peut s'arrÃªter dÃ¨s que l'on trouve une propriÃ©tÃ© avec
+				//	un WellKnownType plus grand que celui recherchÃ©, car la
+				//	table est triÃ©e :
 				
 				if (found > type)
 				{
@@ -325,9 +325,9 @@ namespace Epsitec.Common.Text.Styles
 				{
 					Properties.WellKnownType found = this.properties[i].WellKnownType;
 					
-					//	On peut s'arrêter dès que l'on trouve une propriété avec
-					//	un WellKnownType plus grand que celui recherché, car la
-					//	table est triée :
+					//	On peut s'arrÃªter dÃ¨s que l'on trouve une propriÃ©tÃ© avec
+					//	un WellKnownType plus grand que celui recherchÃ©, car la
+					//	table est triÃ©e :
 					
 					if (found > type)
 					{
@@ -368,9 +368,9 @@ namespace Epsitec.Common.Text.Styles
 				{
 					Properties.WellKnownType found = this.properties[i].WellKnownType;
 					
-					//	On peut s'arrêter dès que l'on trouve une propriété avec
-					//	un WellKnownType plus grand que celui recherché, car la
-					//	table est triée :
+					//	On peut s'arrÃªter dÃ¨s que l'on trouve une propriÃ©tÃ© avec
+					//	un WellKnownType plus grand que celui recherchÃ©, car la
+					//	table est triÃ©e :
 					
 					if (found > maxType)
 					{
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Text.Styles
 		public virtual void UpdateContentsSignature(IO.IChecksum checksum)
 		{
 			//	Calcule la signature en se basant exclusivement sur celle des
-			//	propriétés.
+			//	propriÃ©tÃ©s.
 			
 			if ((this.properties != null) &&
 				(this.properties.Length > 0))
@@ -589,11 +589,11 @@ namespace Epsitec.Common.Text.Styles
 		public int GetContentsSignature()
 		{
 			//	Retourne la signature (CRC) correspondant au contenu du style.
-			//	La signature exclut les réglages et l'index.
+			//	La signature exclut les rÃ©glages et l'index.
 			
 			//	Si la signature n'existe pas, il faut la calculer; on ne fait
-			//	cela qu'à la demande, car le calcul de la signature peut être
-			//	relativement onéreux :
+			//	cela qu'Ã  la demande, car le calcul de la signature peut Ãªtre
+			//	relativement onÃ©reux :
 			
 			if (this.contentsSignature == 0)
 			{
@@ -603,8 +603,8 @@ namespace Epsitec.Common.Text.Styles
 				
 				int signature = (int) checksum.Value;
 				
-				//	La signature calculée pourrait être nulle; dans ce cas, on
-				//	l'ajuste pour éviter d'interpréter cela comme une absence
+				//	La signature calculÃ©e pourrait Ãªtre nulle; dans ce cas, on
+				//	l'ajuste pour Ã©viter d'interprÃ©ter cela comme une absence
 				//	de signature :
 				
 				this.contentsSignature = (signature == 0) ? 1 : signature;

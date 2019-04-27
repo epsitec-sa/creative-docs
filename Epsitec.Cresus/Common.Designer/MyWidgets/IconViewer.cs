@@ -8,8 +8,8 @@ using System.Linq;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Ce widget sait afficher toutes les variantes d'une icône.
-	/// Une variante correspond à une page dans CresusPictogrammes.
+	/// Ce widget sait afficher toutes les variantes d'une icÃ´ne.
+	/// Une variante correspond Ã  une page dans CresusPictogrammes.
 	/// </summary>
 	public class IconViewer : Button, Widgets.Helpers.IToolTipHost
 	{
@@ -31,8 +31,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool ShowAllIcons
 		{
-			//	false -> montre seulement la plus grande icône.
-			//	true  -> montre toutes les icônes, de la plus petite à la plus grande
+			//	false -> montre seulement la plus grande icÃ´ne.
+			//	true  -> montre toutes les icÃ´nes, de la plus petite Ã  la plus grande
 			get
 			{
 				return this.showAllIcons;
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsClickable
 		{
-			//	false -> dessine seulement l'icône
+			//	false -> dessine seulement l'icÃ´ne
 			//	true  -> dessine les cadres d'un bouton cliquable.
 			get
 			{
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.UpdateSampleIcons ();
 
-			if (this.sampleIcons.Count == 0)  // aucune icône ?
+			if (this.sampleIcons.Count == 0)  // aucune icÃ´ne ?
 			{
 				//	Dessine une croix 'x'.
 				double size = System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height) * 0.5;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine (rect.BottomRight, rect.TopLeft);
 				graphics.RenderSolid (this.BorderColor);
 			}
-			else  // une ou plusieurs icônes ?
+			else  // une ou plusieurs icÃ´nes ?
 			{
 				foreach (var sample in this.sampleIcons)
 				{
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void DrawSampleIcon(Graphics graphics, SampleIcon sample)
 		{
-			//	Dessine une icône à sa place.
+			//	Dessine une icÃ´ne Ã  sa place.
 			if (this.isClickable)
 			{
 				var bounds = sample.Bounds;
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private Color BorderColor
 		{
-			//	Retourne la couleur à utiliser pour les cadres.
+			//	Retourne la couleur Ã  utiliser pour les cadres.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				var bounds = sample.Bounds;
 				bounds.Inflate (1);
 
-				if (bounds.Contains (pos))  // souris dans l'écnahtillon ?
+				if (bounds.Contains (pos))  // souris dans l'Ã©cnahtillon ?
 				{
 					return IconViewer.GetIconDescripton (sample.IconKey);
 				}
@@ -152,8 +152,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void UpdateSampleIcons()
 		{
-			//	Met à jour tous les échantillons.
-			if (this.lastIconUri == this.IconUri)  // IconUri inchangé ?
+			//	Met Ã  jour tous les Ã©chantillons.
+			if (this.lastIconUri == this.IconUri)  // IconUri inchangÃ© ?
 			{
 				return;
 			}
@@ -169,17 +169,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (canvas != null)
 				{
 					var list = canvas.IconKeys.ToList ();
-					list.Sort (new IconKeyComparer ());  // de la plus petite icône à la plus grande
+					list.Sort (new IconKeyComparer ());  // de la plus petite icÃ´ne Ã  la plus grande
 
 					if (this.showAllIcons == false && list.Count != 0)
 					{
-						//	On ne garde que la plus grande icône.
+						//	On ne garde que la plus grande icÃ´ne.
 						var big = list[list.Count-1];
 						list.Clear ();
 						list.Add (big);
 					}
 
-					//	Calcule la largeur totale nécessaire.
+					//	Calcule la largeur totale nÃ©cessaire.
 					double totalWidth = 0;
 
 					foreach (var iconKey in list)
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						totalWidth += iconKey.Size.Width+3;
 					}
 
-					//	Place les icônes.
+					//	Place les icÃ´nes.
 					double x = this.Client.Bounds.Left + System.Math.Max (System.Math.Floor ((this.Client.Bounds.Width-totalWidth)/2), 0);
 
 					foreach (var iconKey in list)
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			public int Compare(Canvas.IconKey a, Canvas.IconKey b)
 			{
-				//	Trie de la plus petite icône à la plus grande.
+				//	Trie de la plus petite icÃ´ne Ã  la plus grande.
 				if (a.Size.Width != b.Size.Width)
 				{
 					return a.Size.Width.CompareTo (b.Size.Width);
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return a.Size.Height.CompareTo (b.Size.Height);
 				}
 
-				//	Les icônes avec un style viennent en dernier.
+				//	Les icÃ´nes avec un style viennent en dernier.
 				if (a.Style != b.Style)
 				{
 					if (a.Style == null)
@@ -283,12 +283,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private static string GetIconDescripton(Canvas.IconKey iconKey)
 		{
-			//	Retourne un texte de description pour une icône, qui sera placé dans un tooltip.
+			//	Retourne un texte de description pour une icÃ´ne, qui sera placÃ© dans un tooltip.
 			var builder = new System.Text.StringBuilder ();
 
 			builder.Append ("Taille: ");
 			builder.Append (iconKey.Size.Width.ToString ());
-			builder.Append ("×");
+			builder.Append ("Ã—");
 			builder.Append (iconKey.Size.Height.ToString ());
 
 			if (!string.IsNullOrEmpty (iconKey.Language))
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			switch (twoLetters)
 			{
 				case "fr":
-					return "Français";
+					return "FranÃ§ais";
 
 				case "en":
 					return "Anglais";

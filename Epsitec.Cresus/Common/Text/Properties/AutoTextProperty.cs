@@ -1,13 +1,13 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe AutoTextProperty permet de décrire un morceau de texte
-	/// généré automatiquement (avec styles particuliers); comparer avec
-	/// GeneratorProperty qui génère aussi du texte.
-	/// Attention: cette propriété requiert un traitement spécial de la part
+	/// La classe AutoTextProperty permet de dÃ©crire un morceau de texte
+	/// gÃ©nÃ©rÃ© automatiquement (avec styles particuliers); comparer avec
+	/// GeneratorProperty qui gÃ©nÃ¨re aussi du texte.
+	/// Attention: cette propriÃ©tÃ© requiert un traitement spÃ©cial de la part
 	/// de TextContext.GetPropertiesQuickAndDirty.
 	/// </summary>
 	public class AutoTextProperty : Property
@@ -61,10 +61,10 @@ namespace Epsitec.Common.Text.Properties
 		
 		public long								UniqueId
 		{
-			//	Grâce au UniqueId, on garantit que deux propriétés décrivant un
-			//	même générateur sont toujours distinctes; ceci évite que deux
-			//	textes adjacents faisant référence au même générateur ne soient
-			//	considérés que comme un texte unique.
+			//	GrÃ¢ce au UniqueId, on garantit que deux propriÃ©tÃ©s dÃ©crivant un
+			//	mÃªme gÃ©nÃ©rateur sont toujours distinctes; ceci Ã©vite que deux
+			//	textes adjacents faisant rÃ©fÃ©rence au mÃªme gÃ©nÃ©rateur ne soient
+			//	considÃ©rÃ©s que comme un texte unique.
 			
 			get
 			{

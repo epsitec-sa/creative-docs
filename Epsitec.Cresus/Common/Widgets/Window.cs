@@ -1,4 +1,4 @@
-//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUDinternal void MakeTitlelessResizableWindow()
 
 using Epsitec.Common.Support;
@@ -17,9 +17,9 @@ namespace Epsitec.Common.Widgets
 	using Epsitec.Common.Types.Collections;
 	
 	/// <summary>
-	/// La classe Window représente une fenêtre du système d'exploitation. Ce
-	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
-	/// racine de la fenêtre.
+	/// La classe Window reprÃ©sente une fenÃªtre du systÃ¨me d'exploitation. Ce
+	/// n'est pas un widget en tant que tel: Window.Root dÃ©finit le widget Ã  la
+	/// racine de la fenÃªtre.
 	/// </summary>
 	public class Window : Types.DependencyObject, Support.Data.IContainer, Support.Platform.IFileOperationWindow, Support.IIsDisposed
 	{
@@ -963,12 +963,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.windowLocationSet == false)
 				{
-					//	L'utilisateur n'a jamais positionné sa fenêtre et le système
-					//	dans son immense bonté nous a proposé une origine. Si nous
-					//	changeons sa taille avec notre système de coordonnées, le
-					//	sommet ne sera plus là où l'OS aurait voulu qu'il soit. Il
-					//	faut donc repositionner en même temps que l'on redimensionne
-					//	la fenêtre :
+					//	L'utilisateur n'a jamais positionnÃ© sa fenÃªtre et le systÃ¨me
+					//	dans son immense bontÃ© nous a proposÃ© une origine. Si nous
+					//	changeons sa taille avec notre systÃ¨me de coordonnÃ©es, le
+					//	sommet ne sera plus lÃ  oÃ¹ l'OS aurait voulu qu'il soit. Il
+					//	faut donc repositionner en mÃªme temps que l'on redimensionne
+					//	la fenÃªtre :
 					
 					Drawing.Rectangle bounds = this.WindowBounds;
 					
@@ -1061,10 +1061,10 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				//	En mettant cette propriété à true, l'appel RunInTestEnvironment
-				//	ne démarrera pas de "message loop", ce qui évite qu'une batterie
-				//	de tests automatique (NUnit) ne se bloque après l'affichage d'une
-				//	fenêtre.
+				//	En mettant cette propriÃ©tÃ© Ã  true, l'appel RunInTestEnvironment
+				//	ne dÃ©marrera pas de "message loop", ce qui Ã©vite qu'une batterie
+				//	de tests automatique (NUnit) ne se bloque aprÃ¨s l'affichage d'une
+				//	fenÃªtre.
 				
 				if (Window.isRunningInAutomatedTestEnvironment != value)
 				{
@@ -1076,12 +1076,12 @@ namespace Epsitec.Common.Widgets
 
 		public static void RunInTestEnvironment(Window window)
 		{
-			//	Cette méthode doit être appelée dans des tests basés sur NUnit, lorsque
-			//	l'on désire que la fenêtre reste visible jusqu'à sa fermeture manuelle.
+			//	Cette mÃ©thode doit Ãªtre appelÃ©e dans des tests basÃ©s sur NUnit, lorsque
+			//	l'on dÃ©sire que la fenÃªtre reste visible jusqu'Ã  sa fermeture manuelle.
 			
-			//	Il est conseillé de rajouter un test nommé AutomatedTestEnvironment qui
-			//	met la propriété RunningInAutomatedTestEnvironment à true; ainsi, si on
-			//	exécute un test global (Run sans avoir sélectionné de test spécifique),
+			//	Il est conseillÃ© de rajouter un test nommÃ© AutomatedTestEnvironment qui
+			//	met la propriÃ©tÃ© RunningInAutomatedTestEnvironment Ã  true; ainsi, si on
+			//	exÃ©cute un test global (Run sans avoir sÃ©lectionnÃ© de test spÃ©cifique),
 			//	RunInTestEnvironment ne bloquera pas.
 			
 			if (Window.RunningInAutomatedTestEnvironment)
@@ -1356,8 +1356,8 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.cmdQueue.Count > 0)
 				{
-					//	Il y a encore des commandes dans la queue d'exécution. Il faut soit les transmettre
-					//	à une autre fenêtre encore en vie, soit les exécuter tout de suite.
+					//	Il y a encore des commandes dans la queue d'exÃ©cution. Il faut soit les transmettre
+					//	Ã  une autre fenÃªtre encore en vie, soit les exÃ©cuter tout de suite.
 					
 					Window helper = this.Owner;
 					
@@ -1398,9 +1398,9 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.window.IsActive && Window.IsApplicationActive)
 					{
-						//	Si la fenêtre est active au moment de sa destruction, Windows a tendance
-						//	à se comporter de manière étrange. On va donc se dépêcher d'activer une
-						//	autre fenêtre (le propriétaire fera l'affaire) :
+						//	Si la fenÃªtre est active au moment de sa destruction, Windows a tendance
+						//	Ã  se comporter de maniÃ¨re Ã©trange. On va donc se dÃ©pÃªcher d'activer une
+						//	autre fenÃªtre (le propriÃ©taire fera l'affaire) :
 						
 						Platform.Window owner = this.window.Owner as Platform.Window;
 						
@@ -1438,9 +1438,9 @@ namespace Epsitec.Common.Widgets
 					Support.Data.IComponent[] components = new Support.Data.IComponent[this.components.Count];
 					this.components.CopyTo (components, 0);
 					
-					//	S'il y a des composants attachés, on les détruit aussi. Si l'utilisateur
-					//	ne désire pas que ses composants soient détruits, il doit les détacher
-					//	avant de faire le Dispose de la fenêtre !
+					//	S'il y a des composants attachÃ©s, on les dÃ©truit aussi. Si l'utilisateur
+					//	ne dÃ©sire pas que ses composants soient dÃ©truits, il doit les dÃ©tacher
+					//	avant de faire le Dispose de la fenÃªtre !
 					
 					for (int i = 0; i < components.Length; i++)
 					{
@@ -1748,14 +1748,14 @@ namespace Epsitec.Common.Widgets
 			{
 				Window.MessageFilter (this, message);
 					
-				//	Si le message a été "absorbé" par le filtre, il ne faut en aucun
+				//	Si le message a Ã©tÃ© "absorbÃ©" par le filtre, il ne faut en aucun
 				//	cas le transmettre plus loin.
 					
 				if (message.Handled)
 				{
 					if (message.Swallowed && !this.IsFrozen)
 					{
-						//	Le message a été mangé. Il faut donc aussi manger le message
+						//	Le message a Ã©tÃ© mangÃ©. Il faut donc aussi manger le message
 						//	correspondant si les messages viennent par paire.
 							
 						switch (message.MessageType)
@@ -2303,8 +2303,8 @@ namespace Epsitec.Common.Widgets
 
 				if (this.capturingWidget == null)
 				{
-					//	C'est un message souris. Nous allons commencer par vérifier si tous les widgets
-					//	encore marqués comme IsEntered contiennent effectivement encore la souris. Si non,
+					//	C'est un message souris. Nous allons commencer par vÃ©rifier si tous les widgets
+					//	encore marquÃ©s comme IsEntered contiennent effectivement encore la souris. Si non,
 					//	on les retire de la liste en leur signalant qu'ils viennent de perdre la souris.
 					
 					Widget.UpdateEntered (this, message);
@@ -2312,8 +2312,8 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					//	Un widget a capturé les événements souris. Il ne faut donc gérer l'état Entered
-					//	uniquement pour ce widget-là.
+					//	Un widget a capturÃ© les Ã©vÃ©nements souris. Il ne faut donc gÃ©rer l'Ã©tat Entered
+					//	uniquement pour ce widget-lÃ .
 					
 					Widget.UpdateEntered (this, this.capturingWidget, message);
 				}
@@ -2324,9 +2324,9 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.capturingWidget == null)
 			{
-				//	La capture des événements souris n'est pas active. Si un widget a le focus, il va
-				//	recevoir les événements clavier en priorité (message.FilterOnlyFocused = true).
-				//	Dans les autres cas, les événements sont simplement acheminés de widget en widget,
+				//	La capture des Ã©vÃ©nements souris n'est pas active. Si un widget a le focus, il va
+				//	recevoir les Ã©vÃ©nements clavier en prioritÃ© (message.FilterOnlyFocused = true).
+				//	Dans les autres cas, les Ã©vÃ©nements sont simplement acheminÃ©s de widget en widget,
 				//	en utilisant une approche en profondeur d'abord.
 				
 				Drawing.Point pos = message.Cursor;
@@ -2354,8 +2354,8 @@ namespace Epsitec.Common.Widgets
 				
 				while (message.Handled == false)
 				{
-					//	Le message n'a pas été consommé. Regarde si nous avons à faire
-					//	à une fenêtre chaînée avec un parent.
+					//	Le message n'a pas Ã©tÃ© consommÃ©. Regarde si nous avons Ã  faire
+					//	Ã  une fenÃªtre chaÃ®nÃ©e avec un parent.
 					
 					pos  = Helpers.VisualTree.MapParentToScreen (root, pos);
 					root = MenuWindow.GetParentWidget (window);
@@ -2414,7 +2414,7 @@ namespace Epsitec.Common.Widgets
 				if (window.capturingWidget.IsVisible == false)
 				{
 					//	Il faut terminer la capture si le widget n'est plus visible,
-					//	sinon on risque de ne plus jamais recevoir d'événements pour
+					//	sinon on risque de ne plus jamais recevoir d'Ã©vÃ©nements pour
 					//	les autres widgets.
 
 					window.ReleaseCapturingWidget ();
@@ -2447,7 +2447,7 @@ namespace Epsitec.Common.Widgets
 				(widget.AcceptsFocus) &&
 				(widget != this.focusedWidget))
 			{
-				//	On va réaliser un changement de focus. Mais pour cela, il faut que le widget
+				//	On va rÃ©aliser un changement de focus. Mais pour cela, il faut que le widget
 				//	ayant le focus actuellement, ainsi que le widget candidat pour l'obtention du
 				//	focus soient d'accord...
 				
@@ -2530,7 +2530,7 @@ namespace Epsitec.Common.Widgets
 				if (this.capturingWidget.IsVisible == false)
 				{
 					//	Il faut terminer la capture si le widget n'est plus visible,
-					//	sinon on risque de ne plus jamais recevoir d'événements pour
+					//	sinon on risque de ne plus jamais recevoir d'Ã©vÃ©nements pour
 					//	les autres widgets.
 					
 					this.ReleaseCapturingWidget ();
@@ -2584,7 +2584,7 @@ namespace Epsitec.Common.Widgets
 								(consumer.IsEntered) &&
 								(!consumer.IsFrozen))
 							{
-								//	Change l'état du bouton...
+								//	Change l'Ã©tat du bouton...
 								
 								consumer.Toggle ();
 							}
@@ -2630,15 +2630,15 @@ namespace Epsitec.Common.Widgets
 				if ((! message.Handled) &&
 					(this.owner != null))
 				{
-					//	Le message n'a pas été traité. Peut-être qu'il pourrait intéresser la fenêtre
-					//	parent; pour l'instant, on poubellise simplement l'événement, car le faire
-					//	remonter m'a causé passablement de surprises...
+					//	Le message n'a pas Ã©tÃ© traitÃ©. Peut-Ãªtre qu'il pourrait intÃ©resser la fenÃªtre
+					//	parent; pour l'instant, on poubellise simplement l'Ã©vÃ©nement, car le faire
+					//	remonter m'a causÃ© passablement de surprises...
 				}
 			}
 			
 			if (message.Swallowed)
 			{
-				//	Le message a été mangé. Il faut donc aussi manger le message
+				//	Le message a Ã©tÃ© mangÃ©. Il faut donc aussi manger le message
 				//	correspondant si les messages viennent par paire.
 						
 				switch (message.MessageType)
@@ -2665,7 +2665,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (strips.Length > 1)
 			{
-				//	On doit repeindre toute une série de rectangles :
+				//	On doit repeindre toute une sÃ©rie de rectangles :
 				
 				for (int i = 0; i < strips.Length; i++)
 				{

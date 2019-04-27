@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe UserTagProperty permet de stocker des informations supplémentaires,
-	/// ainsi que des commentaires, à des fragments de texte.
+	/// La classe UserTagProperty permet de stocker des informations supplÃ©mentaires,
+	/// ainsi que des commentaires, Ã  des fragments de texte.
 	/// </summary>
 	public class UserTagProperty : Property
 	{

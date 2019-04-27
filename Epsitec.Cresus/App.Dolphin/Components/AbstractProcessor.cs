@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -34,12 +34,12 @@ namespace Epsitec.App.Dolphin.Components
 
 		public virtual void Clock()
 		{
-			//	Exécute une instruction du processeur.
+			//	ExÃ©cute une instruction du processeur.
 		}
 
 		public virtual bool IsHalted
 		{
-			//	Indique si le processeur est stoppé par l'instruction Halt.
+			//	Indique si le processeur est stoppÃ© par l'instruction Halt.
 			get
 			{
 				return this.isHalted;
@@ -49,7 +49,7 @@ namespace Epsitec.App.Dolphin.Components
 		public virtual bool IsCall(out int retAddress)
 		{
 			//	Indique si le processeur est sur une instruction CALL.
-			//	Si oui, retourne l'adresse après le CALL.
+			//	Si oui, retourne l'adresse aprÃ¨s le CALL.
 			retAddress = 0;
 			return false;
 		}
@@ -75,7 +75,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public virtual IEnumerable<string> RegisterNames
 		{
-			//	Enumère tous les noms de registres.
+			//	EnumÃ¨re tous les noms de registres.
 			get
 			{
 				yield return null;
@@ -121,27 +121,27 @@ namespace Epsitec.App.Dolphin.Components
 
 		public virtual void AssemblySplitAddr(string addr, out string text, out int mode)
 		{
-			//	Extrait les modes d'adressage spéciaux d'une adresse.
+			//	Extrait les modes d'adressage spÃ©ciaux d'une adresse.
 			text = addr;
 			mode = 0;
 		}
 
 		public virtual string AssemblyCombineAddr(string text, int mode)
 		{
-			//	Combine les modes d'adressage spéciaux d'une adresse.
+			//	Combine les modes d'adressage spÃ©ciaux d'une adresse.
 			return text;
 		}
 
 		public virtual string AssemblyPreprocess(string instruction)
 		{
-			//	Pré-traitement avant AssemblyInstruction.
-			//	En retour, tout est en majuscule avec un espace pour séparer les arguments.
+			//	PrÃ©-traitement avant AssemblyInstruction.
+			//	En retour, tout est en majuscule avec un espace pour sÃ©parer les arguments.
 			return instruction.ToUpper().Trim();
 		}
 
 		public virtual string AssemblyInstruction(string instruction, List<int> codes)
 		{
-			//	Assemble les codes d'une instruction et retourne une éventuelle erreur.
+			//	Assemble les codes d'une instruction et retourne une Ã©ventuelle erreur.
 			codes.Clear();
 			codes.Add(0);  // NOP
 			return null;  // ok
@@ -155,7 +155,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public virtual void RomVariables(int address, Dictionary<string, int> variables)
 		{
-			//	Défini les variables de la Rom.
+			//	DÃ©fini les variables de la Rom.
 		}
 
 

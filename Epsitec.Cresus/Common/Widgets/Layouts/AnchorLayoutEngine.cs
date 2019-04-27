@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -17,8 +17,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				if ((child.Dock != DockStyle.None) ||
 					(child.Anchor == AnchorStyles.None))
 				{
-					//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
-					//	positionnés. Ceux qui ne sont pas ancrés ne bougent pas non plus.
+					//	Saute les widgets qui sont "docked" dans le parent, car ils ont dÃ©jÃ  Ã©tÃ©
+					//	positionnÃ©s. Ceux qui ne sont pas ancrÃ©s ne bougent pas non plus.
 					
 					continue;
 				}
@@ -43,28 +43,28 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (dx.IsSafeNaN ())
 				{
-					dx = child.ActualWidth;		//	TODO: améliorer
+					dx = child.ActualWidth;		//	TODO: amÃ©liorer
 				}
 				if (dy.IsSafeNaN ())
 				{
-					dy = child.ActualHeight;		//	TODO: améliorer
+					dy = child.ActualHeight;		//	TODO: amÃ©liorer
 				}
 				
 				switch (anchorX)
 				{
-					case AnchorStyles.Left:							//	[x1] fixe à gauche
+					case AnchorStyles.Left:							//	[x1] fixe Ã  gauche
 						x1 = client.Left + margins.Left;
 						x2 = x1 + dx;
 						break;
-					case AnchorStyles.Right:						//	[x2] fixe à droite
+					case AnchorStyles.Right:						//	[x2] fixe Ã  droite
 						x2 = client.Right - margins.Right;
 						x1 = x2 - dx;
 						break;
-					case AnchorStyles.None:							//	ne touche à rien...
+					case AnchorStyles.None:							//	ne touche Ã  rien...
 						x1 = child.ActualBounds.Left;
 						x2 = child.ActualBounds.Right;
 						break;
-					case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
+					case AnchorStyles.LeftAndRight:					//	[x1] fixe Ã  gauche, [x2] fixe Ã  droite
 						x1 = client.Left + margins.Left;
 						x2 = client.Right - margins.Right;
 						break;
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						y2 = client.Top - margins.Top;
 						y1 = y2 - dy;
 						break;
-					case AnchorStyles.None:							//	ne touche à rien...
+					case AnchorStyles.None:							//	ne touche Ã  rien...
 						y1 = child.ActualBounds.Bottom;
 						y2 = child.ActualBounds.Top;
 						break;
@@ -110,8 +110,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				if ((child.Dock != DockStyle.None) ||
 					(child.Anchor == AnchorStyles.None))
 				{
-					//	Saute les widgets qui sont "docked" dans le parent, car ils sont traités
-					//	ailleurs. Ceux qui ne sont pas ancrés ne contribuent pas non plus.
+					//	Saute les widgets qui sont "docked" dans le parent, car ils sont traitÃ©s
+					//	ailleurs. Ceux qui ne sont pas ancrÃ©s ne contribuent pas non plus.
 
 					continue;
 				}

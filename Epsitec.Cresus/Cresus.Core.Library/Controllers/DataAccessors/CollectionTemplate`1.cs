@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -126,21 +126,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		public CollectionTemplate<T> DefineCreateItem(System.Func<T> action)
 		{
-			//	Définition de l'action qui crée une nouvelle entité.
+			//	DÃ©finition de l'action qui crÃ©e une nouvelle entitÃ©.
 			this.createItem = action;
 			return this;
 		}
 
 		public CollectionTemplate<T> DefineCreateGetIndex(System.Func<int> action)
 		{
-			//	Définition de l'action qui retourne l'index où insérer la nouvelle entité créée.
+			//	DÃ©finition de l'action qui retourne l'index oÃ¹ insÃ©rer la nouvelle entitÃ© crÃ©Ã©e.
 			this.createGetIndex = action;
 			return this;
 		}
 
 		public CollectionTemplate<T> DefineDeleteItem(System.Action<T> action)
 		{
-			//	Définition de l'action qui supprime une entité.
+			//	DÃ©finition de l'action qui supprime une entitÃ©.
 			this.deleteItem = action;
 			return this;
 		}
@@ -270,12 +270,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		private void CreateItem(TileDataItem data, ICollectionAccessor collectionAccessor)
 		{
-			//	Crée une nouvelle entité et insère-la au bon endroit.
-			//	Si aucune action CreateGetIndex n'est définie, elle est insérée à la fin.
-			//	Sinon, CreateGetIndex détermine l'index à utiliser.
+			//	CrÃ©e une nouvelle entitÃ© et insÃ¨re-la au bon endroit.
+			//	Si aucune action CreateGetIndex n'est dÃ©finie, elle est insÃ©rÃ©e Ã  la fin.
+			//	Sinon, CreateGetIndex dÃ©termine l'index Ã  utiliser.
 			int index = -1;
 
-			if (this.HasCreateGetIndex)  // action CreateGetIndex définie ?
+			if (this.HasCreateGetIndex)  // action CreateGetIndex dÃ©finie ?
 			{
 				index = this.createGetIndex ();  // index selon l'action
 			}
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				collectionAccessor.InsertItem (index, item);
 			}
 
-			// Mémorise l'index de l'entité insérée, pour permettre de la sélectionner dans la tuile.
+			// MÃ©morise l'index de l'entitÃ© insÃ©rÃ©e, pour permettre de la sÃ©lectionner dans la tuile.
 			data.CreatedIndex = index;
 		}
 		

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -6,11 +6,11 @@ namespace Epsitec.Common.Drawing
 	public delegate bool DynamicImagePaintCallback(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner);
 	
 	/// <summary>
-	/// La classe DynamicImage permet de représenter une image construite à la
-	/// volée (on the fly). Le dessin lui-même se fait dans un call-back fourni
+	/// La classe DynamicImage permet de reprÃ©senter une image construite Ã  la
+	/// volÃ©e (on the fly). Le dessin lui-mÃªme se fait dans un call-back fourni
 	/// par l'utilisateur.
-	/// Cette classe est utilisée par le protocole "dyn:xyz/abc" (cf ImageProvider,
-	/// il sait retrouver le DynamicImage correspondant à partir de la paire nom
+	/// Cette classe est utilisÃ©e par le protocole "dyn:xyz/abc" (cf ImageProvider,
+	/// il sait retrouver le DynamicImage correspondant Ã  partir de la paire nom
 	/// "xyz" et argument "abc").
 	/// </summary>
 	public sealed class DynamicImage : Image
@@ -320,8 +320,8 @@ namespace Epsitec.Common.Drawing
 		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
 			//	Retourne l'image qui correspond au style de peinture de glyphe
-			//	désiré. On réalise un clonage rapide. Afin d'éviter de devoir
-			//	copier trop d'information, on chaîne le clone avec son modèle.
+			//	dÃ©sirÃ©. On rÃ©alise un clonage rapide. Afin d'Ã©viter de devoir
+			//	copier trop d'information, on chaÃ®ne le clone avec son modÃ¨le.
 			
 			return this.GetImageForKey (new Key (style, this.Width, this.Height, this.Argument));
 		}
@@ -333,18 +333,18 @@ namespace Epsitec.Common.Drawing
 		
 		public DynamicImage GetImageForArgument(string argument)
 		{
-			//	Retourne une instance de DynamicImage réglée pour correspondre
-			//	à l'argument spécifié. Le modèle initial contient une table avec
-			//	les instances déjà créées, ce qui évite que l'on n'instancie des
-			//	nouvelles copies à tour de bras.
+			//	Retourne une instance de DynamicImage rÃ©glÃ©e pour correspondre
+			//	Ã  l'argument spÃ©cifiÃ©. Le modÃ¨le initial contient une table avec
+			//	les instances dÃ©jÃ  crÃ©Ã©es, ce qui Ã©vite que l'on n'instancie des
+			//	nouvelles copies Ã  tour de bras.
 			
 			return this.GetImageForKey (new Key (this.PaintStyle, this.Width, this.Height, argument));
 		}
 		
 		public DynamicImage GetImageForSize(double width, double height)
 		{
-			//	Retourne une instance de DynamicImage réglée pour correspondre
-			//	à la taille sépcifiée.
+			//	Retourne une instance de DynamicImage rÃ©glÃ©e pour correspondre
+			//	Ã  la taille sÃ©pcifiÃ©e.
 			
 			return this.GetImageForKey (new Key (this.PaintStyle, width, height, this.Argument));
 		}
@@ -389,15 +389,15 @@ namespace Epsitec.Common.Drawing
 		{
 			if (this.model == null)
 			{
-				//	Nous travaillons avec le modèle initial, seul à contenir
+				//	Nous travaillons avec le modÃ¨le initial, seul Ã  contenir
 				//	une table des variantes :
 				
 				DynamicImage image = this.variants[key] as DynamicImage;
 				
 				if (image == null)
 				{
-					//	Crée un clone qui reprend tous les réglages du modèle
-					//	initial, sauf les arguments qui lui sont spécifiques.
+					//	CrÃ©e un clone qui reprend tous les rÃ©glages du modÃ¨le
+					//	initial, sauf les arguments qui lui sont spÃ©cifiques.
 					
 					//	Chacun a son propre cache.
 					

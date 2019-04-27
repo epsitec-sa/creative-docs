@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
@@ -44,14 +44,14 @@ namespace Epsitec.Common.IO
 		
 		public void Delete()
 		{
-			//	Tente de supprimer le fichier tout de suite. Si on n'y réussit pas,
+			//	Tente de supprimer le fichier tout de suite. Si on n'y rÃ©ussit pas,
 			//	ce sera le 'finalizer' qui s'en chargera...
 			
 			this.RemoveFile ();
 			
 			if (this.name == null)
 			{
-				//	Fichier détruit, plus besoin d'exécuter le 'finalizer'.
+				//	Fichier dÃ©truit, plus besoin d'exÃ©cuter le 'finalizer'.
 				
 				System.GC.SuppressFinalize (this);
 			}
@@ -70,7 +70,7 @@ namespace Epsitec.Common.IO
 		{
 			if (disposing)
 			{
-				//	rien à faire de plus...
+				//	rien Ã  faire de plus...
 			}
 			
 			this.RemoveFile ();

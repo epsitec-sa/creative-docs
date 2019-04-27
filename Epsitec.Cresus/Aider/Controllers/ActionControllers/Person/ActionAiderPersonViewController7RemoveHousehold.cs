@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Retirer le ménage sélectionné");
+			return Resources.Text ("Retirer le mÃ©nage sÃ©lectionnÃ©");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,8 +34,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			form
-				.Title ("Retirer le ménage sélectionné ?")
-					.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment retirer le ménage", this.AdditionalEntity.DisplayName, "associé à cette personne ?"))
+				.Title ("Retirer le mÃ©nage sÃ©lectionnÃ© ?")
+					.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment retirer le mÃ©nage", this.AdditionalEntity.DisplayName, "associÃ© Ã  cette personne ?"))
 				.End ();
 		}
 

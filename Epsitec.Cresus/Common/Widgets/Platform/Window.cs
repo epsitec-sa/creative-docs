@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private static void HandleSystemEventsUserPreferenceChanged(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
 		{
-			//	TODO: notifier d'autres classes du changement des préférences
+			//	TODO: notifier d'autres classes du changement des prÃ©fÃ©rences
 			
 			switch (e.Category)
 			{
@@ -88,8 +88,8 @@ namespace Epsitec.Common.Widgets.Platform
 			Window.DummyHandleEater (this.Handle);
 			
 			//	Fait en sorte que les changements de dimensions en [x] et en [y] provoquent un
-			//	redessin complet de la fenêtre, sinon Windows tente de recopier l'ancien contenu
-			//	en le décalant, ce qui donne des effets bizarres :
+			//	redessin complet de la fenÃªtre, sinon Windows tente de recopier l'ancien contenu
+			//	en le dÃ©calant, ce qui donne des effets bizarres :
 			
 			int classWindowStyle = Win32Api.GetClassLong (this.Handle, Win32Const.GCL_STYLE);
 			
@@ -851,8 +851,8 @@ namespace Epsitec.Common.Widgets.Platform
 				double dx = this.MapFromWinFormsWidth (placement.NormalPosition.Right - placement.NormalPosition.Left);
 				double dy = this.MapFromWinFormsHeight (placement.NormalPosition.Bottom - placement.NormalPosition.Top);
 
-				//	Attention: les coordonnées retournées par WindowPlacement sont exprimées
-				//	en "workspace coordinates" (elles tiennent compte de la présence d'une
+				//	Attention: les coordonnÃ©es retournÃ©es par WindowPlacement sont exprimÃ©es
+				//	en "workspace coordinates" (elles tiennent compte de la prÃ©sence d'une
 				//	barre "Desktop").
 
 				//	Cf. http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/windows/windowreference/windowstructures/windowplacement.asp
@@ -866,9 +866,9 @@ namespace Epsitec.Common.Widgets.Platform
 		private static void AdjustWindowPlacementOrigin(Win32Api.WindowPlacement placement, ref double ox, ref double oy)
 		{
 			//	La conversion entre "screen coordinates" et "workspace coordinates" est
-			//	théoriquement impossible avec les informations que fournit Windows mais
-			//	on peut s'arranger en créant une fenêtre temporaire pour déterminer son
-			//	offset par rapport à l'endroit désiré :
+			//	thÃ©oriquement impossible avec les informations que fournit Windows mais
+			//	on peut s'arranger en crÃ©ant une fenÃªtre temporaire pour dÃ©terminer son
+			//	offset par rapport Ã  l'endroit dÃ©sirÃ© :
 
 			System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint (new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Top));
 
@@ -1209,7 +1209,7 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				//	Attention: il n'est pas permis de faire un Dispose si l'appelant provient d'une
 				//	WndProc, car cela perturbe le bon acheminement des messages dans Windows. On
-				//	préfère donc remettre la destruction à plus tard si on détecte cette condition.
+				//	prÃ©fÃ¨re donc remettre la destruction Ã  plus tard si on dÃ©tecte cette condition.
 				
 				if (this.wndProcDepth > 0)
 				{
@@ -1242,9 +1242,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			if (this.Focused)
 			{
-				//	Si la fenêtre avait le focus et qu'on la ferme, on aimerait bien que
-				//	si elle avait une fenêtre "parent", alors ce soit le parent qui reçoive
-				//	le focus à son tour. Ca paraît logique.
+				//	Si la fenÃªtre avait le focus et qu'on la ferme, on aimerait bien que
+				//	si elle avait une fenÃªtre "parent", alors ce soit le parent qui reÃ§oive
+				//	le focus Ã  son tour. Ca paraÃ®t logique.
 				
 				System.Windows.Forms.Form form = this.Owner;
 				
@@ -1335,8 +1335,8 @@ namespace Epsitec.Common.Widgets.Platform
 					return;
 				}
 
-				//	Empêche la fermeture de la fenêtre lorsque l'utilisateur clique sur le bouton de
-				//	fermeture, et synthétise un événement clavier ALT + F4 à la place...
+				//	EmpÃªche la fermeture de la fenÃªtre lorsque l'utilisateur clique sur le bouton de
+				//	fermeture, et synthÃ©tise un Ã©vÃ©nement clavier ALT + F4 Ã  la place...
 				
 				System.Windows.Forms.Keys altF4 = System.Windows.Forms.Keys.F4 | System.Windows.Forms.Keys.Alt;
 				System.Windows.Forms.KeyEventArgs fakeEvent = new System.Windows.Forms.KeyEventArgs (altF4);
@@ -1459,7 +1459,7 @@ namespace Epsitec.Common.Widgets.Platform
 						 (this.formBounds.Size == this.Size) &&
 						 (this.onResizeEvent == false))
 				{
-					//	Rien à faire, car la taille correspond à la dernière taille mémorisée.
+					//	Rien Ã  faire, car la taille correspond Ã  la derniÃ¨re taille mÃ©morisÃ©e.
 				}
 				else
 				{
@@ -1831,9 +1831,9 @@ namespace Epsitec.Common.Widgets.Platform
 
 			if (msg.Msg == Win32Const.WM_GETMINMAXINFO)
 			{
-				//	Pour des raisons mystérieuses, WinForms (?) se croit obligé de touiller les positions
-				//	pour la fenêtre maximisée avec un résultat désastreux (si la barre des tâches est à
-				//	gauche ou en haut). On force la position maximisée à ce qu'elle devrait toujours être.
+				//	Pour des raisons mystÃ©rieuses, WinForms (?) se croit obligÃ© de touiller les positions
+				//	pour la fenÃªtre maximisÃ©e avec un rÃ©sultat dÃ©sastreux (si la barre des tÃ¢ches est Ã 
+				//	gauche ou en haut). On force la position maximisÃ©e Ã  ce qu'elle devrait toujours Ãªtre.
 				
 				unsafe
 				{
@@ -1922,9 +1922,9 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				System.Diagnostics.Debug.Assert (this.wndProcDepth == 0);
 				
-				//	L'appelant avait tenté de nous détruire alors qu'il était dans un WndProc,
-				//	on reçoint maintenant la commande explicite (asynchrone) qui nous autorise
-				//	à nous détruire réellement.
+				//	L'appelant avait tentÃ© de nous dÃ©truire alors qu'il Ã©tait dans un WndProc,
+				//	on reÃ§oint maintenant la commande explicite (asynchrone) qui nous autorise
+				//	Ã  nous dÃ©truire rÃ©ellement.
 				
 				this.Dispose ();
 				return;
@@ -1977,9 +1977,9 @@ namespace Epsitec.Common.Widgets.Platform
 					return;
 				}
 				
-				//	Tente d'unifier tous les événements qui touchent au clavier, sans faire de traitement
-				//	spécial pour les touches pressées en même temps que ALT. Mais si l'on veut que le menu
-				//	système continue à fonctionner (ALT + ESPACE), il faut laisser transiter les événements
+				//	Tente d'unifier tous les Ã©vÃ©nements qui touchent au clavier, sans faire de traitement
+				//	spÃ©cial pour les touches pressÃ©es en mÃªme temps que ALT. Mais si l'on veut que le menu
+				//	systÃ¨me continue Ã  fonctionner (ALT + ESPACE), il faut laisser transiter les Ã©vÃ©nements
 				//	clavier qui ne concernent que ALT ou ALT + ESPACE sans modification.
 				
 				int wParam = (int) msg.WParam;
@@ -2004,8 +2004,8 @@ namespace Epsitec.Common.Widgets.Platform
 					Helpers.VisualTree.DebugDump (this.widgetWindow.Root, 1);
 				}
 				
-				//	Filtre les répétitions clavier des touches super-shift. Cela n'a, à mon avis, aucun
-				//	sens, puisqu'une touche super-shift est soit enfoncée, soit non enfoncée...
+				//	Filtre les rÃ©pÃ©titions clavier des touches super-shift. Cela n'a, Ã  mon avis, aucun
+				//	sens, puisqu'une touche super-shift est soit enfoncÃ©e, soit non enfoncÃ©e...
 				
 				if ((msg.Msg == Win32Const.WM_KEYDOWN) ||
 					(msg.Msg == Win32Const.WM_SYSKEYDOWN))
@@ -2025,7 +2025,7 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (msg.Msg == Win32Const.WM_MOUSEACTIVATE)
 				{
-					//	Si l'utilisateur clique dans la fenêtre, on veut recevoir l'événement d'activation
+					//	Si l'utilisateur clique dans la fenÃªtre, on veut recevoir l'Ã©vÃ©nement d'activation
 					//	dans tous les cas.
 					
 					msg.Result = (System.IntPtr) (this.isNoActivate ? Win32Const.MA_NOACTIVATE : Win32Const.MA_ACTIVATE);
@@ -2104,8 +2104,8 @@ namespace Epsitec.Common.Widgets.Platform
 					
 					if (active)
 					{
-						//	Notre fenêtre vient d'être activée. Si c'est une fenêtre "flottante", alors il faut activer
-						//	la fenêtre principale et les autres fenêtres "flottantes".
+						//	Notre fenÃªtre vient d'Ãªtre activÃ©e. Si c'est une fenÃªtre "flottante", alors il faut activer
+						//	la fenÃªtre principale et les autres fenÃªtres "flottantes".
 						
 						if (this.isToolWindow)
 						{
@@ -2119,7 +2119,7 @@ namespace Epsitec.Common.Widgets.Platform
 					}
 					else
 					{
-						//	Notre fenêtre vient d'être désactivée.
+						//	Notre fenÃªtre vient d'Ãªtre dÃ©sactivÃ©e.
 						
 						Widgets.Window window = Widgets.Window.FindFromHandle (msg.LParam);
 						
@@ -2127,8 +2127,8 @@ namespace Epsitec.Common.Widgets.Platform
 						{
 							if (this.IsOwnedWindow (window.PlatformWindow))
 							{
-								//	La fenêtre qui sera activée (et qui a causé notre désactivation) nous appartient.
-								//	Si cette fenêtre est "flottante", alors on doit s'assurer que notre état visuel
+								//	La fenÃªtre qui sera activÃ©e (et qui a causÃ© notre dÃ©sactivation) nous appartient.
+								//	Si cette fenÃªtre est "flottante", alors on doit s'assurer que notre Ã©tat visuel
 								//	reste actif.
 								
 								if (window.PlatformWindow.isToolWindow)
@@ -2140,7 +2140,7 @@ namespace Epsitec.Common.Widgets.Platform
 							{
 								if (this.FindRootOwner () == window.PlatformWindow)
 								{
-									//	La fenêtre qui va être activée est en fait la propriétaire de cette fenêtre
+									//	La fenÃªtre qui va Ãªtre activÃ©e est en fait la propriÃ©taire de cette fenÃªtre
 									//	"flottante". On doit donc conserver l'activation.
 									
 									active = true;
@@ -2151,17 +2151,17 @@ namespace Epsitec.Common.Widgets.Platform
 					
 					if (this.isToolWindow)
 					{
-						//	Il ne faut touiller l'état d'activation des fenêtres que si la fenêtre
+						//	Il ne faut touiller l'Ã©tat d'activation des fenÃªtres que si la fenÃªtre
 						//	actuelle est une palette...
 						
 						this.FindRootOwner ().FakeActivateOwned (active);
 					}
 					else
 					{
-						//	TODO: mieux gérer la question de l'affichage de l'état (activé ou non) des fenêtres
-						//	de l'application... On aimerait pouvoir spécifier par programmation l'état à donner
-						//	à chaque fenêtre, plus un état général lié à l'activation de l'application et aussi
-						//	dépendant de la présence ou non d'un dialogue modal... Pfff...
+						//	TODO: mieux gÃ©rer la question de l'affichage de l'Ã©tat (activÃ© ou non) des fenÃªtres
+						//	de l'application... On aimerait pouvoir spÃ©cifier par programmation l'Ã©tat Ã  donner
+						//	Ã  chaque fenÃªtre, plus un Ã©tat gÃ©nÃ©ral liÃ© Ã  l'activation de l'application et aussi
+						//	dÃ©pendant de la prÃ©sence ou non d'un dialogue modal... Pfff...
 						
 						this.FakeActivate (active);
 					}
@@ -2383,8 +2383,8 @@ namespace Epsitec.Common.Widgets.Platform
 			if (this.filterMouseMessages)
 			{
 				//	Si le filtre des messages souris est actif, on mange absolument tous
-				//	les événements relatifs à la souris, jusqu'à ce que tous les boutons
-				//	aient été relâchés.
+				//	les Ã©vÃ©nements relatifs Ã  la souris, jusqu'Ã  ce que tous les boutons
+				//	aient Ã©tÃ© relÃ¢chÃ©s.
 				
 				if (Message.IsMouseMsg (msg))
 				{
@@ -2422,8 +2422,8 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (message.NonClient)
 				{
-					//	Les messages "non-client" ne sont pas acheminés aux widgets normaux,
-					//	car ils ne présentent aucun intérêt. Par contre, le filtre peut les
+					//	Les messages "non-client" ne sont pas acheminÃ©s aux widgets normaux,
+					//	car ils ne prÃ©sentent aucun intÃ©rÃªt. Par contre, le filtre peut les
 					//	voir.
 					
 					return false;
@@ -2456,7 +2456,7 @@ namespace Epsitec.Common.Widgets.Platform
 			System.Windows.Forms.Message msg;
 			msg = System.Windows.Forms.Message.Create (form.Handle, Win32Const.WM_NCACTIVATE, System.IntPtr.Zero, System.IntPtr.Zero);
 			
-			//	TODO: gère le cas où des fenêtres modales sont ouvertes... Cf. VirtualPen
+			//	TODO: gÃ¨re le cas oÃ¹ des fenÃªtres modales sont ouvertes... Cf. VirtualPen
 			
 			if (activate)
 			{
@@ -2481,8 +2481,8 @@ namespace Epsitec.Common.Widgets.Platform
 
 		protected void DispatchPaint(System.Drawing.Graphics winGraphics, System.Drawing.Rectangle winClipRect)
 		{
-			//	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reçoit un événement
-			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
+			//	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reÃ§oit un Ã©vÃ©nement
+			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenÃªtre, sans regÃ©nÃ©rer le
 			//	contenu du pixmap servant de cache.
 
 			if ((this.widgetWindow == null) ||
@@ -2672,9 +2672,9 @@ namespace Epsitec.Common.Widgets.Platform
 			string email = Globals.Properties.GetProperty (key, "bugs@opac.ch");
 			
 			string msgFr = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
-							"description de ce que vous étiez en train de faire au moment où ce message\n" + 
+							"description de ce que vous Ã©tiez en train de faire au moment oÃ¹ ce message\n" + 
 							"est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n" +
-							"Envoyez s'il-vous-plaît ces informations à " + email + "\n\n" +
+							"Envoyez s'il-vous-plaÃ®t ces informations Ã  " + email + "\n\n" +
 							"Merci pour votre aide.";
 			
 			string msgEn = "An internal error occurred. Please send an e-mail with a short description\n" +

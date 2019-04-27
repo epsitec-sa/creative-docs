@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -142,8 +142,8 @@ namespace Epsitec.Common.Types
 
 		public decimal Constrain(decimal value)
 		{
-			//	Tronque la précision de la valeur à la résolution courante,
-			//	en utilisant un arrondi à la valeur la plus proche, puis
+			//	Tronque la prÃ©cision de la valeur Ã  la rÃ©solution courante,
+			//	en utilisant un arrondi Ã  la valeur la plus proche, puis
 			//	contraint la valeur aux bornes minimum/maximum.
 
 			if (this.IsValid && !this.IsEmpty)
@@ -172,10 +172,10 @@ namespace Epsitec.Common.Types
 				value = System.Math.Min (value, this.maximum);
 				value = System.Math.Max (value, this.minimum);
 
-				//	Assure que le nombre de décimales après le point est constant et conforme à
-				//	la précision définie.
+				//	Assure que le nombre de dÃ©cimales aprÃ¨s le point est constant et conforme Ã 
+				//	la prÃ©cision dÃ©finie.
 				//
-				//	Ceci permet de garantir que ToString() se comporte de manière prévisible.
+				//	Ceci permet de garantir que ToString() se comporte de maniÃ¨re prÃ©visible.
 
 				if (this.resolution != 0)
 				{
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Types
 		public decimal ConstrainToZero(decimal value)
 		{
 			//	Comme Constain, mais force l'arrondi vers le nombre le plus proche
-			//	de zéro.
+			//	de zÃ©ro.
 
 			if (this.IsValid)
 			{
@@ -246,10 +246,10 @@ namespace Epsitec.Common.Types
 				value = System.Math.Min (value, this.maximum);
 				value = System.Math.Max (value, this.minimum);
 
-				//	Assure que le nombre de décimales après le point est constant et conforme à
-				//	la précision définie.
+				//	Assure que le nombre de dÃ©cimales aprÃ¨s le point est constant et conforme Ã 
+				//	la prÃ©cision dÃ©finie.
 				//
-				//	Ceci permet de garantir que ToString() se comporte de manière prévisible.
+				//	Ceci permet de garantir que ToString() se comporte de maniÃ¨re prÃ©visible.
 
 				if (this.resolution != 0)
 				{
@@ -367,13 +367,13 @@ namespace Epsitec.Common.Types
 
 			this.resolution = value;
 
-			//	Pour une résolution de 0.05, par exemple, on va déterminer les facteurs
-			//	multiplicatifs pour créer les 2 décimales après la virgule au moyen d'une
-			//	suite d'opérations: multiplier par le, facteur 'digitsMul' tronquer et
+			//	Pour une rÃ©solution de 0.05, par exemple, on va dÃ©terminer les facteurs
+			//	multiplicatifs pour crÃ©er les 2 dÃ©cimales aprÃ¨s la virgule au moyen d'une
+			//	suite d'opÃ©rations: multiplier par le, facteur 'digitsMul' tronquer et
 			//	multiplier par le facteur 'digitsDiv'.
 			//
-			//	Ceci est utile, car le nombre decimal 1M n'est pas représenté de la même
-			//	manière que les nombres 1.0M ou 1.00M, quand ils sont convertis en string.
+			//	Ceci est utile, car le nombre decimal 1M n'est pas reprÃ©sentÃ© de la mÃªme
+			//	maniÃ¨re que les nombres 1.0M ou 1.00M, quand ils sont convertis en string.
 
 			this.digitsDiv  = 1M;
 			this.digitsMul  = 1M;

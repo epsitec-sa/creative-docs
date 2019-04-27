@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Cursors
 {
 	/// <summary>
-	/// La classe TempCursorDir joue le même rôle que TempCursor, mais prend en
-	/// plus note de la direction du déplacement.
+	/// La classe TempCursorDir joue le mÃªme rÃ´le que TempCursor, mais prend en
+	/// plus note de la direction du dÃ©placement.
 	/// </summary>
 	public class TempCursorDir : TempCursor
 	{

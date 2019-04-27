@@ -10,7 +10,7 @@ using Epsitec.Common.FormEngine;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public class Forms : Abstract
 	{
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Viewers
 			surface.Margins = new Margins(0, 0, 5, 0);
 			surface.Dock = DockStyle.Fill;
 
-			//	Crée le groupe central.
+			//	CrÃ©e le groupe central.
 			this.middle = new FrameBox(surface);
 			this.middle.Padding = new Margins(5, 5, 5, 5);
 			this.middle.Dock = DockStyle.Fill;
@@ -70,9 +70,9 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Le UI.Panel est dans le sous-contenur qui a des marges.
 			this.panelContainer = new UI.Panel();
 
-			//	Le FormEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
-			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
-			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
+			//	Le FormEditor est par-dessus le UI.Panel. Il occupe toute la surface (il dÃ©borde
+			//	donc des marges) et tient compte lui-mÃªme du dÃ©calage. C'est le seul moyen pour
+			//	pouvoir dessiner dans les marges ET y dÃ©tecter les Ã©vÃ©nements souris.
 			this.formEditor = new FormEditor.Editor(container);
 			this.formEditor.Initialize(this, this.module, this.context, this.panelContainer);
 			this.formEditor.MinWidth = 100;
@@ -84,20 +84,20 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.InitializePanel();
 
-			//	Crée le groupe droite.
+			//	CrÃ©e le groupe droite.
 			this.right = new FrameBox(surface);
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = Forms.rightPanelWidth;
 			this.right.MaxWidth = 400;
 			this.right.Dock = DockStyle.Right;
 
-			//	Crée le tabbook primaire pour les onglets.
+			//	CrÃ©e le tabbook primaire pour les onglets.
 			FrameBox top = new FrameBox(this.right);
 			top.Dock = DockStyle.Fill;
 			top.Margins = new Margins(5, 5, 5, 5);
 			top.Padding = new Margins(1, 1, 1, 1);
 
-			//	Crée le tabbook secondaire pour les onglets.
+			//	CrÃ©e le tabbook secondaire pour les onglets.
 			this.tabBookSecondary = new TabBook(this.right);
 			this.tabBookSecondary.Arrows = TabBookArrows.Stretch;
 			this.tabBookSecondary.Dock = DockStyle.Bottom;
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBookSecondary.Padding = new Margins(1, 1, 1, 1);
 			this.tabBookSecondary.PreferredHeight = Forms.bottomPanelHeight;
 
-			//	Crée l'onglet 'champs'.
+			//	CrÃ©e l'onglet 'champs'.
 			FrameBox topToolBar = new FrameBox(top);
 			topToolBar.Dock = DockStyle.Top;
 			topToolBar.Margins = new Margins(0, 0, 0, 5);
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsTable.SelectedRowChanged += this.HandleFieldTableSelectedRowChanged;
 			this.UpdateFieldsTableColumns();
 
-			//	Crée l'onglet 'propriétés'.
+			//	CrÃ©e l'onglet 'propriÃ©tÃ©s'.
 			if (!isWindow)
 			{
 				this.tabPageProperties = new TabPage();
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.propertiesScrollable.PaintViewportFrame = true;
 			this.propertiesScrollable.ViewportPadding = new Margins (-1);
 
-			//	Crée l'onglet 'source'.
+			//	CrÃ©e l'onglet 'source'.
 			this.tabPageSource = new TabPage();
 			this.tabPageSource.TabTitle = Res.Strings.Viewers.Forms.TabRelations;
 			this.tabPageSource.Padding = new Margins(4, 4, 4, 4);
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsTable.SelectedRowChanged += this.HandleRelationsTableSelectedRowChanged;
 			this.relationsTable.SelectedRowDoubleClicked += this.HandleRelationsTableSelectedRowDoubleClicked;
 
-			//	Crée l'onglet 'divers'.
+			//	CrÃ©e l'onglet 'divers'.
 			this.tabPageMisc = new TabPage();
 			this.tabPageMisc.TabTitle = Res.Strings.Viewers.Forms.TabMisc;
 			this.tabPageMisc.Padding = new Margins(10, 10, 10, 10);
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.CreateMiscPage();
 
-			//	Crée l'onglet 'cultures'.
+			//	CrÃ©e l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Forms.TabCultures;
 			this.tabPageCultures.Padding = new Margins(10, 10, 10, 10);
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override bool HasUsefulViewerWindow
 		{
-			//	Indique si cette vue a l'utilité d'une fenêtre supplémentaire.
+			//	Indique si cette vue a l'utilitÃ© d'une fenÃªtre supplÃ©mentaire.
 			get
 			{
 				return true;
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override double GetColumnWidth(int column)
 		{
-			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			//	Retourne la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.IsDisplayModeHorizontal)
 			{
 				return Forms.columnWidthHorizontal[column];
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void SetColumnWidth(int column, double value)
 		{
-			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			//	MÃ©morise la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.IsDisplayModeHorizontal)
 			{
 				Forms.columnWidthHorizontal[column] = value;
@@ -489,7 +489,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void DoCommand(string name)
 		{
-			//	Exécute une commande.
+			//	ExÃ©cute une commande.
 			if (name == "PanelRun")
 			{
 				this.module.DesignerApplication.ActiveButton("PanelRun", true);
@@ -499,7 +499,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (name == "FormFieldsShowPrefix")  // affiche/cache les préfixes ?
+			if (name == "FormFieldsShowPrefix")  // affiche/cache les prÃ©fixes ?
 			{
 				Forms.showPrefix = !Forms.showPrefix;
 				this.UpdateFieldsTable(false);
@@ -513,14 +513,14 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (name == "FormFieldsShowColumn1")  // affiche/cache la 2ème colonne ?
+			if (name == "FormFieldsShowColumn1")  // affiche/cache la 2Ã¨me colonne ?
 			{
 				Forms.showColumn1 = !Forms.showColumn1;
 				this.UpdateFieldsTableColumns();
 				return;
 			}
 
-			if (name == "FormFieldsShowColumn2")  // affiche/cache la 3ème colonne ?
+			if (name == "FormFieldsShowColumn2")  // affiche/cache la 3Ã¨me colonne ?
 			{
 				Forms.showColumn2 = !Forms.showColumn2;
 				this.UpdateFieldsTableColumns();
@@ -556,7 +556,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsDeleteOrDuplicateForViewer
 		{
-			//	Indique s'il faut aiguiller ici une opération delete ou duplicate.
+			//	Indique s'il faut aiguiller ici une opÃ©ration delete ou duplicate.
 			get
 			{
 				return false;
@@ -565,14 +565,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void PrepareForDelete()
 		{
-			//	Préparation en vue de la suppression de l'interface.
+			//	PrÃ©paration en vue de la suppression de l'interface.
 			this.formEditor.PrepareForDelete();
 		}
 
 
 		protected override void UpdateEdit()
 		{
-			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			//	Met Ã  jour les lignes Ã©ditables en fonction de la sÃ©lection dans le tableau.
 			base.UpdateEdit();
 
 			bool iic = this.ignoreChange;
@@ -583,13 +583,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateRelationsTable(true);
 			this.UpdateRelationsButtons();
 			this.UpdateMiscPage();
-			this.DefineProxies();  // met à jour les proxies
+			this.DefineProxies();  // met Ã  jour les proxies
 			this.ignoreChange = iic;
 		}
 
 		protected void UpdateFieldsTableColumns()
 		{
-			//	Met à jour la largeur des colonnes de la table des champs.
+			//	Met Ã  jour la largeur des colonnes de la table des champs.
 			double w1 = Forms.showColumn1 ? 0.10 : 0.00;
 			double w2 = Forms.showColumn2 ? 0.10 : 0.00;
 
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateFieldsTable(bool newContent)
 		{
-			//	Met à jour la table des champs.
+			//	Met Ã  jour la table des champs.
 			this.formEditor.ObjectModifier.UpdateTableContent();
 
 			int first = this.fieldsTable.FirstVisibleRow;
@@ -658,7 +658,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (newContent)
 			{
 				this.fieldsTable.FirstVisibleRow = 0;
-				this.fieldsTable.SelectedRows = new List<int>();  // désélectionne tout
+				this.fieldsTable.SelectedRows = new List<int>();  // dÃ©sÃ©lectionne tout
 			}
 
 			this.fieldsTable.SetDynamicToolTips(0, !Forms.showPrefix);
@@ -666,7 +666,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateFieldsButtons()
 		{
-			//	Met à jour les boutons dans l'onglet des champs.
+			//	Met Ã  jour les boutons dans l'onglet des champs.
 			bool isSel = false;
 			bool isPrev = false;
 			bool isNext = false;
@@ -681,7 +681,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				List<int> sels = this.fieldsTable.SelectedRows;
 
-				if (sels != null && sels.Count > 0)  // sélection multiple ?
+				if (sels != null && sels.Count > 0)  // sÃ©lection multiple ?
 				{
 					isSel = true;
 					isPrev = true;
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					foreach (int sel in sels)
 					{
-						if (sel >= this.formEditor.ObjectModifier.TableContent.Count)  // ancienne sélection parasite ?
+						if (sel >= this.formEditor.ObjectModifier.TableContent.Count)  // ancienne sÃ©lection parasite ?
 						{
 							continue;
 						}
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				if (sels != null && sels.Count == 1)  // sélection simple ?
+				if (sels != null && sels.Count == 1)  // sÃ©lection simple ?
 				{
 					int sel = sels[0];
 
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				if (sels != null && sels.Count == 2)  // sélection double ?
+				if (sels != null && sels.Count == 2)  // sÃ©lection double ?
 				{
 					if (sels[0] == sels[1]+1 || sels[0] == sels[1]-1)
 					{
@@ -770,7 +770,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected bool IsDeletableField(int sel)
 		{
-			//	Indique si un élément peut être véritablement supprimé, et non simplement caché.
+			//	Indique si un Ã©lÃ©ment peut Ãªtre vÃ©ritablement supprimÃ©, et non simplement cachÃ©.
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 			int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
 
@@ -796,7 +796,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateRelationsTable(bool newContent)
 		{
-			//	Met à jour la table des relations.
+			//	Met Ã  jour la table des relations.
 			List<FormEditor.ObjectModifier.RelationItem> list = this.formEditor.ObjectModifier.TableRelations;
 
 			int first = this.relationsTable.FirstVisibleRow;
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateRelationsButtons()
 		{
-			//	Met à jour les boutons dans l'onglet des relations.
+			//	Met Ã  jour les boutons dans l'onglet des relations.
 			int sel = this.relationsTable.SelectedRow;
 
 			this.relationsButtonUse.Enable = this.formEditor.ObjectModifier.IsTableRelationUseable(sel);
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region UndoRedo
 		public override void Undo()
 		{
-			//	Annule la dernière action.
+			//	Annule la derniÃ¨re action.
 			Undo.Shapshot snapshot = this.undoEngine.Undo(this.UndoCurrentSnapshot(null));
 			this.UndoRestore(snapshot);
 			this.UpdateUndoRedoCommands();
@@ -877,7 +877,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void Redo()
 		{
-			//	Refait la dernière action.
+			//	Refait la derniÃ¨re action.
 			Undo.Shapshot snapshot = this.undoEngine.Redo();
 			this.UndoRestore(snapshot);
 			this.UpdateUndoRedoCommands();
@@ -885,7 +885,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override VMenu UndoRedoCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
-			//	Crée le menu undo/redo.
+			//	CrÃ©e le menu undo/redo.
 			return this.undoEngine.CreateMenu(message);
 		}
 
@@ -906,7 +906,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsUndoEnable
 		{
-			//	Retourne true si la commande "Undo" doit être active.
+			//	Retourne true si la commande "Undo" doit Ãªtre active.
 			get
 			{
 				return this.undoEngine.IsUndoEnable;
@@ -915,7 +915,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsRedoEnable
 		{
-			//	Retourne true si la commande "Redo" doit être active.
+			//	Retourne true si la commande "Redo" doit Ãªtre active.
 			get
 			{
 				return this.undoEngine.IsRedoEnable;
@@ -924,7 +924,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override bool IsUndoRedoListEnable
 		{
-			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
+			//	Retourne true si la commande "UndoRedoList" pour le menu doit Ãªtre active.
 			get
 			{
 				return this.undoEngine.IsUndoRedoListEnable;
@@ -933,16 +933,16 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public void UndoMemorize(string snapshotName, bool merge)
 		{
-			//	Mémorise l'état actuel, avant d'effectuer une modification dans this.workingForm.
-			//	Si merge = true et que la dernière photographie avait le même nom, on conserve la dernière
-			//	photographie mémorisée.
+			//	MÃ©morise l'Ã©tat actuel, avant d'effectuer une modification dans this.workingForm.
+			//	Si merge = true et que la derniÃ¨re photographie avait le mÃªme nom, on conserve la derniÃ¨re
+			//	photographie mÃ©morisÃ©e.
 			this.undoEngine.Memorize(this.UndoCurrentSnapshot(snapshotName), merge);
 			this.UpdateUndoRedoCommands();
 		}
 
 		protected Undo.Shapshot UndoCurrentSnapshot(string snapshotName)
 		{
-			//	Retourne la photographie courante, prête à être mémorisée dans this.undoEngine.
+			//	Retourne la photographie courante, prÃªte Ã  Ãªtre mÃ©morisÃ©e dans this.undoEngine.
 			Undo.Shapshot snapshot = new Undo.Shapshot();
 
 			snapshot.Name = snapshotName;
@@ -958,7 +958,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UndoRestore(Undo.Shapshot snapshot)
 		{
-			//	Remet l'éditeur de masques dans un état précédent.
+			//	Remet l'Ã©diteur de masques dans un Ã©tat prÃ©cÃ©dent.
 			FormDescription inputForm = this.XmlToForm(snapshot.SerializedData);
 			this.access.GetForm(this.druidToSerialize, inputForm, out this.workingForm, out this.baseFields, out this.finalFields, out this.entityId);
 			this.SetForm(false);
@@ -986,8 +986,8 @@ namespace Epsitec.Common.Designer.Viewers
 	
 		public override bool Terminate(bool soft)
 		{
-			//	Termine le travail sur une ressource, avant de passer à une autre.
-			//	Si soft = true, on sérialise temporairement sans poser de question.
+			//	Termine le travail sur une ressource, avant de passer Ã  une autre.
+			//	Si soft = true, on sÃ©rialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
 			base.Terminate(soft);
 
@@ -1005,7 +1005,7 @@ namespace Epsitec.Common.Designer.Viewers
 					// (*)	Il ne faut surtout pas faire une copie comme ceci:
 					//		Forms.softWorkingForm = new FormDescription(this.workingForm);
 					//		this.finalFields est parfois la liste directement dans this.workingForm (mais pas toujours).
-					//		Une copie fait qu'une modification dans this.workingForm n'est plus reportée dans this.finalFields !
+					//		Une copie fait qu'une modification dans this.workingForm n'est plus reportÃ©e dans this.finalFields !
 				}
 				else
 				{
@@ -1021,7 +1021,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void PersistChanges()
 		{
-			//	Stocke la version XML (sérialisée) du masque de saisie dans l'accesseur
+			//	Stocke la version XML (sÃ©rialisÃ©e) du masque de saisie dans l'accesseur
 			//	s'il y a eu des modifications.
 			if (this.access.SetForm(this.druidToSerialize, this.workingForm))
 			{
@@ -1031,7 +1031,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void Deserialize()
 		{
-			//	Désérialise les données sérialisées.
+			//	DÃ©sÃ©rialise les donnÃ©es sÃ©rialisÃ©es.
 			int sel = this.access.AccessIndex;
 			this.druidToSerialize = Druid.Empty;
 
@@ -1083,7 +1083,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SetForm(bool keepSelection)
 		{
-			//	Spécifie le masque de saisie en cours d'édition.
+			//	SpÃ©cifie le masque de saisie en cours d'Ã©dition.
 			//	Construit physiquement le masque de saisie (UI.Panel contenant des widgets) sur la
 			//	base de sa description FormDescription.
 			if (this.panelContainer != null)
@@ -1111,7 +1111,7 @@ namespace Epsitec.Common.Designer.Viewers
 				List<System.Guid> guids = null;
 				if (keepSelection)
 				{
-					guids = this.formEditor.GetSelectedGuids();  // Guid des objets sélectionnés
+					guids = this.formEditor.GetSelectedGuids();  // Guid des objets sÃ©lectionnÃ©s
 				}
 
 				if (this.workingForm.IsDelta)
@@ -1141,11 +1141,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (keepSelection)
 				{
-					this.formEditor.SetSelectedGuids(guids);  // resélectionne les mêmes objets
+					this.formEditor.SetSelectedGuids(guids);  // resÃ©lectionne les mÃªmes objets
 
-					//	Il ne faut surtout pas régénérer les proxies ici, car cela cause de gros problèmes
+					//	Il ne faut surtout pas rÃ©gÃ©nÃ©rer les proxies ici, car cela cause de gros problÃ¨mes
 					//	pendant le drag d'un slider, par exemple !
-					//	this.DefineProxies();  // met à jour les proxies
+					//	this.DefineProxies();  // met Ã  jour les proxies
 				}
 				else
 				{
@@ -1163,7 +1163,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void InitializePanel()
 		{
-			//	Initialise le panneau contenant le masque pour pouvoir être édité.
+			//	Initialise le panneau contenant le masque pour pouvoir Ãªtre Ã©ditÃ©.
 			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			this.panelContainer.Dock = DockStyle.Fill;
@@ -1176,7 +1176,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void Update()
 		{
-			//	Met à jour le contenu du Viewer.
+			//	Met Ã  jour le contenu du Viewer.
 			this.formEditor.DeselectAll();
 			this.UpdateArray();
 			this.UpdateEdit();
@@ -1192,7 +1192,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region MiscPage
 		protected void CreateMiscPage()
 		{
-			//	Crée tous les widgets pour la page "divers".
+			//	CrÃ©e tous les widgets pour la page "divers".
 			int index = 1;
 
 			FrameBox widthBox = new FrameBox(this.tabPageMisc);
@@ -1250,7 +1250,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleMiscButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Le bouton pour la largeur ou la hauteur préférentielle a changé.
+			//	Le bouton pour la largeur ou la hauteur prÃ©fÃ©rentielle a changÃ©.
 			if (this.ignoreChange || this.designerApplication.IsReadonly)
 			{
 				return;
@@ -1293,7 +1293,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleMiscFieldTextChanged(object sender)
 		{
-			//	Le texte pour la largeur ou la hauteur préférentielle a changé.
+			//	Le texte pour la largeur ou la hauteur prÃ©fÃ©rentielle a changÃ©.
 			if (this.ignoreChange || this.designerApplication.IsReadonly)
 			{
 				return;
@@ -1337,7 +1337,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateMiscPage()
 		{
-			//	Met à jour tous les widgets pour la page "divers".
+			//	Met Ã  jour tous les widgets pour la page "divers".
 			this.ignoreChange = true;
 
 			Size defaultSize = new Size(double.NaN, double.NaN);
@@ -1381,9 +1381,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateMiscPagePanel()
 		{
-			//	Met à jour le vrai panneau (this.panelContainer) en fonction des réglages de
-			//	l'onglet "divers", dans le but de représenter le panneau avec la taille que
-			//	l'utilisateur spécifie.
+			//	Met Ã  jour le vrai panneau (this.panelContainer) en fonction des rÃ©glages de
+			//	l'onglet "divers", dans le but de reprÃ©senter le panneau avec la taille que
+			//	l'utilisateur spÃ©cifie.
 			Size defaultSize = this.workingForm.DefaultSize;
 
 			if (defaultSize.Width.IsSafeNaN ())
@@ -1418,7 +1418,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region CultureButtons
 		protected void CreateCultureButtons()
 		{
-			//	Crée tous les boutons pour les cultures.
+			//	CrÃ©e tous les boutons pour les cultures.
 			this.cultureButtonList = new List<IconButton>();
 
 			int tabIndex = 1;
@@ -1445,7 +1445,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleCultureButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Un bouton pour changer de culture a été cliqué.
+			//	Un bouton pour changer de culture a Ã©tÃ© cliquÃ©.
 			IconButton button = sender as IconButton;
 			this.module.ResourceManager.ActiveCulture = Resources.FindSpecificCultureInfo(button.Name);
 			this.panelContainer.UpdateDisplayCaptions();
@@ -1455,7 +1455,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateCultureButtons()
 		{
-			//	Met à jour les boutons pour les cultures.
+			//	Met Ã  jour les boutons pour les cultures.
 			string culture = Misc.CultureBaseName(this.module.ResourceManager.ActiveCulture);
 			foreach (IconButton button in this.cultureButtonList)
 			{
@@ -1468,8 +1468,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void UpdateViewer(Viewers.Changing oper)
 		{
-			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
-			//	Met également à jour l'arbre des objets, s'il est visible.
+			//	Met Ã  jour le statut du visualisateur en cours, en fonction de la sÃ©lection.
+			//	Met Ã©galement Ã  jour l'arbre des objets, s'il est visible.
 			if (oper == Changing.Selection)
 			{
 				this.ReflectSelectionToList();
@@ -1478,7 +1478,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move || oper == Changing.Regenerate)
 			{
-				//	Régénère le panneau contenant le masque de saisie.
+				//	RÃ©gÃ©nÃ¨re le panneau contenant le masque de saisie.
 				this.SetForm(oper == Changing.Regenerate);
 				this.UpdateFieldsTable(false);
 			}
@@ -1487,7 +1487,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void ReflectSelectionToList()
 		{
-			//	Reflète les sélections effectuées dans l'éditeur de Forms dans la liste des champs.
+			//	ReflÃ¨te les sÃ©lections effectuÃ©es dans l'Ã©diteur de Forms dans la liste des champs.
 			//	Editeur de Forms -> Liste des champs.
 			List<System.Guid> guids = this.formEditor.GetSelectedGuids();
 			List<int> sels = new List<int>();
@@ -1508,7 +1508,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void ReflectSelectionToEditor()
 		{
-			//	Reflète les sélections effectuées dans la liste des champs dans l'éditeur de Forms.
+			//	ReflÃ¨te les sÃ©lections effectuÃ©es dans la liste des champs dans l'Ã©diteur de Forms.
 			//	Liste des champs -> Editeur de Forms.
 			List<int> sels = this.fieldsTable.SelectedRows;
 
@@ -1534,7 +1534,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsRemove()
 		{
-			//	Utilise ou supprime les champs sélectionnés.
+			//	Utilise ou supprime les champs sÃ©lectionnÃ©s.
 			this.UndoMemorize(Res.Strings.Undo.Action.FieldRemove, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
@@ -1548,14 +1548,14 @@ namespace Epsitec.Common.Designer.Viewers
 				FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
 				int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
 
-				if (this.IsDeletableField(sel))  // élément à supprimer réellement ?
+				if (this.IsDeletableField(sel))  // Ã©lÃ©ment Ã  supprimer rÃ©ellement ?
 				{
 					if (index != -1)
 					{
 						this.workingForm.Fields.RemoveAt(index);
 					}
 				}
-				else  // élément à montrer/cacher ?
+				else  // Ã©lÃ©ment Ã  montrer/cacher ?
 				{
 					if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 					{
@@ -1566,14 +1566,14 @@ namespace Epsitec.Common.Designer.Viewers
 								FieldDescription copy = new FieldDescription(field);
 								copy.DeltaShowed = true;
 								copy.DeltaHidden = false;
-								this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "montré"
+								this.workingForm.Fields.Add(copy);  // ajoute l'Ã©lÃ©ment pour dire "montrÃ©"
 							}
 							else
 							{
 								FieldDescription copy = new FieldDescription(field);
 								copy.DeltaHidden = true;
 								copy.DeltaShowed = false;
-								this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
+								this.workingForm.Fields.Add(copy);  // ajoute l'Ã©lÃ©ment pour dire "cachÃ©"
 							}
 						}
 						else
@@ -1595,11 +1595,11 @@ namespace Epsitec.Common.Designer.Viewers
 							}
 							else
 							{
-								if (actual.DeltaShowed)  // champ montré ?
+								if (actual.DeltaShowed)  // champ montrÃ© ?
 								{
-									actual.DeltaShowed = false;  // cet élément sera supprimé, et c'est donc le parent DeltaHidden qui dira de cacher
+									actual.DeltaShowed = false;  // cet Ã©lÃ©ment sera supprimÃ©, et c'est donc le parent DeltaHidden qui dira de cacher
 								}
-								else if (actual.DeltaHidden)  // champ caché ?
+								else if (actual.DeltaHidden)  // champ cachÃ© ?
 								{
 									actual.DeltaHidden = false;  // rend le champ visible
 								}
@@ -1650,7 +1650,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsReset()
 		{
-			//	Remet à zéro les champs sélectionnés, dans un masque delta.
+			//	Remet Ã  zÃ©ro les champs sÃ©lectionnÃ©s, dans un masque delta.
 			this.UndoMemorize(Res.Strings.Undo.Action.FieldReset, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
@@ -1701,7 +1701,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsForm()
 		{
-			//	Choix du sous-masque à utiliser pour la relation.
+			//	Choix du sous-masque Ã  utiliser pour la relation.
 			List<int> sels = this.fieldsTable.SelectedRows;
 			if (sels == null || sels.Count == 0)
 			{
@@ -1738,7 +1738,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsBox()
 		{
-			//	Groupe/sépare les champs sélectionnés.
+			//	Groupe/sÃ©pare les champs sÃ©lectionnÃ©s.
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
@@ -1749,7 +1749,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (firstItem.FieldType == FieldDescription.FieldType.BoxBegin)
 				{
-					//	Sépare le groupe sélectionné.
+					//	SÃ©pare le groupe sÃ©lectionnÃ©.
 					this.UndoMemorize(Res.Strings.Undo.Action.FieldBoxUnlink, false);
 
 					int level = 0;
@@ -1768,8 +1768,8 @@ namespace Epsitec.Common.Designer.Viewers
 							if (level == 0)
 							{
 								int last = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
-								this.workingForm.Fields.RemoveAt(last);  // enlève le BoxEnd
-								this.workingForm.Fields.RemoveAt(first);  // enlève le BoxBegin
+								this.workingForm.Fields.RemoveAt(last);  // enlÃ¨ve le BoxEnd
+								this.workingForm.Fields.RemoveAt(first);  // enlÃ¨ve le BoxBegin
 
 								this.SetForm(true);
 								this.UpdateFieldsTable(false);
@@ -1788,7 +1788,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			//	Groupe les champs sélectionnés.
+			//	Groupe les champs sÃ©lectionnÃ©s.
 			this.UndoMemorize(Res.Strings.Undo.Action.FieldBoxLink, false);
 
 			List<FieldDescription> content = new List<FieldDescription>();
@@ -1829,7 +1829,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsMove(int direction)
 		{
-			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
+			//	DÃ©place les champs sÃ©lectionnÃ©s vers le haut ou vers le bas.
 			this.UndoMemorize(Res.Strings.Undo.Action.FieldMove, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
@@ -1882,7 +1882,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsGoto()
 		{
-			//	Va sur la définition du champ sélectionné.
+			//	Va sur la dÃ©finition du champ sÃ©lectionnÃ©.
 			List<int> sels = this.fieldsTable.SelectedRows;
 			if (sels.Count != 1)
 			{
@@ -1904,7 +1904,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedRelationsUse()
 		{
-			//	Utilise la relation sélectionnée.
+			//	Utilise la relation sÃ©lectionnÃ©e.
 			int sel = this.relationsTable.SelectedRow;
 			if (sel == -1)
 			{
@@ -1929,9 +1929,9 @@ namespace Epsitec.Common.Designer.Viewers
 			else  // masque normal ?
 			{
 #if true
-				//	Tous les champs, quels que soient leur type, sont traités comme
+				//	Tous les champs, quels que soient leur type, sont traitÃ©s comme
 				//	tels; c'est en aval, dans FormEngine, que se prennent le bonnes
-				//	décisions.
+				//	dÃ©cisions.
 				field = new FieldDescription (FieldDescription.FieldType.Field);
 				field.SetFields (item.DruidsPath);
 #else
@@ -1976,7 +1976,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedRelationsExpand()
 		{
-			//	Etend la relation sélectionnée.
+			//	Etend la relation sÃ©lectionnÃ©e.
 			int sel = this.relationsTable.SelectedRow;
 			this.formEditor.ObjectModifier.TableRelationExpand(sel);
 
@@ -1988,7 +1988,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedRelationsCompact()
 		{
-			//	Compacte la relation sélectionnée.
+			//	Compacte la relation sÃ©lectionnÃ©e.
 			int sel = this.relationsTable.SelectedRow;
 			this.formEditor.ObjectModifier.TableRelationCompact(sel);
 
@@ -2000,7 +2000,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedRelationsAuto()
 		{
-			//	Etend automatiquement les champs utilisés.
+			//	Etend automatiquement les champs utilisÃ©s.
 			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields, this.workingForm);
 
 			this.UpdateRelationsTable(false);
@@ -2011,7 +2011,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedOtherCommand()
 		{
-			//	Insère une commande sous forme d'un MetaButton.
+			//	InsÃ¨re une commande sous forme d'un MetaButton.
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
 			Druid druid = Druid.Empty;
 			bool isNullable = false;
@@ -2085,7 +2085,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedOtherLine()
 		{
-			//	Insère une ligne avant le champ sélectionné.
+			//	InsÃ¨re une ligne avant le champ sÃ©lectionnÃ©.
 			this.UndoMemorize(Res.Strings.Undo.Action.FieldLine, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
@@ -2144,7 +2144,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedOtherTitle()
 		{
-			//	Insère un titre avant le champ sélectionné.
+			//	InsÃ¨re un titre avant le champ sÃ©lectionnÃ©.
 			this.UndoMemorize(Res.Strings.Undo.Action.FieldTitle, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
@@ -2203,7 +2203,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedOtherGlue()
 		{
-			//	Insère une "glue" avant le champ sélectionné.
+			//	InsÃ¨re une "glue" avant le champ sÃ©lectionnÃ©.
 			List<int> sels = this.fieldsTable.SelectedRows;
 			if (sels == null || sels.Count != 2)
 			{
@@ -2249,7 +2249,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public void ChangeForwardTab(System.Guid fieldGuid, System.Guid forwardTabGuid)
 		{
-			//	Modifie l'élément suivant pour la navigation avec Tab.
+			//	Modifie l'Ã©lÃ©ment suivant pour la navigation avec Tab.
 			this.UndoMemorize(Res.Strings.Undo.Action.ForwardTab, false);
 
 			FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(fieldGuid);
@@ -2265,7 +2265,7 @@ namespace Epsitec.Common.Designer.Viewers
 						copy.DeltaForwardTab = true;
 						copy.ForwardTabGuid = forwardTabGuid;
 
-						this.workingForm.Fields.Add(copy);  // met l'élément à la fin de la liste delta
+						this.workingForm.Fields.Add(copy);  // met l'Ã©lÃ©ment Ã  la fin de la liste delta
 					}
 				}
 				else
@@ -2277,7 +2277,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					if (!actual.Delta)
 					{
-						this.workingForm.Fields.RemoveAt(index);  // supprime l'élément dans la liste delta
+						this.workingForm.Fields.RemoveAt(index);  // supprime l'Ã©lÃ©ment dans la liste delta
 					}
 				}
 			}
@@ -2296,7 +2296,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void DefineProxies()
 		{
-			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
+			//	CrÃ©e les proxies et l'interface utilisateur pour les widgets sÃ©lectionnÃ©s.
 			this.propertiesScrollable.Viewport.Children.Clear();  // supprime les panneaux existants
 			this.proxyManager.CreateInterface(this.propertiesScrollable.Viewport, this.formEditor.SelectedObjects);
 		}
@@ -2304,7 +2304,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected VMenu CreateFieldsMenu()
 		{
-			//	Crée le petit menu contextuel associé au bouton "v" de la liste des champs.
+			//	CrÃ©e le petit menu contextuel associÃ© au bouton "v" de la liste des champs.
 			VMenu menu = new VMenu();
 			MenuItem item;
 
@@ -2336,7 +2336,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleSplitterDragged(object sender)
 		{
-			//	Un splitter a été bougé.
+			//	Un splitter a Ã©tÃ© bougÃ©.
 			if (sender == this.splitter2)
 			{
 				Forms.rightPanelWidth = this.right.ActualWidth;
@@ -2455,19 +2455,19 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleRelationsTableCellCountChanged(object sender)
 		{
-			//	Le nombre de lignes a changé.
+			//	Le nombre de lignes a changÃ©.
 			this.UpdateRelationsTable(false);
 		}
 
 		private void HandleRelationsTableCellsContentChanged(object sender)
 		{
-			//	Le contenu des cellules a changé.
+			//	Le contenu des cellules a changÃ©.
 			this.UpdateRelationsTable(false);
 		}
 
 		private void HandleRelationsTableSelectedRowChanged(object sender)
 		{
-			//	La ligne sélectionnée a changé.
+			//	La ligne sÃ©lectionnÃ©e a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -2478,7 +2478,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleRelationsTableSelectedRowDoubleClicked(object sender)
 		{
-			//	La ligne sélectionnée a été double-cliquée.
+			//	La ligne sÃ©lectionnÃ©e a Ã©tÃ© double-cliquÃ©e.
 			int sel = this.relationsTable.SelectedRow;
 			if (sel == -1)
 			{
@@ -2501,19 +2501,19 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleFieldTableCellCountChanged(object sender)
 		{
-			//	Le nombre de lignes a changé.
+			//	Le nombre de lignes a changÃ©.
 			this.UpdateFieldsTable(false);
 		}
 
 		private void HandleFieldTableCellsContentChanged(object sender)
 		{
-			//	Le contenu des cellules a changé.
+			//	Le contenu des cellules a changÃ©.
 			this.UpdateFieldsTable(false);
 		}
 
 		private void HandleFieldTableSelectedRowChanged(object sender)
 		{
-			//	La ligne sélectionnée a changé.
+			//	La ligne sÃ©lectionnÃ©e a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;

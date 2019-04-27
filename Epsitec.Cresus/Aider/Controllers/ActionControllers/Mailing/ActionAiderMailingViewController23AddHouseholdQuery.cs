@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ménages");
+			return Resources.FormattedText ("MÃ©nages");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -55,9 +55,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Ajouter une requête sur les ménages")
+				.Title ("Ajouter une requÃªte sur les mÃ©nages")
 				.Field<List<string>> ()
-					.Title ("Requête")
+					.Title ("RequÃªte")
 					.WithStringCollection (queries)
 				.End ()
 			.End ();

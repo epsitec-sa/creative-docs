@@ -8,7 +8,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
 	/// <summary>
-	/// Dialogue "mise à jour".
+	/// Dialogue "mise Ã  jour".
 	/// </summary>
 	public class Update : Abstract
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -116,7 +116,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("Update");
 		}
 

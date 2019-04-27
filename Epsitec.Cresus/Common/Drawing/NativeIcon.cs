@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -85,21 +85,21 @@ namespace Epsitec.Common.Drawing.Platform
 
 			multi.SelectedIndex = 0;
 
-			//	On génère d'abord les images 8 bpp, puis 32 bpp. 4 bpp étant devenu désuet, il
-			//	a été supprimé de la liste, bien que le code "case 4" plus bas soit resté, en
+			//	On gÃ©nÃ¨re d'abord les images 8 bpp, puis 32 bpp. 4 bpp Ã©tant devenu dÃ©suet, il
+			//	a Ã©tÃ© supprimÃ© de la liste, bien que le code "case 4" plus bas soit restÃ©, en
 			//	cas de besoin futur.
 
 			foreach (int bpp in new int[] { 8, 32 })
 			{
 				foreach (NativeBitmap image in images)
 				{
-					//	Une icône consiste en une collection de fichiers BMP non comprimés (4-, 8-,
-					//	16- ou 32- bpp) avec une taille qui peut aller techniquement de 1 x 1 à
-					//	255 x 255. Microsoft a rajouté bien plus tard le support pour une
-					//	représentation sous forme PNG comprimée pour le format 256 x 256,
-					//	parce que sinon, une telle icône serait juste monstrueuse (256KB en BMP).
-					//	Le format 256 x 256 est donc nécessairement du PNG, et le PNG est
-					//	nécessairement en 32 bit/pixel dans la spécification des fichiers .ICO.
+					//	Une icÃ´ne consiste en une collection de fichiers BMP non comprimÃ©s (4-, 8-,
+					//	16- ou 32- bpp) avec une taille qui peut aller techniquement de 1 x 1 Ã 
+					//	255 x 255. Microsoft a rajoutÃ© bien plus tard le support pour une
+					//	reprÃ©sentation sous forme PNG comprimÃ©e pour le format 256 x 256,
+					//	parce que sinon, une telle icÃ´ne serait juste monstrueuse (256KB en BMP).
+					//	Le format 256 x 256 est donc nÃ©cessairement du PNG, et le PNG est
+					//	nÃ©cessairement en 32 bit/pixel dans la spÃ©cification des fichiers .ICO.
 
 					if (image.Width <= 64)
 					{
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Drawing.Platform
 					{
 						switch (bpp)
 						{
-							//	Les icônes > 128 n'ont pas de sens en 32 bits (voir remarque ci-dessus).
+							//	Les icÃ´nes > 128 n'ont pas de sens en 32 bits (voir remarque ci-dessus).
 
 							case 32:
 								System.Drawing.Bitmap bitmap32bpp = SystemDrawingBitmapHelper.Generate32BppBitmap (image);

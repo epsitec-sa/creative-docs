@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Cresus.DataLayer.ImportExport
+namespace Epsitec.Cresus.DataLayer.ImportExport
 {
 
 

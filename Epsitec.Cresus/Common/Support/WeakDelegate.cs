@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 //	TODO: implement fully or kill
@@ -6,8 +6,8 @@
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe générique WeakDelegate permet de réaliser un lien avec WeakReference
-	/// entre un événement et une cible, pour autant que la cilbe implémente l'interface
+	/// La classe gÃ©nÃ©rique WeakDelegate permet de rÃ©aliser un lien avec WeakReference
+	/// entre un Ã©vÃ©nement et une cible, pour autant que la cilbe implÃ©mente l'interface
 	/// IWeakDelegateTarget.
 	/// </summary>
 	/// <typeparam name="TEventArgs"></typeparam>

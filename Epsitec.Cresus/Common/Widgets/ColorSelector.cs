@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Widgets
 			ToolTip.Default.SetToolTip (this.fields[2], Res.Strings.ColorSelector.LongBlue);
 			ToolTip.Default.SetToolTip (this.fields[3], Res.Strings.ColorSelector.LongAlpha);
 
-			this.fields[4].TextSuffix = "\u00B0";  // symbole unicode "degré" (#176)
+			this.fields[4].TextSuffix = "\u00B0";  // symbole unicode "degrÃ©" (#176)
 			this.fields[4].Color = Drawing.Color.FromRgb (0, 0, 0);
 			this.fields[4].BackColor = Drawing.Color.FromRgb (0.5, 0.5, 0.5);
 			ToolTip.Default.SetToolTip (this.fields[4], Res.Strings.ColorSelector.LongHue);
@@ -332,7 +332,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateColors()
 		{
-			//	Met tout à jour après un changement de couleur.
+			//	Met tout Ã  jour aprÃ¨s un changement de couleur.
 			System.Diagnostics.Debug.Assert (this.suspendColorEvents > 0);
 			this.ColorToFieldsRgb ();
 			this.ColorToFieldsHsv ();
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateColorSpace()
 		{
-			//	Met à jour les boutons pour l'espace de couleur.
+			//	Met Ã  jour les boutons pour l'espace de couleur.
 			Drawing.ColorSpace cs = this.color.ColorSpace;
 
 			this.buttonRgb.ActiveState = (cs == Drawing.ColorSpace.Rgb) ? ActiveState.Yes : ActiveState.No;
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ColorToFieldsRgb()
 		{
-			//	Couleur -> textes éditables.
+			//	Couleur -> textes Ã©ditables.
 			double a, r, g, b;
 			this.color.Basic.GetAlphaRgb (out a, out r, out g, out b);
 
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ColorToFieldsHsv()
 		{
-			//	Couleur -> textes éditables.
+			//	Couleur -> textes Ã©ditables.
 			double h, s, v;
 			this.wheel.GetHsv (out h, out s, out v);
 
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ColorToFieldsCmyk()
 		{
-			//	Couleur -> textes éditables.
+			//	Couleur -> textes Ã©ditables.
 			double a = this.color.A;
 			double c = this.color.C;
 			double m = this.color.M;
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ColorToFieldsGray()
 		{
-			//	Couleur -> textes éditables.
+			//	Couleur -> textes Ã©ditables.
 			double a = this.color.A;
 			double g = this.color.Gray;
 
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ColorToFieldsHexa()
 		{
-			//	Couleur -> textes éditables.
+			//	Couleur -> textes Ã©ditables.
 			double a, r, g, b;
 			this.color.Basic.GetAlphaRgb (out a, out r, out g, out b);
 
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Widgets
 
 		private void FieldsRgbToColor()
 		{
-			//	Textes éditables RGB -> couleur.
+			//	Textes Ã©ditables RGB -> couleur.
 			double r = (double) this.fields[0].Value/255;
 			double g = (double) this.fields[1].Value/255;
 			double b = (double) this.fields[2].Value/255;
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Widgets
 
 		private void FieldsHsvToColor()
 		{
-			//	Textes éditables HSV -> couleur.
+			//	Textes Ã©ditables HSV -> couleur.
 			double h = (double) this.fields[4].Value;
 			double s = (double) this.fields[5].Value/100;
 			double v = (double) this.fields[6].Value/100;
@@ -468,7 +468,7 @@ namespace Epsitec.Common.Widgets
 
 		private void FieldsCmykToColor()
 		{
-			//	Textes éditables CMYK -> couleur.
+			//	Textes Ã©ditables CMYK -> couleur.
 			double a = (double) this.fields[3].Value/255;
 			double c = (double) this.fields[7].Value/100;
 			double m = (double) this.fields[8].Value/100;
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Widgets
 
 		private void FieldsGrayToColor()
 		{
-			//	Textes éditables Gray -> couleur.
+			//	Textes Ã©ditables Gray -> couleur.
 			double a = (double) this.fields[3].Value/255;
 			double g = (double) this.fields[11].Value/100;
 
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Widgets
 
 		private void FieldsHexaToColor()
 		{
-			//	Textes éditables Hexa -> couleur.
+			//	Textes Ã©ditables Hexa -> couleur.
 			double r = 0;
 			double g = 0;
 			double b = 0;
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ColorizeSliders()
 		{
-			//	Colorise certains sliders en fonction de la couleur définie.
+			//	Colorise certains sliders en fonction de la couleur dÃ©finie.
 			double h, s, v;
 			this.wheel.GetHsv (out h, out s, out v);
 			Drawing.Color saturated = Drawing.Color.FromHsv (h, 1, 1);
@@ -582,7 +582,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 
 			if (this.fields == null)
 			{
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTextAlphaChanged(object sender)
 		{
-			//	La valeur alpha a été changée.
+			//	La valeur alpha a Ã©tÃ© changÃ©e.
 			if (this.suspendColorEvents == 0)
 			{
 				switch (this.Color.ColorSpace)
@@ -810,7 +810,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTextRgbChanged(object sender)
 		{
-			//	Une valeur RGB a été changée.
+			//	Une valeur RGB a Ã©tÃ© changÃ©e.
 			if (this.suspendColorEvents == 0)
 			{
 				this.FieldsRgbToColor ();
@@ -819,7 +819,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTextHsvChanged(object sender)
 		{
-			//	Une valeur HSV a été changée.
+			//	Une valeur HSV a Ã©tÃ© changÃ©e.
 			if (this.suspendColorEvents == 0)
 			{
 				this.FieldsHsvToColor ();
@@ -828,7 +828,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTextCmykChanged(object sender)
 		{
-			//	Une valeur CMYK a été changée.
+			//	Une valeur CMYK a Ã©tÃ© changÃ©e.
 			if (this.suspendColorEvents == 0)
 			{
 				this.FieldsCmykToColor ();
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTextGrayChanged(object sender)
 		{
-			//	Une valeur Gray a été changée.
+			//	Une valeur Gray a Ã©tÃ© changÃ©e.
 			if (this.suspendColorEvents == 0)
 			{
 				this.FieldsGrayToColor ();
@@ -846,7 +846,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTextHexaChanged(object sender)
 		{
-			//	Une valeur Hexa a été changée.
+			//	Une valeur Hexa a Ã©tÃ© changÃ©e.
 			if (this.suspendColorEvents == 0)
 			{
 				this.FieldsHexaToColor ();
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleWheelChanged(object sender)
 		{
-			//	Couleur dans le cercle changée.
+			//	Couleur dans le cercle changÃ©e.
 			if (this.suspendColorEvents == 0)
 			{
 				this.suspendColorEvents++;
@@ -874,14 +874,14 @@ namespace Epsitec.Common.Widgets
 
 		private void HandlePaletteExport(object sender)
 		{
-			//	Couleur dans palette cliquée.
+			//	Couleur dans palette cliquÃ©e.
 			this.Color = this.palette.SelectedColor;
 			this.OnColorChanged ();
 		}
 
 		private void HandlePaletteImport(object sender)
 		{
-			//	Couleur dans palette cliquée.
+			//	Couleur dans palette cliquÃ©e.
 			this.palette.WriteSelectedColor (this.Color);
 		}
 

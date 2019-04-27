@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum RegularType
 	{
 		Norm    = 0,
@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Regular représente une propriété d'un objet graphique.
+	/// La classe Regular reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Regular : Abstract
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Polar Deep
 		{
-			//	Profondeur des branches de l'étoile.
+			//	Profondeur des branches de l'Ã©toile.
 			get
 			{
 				return this.deep;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Polar E1
 		{
-			//	Torsion des branches de l'étoile.
+			//	Torsion des branches de l'Ã©toile.
 			get
 			{
 				return this.e1;
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Polar E2
 		{
-			//	Torsion des branches de l'étoile.
+			//	Torsion des branches de l'Ã©toile.
 			get
 			{
 				return this.e2;
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Polar I1
 		{
-			//	Torsion des branches de l'étoile.
+			//	Torsion des branches de l'Ã©toile.
 			get
 			{
 				return this.i1;
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Polar I2
 		{
-			//	Torsion des branches de l'étoile.
+			//	Torsion des branches de l'Ã©toile.
 			get
 			{
 				return this.i2;
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				string star = this.regularType == RegularType.Norm ? "" : " *";
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 			builder.Append(this.SampleText);
 			this.PutStyleBriefPostfix(builder);
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(RegularType type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			switch (type)
 			{
 				case RegularType.Star:     return Res.Strings.Property.Regular.Star;
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(RegularType type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch (type)
 			{
 				case RegularType.Star:     return "RegularStar";
@@ -242,14 +242,14 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
 		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Début du déplacement d'une poignée.
+			//	DÃ©but du dÃ©placement d'une poignÃ©e.
 			Objects.Regular reg = obj as Objects.Regular;
 
 			if (rank == 0)
@@ -291,13 +291,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignées.
+			//	Nombre de poignÃ©es.
 			return 5;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignée est visible.
+			//	Indique si une poignÃ©e est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -323,7 +323,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignée.
+			//	Retourne la position d'une poignÃ©e.
 			Objects.Regular reg = obj as Objects.Regular;
 			Point pos = Point.Zero;
 
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignée.
+			//	Modifie la position d'une poignÃ©e.
 			Objects.Regular reg = obj as Objects.Regular;
 
 			if (rank == 0)
@@ -462,7 +462,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Regular p = property as Regular;
 			p.regularType = this.regularType;
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Regular p = property as Regular;
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Regular(document);
 		}
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("NbFaces", this.nbFaces);
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Regular(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.nbFaces = info.GetInt32("NbFaces");
 
 			if (this.document.IsRevisionGreaterOrEqual(2, 0, 16))

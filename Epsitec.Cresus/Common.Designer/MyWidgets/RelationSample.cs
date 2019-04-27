@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant de dessiner un échantillon de relation (flèche).
+	/// Widget permettant de dessiner un Ã©chantillon de relation (flÃ¨che).
 	/// </summary>
 	public class RelationSample : Widget
 	{

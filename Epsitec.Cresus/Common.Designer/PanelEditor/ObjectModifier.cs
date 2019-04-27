@@ -9,7 +9,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
-	/// La classe ObjectModifier permet de gérer les 'widgets' de Designer.
+	/// La classe ObjectModifier permet de gÃ©rer les 'widgets' de Designer.
 	/// </summary>
 	public class ObjectModifier
 	{
@@ -100,11 +100,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 		public enum ObjectType
 		{
 			Unknow,
-			HSeparator,			// séparateur horizontal
-			VSeparator,			// séparateur vertical
-			Button,				// bouton associé à une commande
-			Placeholder,		// texte éditable lié à la base de données
-			Table,				// table lié à la base de données
+			HSeparator,			// sÃ©parateur horizontal
+			VSeparator,			// sÃ©parateur vertical
+			Button,				// bouton associÃ© Ã  une commande
+			Placeholder,		// texte Ã©ditable liÃ© Ã  la base de donnÃ©es
+			Table,				// table liÃ© Ã  la base de donnÃ©es
 			StaticText,			// texte fixe
 			Group,				// conteneur invisible
 			GroupFrame,			// conteneur avec cadre
@@ -157,11 +157,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			if (obj is Separator)
 			{
-				if (obj.PreferredHeight == 1)  // séparateur horizontal ?
+				if (obj.PreferredHeight == 1)  // sÃ©parateur horizontal ?
 				{
 					return ObjectType.HSeparator;
 				}
-				else  // séparateur vertical ?
+				else  // sÃ©parateur vertical ?
 				{
 					return ObjectType.VSeparator;
 				}
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				return ObjectType.StaticText;
 			}
 
-			//	Ce test doit s'exécuter avant FrameBox, car un PanelPlaceholder est
+			//	Ce test doit s'exÃ©cuter avant FrameBox, car un PanelPlaceholder est
 			//	aussi un FrameBox !
 			if (obj is UI.PanelPlaceholder)
 			{
@@ -217,14 +217,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static string GetObjectIcon(Widget obj)
 		{
-			//	Retourne l'icône d'un objet.
+			//	Retourne l'icÃ´ne d'un objet.
 			ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
 			return ObjectModifier.GetObjectIcon(type);
 		}
 
 		protected static string GetObjectIcon(ObjectType type)
 		{
-			//	Retourne l'icône d'un objet.
+			//	Retourne l'icÃ´ne d'un objet.
 			switch (type)
 			{
 				case ObjectType.HSeparator:   return "ObjectHLine";
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		{
 			//	Retourne le druid de l'objet.
 			//	On peut obtenir le druid du panneau de base (MainPanel), bien que la
-			//	méthode HasDruid retourne false !
+			//	mÃ©thode HasDruid retourne false !
 			Druid druid = Druid.Empty;
 
 			ObjectType type = ObjectModifier.GetObjectType(obj);
@@ -306,12 +306,12 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				// Si nous venons de tomber sur le UI.Panel racine, celui-ci n'est pas
 				// contenu dans un PanelPlaceholder: on ne peut pas obtenir son DRUID
-				// de la même manière que pour les autres panels et il faut recourir à
+				// de la mÃªme maniÃ¨re que pour les autres panels et il faut recourir Ã 
 				// une aide externe.
-				// Quand ResourceAccess définit le lien entre bundle et panel au moyen
+				// Quand ResourceAccess dÃ©finit le lien entre bundle et panel au moyen
 				// de UI.Panel.SetPanel(bundle, panel), UI.Panel prend aussi note du
-				// lien inverse, à savoir panel-->bundle en conservant le DRUID du
-				// bundle. Ce DRUID est accessible via la méthode UI.Panel.GetBundleId.
+				// lien inverse, Ã  savoir panel-->bundle en conservant le DRUID du
+				// bundle. Ce DRUID est accessible via la mÃ©thode UI.Panel.GetBundleId.
 				druid = UI.Panel.GetBundleId(obj);
 			}
 
@@ -323,9 +323,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region TableColumns
 		public static void TableDefineAllColumns(Widget obj)
 		{
-			//	Ajoute les colonnes avec des réglages par défaut si l'objet
-			//	en cours d'édition est une table qui n'a aucune colonne (donc
-			//	qui a été fraîchement créée).
+			//	Ajoute les colonnes avec des rÃ©glages par dÃ©faut si l'objet
+			//	en cours d'Ã©dition est une table qui n'a aucune colonne (donc
+			//	qui a Ã©tÃ© fraÃ®chement crÃ©Ã©e).
 			UI.TablePlaceholder table = obj as UI.TablePlaceholder;
 			System.Diagnostics.Debug.Assert(table != null);
 
@@ -341,11 +341,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static StructuredType GetTableStructuredType(Widget obj)
 		{
-			//	Retourne la structure de données d'un objet 'Table'.
+			//	Retourne la structure de donnÃ©es d'un objet 'Table'.
 			UI.TablePlaceholder table = obj as UI.TablePlaceholder;
 			System.Diagnostics.Debug.Assert(table != null);
 
-			//	TODO: à supprimer un jour !!!
+			//	TODO: Ã  supprimer un jour !!!
 			Druid sourceTypeId = table.SourceTypeId;
 			ResourceManager resourceManager = Widgets.Helpers.VisualTree.GetResourceManager(obj);
 			Caption sourceTypeCaption = resourceManager.GetCaption(sourceTypeId);
@@ -416,14 +416,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static bool HasStructuredType(Widget obj)
 		{
-			//	Indique si l'objet a une structure de données associée.
+			//	Indique si l'objet a une structure de donnÃ©es associÃ©e.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			return type == ObjectType.MainPanel;
 		}
 
 		public static void SetStructuredType(Widget obj, StructuredType st)
 		{
-			//	Modifie la structure de données associée à l'objet.
+			//	Modifie la structure de donnÃ©es associÃ©e Ã  l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.MainPanel)
 			{
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static StructuredType GetStructuredType(Widget obj)
 		{
-			//	Retourne la structure de données associée de l'objet.
+			//	Retourne la structure de donnÃ©es associÃ©e de l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.MainPanel)
 			{
@@ -570,14 +570,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Grid
 		public void GridColumnAdd(Widget obj, int column, bool after)
 		{
-			//	Insère une colonne en poussant les suivantes.
+			//	InsÃ¨re une colonne en poussant les suivantes.
 			this.SetGridColumnsCount(obj, this.GetGridColumnsCount(obj)+1);
 			this.GridColumnShift(obj, after ? column+1 : column, column+1, 1);
 		}
 
 		public void GridColumnRemove(Widget obj, int column)
 		{
-			//	Supprime une colonne en décalant les suivantes.
+			//	Supprime une colonne en dÃ©calant les suivantes.
 			//	Pour cela, la colonne ne doit contenir aucun objet.
 			if (this.IsGridColumnEmpty(obj, column))
 			{
@@ -588,14 +588,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void GridRowAdd(Widget obj, int row, bool after)
 		{
-			//	Insère une ligne en poussant les suivantes.
+			//	InsÃ¨re une ligne en poussant les suivantes.
 			this.SetGridRowsCount(obj, this.GetGridRowsCount(obj)+1);
 			this.GridRowShift(obj, after ? row+1 : row, row+1, 1);
 		}
 
 		public void GridRowRemove(Widget obj, int row)
 		{
-			//	Supprime une ligne en décalant les suivantes.
+			//	Supprime une ligne en dÃ©calant les suivantes.
 			//	Pour cela, la colonne ne doit contenir aucun objet.
 			if (this.IsGridRowEmpty(obj, row))
 			{
@@ -606,7 +606,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool IsGridColumnEmpty(Widget obj, int column)
 		{
-			//	Vérifie si une colonne est entièrement vide.
+			//	VÃ©rifie si une colonne est entiÃ¨rement vide.
 			foreach (Widget children in obj.Children)
 			{
 				int c1 = this.GetGridColumn(children);
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool IsGridRowEmpty(Widget obj, int row)
 		{
-			//	Vérifie si une ligne est entièrement vide.
+			//	VÃ©rifie si une ligne est entiÃ¨rement vide.
 			foreach (Widget children in obj.Children)
 			{
 				int r1 = this.GetGridRow(children);
@@ -638,7 +638,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridColumnShift(Widget obj, int column, int columnGeometry, int direction)
 		{
-			//	Décale les colonnes.
+			//	DÃ©cale les colonnes.
 			if (direction > 0)
 			{
 				for (int i=this.GetGridColumnsCount(obj)-1; i>=columnGeometry; i--)
@@ -666,7 +666,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridRowShift(Widget obj, int row, int rowGeometry, int direction)
 		{
-			//	Décale les lignes.
+			//	DÃ©cale les lignes.
 			if (direction > 0)
 			{
 				for (int i=this.GetGridRowsCount(obj)-1; i>=rowGeometry; i--)
@@ -694,7 +694,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridColumnShiftGeometry(Widget obj, int src, int dst)
 		{
-			//	Copie les informations de géométrie d'une colonne.
+			//	Copie les informations de gÃ©omÃ©trie d'une colonne.
 			this.SetGridColumnMode(obj, dst, this.GetGridColumnMode(obj, src));  // (*)
 			this.SetGridColumnWidth(obj, dst, this.GetGridColumnWidth(obj, src));
 			this.SetGridColumnMinWidth(obj, dst, this.GetGridColumnMinWidth(obj, src));
@@ -705,7 +705,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridRowShiftGeometry(Widget obj, int src, int dst)
 		{
-			//	Copie les informations de géométrie d'une ligne.
+			//	Copie les informations de gÃ©omÃ©trie d'une ligne.
 			this.SetGridRowMode(obj, dst, this.GetGridRowMode(obj, src));  // (*)
 			this.SetGridRowHeight(obj, dst, this.GetGridRowHeight(obj, src));
 			this.SetGridRowMinHeight(obj, dst, this.GetGridRowMinHeight(obj, src));
@@ -734,7 +734,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridColumnsCount(Widget obj, int columns)
 		{
-			//	Détermine le nombre total de colonnes de l'objet group.
+			//	DÃ©termine le nombre total de colonnes de l'objet group.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
 
 			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -777,7 +777,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 						int i = gs.Search(GridSelection.Unit.Column, count-1);
 						if (i != -1)
 						{
-							gs.RemoveAt(i);  // supprime la colonne sélectionnée
+							gs.RemoveAt(i);  // supprime la colonne sÃ©lectionnÃ©e
 						}
 					}
 				}
@@ -803,7 +803,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridRowsCount(Widget obj, int rows)
 		{
-			//	Détermine le nombre total de colonnes de l'objet group.
+			//	DÃ©termine le nombre total de colonnes de l'objet group.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
 
 			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -846,7 +846,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 						int i = gs.Search(GridSelection.Unit.Row, count-1);
 						if (i != -1)
 						{
-							gs.RemoveAt(i);  // supprime la ligne sélectionnée
+							gs.RemoveAt(i);  // supprime la ligne sÃ©lectionnÃ©e
 						}
 					}
 				}
@@ -1058,7 +1058,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				if (engine != null)
 				{
 					ColumnDefinition def = engine.ColumnDefinitions[column];
-					if (System.Double.IsInfinity(def.MaxWidth))  return 9999;  // TODO: à supprimer !
+					if (System.Double.IsInfinity(def.MaxWidth))  return 9999;  // TODO: Ã  supprimer !
 					return def.MaxWidth;
 				}
 			}
@@ -1123,7 +1123,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				if (engine != null)
 				{
 					RowDefinition def = engine.RowDefinitions[row];
-					if (System.Double.IsInfinity(def.MaxHeight))  return 9999;  // TODO: à supprimer !
+					if (System.Double.IsInfinity(def.MaxHeight))  return 9999;  // TODO: Ã  supprimer !
 					return def.MaxHeight;
 				}
 			}
@@ -1215,7 +1215,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public double GetGridRowTopBorder(Widget obj, int row)
 		{
-			//	Retourne le bord supérieur d'une colonne.
+			//	Retourne le bord supÃ©rieur d'une colonne.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1231,7 +1231,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridRowTopBorder(Widget obj, int row, double value)
 		{
-			//	Modifie le bord supérieur d'une colonne.
+			//	Modifie le bord supÃ©rieur d'une colonne.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
 
 			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1247,7 +1247,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public double GetGridRowBottomBorder(Widget obj, int row)
 		{
-			//	Retourne le bord inférieur d'une colonne.
+			//	Retourne le bord infÃ©rieur d'une colonne.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1263,7 +1263,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridRowBottomBorder(Widget obj, int row, double value)
 		{
-			//	Modifie le bord inférieur d'une colonne.
+			//	Modifie le bord infÃ©rieur d'une colonne.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
 
 			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1316,7 +1316,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Widget GetGridCellWidget(Widget container, Widget exclude, int column, int row)
 		{
-			//	Retourne le premier widget occupant une cellule donnée.
+			//	Retourne le premier widget occupant une cellule donnÃ©e.
 			foreach (Widget widget in this.GetGridCellWidgets(container, exclude, column, row))
 			{
 				return widget;
@@ -1327,7 +1327,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected IEnumerable<Widget> GetGridCellWidgets(Widget container, Widget exclude, int column, int row)
 		{
-			//	Retourne tous les widgets occupant une cellule donnée, en tenant
+			//	Retourne tous les widgets occupant une cellule donnÃ©e, en tenant
 			//	compte de leur span.
 			if (this.AreChildrenGrid(container) && container.HasChildren)
 			{
@@ -1353,8 +1353,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 					int columnSpan = GridLayoutEngine.GetColumnSpan(child);
 					int rowSpan    = GridLayoutEngine.GetRowSpan(child);
 
-					//	Si le widget implémente IGridPermeable, cela implique qu'il a son
-					//	mot à dire sur le nombre de lignes et/ou colonnes qu'il utilise :
+					//	Si le widget implÃ©mente IGridPermeable, cela implique qu'il a son
+					//	mot Ã  dire sur le nombre de lignes et/ou colonnes qu'il utilise :
 					IGridPermeable permeable = child as IGridPermeable;
 					
 					if (permeable != null)
@@ -1374,7 +1374,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridClear(Widget obj)
 		{
-			//	Annule les informations d'appartenance à une cellule, lorsque l'objet n'est
+			//	Annule les informations d'appartenance Ã  une cellule, lorsque l'objet n'est
 			//	plus dans un tableau.
 			GridLayoutEngine.SetColumn(obj, -1);
 			GridLayoutEngine.SetRow(obj, -1);
@@ -1385,7 +1385,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool SetGridParentColumnRow(Widget obj, Widget parent, int column, int row)
 		{
-			//	Détermine la cellule dans un tableau à laquelle appartient l'objet.
+			//	DÃ©termine la cellule dans un tableau Ã  laquelle appartient l'objet.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(parent));
 			bool isChanging = false;
 
@@ -1415,7 +1415,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridColumn(Widget obj, int column)
 		{
-			//	Modifie la colonne à laquelle appartient l'objet.
+			//	Modifie la colonne Ã  laquelle appartient l'objet.
 			if (this.AreChildrenGrid(obj.Parent))
 			{
 				GridLayoutEngine.SetColumn(obj, column);
@@ -1424,7 +1424,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public int GetGridColumn(Widget obj)
 		{
-			//	Retourne la colonne à laquelle appartient l'objet.
+			//	Retourne la colonne Ã  laquelle appartient l'objet.
 			if (this.AreChildrenGrid(obj.Parent))
 			{
 				return GridLayoutEngine.GetColumn(obj);
@@ -1435,7 +1435,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridRow(Widget obj, int row)
 		{
-			//	Modifie la ligne à laquelle appartient l'objet.
+			//	Modifie la ligne Ã  laquelle appartient l'objet.
 			if (this.AreChildrenGrid(obj.Parent))
 			{
 				GridLayoutEngine.SetRow(obj, row);
@@ -1444,7 +1444,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public int GetGridRow(Widget obj)
 		{
-			//	Retourne la ligne à laquelle appartient l'objet.
+			//	Retourne la ligne Ã  laquelle appartient l'objet.
 			if (this.AreChildrenGrid(obj.Parent))
 			{
 				return GridLayoutEngine.GetRow(obj);
@@ -1456,8 +1456,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridColumnSpan(Widget obj, int span)
 		{
-			//	Détermine le nombre de colonnes occupées.
-			//	Empêche le chevauchement de deux objets.
+			//	DÃ©termine le nombre de colonnes occupÃ©es.
+			//	EmpÃªche le chevauchement de deux objets.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
 
 			int ic = GridLayoutEngine.GetColumn(obj);
@@ -1489,7 +1489,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public int GetGridColumnSpan(Widget obj)
 		{
-			//	Retourne le nombre de colonnes occupées.
+			//	Retourne le nombre de colonnes occupÃ©es.
 			if (this.AreChildrenGrid(obj.Parent))
 			{
 				return GridLayoutEngine.GetColumnSpan(obj);
@@ -1500,8 +1500,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetGridRowSpan(Widget obj, int span)
 		{
-			//	Détermine le nombre de lignes occupées.
-			//	Empêche le chevauchement de deux objets.
+			//	DÃ©termine le nombre de lignes occupÃ©es.
+			//	EmpÃªche le chevauchement de deux objets.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
 
 			int ic = GridLayoutEngine.GetColumn(obj);
@@ -1533,7 +1533,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public int GetGridRowSpan(Widget obj)
 		{
-			//	Retourne le nombre de lignes occupées.
+			//	Retourne le nombre de lignes occupÃ©es.
 			if (this.AreChildrenGrid(obj.Parent))
 			{
 				return GridLayoutEngine.GetRowSpan(obj);
@@ -1545,7 +1545,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Rectangle GetGridItemArea(Widget obj, GridSelection.OneItem item)
 		{
-			//	Retourne la zone rectangulaire correspondant à une sélection.
+			//	Retourne la zone rectangulaire correspondant Ã  une sÃ©lection.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1599,7 +1599,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		{
 			//	Retourne la position d'une colonne.
 			//	Accepte des index < 0 ou > que le nombre de colonnes, en prenant comme
-			//	valeur la première ou la dernière colonne.
+			//	valeur la premiÃ¨re ou la derniÃ¨re colonne.
 			if (this.AreChildrenGrid(obj) && index != GridSelection.Invalid)
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1637,7 +1637,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		{
 			//	Retourne la position d'une ligne.
 			//	Accepte des index < 0 ou > que le nombre de lignes, en prenant comme
-			//	valeur la première ou la dernière ligne.
+			//	valeur la premiÃ¨re ou la derniÃ¨re ligne.
 			if (this.AreChildrenGrid(obj) && index != GridSelection.Invalid)
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1984,7 +1984,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Rectangle GetFinalPadding(Widget obj)
 		{
-			//	Retourne le rectangle intérieur d'un objet AbstractGroup.
+			//	Retourne le rectangle intÃ©rieur d'un objet AbstractGroup.
 			Rectangle bounds = this.GetActualBounds(obj);
 
 			if (this.HasPadding(obj))
@@ -2000,7 +2000,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		public bool HasWidth(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la largeur d'un objet.
-			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
+			//	A ne pas confondre avec SetBounds pour le mode ancrÃ©. Un objet ancrÃ©
 			//	pour lequel on peut faire un SetBounds n'accepte pas le SetWidth !
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.MainPanel)
@@ -2044,7 +2044,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		public bool HasHeight(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la hauteur d'un objet.
-			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
+			//	A ne pas confondre avec SetBounds pour le mode ancrÃ©. Un objet ancrÃ©
 			//	pour lequel on peut faire un SetBounds n'accepte pas le HasHeight !
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.MainPanel)
@@ -2554,7 +2554,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void UndoMemorize(string actionName)
 		{
-			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.
+			//	MÃ©morise l'Ã©tat actuel, avant d'effectuer une modification dans le masque.
 			this.panelEditor.ViewersPanels.UndoMemorize(actionName, true);
 		}
 

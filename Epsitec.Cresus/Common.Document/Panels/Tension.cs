@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Panels
 {
 	/// <summary>
-	/// La classe Tension permet de choisir la tension d'un trait ‡ main levÈe.
+	/// La classe Tension permet de choisir la tension d'un trait √† main lev√©e.
 	/// </summary>
 	public class Tension : Abstract
 	{
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Tension p = this.property as Properties.Tension;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Tension p = this.property as Properties.Tension;
 			if ( p == null )  return;
 
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldTension == null )  return;
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

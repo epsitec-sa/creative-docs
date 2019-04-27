@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business;
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Entities
 		#region Static GroupIndex operations
 		public static bool GroupCompare(int groupIndex1, int groupIndex2, int levelCount)
 		{
-			//	Compare deux GroupIndex jusqu'à une profondeur donnée.
+			//	Compare deux GroupIndex jusqu'Ã  une profondeur donnÃ©e.
 			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 1 -> true
 			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 2 -> true
 			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 3 -> false

@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void SetDocument(Settings.GlobalSettings gs, Document document)
 		{
-			//	Indique quel est le document actif, puisque les rubans sont globaux à l'application.
+			//	Indique quel est le document actif, puisque les rubans sont globaux Ã  l'application.
 			base.SetDocument(gs, document);
 
 			if (this.debugMode == DebugMode.DebugCommands)
@@ -99,8 +99,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void NotifyTextStylesChanged()
 		{
-			//	Appelé lorsque le style courant a été changé, par exemple suite au
-			//	déplacement du curseur.
+			//	AppelÃ© lorsque le style courant a Ã©tÃ© changÃ©, par exemple suite au
+			//	dÃ©placement du curseur.
 			if ( this.document == null )  return;
 			this.UpdateSelectedFont();
 		}
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void UpdateAfterFontListChanged()
 		{
-			//	Met à jour la liste des styles.
+			//	Met Ã  jour la liste des styles.
 			if ( this.document == null )  return;
 			this.document.Wrappers.FontFaceComboUpdate(this.comboFont);
 			this.comboFont.UpdateButtons();
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void UpdateSelectedFont()
 		{
-			//	Met à jour la police sélectionnée en fonction du texte en édition.
+			//	Met Ã  jour la police sÃ©lectionnÃ©e en fonction du texte en Ã©dition.
 			if ( this.document == null )  return;
 			if ( this.document.Wrappers.TextFlow == null )  return;
 
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Ribbons
 		
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonBold == null )  return;
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected Widgets.ButtonFontFace CreateButtonFontFace(string command)
 		{
-			//	Crée un bouton pour une police.
+			//	CrÃ©e un bouton pour une police.
 			Command c = Common.Widgets.Command.Get (command);
 			Widgets.ButtonFontFace button = new Widgets.ButtonFontFace(this);
 

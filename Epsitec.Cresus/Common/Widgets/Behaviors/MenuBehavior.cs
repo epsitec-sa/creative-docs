@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -10,17 +10,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// La classe MenuBehavior implémente la logique permettant de gérer un menu
-	/// (affichage d'une ou plusieurs fenêtres flottantes, fermeture, etc.)
+	/// La classe MenuBehavior implÃ©mente la logique permettant de gÃ©rer un menu
+	/// (affichage d'une ou plusieurs fenÃªtres flottantes, fermeture, etc.)
 	/// </summary>
 	public sealed class MenuBehavior : Types.DependencyObject
 	{
 		public MenuBehavior()
 		{
-			//	En principe, on associe à toute une hiérarchie (menu + sous-menus)
-			//	un unique MenuBehavior. Dans la pratique, ce n'est pas nécessaire
-			//	et seul le MenuBehavior associé à la racine des menus sera utilisé
-			//	pour gérer l'ensemble des (sous-)menus.
+			//	En principe, on associe Ã  toute une hiÃ©rarchie (menu + sous-menus)
+			//	un unique MenuBehavior. Dans la pratique, ce n'est pas nÃ©cessaire
+			//	et seul le MenuBehavior associÃ© Ã  la racine des menus sera utilisÃ©
+			//	pour gÃ©rer l'ensemble des (sous-)menus.
 		}
 
 
@@ -60,10 +60,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 					{
 						System.Diagnostics.Debug.Assert (MenuBehavior.menuLastBehavior == this);
 						
-						//	Quand un menu est "gelé", il ne réagit plus aux
-						//	événements souris. Il faut mémoriser l'état courant
-						//	pour pouvoir le restaurer au moment où le menu est
-						//	dégelé :
+						//	Quand un menu est "gelÃ©", il ne rÃ©agit plus aux
+						//	Ã©vÃ©nements souris. Il faut mÃ©moriser l'Ã©tat courant
+						//	pour pouvoir le restaurer au moment oÃ¹ le menu est
+						//	dÃ©gelÃ© :
 						
 						this.frozenMenuLastItem = MenuBehavior.menuLastItem;
 						
@@ -98,11 +98,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public static MenuBehavior OpenItemSubmenu(Widget item, Animate animate)
 		{
-			//	Ouvre le sous-menu d'un MenuItem donné. Retourne le MenuBehavior
-			//	associé au sous-menu en question.
+			//	Ouvre le sous-menu d'un MenuItem donnÃ©. Retourne le MenuBehavior
+			//	associÃ© au sous-menu en question.
 			
-			//	Si l'item spécifié ne possède pas de sous-menu, on garantit au
-			//	moins que le (sous-)menu contenant l'item lui-même est visible.
+			//	Si l'item spÃ©cifiÃ© ne possÃ¨de pas de sous-menu, on garantit au
+			//	moins que le (sous-)menu contenant l'item lui-mÃªme est visible.
 			
 			if (item == null)
 			{
@@ -154,8 +154,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public static MenuBehavior CloseItemMenu(Widget item)
 		{
-			//	Ferme complètement le menu associé à l'item spécifié. Les fenêtres
-			//	correspondant aux (sous-)menus sont simplement cachées.
+			//	Ferme complÃ¨tement le menu associÃ© Ã  l'item spÃ©cifiÃ©. Les fenÃªtres
+			//	correspondant aux (sous-)menus sont simplement cachÃ©es.
 			
 			MenuBehavior behavior = MenuItem.GetMenuBehavior (item);
 			
@@ -184,34 +184,34 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public void OpenPopup(MenuWindow window, Animate animate)
 		{
-			//	Montre le menu en animant l'ouverture à la façon d'un "pop-up".
+			//	Montre le menu en animant l'ouverture Ã  la faÃ§on d'un "pop-up".
 			
 			this.OpenGenericMenu (window, animate, MenuType.Popup);
 		}
 		
 		public void OpenSubmenu(MenuWindow window, Animate animate)
 		{
-			//	Montre le menu en animant l'ouverture à la façon d'un sous-menu.
+			//	Montre le menu en animant l'ouverture Ã  la faÃ§on d'un sous-menu.
 			this.OpenGenericMenu (window, animate, MenuType.Submenu);
 		}
 
 		public void OpenCombo(MenuWindow window, Animate animate)
 		{
-			//	Montre le menu en animant l'ouverture à la façon d'une combo.
+			//	Montre le menu en animant l'ouverture Ã  la faÃ§on d'une combo.
 			this.OpenGenericMenu (window, animate, MenuType.ComboList);
 		}
 
 		
 		private void OpenGenericMenu(MenuWindow window, Animate animate, MenuType type)
 		{
-			//	Ouvre le sous-menu spécifié par sa fenêtre. Le sous-menu doit
-			//	impérativement appartenir à notre "menu".
+			//	Ouvre le sous-menu spÃ©cifiÃ© par sa fenÃªtre. Le sous-menu doit
+			//	impÃ©rativement appartenir Ã  notre "menu".
 			
 			if (window == null)
 			{
-				//	Il faut cacher toutes les fenêtres encore ouvertes, car ce
-				//	cas (window == null) apparaît quand on désire montrer un
-				//	menu horizontal déjà visible (racine d'un menu dynamique).
+				//	Il faut cacher toutes les fenÃªtres encore ouvertes, car ce
+				//	cas (window == null) apparaÃ®t quand on dÃ©sire montrer un
+				//	menu horizontal dÃ©jÃ  visible (racine d'un menu dynamique).
 				
 				this.HideAll ();
 				
@@ -225,8 +225,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (index >= 0)
 			{
-				//	Ce sous-menu est déjà visible : il faut s'assurer que, s'il a
-				//	lui-même des sous-menus, on ferme ceux qui doivent être cachés :
+				//	Ce sous-menu est dÃ©jÃ  visible : il faut s'assurer que, s'il a
+				//	lui-mÃªme des sous-menus, on ferme ceux qui doivent Ãªtre cachÃ©s :
 				
 				for (int i = live.Length-1; i > index; i--)
 				{
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					window.MenuType = type;
 				}
 				
-				//	Il faut s'assurer que le parent immédiat est visible avant
+				//	Il faut s'assurer que le parent immÃ©diat est visible avant
 				//	de montrer le sous-menu (si c'en est un) :
 				
 				if (window.MenuType == MenuType.Submenu)
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public void HideAll()
 		{
-			//	Ferme tous les menus associés à ce gestionnaire.
+			//	Ferme tous les menus associÃ©s Ã  ce gestionnaire.
 			
 			MenuBehavior.DisableKeyboardNavigation ();
 			
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		internal void Attach(Widget rootMenu)
 		{
 			//	Attache un menu racine au gestionnaire de menus. Un seul menu
-			//	racine peut être attaché à la fois. Attache aussi la fenêtre
+			//	racine peut Ãªtre attachÃ© Ã  la fois. Attache aussi la fenÃªtre
 			//	contenant le menu racine si le menu est est visible.
 			
 			System.Diagnostics.Debug.Assert (this.rootMenu == null);
@@ -349,13 +349,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void ShowSubmenu(MenuWindow window, Animate animate)
 		{
-			//	Montre un sous-menu en le positionnant au préalable par rapport
-			//	à son parent, de la manière la plus judicieuse possible.
+			//	Montre un sous-menu en le positionnant au prÃ©alable par rapport
+			//	Ã  son parent, de la maniÃ¨re la plus judicieuse possible.
 			
 			Widget       parent = window.ParentWidget;
 			Drawing.Size size   = window.Root.GetBestFitSize ();
 			
-			//	Détermine la position où afficher le menu...
+			//	DÃ©termine la position oÃ¹ afficher le menu...
 			
 			IMenuHost host = parent as IMenuHost;
 			
@@ -404,8 +404,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void CleanupAfterClose()
 		{
-			//	Après la fermeture complète d'un menu, stoppe le timer et remet
-			//	le gestionnaire de menus dans un état "neutre".
+			//	AprÃ¨s la fermeture complÃ¨te d'un menu, stoppe le timer et remet
+			//	le gestionnaire de menus dans un Ã©tat "neutre".
 			
 			MenuBehavior.timer.Stop ();
 			MenuBehavior.timerItem      = null;
@@ -435,8 +435,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		internal void HandleAboutToShowMenuWindow(MenuWindow window)
 		{
-			//	Appelé avant qu'une fenêtre du menu ne devienne visible. A
-			//	partir de ce moment, il faut considérer la fenêtre comme en
+			//	AppelÃ© avant qu'une fenÃªtre du menu ne devienne visible. A
+			//	partir de ce moment, il faut considÃ©rer la fenÃªtre comme en
 			//	cours d'affichage.
 			
 			this.AttachMenu ();
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		internal void HandleAboutToHideMenuWindow(MenuWindow window)
 		{
-			//	Appelé avant qu'une fenêtre du menu ne soit cachée.
+			//	AppelÃ© avant qu'une fenÃªtre du menu ne soit cachÃ©e.
 			
 			System.Diagnostics.Debug.Assert (this.liveMenuWindows.Contains (window) == true);
 			System.Diagnostics.Debug.Assert (this.liveMenuWindows.IndexOf (window) == this.liveMenuWindows.Count-1);
@@ -465,8 +465,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.liveMenuWindows.Remove (window);
 			this.UpdateItems ();
 			
-			//	Si une fenêtre possède le focus, il faut avant de la cacher activer
-			//	la fenêtre parent, pour éviter des clignotements de fenêtres :
+			//	Si une fenÃªtre possÃ¨de le focus, il faut avant de la cacher activer
+			//	la fenÃªtre parent, pour Ã©viter des clignotements de fenÃªtres :
 			
 			if ((window.IsFocused) &&
 				(Window.IsApplicationActive))
@@ -554,7 +554,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void AttachRootWindow()
 		{
-			//	Quand la fenêtre contenant le menu racine devient visible, on
+			//	Quand la fenÃªtre contenant le menu racine devient visible, on
 			//	active le filtre, etc. comme si on avait ouvert un menu.
 			
 			this.AttachMenu ();
@@ -584,7 +584,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void HandleRootMenuIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			//	Quand le menu racine devient visible, on s'attache à sa fenêtre
+			//	Quand le menu racine devient visible, on s'attache Ã  sa fenÃªtre
 			//	via AttachRootWindow, et vice versa.
 			
 			System.Diagnostics.Debug.Assert (this.rootMenu == sender);
@@ -649,7 +649,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (this.liveMenuWindows.Count > 0)
 			{
-				//	Il reste probablement des fenêtres de sous-menu à
+				//	Il reste probablement des fenÃªtres de sous-menu Ã 
 				//	refermer :
 				
 				MenuBehavior.timer.Suspend ();
@@ -706,7 +706,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void KeyboardSelectItem(int direction)
 		{
-			//	Sélectionne un élément du même menu à la suite d'un déplacement
+			//	SÃ©lectionne un Ã©lÃ©ment du mÃªme menu Ã  la suite d'un dÃ©placement
 			//	avec les touches haut/bas.
 			
 			int    n    = this.liveMenuWindows.Count;
@@ -760,7 +760,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if (n == 0)
 			{
 				//	Aucun (sous-)menu n'est actuellement visible. On va donc
-				//	ouvrir celui correspondant à la case sélectionnée :
+				//	ouvrir celui correspondant Ã  la case sÃ©lectionnÃ©e :
 				
 				MenuBehavior.OpenItemSubmenu (this.keyboardMenuItem, Animate.No);
 				MenuBehavior.EnableKeyboardNavigation ();
@@ -780,7 +780,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private void KeyboardSelectMenu(int direction)
 		{
 			//	Navigation avec les touches gauche/droite, pour passer de menu
-			//	en menu, dans le cas d'un menu hiérarchique.
+			//	en menu, dans le cas d'un menu hiÃ©rarchique.
 			
 			int      n      = this.liveMenuWindows.Count;
 			MenuItem item   = null;
@@ -789,9 +789,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if ((n > 0) &&
 				((this.rootWindow == this.keyboardMenuWindow) || (MenuBehavior.menuLastItem == null)))
 			{
-				//	Aucune case sélectionnée dans le menu, ou alors c'est une case
-				//	du menu principal. Dans ce cas, il faut commencer par sélec-
-				//	tionner la première case du premier sous-menu :
+				//	Aucune case sÃ©lectionnÃ©e dans le menu, ou alors c'est une case
+				//	du menu principal. Dans ce cas, il faut commencer par sÃ©lec-
+				//	tionner la premiÃ¨re case du premier sous-menu :
 				
 				MenuWindow menu = this.liveMenuWindows[0] as MenuWindow;
 				
@@ -806,7 +806,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (n == 0)
 			{
-				//	Déplacement horizontal dans le menu de base. Aucun sous-menu
+				//	DÃ©placement horizontal dans le menu de base. Aucun sous-menu
 				//	n'est actuellement ouvert. On ne va donc pas ouvrir de menu,
 				//	mais juste changer de MenuItem actif :
 				
@@ -836,9 +836,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			else
 			{
-				//	Déplacement horizontal avec un ou plusieurs sous-menus ouverts.
+				//	DÃ©placement horizontal avec un ou plusieurs sous-menus ouverts.
 				//	En fonction du niveau, il faudra soit ouvrir un sous-menu, soit
-				//	passer au menu suivant/précédent :
+				//	passer au menu suivant/prÃ©cÃ©dent :
 				
 				item = null;
 				
@@ -859,7 +859,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				{
 					if (direction > 0)
 					{
-						//	Tente d'ouvrir un sous-menu pour l'élément en cours.
+						//	Tente d'ouvrir un sous-menu pour l'Ã©lÃ©ment en cours.
 						
 						Widget submenu = MenuItem.GetSubmenu (item);
 						
@@ -878,7 +878,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 						}
 						else if (this.rootMenu != null)
 						{
-							//	Il n'y a pas de sous-menu pour l'élément en cours.
+							//	Il n'y a pas de sous-menu pour l'Ã©lÃ©ment en cours.
 							//	Il faut donc fermer ce menu et ouvrir le menu de
 							//	base suivant (s'il y en a).
 							
@@ -918,7 +918,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 							(parent.Window == this.rootWindow))
 						{
 							//	Il n'y a plus de parent sur lequel on puisse se
-							//	rabattre. Montre le menu précédent :
+							//	rabattre. Montre le menu prÃ©cÃ©dent :
 							
 							Widget root = this.FindRootItem (item);
 							
@@ -992,8 +992,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private bool ChangeFocusedItem(MenuItem newItem)
 		{
-			//	Change le focus d'un item à un autre, tout en tenant compte des
-			//	éventuels items "riches" qui nécessitent un traitement spécial.
+			//	Change le focus d'un item Ã  un autre, tout en tenant compte des
+			//	Ã©ventuels items "riches" qui nÃ©cessitent un traitement spÃ©cial.
 			
 			MenuItemContainer oldContainer = this.frozenMenuLastItem as MenuItemContainer;
 			MenuItemContainer newContainer = newItem as MenuItemContainer;
@@ -1001,13 +1001,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if (oldContainer != null)
 			{
 				//	Un item "riche" a le focus et il faut donc lui signaler qu'il va le
-				//	perdre (ce qui va mettre IsFrozen à 'false' et procéder à diverses
+				//	perdre (ce qui va mettre IsFrozen Ã  'false' et procÃ©der Ã  diverses
 				//	modifications) :
 				
 				oldContainer.DefocusFromMenu ();
 				
-				//	Les réglages de menuLast_... peuvent avoir été modifiés depuis
-				//	notre appel. On les applique à nouveau ici pour être sûr :
+				//	Les rÃ©glages de menuLast_... peuvent avoir Ã©tÃ© modifiÃ©s depuis
+				//	notre appel. On les applique Ã  nouveau ici pour Ãªtre sÃ»r :
 				
 				MenuBehavior.menuLastItem     = newItem;
 				MenuBehavior.menuLastBehavior = (newItem == null) ? null : this;
@@ -1218,8 +1218,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if ((hiliteBelowI > 0) &&
 				(MenuBehavior.timerKeepMenu != null))
 			{
-				//	La souris est sortie du menu spécifié par timerKeepMenu et
-				//	on ne doit donc pas peindre la case mise en évidence pour le
+				//	La souris est sortie du menu spÃ©cifiÃ© par timerKeepMenu et
+				//	on ne doit donc pas peindre la case mise en Ã©vidence pour le
 				//	sous-menu ouvert, s'il y en a un.
 				
 				for (int i = 0; i < hiliteBelowI; i++)
@@ -1315,9 +1315,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior behavior = behaviors[i];
 				MenuWindow[] windows  = (MenuWindow[]) behavior.liveMenuWindows.ToArray (typeof (MenuWindow));
 				
-				//	Analyse la chaîne des fenêtres correspondant au menu déroulé,
-				//	en commençant par la fin (dernier élément affiché = premier à
-				//	être considéré) :
+				//	Analyse la chaÃ®ne des fenÃªtres correspondant au menu dÃ©roulÃ©,
+				//	en commenÃ§ant par la fin (dernier Ã©lÃ©ment affichÃ© = premier Ã 
+				//	Ãªtre considÃ©rÃ©) :
 				
 				for (int j = windows.Length-1; j >= 0; j--)
 				{
@@ -1338,8 +1338,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			MenuBehavior[] behaviors = MenuBehavior.GetRootMenuBehaviors ();
 			
-			//	Peut-être y a-t-il une fenêtre contenant un menu racine toujours
-			//	visible à l'écran ?
+			//	Peut-Ãªtre y a-t-il une fenÃªtre contenant un menu racine toujours
+			//	visible Ã  l'Ã©cran ?
 			
 			for (int i = behaviors.Length-1; i >= 0; i--)
 			{
@@ -1403,8 +1403,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if ((MenuBehavior.menuList.Count == 0) &&
 				(MenuBehavior.menuRootList.Count == 0))
 			{
-				//	Rien à filtrer si aucun menu n'est actuellement visible. Il
-				//	est primordial de faire le test immédiatement, pour éviter
+				//	Rien Ã  filtrer si aucun menu n'est actuellement visible. Il
+				//	est primordial de faire le test immÃ©diatement, pour Ã©viter
 				//	de griller inutilement des cycles CPU.
 				
 				return;
@@ -1423,9 +1423,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 				if ((MenuBehavior.menuList.Count > 0) &&
 					(window.CapturingWidget != null))
 				{
-					//	Quelqu'un a capturé la souris... On désactive cette capture,
-					//	à moins que la fenêtre responsable de la capture soit elle-
-					//	même une fenêtre appartenant au menu actif :
+					//	Quelqu'un a capturÃ© la souris... On dÃ©sactive cette capture,
+					//	Ã  moins que la fenÃªtre responsable de la capture soit elle-
+					//	mÃªme une fenÃªtre appartenant au menu actif :
 					
 					int  n       = MenuBehavior.menuList.Count;
 					bool release = true;
@@ -1478,15 +1478,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			MenuBehavior.lastMousePos = mouse;
 			
-			//	Détermine dans quelle fenêtre appartenant à un menu la souris se
-			//	trouve ('menu' ou 'root' si la souris se trouve dans la fenêtre
-			//	racine d'un menu hiérarchique).
+			//	DÃ©termine dans quelle fenÃªtre appartenant Ã  un menu la souris se
+			//	trouve ('menu' ou 'root' si la souris se trouve dans la fenÃªtre
+			//	racine d'un menu hiÃ©rarchique).
 			
 			Window   menu = MenuBehavior.DetectWindow (mouse);
 			Window   root = menu == null ? MenuBehavior.DetectRootWindow (mouse) : null;
 			MenuItem item = null;
 			
-			//	Détermine dans quel MenuItem la souris se trouve actuellement :
+			//	DÃ©termine dans quel MenuItem la souris se trouve actuellement :
 			
 			if ((menu != null) ||
 				(root != null))
@@ -1494,27 +1494,27 @@ namespace Epsitec.Common.Widgets.Behaviors
 				item = MenuBehavior.DetectMenuItem (window, message.Cursor);
 			}
 			
-			//	Par défaut, on consomme l'événement lorsque toutes les conditions
+			//	Par dÃ©faut, on consomme l'Ã©vÃ©nement lorsque toutes les conditions
 			//	suivantes sont remplies :
 			//
-			//	- Un menu est affiché
-			//	- La souris se trouve dans une partie "client" d'une fenêtre
-			//	- La souris se trouve hors d'une fenêtre appartenant à un menu
+			//	- Un menu est affichÃ©
+			//	- La souris se trouve dans une partie "client" d'une fenÃªtre
+			//	- La souris se trouve hors d'une fenÃªtre appartenant Ã  un menu
 
 			bool mouseInMenu   = (item != null) || (menu != null);
 			bool swallowMessage = (MenuBehavior.menuList.Count > 0) && (message.NonClient == false) && !mouseInMenu;
 			
 			
-			//	Pour résumer : un clic hors du menu ferme le menu; un clic dans
-			//	le menu est traité par le menu item lui-même. Un relâchement de
-			//	bouton dans un menu item est considéré comme un clic.
+			//	Pour rÃ©sumer : un clic hors du menu ferme le menu; un clic dans
+			//	le menu est traitÃ© par le menu item lui-mÃªme. Un relÃ¢chement de
+			//	bouton dans un menu item est considÃ©rÃ© comme un clic.
 			
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
 					if (!mouseInMenu)
 					{
-						//	L'utilisateur a cliqué hors de tout menu actuellement
+						//	L'utilisateur a cliquÃ© hors de tout menu actuellement
 						//	ouvert. Si un menu est actuellement ouvert, il faut le
 						//	refermer :
 						
@@ -1525,9 +1525,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 					}
 					else if (mouseInMenu && (root == null))
 					{
-						//	L'utilisateur a cliqué dans une fenêtre appartenant à
+						//	L'utilisateur a cliquÃ© dans une fenÃªtre appartenant Ã 
 						//	un menu (autre que celui de la racine); on va changer
-						//	le focus si un item "riche" a été cliqué :
+						//	le focus si un item "riche" a Ã©tÃ© cliquÃ© :
 						
 						MenuBehavior that = MenuItem.GetMenuBehavior (item);
 						
@@ -1541,7 +1541,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					}
 					else
 					{
-						//	L'utilisateur a cliqué dans la fenêtre racine, dans la
+						//	L'utilisateur a cliquÃ© dans la fenÃªtre racine, dans la
 						//	surface du menu racine. S'il y a des menus ouverts, il
 						//	faut les fermer :
 						
@@ -1559,14 +1559,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 						if ((item is MenuItemContainer) ||
 							(item is MenuSeparator))
 						{
-							//	Rien à faire (on transmet le message plus loin) si
-							//	la souris se trouve dans un séparateur ou dans un
+							//	Rien Ã  faire (on transmet le message plus loin) si
+							//	la souris se trouve dans un sÃ©parateur ou dans un
 							//	item "riche".
 						}
 						else
 						{
 							//	Sinon, simule une pression du MenuItem et consomme
-							//	l'événement.
+							//	l'Ã©vÃ©nement.
 							
 							item.SimulateClicked ();
 							
@@ -1582,13 +1582,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 						(Drawing.Point.Distance (mouse, MenuBehavior.keyboardNavigationMousePos) < 4))
 					{
 						//	En cas de navigation au clavier, on ne tient pas compte
-						//	des petits déplacements de souris.
+						//	des petits dÃ©placements de souris.
 						
 						swallowMessage = true;
 					}
 					else
 					{
-						//	...sinon, on traite l'éventuel changement d'item actif :
+						//	...sinon, on traite l'Ã©ventuel changement d'item actif :
 						
 						MenuBehavior.ProcessMouseMoveInItem (item);
 					}
@@ -1603,8 +1603,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void ProcessMouseMoveInItem(MenuItem item)
 		{
-			//	Signale que la souris est dans le menu item spécifié. S'il y a
-			//	eu un changement depuis la dernière fois, il faut mettre à jour
+			//	Signale que la souris est dans le menu item spÃ©cifiÃ©. S'il y a
+			//	eu un changement depuis la derniÃ¨re fois, il faut mettre Ã  jour
 			//	les menus correspondants.
 			
 			if (MenuBehavior.menuLastItem == item)
@@ -1621,19 +1621,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 				return;
 			}
 			
-			//	Du moment qu'il y a eu un déplacement de souris suffisamment
-			//	important, on désactive la navigation au clavier :
+			//	Du moment qu'il y a eu un dÃ©placement de souris suffisamment
+			//	important, on dÃ©sactive la navigation au clavier :
 			
 			MenuBehavior.DisableKeyboardNavigation ();
 			
-			//	Nous allons mettre à jour (peut-être en plusieurs étapes) les
-			//	états de sélection des menu items. Pour éviter de clignoter, on
-			//	suspend (éventuellement) le redessin temporairement.
+			//	Nous allons mettre Ã  jour (peut-Ãªtre en plusieurs Ã©tapes) les
+			//	Ã©tats de sÃ©lection des menu items. Pour Ã©viter de clignoter, on
+			//	suspend (Ã©ventuellement) le redessin temporairement.
 			
 			MenuBehavior suspendedBehavior = null;
 			
-			//	S'il y avait un menu item sélectionné, on commence par signaler
-			//	que la souris a quitté cet item.
+			//	S'il y avait un menu item sÃ©lectionnÃ©, on commence par signaler
+			//	que la souris a quittÃ© cet item.
 			
 			if (MenuBehavior.menuLastItem != null)
 			{
@@ -1652,7 +1652,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			
 			//	S'il y a un nouvel item qui contient la souris, on signale qu'il
-			//	faut le sélectionner.
+			//	faut le sÃ©lectionner.
 			
 			if (item != null)
 			{
@@ -1691,9 +1691,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 				return;
 			}
 			
-			//	S'il n'y a aucun menu ouvert, on ne traite les événements du
-			//	clavier uniquement si une navigation avait été activée au
-			//	préalable :
+			//	S'il n'y a aucun menu ouvert, on ne traite les Ã©vÃ©nements du
+			//	clavier uniquement si une navigation avait Ã©tÃ© activÃ©e au
+			//	prÃ©alable :
 			
 			if ((that.isOpen == false) &&
 				(that.keyboardMenuActive == false))

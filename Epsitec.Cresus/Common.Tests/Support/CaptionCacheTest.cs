@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Tests.Support
 			captionA_fr = CaptionCache.Instance.GetCaption (this.manager_fr, idA);
 			captionQ_fr = CaptionCache.Instance.GetCaption (this.manager_fr, idQ);
 
-			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA_fr.Description);
-			Assert.AreEqual ("Coefficient de Qualité.", captionQ_fr.Description);
+			Assert.AreEqual ("Angle de rotation de la trame, exprimÃ© en degrÃ©s.", captionA_fr.Description);
+			Assert.AreEqual ("Coefficient de QualitÃ©.", captionQ_fr.Description);
 			Assert.AreEqual ("A", Collection.Extract (captionA_fr.SortedLabels, 0));
 			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA_fr.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ_fr.SortedLabels, 0));

@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;

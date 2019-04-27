@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text
 	using IComparer = System.Collections.IComparer;
 	
 	/// <summary>
-	/// La structure CursorInfo permet de stocker à la fois l'identificateur
+	/// La structure CursorInfo permet de stocker Ã  la fois l'identificateur
 	/// d'un curseur et sa position dans le texte.
 	/// </summary>
 	public struct CursorInfo

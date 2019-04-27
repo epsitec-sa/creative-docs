@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								SelectionWaved
 		{
-			//	Attribut typographique "ondulÈ" des caractËres sÈlectionnÈs.
+			//	Attribut typographique "ondul√©" des caract√®res s√©lectionn√©s.
 			get
 			{
 				return this.textLayout.IsSelectionWaved(this.context);
@@ -420,7 +420,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetCursors(int from, int to, bool after)
 		{
-			//	Modifie les deux curseurs en mÍme temps.
+			//	Modifie les deux curseurs en m√™me temps.
 			int len = this.textLayout.MaxTextIndex;
 			
 			from = System.Math.Max(from, 0);
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isControlPressed)
 		{
-			//	Gestion d'une touche pressÈe avec KeyDown dans le texte.
+			//	Gestion d'une touche press√©e avec KeyDown dans le texte.
 			this.InitialMemorize();
 
 			if ( this.IsMultiLine )
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Widgets
 				
 					case KeyCode.PageUp:
 					case KeyCode.PageDown:
-						//	TODO: gÈrer PageUp et PageDown...
+						//	TODO: g√©rer PageUp et PageDown...
 						return true;
 				}
 			}
@@ -793,11 +793,11 @@ namespace Epsitec.Common.Widgets
 
 		private bool ProcessKeyPress(int key)
 		{
-			//	Gestion d'une touche pressÈe avec KeyPress dans le texte.
+			//	Gestion d'une touche press√©e avec KeyPress dans le texte.
 			if ( this.isReadOnly )  return false;
 			this.InitialMemorize();
 
-			if ( key >= 32 )  // TODO: ‡ vÈrifier ...
+			if ( key >= 32 )  // TODO: √† v√©rifier ...
 			{
 				bool replaced = this.textLayout.HasSelection(this.context);
 
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Widgets
 
 		private bool ProcessMouseDown(Drawing.Point pos)
 		{
-			//	AppelÈ lorsque le bouton de la souris est pressÈ.
+			//	Appel√© lorsque le bouton de la souris est press√©.
 			int index;
 			bool after;
 			this.mouseMoved = false;
@@ -898,7 +898,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ProcessMouseDrag(Drawing.Point pos)
 		{
-			//	AppelÈ lorsque la souris est dÈplacÈe, bouton pressÈ.
+			//	Appel√© lorsque la souris est d√©plac√©e, bouton press√©.
 			int index;
 			bool after;
 			this.mouseMoved = true;
@@ -920,13 +920,13 @@ namespace Epsitec.Common.Widgets
 
 		private void ProcessMouseUp(Drawing.Point pos, int downCount)
 		{
-			//	AppelÈ lorsque le bouton de la souris est rel‚chÈ.
+			//	Appel√© lorsque le bouton de la souris est rel√¢ch√©.
 			this.InitialMemorize ();
 
 			if (this.IsNumeric)
 			{
 				if (downCount >= 2)
-					downCount = 4;  // double clic -> sÈlectionne tout
+					downCount = 4;  // double clic -> s√©lectionne tout
 			}
 
 			if (downCount >= 4)  // quadruple clic ?
@@ -982,7 +982,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UndoMemorize(UndoType type)
 		{
-			//	MÈmorise l'Ètat actuel complet du texte, pour permettre l'annulation.
+			//	M√©morise l'√©tat actuel complet du texte, pour permettre l'annulation.
 
 			if (this.opletQueue == null)
 				return;
@@ -999,7 +999,7 @@ namespace Epsitec.Common.Widgets
 					 lastOplet.Navigator == this     &&
 					 lastOplet.Type == type)
 				{
-					return;  // situation initiale dÈj‡ mÈmorisÈe
+					return;  // situation initiale d√©j√† m√©moris√©e
 				}
 			}
 
@@ -1072,7 +1072,7 @@ namespace Epsitec.Common.Widgets
 
 			private void Swap()
 			{
-				//	Permute le texte et le contexte contenus par l'hÙte avec ceux
+				//	Permute le texte et le contexte contenus par l'h√¥te avec ceux
 				//	contenus dans TextOplet.
 				string undoText = string.Copy(this.textCopy);
 				string redoText = string.Copy(this.host.textLayout.InternalText);
@@ -1184,7 +1184,7 @@ namespace Epsitec.Common.Widgets
 
 		private void InitialMemorize()
 		{
-			//	MÈmorise l'Ètat avant une opÈration quelconque sur le texte.
+			//	M√©morise l'√©tat avant une op√©ration quelconque sur le texte.
 
 			this.initialInfo = new CursorInfo ()
 			{
@@ -1197,13 +1197,13 @@ namespace Epsitec.Common.Widgets
 
 		private void OnTextInserted(bool always)
 		{
-			//	GÈnËre un ÈvÈnement pour dire que des caractËres ont ÈtÈ insÈrÈs.
+			//	G√©n√®re un √©v√©nement pour dire que des caract√®res ont √©t√© ins√©r√©s.
 			if (!always && this.initialInfo.TextLength == this.textLayout.Text.Length)
 			{
 				return;
 			}
 
-			if (this.TextInserted != null)  // qq'un Ècoute ?
+			if (this.TextInserted != null)  // qq'un √©coute ?
 			{
 				this.textLayout.NotifyTextChangeEvent (this.TextInserted, this);
 			}
@@ -1211,13 +1211,13 @@ namespace Epsitec.Common.Widgets
 
 		private void OnTextDeleted(bool always)
 		{
-			//	GÈnËre un ÈvÈnement pour dire que des caractËres ont ÈtÈ dÈtruits.
+			//	G√©n√®re un √©v√©nement pour dire que des caract√®res ont √©t√© d√©truits.
 			if (!always && this.initialInfo.TextLength == this.textLayout.Text.Length)
 			{
 				return;
 			}
 
-			if (this.TextDeleted != null)  // qq'un Ècoute ?
+			if (this.TextDeleted != null)  // qq'un √©coute ?
 			{
 				this.textLayout.NotifyTextChangeEvent (this.TextDeleted, this);
 			}
@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Widgets
 
 		private void OnCursorChanged(bool always)
 		{
-			//	GÈnËre un ÈvÈnement pour dire que le curseur a bougÈ.
+			//	G√©n√®re un √©v√©nement pour dire que le curseur a boug√©.
 			if (!always                                       &&
 				 this.initialInfo.CursorFrom  == this.context.CursorFrom  &&
 				 this.initialInfo.CursorTo    == this.context.CursorTo    &&
@@ -1234,7 +1234,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			if (this.CursorChanged != null)  // qq'un Ècoute ?
+			if (this.CursorChanged != null)  // qq'un √©coute ?
 			{
 				this.textLayout.NotifyTextChangeEvent (this.CursorChanged, this);
 			}
@@ -1242,8 +1242,8 @@ namespace Epsitec.Common.Widgets
 
 		private void OnCursorScrolled()
 		{
-			//	GÈnËre un ÈvÈnement pour dire que le curseur a scrollÈ.
-			if (this.CursorScrolled != null)  // qq'un Ècoute ?
+			//	G√©n√®re un √©v√©nement pour dire que le curseur a scroll√©.
+			if (this.CursorScrolled != null)  // qq'un √©coute ?
 			{
 				this.textLayout.NotifyTextChangeEvent (this.CursorScrolled, this);
 			}
@@ -1251,8 +1251,8 @@ namespace Epsitec.Common.Widgets
 
 		private void OnStyleChanged()
 		{
-			//	GÈnËre un ÈvÈnement pour dire que le style a changÈ.
-			if (this.StyleChanged != null)  // qq'un Ècoute ?
+			//	G√©n√®re un √©v√©nement pour dire que le style a chang√©.
+			if (this.StyleChanged != null)  // qq'un √©coute ?
 			{
 				this.textLayout.NotifyTextChangeEvent (this.StyleChanged, this);
 			}

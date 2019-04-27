@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Debug
 {
 	/// <summary>
-	/// La classe FailureException permet de signaler un échec général.
+	/// La classe FailureException permet de signaler un Ã©chec gÃ©nÃ©ral.
 	/// </summary>
 	
 	[System.Serializable]

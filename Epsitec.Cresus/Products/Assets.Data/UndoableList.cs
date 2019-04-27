@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -63,8 +63,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private UndoItem UAdd(T item)
 		{
-			//	Ajoute un item à la fin de la liste et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	Ajoute un item Ã  la fin de la liste et retourne l'information permettant
+			//	de faire l'opÃ©ration inverse.
 			this.list.Add (item);
 
 			var undoData = new UndoData
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private UndoItem UInsert(int index, T item)
 		{
 			//	Ajoute un item dans la liste et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	de faire l'opÃ©ration inverse.
 			this.list.Insert (index, item);
 
 			var undoData = new UndoData
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private UndoItem URemove(T item)
 		{
 			//	Supprime un item de la liste et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	de faire l'opÃ©ration inverse.
 			var undoData = new UndoData
 			{
 				Index = this.IndexOf (item),
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private UndoItem URemoveAt(int index)
 		{
 			//	Supprime un item de la liste et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	de faire l'opÃ©ration inverse.
 			var undoData = new UndoData
 			{
 				Index = index,
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private UndoItem USet(int index, T item)
 		{
 			//	Remplace un item dans la liste et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	de faire l'opÃ©ration inverse.
 			var undoData = new UndoData
 			{
 				Index = index,

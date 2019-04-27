@@ -1,11 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe AbstractButton implémente les fonctions de base communes de tous
-	/// les boutons (notamment au niveau de la gestion des événements).
+	/// La classe AbstractButton implÃ©mente les fonctions de base communes de tous
+	/// les boutons (notamment au niveau de la gestion des Ã©vÃ©nements).
 	/// </summary>
 	public abstract class AbstractButton : Widget
 	{

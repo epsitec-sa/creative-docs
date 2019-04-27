@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// AggregateList représente la liste des styles graphiques.
+	/// AggregateList reprÃ©sente la liste des styles graphiques.
 	/// </summary>
 	public class AggregateList : AbstractStyleList
 	{
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public UndoableList List
 		{
-			//	Liste des aggrégats représentés dans la liste.
+			//	Liste des aggrÃ©gats reprÃ©sentÃ©s dans la liste.
 			get
 			{
 				return this.list;
@@ -71,13 +71,13 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override AbstractSample CreateSample()
 		{
-			//	Crée un échantillon.
+			//	CrÃ©e un Ã©chantillon.
 			return new Sample();
 		}
 
 		protected override void ListSample(AbstractSample sample, int rank)
 		{
-			//	 Met à jour l'échantillon d'une ligne de la liste.
+			//	 Met Ã  jour l'Ã©chantillon d'une ligne de la liste.
 			Sample sm = sample as Sample;
 
 			if ( rank == -1 || this.list == null )

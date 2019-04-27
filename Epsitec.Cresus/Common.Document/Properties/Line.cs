@@ -17,7 +17,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Line représente une propriété d'un objet graphique.
+	/// La classe Line reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Line : Abstract
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(StandardDashType type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -488,7 +488,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(StandardDashType type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case StandardDashType.Full:        return "LineFull";
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(CapStyle type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -518,7 +518,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(CapStyle type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case CapStyle.Round:   return "CapRound";
@@ -530,7 +530,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(JoinStyle type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(JoinStyle type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case JoinStyle.Round:  return "JoinRound";
@@ -555,7 +555,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				return string.Concat(Res.Strings.Property.Line.Short.Witdh, this.document.Modifier.RealToString(this.width));
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(Line.GetName(this.StandardDash));
@@ -581,7 +581,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
@@ -593,7 +593,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Line p = property as Line;
 			p.width = this.width;
@@ -611,7 +611,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Line p = property as Line;
@@ -632,7 +632,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Line(document);
 		}
@@ -699,7 +699,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void MoveGlobalStarting()
 		{
-			//	Début du déplacement global de la propriété.
+			//	DÃ©but du dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
 			this.InsertOpletProperty();
@@ -715,7 +715,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void MoveGlobalProcess(Selector selector)
 		{
-			//	Effectue le déplacement global de la propriété.
+			//	Effectue le dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
 			double scale = selector.GetTransformScale;
@@ -734,11 +734,11 @@ namespace Epsitec.Common.Document.Properties
 		
 		public void GetPenGap(int i, bool printing, out double pen, out double gap)
 		{
-			//	Donne les valeurs trait/trou d'un traitillé.
+			//	Donne les valeurs trait/trou d'un traitillÃ©.
 			pen = this.dashPen[i];
 			gap = this.dashGap[i];
 
-			if ( pen == 0.0 )  // pointillé ?
+			if ( pen == 0.0 )  // pointillÃ© ?
 			{
 				double min = printing ? 0.5 : 0.00001;
 				pen += min;
@@ -748,8 +748,8 @@ namespace Epsitec.Common.Document.Properties
 
 		public void ExportPDF(PDF.Port port, DrawingContext drawingContext, Objects.Abstract obj)
 		{
-			//	Exporte en PDF la propriété.
-			if ( this.dash )  // traitillé ?
+			//	Exporte en PDF la propriÃ©tÃ©.
+			if ( this.dash )  // traitillÃ© ?
 			{
 				port.SetLineDash(this.width, this.dashPen[0], this.dashGap[0], this.dashPen[1], this.dashGap[1], this.dashPen[2], this.dashGap[2]);
 			}
@@ -767,7 +767,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Width", this.width);
@@ -784,7 +784,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Line(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.width = info.GetDouble("Width");
 			this.cap = (CapStyle) info.GetValue("CapStyle", typeof(CapStyle));
 			this.join = (JoinStyle) info.GetValue("JoinStyle", typeof(JoinStyle));

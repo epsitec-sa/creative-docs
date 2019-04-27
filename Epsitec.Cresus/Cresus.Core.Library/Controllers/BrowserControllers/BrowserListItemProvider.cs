@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.BigList;
@@ -57,9 +57,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return false;
 			}
 
-			long µs = Profiler.ElapsedMicroseconds (() => this.FillDataCache (index));
+			long Âµs = Profiler.ElapsedMicroseconds (() => this.FillDataCache (index));
 
-			System.Diagnostics.Debug.WriteLine ("Resolved index {0} in {1} µs", index, µs);
+			System.Diagnostics.Debug.WriteLine ("Resolved index {0} in {1} Âµs", index, Âµs);
 
 			return this.dataCache.TryGetValue (index, out value);
 		}
@@ -74,11 +74,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				if (this.count == null)
 				{
-					long µs;
+					long Âµs;
 
-					this.count = Profiler.ElapsedMicroseconds (() => this.Accessor.GetItemCount (), out µs);
+					this.count = Profiler.ElapsedMicroseconds (() => this.Accessor.GetItemCount (), out Âµs);
 
-					System.Diagnostics.Debug.WriteLine ("Retrieved item count in {0} µs", µs);
+					System.Diagnostics.Debug.WriteLine ("Retrieved item count in {0} Âµs", Âµs);
 				}
 
 				return this.count.Value;

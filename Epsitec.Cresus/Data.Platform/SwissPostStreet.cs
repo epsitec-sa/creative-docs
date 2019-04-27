@@ -1,4 +1,4 @@
-//	Copyright © 2012-2017, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2017, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -44,8 +44,8 @@ namespace Epsitec.Data.Platform
 
 		/// <summary>
 		/// Converts the Swiss Post street name (as represent in the MAT[CH]street database,
-		/// that is "Neuchâtel, rue de") into a user friendly street name (such as
-		/// "rue de Neuchâtel 32").
+		/// that is "NeuchÃ¢tel, rue de") into a user friendly street name (such as
+		/// "rue de NeuchÃ¢tel 32").
 		/// </summary>
 		/// <param name="street">The Swiss Post street name.</param>
 		/// <returns>The user friendly street name.</returns>

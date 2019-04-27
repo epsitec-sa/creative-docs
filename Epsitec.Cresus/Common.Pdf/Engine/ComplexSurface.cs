@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pdf.Engine
 	{
 		public ComplexSurface(int page, RichColor color, int id)
 		{
-			//	Crée une surface complexe correspondant à une couleur transparente unie.
+			//	CrÃ©e une surface complexe correspondant Ã  une couleur transparente unie.
 			this.page  = page;
 			this.type  = ComplexSurfaceType.TransparencyRegular;
 			this.color = color;
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public int Page
 		{
-			//	Numéro de la page (1..n).
+			//	NumÃ©ro de la page (1..n).
 			get
 			{
 				return this.page;

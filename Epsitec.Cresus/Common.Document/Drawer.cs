@@ -4,7 +4,7 @@ namespace Epsitec.Common.Document
 {
 	/// <summary>
 	/// La classe Drawer contient le dessinateur universel, pour dessiner sur
-	/// l'écran ou dans un bitmap avec AGG, pour imprimer ou pour exporter en PDF.
+	/// l'Ã©cran ou dans un bitmap avec AGG, pour imprimer ou pour exporter en PDF.
 	/// </summary>
 	public class Drawer
 	{
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document
 							   params Shape[] shapes)
 		{
 			//	Dessine des formes dans n'importe quel IPaintPort.
-			//	Retourne true si un texte a été sauté en mode NoText.
+			//	Retourne true si un texte a Ã©tÃ© sautÃ© en mode NoText.
 			FillMode iMode = port.FillMode;
 			bool skipText = false;
 
@@ -139,14 +139,14 @@ namespace Epsitec.Common.Document
 		public static void DrawPathDash(Graphics graphics, DrawingContext drawingContext, Path path,
 										double width, double dash, double gap, Drawing.Color color)
 		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			//	Dessine un traitillÃ© simple (dash/gap) le long d'un chemin.
 			Drawer.DrawPathDash(graphics, drawingContext.ScaleX, path, width, dash, gap, color);
 		}
 
 		public static void DrawPathDash(Graphics graphics, double scale, Path path,
 										double width, double dash, double gap, Drawing.Color color)
 		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			//	Dessine un traitillÃ© simple (dash/gap) le long d'un chemin.
 			if (path.IsEmpty)
 			{
 				return;
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Document
 						   DrawingContext drawingContext,
 						   params Shape[] shapes)
 		{
-			//	Détecte si la souris est sur une forme.
+			//	DÃ©tecte si la souris est sur une forme.
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null ||
@@ -209,8 +209,8 @@ namespace Epsitec.Common.Document
 								 DrawingContext drawingContext,
 								 params Shape[] shapes)
 		{
-			//	Détecte si la souris est sur le pourtour d'une forme.
-			//	Retourne le rang de la poignée de départ, ou -1
+			//	DÃ©tecte si la souris est sur le pourtour d'une forme.
+			//	Retourne le rang de la poignÃ©e de dÃ©part, ou -1
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null ||
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document
 								   Shape shape,
 								   Objects.Abstract obj)
 		{
-			//	Dessine une surface à l'écran ou dans un bitmap.
+			//	Dessine une surface Ã  l'Ã©cran ou dans un bitmap.
 			this.DrawShape(port, drawingContext, shape, obj);
 		}
 
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document
 								  Shape shape,
 								  Objects.Abstract obj)
 		{
-			//	Dessine un chemin à l'écran ou dans un bitmap.
+			//	Dessine un chemin Ã  l'Ã©cran ou dans un bitmap.
 			Properties.Line stroke = shape.PropertyStroke;
 
 			if ( shape.Aspect != Aspect.Hilited    &&
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Document
 								 Shape shape,
 								 Objects.Abstract obj)
 		{
-			//	Dessine une forme à l'écran ou dans un bitmap.
+			//	Dessine une forme Ã  l'Ã©cran ou dans un bitmap.
 			SurfaceAnchor sa = obj.SurfaceAnchor;
 			if ( sa.IsSurfaceZero && shape.Aspect != Aspect.Support )  return;
 
@@ -437,7 +437,7 @@ namespace Epsitec.Common.Document
 				int step = (int)(surface.Smooth*sx);
 				if ( step > 20 )  step = 20;
 				if ( drawingContext != null && !drawingContext.PreviewActive )  step /= 4;  // brouillon
-				if ( drawingContext != null && drawingContext.IsBitmap )  step *= 2;  // qualité supérieure
+				if ( drawingContext != null && drawingContext.IsBitmap )  step *= 2;  // qualitÃ© supÃ©rieure
 				if ( step <  2 )  step =  2;
 				for ( int i=0 ; i<step ; i++ )
 				{
@@ -499,7 +499,7 @@ namespace Epsitec.Common.Document
 					port.FinalRenderSolid(c1);
 				}
 			}
-			else	// dégradé ?
+			else	// dÃ©gradÃ© ?
 			{
 				Color c1 = surface.Color1.Basic;
 				Color c2 = surface.Color2.Basic;
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Document
 
 		protected static void RenderHatch(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
-			//	Effectue le rendu d'une zone quelconque hachurée.
+			//	Effectue le rendu d'une zone quelconque hachurÃ©e.
 			Drawing.RichColor initialColor = port.RichColor;
 
 			RichColor c1 = surface.Color1;
@@ -725,7 +725,7 @@ namespace Epsitec.Common.Document
 
 		protected static void RenderSquares(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
-			//	Effectue le rendu d'une zone quelconque de carrés.
+			//	Effectue le rendu d'une zone quelconque de carrÃ©s.
 			Drawing.RichColor initialColor = port.RichColor;
 
 			RichColor c1 = surface.Color1;
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Document
 		protected static void MinRectMotif(Properties.Gradient surface, SurfaceAnchor sa, int i, out Point p1, out Point p2, out Point p3, out Point p4, out double offset)
 		{
 			//	Calcule le rectangle le plus petit possible qui sera rempli par le motif.
-			//	L'offset permet à deux objets proches d'avoir des hachures jointives.
+			//	L'offset permet Ã  deux objets proches d'avoir des hachures jointives.
 			Rectangle bbox = sa.BoundingBox;
 
 			double b = Math.ClipAngleDeg(sa.Direction+surface.GetHatchAngle(i));
@@ -866,7 +866,7 @@ namespace Epsitec.Common.Document
 
 			Properties.Line stroke = shape.PropertyStroke;
 
-			if ( stroke.Dash )  // traitillé ?
+			if ( stroke.Dash )  // traitillÃ© ?
 			{
 				DashedPath dp = new DashedPath();
 				dp.DefaultZoom = drawingContext.ScaleX;
@@ -957,7 +957,7 @@ namespace Epsitec.Common.Document
 			{
 				Properties.Line stroke = shape.PropertyStroke;
 
-				if ( stroke.Dash )  // traitillé ?
+				if ( stroke.Dash )  // traitillÃ© ?
 				{
 					DashedPath dp = new DashedPath();
 					dp.DefaultZoom = drawingContext.ScaleX;
@@ -1035,7 +1035,7 @@ namespace Epsitec.Common.Document
 									Properties.Line stroke)
 		{
 			//	Initialise le port en fonction du trait.
-			if ( stroke.Dash )  // traitillé ?
+			if ( stroke.Dash )  // traitillÃ© ?
 			{
 				port.SetLineDash(stroke.Width, stroke.GetDashPen(0), stroke.GetDashGap(0), stroke.GetDashPen(1), stroke.GetDashGap(1), stroke.GetDashPen(2), stroke.GetDashGap(2));
 			}

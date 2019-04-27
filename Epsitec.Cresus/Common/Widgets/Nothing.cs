@@ -3,7 +3,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Nothing permet de représenter une croix.
+	/// La classe Nothing permet de reprÃ©senter une croix.
 	/// </summary>
 	public class Nothing : Widget
 	{

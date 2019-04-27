@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Rules
 			{
 				if (!entity.OfficeOwner.ParishGroup.IsParish ())
 				{
-					Logic.BusinessRuleException ("La gestion séléctionnée n'est pas de type paroisse");
+					Logic.BusinessRuleException ("La gestion sÃ©lÃ©ctionnÃ©e n'est pas de type paroisse");
 					return;
 				}
 			}		

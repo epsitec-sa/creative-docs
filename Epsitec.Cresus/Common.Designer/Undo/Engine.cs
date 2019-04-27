@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 

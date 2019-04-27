@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System;
@@ -620,8 +620,8 @@ namespace Epsitec.Common.OpenType.Platform
 					int table  = 0x66637474;		//	"ttcf"
 					int length = Win32.GetFontData (dc.Handle, table, 0, null, 0);
 					
-					//	Si la tentative d'accès à la table TTC n'a pas abouti, on essaie
-					//	encore d'accéder normalement à la fonte :
+					//	Si la tentative d'accÃ¨s Ã  la table TTC n'a pas abouti, on essaie
+					//	encore d'accÃ©der normalement Ã  la fonte :
 					
 					if (length <= 0)
 					{
@@ -692,7 +692,7 @@ namespace Epsitec.Common.OpenType.Platform
 					if (Win32.IsTrueTypeCollection (dc.Handle))
 					{
 						//	C'est une collection TrueType. On ne peut pas simplement
-						//	demander à GetFontData de retourner la table en question,
+						//	demander Ã  GetFontData de retourner la table en question,
 						//	car les offsets seraient faux. Il faudrait donc lire la
 						//	fonte en entier et extraire ce qui est pertinent !
 						

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public virtual Rectangle Bounds
 		{
-			//	Retourne la boîte de l'objet.
+			//	Retourne la boÃ®te de l'objet.
 			get
 			{
 				return this.bounds;
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public virtual Rectangle ExtendedBounds
 		{
-			//	Retourne la boîte de l'objet, éventuellement agrandie si l'objet est étendu.
+			//	Retourne la boÃ®te de l'objet, Ã©ventuellement agrandie si l'objet est Ã©tendu.
 			get
 			{
 				return this.Bounds;
@@ -123,13 +123,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public virtual void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 		}
 
 		protected void ChangeBoundsWidth(double posx, double minWidth)
 		{
 			double width = System.Math.Max (posx-this.bounds.Left, minWidth);
-			width = System.Math.Floor (width/2)*2;  // la largeur doit être pair
+			width = System.Math.Floor (width/2)*2;  // la largeur doit Ãªtre pair
 
 			this.Bounds = new Rectangle (this.bounds.Left, this.bounds.Bottom, width, this.bounds.Height);
 		}
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public virtual ColorItem BackgroundColorItem
 		{
-			//	Couleur de fond de la boîte.
+			//	Couleur de fond de la boÃ®te.
 			get
 			{
 				return this.colorFactory.ColorItem;
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected virtual void DrawAsOriginForMagnetConstrain(Graphics graphics)
 		{
-			//	Dessine l'objet comme étant l'origine d'une contrainte.
+			//	Dessine l'objet comme Ã©tant l'origine d'une contrainte.
 		}
 
 
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public bool IsHilitedForLinkChanging
 		{
-			//	Indique si cet objet est mis en évidence pendant un changement de destination d'une connexion.
+			//	Indique si cet objet est mis en Ã©vidence pendant un changement de destination d'une connexion.
 			get
 			{
 				return this.isHilitedForLinkChanging;
@@ -220,16 +220,16 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public bool ProcessDimmed(double step)
 		{
-			//	Fait évoluer l'intensité de l'objet. Retourne true si un changement est intervenu.
+			//	Fait Ã©voluer l'intensitÃ© de l'objet. Retourne true si un changement est intervenu.
 			double newIntensity;
 
 			if (this.isDimmed && !this.isHilitedForLinkChanging)
 			{
-				newIntensity = System.Math.Min (this.dimmedIntensity+step, 1);  // diminue l'intensité
+				newIntensity = System.Math.Min (this.dimmedIntensity+step, 1);  // diminue l'intensitÃ©
 			}
 			else
 			{
-				newIntensity = System.Math.Max (this.dimmedIntensity-step, 0);  // augmente l'intensité
+				newIntensity = System.Math.Max (this.dimmedIntensity-step, 0);  // augmente l'intensitÃ©
 			}
 
 			if (this.dimmedIntensity == newIntensity)
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public virtual void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			this.initialPos = pos;
 			this.isMouseDown = true;
 			this.isMouseDownForDrag = false;
@@ -299,20 +299,20 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public virtual void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			this.isMouseDown = false;
 			this.isMouseDownForDrag = false;
 		}
 
 		public virtual ActiveElement MouseDetectBackground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			return ActiveElement.None;
 		}
 
 		public virtual ActiveElement MouseDetectForeground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			return ActiveElement.None;
 		}
 
@@ -375,7 +375,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected static  bool DetectRoundRectangle(Rectangle rect, double radius, Point pos)
 		{
-			//	Détecte si une position est à l'intérieur d'un rectangle arrondi.
+			//	DÃ©tecte si une position est Ã  l'intÃ©rieur d'un rectangle arrondi.
 			radius = System.Math.Min (radius, System.Math.Min (rect.Width, rect.Height) / 2);
 
 			if (!rect.Contains (pos))
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected static bool DetectCircle(Point center, double radius, Point pos)
 		{
-			//	Détecte si une position est à l'intérieur d'un cercle.
+			//	DÃ©tecte si une position est Ã  l'intÃ©rieur d'un cercle.
 			return Point.Distance (center, pos) <= radius;
 		}
 
@@ -478,7 +478,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
 		{
-			//	Peint la surface avec un dégradé horizontal.
+			//	Peint la surface avec un dÃ©gradÃ© horizontal.
 			graphics.FillMode = FillMode.NonZero;
 			graphics.GradientRenderer.Fill = GradientFill.X;
 			graphics.GradientRenderer.SetColors(leftColor, rightColor);
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected void RenderVerticalGradient(Graphics graphics, Rectangle rect, Color bottomColor, Color topColor)
 		{
-			//	Peint la surface avec un dégradé vertical.
+			//	Peint la surface avec un dÃ©gradÃ© vertical.
 			graphics.FillMode = FillMode.NonZero;
 			graphics.GradientRenderer.Fill = GradientFill.Y;
 			graphics.GradientRenderer.SetColors(bottomColor, topColor);
@@ -533,7 +533,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected Path PathRoundRectangle(Rectangle rect, double radius)
 		{
-			//	Retourne le chemin d'un rectangle à coins arrondis.
+			//	Retourne le chemin d'un rectangle Ã  coins arrondis.
 			var path = new Path ();
 
 			radius = System.Math.Min (radius, System.Math.Min (rect.Width, rect.Height) / 2);
@@ -544,7 +544,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected Path PathBevelRectangle(Rectangle rect, double topBevelX, double topBevelY, double bottomBevelX, double bottomBevelY, bool isTopBevel, bool isBottomBevel)
 		{
-			//	Retourne le chemin d'un rectangle, avec des coins biseautés en haut et/ou en bas.
+			//	Retourne le chemin d'un rectangle, avec des coins biseautÃ©s en haut et/ou en bas.
 			double ox = rect.Left;
 			double oy = rect.Bottom;
 			double dx = rect.Width;
@@ -567,7 +567,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			Path path = new Path ();
 
-			if (isBottomBevel)  // coins bas/gauche et bas/droite biseautés ?
+			if (isBottomBevel)  // coins bas/gauche et bas/droite biseautÃ©s ?
 			{
 				path.MoveTo (ox, oy+bottomBevelY);
 				path.LineTo (ox+bottomBevelX, oy);
@@ -580,7 +580,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				path.LineTo (ox+dx, oy);
 			}
 
-			if (isTopBevel)  // coins haut/gauche et haut/droite biseautés ?
+			if (isTopBevel)  // coins haut/gauche et haut/droite biseautÃ©s ?
 			{
 				path.LineTo (ox+dx, oy+dy-topBevelY);
 				path.LineTo (ox+dx-topBevelX, oy+dy);
@@ -636,7 +636,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected ActiveElement DetectButtons(Point pos)
 		{
-			//	Détection dans l'ordre inverse du dessin !
+			//	DÃ©tection dans l'ordre inverse du dessin !
 			for (int i=this.buttons.Count-1; i>= 0; i--)
 			{
 				var button = this.buttons[i];
@@ -699,7 +699,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				this.DrawAsOriginForMagnetConstrain (graphics);
 			}
 
-			//	Dessine les contraintes imposées sur l'objet.
+			//	Dessine les contraintes imposÃ©es sur l'objet.
 			if (this.IsVerticalMagneted)
 			{
 				var rect = new Rectangle (this.bounds.Center.X-1, this.bounds.Bottom, 2, this.bounds.Height);

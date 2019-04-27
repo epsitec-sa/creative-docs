@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// La batterie de tests CheckParagraphManager vérifie le bon fonctionnement
+	/// La batterie de tests CheckParagraphManager vÃ©rifie le bon fonctionnement
 	/// des gestionnaires de paragraphes (puces, etc.)
 	/// </summary>
 	public sealed class CheckParagraphManager
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Text.Tests
 			Properties.AutoTextProperty at2 = new Epsitec.Common.Text.Properties.AutoTextProperty ("NN");
 			Properties.AutoTextProperty at3 = new Epsitec.Common.Text.Properties.AutoTextProperty ("NN");
 			
-			//	Deux propriétés AutoText identiques ne le sont jamais (à cause de
+			//	Deux propriÃ©tÃ©s AutoText identiques ne le sont jamais (Ã  cause de
 			//	leur identificateur unique) :
 			
 			Debug.Assert.IsFalse (Property.CompareEqualContents (at2, at3));
@@ -64,15 +64,15 @@ namespace Epsitec.Common.Text.Tests
 			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 			Debug.Assert.Equals (6, navigator.CursorPosition);
 			
-			//	On recule d'un caractère, mais on en saute 2 à cause de 'at2'.
+			//	On recule d'un caractÃ¨re, mais on en saute 2 Ã  cause de 'at2'.
 			
 			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 			Debug.Assert.Equals (4, navigator.CursorPosition);
 			Debug.Assert.IsTrue (story.TextContext.GetAutoText (story.ReadChar (navigator.ActiveCursor), out at));
 			Debug.Assert.IsTrue (Property.CompareEqualContents (at, at2));
 			
-			//	On recule d'un caractère et on en saute effectivement 1, même
-			//	si 'at1' décore "X" (vérifie que le code de navigation est OK).
+			//	On recule d'un caractÃ¨re et on en saute effectivement 1, mÃªme
+			//	si 'at1' dÃ©core "X" (vÃ©rifie que le code de navigation est OK).
 			
 			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 			Debug.Assert.Equals (3, navigator.CursorPosition);
@@ -85,9 +85,9 @@ namespace Epsitec.Common.Text.Tests
 			navigator.MoveTo (TextNavigator.Target.CharacterNext, 2);
 			Debug.Assert.Equals (4, navigator.CursorPosition);
 
-			//	On se trouve à cheval entre "X" et "12". Les propriétés visibles
-			//	par le navigateur ne reflètent jamais AutoText, car une insertion
-			//	à ce point insère du texte normal !
+			//	On se trouve Ã  cheval entre "X" et "12". Les propriÃ©tÃ©s visibles
+			//	par le navigateur ne reflÃ¨tent jamais AutoText, car une insertion
+			//	Ã  ce point insÃ¨re du texte normal !
 			
 			foreach (Property property in navigator.AccumulatedTextProperties)
 			{
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Debug.WriteLine ("Before SetParagraphStylesAndProperties (style2) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
-			//	Crée la liste à puces :
+			//	CrÃ©e la liste Ã  puces :
 			
 			ICursor temp = new Cursors.TempCursor ();
 			
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Debug.WriteLine ("After SetParagraphStylesAndProperties (style2) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
-			//	Supprime la liste à puces :
+			//	Supprime la liste Ã  puces :
 			
 			story.SetCursorPosition (temp, 1);
 			Internal.Navigator.SetParagraphStyles (story, temp, style1);

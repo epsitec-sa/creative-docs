@@ -1,4 +1,4 @@
-//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
-		/// Retourne un résumé complet de l'entité.
+		/// Retourne un rÃ©sumÃ© complet de l'entitÃ©.
 		/// </summary>
 		/// <returns></returns>
 		public virtual FormattedText GetSummary()
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
-		/// Retourne un résumé court (d'une seule ligne) de l'entité.
+		/// Retourne un rÃ©sumÃ© court (d'une seule ligne) de l'entitÃ©.
 		/// </summary>
 		/// <returns></returns>
 		public virtual FormattedText GetCompactSummary()
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
-		/// Retourne la liste des mots-clé de l'entité, en vue d'une recherche.
+		/// Retourne la liste des mots-clÃ© de l'entitÃ©, en vue d'une recherche.
 		/// </summary>
 		/// <returns></returns>
 		public string[] GetEntityKeywords()
@@ -579,7 +579,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		/// <summary>
 		/// Resolves the specified entity to the specified type. If the specified
-		/// entity is a façade, this will return the real underlying entity, cast
+		/// entity is a faÃ§ade, this will return the real underlying entity, cast
 		/// appropriately.
 		/// </summary>
 		/// <typeparam name="T">The type to resolve to.</typeparam>
@@ -1234,7 +1234,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		/// <summary>
 		/// Resolves this instance; override this method if the entity is just
-		/// a façade.
+		/// a faÃ§ade.
 		/// </summary>
 		/// <returns>The real entity instance.</returns>
 		protected virtual AbstractEntity Resolve()

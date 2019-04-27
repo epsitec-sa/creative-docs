@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe TextFieldPolar permet d'éditer une coordonnée polaire.
+	/// La classe TextFieldPolar permet d'Ã©diter une coordonnÃ©e polaire.
 	/// </summary>
 	public class TextFieldPolar : AbstractGroup
 	{
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldA.InternalDefaultValue = 0.0M;
 			this.textFieldA.Step                 = 1.0M;
 			this.textFieldA.Resolution           = 0.1M;
-			this.textFieldA.TextSuffix = "°";
+			this.textFieldA.TextSuffix = "Â°";
 			this.textFieldA.PreferredWidth = TextFieldPolar.DefaultTextWidth;
 			this.textFieldA.Dock = DockStyle.Right;
 			this.textFieldA.Margins = new Margins(this.marginWidth, 0, 0, 0);
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Document.Widgets
 #if false
 		public override double DefaultWidth
 		{
-			//	Largeur par défaut.
+			//	Largeur par dÃ©faut.
 			get
 			{
 				return TextFieldPolar.ShortWidth;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public static double DefaultLabelWidth
 		{
-			//	Largeur par défaut du label.
+			//	Largeur par dÃ©faut du label.
 			get
 			{
 				return 10;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public static double DefaultMarginWidth
 		{
-			//	Largeur par défaut de la marge entre le label et le texte.
+			//	Largeur par dÃ©faut de la marge entre le label et le texte.
 			get
 			{
 				return 2;
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public static double DefaultTextWidth
 		{
-			//	Largeur par défaut du texte.
+			//	Largeur par dÃ©faut du texte.
 			get
 			{
 				return 48;

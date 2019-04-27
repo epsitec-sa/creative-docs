@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe TextStyle définit un style de texte de haut niveau. Il s'agit
-	/// d'une collection de propriétés.
+	/// La classe TextStyle dÃ©finit un style de texte de haut niveau. Il s'agit
+	/// d'une collection de propriÃ©tÃ©s.
 	/// </summary>
 	public sealed class TextStyle : Styles.PropertyContainer, IContentsComparer
 	{
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Text
 		
 		internal void Clear()
 		{
-			//	Oublie les dépendances d'un style avec d'éventuels styles parents
+			//	Oublie les dÃ©pendances d'un style avec d'Ã©ventuels styles parents
 			//	pour redevenir un style "plat".
 			
 			this.parentStyles = null;
@@ -258,11 +258,11 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				//	Initialise un style dérivé d'autres styles. Il faut d'une part
+				//	Initialise un style dÃ©rivÃ© d'autres styles. Il faut d'une part
 				//	prendre note des styles parents et d'autre part se souvenir des
-				//	propriétés additionnelles. En effet, PropertyContainer stockant
-				//	toutes les propriétés au même niveau, il ne serait pas possible
-				//	d'en regénérer la liste si ces infos n'étaient pas conservées.
+				//	propriÃ©tÃ©s additionnelles. En effet, PropertyContainer stockant
+				//	toutes les propriÃ©tÃ©s au mÃªme niveau, il ne serait pas possible
+				//	d'en regÃ©nÃ©rer la liste si ces infos n'Ã©taient pas conservÃ©es.
 				
 				this.parentStyles    = TextStyle.FilterNullStyles (parentStyles);
 				this.styleProperties = new Property[properties.Count];
@@ -391,9 +391,9 @@ namespace Epsitec.Common.Text
 				}
 			}
 
-			//	S'il y a un style de paragraphe suivant chaîné à ce style, on le
-			//	sérialise en utilisant le même principe que pour les styles parents,
-			//	avec un préfixe "=>" :
+			//	S'il y a un style de paragraphe suivant chaÃ®nÃ© Ã  ce style, on le
+			//	sÃ©rialise en utilisant le mÃªme principe que pour les styles parents,
+			//	avec un prÃ©fixe "=>" :
 			
 			if (this.nextStyle != null)
 			{
@@ -434,9 +434,9 @@ namespace Epsitec.Common.Text
 			
 			this.textStyleClass = tsc;
 			
-			//	S'il y a des styles "parents" pour le style courant, on récupère leur
+			//	S'il y a des styles "parents" pour le style courant, on rÃ©cupÃ¨re leur
 			//	nom; ce n'est qu'au moment du DeserializeFixups que les noms seront
-			//	remplacés par des instances d'objets réels :
+			//	remplacÃ©s par des instances d'objets rÃ©els :
 			
 			if (nStyles > 0)
 			{
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			//	Désérialise encore les propriétés propres au style, s'il y en a :
+			//	DÃ©sÃ©rialise encore les propriÃ©tÃ©s propres au style, s'il y en a :
 			
 			if (nProps > 0)
 			{
@@ -494,8 +494,8 @@ namespace Epsitec.Common.Text
 						{
 							parentStyles[i] = list.GetTextStyle (fullName);
 							
-							//	Il faut s'assurer que le style duquel nous dérivons est
-							//	prête à l'emploi :
+							//	Il faut s'assurer que le style duquel nous dÃ©rivons est
+							//	prÃªte Ã  l'emploi :
 							
 							parentStyles[i].DeserializeFixups (list);
 						}
@@ -556,14 +556,14 @@ namespace Epsitec.Common.Text
 		
 		private static string GetStyleNameAndFilterDeletedStyles(TextStyle style)
 		{
-			//	Retourne le nom du style; si le style a été détruit, on retourne
-			//	le nom du style par défaut (que si c'est un style de paragraphe).
+			//	Retourne le nom du style; si le style a Ã©tÃ© dÃ©truit, on retourne
+			//	le nom du style par dÃ©faut (que si c'est un style de paragraphe).
 			
 			System.Diagnostics.Debug.Assert (style != null);
 			
 			if (style.IsDeleted)
 			{
-				//	Remplace le style détruit par le style par défaut correspondant.
+				//	Remplace le style dÃ©truit par le style par dÃ©faut correspondant.
 				
 				if (style.TextStyleClass == TextStyleClass.Paragraph)
 				{
@@ -637,7 +637,7 @@ namespace Epsitec.Common.Text
 			{
 				//	Ignore le nom dans la comparaison du contenu. C'est voulu !
 				
-				//	TODO: compléter
+				//	TODO: complÃ©ter
 				
 				return true;
 			}
@@ -703,9 +703,9 @@ namespace Epsitec.Common.Text
 		
 		private void GenerateStyleProperties()
 		{
-			//	Génère les propriétés accumulées/combinées correspondant à tous
-			//	les styles parents et aux propriétés locales, puis initialise le
-			//	PropertyContainer avec ces propriétés "à plat".
+			//	GÃ©nÃ¨re les propriÃ©tÃ©s accumulÃ©es/combinÃ©es correspondant Ã  tous
+			//	les styles parents et aux propriÃ©tÃ©s locales, puis initialise le
+			//	PropertyContainer avec ces propriÃ©tÃ©s "Ã  plat".
 			
 			System.Diagnostics.Debug.Assert (this.styleProperties != null);
 			System.Diagnostics.Debug.Assert (this.parentStyles != null);

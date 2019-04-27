@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions

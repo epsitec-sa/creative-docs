@@ -1,4 +1,4 @@
-//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -32,9 +32,9 @@ namespace Epsitec.Common.IO
 			
 			while (total < length)
 			{
-				//	Il se peut que le Read n'ait pas retourné tout ce
-				//	qui lui a été demandé, sans pour autant que la fin
-				//	ait été atteinte (par ex. lors de décompression).
+				//	Il se peut que le Read n'ait pas retournÃ© tout ce
+				//	qui lui a Ã©tÃ© demandÃ©, sans pour autant que la fin
+				//	ait Ã©tÃ© atteinte (par ex. lors de dÃ©compression).
 				
 				//	Dans ce cas, il faut tenter de lire la suite par
 				//	petits morceaux :

@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Supprimer une répondance...");
+			return Resources.Text ("Supprimer une rÃ©pondance...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -36,8 +36,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderEmployeeEntity, SimpleBrick<AiderEmployeeEntity>> form)
 		{
 			form
-				.Title ("Supprimer une répondance")
-				.Text ("Faut-il vraiment supprimer cette répondance ?")
+				.Title ("Supprimer une rÃ©pondance")
+				.Text ("Faut-il vraiment supprimer cette rÃ©pondance ?")
 				.End ();
 		}
 

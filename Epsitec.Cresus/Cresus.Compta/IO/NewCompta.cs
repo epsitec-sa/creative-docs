@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -13,7 +13,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.IO
 {
 	/// <summary>
-	/// Cette classe s'occupe de créer une nouvelle comptabilité de toutes pièces.
+	/// Cette classe s'occupe de crÃ©er une nouvelle comptabilitÃ© de toutes piÃ¨ces.
 	/// </summary>
 	public static class NewCompta
 	{
@@ -23,12 +23,12 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Description = FormattedText.Null;
 
 			compta.PlanComptable.Clear ();
-			compta.Périodes.Clear ();
+			compta.PÃ©riodes.Clear ();
 			compta.Journaux.Clear ();
-			compta.PiècesGenerator.Clear ();
+			compta.PiÃ¨cesGenerator.Clear ();
 			compta.Utilisateurs.Clear ();
 
-			compta.PiècesGenerator.Add (NewCompta.CreatePiècesGenerator ());
+			compta.PiÃ¨cesGenerator.Add (NewCompta.CreatePiÃ¨cesGenerator ());
 			compta.Utilisateurs.Add (NewCompta.CreateAdminUser ());
 		}
 
@@ -38,47 +38,47 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Description = FormattedText.Null;
 
 			compta.PlanComptable.Clear ();
-			compta.Périodes.Clear ();
+			compta.PÃ©riodes.Clear ();
 			compta.Journaux.Clear ();
-			compta.PiècesGenerator.Clear ();
+			compta.PiÃ¨cesGenerator.Clear ();
 			compta.Utilisateurs.Clear ();
 
 			NewCompta.CreateTVA (compta);
 			NewCompta.CreateMonnaies (compta);
-			NewCompta.CreatePériodes (compta);
-			compta.PiècesGenerator.Add (NewCompta.CreatePiècesGenerator ());
+			NewCompta.CreatePÃ©riodes (compta);
+			compta.PiÃ¨cesGenerator.Add (NewCompta.CreatePiÃ¨cesGenerator ());
 			compta.Journaux.Add (NewCompta.CreateJournal (compta));
 			compta.Utilisateurs.Add (NewCompta.CreateAdminUser ());
 		}
 
-		public static void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 1)
+		public static void CreatePÃ©riodes(ComptaEntity compta, int pastCount = -1, int postCount = 1)
 		{
-			compta.Périodes.Clear ();
+			compta.PÃ©riodes.Clear ();
 
 			var now = Date.Today;
 			for (int year = now.Year+pastCount; year <= now.Year+postCount; year++)
 			{
-				compta.Périodes.Add (NewCompta.CreatePériode (year));
+				compta.PÃ©riodes.Add (NewCompta.CreatePÃ©riode (year));
 			}
 		}
 
-		private static ComptaPériodeEntity CreatePériode(int year)
+		private static ComptaPÃ©riodeEntity CreatePÃ©riode(int year)
 		{
-			//	Crée une période couvrant une année.
+			//	CrÃ©e une pÃ©riode couvrant une annÃ©e.
 			var beginDate = new Date (year,  1,  1);  // du 1 janvier
-			var endDate   = new Date (year, 12, 31);  // au 31 décembre
+			var endDate   = new Date (year, 12, 31);  // au 31 dÃ©cembre
 
-			var période = new ComptaPériodeEntity ();
-			période.DateDébut    = beginDate;
-			période.DateFin      = endDate;
-			période.DernièreDate = beginDate;
+			var pÃ©riode = new ComptaPÃ©riodeEntity ();
+			pÃ©riode.DateDÃ©but    = beginDate;
+			pÃ©riode.DateFin      = endDate;
+			pÃ©riode.DerniÃ¨reDate = beginDate;
 
-			return période;
+			return pÃ©riode;
 		}
 
 		private static ComptaJournalEntity CreateJournal(ComptaEntity compta)
 		{
-			//	Crée un journal principal.
+			//	CrÃ©e un journal principal.
 			var journal = new ComptaJournalEntity ();
 
 			journal.Id  = compta.GetJournalId ();
@@ -89,8 +89,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private static ComptaUtilisateurEntity CreateAdminUser()
 		{
-			//	Crée l'utilisteur administrateur. Il est préférable qu'il n'ait pas de mot de passe,
-			//	pour permettre un login automatique à l'ouverture.
+			//	CrÃ©e l'utilisteur administrateur. Il est prÃ©fÃ©rable qu'il n'ait pas de mot de passe,
+			//	pour permettre un login automatique Ã  l'ouverture.
 			var utilisateur = new ComptaUtilisateurEntity ();
 
 			utilisateur.Utilisateur = "Admin";
@@ -101,23 +101,23 @@ namespace Epsitec.Cresus.Compta.IO
 			return utilisateur;
 		}
 
-		private static ComptaPiècesGeneratorEntity CreatePiècesGenerator()
+		private static ComptaPiÃ¨cesGeneratorEntity CreatePiÃ¨cesGenerator()
 		{
-			//	Crée le générateur de numéros de pièces de base.
-			var pièce = new ComptaPiècesGeneratorEntity ();
+			//	CrÃ©e le gÃ©nÃ©rateur de numÃ©ros de piÃ¨ces de base.
+			var piÃ¨ce = new ComptaPiÃ¨cesGeneratorEntity ();
 
-			pièce.Nom       = "Base";
-			pièce.Format    = "1";
-			pièce.Numéro    = 1;
-			pièce.Incrément = 1;
+			piÃ¨ce.Nom       = "Base";
+			piÃ¨ce.Format    = "1";
+			piÃ¨ce.NumÃ©ro    = 1;
+			piÃ¨ce.IncrÃ©ment = 1;
 
-			return pièce;
+			return piÃ¨ce;
 		}
 
 
 		public static void CreateTVA(ComptaEntity compta)
 		{
-			//	Crée tout ce qui concerne la TVA pour toutes comptabilités.
+			//	CrÃ©e tout ce qui concerne la TVA pour toutes comptabilitÃ©s.
 			compta.ListesTVA.Clear ();
 
 			{
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom = "Exclu",
 				};
 
-				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 1995, 0.0m);
+				liste.TauxParDÃ©faut = NewCompta.CreateTauxTVA (liste, 1995, 0.0m);
 
 				compta.ListesTVA.Add (liste);
 			}
@@ -134,13 +134,13 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var liste = new ComptaListeTVAEntity
 				{
-					Nom = "Réduit",
+					Nom = "RÃ©duit",
 				};
 
 				NewCompta.CreateTauxTVA (liste, 1995, 2.0m);
 				NewCompta.CreateTauxTVA (liste, 1999, 2.3m);
 				NewCompta.CreateTauxTVA (liste, 2001, 2.4m);
-				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 2011, 2.5m);
+				liste.TauxParDÃ©faut = NewCompta.CreateTauxTVA (liste, 2011, 2.5m);
 
 				compta.ListesTVA.Add (liste);
 			}
@@ -148,13 +148,13 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var liste = new ComptaListeTVAEntity
 				{
-					Nom = "Hébergement",
+					Nom = "HÃ©bergement",
 				};
 
 				NewCompta.CreateTauxTVA (liste, 1996, 3.0m);
 				NewCompta.CreateTauxTVA (liste, 1999, 3.5m);
 				NewCompta.CreateTauxTVA (liste, 2001, 3.6m);
-				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 2011, 3.8m);
+				liste.TauxParDÃ©faut = NewCompta.CreateTauxTVA (liste, 2011, 3.8m);
 
 				compta.ListesTVA.Add (liste);
 			}
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Compta.IO
 				NewCompta.CreateTauxTVA (liste, 1995, 6.5m);
 				NewCompta.CreateTauxTVA (liste, 1999, 7.5m);
 				NewCompta.CreateTauxTVA (liste, 2001, 7.6m);
-				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 2011, 8.0m);
+				liste.TauxParDÃ©faut = NewCompta.CreateTauxTVA (liste, 2011, 8.0m);
 
 				compta.ListesTVA.Add (liste);
 			}
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var entity = new ComptaTauxTVAEntity ()
 			{
-				DateDébut = new Date (year, 1, 1),
+				DateDÃ©but = new Date (year, 1, 1),
 				Taux      = taux/100,
 			};
 
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public static void CreateMonnaies(ComptaEntity compta)
 		{
-			//	Crée tout ce qui concerne les taux de change pour toutes comptabilités.
+			//	CrÃ©e tout ce qui concerne les taux de change pour toutes comptabilitÃ©s.
 			compta.Monnaies.Clear ();
 
 			NewCompta.CreateMonnaie (compta, "CHR", "Franc",     1.0m);
@@ -204,10 +204,10 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				CodeISO     = code,
 				Description = description,
-				Décimales   = 2,
+				DÃ©cimales   = 2,
 				Arrondi     = 0.01m,
 				Cours       = cours,
-				Unité       = 1,
+				UnitÃ©       = 1,
 			};
 
 			ComptaCompteEntity compte;

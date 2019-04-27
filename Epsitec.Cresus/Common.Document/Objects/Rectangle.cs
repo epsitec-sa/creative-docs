@@ -41,14 +41,14 @@ namespace Epsitec.Common.Document.Objects
 
 		public override string IconUri
 		{
-			//	Nom de l'icône.
+			//	Nom de l'icÃ´ne.
 			get { return Misc.Icon("ObjectRectangle"); }
 		}
 
 
 		public override Polygon PropertyHandleSupport
 		{
-			//	Retourne le polygone de support pour les poignées des propriétés.
+			//	Retourne le polygone de support pour les poignÃ©es des propriÃ©tÃ©s.
 			get
 			{
 				var polygons = this.GetPolygons ();
@@ -59,10 +59,10 @@ namespace Epsitec.Common.Document.Objects
 	
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Début du déplacement d'une poignée.
+			//	DÃ©but du dÃ©placement d'une poignÃ©e.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
-			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			if ( rank < this.handles.Count )  // poignÃ©e de l'objet ?
 			{
 				drawingContext.ConstrainClear();
 
@@ -86,8 +86,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Déplace une poignée.
-			if ( rank >= 4 )  // poignée d'une propriété ?
+			//	DÃ©place une poignÃ©e.
+			if ( rank >= 4 )  // poignÃ©e d'une propriÃ©tÃ© ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			//	Début de la création d'un objet.
+			//	DÃ©but de la crÃ©ation d'un objet.
 			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHomo(pos, false, -1);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
-			//	Déplacement pendant la création d'un objet.
+			//	DÃ©placement pendant la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
-			//	Fin de la création d'un objet.
+			//	Fin de la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
-			//	Crée les 2 autres poignées dans les coins opposés.
+			//	CrÃ©e les 2 autres poignÃ©es dans les coins opposÃ©s.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = this.Handle(1).Position;
 			this.HandleAdd(new Point(p1.X, p2.Y), HandleType.Primary);  // rang = 2
@@ -156,14 +156,14 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
-			//	pas exister et doit être détruit.
+			//	pas exister et doit Ãªtre dÃ©truit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 		public override void Reset()
 		{
-			//	Remet l'objet droit et d'équerre.
+			//	Remet l'objet droit et d'Ã©querre.
 			if (this.handles.Count >= 4)
 			{
 				Drawing.Rectangle box = this.BoundingBoxThin;
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
-			//	Crée le chemin de l'objet.
+			//	CrÃ©e le chemin de l'objet.
 			var polygons = this.GetPolygons ();
 			var corner = this.PropertyCorner;
 			return Polygon.GetPolygonPathCorner (drawingContext, polygons, corner, simplify);
@@ -250,14 +250,14 @@ namespace Epsitec.Common.Document.Objects
 
 		public override Path GetMagnetPath()
 		{
-			//	Retourne le chemin géométrique de l'objet pour les constructions
-			//	magnétiques.
+			//	Retourne le chemin gÃ©omÃ©trique de l'objet pour les constructions
+			//	magnÃ©tiques.
 			return this.PathBuild(null, true);
 		}
 
 		protected override Path GetPath()
 		{
-			//	Retourne le chemin géométrique de l'objet.
+			//	Retourne le chemin gÃ©omÃ©trique de l'objet.
 			return this.PathBuild(null, false);
 		}
 
@@ -265,13 +265,13 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
 		protected Rectangle(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 		}
 		#endregion
 	}

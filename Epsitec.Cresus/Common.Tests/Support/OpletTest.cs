@@ -10,7 +10,7 @@ namespace Epsitec.Common.Tests.Support
 			OpletQueue queue = new OpletQueue ();
 			IOplet[] oplets;
 			
-			//	Insère une action composée de deux oplets :
+			//	InsÃ¨re une action composÃ©e de deux oplets :
 			
 			using (queue.BeginAction ())
 			{
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (1, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
 			
-			//	Accède aux éléments de l'action en cours :
+			//	AccÃ¨de aux Ã©lÃ©ments de l'action en cours :
 			
 			oplets = queue.LastActionOplets;
 			
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual ("A1", (oplets[0] as NamedOplet).Name);
 			Assert.AreEqual ("A2", (oplets[1] as NamedOplet).Name);
 			
-			//	Défait l'action.
+			//	DÃ©fait l'action.
 			
 			queue.UndoAction ();
 			
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (1, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
 			
-			//	Commence la création d'une action avec abandon en cours de
+			//	Commence la crÃ©ation d'une action avec abandon en cours de
 			//	route :
 			
 			try
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (1, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
 			
-			//	Commence la création d'une action avec abandon explicite :
+			//	Commence la crÃ©ation d'une action avec abandon explicite :
 			
 			using (queue.BeginAction ())
 			{
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (1, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
 			
-			//	Crée une action avec une sous-action qui est abandonnée :
+			//	CrÃ©e une action avec une sous-action qui est abandonnÃ©e :
 			
 			using (queue.BeginAction ())
 			{
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (2, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
 			
-			//	Crée une action avec une sous-action qui est validée :
+			//	CrÃ©e une action avec une sous-action qui est validÃ©e :
 			
 			using (queue.BeginAction ())
 			{
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (3, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
 			
-			//	Accède aux éléments de l'action en cours :
+			//	AccÃ¨de aux Ã©lÃ©ments de l'action en cours :
 			
 			oplets = queue.LastActionOplets;
 			

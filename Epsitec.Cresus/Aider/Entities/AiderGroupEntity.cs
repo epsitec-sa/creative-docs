@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -346,10 +346,10 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText
 			(
 				TextFormatter.FormatText (this.Name).ApplyBold (), "\n",
-				"Membres autorisés: ", this.CanHaveMembers ().ToYesOrNo (), "\n",
-				"Sous-groupes autorisés: ", this.CanHaveSubgroups ().ToYesOrNo (), "\n",
+				"Membres autorisÃ©s: ", this.CanHaveMembers ().ToYesOrNo (), "\n",
+				"Sous-groupes autorisÃ©s: ", this.CanHaveSubgroups ().ToYesOrNo (), "\n",
 				"Sous-groupes modifiables: ", this.CanSubgroupsBeEdited ().ToYesOrNo (), "\n",
-				"Cache désactivé:", this.GroupDef.RoleCacheDisabled.ToYesOrNo (), "\n"
+				"Cache dÃ©sactivÃ©:", this.GroupDef.RoleCacheDisabled.ToYesOrNo (), "\n"
 			);
 		}
 
@@ -360,7 +360,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetNameWithRegion()
 		{
-			return TextFormatter.FormatText (this.Name, "–", AiderGroupIds.GetShortName (this.GetRootName ()));
+			return TextFormatter.FormatText (this.Name, "â€“", AiderGroupIds.GetShortName (this.GetRootName ()));
 		}
 
 		public FormattedText GetNameParishNameWithRegion()
@@ -372,12 +372,12 @@ namespace Epsitec.Aider.Entities
 
 			if (parishGroup == null)
 			{
-				return TextFormatter.FormatText (groupName, "–", regionName);
+				return TextFormatter.FormatText (groupName, "â€“", regionName);
 			}
 
 			var parishName = AiderGroupIds.GetShortName (parishGroup.Name);
 
-			return TextFormatter.FormatText (groupName, "–", parishName, "–", regionName);
+			return TextFormatter.FormatText (groupName, "â€“", parishName, "â€“", regionName);
 		}
 
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
@@ -718,12 +718,12 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!forceSubgroupDeletion && group.Subgroups.Count > 0)
 			{
-				throw new BusinessRuleException ("Opération impossible, ce groupe possède encore des sous-groupes : " + group.Path);
+				throw new BusinessRuleException ("OpÃ©ration impossible, ce groupe possÃ¨de encore des sous-groupes : " + group.Path);
 			}
 
 			if (!forceSubgroupDeletion && group.CanHaveMembers ())
 			{
-				throw new BusinessRuleException ("Opération impossible, ce groupe possède potentiellement des participants : " + group.Path);
+				throw new BusinessRuleException ("OpÃ©ration impossible, ce groupe possÃ¨de potentiellement des participants : " + group.Path);
 			}
 
 			if (forceSubgroupDeletion && group.CanHaveMembers ())
@@ -1205,7 +1205,7 @@ namespace Epsitec.Aider.Entities
 			}
 			if (parishGroup.IsNull ())
 			{
-				throw new System.ArgumentException ("Le groupe n'est pas défini.");
+				throw new System.ArgumentException ("Le groupe n'est pas dÃ©fini.");
 			}
 			if (parishGroup.IsParish () == false)
 			{
@@ -1235,7 +1235,7 @@ namespace Epsitec.Aider.Entities
 			}
 			if (parishGroup.IsNull ())
 			{
-				throw new System.ArgumentException ("Le groupe n'est pas défini.");
+				throw new System.ArgumentException ("Le groupe n'est pas dÃ©fini.");
 			}
 			
 			var example = new AiderPlaParishGroupEntity

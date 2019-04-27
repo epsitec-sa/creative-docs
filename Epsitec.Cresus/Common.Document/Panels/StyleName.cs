@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widget.
+			//	Propri√©t√© -> widget.
 			base.PropertyToWidgets();
 
 			this.ignoreChanged = true;
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			if ( this.property.StyleName != this.field.Text )
 			{
 				this.property.StyleName = this.field.Text;
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.field == null )  return;
@@ -80,14 +80,14 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTextChanged(object sender)
 		{
-			//	Une valeur a ÈtÈ changÈe.
+			//	Une valeur a √©t√© chang√©e.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
 		public void SetDefaultFocus()
 		{
-			//	Met le focus par dÈfaut.
+			//	Met le focus par d√©faut.
 			this.field.SelectAll();
 			this.field.Focus();
 		}

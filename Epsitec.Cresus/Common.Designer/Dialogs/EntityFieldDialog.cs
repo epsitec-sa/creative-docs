@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de définir entièrement un champ dans une entité.
+	/// Dialogue permettant de dÃ©finir entiÃ¨rement un champ dans une entitÃ©.
 	/// </summary>
 	public class EntityFieldDialog : AbstractDialog
 	{
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		/// </summary>
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				int tabIndex = 1;
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				//	Titre supérieur.
+				//	Titre supÃ©rieur.
 				Widget header = new Widget(this.window.Root);
 				header.Margins = new Margins(0, 0, 0, 8);
 				header.Dock = DockStyle.Top;
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.radioEntities = new RadioButton(header);
 				this.radioEntities.AutoToggle = false;
-				this.radioEntities.Text = "Entités";
+				this.radioEntities.Text = "EntitÃ©s";
 				this.radioEntities.PreferredWidth = 70;
 				this.radioEntities.Dock = DockStyle.Right;
 				this.radioEntities.Clicked += this.HandleRadioClicked;
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.glyphFieldName.Dock = DockStyle.Right;
 				this.glyphFieldName.TabIndex = tabIndex++;
 
-				Separator sep = new Separator(this.window.Root);  // trait horizontal de séparation
+				Separator sep = new Separator(this.window.Root);  // trait horizontal de sÃ©paration
 				sep.PreferredHeight = 1;
 				sep.Dock = DockStyle.Top;
 
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonIsNullable = new CheckButton(leftFooter);
 				this.buttonIsNullable.AutoToggle = false;
-				this.buttonIsNullable.Text = "Accepte d'être nul";
+				this.buttonIsNullable.Text = "Accepte d'Ãªtre nul";
 				this.buttonIsNullable.PreferredWidth = 140;
 				this.buttonIsNullable.Dock = DockStyle.Top;
 				this.buttonIsNullable.TabIndex = tabIndex++;
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonIsPrivate = new CheckButton (leftFooter);
 				this.buttonIsPrivate.AutoToggle = false;
-				this.buttonIsPrivate.Text = "Relation privée";
+				this.buttonIsPrivate.Text = "Relation privÃ©e";
 				this.buttonIsPrivate.PreferredWidth = 140;
 				this.buttonIsPrivate.Dock = DockStyle.Top;
 				this.buttonIsPrivate.TabIndex = tabIndex++;
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonIsVirtual = new CheckButton (leftFooter);
 				this.buttonIsVirtual.AutoToggle = false;
-				this.buttonIsVirtual.Text = "Propriété virtuelle";
+				this.buttonIsVirtual.Text = "PropriÃ©tÃ© virtuelle";
 				this.buttonIsVirtual.PreferredWidth = 140;
 				this.buttonIsVirtual.Margins = new Margins (0, 0, 0, 4);
 				this.buttonIsVirtual.Dock = DockStyle.Top;
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonIsAccentInsensitive = new CheckButton (leftFooter);
 				this.buttonIsAccentInsensitive.AutoToggle = false;
-				this.buttonIsAccentInsensitive.Text = "Collation a=à";
+				this.buttonIsAccentInsensitive.Text = "Collation a=Ã ";
 				this.buttonIsAccentInsensitive.PreferredWidth = 140;
 				this.buttonIsAccentInsensitive.Margins = new Margins (0, 0, 0, 4);
 				this.buttonIsAccentInsensitive.Dock = DockStyle.Top;
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonIsDisablePrefetch = new CheckButton (leftFooter);
 				this.buttonIsDisablePrefetch.AutoToggle = false;
-				this.buttonIsDisablePrefetch.Text = "Chargement différé";
+				this.buttonIsDisablePrefetch.Text = "Chargement diffÃ©rÃ©";
 				this.buttonIsDisablePrefetch.PreferredWidth = 140;
 				this.buttonIsDisablePrefetch.Margins = new Margins (0, 0, 0, 4);
 				this.buttonIsDisablePrefetch.Dock = DockStyle.Top;
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonIsReference = new RadioButton(middleFooter);
 				this.buttonIsReference.AutoToggle = false;
-				this.buttonIsReference.Text = "Référence";
+				this.buttonIsReference.Text = "RÃ©fÃ©rence";
 				this.buttonIsReference.PreferredWidth = 90;
 				this.buttonIsReference.Dock = DockStyle.Top;
 				this.buttonIsReference.TabIndex = tabIndex++;
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.TabIndex = 200;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				sep = new Separator(this.window.Root);  // trait horizontal de séparation
+				sep = new Separator(this.window.Root);  // trait horizontal de sÃ©paration
 				sep.PreferredHeight = 1;
 				sep.Dock = DockStyle.Bottom;
 			}
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string prefix, string fieldName, Druid resource, EntityFieldDialogOptions options)
 		{
-			//	Début de l'accès aux ressources pour le dialogue.
+			//	DÃ©but de l'accÃ¨s aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
 			this.prefix = prefix;
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					this.module = this.lastModule;  // utilise le dernier module utilisé
+					this.module = this.lastModule;  // utilise le dernier module utilisÃ©
 				}
 			}
 
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				if (this.fieldName == this.initialFieldName)  // nom inchangé ?
+				if (this.fieldName == this.initialFieldName)  // nom inchangÃ© ?
 				{
 					return this.fieldName;
 				}
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void AccessChange(Module module)
 		{
-			//	Change l'accès aux ressources dans un autre module.
+			//	Change l'accÃ¨s aux ressources dans un autre module.
 			this.module = module;
 			this.lastModule = module;
 
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private bool BestAccess()
 		{
 			//	Si le type courant ne contient aucune ressource, mais que l'autre type en contient,
-			//	bascule sur l'autre type (Types ou Entities). L'idée est d'anticiper sur l'utilisateur,
+			//	bascule sur l'autre type (Types ou Entities). L'idÃ©e est d'anticiper sur l'utilisateur,
 			//	qui voudra vraissemblablement changer de type s'il voit une liste vide.
 			int totalTypes = this.module.AccessTypes.Accessor.Collection.Count;
 			int totalEntities = this.module.AccessEntities.Accessor.Collection.Count;
@@ -441,11 +441,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool CollectionViewFilter(object obj)
 		{
-			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
-			//	Retourne false si la ressource doit être exclue.
+			//	MÃ©thode passÃ© comme paramÃ¨tre System.Predicate<object> Ã  CollectionView.Filter.
+			//	Retourne false si la ressource doit Ãªtre exclue.
 			CultureMap cultureMap = obj as CultureMap;
 
-			//	Si "Propriété virtuelle" est cochée, la liste de droite montre les interfaces.
+			//	Si "PropriÃ©tÃ© virtuelle" est cochÃ©e, la liste de droite montre les interfaces.
 			if (this.options.IsVirtual == false &&
 				this.resourceType == ResourceAccess.Type.Entities)
 			{
@@ -462,7 +462,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			
 		public Common.Dialogs.DialogResult AccessClose(out Druid resource)
 		{
-			//	Fin de l'accès aux ressources pour le dialogue.
+			//	Fin de l'accÃ¨s aux ressources pour le dialogue.
 			resource = this.resource;
 			return this.result;
 		}
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateTitle()
 		{
-			//	Met à jour le titre qui dépend du type des ressources éditées.
+			//	Met Ã  jour le titre qui dÃ©pend du type des ressources Ã©ditÃ©es.
 			this.listModules.Items.Clear();
 
 			List<Module> list = this.designerApplication.OpeningListModule;
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateArray()
 		{
-			//	Met à jour tout le contenu du tableau et sélectionne la ressource actuelle.
+			//	Met Ã  jour tout le contenu du tableau et sÃ©lectionne la ressource actuelle.
 			this.listResources.Items.Clear ();
 			this.allModules.Clear ();
 			this.allIndexesInModules.Clear ();
@@ -624,17 +624,17 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateButtons()
 		{
-			//	Met à jour tous les boutons.
+			//	Met Ã  jour tous les boutons.
 			this.allModulesButton.ActiveState = EntityFieldDialog.showAllModules ? ActiveState.Yes : ActiveState.No;
 			this.listModules.Enable = !EntityFieldDialog.showAllModules;
 
-			//	Met à jour le bouton "Utiliser".
+			//	Met Ã  jour le bouton "Utiliser".
 			this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1 && this.glyphFieldName.GlyphShape == GlyphShape.Accept);
 		}
 
 		private void UpdateRadios()
 		{
-			//	Met à jour les boutons radio pour changer le type.
+			//	Met Ã  jour les boutons radio pour changer le type.
 			this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
 			this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
 
@@ -656,7 +656,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private Druid SelectedResource
 		{
-			//	Retourne le Druid de la ressource actuellement sélectionnée.
+			//	Retourne le Druid de la ressource actuellement sÃ©lectionnÃ©e.
 			get
 			{
 				if (this.listResources.SelectedItemIndex == -1)
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.collectionView != null)
 			{
 				this.collectionView.Dispose ();
-				this.collectionView.Filter = null;  // pour éviter un appel ultérieur de CollectionViewFilter !
+				this.collectionView.Filter = null;  // pour Ã©viter un appel ultÃ©rieur de CollectionViewFilter !
 				this.collectionView = null;
 			}
 
@@ -861,7 +861,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleListResourcesSelected(object sender)
 		{
-			//	La ressource sélectionnée a changé.
+			//	La ressource sÃ©lectionnÃ©e a changÃ©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -872,7 +872,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleListResourcesDoubleClicked(object sender, MessageEventArgs e)
 		{
-			//	La liste des ressources a été double-cliquée.
+			//	La liste des ressources a Ã©tÃ© double-cliquÃ©e.
 			this.resource = this.SelectedResource;
 			this.result = Common.Dialogs.DialogResult.Yes;
 

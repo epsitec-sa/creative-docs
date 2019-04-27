@@ -11,8 +11,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 	{
 		public enum Type
 		{
-			Left,		// contrainte verticale à gauche
-			Right,		// contrainte verticale à droite
+			Left,		// contrainte verticale Ã  gauche
+			Right,		// contrainte verticale Ã  droite
 			Bottom,		// contrainte horizontale en bas
 			Top,		// contrainte horizontale en haut
 			BaseLine,	// contrainte horizontale sur la ligne de base
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool Detect(Point position)
 		{
-			//	Détecte si une position est proche d'une contrainte.
+			//	DÃ©tecte si une position est proche d'une contrainte.
 			if (this.IsVertical)
 			{
 				if (System.Math.Abs(position.X-this.position.X) <= this.margin)
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Rectangle Snap(Rectangle rect, double baseLine)
 		{
-			//	Adapte un rectangle à une contrainte.
+			//	Adapte un rectangle Ã  une contrainte.
 			if (this.IsVertical)
 			{
 				double adjust;
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Point Snap(Point pos)
 		{
-			//	Adapte un point à une contrainte.
+			//	Adapte un point Ã  une contrainte.
 			if (this.IsVertical)
 			{
 				pos.X = this.position.X;
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool AdjustX(Rectangle rect, out double adjust)
 		{
-			//	Calcule l'ajustement horizontal nécessaire pour s'adapter à une contrainte.
+			//	Calcule l'ajustement horizontal nÃ©cessaire pour s'adapter Ã  une contrainte.
 			if (this.IsLeft && this.Detect(rect.BottomLeft))
 			{
 				adjust = this.position.X-rect.Left;
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool AdjustY(Rectangle rect, double baseLine, out double adjust)
 		{
-			//	Calcule l'ajustement vertical nécessaire pour s'adapter à une contrainte.
+			//	Calcule l'ajustement vertical nÃ©cessaire pour s'adapter Ã  une contrainte.
 			if (this.IsBottom && this.Detect(rect.BottomLeft))
 			{
 				adjust = this.position.Y-rect.Bottom;

@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La class TabButton représente un bouton d'un onglet.
+	/// La class TabButton reprÃ©sente un bouton d'un onglet.
 	/// </summary>
 	public class TabButton : AbstractButton
 	{

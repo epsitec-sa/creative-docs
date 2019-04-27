@@ -1,13 +1,13 @@
-//	Copyright © 2006-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2006-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
 	/// <summary>
-	/// La classe SelectItemBehavior gËre la sÈlection automatique d'ÈlÈments
-	/// dans une liste lors de frappe de texte (par ex. "A" --> sÈlectionne le
-	/// premier ÈlÈment commenÁant par "A", puis "b" --> sÈlectionne le premier
-	/// ÈlÈment commenÁant par "Ab", etc.).
+	/// La classe SelectItemBehavior g√®re la s√©lection automatique d'√©l√©ments
+	/// dans une liste lors de frappe de texte (par ex. "A" --> s√©lectionne le
+	/// premier √©l√©ment commen√ßant par "A", puis "b" --> s√©lectionne le premier
+	/// √©l√©ment commen√ßant par "Ab", etc.).
 	/// </summary>
 	public sealed class SelectItemBehavior
 	{

@@ -96,8 +96,8 @@ namespace Epsitec.Common.Tests.Support
 			Assert.IsFalse (v3.Enable);
 			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
 
-			//	En créant un stateB dans contextB, on va se trouver plus près de v3
-			//	dans la chaîne des contextes des commandes. Du coup, c'est l'état de
+			//	En crÃ©ant un stateB dans contextB, on va se trouver plus prÃ¨s de v3
+			//	dans la chaÃ®ne des contextes des commandes. Du coup, c'est l'Ã©tat de
 			//	stateB (enabled) qui l'emportera sur stateA (disabled) :
 
 			stateB = contextB.GetCommandState (command);
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Tests.Support
 
 			CommandDispatcherTest.buffer.Length = 0;
 
-			//	Vérifie que le dispatch se fait correctement.
+			//	VÃ©rifie que le dispatch se fait correctement.
 
 			dispatcher.InternalDispatch (null, "private-base-a", null);
 			dispatcher.InternalDispatch (null, "private-base-x", null);
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Tests.Support
 
 			CommandDispatcherTest.buffer.Length = 0;
 
-			//	Vérifie que le dispatch se fait correctement.
+			//	VÃ©rifie que le dispatch se fait correctement.
 
 			dispatcher.InternalDispatch (null, "private-base-a -> protected-base-b -> public-base-virtual-c", null);
 			dispatcher.InternalDispatch (null, "private-base-a -> cancel-multiple", null);
@@ -430,16 +430,16 @@ namespace Epsitec.Common.Tests.Support
 
 			CommandDispatcherTest.buffer.Length = 0;
 
-			//	Vérifie que le dispatch se fait correctement, et que la visibilité des méthodes
-			//	est bien respectée.
+			//	VÃ©rifie que le dispatch se fait correctement, et que la visibilitÃ© des mÃ©thodes
+			//	est bien respectÃ©e.
 
-			dispatcher.InternalDispatch (null, "private-base-a", null);			//	privé, pas accessible dans la version dérivée
-			dispatcher.InternalDispatch (null, "private-base-x", null);			//	privé, pas accessible dans la version dérivée
-			dispatcher.InternalDispatch (null, "protected-base-b", null);		//	accessible et surchargé par 'new' -> visible
-			dispatcher.InternalDispatch (null, "public-base-virtual-c", null);	//	accessible et surchargé par 'override' -> pas visible
-			dispatcher.InternalDispatch (null, "public-base-d", null);			//	accessible et non surchargé -> visible
-			dispatcher.InternalDispatch (null, "public-base-virtual-e", null);	//	accessible mais non marqué :-)
-			dispatcher.InternalDispatch (null, "private-derived-a", null);		//	privé, accessible localement -> visible
+			dispatcher.InternalDispatch (null, "private-base-a", null);			//	privÃ©, pas accessible dans la version dÃ©rivÃ©e
+			dispatcher.InternalDispatch (null, "private-base-x", null);			//	privÃ©, pas accessible dans la version dÃ©rivÃ©e
+			dispatcher.InternalDispatch (null, "protected-base-b", null);		//	accessible et surchargÃ© par 'new' -> visible
+			dispatcher.InternalDispatch (null, "public-base-virtual-c", null);	//	accessible et surchargÃ© par 'override' -> pas visible
+			dispatcher.InternalDispatch (null, "public-base-d", null);			//	accessible et non surchargÃ© -> visible
+			dispatcher.InternalDispatch (null, "public-base-virtual-e", null);	//	accessible mais non marquÃ© :-)
+			dispatcher.InternalDispatch (null, "private-derived-a", null);		//	privÃ©, accessible localement -> visible
 			dispatcher.InternalDispatch (null, "protected-new-b", null);		//	accessible, surcharge la base -> visible
 			dispatcher.InternalDispatch (null, "public-override-c", null);		//	accessible, surcharge la base -> visible
 			dispatcher.InternalDispatch (null, "public-override-e", null);		//	accessible, surcharge la base -> visible

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -27,12 +27,12 @@ namespace Epsitec.Common.Widgets
 		/// <summary>
 		/// The widget is docked at the left of its parent.
 		/// </summary>
-		Left	= 3,				//	colle à gauche
+		Left	= 3,				//	colle Ã  gauche
 		
 		/// <summary>
 		/// The widget is docked at the right of its parent.
 		/// </summary>
-		Right	= 4,				//	colle à droite
+		Right	= 4,				//	colle Ã  droite
 		
 		/// <summary>
 		/// The widget fills its parent.
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets
 		/// The widget is stacked (either from left to right or from top to bottom,
 		/// depending on the parent's <see cref="T:ContainerLayoutMode"/>.
 		/// </summary>
-		Stacked	= 6,				//	organisé en pile
+		Stacked	= 6,				//	organisÃ© en pile
 		
 		/// <summary>
 		/// The widget is stacked at the stack beginning (usually left or top).

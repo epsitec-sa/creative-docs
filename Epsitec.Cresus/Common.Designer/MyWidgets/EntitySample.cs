@@ -8,7 +8,7 @@ using Epsitec.Common.Designer.EntitiesEditor;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant de dessiner un échantillon d'entité (boîte vide).
+	/// Widget permettant de dessiner un Ã©chantillon d'entitÃ© (boÃ®te vide).
 	/// </summary>
 	public class EntitySample : Widget
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Validators
 {
 	/// <summary>
 	/// La classe RegexValidator permet de valider un widget selon une expression
-	/// régulière.
+	/// rÃ©guliÃ¨re.
 	/// </summary>
 	public class RegexValidator : AbstractTextValidator
 	{

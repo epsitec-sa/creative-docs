@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Pdf.Array;
+using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Pdf.Engine;
 
 using Epsitec.Common.Types;

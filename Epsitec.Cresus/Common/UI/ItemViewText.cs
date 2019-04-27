@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -10,9 +10,9 @@ using System.Collections.Generic;
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// La classe ItemViewText représente du texte non éditable. Si un parent de cet objet
-	/// est de type ItemViewWidget, le texte adopte l'aspect sélectionné de ce parent.
-	/// Cet objet sert à afficher des textes dans l'objet UI.ItemTable.
+	/// La classe ItemViewText reprÃ©sente du texte non Ã©ditable. Si un parent de cet objet
+	/// est de type ItemViewWidget, le texte adopte l'aspect sÃ©lectionnÃ© de ce parent.
+	/// Cet objet sert Ã  afficher des textes dans l'objet UI.ItemTable.
 	/// </summary>
 	public class ItemViewText : StaticText
 	{

@@ -18,7 +18,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void Show(string filename)
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -69,7 +69,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
             this.WindowSave("ExportICO");
 		}
 
@@ -83,7 +83,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void UpdatePages()
 		{
-			//	Met à jour le dialogue lorsque les pages ont changé.
+			//	Met Ã  jour le dialogue lorsque les pages ont changÃ©.
             this.editor.CurrentDocument.Dialogs.UpdateExportICOPages();
 		}
 

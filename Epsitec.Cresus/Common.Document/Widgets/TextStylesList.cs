@@ -6,7 +6,7 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// TextStylesList représente la liste des styles de texte (Paragraph ou Character).
+	/// TextStylesList reprÃ©sente la liste des styles de texte (Paragraph ou Character).
 	/// </summary>
 	public class TextStylesList : AbstractStyleList
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public StyleCategory Category
 		{
-			//	Catérorie des styles de texte représentés.
+			//	CatÃ©rorie des styles de texte reprÃ©sentÃ©s.
 			get
 			{
 				return this.category;
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public Text.TextStyle[] List
 		{
-			//	Liste des styles de texte représentés dans la liste.
+			//	Liste des styles de texte reprÃ©sentÃ©s dans la liste.
 			get
 			{
 				return this.list;
@@ -86,13 +86,13 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override AbstractSample CreateSample()
 		{
-			//	Crée un échantillon.
+			//	CrÃ©e un Ã©chantillon.
 			return new TextSample();
 		}
 
 		protected override void ListSample(AbstractSample sample, int rank)
 		{
-			//	 Met à jour l'échantillon d'une ligne de la liste.
+			//	 Met Ã  jour l'Ã©chantillon d'une ligne de la liste.
 			TextSample sm = sample as TextSample;
 
 			if ( rank == -1 || this.list == null )

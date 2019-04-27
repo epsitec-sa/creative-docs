@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -200,11 +200,11 @@ namespace Epsitec.Aider.Rules
 						//	Never mind if the administrator assigns invalid street addresses...
 						//	Let him do so, but send him a warning, nevertheless.
 
-						AiderUserManager.NotifyBusinessRuleOverride (string.Format (Resources.Text ("La rue \"{0}\" n'a pas été trouvée pour \"{1}\"."), street, townName));
+						AiderUserManager.NotifyBusinessRuleOverride (string.Format (Resources.Text ("La rue \"{0}\" n'a pas Ã©tÃ© trouvÃ©e pour \"{1}\"."), street, townName));
 						return;
 					}
 
-					Logic.BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
+					Logic.BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas Ã©tÃ© trouvÃ© pour cette localitÃ©."));
 				}
 			}
 		}

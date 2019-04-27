@@ -1,10 +1,10 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe Copier permet de réaliser des copies de données simples.
+	/// La classe Copier permet de rÃ©aliser des copies de donnÃ©es simples.
 	/// </summary>
 	public static class Copier
 	{
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Types
 				return obj;
 			}
 			
-			//	TODO: compléter...
+			//	TODO: complÃ©ter...
 
 			throw new System.NotSupportedException (string.Format ("Cannot copy type {0}, not supported", obj.GetType ().Name));
 		}

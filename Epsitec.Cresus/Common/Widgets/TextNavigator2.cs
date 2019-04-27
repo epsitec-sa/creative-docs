@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextNavigator2 gère la navigation dans un texte en se basant sur
-	/// des événements clavier/souris.
+	/// La classe TextNavigator2 gÃ¨re la navigation dans un texte en se basant sur
+	/// des Ã©vÃ©nements clavier/souris.
 	/// </summary>
 	public class TextNavigator2
 	{
@@ -83,8 +83,8 @@ namespace Epsitec.Common.Widgets
 		#region Specialized Process Methods
 		private bool ProcessKeyDown(Message message)
 		{
-			//	L'événement KeyDown doit être traité pour toutes les touches non
-			//	alphabétiques (les curseurs, TAB, RETURN, etc.)
+			//	L'Ã©vÃ©nement KeyDown doit Ãªtre traitÃ© pour toutes les touches non
+			//	alphabÃ©tiques (les curseurs, TAB, RETURN, etc.)
 			
 			bool processed = false;
 			
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.textNavigator.IsSelectionActive)
 					{
-						//	Rien à faire, sélection déjà active.
+						//	Rien Ã  faire, sÃ©lection dÃ©jÃ  active.
 					}
 					else if (this.textNavigator.HasSelection)
 					{
@@ -492,8 +492,8 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessMouseMove(Drawing.Point pos, Text.ITextFrame frame)
 		{
-			//	Rien à faire de spécial, la souris se déplace sans aucun bouton
-			//	pressé.
+			//	Rien Ã  faire de spÃ©cial, la souris se dÃ©place sans aucun bouton
+			//	pressÃ©.
 			
 			return true;
 		}
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.ButtonDownCount == 1)
 			{
-				//	TODO: valide position/fin de sélection
+				//	TODO: valide position/fin de sÃ©lection
 			}
 			else if (message.ButtonDownCount == 2)
 			{
@@ -598,7 +598,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (code > Text.Unicode.Code.Invalid)
 			{
-				//	TODO: gérer la génération d'un surrogate pair
+				//	TODO: gÃ©rer la gÃ©nÃ©ration d'un surrogate pair
 				
 				return false;
 			}
@@ -615,7 +615,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (code > Text.Unicode.Code.Invalid)
 			{
-				//	TODO: gérer la génération d'un surrogate pair
+				//	TODO: gÃ©rer la gÃ©nÃ©ration d'un surrogate pair
 				
 				return false;
 			}
@@ -649,7 +649,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-#if false	// MW: la logique d'insertion de tabuleurs est gérée directement dans TextNavigator
+#if false	// MW: la logique d'insertion de tabuleurs est gÃ©rÃ©e directement dans TextNavigator
 		public bool Insert(string text)
 		{
 			this.DeleteSelection ();
@@ -824,9 +824,9 @@ namespace Epsitec.Common.Widgets
 		
 		private double GetVerticalMoveCache()
 		{
-			//	Si on démarre un déplacement vertical avec les touches haut/bas,
-			//	on désire se souvenir de la position [x] initale, de manière à
-			//	pouvoir sauter des lignes plus courtes en maintenant un déplacement
+			//	Si on dÃ©marre un dÃ©placement vertical avec les touches haut/bas,
+			//	on dÃ©sire se souvenir de la position [x] initale, de maniÃ¨re Ã 
+			//	pouvoir sauter des lignes plus courtes en maintenant un dÃ©placement
 			//	avec [x] constant.
 
 			if (this.initialX.IsSafeNaN ())
@@ -843,14 +843,14 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ChangeSelectionModeBeforeMove(bool selection, Text.TextNavigator.Direction direction)
 		{
-			//	Commence ou termine une sélection (appelé par ex. lors d'un
-			//	déplacement avec ou sans SHIFT pressé).
+			//	Commence ou termine une sÃ©lection (appelÃ© par ex. lors d'un
+			//	dÃ©placement avec ou sans SHIFT pressÃ©).
 			
-			//	En cas de désélection, positionne le curseur soit au début,
-			//	soit à la fin de la zone sélectionnée, en fonction de la
-			//	direction préférentielle.
+			//	En cas de dÃ©sÃ©lection, positionne le curseur soit au dÃ©but,
+			//	soit Ã  la fin de la zone sÃ©lectionnÃ©e, en fonction de la
+			//	direction prÃ©fÃ©rentielle.
 			
-			//	Retourne 'true' si une désélection a eu lieu.
+			//	Retourne 'true' si une dÃ©sÃ©lection a eu lieu.
 			
 			if (selection)
 			{
@@ -870,8 +870,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.EndSelection ();
 				
-				//	Si une sélection est active, il faut la désactiver en tenant
-				//	compte de la direction de déplacement souhaitée :
+				//	Si une sÃ©lection est active, il faut la dÃ©sactiver en tenant
+				//	compte de la direction de dÃ©placement souhaitÃ©e :
 				
 				if (this.textNavigator.HasSelection)
 				{

@@ -3,7 +3,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe <c>CloneView</c> implémente un widget qui prend l'aspect d'un autre.
+	/// La classe <c>CloneView</c> implÃ©mente un widget qui prend l'aspect d'un autre.
 	/// </summary>
 	public class CloneView : Widget
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 
 
 		/// <summary>
-		/// Détermine le widget dont on prend l'aspect.
+		/// DÃ©termine le widget dont on prend l'aspect.
 		/// </summary>
 		/// <value>Le widget dont on prend l'aspect.</value>
 		public Widget Model
@@ -48,30 +48,30 @@ namespace Epsitec.Common.Widgets
 				
 				if (modelSize != displaySize)
 				{
-					//	Le modèle n'a pas la bonne taille. Il va falloir changer
+					//	Le modÃ¨le n'a pas la bonne taille. Il va falloir changer
 					//	temporairement sa taille.
 					
-					//	Attache le contexte de layout directement au modèle; de
-					//	cette manière le modèle sera considéré comme la base de
-					//	l'arbre des widgets et son conteneur ne sera pas affecté
+					//	Attache le contexte de layout directement au modÃ¨le; de
+					//	cette maniÃ¨re le modÃ¨le sera considÃ©rÃ© comme la base de
+					//	l'arbre des widgets et son conteneur ne sera pas affectÃ©
 					//	par le changement de taille :
 					
 					Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.model);
 					Layouts.LayoutContext.SetLayoutContext (this.model, context);
 
-					//	Modifie (brutalement) les dimensions du modèle, sans pour
-					//	autant le déplacer, puis force un "arrange" de son contenu
+					//	Modifie (brutalement) les dimensions du modÃ¨le, sans pour
+					//	autant le dÃ©placer, puis force un "arrange" de son contenu
 					//	sans toucher au reste :
 					
 					this.model.SetBounds (new Drawing.Rectangle (modelPos, displaySize));
 					Layouts.LayoutContext.AddToArrangeQueue (this.model);
 					context.ExecuteArrange ();
 					
-					//	Peint normalement le modèle dans notre propre vue :
+					//	Peint normalement le modÃ¨le dans notre propre vue :
 					
 					this.PaintModelView (graphics, repaint, paintFilter);
 
-					//	Remet la taille initiale du modèle et refait ensuite le
+					//	Remet la taille initiale du modÃ¨le et refait ensuite le
 					//	layout de son contenu. Une fois de plus, le conteneur n'y
 					//	aura vu que du feu :
 					
@@ -79,8 +79,8 @@ namespace Epsitec.Common.Widgets
 					Layouts.LayoutContext.AddToArrangeQueue (this.model);
 					context.ExecuteArrange ();
 
-					//	Finalement, détache le contexte de layout du modèle pour
-					//	qu'il réintègre sa position normale dans l'arbre de layout :
+					//	Finalement, dÃ©tache le contexte de layout du modÃ¨le pour
+					//	qu'il rÃ©intÃ¨gre sa position normale dans l'arbre de layout :
 
 					Layouts.LayoutContext.ClearLayoutContext (this.model);
 				}

@@ -4,7 +4,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Slider implémente un curseur de réglage.
+	/// La classe Slider implÃ©mente un curseur de rÃ©glage.
 	/// </summary>
 	public sealed class Slider : AbstractSlider, Support.Data.INumValue
 	{

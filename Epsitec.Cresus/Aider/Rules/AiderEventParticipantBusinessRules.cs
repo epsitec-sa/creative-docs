@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Rules
 		{
 			if (!AiderEventParticipantBusinessRules.RoleCanBeSetTwice (entity))
 			{
-				Logic.BusinessRuleException ("Ce rôle est déjà attribué");
+				Logic.BusinessRuleException ("Ce rÃ´le est dÃ©jÃ  attribuÃ©");
 			}	
 		}
 

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Drawing
 
 		public TextBreak.Line[] GetLines(double initialWidth, double followingWidth, double fullWidth)
 		{
-			//	Effectue le découpage des "runs" en lignes.
+			//	Effectue le dÃ©coupage des "runs" en lignes.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			this.Rewind ();
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Drawing
 					(lineSkip == 0))
 				{
 					//	Panique: il n'est pas possible de couper cette ligne, quel que soit
-					//	le moyen utilisé. On abandonne !
+					//	le moyen utilisÃ©. On abandonne !
 					
 					return null;
 				}
@@ -95,8 +95,8 @@ namespace Epsitec.Common.Drawing
 				if ((lineText.Length > 0) &&
 					(lineText[lineText.Length-1] == TextBreak.CodeLineBreak))
 				{
-					//	Le texte se termine par une fin de ligne forcée (<br/>) et il faut donc
-					//	continuer à disposer les lignes avec toute la largeur.
+					//	Le texte se termine par une fin de ligne forcÃ©e (<br/>) et il faut donc
+					//	continuer Ã  disposer les lignes avec toute la largeur.
 					
 					followingWidth = fullWidth;
 				}
@@ -118,10 +118,10 @@ namespace Epsitec.Common.Drawing
 
 		public class XRun
 		{
-			//	Décrit une portion de texte d'une longueur quelconque utilisant
-			//	une seule et même typographie.
-			public int Start       = 0;  // index début
-			public int Length      = 0;  // index fin - index début
+			//	DÃ©crit une portion de texte d'une longueur quelconque utilisant
+			//	une seule et mÃªme typographie.
+			public int Start       = 0;  // index dÃ©but
+			public int Length      = 0;  // index fin - index dÃ©but
 			public string FontFace    = "";
 			public Font Font        = null;
 			public double FontSize    = 0.0;
@@ -178,8 +178,8 @@ namespace Epsitec.Common.Drawing
 		{
 			public Line(string text, double width, int skip)
 			{
-				//	Décrit une ligne physique pouvant contenir plusieurs typographies
-				//	différentes.
+				//	DÃ©crit une ligne physique pouvant contenir plusieurs typographies
+				//	diffÃ©rentes.
 				this.text  = text;
 				this.width = width;
 				this.skip  = skip;
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Drawing
 			}
 
 
-			private int skip;   // nb de caractères à sauter jusqu'au début de la ligne suivante
-			private string text;   // texte de la ligne, terminée év. par les caractères de césure
-			private double width;  // largeur occupée par la ligne
+			private int skip;   // nb de caractÃ¨res Ã  sauter jusqu'au dÃ©but de la ligne suivante
+			private string text;   // texte de la ligne, terminÃ©e Ã©v. par les caractÃ¨res de cÃ©sure
+			private double width;  // largeur occupÃ©e par la ligne
 		}
 		
 		public const char CodeLineBreak	= '\u2028';

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -11,13 +11,13 @@ using System.Linq;
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
-	/// La classe Misc contient quelques routines générales.
+	/// La classe Misc contient quelques routines gÃ©nÃ©rales.
 	/// </summary>
 	public class Misc
 	{
 		static public double Truncate(double value, int numberOfDecimal=1)
 		{
-			//	Retourne un nombre tronqué à un certain nombre de décimales.
+			//	Retourne un nombre tronquÃ© Ã  un certain nombre de dÃ©cimales.
 			double factor = System.Math.Pow (10, numberOfDecimal);
 			return System.Math.Floor (value*factor) / factor;
 		}
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		static public Size IconPreferredSize(string iconSize)
 		{
-			//	Retourne la taille préférée pour une icône. Si la taille réelle de l'icône n'est
+			//	Retourne la taille prÃ©fÃ©rÃ©e pour une icÃ´ne. Si la taille rÃ©elle de l'icÃ´ne n'est
 			//	pas exactement identique, ce n'est pas important. Drawing.Canvas cherche au mieux.
 			if ( iconSize == "Small" )  return new Size(14, 14);
 			if ( iconSize == "Large" )  return new Size(31, 31);
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		static public string Icon(string icon)
 		{
-			//	Retourne le nom complet d'une icône.
+			//	Retourne le nom complet d'une icÃ´ne.
 			if (string.IsNullOrEmpty (icon))
 			{
 				return null;
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		static public string IconDyn(string name, string parameter)
 		{
-			//	Retourne le nom complet d'une icône dynamique.
+			//	Retourne le nom complet d'une icÃ´ne dynamique.
 			return string.Format("dyn:{0}/{1}", name, parameter);
 		}
 	}

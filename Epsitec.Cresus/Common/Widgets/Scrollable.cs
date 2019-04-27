@@ -1,4 +1,4 @@
-//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateGeometry()
 		{
-			//	Met à jour la géométrie du viewport et des ascenceurs.
+			//	Met Ã  jour la gÃ©omÃ©trie du viewport et des ascenceurs.
 			
 			if ((this.hScroller == null) ||
 				(this.vScroller == null))
@@ -347,8 +347,8 @@ namespace Epsitec.Common.Widgets
 			}
 
 
-			//	Met à jour la position du viewport dans la surface disponible; ceci détermine aussi
-			//	du même coup la visibilité des ascenceurs.
+			//	Met Ã  jour la position du viewport dans la surface disponible; ceci dÃ©termine aussi
+			//	du mÃªme coup la visibilitÃ© des ascenceurs.
 			
 			if (this.isGeometryValid)
             {
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Widgets
 			double deltaDx;
 			double deltaDy;
 			
-			//	Procède itérativement pour savoir quels ascenceurs vont être utilisés
+			//	ProcÃ¨de itÃ©rativement pour savoir quels ascenceurs vont Ãªtre utilisÃ©s
 			//	et quelle place ils vont occuper.
 			
 			for (;;)
@@ -526,8 +526,8 @@ namespace Epsitec.Common.Widgets
 			viewportDx = System.Math.Max (viewportDx, visDx);
 			viewportDy = System.Math.Max (viewportDy, visDy);
 			
-			//	Détermine l'aspect des ascenceurs ainsi que les offsets [x] et [y] qui
-			//	doivent s'appliquer à l'ouverture (aperture) qui permet de voir le viewport.
+			//	DÃ©termine l'aspect des ascenceurs ainsi que les offsets [x] et [y] qui
+			//	doivent s'appliquer Ã  l'ouverture (aperture) qui permet de voir le viewport.
 
 			if ((viewportDx > 0) &&
 				(deltaDx > 0) &&
@@ -585,8 +585,8 @@ namespace Epsitec.Common.Widgets
 				this.vScroller.VisibleRangeRatio = 1.0M;
 			}
 
-			//	Met à jour l'ouverture (aperture) qui permet de voir le viewport et ajuste
-			//	ce dernier pour que la partie qui intéresse l'utilisateur soit en face de
+			//	Met Ã  jour l'ouverture (aperture) qui permet de voir le viewport et ajuste
+			//	ce dernier pour que la partie qui intÃ©resse l'utilisateur soit en face de
 			//	l'ouverture.
 
 			this.hScroller.Visibility = (marginY > 0);

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -12,7 +12,7 @@ using System.Linq;
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 {
 	/// <summary>
-	/// La classe EntitySubView est un bouton pour choisir une sous-vue, avec possibilité
+	/// La classe EntitySubView est un bouton pour choisir une sous-vue, avec possibilitÃ©
 	/// de drag &amp; drop entre EntitySubView.
 	/// </summary>
 	public class EntitySubView : Button, Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost
@@ -51,16 +51,16 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 		
 		public bool OnDragBegin(Point cursor)
 		{
-			//	Crée un échantillon utilisable pour l'opération de drag & drop (il
-			//	va représenter visuellement l'échantillon de couleur). On le place
+			//	CrÃ©e un Ã©chantillon utilisable pour l'opÃ©ration de drag & drop (il
+			//	va reprÃ©senter visuellement l'Ã©chantillon de couleur). On le place
 			//	dans un DragWindow et hop.
 			EntitySubView widget = new EntitySubView();
 			widget.AutoFocus = false;
 			
-			//	Signale à l'échantillon qui est la cause du drag. On aurait très
-			//	bien pu ajouter une variable à EntitySubView, mais ça paraît du
-			//	gaspillage de mémoire d'avoir cette variable inutilisée pour
-			//	tous les EntitySubView. Alors on utilise une "propriété" :
+			//	Signale Ã  l'Ã©chantillon qui est la cause du drag. On aurait trÃ¨s
+			//	bien pu ajouter une variable Ã  EntitySubView, mais Ã§a paraÃ®t du
+			//	gaspillage de mÃ©moire d'avoir cette variable inutilisÃ©e pour
+			//	tous les EntitySubView. Alors on utilise une "propriÃ©tÃ©" :
 			EntitySubView.SetDragHost(widget, this);
 
 			double w = this.ActualWidth*0.5;
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 
 		protected void DragHilite(EntitySubView dst, EntitySubView src, bool enable)
 		{
-			//	Met en évidence le widget EntitySubView destinataire du drag & drop.
+			//	Met en Ã©vidence le widget EntitySubView destinataire du drag & drop.
 			if (dst == null || src == null)  return;
 
 			if (enable)
@@ -168,15 +168,15 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//	Gestion d'un événement.
+			//	Gestion d'un Ã©vÃ©nement.
 			EntitySubView dragHost = EntitySubView.GetDragHost(this);
 			
-			//	Est-ce que l'événement clavier est reçu dans un échantillon en
+			//	Est-ce que l'Ã©vÃ©nement clavier est reÃ§u dans un Ã©chantillon en
 			//	cours de drag dans un DragWindow ? C'est possible, car le focus
 			//	clavier change quand on montre le DragWindow.
 			if (dragHost != null && message.IsKeyType)
 			{
-				//	Signalons l'événement clavier à l'auteur du drag :
+				//	Signalons l'Ã©vÃ©nement clavier Ã  l'auteur du drag :
 				dragHost.ProcessMessage(message, pos);
 				return;
 			}
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 		#region
 		protected virtual void OnDragStarting()
 		{
-			//	Génère un événement pour dire que le drag a commencé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le drag a commencÃ©.
 			var handler = this.GetUserEventHandler("DragStarting");
 			if (handler != null)
 			{
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 
 		protected virtual void OnDragEnding()
 		{
-			//	Génère un événement pour dire que le drag est terminé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le drag est terminÃ©.
 			var handler = this.GetUserEventHandler("DragEnding");
 			if (handler != null)
 			{

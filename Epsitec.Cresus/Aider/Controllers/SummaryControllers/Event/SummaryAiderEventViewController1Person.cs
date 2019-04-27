@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 					.Icon ("Data.AiderEvent")
-					.Title (x => "Acte N° " + x.Report.EventNumberByYearAndRegistry)
+					.Title (x => "Acte NÂ° " + x.Report.EventNumberByYearAndRegistry)
 					.Text (x => x.GetActSummary ())
 					.Attribute (BrickMode.DefaultToNoSubView);
 

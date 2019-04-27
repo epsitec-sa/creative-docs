@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.OpenType.Platform
 {
 	/// <summary>
-	/// La classe Neutral encapsule les dépendances système de manière à ce que
-	/// l'appelant ne voie pas ce qui se passe derrière les rideaux.
+	/// La classe Neutral encapsule les dÃ©pendances systÃ¨me de maniÃ¨re Ã  ce que
+	/// l'appelant ne voie pas ce qui se passe derriÃ¨re les rideaux.
 	/// </summary>
 	public sealed class Neutral
 	{

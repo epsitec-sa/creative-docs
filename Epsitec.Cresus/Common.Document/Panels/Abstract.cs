@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected double LabelHeight
 		{
-			//	Retourne la hauteur pour le label supÈrieur.
+			//	Retourne la hauteur pour le label sup√©rieur.
 			get
 			{
 				return (this.IsLabelProperties || this is ModColor) ? 14 : 0;
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Document.Panels
 
 		public bool IsLabelProperties
 		{
-			//	Indique le mode des propriÈtÈs.
+			//	Indique le mode des propri√©t√©s.
 			get
 			{
 				if ( this.document != null )
@@ -87,13 +87,13 @@ namespace Epsitec.Common.Document.Panels
 
 		protected virtual bool IsNormalAndExtended()
 		{
-			//	Indique si ce panneau possËde 2 hauteurs diffÈrentes.
+			//	Indique si ce panneau poss√®de 2 hauteurs diff√©rentes.
 			return this.isNormalAndExtended;
 		}
 
 		public bool IsExtendedSize
 		{
-			//	Indique si le panneau est rÈduit (petite hauteur) ou Ètendu (grande hauteur).
+			//	Indique si le panneau est r√©duit (petite hauteur) ou √©tendu (grande hauteur).
 			get
 			{
 				return this.isExtendedSize;
@@ -112,13 +112,13 @@ namespace Epsitec.Common.Document.Panels
 
 		public void HeightChanged()
 		{
-			//	Indique que la hauteur du panneau a changÈ.
+			//	Indique que la hauteur du panneau a chang√©.
 			this.PreferredHeight = this.DefaultHeight;
 		}
 
 		public bool IsLayoutDirect
 		{
-			//	Indique si le panneau Èdite directement une propriÈtÈ de calque.
+			//	Indique si le panneau √©dite directement une propri√©t√© de calque.
 			get { return this.isLayoutDirect; }
 			set { this.isLayoutDirect = value; }
 		}
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document.Panels
 
 		public bool IsHilite
 		{
-			//	Etat survolÈ du panneau.
+			//	Etat survol√© du panneau.
 			get
 			{
 				return this.isHilite;
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleMouseEntered(object sender, MessageEventArgs e)
 		{
-			//	La souris est entrÈe dans le panneau.
+			//	La souris est entr√©e dans le panneau.
 			if ( !this.document.Modifier.PropertiesDetailMany )  return;
 			if ( this.property == null )  return;
 
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Panels
 
 		public Properties.Abstract Property
 		{
-			//	Choix de la propriÈtÈ ÈditÈe par le panneau.
+			//	Choix de la propri√©t√© √©dit√©e par le panneau.
 			get
 			{
 				return this.property;
@@ -216,30 +216,30 @@ namespace Epsitec.Common.Document.Panels
 
 		public void UpdateValues()
 		{
-			//	Met ‡ jour toutes les valeurs du panneau.
+			//	Met √† jour toutes les valeurs du panneau.
 			this.PropertyToWidgets();
 		}
 
 		public virtual void UpdateGeometry()
 		{
-			//	Met ‡ jour aprËs un changement de gÈomÈtrie.
+			//	Met √† jour apr√®s un changement de g√©om√©trie.
 		}
 
 		protected virtual void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			this.UpdateButtons();
 		}
 
 		protected virtual void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 		}
 
 
 		public virtual bool DefaultFocus()
 		{
-			//	Met le focus par dÈfaut dans ce panneau.
+			//	Met le focus par d√©faut dans ce panneau.
 			return false;
 		}
 
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.extendedButton == null )  return;
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void UpdateButtons()
 		{
-			//	Met ‡ jour les boutons.
+			//	Met √† jour les boutons.
 			if ( this.isObjectHilite )
 			{
 				this.fixIcon.Visibility = false;
@@ -309,12 +309,12 @@ namespace Epsitec.Common.Document.Panels
 
 		public virtual void OriginColorDeselect()
 		{
-			//	DÈsÈlectionne toutes les origines de couleurs possibles.
+			//	D√©s√©lectionne toutes les origines de couleurs possibles.
 		}
 
 		public virtual void OriginColorSelect(int rank)
 		{
-			//	SÈlectionne l'origine de couleur.
+			//	S√©lectionne l'origine de couleur.
 		}
 
 		public virtual int OriginColorRank()
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected virtual void OnChanged()
 		{
-			//	GÈnËre un ÈvÈnement pour dire que Áa a changÈ.
+			//	G√©n√®re un √©v√©nement pour dire que √ßa a chang√©.
 			if ( this.ignoreChanged )  return;
 
 			if ( this.property != null )
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Document.Panels
 				this.document.Modifier.OpletQueueValidateAction();
 			}
 
-			if ( this.Changed != null )  // qq'un Ècoute ?
+			if ( this.Changed != null )  // qq'un √©coute ?
 			{
 				this.Changed(this);
 			}
@@ -358,10 +358,10 @@ namespace Epsitec.Common.Document.Panels
 		public event EventHandler Changed;
 
 
-		//	GÈnËre un ÈvÈnement pour dire que la couleur d'origine a changÈ.
+		//	G√©n√®re un √©v√©nement pour dire que la couleur d'origine a chang√©.
 		protected virtual void OnOriginColorChanged()
 		{
-			if ( this.OriginColorChanged != null )  // qq'un Ècoute ?
+			if ( this.OriginColorChanged != null )  // qq'un √©coute ?
 			{
 				this.OriginColorChanged(this);
 			}
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Document.Panels
 		public event EventHandler OriginColorChanged;
 
 
-		//	Le bouton pour Ètendre/rÈduire le panneau a ÈtÈ cliquÈ.
+		//	Le bouton pour √©tendre/r√©duire le panneau a √©t√© cliqu√©.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.IsExtendedSize = !this.isExtendedSize;
@@ -452,10 +452,10 @@ namespace Epsitec.Common.Document.Panels
 
 		//	ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
 		//	Le constructeur de Common.Widget appelle DefaultHeight, qui doit
-		//	connaÓtre le document pour dÈterminer la hauteur (avec LabelHeight).
-		//	Comme ce constructeur est appelÈ avant l'initialisation de this.document,
-		//	je n'ai pas trouvÈ d'autre moyen pour connaÓtre le document que de le
-		//	mettre au prÈalable dans une variable statique !!!
+		//	conna√Ætre le document pour d√©terminer la hauteur (avec LabelHeight).
+		//	Comme ce constructeur est appel√© avant l'initialisation de this.document,
+		//	je n'ai pas trouv√© d'autre moyen pour conna√Ætre le document que de le
+		//	mettre au pr√©alable dans une variable statique !!!
 		public static Document				StaticDocument;
 
 		protected Document					document;

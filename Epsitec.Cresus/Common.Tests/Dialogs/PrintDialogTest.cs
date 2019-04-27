@@ -362,8 +362,8 @@ namespace Epsitec.Common.Tests.Dialogs
 				
 				Image bitmap = Bitmap.FromFile (@"..\..\Images\picture.jpg");
 				
-				port.PaintText (50, 145, "Image de Délos, définie à 300 dpi, 100mm x 100mm, codé au format JPEG.", font, 2.5);
-				port.PaintText (50, 141, "Imprimé avec les mécanismes de bas niveau de Crésus Réseau.", font, 2.5);
+				port.PaintText (50, 145, "Image de DÃ©los, dÃ©finie Ã  300 dpi, 100mm x 100mm, codÃ© au format JPEG.", font, 2.5);
+				port.PaintText (50, 141, "ImprimÃ© avec les mÃ©canismes de bas niveau de CrÃ©sus RÃ©seau.", font, 2.5);
 				port.PaintImage (bitmap, 50, 150, 100, 100, 0, 0, bitmap.Width, bitmap.Height);
 				
 				PrintDialogTest.Helper.TestDocument (port);

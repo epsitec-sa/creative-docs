@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -15,10 +15,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		NotAnInvoice		= 1,				//	ceci n'est pas (encore) une facture
 
-		DebtorBillOpen		= 2,				//	facture débiteur ouverte
-		DebtorBillClosed	= 3,				//	facture débiteur fermée
+		DebtorBillOpen		= 2,				//	facture dÃ©biteur ouverte
+		DebtorBillClosed	= 3,				//	facture dÃ©biteur fermÃ©e
 
-		CreditorBillOpen	= 8,				//	facture créancier/fournisseur ouverte
-		CreditorBillClosed	= 9,				//	facture créancier/fournisseur fermée
+		CreditorBillOpen	= 8,				//	facture crÃ©ancier/fournisseur ouverte
+		CreditorBillClosed	= 9,				//	facture crÃ©ancier/fournisseur fermÃ©e
 	}
 }

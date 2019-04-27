@@ -11,12 +11,12 @@ namespace Epsitec.Common.Document
 	{
 		Page      = 0,		// cadrer sur la page
 		Objects   = 1,		// cadrer sur les objets
-		Selection = 2,		// cadrer sur les objets sélectionnés
+		Selection = 2,		// cadrer sur les objets sÃ©lectionnÃ©s
 	}
 
 
 	/// <summary>
-	/// La classe Printer implémente l'impression d'un document.
+	/// La classe Printer implÃ©mente l'impression d'un document.
 	/// </summary>
 	/// 
 	public class Printer
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document
 		public void Print(Epsitec.Common.Dialogs.PrintDialog dp)
 		{
 			//	Imprime le document selon les choix faits dans le dialogue Window (dp)
-			//	ainsi que dans le dialogue des réglages (PrintInfo).
+			//	ainsi que dans le dialogue des rÃ©glages (PrintInfo).
 			PrintEngine printEngine = new PrintEngine();
 			if (printEngine.Initialize(this, dp))
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document
 		public string Export(string filename)
 		{
 			//	Exporte le document dans un fichier bitmap.
-			//	Crée le DrawingContext utilisé pour l'exportation.
+			//	CrÃ©e le DrawingContext utilisÃ© pour l'exportation.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = true;
@@ -74,8 +74,8 @@ namespace Epsitec.Common.Document
 
         public string ExportICO(string filename)
         {
-            //	Exporte le document dans une icône windows.
-            //	Crée le DrawingContext utilisé pour l'exportation.
+            //	Exporte le document dans une icÃ´ne windows.
+            //	CrÃ©e le DrawingContext utilisÃ© pour l'exportation.
             DrawingContext drawingContext = new DrawingContext(this.document, null);
             drawingContext.ContainerSize = this.document.PageSize;
             drawingContext.PreviewActive = true;
@@ -96,14 +96,14 @@ namespace Epsitec.Common.Document
 
         public bool Miniature(Size sizeHope, bool isModel, out string filename, out byte[] data)
 		{
-			//	Retourne les données pour l'image bitmap miniature de la première page.
+			//	Retourne les donnÃ©es pour l'image bitmap miniature de la premiÃ¨re page.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = false;
 			drawingContext.IsBitmap = true;
 			drawingContext.GridShow = isModel;
 
-			int pageNumber = this.document.Modifier.PrintablePageRank(0);  // numéro de la première page non modèle du document
+			int pageNumber = this.document.Modifier.PrintablePageRank(0);  // numÃ©ro de la premiÃ¨re page non modÃ¨le du document
 
 			Size pageSize = this.document.GetPageSize(pageNumber);
 			double dpix = sizeHope.Width*254/pageSize.Width;
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document
 
 		public Bitmap CreateMiniatureBitmap(Size sizeHope, bool isModel, int page, int layer)
 		{
-			//	Retourne les données pour l'image bitmap d'une miniature.
+			//	Retourne les donnÃ©es pour l'image bitmap d'une miniature.
 			//	Si layer == -1, on dessine tous les calques.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.IsBitmap = true;
@@ -254,21 +254,21 @@ namespace Epsitec.Common.Document
 
 		public void SetImagePixelWidth(double width)
 		{
-			//	Adapte la résolution d'après une largeur en pixel souhaitée.
+			//	Adapte la rÃ©solution d'aprÃ¨s une largeur en pixel souhaitÃ©e.
 			Size size = this.ImageSize;
 			this.imageDpi = (width*10.0*25.4)/size.Width;
 		}
 
 		public void SetImagePixelHeight(double height)
 		{
-			//	Adapte la résolution d'après une hauteur en pixel souhaitée.
+			//	Adapte la rÃ©solution d'aprÃ¨s une hauteur en pixel souhaitÃ©e.
 			Size size = this.ImageSize;
 			this.imageDpi = (height*10.0*25.4)/size.Height;
 		}
 
 		public Size ImagePixelSize
 		{
-			//	Retourne la taille en pixels de l'image exportée.
+			//	Retourne la taille en pixels de l'image exportÃ©e.
 			get
 			{
 				Size size = this.ImageSize;
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Document
 
 		protected Size ImageSize
 		{
-			//	Retourne la taille de l'image exportée.
+			//	Retourne la taille de l'image exportÃ©e.
 			get
 			{
 				if (this.ImageCrop == ExportImageCrop.Page)
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Document
 
 				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
 
-				//	Crée le DrawingContext utilisé pour l'impression.
+				//	CrÃ©e le DrawingContext utilisÃ© pour l'impression.
 				this.drawingContext = new DrawingContext(this.document, null);
 				this.drawingContext.ContainerSize = this.document.DocumentSize;
 				this.drawingContext.PreviewActive = true;
@@ -366,8 +366,8 @@ namespace Epsitec.Common.Document
 
 				int totalPages = toPage-fromPage+1;
 
-				//	Reprend ici tous les choix effectués dans le dialogue Window
-				//	de l'impression. Même s'il semble possible de les atteindre
+				//	Reprend ici tous les choix effectuÃ©s dans le dialogue Window
+				//	de l'impression. MÃªme s'il semble possible de les atteindre
 				//	plus tard avec port.PageSettings.PrinterSettings, cela
 				//	fonctionne mal.
 				this.paperSize = dp.Document.PrinterSettings.DefaultPageSettings.PaperSize.Size;
@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document
 					dp.Document.PrinterSettings.Copies = 1;
 				}
 
-				//	Calcule la liste des pages à imprimer.
+				//	Calcule la liste des pages Ã  imprimer.
 				if ( justeOneMaster )
 				{
 					for ( int i=0 ; i<copies ; i++ )
@@ -518,7 +518,7 @@ namespace Epsitec.Common.Document
 									 DrawingContext drawingContext,
 									 int pageNumber)
 		{
-			//	Imprime la géométrie de tous les objets.
+			//	Imprime la gÃ©omÃ©trie de tous les objets.
 			System.Diagnostics.Debug.Assert(pageNumber >= 0);
 			System.Diagnostics.Debug.Assert(pageNumber < this.document.DocumentObjects.Count);
 
@@ -615,12 +615,12 @@ namespace Epsitec.Common.Document
 
 		protected System.Collections.ArrayList ComputeLayers(int pageNumber)
 		{
-			//	Calcule la liste des calques, y compris ceux des pages maîtres.
-			//	Les calques cachés à l'impression ne sont pas mis dans la liste.
+			//	Calcule la liste des calques, y compris ceux des pages maÃ®tres.
+			//	Les calques cachÃ©s Ã  l'impression ne sont pas mis dans la liste.
 			System.Collections.ArrayList layers = new System.Collections.ArrayList();
 			List<Objects.Page> masterList = this.document.Modifier.ComputeMasterPageList(pageNumber);
 
-			//	Mets d'abord les premiers calques de toutes les pages maîtres.
+			//	Mets d'abord les premiers calques de toutes les pages maÃ®tres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -640,7 +640,7 @@ namespace Epsitec.Common.Document
 				layers.Add(layer);
 			}
 
-			//	Mets finalement les derniers calques de toutes les pages maîtres.
+			//	Mets finalement les derniers calques de toutes les pages maÃ®tres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -659,7 +659,7 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList ComputeAreas(int pageNumber)
 		{
 			//	Calcule les zones d'impression.
-			//	Les différentes zones n'ont aucune intersection entre elles.
+			//	Les diffÃ©rentes zones n'ont aucune intersection entre elles.
 			System.Collections.ArrayList areas = new System.Collections.ArrayList();
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			int rank = 0;
@@ -670,7 +670,7 @@ namespace Epsitec.Common.Document
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
-					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( obj.IsHide )  continue;  // objet cachÃ© ?
 					if ( !this.PrintInfo.PerfectJoin && !isLayerComplexPrinting && !obj.IsComplexPrinting )  continue;
 					rank ++;
 
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Document
 			return areas;
 		}
 
-		//	PrintingArea représente une zone rectangulaire contenant un ou plusieurs
+		//	PrintingArea reprÃ©sente une zone rectangulaire contenant un ou plusieurs
 		//	objets complexes.
 		protected class PrintingArea
 		{
@@ -808,13 +808,13 @@ namespace Epsitec.Common.Document
 
 		protected bool IsComplexPrinting(int pageNumber)
 		{
-			//	Indique si une impression complexe est nécessaire.
+			//	Indique si une impression complexe est nÃ©cessaire.
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			foreach ( Objects.Layer layer in layers )
 			{
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
-					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( obj.IsHide )  continue;  // objet cachÃ© ?
 					if ( obj.IsComplexPrinting )  return true;
 				}
 			}
@@ -827,8 +827,8 @@ namespace Epsitec.Common.Document
 										   int pageNumber,
 										   Point offset)
 		{
-			//	Imprime la géométrie simple de tous les objets, possible lorsque les
-			//	objets n'utilisent ni les dégradés ni la transparence.
+			//	Imprime la gÃ©omÃ©trie simple de tous les objets, possible lorsque les
+			//	objets n'utilisent ni les dÃ©gradÃ©s ni la transparence.
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset, pageNumber);
 
@@ -842,7 +842,7 @@ namespace Epsitec.Common.Document
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
-					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( obj.IsHide )  continue;  // objet cachÃ© ?
 					obj.DrawGeometry(port, drawingContext);
 				}
 
@@ -860,7 +860,7 @@ namespace Epsitec.Common.Document
 										Point offset,
 										System.Collections.ArrayList areas)
 		{
-			//	Imprime la géométrie composée d'objets simples et de zones complexes.
+			//	Imprime la gÃ©omÃ©trie composÃ©e d'objets simples et de zones complexes.
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset, pageNumber);
 
@@ -875,7 +875,7 @@ namespace Epsitec.Common.Document
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
-					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( obj.IsHide )  continue;  // objet cachÃ© ?
 
 					if ( this.PrintInfo.PerfectJoin )
 					{
@@ -929,8 +929,8 @@ namespace Epsitec.Common.Document
 										   Rectangle clipRect,
 										   Objects.Abstract topObject)
 		{
-			//	Imprime la géométrie complexe de tous les objets, en utilisant
-			//	un bitmap intermédiaire.
+			//	Imprime la gÃ©omÃ©trie complexe de tous les objets, en utilisant
+			//	un bitmap intermÃ©diaire.
 			Transform initialTransform = port.Transform;
 
 			double dpi = this.PrintInfo.Dpi;
@@ -972,7 +972,7 @@ namespace Epsitec.Common.Document
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
-					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( obj.IsHide )  continue;  // objet cachÃ© ?
 					if ( !clipRect.IntersectsWith(obj.BoundingBox) )  continue;
 					obj.DrawGeometry(gfx, drawingContext);
 					if ( obj == topObject )  goto stop;
@@ -1059,7 +1059,7 @@ namespace Epsitec.Common.Document
 			path.MoveTo(ds.Width, ds.Height+db);  path.LineTo(ds.Width, ds.Height+db+len);
 			port.PaintOutline(path);
 
-			len = 60.0;  // échantillons carrés de 6mm de côté
+			len = 60.0;  // Ã©chantillons carrÃ©s de 6mm de cÃ´tÃ©
 			Drawing.Rectangle rect = new Rectangle();
 			rect.Left = len;
 			rect.Bottom = ds.Height+db+len/2.0;
@@ -1104,7 +1104,7 @@ namespace Epsitec.Common.Document
 
 		protected void PaintColorSample(Drawing.IPaintPort port, Rectangle rect, Color color)
 		{
-			//	Dessine un échantillon de couleur.
+			//	Dessine un Ã©chantillon de couleur.
 			Path path = new Path();
 			path.AppendRectangle(rect);
 
@@ -1232,7 +1232,7 @@ namespace Epsitec.Common.Document
 
 		protected void InitSimplyPort(Printing.PrintPort port, PrintEngine printEngine, Point offset, int pageNumber)
 		{
-			//	Initialise le port pour une impression simplifiée.
+			//	Initialise le port pour une impression simplifiÃ©e.
 			double zoom = 1.0;
 			if ( this.PrintInfo.AutoZoom )
 			{
@@ -1257,8 +1257,8 @@ namespace Epsitec.Common.Document
 
 		private string ExportGeometry(DrawingContext drawingContext, string filename, int pageNumber)
 		{
-			//	Exporte la géométrie complexe de tous les objets, en utilisant
-			//	un bitmap intermédiaire.
+			//	Exporte la gÃ©omÃ©trie complexe de tous les objets, en utilisant
+			//	un bitmap intermÃ©diaire.
 			byte[] data;
 			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, this.imageAlphaCorrect, this.imageAlphaPremultiplied, true, this.ImageOnlySelected, this.ImageCrop, out data);
 			if (err != "")
@@ -1280,8 +1280,8 @@ namespace Epsitec.Common.Document
 
         private string ExportGeometryICO(DrawingContext drawingContext, string filename, int pageNumber)
         {
-            //	Exporte la géométrie complexe de tous les objets d'une page donnée,
-			//	en utilisant un bitmap intermédiaire.
+            //	Exporte la gÃ©omÃ©trie complexe de tous les objets d'une page donnÃ©e,
+			//	en utilisant un bitmap intermÃ©diaire.
             Settings.ExportICOInfo info = this.document.Settings.ExportICOInfo;
             Size pageSize = this.document.GetPageSize(pageNumber);
             ImageFormat format;
@@ -1319,9 +1319,9 @@ namespace Epsitec.Common.Document
 
 		private string ExportGeometryICO(DrawingContext drawingContext, string filename)
 		{
-			//	Exporte la géométrie complexe de tous les objets de toutes les pages,
-			//	en utilisant un bitmap intermédiaire pour chaque page.
-			//	Lors de l'exportation de abc.ico, on crée un dossier abc.ico contenant:
+			//	Exporte la gÃ©omÃ©trie complexe de tous les objets de toutes les pages,
+			//	en utilisant un bitmap intermÃ©diaire pour chaque page.
+			//	Lors de l'exportation de abc.ico, on crÃ©e un dossier abc.ico contenant:
 			//		abc.ico
 			//		abc-16.png
 			//		abc-32.png
@@ -1371,9 +1371,9 @@ namespace Epsitec.Common.Document
 
 		private string ExportGeometryICOPng(DrawingContext drawingContext, string filename)
 		{
-			//	Lors de l'exportation d'une icône paginée, exporte en plus les différentes tailles
-			//	dans autant de fichiers PNG séparés. Cela est principalement utile pour pouvoir
-			//	générer l'icône pour Mac.
+			//	Lors de l'exportation d'une icÃ´ne paginÃ©e, exporte en plus les diffÃ©rentes tailles
+			//	dans autant de fichiers PNG sÃ©parÃ©s. Cela est principalement utile pour pouvoir
+			//	gÃ©nÃ©rer l'icÃ´ne pour Mac.
 			var sizes = new int[] { 16, 32, 48, 64, 96, 128, 256, 512, 1024 };
 			var pageNumbers = this.GetPageNumbers (drawingContext);
 
@@ -1434,8 +1434,8 @@ namespace Epsitec.Common.Document
 
 		private string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool alphaCorrect, bool alphaPremultiplied, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
 		{
-			//	Exporte la géométrie complexe de tous les objets d'une page donnée, en
-			//	utilisant un bitmap intermédiaire. Retourne un éventuel message d'erreur
+			//	Exporte la gÃ©omÃ©trie complexe de tous les objets d'une page donnÃ©e, en
+			//	utilisant un bitmap intermÃ©diaire. Retourne un Ã©ventuel message d'erreur
 			//	ainsi que le tableau de bytes pour le fichier.
 			data = null;
 
@@ -1466,8 +1466,8 @@ namespace Epsitec.Common.Document
 
 		protected string ExportGeometry(DrawingContext drawingContext, IEnumerable<int> pageNumbers, double dpi, int depth, double AA, bool alphaCorrect, bool alphaPremultiplied, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
 		{
-			//	Exporte la géométrie complexe de tous les objets de plusieurs pages, en utilisant
-			//	un bitmap intermédiaire pour chaque page. Retourne un éventuel message d'erreur
+			//	Exporte la gÃ©omÃ©trie complexe de tous les objets de plusieurs pages, en utilisant
+			//	un bitmap intermÃ©diaire pour chaque page. Retourne un Ã©ventuel message d'erreur
 			//	ainsi que le tableau de bytes pour le fichier.
 			data = null;
 			var bitmaps = new List<NativeBitmap> ();
@@ -1487,8 +1487,8 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.NoBitmap;
 			}
 
-			//	S'ils ne sont pas déjà présents, génère les bitmaps dans les grandes tailles
-			//	supplémentaires.
+			//	S'ils ne sont pas dÃ©jÃ  prÃ©sents, gÃ©nÃ¨re les bitmaps dans les grandes tailles
+			//	supplÃ©mentaires.
 			var supplements = new int[] { 96, 256 };
 			foreach (var supplement in supplements)
 			{
@@ -1566,8 +1566,8 @@ namespace Epsitec.Common.Document
 				return pageNumber;
 			}
 
-			//	On cherche ensuite s'il existe une page ayant exactement la moitié
-			//	de la taille souhaitée.
+			//	On cherche ensuite s'il existe une page ayant exactement la moitiÃ©
+			//	de la taille souhaitÃ©e.
 			pageNumber = this.GetPageNumber (pageNumbers, width/2, height/2);
 			if (pageNumber != -1)
 			{
@@ -1576,7 +1576,7 @@ namespace Epsitec.Common.Document
 			}
 
 			//	On cherche ensuite s'il existe une page ayant exactement le quart
-			//	de la taille souhaitée.
+			//	de la taille souhaitÃ©e.
 			pageNumber = this.GetPageNumber (pageNumbers, width/4, height/4);
 			if (pageNumber != -1)
 			{
@@ -1584,13 +1584,13 @@ namespace Epsitec.Common.Document
 				return pageNumber;
 			}
 
-			//	Si on n'a pas trouvé, on cherche la plus grande page carrée.
+			//	Si on n'a pas trouvÃ©, on cherche la plus grande page carrÃ©e.
 			return this.GetGreatestPageNumber (pageNumbers, out pageSize);
 		}
 
 		private int GetPageNumber(IEnumerable<int> pageNumbers, int width, int height)
 		{
-			//	Retourne le numéro de la page ayant une dimension donnée.
+			//	Retourne le numÃ©ro de la page ayant une dimension donnÃ©e.
 			foreach (var pageNumber in pageNumbers)
 			{
 				var size = this.document.GetPageSize (pageNumber);
@@ -1606,7 +1606,7 @@ namespace Epsitec.Common.Document
 
 		private int GetGreatestPageNumber(IEnumerable<int> pageNumbers, out int size)
 		{
-			//	Retourne le numéro de la plus grande page carrée.
+			//	Retourne le numÃ©ro de la plus grande page carrÃ©e.
 			int greatestPage = -1;
 			size = 0;
 
@@ -1626,7 +1626,7 @@ namespace Epsitec.Common.Document
 
 		private Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool alphaCorrect, bool alphaPremultiplied, bool paintMark, bool onlySelected, ExportImageCrop crop)
 		{
-            //	Retourne le bitmap contenant le dessin des objets à exporter.
+            //	Retourne le bitmap contenant le dessin des objets Ã  exporter.
             if (depth == 32 && (alphaCorrect || alphaPremultiplied))
             {
                 var bBlack = this.ExportBitmap(drawingContext, pageNumber, layerNumber, dpi, 24, AA, paintMark, onlySelected, crop, 0.0);
@@ -1645,7 +1645,7 @@ namespace Epsitec.Common.Document
         private Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop, double backgroundIntensity)
         {
             Rectangle pageBox;
-            double zoom = dpi / (10.0 * 25.4);  // 254 correspond à un zoom de 1
+            double zoom = dpi / (10.0 * 25.4);  // 254 correspond Ã  un zoom de 1
 
             if (crop == ExportImageCrop.Page)
             {
@@ -1664,7 +1664,7 @@ namespace Epsitec.Common.Document
             Rectangle pageScale = pageBox;
             pageScale.Scale(zoom);
 
-            //	Il faut subtilement agrandir le rectangle, afin qu'un trait antialiasé soit contenu intégralement.
+            //	Il faut subtilement agrandir le rectangle, afin qu'un trait antialiasÃ© soit contenu intÃ©gralement.
             int left   = (int) System.Math.Floor   (pageScale.Left);
             int right  = (int) System.Math.Ceiling (pageScale.Right);
             int bottom = (int) System.Math.Floor   (pageScale.Bottom);
@@ -1700,7 +1700,7 @@ namespace Epsitec.Common.Document
                 {
                     if (obj.IsHide)
                     {
-                        continue;  // objet caché ?
+                        continue;  // objet cachÃ© ?
                     }
 
                     obj.DrawGeometry(gfx, drawingContext);
@@ -1735,7 +1735,7 @@ namespace Epsitec.Common.Document
         
         protected Rectangle GetBoundingBox(int pageNumber, bool onlySelected)
 		{
-			//	Retourne le rectangle englobant les objets à imprimer.
+			//	Retourne le rectangle englobant les objets Ã  imprimer.
 			Rectangle bbox = Rectangle.Empty;
 
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
@@ -1745,7 +1745,7 @@ namespace Epsitec.Common.Document
 				{
 					if (obj.IsHide)
 					{
-						continue;  // objet caché ?
+						continue;  // objet cachÃ© ?
 					}
 
 					bbox = Rectangle.Union(bbox, obj.BoundingBoxGeom);
@@ -1758,7 +1758,7 @@ namespace Epsitec.Common.Document
 
 		protected Settings.PrintInfo PrintInfo
 		{
-			//	Donne les réglages de l'impression.
+			//	Donne les rÃ©glages de l'impression.
 			get
 			{
 				return this.document.Settings.PrintInfo;

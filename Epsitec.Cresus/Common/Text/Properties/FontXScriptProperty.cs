@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe FontXscriptProperty définit si un superscript ou un subscript
-	/// est requis (exposant/indice en français).
+	/// La classe FontXscriptProperty dÃ©finit si un superscript ou un subscript
+	/// est requis (exposant/indice en franÃ§ais).
 	/// </summary>
 	public class FontXscriptProperty : Property
 	{
@@ -140,8 +140,8 @@ namespace Epsitec.Common.Text.Properties
 			}
 			else
 			{
-				//	La combinaison de deux propriétés XScript normales donne
-				//	toujours la deuxième comme vainqueur.
+				//	La combinaison de deux propriÃ©tÃ©s XScript normales donne
+				//	toujours la deuxiÃ¨me comme vainqueur.
 				
 				return b;
 			}

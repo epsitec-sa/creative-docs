@@ -13,9 +13,9 @@ namespace Epsitec.Common.Document
 	public class Polygon
 	{
 		/// <summary>
-		/// Un polygone est une forme fermée constituée de segments de droites, simplement définis
-		/// par une liste de points. Un polygone est obligatoirement fermé.
-		/// Pour obtenir une forme plus complexe (par exemple une forme trouée), il faut utiliser
+		/// Un polygone est une forme fermÃ©e constituÃ©e de segments de droites, simplement dÃ©finis
+		/// par une liste de points. Un polygone est obligatoirement fermÃ©.
+		/// Pour obtenir une forme plus complexe (par exemple une forme trouÃ©e), il faut utiliser
 		/// une liste de polygones.
 		/// </summary>
 		public Polygon()
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document
 
 		public Point GetPoint(int index)
 		{
-			//	Retourne un point à partir d'un index donné.
+			//	Retourne un point Ã  partir d'un index donnÃ©.
 			if (index < 0 || index > this.typedPoints.Count-1)
 			{
 				return Point.Zero;
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document
 
 		public PointType GetPointType(int index)
 		{
-			//	Retourne un point à partir d'un index donné.
+			//	Retourne un point Ã  partir d'un index donnÃ©.
 			if (index < 0 || index > this.typedPoints.Count-1)
 			{
 				return PointType.None;
@@ -55,28 +55,28 @@ namespace Epsitec.Common.Document
 
 		public Point GetCyclingPoint(int cyclingIndex)
 		{
-			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			//	Retourne un point Ã  partir d'un index donnÃ© dans un 'torre'.
 			cyclingIndex = this.GetCyclingIndex (cyclingIndex);
 			return this.typedPoints[cyclingIndex].Point;
 		}
 
 		public PointType GetCyclingPointType(int cyclingIndex)
 		{
-			//	Retourne un type de point à partir d'un index donné dans un 'torre'.
+			//	Retourne un type de point Ã  partir d'un index donnÃ© dans un 'torre'.
 			cyclingIndex = this.GetCyclingIndex (cyclingIndex);
 			return this.typedPoints[cyclingIndex].PointType;
 		}
 
 		private TypedPoint GetCyclingTypedPoint(int cyclingIndex)
 		{
-			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			//	Retourne un point Ã  partir d'un index donnÃ© dans un 'torre'.
 			cyclingIndex = this.GetCyclingIndex (cyclingIndex);
 			return this.typedPoints[cyclingIndex];
 		}
 
 		public int GetCyclingIndex(int cyclingIndex)
 		{
-			//	Retourne un index à partir d'un index donné dans un 'torre'.
+			//	Retourne un index Ã  partir d'un index donnÃ© dans un 'torre'.
 			while (cyclingIndex < 0)
 			{
 				cyclingIndex += this.typedPoints.Count;
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Document
 
 		public void Add(Point p, PointType pointType = PointType.Primary)
 		{
-			//	Ajoute un point au polygone, sauf s'il est identique au dernier ajouté.
+			//	Ajoute un point au polygone, sauf s'il est identique au dernier ajoutÃ©.
 			if (this.typedPoints.Count > 0 && pointType == PointType.Primary)
 			{
 				var last = this.typedPoints[this.typedPoints.Count-1];
@@ -137,8 +137,8 @@ namespace Epsitec.Common.Document
 		public void Simplify()
 		{
 			//	Simplifie un polygone.
-			//	Lorsqu'un polygone est généré à partir d'un chemin Path (Geometry.PathToPolygons),
-			//	beaucoup d'incohérences et de redondances peuvent être rencontrées !
+			//	Lorsqu'un polygone est gÃ©nÃ©rÃ© Ã  partir d'un chemin Path (Geometry.PathToPolygons),
+			//	beaucoup d'incohÃ©rences et de redondances peuvent Ãªtre rencontrÃ©es !
 			int i = 0;
 			while (i < this.typedPoints.Count)
 			{
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Document
 		#region Polygons to Path
 		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner, bool simplify)
 		{
-			//	Crée le chemin de plusieurs polygones en injectant des coins quelconques.
+			//	CrÃ©e le chemin de plusieurs polygones en injectant des coins quelconques.
 			if (corner == null || corner.CornerType == Properties.CornerType.None)
 			{
 				return Polygon.GetPolygonPath (polygons);
@@ -233,16 +233,16 @@ namespace Epsitec.Common.Document
 							polygon.typedPoints[1].PointType == PointType.Secondary &&
 							polygon.typedPoints[2].PointType == PointType.Secondary)
 						{
-							//	Lorsqu'un polygone constitué de segments de droites a été convexifié/concavifié,
-							//	il devient une suite de courbes de Bézier. Cette suite régulière (principal,
-							//	secondaire, secondaire, principal, secondaire, secondaire, etc.) peut être
-							//	traitée ici pour y ajouter les coins. Mais il doit absolument s'agir d'une
-							//	suite régulière. S'il y a un mélange de droites et de courbes, cela donnera
-							//	des résultats imprévisibles !
+							//	Lorsqu'un polygone constituÃ© de segments de droites a Ã©tÃ© convexifiÃ©/concavifiÃ©,
+							//	il devient une suite de courbes de BÃ©zier. Cette suite rÃ©guliÃ¨re (principal,
+							//	secondaire, secondaire, principal, secondaire, secondaire, etc.) peut Ãªtre
+							//	traitÃ©e ici pour y ajouter les coins. Mais il doit absolument s'agir d'une
+							//	suite rÃ©guliÃ¨re. S'il y a un mÃ©lange de droites et de courbes, cela donnera
+							//	des rÃ©sultats imprÃ©visibles !
 
 							for (int i = 0; i < polygon.typedPoints.Count; i+=3)
 							{
-								Point a = polygon.GetCyclingPoint (i-1);  // point précédent (secondaire)
+								Point a = polygon.GetCyclingPoint (i-1);  // point prÃ©cÃ©dent (secondaire)
 								Point p = polygon.GetCyclingPoint (i);    // point courant (principal)
 								Point b = polygon.GetCyclingPoint (i+1);  // point suivant (secondaire)
 								Point c = polygon.GetCyclingPoint (i+2);  // point suivant (secondaire)
@@ -276,7 +276,7 @@ namespace Epsitec.Common.Document
 						{
 							for (int i = 0; i < polygon.typedPoints.Count; i++)
 							{
-								Point a = polygon.GetCyclingPoint (i-1);  // point précédent
+								Point a = polygon.GetCyclingPoint (i-1);  // point prÃ©cÃ©dent
 								Point p = polygon.GetCyclingPoint (i);    // point courant
 								Point b = polygon.GetCyclingPoint (i+1);  // point suivant
 
@@ -306,7 +306,7 @@ namespace Epsitec.Common.Document
 
 		public Path PolygonPath
 		{
-			//	Crée le chemin d'un polygone à coins droits.
+			//	CrÃ©e le chemin d'un polygone Ã  coins droits.
 			get
 			{
 				var path = new Path ();
@@ -317,7 +317,7 @@ namespace Epsitec.Common.Document
 
 		public static Path GetPolygonPath(List<Polygon> polygons)
 		{
-			//	Crée le chemin de plusieurs polygones à coins droits.
+			//	CrÃ©e le chemin de plusieurs polygones Ã  coins droits.
 			var path = new Path ();
 
 			foreach (var polygon in polygons)
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Document
 
 		private static void AddPolygonPath(Path path, Polygon polygon)
 		{
-			//	Ajoute à un chemin un polygone à coins droits.
+			//	Ajoute Ã  un chemin un polygone Ã  coins droits.
 			int i = 0;
 			while (i < polygon.typedPoints.Count)
 			{
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Document
 		#region Polygons geometry
 		public static List<Polygon> Move(List<Polygon> polygons, double mx, double my)
 		{
-			//	Déplace des polygones.
+			//	DÃ©place des polygones.
 			if (mx == 0 && my == 0)
 			{
 				return polygons;
@@ -387,7 +387,7 @@ namespace Epsitec.Common.Document
 
 		public Polygon Move(double mx, double my)
 		{
-			//	Déplace un polygone.
+			//	DÃ©place un polygone.
 			if (mx == 0 && my == 0)
 			{
 				return this;
@@ -411,9 +411,9 @@ namespace Epsitec.Common.Document
 
 		public Polygon InflateAndMakeConvexe(double inflate, double convexe)
 		{
-			//	Engraisse/dégraisse et rend convexe/concave un polygone.
+			//	Engraisse/dÃ©graisse et rend convexe/concave un polygone.
 			//	inflate > 0  --> engraisse
-			//	inflate < 0  --> dégraisse
+			//	inflate < 0  --> dÃ©graisse
 			//	convexe > 0  --> rend convexe
 			//	convexe < 0  --> rend concave
 			if (inflate == 0 && convexe == 0)
@@ -429,16 +429,16 @@ namespace Epsitec.Common.Document
 
 		public static List<Polygon> InflateAndMakeConvexe(List<Polygon> polygons, double inflate, double convexe)
 		{
-			//	Engraisse/dégraisse et rend convexe/concave des polygones.
+			//	Engraisse/dÃ©graisse et rend convexe/concave des polygones.
 			//	inflate > 0  --> engraisse
-			//	inflate < 0  --> dégraisse
+			//	inflate < 0  --> dÃ©graisse
 			//	convexe > 0  --> rend convexe
 			//	convexe < 0  --> rend concave
-			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
-			//	Les polygones obtenus ont toujours le même nombre de sommets.
-			//	Dès que l'engraissement produit des parties qui se touchent, le résultat est étrange.
-			//	Idem dès que le dégraissement produit des parties vides.
-			//	TODO: Améliorer...
+			//	Cette procÃ©dure ne fonctionne que dans des cas simples, sans dÃ©gÃ©nÃ©rescence.
+			//	Les polygones obtenus ont toujours le mÃªme nombre de sommets.
+			//	DÃ¨s que l'engraissement produit des parties qui se touchent, le rÃ©sultat est Ã©trange.
+			//	Idem dÃ¨s que le dÃ©graissement produit des parties vides.
+			//	TODO: AmÃ©liorer...
 			if (inflate == 0 && convexe == 0)
 			{
 				return polygons;
@@ -459,24 +459,24 @@ namespace Epsitec.Common.Document
 
 		private static bool GetCCW(List<Polygon> polygons, Polygon polygon)
 		{
-			//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
-			Point a = polygon.GetCyclingPoint (-1);  // point précédent
+			//	DÃ©termine s'il faut mettre les points Ã  l'intÃ©rieur ou Ã  l'extÃ©rieur.
+			Point a = polygon.GetCyclingPoint (-1);  // point prÃ©cÃ©dent
 			Point p = polygon.GetCyclingPoint (0);   // point courant
 			Point b = polygon.GetCyclingPoint (1);   // point suivant
 
-			Point c = Polygon.InflateCorner (a, p, b, 1.0, false);  // calcule un point intérieur/extérieur au hasard
-			return Polygon.IsInside (polygons, c);  // point obtenu à l'intérieur du polygone ?
+			Point c = Polygon.InflateCorner (a, p, b, 1.0, false);  // calcule un point intÃ©rieur/extÃ©rieur au hasard
+			return Polygon.IsInside (polygons, c);  // point obtenu Ã  l'intÃ©rieur du polygone ?
 		}
 
 		private bool GetCCW()
 		{
-			//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
-			Point a = this.GetCyclingPoint (-1);  // point précédent
+			//	DÃ©termine s'il faut mettre les points Ã  l'intÃ©rieur ou Ã  l'extÃ©rieur.
+			Point a = this.GetCyclingPoint (-1);  // point prÃ©cÃ©dent
 			Point p = this.GetCyclingPoint (0);   // point courant
 			Point b = this.GetCyclingPoint (1);   // point suivant
 
-			Point c = Polygon.InflateCorner (a, p, b, 1.0, false);  // calcule un point intérieur/extérieur au hasard
-			return this.IsInside (c);  // point obtenu à l'intérieur du polygone ?
+			Point c = Polygon.InflateCorner (a, p, b, 1.0, false);  // calcule un point intÃ©rieur/extÃ©rieur au hasard
+			return this.IsInside (c);  // point obtenu Ã  l'intÃ©rieur du polygone ?
 		}
 
 		private Polygon InflateAndMakeConvexe(double inflate, double convexe, bool ccw)
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Document
 
 		private Polygon Inflate(double inflate, bool ccw)
 		{
-			//	Engraisse/dégraisse un polygone.
+			//	Engraisse/dÃ©graisse un polygone.
 			if (inflate == 0)
 			{
 				return this;
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Document
 
 				for (int i = 0; i < this.typedPoints.Count; i++)
 				{
-					Point a = this.GetCyclingPoint (i-1);  // point précédent
+					Point a = this.GetCyclingPoint (i-1);  // point prÃ©cÃ©dent
 					Point p = this.GetCyclingPoint (i);    // point courant
 					Point b = this.GetCyclingPoint (i+1);  // point suivant
 
@@ -512,13 +512,13 @@ namespace Epsitec.Common.Document
 
 		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw)
 		{
-			//	Engraisse/dégraisse un coin 'a-p-b'.
+			//	Engraisse/dÃ©graisse un coin 'a-p-b'.
 			//
-			//	L'angle formé par les segments p-a et p-b peut être quelconque (aïgu ou obtu)
-			//	Le segment aa-a est perpendiculaire à p-a
-			//	Le segment pa-p est perpendiculaire à p-a
-			//	Le segment bb-b est perpendiculaire à p-b
-			//	Le segment pb-p est perpendiculaire à p-b
+			//	L'angle formÃ© par les segments p-a et p-b peut Ãªtre quelconque (aÃ¯gu ou obtu)
+			//	Le segment aa-a est perpendiculaire Ã  p-a
+			//	Le segment pa-p est perpendiculaire Ã  p-a
+			//	Le segment bb-b est perpendiculaire Ã  p-b
+			//	Le segment pb-p est perpendiculaire Ã  p-b
 			//	La distance a-aa, p-pa, p-pb et b-bb vaut inflate
 			//	i est l'insersection des segments pa-aa et pb-bb
 			//	
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				if (a == b)  // cas dégénéré ?
+				if (a == b)  // cas dÃ©gÃ©nÃ©rÃ© ?
 				{
 					return Point.Move (p, a, -inflate);
 				}
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Document
 					var pb = Point.Move (p, Polygon.RotateCW (p, b,  ccw), inflate);
 					var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
 
-					if (Geometry.Compare (pa, pb))  // droite p-a parallèle à p-b ?
+					if (Geometry.Compare (pa, pb))  // droite p-a parallÃ¨le Ã  p-b ?
 					{
 						return pa;
 					}
@@ -562,7 +562,7 @@ namespace Epsitec.Common.Document
 							var pp = i[0];  // p' <-- intersection
 
 							//	Garde-fou (un peu comme MiterLimit en PostScript), si l'intersection gicle trop loin !
-							//	Sauf qu'ici, on ne peut donner qu'un seul point pour l'extrémité.
+							//	Sauf qu'ici, on ne peut donner qu'un seul point pour l'extrÃ©mitÃ©.
 							double d = Point.Distance (p, pp);
 							if (d > System.Math.Abs (inflate)*Polygon.miterLimit)
 							{
@@ -585,8 +585,8 @@ namespace Epsitec.Common.Document
 		private Polygon MakeConvexe(double convexe, bool ccw)
 		{
 			//	Rend un polygone convexe (> 0) ou concave (< 0).
-			//	Seuls les segments de droite sont concernés. Ils sont transformés en segments
-			//	de courbes de Bézier.
+			//	Seuls les segments de droite sont concernÃ©s. Ils sont transformÃ©s en segments
+			//	de courbes de BÃ©zier.
 			if (convexe == 0)
 			{
 				return this;
@@ -597,7 +597,7 @@ namespace Epsitec.Common.Document
 
 				for (int i = 0; i < this.typedPoints.Count; i++)
 				{
-					TypedPoint a = this.GetCyclingTypedPoint (i-1);  // point précédent
+					TypedPoint a = this.GetCyclingTypedPoint (i-1);  // point prÃ©cÃ©dent
 					TypedPoint p = this.GetCyclingTypedPoint (i);    // point courant
 					TypedPoint b = this.GetCyclingTypedPoint (i+1);  // point suivant
 
@@ -650,7 +650,7 @@ namespace Epsitec.Common.Document
 
 		private static Point RotateCW(Point center, Point a, bool ccw)
 		{
-			//	Retourne le point 'a' tourné de +/-90 degrés autour de 'center'.
+			//	Retourne le point 'a' tournÃ© de +/-90 degrÃ©s autour de 'center'.
 			double dx = a.X - center.X;
 			double dy = a.Y - center.Y;
 

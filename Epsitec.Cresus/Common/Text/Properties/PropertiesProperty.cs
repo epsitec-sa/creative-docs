@@ -1,10 +1,10 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe PropertiesProperty contient une liste de propriétés sérialisées
+	/// La classe PropertiesProperty contient une liste de propriÃ©tÃ©s sÃ©rialisÃ©es
 	/// qui doivent s'appliquer au texte.
 	/// </summary>
 	public class PropertiesProperty : Property
@@ -202,8 +202,8 @@ namespace Epsitec.Common.Text.Properties
 
 		public override Property GetCombination(Property property)
 		{
-			//	Produit une propriété qui est le résultat de la combinaison de
-			//	la propriété actuelle avec celle passée en entrée (qui vient
+			//	Produit une propriÃ©tÃ© qui est le rÃ©sultat de la combinaison de
+			//	la propriÃ©tÃ© actuelle avec celle passÃ©e en entrÃ©e (qui vient
 			//	ajouter ses attributs aux attributs actuels).
 			
 			Debug.Assert.IsTrue (property is Properties.PropertiesProperty);
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Text.Properties
 			PropertiesProperty b = property as PropertiesProperty;
 			PropertiesProperty c = new PropertiesProperty ();
 			
-			//	TODO: gérer les doublets
+			//	TODO: gÃ©rer les doublets
 			
 			c.serializedProperties = new string[a.serializedProperties.Length + b.serializedProperties.Length];
 			
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static Property[] RemovePropertiesProperties(System.Collections.ICollection properties)
 		{
-			//	Supprime les propriétés PropertiesProprty de la liste.
+			//	Supprime les propriÃ©tÃ©s PropertiesProprty de la liste.
 			
 			int count = 0;
 			

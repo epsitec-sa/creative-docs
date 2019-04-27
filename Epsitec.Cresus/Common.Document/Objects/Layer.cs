@@ -7,23 +7,23 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Objects
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum LayerType
 	{
 		None   = 0,		// aucun
-		Show   = 1,		// affiché normalement
-		Dimmed = 2,		// affiché estompé
-		Hide   = 3,		// caché complètement
+		Show   = 1,		// affichÃ© normalement
+		Dimmed = 2,		// affichÃ© estompÃ©
+		Hide   = 3,		// cachÃ© complÃ¨tement
 	}
 
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum LayerPrint
 	{
 		None   = 0,		// aucun
-		Show   = 1,		// imprimé normalement
-		Dimmed = 2,		// imprimé estompé
-		Hide   = 3,		// caché complètement
+		Show   = 1,		// imprimÃ© normalement
+		Dimmed = 2,		// imprimÃ© estompÃ©
+		Hide   = 3,		// cachÃ© complÃ¨tement
 	}
 
 	/// <summary>
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CloneObject(Objects.Abstract src)
 		{
-			//	Reprend toutes les caractéristiques d'un objet.
+			//	Reprend toutes les caractÃ©ristiques d'un objet.
 			base.CloneObject(src);
 			Layer layer = src as Layer;
 			this.layerType = layer.layerType;
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public static string LayerPositionName(int rank, int total)
 		{
-			//	Retourne la chaîne pour nommer la position d'un calque.
+			//	Retourne la chaÃ®ne pour nommer la position d'un calque.
 			if ( total == 1 )
 			{
 				return Res.Strings.Layer.PositionName.Unique;
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Document.Objects
 		#region CacheBitmap
 		protected override void CacheBitmapCreate()
 		{
-			//	Crée le bitmap caché.
+			//	CrÃ©e le bitmap cachÃ©.
 			//?System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate layer #{0}", this.LayerNumber));
 			if (this.cacheBitmapSize.IsEmpty)
 			{
@@ -219,13 +219,13 @@ namespace Epsitec.Common.Document.Objects
 		#region OpletType
 		protected void InsertOpletType()
 		{
-			//	Ajoute un oplet pour mémoriser le type du calque.
+			//	Ajoute un oplet pour mÃ©moriser le type du calque.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletType oplet = new OpletType(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		//	Mémorise le nom de l'objet.
+		//	MÃ©morise le nom de l'objet.
 		protected class OpletType : AbstractOplet
 		{
 			public OpletType(Layer host)
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			base.GetObjectData(info, context);
 
 			info.AddValue("LayerType", this.layerType);
@@ -289,7 +289,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Layer(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 			this.layerType = (LayerType) info.GetValue("LayerType", typeof(LayerType));
 
 			if ( this.document.Type != DocumentType.Pictogram )

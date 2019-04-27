@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 using System.Linq;
 using Epsitec.Aider.Entities;
@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return "Définir ou changer la paroisse ou région";
+			return "DÃ©finir ou changer la paroisse ou rÃ©gion";
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -41,9 +41,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var user = this.Entity;
 
 			form
-				.Title ("Définir ou changer la paroisse ou région")		
+				.Title ("DÃ©finir ou changer la paroisse ou rÃ©gion")		
 					.Field<AiderGroupEntity> ()
-						.Title ("Choisir un groupe ou une région")
+						.Title ("Choisir un groupe ou une rÃ©gion")
 						.InitialValue (user.Parish)
 						.WithSpecialField<AiderGroupSpecialField<AiderUserEntity>> ()
 					.End ()

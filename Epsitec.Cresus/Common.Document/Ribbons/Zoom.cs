@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Zoom gère le zoom d'affichage.
+	/// La classe Zoom gÃ¨re le zoom d'affichage.
 	/// </summary>
 	public class Zoom : Abstract
 	{
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonZoomMin == null )  return;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void CreateFieldZoom(ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour le zoom.
+			//	CrÃ©e un champ Ã©ditable pour le zoom.
 			field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void AdaptFieldZoom(TextFieldReal field)
 		{
-			//	Adapte un champ éditable pour le zoom.
+			//	Adapte un champ Ã©ditable pour le zoom.
 			if ( this.document == null )
 			{
 				field.Enable = false;
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleZoomChanged()
 		{
-			//	Appelé par le document lorsque le zoom a changé.
+			//	AppelÃ© par le document lorsque le zoom a changÃ©.
 			this.ignoreChange = true;
 			this.fieldZoom.InternalValue = (decimal) this.document.Modifier.ActiveViewer.DrawingContext.Zoom;
 			this.ignoreChange = false;
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleOthersPressed(object sender, MessageEventArgs e)
 		{
-			//	Bouton pour ouvrir le menu des autres opérations.
+			//	Bouton pour ouvrir le menu des autres opÃ©rations.
 			if ( this.document == null )  return;
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;

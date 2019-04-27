@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -10,11 +10,11 @@ using System.Linq;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe ImageProvider permet d'obtenir des images à partir de leur
-	/// nom. Cette implémentation supporte les protocoles suivants :
-	/// - "file:name", accès direct à une image dans un fichier (name)
-	/// - "res:id#field", accès direct à une image dans un bundle de ressources
-	/// - "dyn:tag", accès à une image dynamique
+	/// La classe ImageProvider permet d'obtenir des images Ã  partir de leur
+	/// nom. Cette implÃ©mentation supporte les protocoles suivants :
+	/// - "file:name", accÃ¨s direct Ã  une image dans un fichier (name)
+	/// - "res:id#field", accÃ¨s direct Ã  une image dans un bundle de ressources
+	/// - "dyn:tag", accÃ¨s Ã  une image dynamique
 	/// </summary>
 	public sealed class ImageProvider : IImageProvider
 	{
@@ -48,8 +48,8 @@ namespace Epsitec.Common.Support
 		
 		public static void Initialize()
 		{
-			//	En appelant cette méthode statique, on peut garantir que le constructeur
-			//	statique de ImageProvider a bien été exécuté.
+			//	En appelant cette mÃ©thode statique, on peut garantir que le constructeur
+			//	statique de ImageProvider a bien Ã©tÃ© exÃ©cutÃ©.
 		}
 		
 		
@@ -167,8 +167,8 @@ namespace Epsitec.Common.Support
 			
 			if (name.StartsWith ("file:"))
 			{
-				//	TODO: vérifier le nom du fichier pour éviter de faire des bêtises ici
-				//	(pour améliorer la sécurité, mais ce n'est probablement pas un problème).
+				//	TODO: vÃ©rifier le nom du fichier pour Ã©viter de faire des bÃªtises ici
+				//	(pour amÃ©liorer la sÃ©curitÃ©, mais ce n'est probablement pas un problÃ¨me).
 				
 				Image                image     = null;
 				string                       baseName = name.Remove (0, 5);
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Support
 				{
 					string path = ImageProvider.defaultPaths[i];
 					
-					//	Il se peut que cette option ne soit pas définie :
+					//	Il se peut que cette option ne soit pas dÃ©finie :
 					
 					if (path == null)
 					{
@@ -243,17 +243,17 @@ namespace Epsitec.Common.Support
 			if ((name.StartsWith ("res:")) &&
 				(resourceManager != null))
 			{
-				//	L'image décrite par l'identificateur de ressources est définie au moyen
-				//	d'un bundle comportant au minimum le champ "image" et le champ spécifié
+				//	L'image dÃ©crite par l'identificateur de ressources est dÃ©finie au moyen
+				//	d'un bundle comportant au minimum le champ "image" et le champ spÃ©cifiÃ©
 				//	par le format "res:id#field".
 				//
-				//	Le champ "image" se réfère aux données binaires de l'image (par exemple
+				//	Le champ "image" se rÃ©fÃ¨re aux donnÃ©es binaires de l'image (par exemple
 				//	une image au format PNG).
 				//
-				//	Le champ spécifié décrit quant à lui quelques informations au sujet de
-				//	la partie de l'image qui nous intéresse ici. Dans la partie "id", il
-				//	faut en principe spécifier le provider à utiliser, sinon le provider
-				//	de ressources par défaut sera pris.
+				//	Le champ spÃ©cifiÃ© dÃ©crit quant Ã  lui quelques informations au sujet de
+				//	la partie de l'image qui nous intÃ©resse ici. Dans la partie "id", il
+				//	faut en principe spÃ©cifier le provider Ã  utiliser, sinon le provider
+				//	de ressources par dÃ©faut sera pris.
 				
 				string resFull = name.Remove (0, 4);
 				string resBundle;
@@ -296,8 +296,8 @@ namespace Epsitec.Common.Support
 			
 			if (name.StartsWith ("manifest:"))
 			{
-				//	L'image décrite est stockée dans les ressources du manifeste de l'assembly .NET.
-				//	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiés par
+				//	L'image dÃ©crite est stockÃ©e dans les ressources du manifeste de l'assembly .NET.
+				//	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiÃ©s par
 				//	.NET et des transformations futures pourraient ne pas fonctionner.
 
 				var assemblies   = ImageProvider.GetAssemblies ();
@@ -549,8 +549,8 @@ namespace Epsitec.Common.Support
 			
 			if (bundle.Contains (fieldName))
 			{
-				//	Une image est définie par un champ 'i.name' qui contient une chaîne composée
-				//	de 'x;y;dx;dy;ox;oy' définissant l'origine dans l'image mère, la taille et
+				//	Une image est dÃ©finie par un champ 'i.name' qui contient une chaÃ®ne composÃ©e
+				//	de 'x;y;dx;dy;ox;oy' dÃ©finissant l'origine dans l'image mÃ¨re, la taille et
 				//	l'offset de l'origine dans la sous-image. 'oy;oy' sont facultatifs.
 				
 				string[] args = bundle[fieldName].AsString.Split (';', ':');

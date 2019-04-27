@@ -1,17 +1,17 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération CombinationMode détermine comment des propriétés peuvent
-	/// être combinées.
+	/// L'Ã©numÃ©ration CombinationMode dÃ©termine comment des propriÃ©tÃ©s peuvent
+	/// Ãªtre combinÃ©es.
 	/// </summary>
 	public enum CombinationMode
 	{
 		Invalid				= 0,
 		
-		Combine,								//	combine deux propriétés pour en former une nouvelle
-		Accumulate								//	accumule les propriétés (pas de combinaison)
+		Combine,								//	combine deux propriÃ©tÃ©s pour en former une nouvelle
+		Accumulate								//	accumule les propriÃ©tÃ©s (pas de combinaison)
 	}
 }

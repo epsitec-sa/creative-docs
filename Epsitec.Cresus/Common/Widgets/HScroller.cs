@@ -3,7 +3,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe HScroller implémente l'ascenceur horizontal.
+	/// La classe HScroller implÃ©mente l'ascenceur horizontal.
 	/// </summary>
 	public class HScroller : AbstractScroller
 	{

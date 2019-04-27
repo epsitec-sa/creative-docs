@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -15,14 +15,14 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Compta.Graph
 {
 	/// <summary>
-	/// Cette classe représente une surface quelconque correspondant à un élément d'un graphique,
-	/// tel qu'une barre, un secteur, la boîte des légendes, etc.
+	/// Cette classe reprÃ©sente une surface quelconque correspondant Ã  un Ã©lÃ©ment d'un graphique,
+	/// tel qu'une barre, un secteur, la boÃ®te des lÃ©gendes, etc.
 	/// </summary>
 	public class GraphSurface
 	{
 		public GraphSurface(GraphEngine engine, GraphSurfaceId id, Rectangle rect)
 		{
-			//	Crée une surface rectangulaire.
+			//	CrÃ©e une surface rectangulaire.
 			this.engine = engine;
 			this.id     = id;
 			this.Rect   = rect;
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphSurface(GraphEngine engine, GraphSurfaceId id, Path path)
 		{
-			//	Crée une surface quelconque, selon un chemin.
+			//	CrÃ©e une surface quelconque, selon un chemin.
 			this.engine = engine;
 			this.id     = id;
 			this.Path   = path;
@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.PaintPrototype (graphics);
 
-			//	Dessine les poignées.
+			//	Dessine les poignÃ©es.
 			for (int i = 0; i < this.HandleCount; i++)
 			{
 				this.PaintHandle (graphics, this.GetHandle (i));
@@ -464,7 +464,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintHandle(Graphics graphics, Point? pos)
 		{
-			//	Dessine une poignée.
+			//	Dessine une poignÃ©e.
 			if (pos.HasValue)
 			{
 				var p = graphics.Align (pos.Value);
@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private static void PaintDashedPath(Graphics graphics, Path path, double dashLength, double gapLength)
 		{
-			//	Dessine un chemin sous forme d'un traitillé.
+			//	Dessine un chemin sous forme d'un traitillÃ©.
 			var dp = new DashedPath ();
 			dp.Append (path);
 			dp.AddDash (dashLength, gapLength);
@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		private readonly static double handleSize = 6;  // doit être pair
+		private readonly static double handleSize = 6;  // doit Ãªtre pair
 
 		private readonly GraphEngine				engine;
 		private readonly GraphSurfaceId				id;

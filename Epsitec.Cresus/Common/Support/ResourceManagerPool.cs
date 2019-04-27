@@ -1,4 +1,4 @@
-//	Copyright © 2006-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		public void SetupDefaultRootPaths()
 		{
-			//	TODO: définir les chemins...
+			//	TODO: dÃ©finir les chemins...
 
 			string appPath  = Globals.Directories.ExecutableRoot;
 			string userPath = Globals.Directories.UserAppData;

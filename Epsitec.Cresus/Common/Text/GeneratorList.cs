@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text
 	using EventHandler = Epsitec.Common.Support.EventHandler;
 	
 	/// <summary>
-	/// La classe GeneratorList gère la liste des générateurs, accessibles par
+	/// La classe GeneratorList gÃ¨re la liste des gÃ©nÃ©rateurs, accessibles par
 	/// leur nom.
 	/// </summary>
 	public sealed class GeneratorList
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Text
 		
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
-			//	Sérialise toutes les définitions des générateurs :
+			//	SÃ©rialise toutes les dÃ©finitions des gÃ©nÃ©rateurs :
 			
 			buffer.Append (SerializerSupport.SerializeInt (this.generators.Count));
 			

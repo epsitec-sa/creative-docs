@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.Extensions;
 
 using System;
 

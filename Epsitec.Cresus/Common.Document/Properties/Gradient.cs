@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum GradientFillType
 	{
 		None    = 0,
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Gradient représente une propriété d'un objet graphique.
+	/// La classe Gradient reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Gradient : Abstract
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public GradientFillType FillType
 		{
-			//	Mode de remplissage du dégradé.
+			//	Mode de remplissage du dÃ©gradÃ©.
 			get
 			{
 				return this.fillType;
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Drawing.RichColor Color1
 		{
-			//	Couleur 1 du dégradé.
+			//	Couleur 1 du dÃ©gradÃ©.
 			get
 			{
 				return this.color1;
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Drawing.RichColor Color2
 		{
-			//	Couleur 2 du dégradé.
+			//	Couleur 2 du dÃ©gradÃ©.
 			get
 			{
 				return this.color2;
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public double Angle
 		{
-			//	Angle du dégradé.
+			//	Angle du dÃ©gradÃ©.
 			get
 			{
 				return this.angle;
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public double Cx
 		{
-			//	Centre x du dégradé.
+			//	Centre x du dÃ©gradÃ©.
 			get
 			{
 				return this.cx;
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public double Cy
 		{
-			//	Centre y du dégradé.
+			//	Centre y du dÃ©gradÃ©.
 			get
 			{
 				return this.cy;
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public double Sx
 		{
-			//	Echelle x du dégradé.
+			//	Echelle x du dÃ©gradÃ©.
 			get
 			{
 				return this.sx;
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public double Sy
 		{
-			//	Echelle y du dégradé.
+			//	Echelle y du dÃ©gradÃ©.
 			get
 			{
 				return this.sy;
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public int Repeat
 		{
-			//	Nombre de répétitions.
+			//	Nombre de rÃ©pÃ©titions.
 			get
 			{
 				return this.repeat;
@@ -483,7 +483,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(GradientFillType type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(GradientFillType type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case GradientFillType.None:     return "GradientNone";
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(Gradient.GetName(this.fillType));
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool IsComplexPrinting
 		{
-			//	Indique si une impression complexe est nécessaire.
+			//	Indique si une impression complexe est nÃ©cessaire.
 			get
 			{
 				if ( this.fillType != GradientFillType.None )  return true;
@@ -550,15 +550,15 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }  // (*)
 		}
 		public override bool IsVisible(IPaintPort port)
 		{
-			//	(*)	Doit rendre "true" à cause de BoundingBox, lorsque this.fillType passe
-			//		de GradientFillType.None à autre chose, et inversément.
+			//	(*)	Doit rendre "true" Ã  cause de BoundingBox, lorsque this.fillType passe
+			//		de GradientFillType.None Ã  autre chose, et inversÃ©ment.
 	
-			//	Indique si le dégradé est visible.
+			//	Indique si le dÃ©gradÃ© est visible.
 			Drawing.Color c1 = this.color1.Basic;
 			Drawing.Color c2 = this.color2.Basic;
 
@@ -585,7 +585,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Gradient p = property as Gradient;
 			p.fillType = this.fillType;
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Gradient p = property as Gradient;
@@ -638,7 +638,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Gradient(document);
 		}
@@ -646,7 +646,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Rectangle BoundingBoxGeom(Rectangle bbox)
 		{
-			//	Calcule la bbox pour la représentation du dégradé.
+			//	Calcule la bbox pour la reprÃ©sentation du dÃ©gradÃ©.
 			bbox.Inflate(this.smooth);
 			return bbox;
 		}
@@ -667,7 +667,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void InflateBoundingBox(SurfaceAnchor sa, ref Rectangle bboxFull)
 		{
-			//	Engraisse la bbox en fonction de la propriété.
+			//	Engraisse la bbox en fonction de la propriÃ©tÃ©.
 			if ( this.fillType == GradientFillType.None )  return;
 
 			Point p1 = sa.ToAbs(new Point(this.cx+this.sx, this.cy+this.sy));
@@ -696,7 +696,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Début du déplacement d'une poignée.
+			//	DÃ©but du dÃ©placement d'une poignÃ©e.
 			if ( this.fillType == GradientFillType.Hatch   ||
 				 this.fillType == GradientFillType.Dots    ||
 				 this.fillType == GradientFillType.Squares )
@@ -707,7 +707,7 @@ namespace Epsitec.Common.Document.Properties
 					drawingContext.ConstrainAddCenter(sa.Center, false, -1);
 				}
 
-				if ( rank == 1 )  // épaisseur ?
+				if ( rank == 1 )  // Ã©paisseur ?
 				{
 				}
 
@@ -738,13 +738,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignées.
+			//	Nombre de poignÃ©es.
 			return 3;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignée est visible.
+			//	Indique si une poignÃ©e est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -772,14 +772,14 @@ namespace Epsitec.Common.Document.Properties
 
 		protected SurfaceAnchor SurfaceAnchor(Objects.Abstract obj)
 		{
-			//	Retourne la surface à utiliser pour les poignées du dégradé.
+			//	Retourne la surface Ã  utiliser pour les poignÃ©es du dÃ©gradÃ©.
 			obj.SurfaceAnchor.LineUse = (this.type == Properties.Type.LineColor);
 			return obj.SurfaceAnchor;
 		}
 
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignée.
+			//	Retourne la position d'une poignÃ©e.
 			Point pos = new Point();
 			SurfaceAnchor sa = this.SurfaceAnchor(obj);
 
@@ -792,7 +792,7 @@ namespace Epsitec.Common.Document.Properties
 					pos = sa.Center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0], new Point(0, sa.RotateRadius));
 				}
 
-				if ( rank == 1 )  // épaisseur ?
+				if ( rank == 1 )  // Ã©paisseur ?
 				{
 					pos = sa.Center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0]-90, new Point(0, this.hatchWidth[0]));
 				}
@@ -829,7 +829,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignée.
+			//	Modifie la position d'une poignÃ©e.
 			SurfaceAnchor sa = this.SurfaceAnchor(obj);
 
 			if ( this.fillType == GradientFillType.Hatch   ||
@@ -841,7 +841,7 @@ namespace Epsitec.Common.Document.Properties
 					this.HatchAngle1 = Point.ComputeAngleDeg(sa.Center, pos)-90-sa.Direction;
 				}
 
-				if ( rank == 1 )  // épaisseur ?
+				if ( rank == 1 )  // Ã©paisseur ?
 				{
 					this.HatchWidth1 = Point.Distance(sa.Center, pos);
 				}
@@ -880,7 +880,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void MoveGlobalStarting()
 		{
-			//	Début du déplacement global de la propriété.
+			//	DÃ©but du dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
 			this.InsertOpletProperty();
@@ -890,7 +890,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void MoveGlobalProcess(Selector selector)
 		{
-			//	Effectue le déplacement global de la propriété.
+			//	Effectue le dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
 			double scale = selector.GetTransformScale;
@@ -902,7 +902,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void DrawEdit(Graphics graphics, DrawingContext drawingContext, Objects.Abstract obj)
 		{
-			//	Dessine les traits de construction avant les poignées.
+			//	Dessine les traits de construction avant les poignÃ©es.
 			if ( !obj.IsSelected ||
 				 obj.IsGlobalSelected ||
 				 obj.IsEdited ||
@@ -922,7 +922,7 @@ namespace Epsitec.Common.Document.Properties
 			{
 				graphics.AddLine(p3, p1);
 				graphics.AddLine (p1, Geometry.ComputeArrowExtremity (p3, p1, 0.2, 0.1, 0));
-				graphics.AddLine (p1, Geometry.ComputeArrowExtremity (p3, p1, 0.2, 0.1, 1));  // flèche
+				graphics.AddLine (p1, Geometry.ComputeArrowExtremity (p3, p1, 0.2, 0.1, 1));  // flÃ¨che
 
 				graphics.AddLine (Geometry.ComputeArrowExtremity (p3, p1, 0.0, 0.2, 0), Geometry.ComputeArrowExtremity (p3, p1, 0.0, 0.2, 1));
 				graphics.AddLine (Geometry.ComputeArrowExtremity (p1, p3, 0.0, 0.2, 0), Geometry.ComputeArrowExtremity (p1, p3, 0.0, 0.2, 1));
@@ -935,7 +935,7 @@ namespace Epsitec.Common.Document.Properties
 				double radius = System.Math.Min(sa.Width, sa.Height)*0.5;
 				Point pa = center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0], new Point(0, radius*0.9));
 				graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 0));
-				graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flèche
+				graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flÃ¨che
 				graphics.AddLine(center, pa);
 
 				Point pb = center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0]+90, new Point(0, radius));
@@ -972,7 +972,7 @@ namespace Epsitec.Common.Document.Properties
 					double radius = System.Math.Min(System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
 					Point pa = center+Transform.RotatePointDeg(sa.Direction+this.angle, new Point(0, radius));
 					graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 0));
-					graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flèche
+					graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flÃ¨che
 					graphics.AddLine(center, pa);
 				}
 			}
@@ -1129,7 +1129,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("FillType", this.fillType);
@@ -1158,7 +1158,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Gradient(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.fillType = (GradientFillType) info.GetValue("FillType", typeof(GradientFillType));
 
 			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )

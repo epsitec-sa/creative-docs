@@ -4,12 +4,12 @@ namespace Epsitec.Common.Widgets
 {
 	public enum HeaderSliderStyle
 	{
-		Top,			// bouton dans en-tête supérieure
-		Left,			// bouton dans en-tête gauche
+		Top,			// bouton dans en-tÃªte supÃ©rieure
+		Left,			// bouton dans en-tÃªte gauche
 	}
 	
 	/// <summary>
-	/// La class HeaderSlider représente un bouton d'un en-tête de tableau,
+	/// La class HeaderSlider reprÃ©sente un bouton d'un en-tÃªte de tableau,
 	/// permettant de modifier une largeur de colonne ou une hauteur de ligne.
 	/// </summary>
 	public class HeaderSlider : AbstractButton
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	Gestion d'un événement.
+			//	Gestion d'un Ã©vÃ©nement.
 			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDragStarted(MessageEventArgs e)
 		{
-			//	Le slider va être déplacé.
+			//	Le slider va Ãªtre dÃ©placÃ©.
 			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragStarted");
 			if (handler != null)
 			{
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDragMoved(MessageEventArgs e)
 		{
-			//	Le slider est déplacé.
+			//	Le slider est dÃ©placÃ©.
 			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragMoved");
 			if (handler != null)
 			{
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDragEnded(MessageEventArgs e)
 		{
-			//	Le slider est fini de déplacer.
+			//	Le slider est fini de dÃ©placer.
 			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragEnded");
 			if (handler != null)
 			{

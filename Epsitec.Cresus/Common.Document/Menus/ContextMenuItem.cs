@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Document.Menus
 {
 	/// <summary>
-	/// La classe ContextMenuItem représente une case du menu contextuel.
+	/// La classe ContextMenuItem reprÃ©sente une case du menu contextuel.
 	/// </summary>
 	public class ContextMenuItem
 	{
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document.Menus
 			item.Command = cs.Command.CommandId;
 			item.Name = cs.Command.CommandId;
 			item.Icon = cs.Command.Icon;
-			item.Text = cs.Command.Description;  // texte sans le raccourci clavier entre parenthèses
+			item.Text = cs.Command.Description;  // texte sans le raccourci clavier entre parenthÃ¨ses
 			list.Add(item);
 			return true;
 		}
@@ -102,9 +102,9 @@ namespace Epsitec.Common.Document.Menus
 
 		public static void MenuAddSep(List<ContextMenuItem> list)
 		{
-			//	Ajoute un séparateur dans le menu.
+			//	Ajoute un sÃ©parateur dans le menu.
 			ContextMenuItem item = new ContextMenuItem();
-			list.Add(item);  // séparateur
+			list.Add(item);  // sÃ©parateur
 		}
 
 		public static bool IsMenuActive(List<ContextMenuItem> list)
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document.Menus
 				{
 					return true;
 				}
-				else if ( cmi.Name == "" )  // séparateur ?
+				else if ( cmi.Name == "" )  // sÃ©parateur ?
 				{
 				}
 				else	// case normale ?
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Menus
 
 		public static void MenuCreate(VMenu menu, List<ContextMenuItem> list)
 		{
-			//	Crée le menu.
+			//	CrÃ©e le menu.
 			foreach ( ContextMenuItem cmi in list )
 			{
 				if ( cmi.submenu != null )  // sous-menu ?
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document.Menus
 					mi.Submenu = cmi.submenu;
 					menu.Items.Add(mi);
 				}
-				else if ( cmi.Name == "" )  // séparateur ?
+				else if ( cmi.Name == "" )  // sÃ©parateur ?
 				{
 					menu.Items.Add(new MenuSeparator());
 				}

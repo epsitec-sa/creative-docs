@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using System;

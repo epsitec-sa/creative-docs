@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public int TitleNumber
 		{
-			//	Titre au sommet de la boîte (nom du noeud).
+			//	Titre au sommet de la boÃ®te (nom du noeud).
 			get
 			{
 				int value;
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override Rectangle ExtendedBounds
 		{
-			//	Retourne la boîte de l'objet, éventuellement agrandie si l'objet est étendu.
+			//	Retourne la boÃ®te de l'objet, Ã©ventuellement agrandie si l'objet est Ã©tendu.
 			get
 			{
 				var box = this.bounds;
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			this.bounds.Offset(dx, dy);
 			this.UpdateGeometry ();
 		}
@@ -121,17 +121,17 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void ContextMenu()
 		{
-			if (!this.Entity.IsForeign)  // pas un noeud étranger ?
+			if (!this.Entity.IsForeign)  // pas un noeud Ã©tranger ?
 			{
 				if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
 				{
-					this.editor.CreateMenuItem (!this.Entity.IsPublic, "Nœud privé",  "Node.Private");
-					this.editor.CreateMenuItem (this.Entity.IsPublic,  "Nœud public", "Node.Public");
+					this.editor.CreateMenuItem (!this.Entity.IsPublic, "NÅ“ud privÃ©",  "Node.Private");
+					this.editor.CreateMenuItem (this.Entity.IsPublic,  "NÅ“ud public", "Node.Public");
 				}
 
 				this.editor.CreateMenuSeparator ();
-				this.editor.CreateMenuItem (!this.Entity.IsAuto, "Nœud manuel",      "Node.Manuel");
-				this.editor.CreateMenuItem (this.Entity.IsAuto,  "Nœud automatique", "Node.Auto");
+				this.editor.CreateMenuItem (!this.Entity.IsAuto, "NÅ“ud manuel",      "Node.Manuel");
+				this.editor.CreateMenuItem (this.Entity.IsAuto,  "NÅ“ud automatique", "Node.Auto");
 			}
 
 			this.editor.CreateMenuSeparator ();
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			if (this.IsButtonEnable (ActiveElement.NodeOpenLink))
 			{
 				this.editor.CreateMenuSeparator ();
-				this.editor.CreateMenuItem (null, "Crée une nouvelle connexion", "Node.OpenLink");
+				this.editor.CreateMenuItem (null, "CrÃ©e une nouvelle connexion", "Node.OpenLink");
 			}
 
 			if (this.IsButtonEnable (ActiveElement.NodeComment) || this.IsButtonEnable (ActiveElement.NodeInfo))
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			if (this.IsButtonEnable (ActiveElement.NodeClose))
 			{
 				this.editor.CreateMenuSeparator ();
-				this.editor.CreateMenuItem (null, "Supprime le nœud...", "Node.Delete");
+				this.editor.CreateMenuItem (null, "Supprime le nÅ“ud...", "Node.Delete");
 			}
 		}
 
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public bool IsRoot
 		{
-			//	Indique s'il s'agit de la boîte racine, c'est-à-dire de la boîte affichée avec un cadre gras.
+			//	Indique s'il s'agit de la boÃ®te racine, c'est-Ã -dire de la boÃ®te affichÃ©e avec un cadre gras.
 			get
 			{
 				return this.isRoot;
@@ -388,19 +388,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			switch (element)
 			{
 				case ActiveElement.NodeExtend:
-					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
+					return this.isExtended ? "RÃ©duit la boÃ®te" : "Etend la boÃ®te";
 
 				case ActiveElement.NodeClose:
-					return "<b>Supprime</b> le nœud";
+					return "<b>Supprime</b> le nÅ“ud";
 
 				case ActiveElement.NodeComment:
-					return (this.comment == null) ? "Ajoute un commentaire au nœud" : "Ferme le commentaire";
+					return (this.comment == null) ? "Ajoute un commentaire au nÅ“ud" : "Ferme le commentaire";
 
 				case ActiveElement.NodeInfo:
-					return (this.info == null) ? "Monte les informations du nœud" : "Ferme les informations du nœud";
+					return (this.info == null) ? "Monte les informations du nÅ“ud" : "Ferme les informations du nÅ“ud";
 
 				case ActiveElement.NodeOpenLink:
-					return "Crée une nouvelle connexion";
+					return "CrÃ©e une nouvelle connexion";
 
 				case ActiveElement.NodeColor1:
 					return "Jaune";
@@ -432,8 +432,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			base.MouseMove (message, pos);
 
 			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.HilitedElement == ActiveElement.NodeHeader)
@@ -455,13 +455,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			base.MouseDown (message, pos);
 		}
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			base.MouseUp (message, pos);
 
 			if (this.HilitedElement == ActiveElement.NodeHeader && this.draggingMode == DraggingMode.None && !this.Entity.IsForeign)
@@ -556,7 +556,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (AbstractObject.DetectRoundRectangle (this.ExtendedBounds, ObjectNode.frameRadius, pos))
 			{
 				return ActiveElement.NodeHeader;
@@ -567,7 +567,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			var result = ActiveElement.None;
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
@@ -633,7 +633,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 	
 		private void SwapComment()
 		{
-			//	Ajoute un commentaire à la boîte.
+			//	Ajoute un commentaire Ã  la boÃ®te.
 			if (this.comment == null)
 			{
 				this.comment = new ObjectComment (this.editor, this.Entity);
@@ -663,7 +663,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public void SwapInfo()
 		{
-			//	Ajoute une information à la boîte.
+			//	Ajoute une information Ã  la boÃ®te.
 			if (this.info == null)
 			{
 				this.info = new ObjectInfo (this.editor, this.Entity);
@@ -689,7 +689,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void OpenLink()
 		{
-			//	Crée un moignon de lien o--->
+			//	CrÃ©e un moignon de lien o--->
 			var link = new ObjectLink (this.editor, this.entity);
 			link.SrcObject = this;
 			link.SetStumpAngle (this.ComputeBestStumpAngle ());
@@ -707,7 +707,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			{
 				if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
 				{
-					string message = string.Format ("Voulez-vous supprimer le nœud \"{0}\" ?", this.Entity.Name);
+					string message = string.Format ("Voulez-vous supprimer le nÅ“ud \"{0}\" ?", this.Entity.Name);
 					var result = Common.Dialogs.MessageDialog.ShowQuestion (message, this.editor.Window);
 					if (result != Common.Dialogs.DialogResult.Yes)
 					{
@@ -731,7 +731,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				}
 				else
 				{
-					Common.Dialogs.MessageDialog.ShowMessage ("Il n'est pas possible de supprimer ce nœud public,<br/>car il est utilisé dans d'autres workflows !", this.editor.Window);
+					Common.Dialogs.MessageDialog.ShowMessage ("Il n'est pas possible de supprimer ce nÅ“ud public,<br/>car il est utilisÃ© dans d'autres workflows !", this.editor.Window);
 				}
 			}
 		}
@@ -740,7 +740,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
-			//	Héritage	->	Traitillé
+			//	HÃ©ritage	->	TraitillÃ©
 			//	Interface	->	Trait plein avec o---
 			base.DrawBackground (graphics);
 
@@ -757,7 +757,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				extendedRect.Inflate (2);
 			}
 
-			//	Dessine le boîte étendue.
+			//	Dessine le boÃ®te Ã©tendue.
 			if (this.isExtended)
 			{
 				//	Dessine l'ombre.
@@ -769,11 +769,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				rect.Deflate (0.5);
 				Path extendedPath = this.PathRoundRectangle (rect, ObjectNode.frameRadius);
 
-				//	Dessine l'intérieur en blanc.
+				//	Dessine l'intÃ©rieur en blanc.
 				graphics.Rasterizer.AddSurface (extendedPath);
 				graphics.RenderSolid (this.colorFactory.GetColor (1));
 
-				//	Dessine l'intérieur en dégradé.
+				//	Dessine l'intÃ©rieur en dÃ©gradÃ©.
 				graphics.Rasterizer.AddSurface (extendedPath);
 				c1 = this.colorFactory.GetColorMain (dragging ? 0.3 : 0.2);
 				c2 = this.colorFactory.GetColorMain (dragging ? 0.1 : 0.0);
@@ -797,11 +797,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			rect.Deflate(1);
 			Path path = this.PathNodeRectangle (rect);
 
-			//	Dessine l'intérieur en blanc.
+			//	Dessine l'intÃ©rieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.colorFactory.GetColor(1));
 
-			//	Dessine l'intérieur en dégradé.
+			//	Dessine l'intÃ©rieur en dÃ©gradÃ©.
 			graphics.Rasterizer.AddSurface(path);
 			c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
 			c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
@@ -874,7 +874,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected override void DrawAsOriginForMagnetConstrain(Graphics graphics)
 		{
-			//	Dessine l'objet comme étant l'origine d'une contrainte.
+			//	Dessine l'objet comme Ã©tant l'origine d'une contrainte.
 			var rect = this.bounds;
 			rect.Deflate (1);
 			Path path = this.PathNodeRectangle (rect);
@@ -903,7 +903,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsHeaderHilite
 		{
-			//	Indique si la souris est dans l'en-tête.
+			//	Indique si la souris est dans l'en-tÃªte.
 			get
 			{
 				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
@@ -981,7 +981,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		private Point PositionOpenLinkButton
 		{
 			//	Retourne la position du bouton pour ouvrir.
-			//	Le bouton est placé dans la direction où sera ouvert la connexion.
+			//	Le bouton est placÃ© dans la direction oÃ¹ sera ouvert la connexion.
 			get
 			{
 				if (!this.HasNoneDstObject)
@@ -1006,14 +1006,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private string GetGroupTooltip(int rank)
 		{
-			//	Retourne le tooltip à afficher pour un groupe.
+			//	Retourne le tooltip Ã  afficher pour un groupe.
 			return null;  // pas de tooltip
 		}
 
 
 		private void UpdateTitle()
 		{
-			//	Met à jour le titre du noeud.
+			//	Met Ã  jour le titre du noeud.
 			this.title.Text = Misc.Bold (this.Entity.Name.ToString ());
 		}
 

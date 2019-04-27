@@ -15,7 +15,7 @@ namespace Epsitec.Common.Tests.Support
 
 			System.Console.Out.Write ("StartCheck");
 
-			//	Pour tester si une version plus récente de CreativeDocs existe, il faudrait
+			//	Pour tester si une version plus rÃ©cente de CreativeDocs existe, il faudrait
 			//	utiliser l'URL de base suivante :
 			//
 			//	"http://www.creativedocs.net/update/check?software=CreativeDocs&version="
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.IsFalse (checker.IsReady);
 			Assert.IsFalse (checker.IsCheckSuccessful);
 
-			//	Attend que la réponse nous soit parvenue :
+			//	Attend que la rÃ©ponse nous soit parvenue :
 
 			while (checker.IsReady == false)
 			{

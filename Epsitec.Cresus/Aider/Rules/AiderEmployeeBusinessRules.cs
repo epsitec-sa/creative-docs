@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Rules
 					(navs13.Length != 16) ||
 					(navs13[3] != '.') || (navs13[8] != '.') || (navs13[13] != '.'))
 			{
-				Logic.BusinessRuleException ("Le numéro AVS doit avoir 13 chiffres et être formaté comme \"756.nnnn.nnnn.nn\".");
+				Logic.BusinessRuleException ("Le numÃ©ro AVS doit avoir 13 chiffres et Ãªtre formatÃ© comme \"756.nnnn.nnnn.nn\".");
 				return;
 			}
 
@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Rules
 
 			if (digits[12] != lastDigit)
 			{
-				Logic.BusinessRuleException ("Le numéro AVS contient une erreur.");
+				Logic.BusinessRuleException ("Le numÃ©ro AVS contient une erreur.");
 				return;
 			}
 		}
@@ -65,7 +65,7 @@ namespace Epsitec.Aider.Rules
 			{
 				if(entity.PersonContact.Person != entity.Person)
 				{
-					Logic.BusinessRuleException ("Le contact associé ne cible pas la bonne personne");
+					Logic.BusinessRuleException ("Le contact associÃ© ne cible pas la bonne personne");
 				}
 			}
 		}

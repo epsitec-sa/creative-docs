@@ -6,16 +6,16 @@ namespace Epsitec.Cresus.ComptaNG.Record
 {
 	public enum FieldType
 	{
-		Numéro,
+		NumÃ©ro,
 		Titre,
 		Commentaire,  // utile ?
-		Catégorie,
+		CatÃ©gorie,
 
 		Parent,
 		Enfants,  // redondant, utile ?
 		Niveau,  // redondant, utile ?
 
-		CodeTvaParDéfaut,
+		CodeTvaParDÃ©faut,
 		CodesTvaPossibles,
 
 		CompteOuvBoucl,

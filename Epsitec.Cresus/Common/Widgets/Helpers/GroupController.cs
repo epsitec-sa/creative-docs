@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
-	/// La classe GroupController permet de gérer des groupes de widgets.
+	/// La classe GroupController permet de gÃ©rer des groupes de widgets.
 	/// </summary>
 	public sealed class GroupController : DependencyObject, INotifyChanged
 	{
@@ -30,9 +30,9 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				if (this.index != value)
 				{
-					//	On active le widget correspondant à l'index spécifié, ce
-					//	qui va appeler notre méthode SetActiveIndex pour mettre à
-					//	jour l'index réellement actif.
+					//	On active le widget correspondant Ã  l'index spÃ©cifiÃ©, ce
+					//	qui va appeler notre mÃ©thode SetActiveIndex pour mettre Ã 
+					//	jour l'index rÃ©ellement actif.
 					
 					Widget widget = this.FindWidget (this.index);
 					
@@ -78,8 +78,8 @@ namespace Epsitec.Common.Widgets.Helpers
 				(group != null) &&
 				(group.Length > 0))
 			{
-				//	Trouve le contrôleur du groupe, lequel est en principe accessible depuis
-				//	le parent. S'il n'existe pas pour ce groupe, on le crée :
+				//	Trouve le contrÃ´leur du groupe, lequel est en principe accessible depuis
+				//	le parent. S'il n'existe pas pour ce groupe, on le crÃ©e :
 
 				GroupControllerCollection collection = parent.GetValue (GroupController.ControllerCollectionProperty) as GroupControllerCollection;
 			
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public void TurnOffAllButOne(Widget keep)
 		{
-			//	Eteint tous les boutons radio du groupe, sauf celui spécifié par
+			//	Eteint tous les boutons radio du groupe, sauf celui spÃ©cifiÃ© par
 			//	l'argument 'keep'.
 			
 			foreach (Widget radio in this.FindWidgets ())
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public IEnumerable<Widget> FindWidgets()
 		{
-			//	Trouve tous les boutons radio qui appartiennent à notre groupe.
+			//	Trouve tous les boutons radio qui appartiennent Ã  notre groupe.
 			
 			if (this.parent == null)
 			{

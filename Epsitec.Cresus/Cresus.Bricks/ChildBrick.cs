@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Bricks
 {

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Tests.UI
 			
 			ItemPanel panel = table.ItemPanel;
 
-			table.ColumnHeader.SetColumnText (0, "Quantité");
+			table.ColumnHeader.SetColumnText (0, "QuantitÃ©");
 			table.ColumnHeader.SetColumnText (1, "Description");
 			table.ColumnHeader.SetColumnText (2, "Prix unitaire");
 
@@ -689,7 +689,7 @@ namespace Epsitec.Common.Tests.UI
 			source.Add (new Record ("Vis M3", 10, 0.15M, Category.Part));
 			source.Add (new Record ("Ecrou M3", 19, 0.10M, Category.Part));
 			source.Add (new Record ("Rondelle", 41, 0.05M, Category.Part));
-			source.Add (new Record ("Clé M3", 7, 15.00M, Category.Tool));
+			source.Add (new Record ("ClÃ© M3", 7, 15.00M, Category.Tool));
 			source.Add (new Record ("Tournevis", 2, 8.45M, Category.Tool));
 			source.Add (new Record ("Tournevis", 7, 25.70M, Category.Tool));
 		}
@@ -699,7 +699,7 @@ namespace Epsitec.Common.Tests.UI
 			source.Add (ItemPanelTest.NewStructuredData ("Vis M3", 10, 0.15M, Category.Part));
 			source.Add (ItemPanelTest.NewStructuredData ("Ecrou M3", 19, 0.10M, Category.Part));
 			source.Add (ItemPanelTest.NewStructuredData ("Rondelle", 41, 0.05M, Category.Part));
-			source.Add (ItemPanelTest.NewStructuredData ("Clé M3", 7, 15.00M, Category.Tool));
+			source.Add (ItemPanelTest.NewStructuredData ("ClÃ© M3", 7, 15.00M, Category.Tool));
 			source.Add (ItemPanelTest.NewStructuredData ("Tournevis", 2, 8.45M, Category.Tool));
 			source.Add (ItemPanelTest.NewStructuredData ("Tournevis", 7, 25.70M, Category.Tool));
 		}

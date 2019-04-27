@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
-	/// La classe FontPreviewer permet de gérer les échantillons de caractères
-	/// stockés dans le cache des fontes OpenType.
+	/// La classe FontPreviewer permet de gÃ©rer les Ã©chantillons de caractÃ¨res
+	/// stockÃ©s dans le cache des fontes OpenType.
 	/// </summary>
 	public sealed class FontPreviewer
 	{
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Widgets.Helpers
 								
 								temp.Append (font, i, x, y, 1);
 								
-								//	Vérifie si le glyphe dessine quelque chose; si ce n'est
+								//	VÃ©rifie si le glyphe dessine quelque chose; si ce n'est
 								//	pas le cas, on passe simplement au suivant sans avancer.
 								
 								if ((temp.IsEmpty) ||
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Widgets.Helpers
 								
 								temp.Append (font, i, x, y, 1);
 								
-								//	Vérifie si le glyphe dessine quelque chose; si ce n'est
+								//	VÃ©rifie si le glyphe dessine quelque chose; si ce n'est
 								//	pas le cas, on passe simplement au suivant sans avancer.
 								
 								if ((temp.IsEmpty) ||

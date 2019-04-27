@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe VRuler implémente la règle verticale.
+	/// La classe VRuler implÃ©mente la rÃ¨gle verticale.
 	/// </summary>
 	public class VRuler : AbstractRuler
 	{
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					double value = grad/this.ppm;
 					value *= 1000000.0;
-					value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+					value = System.Math.Floor(value+0.5);  // arrondi Ã  la 6Ã¨me dÃ©cimale
 					value /= 1000000.0;
 					string text = value.ToString();
 
@@ -165,14 +165,14 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected double DocumentToScreen(double value)
 		{
-			//	Conversion d'une position dans le document en position en pixel dans l'écran.
+			//	Conversion d'une position dans le document en position en pixel dans l'Ã©cran.
 			double scale = (this.ending-this.starting)/this.Client.Bounds.Height;
 			return (value-this.starting)/scale;
 		}
 
 		protected double ScreenToDocument(double value)
 		{
-			//	Conversion d'une position en pixel dans l'écran en position dans le document.
+			//	Conversion d'une position en pixel dans l'Ã©cran en position dans le document.
 			double scale = (this.ending-this.starting)/this.Client.Bounds.Height;
 			return value*scale + this.starting;
 		}

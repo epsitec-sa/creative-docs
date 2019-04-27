@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Dialogs;
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override Rectangle GetOwnerBounds()
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override void CreateOptionsUserInterface()
 		{
-			//	Crée le panneau facultatif pour les options d'enregistrement.
+			//	CrÃ©e le panneau facultatif pour les options d'enregistrement.
 			this.optionsContainer = new Widget (this.window.Root);
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
@@ -120,13 +120,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			group.Name = "Options";
 
 			this.optionCheckButtonColumns = new CheckButton (group);
-			this.optionCheckButtonColumns.Text = "La première ligne contient les noms des points";
+			this.optionCheckButtonColumns.Text = "La premiÃ¨re ligne contient les noms des points";
 			this.optionCheckButtonColumns.Dock = DockStyle.Top;
 			this.optionCheckButtonColumns.AutoToggle = false;
 			this.optionCheckButtonColumns.Clicked += this.HandleOptionsClicked;
 
 			this.optionCheckButtonRows = new CheckButton (group);
-			this.optionCheckButtonRows.Text = "La première colonne contient les noms des points";
+			this.optionCheckButtonRows.Text = "La premiÃ¨re colonne contient les noms des points";
 			this.optionCheckButtonRows.Dock = DockStyle.Top;
 			this.optionCheckButtonRows.AutoToggle = false;
 			this.optionCheckButtonRows.Clicked += this.HandleOptionsClicked;
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void HandleOptionsClicked(object sender, MessageEventArgs e)
 		{
-			//	Un bouton radio pour le mode d'inclusion des polices a été cliqué.
+			//	Un bouton radio pour le mode d'inclusion des polices a Ã©tÃ© cliquÃ©.
 			var button = sender as CheckButton;
 
 			button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		//	Tous les réglages sont conservés dans des variables statiques,
+		//	Tous les rÃ©glages sont conservÃ©s dans des variables statiques,
 		//	ce qui est une solution rapide et provisoire !
 		private static Settings			settings = new Settings ();
 		private static string			initialDirectory = null;

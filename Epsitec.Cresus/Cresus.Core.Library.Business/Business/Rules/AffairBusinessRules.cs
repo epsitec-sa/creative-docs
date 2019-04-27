@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Controllers;
@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 		private PeopleEntity SearchActiveAffairOwner(BusinessContext businessContext)
 		{
-			//	Cherche le collaborateur actuellement loggé pour initialiser le
-			//	propriétaire de l'affaire.
+			//	Cherche le collaborateur actuellement loggÃ© pour initialiser le
+			//	propriÃ©taire de l'affaire.
 			var coreData = businessContext.Data;
 			var userManager = coreData.GetComponent<UserManager> ();
 

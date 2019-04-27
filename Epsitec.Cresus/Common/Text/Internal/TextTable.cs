@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe TextTable représente un ensemble de morceaux de texte avec
-	/// ses curseurs associés.
+	/// La classe TextTable reprÃ©sente un ensemble de morceaux de texte avec
+	/// ses curseurs associÃ©s.
 	/// </summary>
 	internal sealed class TextTable
 	{
@@ -63,8 +63,8 @@ namespace Epsitec.Common.Text.Internal
 			Internal.CursorId id     = this.cursors.NewCursor ();
 			Internal.Cursor   record = this.cursors.ReadCursor (id);
 			
-			//	Place (arbitrairement) le curseur au début du texte, donc dans le
-			//	morceau de texte numéro 1, à la position 0 :
+			//	Place (arbitrairement) le curseur au dÃ©but du texte, donc dans le
+			//	morceau de texte numÃ©ro 1, Ã  la position 0 :
 			
 			record.TextChunkId    = 1;
 			record.CursorInstance = cursor;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Internal.CursorId NewCursor(ICursor cursor, Internal.CursorId modelId)
 		{
-			//	TODO: optimiser la création d'un curseur au même endroit
+			//	TODO: optimiser la crÃ©ation d'un curseur au mÃªme endroit
 			//	qu'un autre.
 			
 			Internal.CursorId id = this.NewCursor (cursor);
@@ -118,14 +118,14 @@ namespace Epsitec.Common.Text.Internal
 					int room = this.textChunks[index].TextLength - pos;
 					
 					//	Si nous sommes dans le dernier morceau de texte, on ne
-					//	peut de toute manière pas aller plus loin :
+					//	peut de toute maniÃ¨re pas aller plus loin :
 					
 					if (index == this.textChunks.Length-1)
 					{
 						distance = System.Math.Min (room, distance);
 					}
 					
-					//	Le déplacement va-t-il se terminer dans le morceau de
+					//	Le dÃ©placement va-t-il se terminer dans le morceau de
 					//	texte actuel ?
 					
 					if (room >= distance)
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Text.Internal
 						break;
 					}
 					
-					//	Retire le curseur du morceau de texte actuel pour l'insérer
+					//	Retire le curseur du morceau de texte actuel pour l'insÃ©rer
 					//	dans le morceau suivant :
 					
 					this.textChunks[index+0].RemoveCursor (id);
@@ -172,14 +172,14 @@ namespace Epsitec.Common.Text.Internal
 				while (distance > 0)
 				{
 					//	Si nous sommes dans le premier morceau de texte, on ne
-					//	peut de toute manière pas aller plus loin :
+					//	peut de toute maniÃ¨re pas aller plus loin :
 					
 					if (index == 0)
 					{
 						distance = System.Math.Min (pos, distance);
 					}
 					
-					//	Le déplacement va-t-il se terminer dans le morceau de
+					//	Le dÃ©placement va-t-il se terminer dans le morceau de
 					//	texte actuel ?
 					
 					if (pos >= distance)
@@ -196,8 +196,8 @@ namespace Epsitec.Common.Text.Internal
 						break;
 					}
 					
-					//	Retire le curseur du morceau de texte actuel pour l'insérer
-					//	dans le morceau précédent :
+					//	Retire le curseur du morceau de texte actuel pour l'insÃ©rer
+					//	dans le morceau prÃ©cÃ©dent :
 					
 					this.textChunks[index+0].RemoveCursor (id);
 					this.textChunks[index-1].AddCursor (id, this.textChunks[index-1].TextLength, record.Attachment);
@@ -249,8 +249,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public CursorInfo[] FindCursorsBefore(int position, CursorInfo.Filter filter)
 		{
-			//	Trouve les curseurs qui se trouvent avant la position indiquée.
-			//	Retourne le premier curseur trouvé (s'il y en a plusieurs au même
+			//	Trouve les curseurs qui se trouvent avant la position indiquÃ©e.
+			//	Retourne le premier curseur trouvÃ© (s'il y en a plusieurs au mÃªme
 			//	endroit, on les retourne tous en bloc).
 			
 			if (position > this.textLength)
@@ -276,9 +276,9 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (cursorIndex > -1)
 				{
-					//	Trouvé un curseur placé avant la position indiquée. C'est
+					//	TrouvÃ© un curseur placÃ© avant la position indiquÃ©e. C'est
 					//	le dernier d'un paquet s'il y en a plusieurs qui pointent
-					//	au même endroit.
+					//	au mÃªme endroit.
 					
 					CursorId cursorId  = chunk.GetNthCursorId (cursorIndex);
 					int      cursorPos = this.GetCursorPosition (cursorId);
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Text.Internal
 						result[i] = new CursorInfo (cursorIdI, cursorPosI, this.GetCursorDirection (cursorIdI));
 					}
 					
-					//	Filtre le résultat, si nécessaire :
+					//	Filtre le rÃ©sultat, si nÃ©cessaire :
 					
 					if (result.Length > 0)
 					{
@@ -320,14 +320,14 @@ namespace Epsitec.Common.Text.Internal
 							
 							if (result.Length == 0)
 							{
-								//	Arrivé au début sans rien n'avoir trouvé ?
+								//	ArrivÃ© au dÃ©but sans rien n'avoir trouvÃ© ?
 								
 								if (position == origin)
 								{
 									break;
 								}
 								
-								//	Il faut continuer la recherche à partir de la
+								//	Il faut continuer la recherche Ã  partir de la
 								//	position courante.
 								
 								position = cursorPos;
@@ -335,16 +335,16 @@ namespace Epsitec.Common.Text.Internal
 							}
 						}
 						
-						//	Il y a des résultats (après avoir appliqué le filtre);
-						//	on s'arrête là :
+						//	Il y a des rÃ©sultats (aprÃ¨s avoir appliquÃ© le filtre);
+						//	on s'arrÃªte lÃ  :
 						
 						return result;
 					}
 				}
 				
-				//	Aucun curseur trouvé dans le morceau de texte considéré; tant
-				//	que l'on n'a pas atteint le début du texte, on recule et on
-				//	relance la recherche depuis la fin du morceau précédent :
+				//	Aucun curseur trouvÃ© dans le morceau de texte considÃ©rÃ©; tant
+				//	que l'on n'a pas atteint le dÃ©but du texte, on recule et on
+				//	relance la recherche depuis la fin du morceau prÃ©cÃ©dent :
 				
 				if (position == origin)
 				{
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public CursorInfo[] FindCursors(int position, int length, CursorInfo.Filter filter, bool findOnlyFirst)
 		{
-			//	Trouve tous les curseurs compris dans la plage indiquée.
+			//	Trouve tous les curseurs compris dans la plage indiquÃ©e.
 			
 			if (position > this.textLength)
 			{
@@ -450,7 +450,7 @@ namespace Epsitec.Common.Text.Internal
 			
 		done_phase_1:
 			
-			//	On a trouvé combien il y a de curseurs dans la tranche considérée.
+			//	On a trouvÃ© combien il y a de curseurs dans la tranche considÃ©rÃ©e.
 			//	Alloue la table et refait un second parcours :
 			
 			CursorInfo[] infos = new CursorInfo[iNum];
@@ -518,7 +518,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			Debug.Assert.IsTrue (iNum == infos.Length);
 			
-			//	Terminé.
+			//	TerminÃ©.
 			
 			return infos;
 		}
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Text.Internal
 			int pos    = start + offset;
 			
 			//	Puisque nous venons de recalculer la position du curseur, c'est
-			//	le bon moment pour en prendre note, afin de pouvoir en bénéficier
+			//	le bon moment pour en prendre note, afin de pouvoir en bÃ©nÃ©ficier
 			//	la prochaine fois :
 			
 			record.CachedPosition = pos;
@@ -637,7 +637,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int GetCursorDistance(Internal.CursorId idA, Internal.CursorId idB)
 		{
-			//	Retourne la distance de la position du curseur 'a' à la position du curseur
+			//	Retourne la distance de la position du curseur 'a' Ã  la position du curseur
 			//	'b' (dans les faits, calcule pos[b] - pos[a]).
 			
 			int posA = this.GetCursorPosition (idA);
@@ -660,8 +660,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			chunk.InsertText (cursorPosition, text);
 			
-			//	Si l'insertion génère un morceau de texte trop gros, on le découpe
-			//	en deux parts égales :
+			//	Si l'insertion gÃ©nÃ¨re un morceau de texte trop gros, on le dÃ©coupe
+			//	en deux parts Ã©gales :
 			
 			if (chunk.TextLength > TextTable.TextChunkSplitSize)
 			{
@@ -709,7 +709,7 @@ namespace Epsitec.Common.Text.Internal
 						list = new System.Collections.ArrayList ();
 					}
 					
-					//	Conserve les informations au sujet des curseurs affectés par la
+					//	Conserve les informations au sujet des curseurs affectÃ©s par la
 					//	suppression du texte (cursor, position et direction) :
 					
 					for (int i = 0; i < infos.Length; i++)
@@ -826,20 +826,20 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int TraverseText(Internal.CursorId cursorId, int distance, TextStory.CodeCallback callback)
 		{
-			//	Traverse le texte en commençant à partir de la position du
-			//	curseur. La distance indique combien de caractères parcourir
-			//	au plus; si elle est négative, le parcours se fait en marche
-			//	arrière.
+			//	Traverse le texte en commenÃ§ant Ã  partir de la position du
+			//	curseur. La distance indique combien de caractÃ¨res parcourir
+			//	au plus; si elle est nÃ©gative, le parcours se fait en marche
+			//	arriÃ¨re.
 			//
-			//	En marche avant, on considère l'élément sous le curseur comme
-			//	premier élément; en marche arrière, on considère l'élément qui
-			//	précède immédiatement le curseur comme premier élément.
+			//	En marche avant, on considÃ¨re l'Ã©lÃ©ment sous le curseur comme
+			//	premier Ã©lÃ©ment; en marche arriÃ¨re, on considÃ¨re l'Ã©lÃ©ment qui
+			//	prÃ©cÃ¨de immÃ©diatement le curseur comme premier Ã©lÃ©ment.
 			//
-			//	Dès que le callback retourne 'true', on arrête et on retourne
-			//	le nombre de caractères qui ont été traversés avec succès
-			//	(résultat positif en cas de succès).
+			//	DÃ¨s que le callback retourne 'true', on arrÃªte et on retourne
+			//	le nombre de caractÃ¨res qui ont Ã©tÃ© traversÃ©s avec succÃ¨s
+			//	(rÃ©sultat positif en cas de succÃ¨s).
 			//
-			//	Retourne -1 si le callback n'a jamais retourné 'true'.
+			//	Retourne -1 si le callback n'a jamais retournÃ© 'true'.
 			
 			int chunkId = this.cursors.ReadCursor (cursorId).TextChunkId;
 			
@@ -929,10 +929,10 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int GetRunLength(Internal.CursorId cursorId, int offset, int length, out ulong code, out ulong next)
 		{
-			//	Trouve la longueur de texte qui utilise exactement le même
-			//	style que celui utilisé à la position de départ.
+			//	Trouve la longueur de texte qui utilise exactement le mÃªme
+			//	style que celui utilisÃ© Ã  la position de dÃ©part.
 			//
-			//	- 'code' correspond au code du style du morceau de texte mesuré
+			//	- 'code' correspond au code du style du morceau de texte mesurÃ©
 			//	- 'next' correspond au code du style du prochain morceau de texte
 			//
 			//	Si on atteint la fin du texte, on aura 'next' = 'code'.
@@ -1088,7 +1088,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		internal void ReadRawText(System.IO.Stream stream)
 		{
-			//	Remplit une table de texte en lisant un texte brut à partir d'un stream.
+			//	Remplit une table de texte en lisant un texte brut Ã  partir d'un stream.
 			
 			if ((this.textLength > 0) ||
 				(this.textChunks.Length > 1) ||
@@ -1136,7 +1136,7 @@ namespace Epsitec.Common.Text.Internal
 							}
 						}
 						
-						//	On décale l'index des morceaux de 1 cran (à cause du
+						//	On dÃ©cale l'index des morceaux de 1 cran (Ã  cause du
 						//	TextChunkId = 0 qui n'est pas valide).
 						
 						this.textChunks[i] = new Internal.TextChunk ();
@@ -1178,7 +1178,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			length *= 8;
 			
-			//	Commence par déterminer la place qui sera nécessaire pour stocker
+			//	Commence par dÃ©terminer la place qui sera nÃ©cessaire pour stocker
 			//	le plus gros morceau de texte :
 			
 			int maxSize = 0;
@@ -1190,7 +1190,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			byte[] buffer = new byte[8*maxSize];
 			
-			//	Extrait les données pour les envoyer vers le stream :
+			//	Extrait les donnÃ©es pour les envoyer vers le stream :
 			
 			for (int i = 0; i < this.textChunks.Length; i++)
 			{
@@ -1264,9 +1264,9 @@ namespace Epsitec.Common.Text.Internal
 		
 		private int FindTextChunkId(int position)
 		{
-			//	Détermine dans quel morceau de texte se trouve la position
-			//	indiquée. Si la position est à la frontière de deux morceaux,
-			//	préfère le premier morceau.
+			//	DÃ©termine dans quel morceau de texte se trouve la position
+			//	indiquÃ©e. Si la position est Ã  la frontiÃ¨re de deux morceaux,
+			//	prÃ©fÃ¨re le premier morceau.
 			
 			Debug.Assert.IsInBounds (position, 0, this.textLength);
 			
@@ -1280,7 +1280,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Nous avons un problème : la position demandée se trouve hors
+			//	Nous avons un problÃ¨me : la position demandÃ©e se trouve hors
 			//	des bornes, ce qui est impossible.
 			
 			throw new Debug.FailureException ();
@@ -1288,7 +1288,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private int                  FindTextChunkPosition(int id)
 		{
-			//	Détermine la position du début du morceau spécifié.
+			//	DÃ©termine la position du dÃ©but du morceau spÃ©cifiÃ©.
 			
 			Debug.Assert.IsTrue (id > 0);
 			Debug.Assert.IsInBounds (id-1, 0, this.textChunks.Length-1);
@@ -1307,7 +1307,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private void OptimizeTextChunk(int id)
 		{
-			//	Optimise l'utilisation de la mémoire du morceau de texte.
+			//	Optimise l'utilisation de la mÃ©moire du morceau de texte.
 			
 			Debug.Assert.IsTrue (id > 0);
 			Debug.Assert.IsInBounds (id, 0, this.textChunks.Length-1);
@@ -1318,8 +1318,8 @@ namespace Epsitec.Common.Text.Internal
 		private void SplitTextChunk(int id, int offset)
 		{
 			//	Partage un morceau de texte devenu trop grand en deux morceaux
-			//	distincts. Les curseurs dans la table globale doivent tous être
-			//	vérifiés et éventuellement ajustés.
+			//	distincts. Les curseurs dans la table globale doivent tous Ãªtre
+			//	vÃ©rifiÃ©s et Ã©ventuellement ajustÃ©s.
 			
 			Debug.Assert.IsTrue (id > 0);
 			Debug.Assert.IsInBounds (id-1, 0, this.textChunks.Length-1);
@@ -1328,7 +1328,7 @@ namespace Epsitec.Common.Text.Internal
 			int id1 = id - 1;
 			int id2 = id;
 			
-			//	Ajoute un nouveau TextChunk après celui qui doit être partagé :
+			//	Ajoute un nouveau TextChunk aprÃ¨s celui qui doit Ãªtre partagÃ© :
 			
 			{
 				Internal.TextChunk[] oldChunks = this.textChunks;
@@ -1342,14 +1342,14 @@ namespace Epsitec.Common.Text.Internal
 				this.textChunks = newChunks;
 			}
 			
-			//	Déplace une partie du texte du morceau courant vers le morceau
-			//	suivant, tout en déplaçant aussi les curseurs :
+			//	DÃ©place une partie du texte du morceau courant vers le morceau
+			//	suivant, tout en dÃ©plaÃ§ant aussi les curseurs :
 			
 			Internal.TextChunk.ShuffleEnd (this.textChunks[id1], this.textChunks[id2], offset);
 			
-			//	Met à jour tous les curseurs qui se trouvent après les deux morceaux
-			//	que nous venons de manipuler (parcours linéaire dans la table des
-			//	curseurs pour éviter du "memory trashing") :
+			//	Met Ã  jour tous les curseurs qui se trouvent aprÃ¨s les deux morceaux
+			//	que nous venons de manipuler (parcours linÃ©aire dans la table des
+			//	curseurs pour Ã©viter du "memory trashing") :
 			
 			foreach (Internal.CursorId cursorId in this.cursors)
 			{
@@ -1361,9 +1361,9 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Met à jour tous les curseurs qui se trouvent dans le nouveau morceau
-			//	fraîchement créé (ils n'ont pas été affectés par la mise à jour qui
-			//	vient juste d'être faite) :
+			//	Met Ã  jour tous les curseurs qui se trouvent dans le nouveau morceau
+			//	fraÃ®chement crÃ©Ã© (ils n'ont pas Ã©tÃ© affectÃ©s par la mise Ã  jour qui
+			//	vient juste d'Ãªtre faite) :
 			
 			Internal.TextChunk chunk = this.textChunks[id2];
 			int                count = chunk.GetCursorCount ();
@@ -1380,7 +1380,7 @@ namespace Epsitec.Common.Text.Internal
 		public const int						TextChunkSplitSize = 15000;
 		public const int						TextChunkMergeSize =  8000;
 		
-		private Internal.TextChunk[]			textChunks;		//	0..n valides; (prendre index-1 pour l'accès)
+		private Internal.TextChunk[]			textChunks;		//	0..n valides; (prendre index-1 pour l'accÃ¨s)
 		private int								textLength;
 		private Internal.CursorTable			cursors;
 		private long							version = 1;

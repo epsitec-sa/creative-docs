@@ -7,17 +7,17 @@ using Epsitec.Common.IO;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// L'énumération <c>ImageCacheResolution</c> définit les résolutions utiles
+	/// L'Ã©numÃ©ration <c>ImageCacheResolution</c> dÃ©finit les rÃ©solutions utiles
 	/// pour une image.
 	/// </summary>
 	public enum ImageCacheResolution
 	{
-		Low,	//	image réduite, environ 512x512 pixels
-		High	//	image non réduite, résolution maximale
+		Low,	//	image rÃ©duite, environ 512x512 pixels
+		High	//	image non rÃ©duite, rÃ©solution maximale
 	}
 
 	/// <summary>
-	/// La classe <c>ImageCache</c> gère un cache par document des images.
+	/// La classe <c>ImageCache</c> gÃ¨re un cache par document des images.
 	/// </summary>
 	public sealed class ImageCache
 	{
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document
 		
 		public void SetResolution(ImageCacheResolution resolution)
 		{
-			//	Indique à quelle résolution d'images on s'intéresse.
+			//	Indique Ã  quelle rÃ©solution d'images on s'intÃ©resse.
 
 			if (this.resolution != resolution)
 			{
@@ -60,8 +60,8 @@ namespace Epsitec.Common.Document
 
 		public System.DateTime LoadFromFile(string fileName)
 		{
-			//	Essaie de charger une image dans le cache, à partir d'un fichier réel.
-			//	Celle méthode est appelée chaque fois que le nom édité de l'image est changé.
+			//	Essaie de charger une image dans le cache, Ã  partir d'un fichier rÃ©el.
+			//	Celle mÃ©thode est appelÃ©e chaque fois que le nom Ã©ditÃ© de l'image est changÃ©.
 			if (string.IsNullOrEmpty(fileName))
 			{
 				return System.DateTime.MinValue;
@@ -73,17 +73,17 @@ namespace Epsitec.Common.Document
 
 				if (fileDate.Ticks == 0)
 				{
-					//	Aucun fichier n'existe sur le disque, mais peut-être que le nom de
-					//	ce fichier est connu quand-même par le cache, parce que le fichier
+					//	Aucun fichier n'existe sur le disque, mais peut-Ãªtre que le nom de
+					//	ce fichier est connu quand-mÃªme par le cache, parce que le fichier
 					//	fait partie du document...
 					item = this.Find(fileName);
 				}
 				else
 				{
-					//	Le fichier a été trouvé sur le disque; peut-être qu'il existe déjà
-					//	une entrée dans le cache pour ce fichier ? On vérifie en se basant
+					//	Le fichier a Ã©tÃ© trouvÃ© sur le disque; peut-Ãªtre qu'il existe dÃ©jÃ 
+					//	une entrÃ©e dans le cache pour ce fichier ? On vÃ©rifie en se basant
 					//	aussi sur la date du fichier, car on peut avoir un document avec
-					//	plusieurs versions du même fichier :
+					//	plusieurs versions du mÃªme fichier :
 					item = this.Find(fileName, fileDate);
 
 					if (item == null)
@@ -105,9 +105,9 @@ namespace Epsitec.Common.Document
 
 		public Item Find(string fileName, System.DateTime fileDate)
 		{
-			//	Cherche l'élément correspondant exactement au nom et à la date
-			//	spécifiée. Cherche au besoin aussi dans le cache global. Ne charge
-			//	jamais d'image si elle n'est pas trouvée dans le cache.
+			//	Cherche l'Ã©lÃ©ment correspondant exactement au nom et Ã  la date
+			//	spÃ©cifiÃ©e. Cherche au besoin aussi dans le cache global. Ne charge
+			//	jamais d'image si elle n'est pas trouvÃ©e dans le cache.
 			if (string.IsNullOrEmpty(fileName))
 			{
 				return null;
@@ -137,8 +137,8 @@ namespace Epsitec.Common.Document
 
 		public void ResetUsedFlags()
 		{
-			//	Pour toutes les images trouvées dans le cache, remet à zéro le
-			//	marqueur d'utilisation; à combiner avec des appels à SetUsedFlag.
+			//	Pour toutes les images trouvÃ©es dans le cache, remet Ã  zÃ©ro le
+			//	marqueur d'utilisation; Ã  combiner avec des appels Ã  SetUsedFlag.
 			foreach (Item item in this.items.Values)
 			{
 				item.UsedInDocument = false;
@@ -147,8 +147,8 @@ namespace Epsitec.Common.Document
 
 		public void SetUsedFlag(string fileName, System.DateTime fileDate)
 		{
-			//	Définit qu'une image est utilisée par le document auquel ce cache
-			//	est associé.
+			//	DÃ©finit qu'une image est utilisÃ©e par le document auquel ce cache
+			//	est associÃ©.
 			if (string.IsNullOrEmpty(fileName))
 			{
 				return;
@@ -164,8 +164,8 @@ namespace Epsitec.Common.Document
 
 		public void FlushUnused()
 		{
-			//	Supprime toutes les images inutilisées du cache des images. Appeler
-			//	ResetUsedFlags suivi de n x SetUsedFlag pour mettre à jour les marqueurs
+			//	Supprime toutes les images inutilisÃ©es du cache des images. Appeler
+			//	ResetUsedFlags suivi de n x SetUsedFlag pour mettre Ã  jour les marqueurs
 			//	avant...
 			List<string> keysToDelete = new List<string>();
 
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document
 
 		public void ClearEmbeddedInDocument()
 		{
-			//	Enlève tous les modes EmbeddedInDocument.
+			//	EnlÃ¨ve tous les modes EmbeddedInDocument.
 			foreach (Item item in this.items.Values)
 			{
 				item.EmbeddedInDocument = false;
@@ -194,8 +194,8 @@ namespace Epsitec.Common.Document
 
 		public void GenerateShortNames()
 		{
-			//	Génère les noms courts pour toutes les images du document. Chaque
-			//	image reçoit un nom unique qui permet de les distinguer dans le ZIP
+			//	GÃ©nÃ¨re les noms courts pour toutes les images du document. Chaque
+			//	image reÃ§oit un nom unique qui permet de les distinguer dans le ZIP
 			//	contenant le document et ses images.
 			foreach (Item item in this.items.Values)
 			{
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Document
 			{
 				string shortName = System.IO.Path.GetFileName(item.FileName);
 
-				if (this.IsShortNameUsed(shortName))  // nom déjà utilisé ?
+				if (this.IsShortNameUsed(shortName))  // nom dÃ©jÃ  utilisÃ© ?
 				{
 					string name = System.IO.Path.GetFileNameWithoutExtension(item.FileName);
 					string ext  = System.IO.Path.GetExtension(item.FileName);  // extension avec le "." !
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document
 					int i=2;  // commence avec 'nom (2).ext'
 					do
 					{
-						//	Génère un mom du style 'nom (n).ext'.
+						//	GÃ©nÃ¨re un mom du style 'nom (n).ext'.
 						shortName = string.Format("{0} ({1}){2}", name, i.ToString(System.Globalization.CultureInfo.InvariantCulture), ext);
 						i++;
 						System.Diagnostics.Debug.Assert(i < 10000);  // faut pas pousser...
@@ -228,8 +228,8 @@ namespace Epsitec.Common.Document
 
 		public void SyncImageProperty(Properties.Image propImage)
 		{
-			//	Synchronise la propriété de l'image avec les informations contenues
-			//	dans le cache à propos de celle-ci.
+			//	Synchronise la propriÃ©tÃ© de l'image avec les informations contenues
+			//	dans le cache Ã  propos de celle-ci.
 			string fileName = propImage.FileName;
 			System.DateTime fileDate = propImage.FileDate;
 
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Document
 
 		public void WriteData(ZipFile zip, Document.ImageIncludeMode imageIncludeMode)
 		{
-			//	Ecrit toutes les données des images.
+			//	Ecrit toutes les donnÃ©es des images.
 			if (imageIncludeMode == Document.ImageIncludeMode.None)
 			{
 				return;
@@ -262,8 +262,8 @@ namespace Epsitec.Common.Document
 
 		public void ReadData(ZipFile zip, Document.ImageIncludeMode imageIncludeMode, Properties.Image propImage)
 		{
-			//	Lit les données d'une image : ceci se contente de créer un item
-			//	dans le cache mais ne lit aucune donnée, ni depuis le disque, ni
+			//	Lit les donnÃ©es d'une image : ceci se contente de crÃ©er un item
+			//	dans le cache mais ne lit aucune donnÃ©e, ni depuis le disque, ni
 			//	depuis le document ZIP.
 			if (string.IsNullOrEmpty(propImage.FileName))
 			{
@@ -323,8 +323,8 @@ namespace Epsitec.Common.Document
 
 		public void UnlockAll()
 		{
-			//	Déverouille toutes les images. Elles peuvent être recyclées
-			//	s'il n'y a plus assez de mémoire.
+			//	DÃ©verouille toutes les images. Elles peuvent Ãªtre recyclÃ©es
+			//	s'il n'y a plus assez de mÃ©moire.
 			GlobalImageCache.UnlockAll();
 		}
 
@@ -342,7 +342,7 @@ namespace Epsitec.Common.Document
 
 		private Item Find(string fileName)
 		{
-			//	Retourne les données d'une image en se basant uniquement sur le
+			//	Retourne les donnÃ©es d'une image en se basant uniquement sur le
 			//	nom. On prend le premier qui correspond (dans le cache local ou
 			//	dans le cache global).
 			string key = ImageManager.GetKeyPrefix(fileName);
@@ -373,13 +373,13 @@ namespace Epsitec.Common.Document
 
 		private Item FindItem(string key)
 		{
-			//	Retourne les données d'une image, pour autant que celle-ci soit déjà connue
+			//	Retourne les donnÃ©es d'une image, pour autant que celle-ci soit dÃ©jÃ  connue
 			//	dans l'un des caches (local ou global).
 			Item item = null;
 
 			if (this.items.TryGetValue(key, out item))
 			{
-				//	Image déjà dans le cache !
+				//	Image dÃ©jÃ  dans le cache !
 			}
 			else
 			{
@@ -397,10 +397,10 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			if (item != null)  // image trouvée ?
+			if (item != null)  // image trouvÃ©e ?
 			{
-				item.SetRecentTimeStamp();  // le plus récent
-				GlobalImageCache.FreeOldest();  // libère éventuellement des antiquités
+				item.SetRecentTimeStamp();  // le plus rÃ©cent
+				GlobalImageCache.FreeOldest();  // libÃ¨re Ã©ventuellement des antiquitÃ©s
 			}
 
 			return item;
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Document
 
 		private bool Contains(string fileName, System.DateTime fileDate)
 		{
-			//	Vérifie si une image est en cache.
+			//	VÃ©rifie si une image est en cache.
 			if (string.IsNullOrEmpty(fileName))
 			{
 				return false;
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Document
 
 		private bool IsShortNameUsed(string shortName)
 		{
-			//	Vérifie si un nom court donné est déjà utilisé.
+			//	VÃ©rifie si un nom court donnÃ© est dÃ©jÃ  utilisÃ©.
 			foreach (Item item in this.items.Values)
 			{
 				if (item.ShortName == shortName)
@@ -450,7 +450,7 @@ namespace Epsitec.Common.Document
 
 			if (this.items.TryGetValue(key, out item))
 			{
-				//	OK, l'élément est déjà dans notre cache local.
+				//	OK, l'Ã©lÃ©ment est dÃ©jÃ  dans notre cache local.
 			}
 			else
 			{
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Document
 
 			public ImageCacheResolution Resolution
 			{
-				//	Indique la résolution de l'image à laquelle on s'intéresse.
+				//	Indique la rÃ©solution de l'image Ã  laquelle on s'intÃ©resse.
 				get
 				{
 					return this.resolution;
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Document
 
 			public string ShortName
 			{
-				//	Nom court utilisé pour la sérialisation ZIP.
+				//	Nom court utilisÃ© pour la sÃ©rialisation ZIP.
 				get
 				{
 					return this.shortName;
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Document
 
 			public bool EmbeddedInDocument
 			{
-				//	Image incorporée au document (fichier ZIP) ?
+				//	Image incorporÃ©e au document (fichier ZIP) ?
 				get
 				{
 					return this.embeddedInDocument;
@@ -576,7 +576,7 @@ namespace Epsitec.Common.Document
 
 			public bool UsedInDocument
 			{
-				//	Image utilisée par le document associé au cache ?
+				//	Image utilisÃ©e par le document associÃ© au cache ?
 				get
 				{
 					return this.usedInDocument;

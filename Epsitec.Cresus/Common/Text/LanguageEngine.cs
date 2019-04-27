@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe LanguageEngine offre des services dépendants de la langue, tels
-	/// que la césure, par exemple.
+	/// La classe LanguageEngine offre des services dÃ©pendants de la langue, tels
+	/// que la cÃ©sure, par exemple.
 	/// </summary>
 	public sealed class LanguageEngine
 	{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Text
 					locale = null;
 				}
 				
-				//	Détermine un "run" de caractères appartenant à la même langue
+				//	DÃ©termine un "run" de caractÃ¨res appartenant Ã  la mÃªme langue
 				//	et constituant un mot complet.
 				
 				if ((locale != runLocale) ||

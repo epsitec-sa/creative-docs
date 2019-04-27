@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Pdf.Labels
 				{
 					path.AppendRectangle (bounds);
 
-					port.LineWidth = 1.0;  // épaisseur de 0.1mm
+					port.LineWidth = 1.0;  // Ã©paisseur de 0.1mm
 					port.Color = Color.FromBrightness (0.8);  // gris clair
 					port.PaintOutline (path);
 				}
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Pdf.Labels
 
 			if (margins.Right > 10)
 			{
-				margins.Right = 10;  // limite la marge de droite à 1mm pour éviter de tronquer
+				margins.Right = 10;  // limite la marge de droite Ã  1mm pour Ã©viter de tronquer
 			}
 
 			bounds.Deflate (margins);

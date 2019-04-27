@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'interface ITextFrame permet de décrire une zone dans laquelle coule
+	/// L'interface ITextFrame permet de dÃ©crire une zone dans laquelle coule
 	/// du texte.
 	/// </summary>
 	public interface ITextFrame

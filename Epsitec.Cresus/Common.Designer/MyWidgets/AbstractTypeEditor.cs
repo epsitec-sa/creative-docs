@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant d'éditer un Caption.Type.
+	/// Widget permettant d'Ã©diter un Caption.Type.
 	/// </summary>
 	public abstract class AbstractTypeEditor : AbstractGroup
 	{
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public static AbstractTypeEditor Create(TypeCode typeCode, Module module)
 		{
-			//	Crée le bon widget AbstractTypeEditor pour éditer un type.
+			//	CrÃ©e le bon widget AbstractTypeEditor pour Ã©diter un type.
 			switch (typeCode)
 			{
 				case TypeCode.Boolean:      return new TypeEditorBoolean(module);
@@ -129,13 +129,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public virtual string GetSummary()
 		{
-			//	Retourne le texte du résumé.
+			//	Retourne le texte du rÃ©sumÃ©.
 			return "";
 		}
 
 		public void ResetToOriginalValue(Druid id)
 		{
-			//	Force la ressource à revenir à la version "par défaut" du module de référence.
+			//	Force la ressource Ã  revenir Ã  la version "par dÃ©faut" du module de rÃ©fÃ©rence.
 			this.module.AccessTypes.Accessor.ResetToOriginalValue(this.cultureMap, this.structuredData, id);
 		}
 
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (level == 2)
 			{
-				builder.Append("   —   ");
+				builder.Append("   â€”   ");
 			}
 
 			this.summaryEmpty = false;
@@ -194,18 +194,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void ClearCache()
 		{
-			//	Force une nouvelle mise à jour lors du prochain Update.
+			//	Force une nouvelle mise Ã  jour lors du prochain Update.
 			this.resourceSelected = -1;
 		}
 
 		public virtual void UpdateContent()
 		{
-			//	Met à jour le contenu de l'éditeur.
+			//	Met Ã  jour le contenu de l'Ã©diteur.
 		}
 
 		protected string SelectedName
 		{
-			//	Retourne le nom de la ressource sélectionnée.
+			//	Retourne le nom de la ressource sÃ©lectionnÃ©e.
 			get
 			{
 				if (this.resourceSelected != -1)
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void ColorizeResetBox(MyWidgets.ResetBox box, CultureMapSource source, bool usesOriginalData)
 		{
-			//	Colore la boîte si on est dans un module de patch avec redéfinition de la donnée.
+			//	Colore la boÃ®te si on est dans un module de patch avec redÃ©finition de la donnÃ©e.
 			if (!box.IsPatch || source != CultureMapSource.DynamicMerge || usesOriginalData)
 			{
 				box.BackColor = Color.Empty;
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Super widgets
 		protected void CreateStringLabeled(string label, Widget parent, out ResetBox group, out TextFieldEx field)
 		{
-			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
+			//	CrÃ©e un super-widget permettant d'Ã©diter une chaÃ®ne, avec une Ã©tiquette Ã  gauche.
 			group = new ResetBox(parent);
 			System.Diagnostics.Debug.Assert(this.module != null);
 			group.IsPatch = this.module.IsPatch;
@@ -265,7 +265,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void CreateComboLabeled(string label, Widget parent, out ResetBox group, out TextFieldCombo field)
 		{
-			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
+			//	CrÃ©e un super-widget permettant d'Ã©diter une chaÃ®ne, avec une Ã©tiquette Ã  gauche.
 			group = new ResetBox(parent);
 			System.Diagnostics.Debug.Assert(this.module != null);
 			group.IsPatch = this.module.IsPatch;
@@ -288,7 +288,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void CreateDecimalLabeled(string label, Widget parent, out ResetBox group, out TextFieldEx field)
 		{
-			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
+			//	CrÃ©e un super-widget permettant d'Ã©diter une valeur dÃ©cimale, avec une Ã©tiquette Ã  gauche.
 			group = new ResetBox(parent);
 			System.Diagnostics.Debug.Assert(this.module != null);
 			group.IsPatch = this.module.IsPatch;
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected IconButton CreateLocatorGotoButton(Widget parent)
 		{
-			//	Crée un bouton pour la commande "LocatorGoto".
+			//	CrÃ©e un bouton pour la commande "LocatorGoto".
 			IconButton button = new IconButton(parent);
 
 			button.CaptionId = Res.Captions.Editor.LocatorGoto.Id;

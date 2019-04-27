@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -161,8 +161,8 @@ namespace Epsitec.Common.Widgets
 								(sibling.TabNavigationMode.HasFlag (TabNavigationMode.SkipIfReadOnly)) &&
 								(readOnly.IsReadOnly))
 							{
-								//	Saute aussi les widgets qui déclarent être en lecture seule. Ils ne
-								//	sont pas intéressants pour une navigation clavier :
+								//	Saute aussi les widgets qui dÃ©clarent Ãªtre en lecture seule. Ils ne
+								//	sont pas intÃ©ressants pour une navigation clavier :
 								
 								continue;
 							}
@@ -201,9 +201,9 @@ namespace Epsitec.Common.Widgets
 				if ((this.mode == TabNavigationMode.ActivateOnTab) &&
 					(that.AutoRadio))
 				{
-					//	On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
+					//	On recherche les frÃ¨res de ce widget, pour dÃ©terminer lequel devra Ãªtre activÃ© par la
 					//	pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
-					//	qui appartiennent à notre groupe :
+					//	qui appartiennent Ã  notre groupe :
 
 					string group = that.Group;
 
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 					if ((find == null) &&
 								(controller.FindXWidget (that, this.dir == TabNavigationDir.Backwards ? 1 : -1) == null))
 					{
-						//	L'utilisateur demande un déplacement horizontal bien que la disposition
+						//	L'utilisateur demande un dÃ©placement horizontal bien que la disposition
 						//	soit purement verticale. On corrige pour lui :
 
 						find = controller.FindYWidget (that, this.dir == TabNavigationDir.Backwards ? -1 : 1);
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Widgets
 					if ((find == null) &&
 						(controller.FindYWidget (that, this.dir == TabNavigationDir.Backwards ? 1 : -1) == null))
 					{
-						//	L'utilisateur demande un déplacement vertical bien que la disposition
+						//	L'utilisateur demande un dÃ©placement vertical bien que la disposition
 						//	soit purement horizontale. On corrige pour lui :
 
 						find = controller.FindXWidget (that, this.dir == TabNavigationDir.Backwards ? -1 : 1);
@@ -388,8 +388,8 @@ namespace Epsitec.Common.Widgets
 				else if (that.HasChildren)
 				{
 					//	Il n'y a plus de parents au-dessus. C'est donc vraisemblablement WindowRoot et
-					//	dans ce cas, il ne sert à rien de boucler. On va simplement tenter d'activer le
-					//	premier descendant trouvé :
+					//	dans ce cas, il ne sert Ã  rien de boucler. On va simplement tenter d'activer le
+					//	premier descendant trouvÃ© :
 
 					Widget[] candidates = this.GetTabNavigationSiblings (that.Children.Widgets[0]);
 					int count = candidates.Length;
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if ((sibling.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
 						{
-							//	Entre en marche arrière dans le widget...
+							//	Entre en marche arriÃ¨re dans le widget...
 
 							if (sibling.HasChildren)
 							{

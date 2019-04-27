@@ -8,29 +8,29 @@ namespace Epsitec.Common.Document
 	public enum UndoableListType
 	{
 		ObjectsInsideDocument,		// liste d'objets du document, d'une page, d'un calque ou d'un groupe
-		ObjectsInsideProperty,		// liste des objets propriétaires d'une propriété
-		PropertiesInsideDocument,	// liste de propriétés ou de styles du document
-		PropertiesInsideObject,		// liste des propriétés utilisées par un objet
-		StylesInsideAggregate,		// styles utilisés par un agrégat
-		AggregatesInsideDocument,	// liste des agrégats du document
-		AggregatesInsideObject,		// liste des agrégats d'un objet
-		AggregatesChildren,			// liste des agrégats fils
-		Guides,						// liste des repères
+		ObjectsInsideProperty,		// liste des objets propriÃ©taires d'une propriÃ©tÃ©
+		PropertiesInsideDocument,	// liste de propriÃ©tÃ©s ou de styles du document
+		PropertiesInsideObject,		// liste des propriÃ©tÃ©s utilisÃ©es par un objet
+		StylesInsideAggregate,		// styles utilisÃ©s par un agrÃ©gat
+		AggregatesInsideDocument,	// liste des agrÃ©gats du document
+		AggregatesInsideObject,		// liste des agrÃ©gats d'un objet
+		AggregatesChildren,			// liste des agrÃ©gats fils
+		Guides,						// liste des repÃ¨res
 		TextFlows,					// flux de textes
-		ObjectsChain,				// chaîne d'objets pour un flux de textes
+		ObjectsChain,				// chaÃ®ne d'objets pour un flux de textes
 		TextStylesInsideDocument,	// styles de texte du document
-		SelectedSegments,			// segments sélectionnés pour le modeleur
+		SelectedSegments,			// segments sÃ©lectionnÃ©s pour le modeleur
 	}
 
 	/// <summary>
-	/// La classe UndoableList implémente un ArrayList avec possibilité de undo/redo.
+	/// La classe UndoableList implÃ©mente un ArrayList avec possibilitÃ© de undo/redo.
 	/// </summary>
 	[System.Serializable()]
 	public class UndoableList : System.Collections.IEnumerable, ISerializable
 	{
 		public UndoableList(Document document, UndoableListType type)
 		{
-			//	Crée une nouvelle liste vide.
+			//	CrÃ©e une nouvelle liste vide.
 			this.document = document;
 			this.type = type;
 			this.arrayList = new System.Collections.ArrayList();
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document
 		public void Clear()
 		{
 			//	Vide toute la liste.
-			if ( this.IsOpletQueueEnable )  // mémorise l'opération ?
+			if ( this.IsOpletQueueEnable )  // mÃ©morise l'opÃ©ration ?
 			{
 				int total = this.arrayList.Count;
 				for ( int i=0 ; i<total ; i++ )
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document
 
 		public object this[int index]
 		{
-			//	Accès à un objet quelconque.
+			//	AccÃ¨s Ã  un objet quelconque.
 			get
 			{
 				return this.arrayList[index];
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document
 
 			set
 			{
-				if ( this.IsOpletQueueEnable )  // mémorise l'opération ?
+				if ( this.IsOpletQueueEnable )  // mÃ©morise l'opÃ©ration ?
 				{
 					object obj = this.arrayList[index];
 					OpletUndoableList operation = new OpletUndoableList(this, OperationType.Change, index, obj);
@@ -111,16 +111,16 @@ namespace Epsitec.Common.Document
 
 		public int Add(object value)
 		{
-			//	Ajoute un objet à la fin de la liste.
+			//	Ajoute un objet Ã  la fin de la liste.
 			int index = this.arrayList.Count;
-			this.Insert(index, value);  // insère à la fin
+			this.Insert(index, value);  // insÃ¨re Ã  la fin
 			return index;
 		}
 
 		public void Insert(int index, object value)
 		{
 			//	Ajoute un objet dans la liste.
-			if ( this.IsOpletQueueEnable )  // mémorise l'opération ?
+			if ( this.IsOpletQueueEnable )  // mÃ©morise l'opÃ©ration ?
 			{
 				OpletUndoableList operation = new OpletUndoableList(this, OperationType.Insert, index, value);
 				this.document.Modifier.OpletQueue.Insert(operation);
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document
 		public void RemoveAt(int index)
 		{
 			//	Supprime un objet de la liste.
-			if ( this.IsOpletQueueEnable )  // mémorise l'opération ?
+			if ( this.IsOpletQueueEnable )  // mÃ©morise l'opÃ©ration ?
 			{
 				object obj = this.arrayList[index];
 				OpletUndoableList operation = new OpletUndoableList(this, OperationType.Remove, index, obj);
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Document
 
 		public int Selected
 		{
-			//	Indique l'objet sélectionné dans la liste.
+			//	Indique l'objet sÃ©lectionnÃ© dans la liste.
 			get
 			{
 				return this.selected;
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.selected != value )
 				{
-					if ( this.IsOpletQueueEnable )  // mémorise l'opération ?
+					if ( this.IsOpletQueueEnable )  // mÃ©morise l'opÃ©ration ?
 					{
 						OpletUndoableList operation = new OpletUndoableList(this, OperationType.Selected, this.selected, null);
 						this.document.Modifier.OpletQueue.Insert(operation);
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document
 
 		public void UndoableCopyTo(UndoableList dst)
 		{
-			//	Copie toute la liste, avec possibilité d'annulation.
+			//	Copie toute la liste, avec possibilitÃ© d'annulation.
 			dst.Clear();
 			foreach ( object obj in this.arrayList )
 			{
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Document
 
 		public void CopyTo(UndoableList dst)
 		{
-			//	Copie toute la liste, sans possibilité d'annulation.
+			//	Copie toute la liste, sans possibilitÃ© d'annulation.
 			dst.arrayList.Clear();
 			foreach ( object obj in this.arrayList )
 			{
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document
 
 		protected bool IsOpletQueueEnable
 		{
-			//	Indique s'il faut mémoriser l'opération.
+			//	Indique s'il faut mÃ©moriser l'opÃ©ration.
 			get
 			{
 				if ( this.document.Modifier == null )  return false;
@@ -260,14 +260,14 @@ namespace Epsitec.Common.Document
 
 		public System.Collections.IEnumerator GetEnumerator()
 		{
-			//	Retourne l'énumérateur, pour pouvoir utiliser foreach.
+			//	Retourne l'Ã©numÃ©rateur, pour pouvoir utiliser foreach.
 			return this.arrayList.GetEnumerator();
 		}
 
 		protected static void UndoRedoOperation(OpletUndoableList operation)
 		{
-			//	Défait une opération dans une UndoableList.
-			//	Une prochaine exécution de UndoRedoOperation refera l'opération.
+			//	DÃ©fait une opÃ©ration dans une UndoableList.
+			//	Une prochaine exÃ©cution de UndoRedoOperation refera l'opÃ©ration.
 			Document document = operation.List.document;
 			UndoableListType listType = operation.List.type;
 			System.Collections.ArrayList arrayList = operation.List.arrayList;
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Document
 			Insert,		// ajout d'un nouvel objet dans une UndoableList
 			Remove,		// suppression d'un objet dans une UndoableList
 			Change,		// changement d'un objet dans une UndoableList
-			Selected,	// sélection d'un objet dans une UndoableList
+			Selected,	// sÃ©lection d'un objet dans une UndoableList
 		}
 
 		protected class OpletUndoableList : AbstractOplet
@@ -428,7 +428,7 @@ namespace Epsitec.Common.Document
 		#region Serialization
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la liste.
+			//	SÃ©rialise la liste.
 			info.AddValue("Type", this.type);
 			info.AddValue("List", this.arrayList);
 			info.AddValue("Selected", this.selected);
@@ -436,7 +436,7 @@ namespace Epsitec.Common.Document
 
 		protected UndoableList(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise la liste.
+			//	Constructeur qui dÃ©sÃ©rialise la liste.
 			this.document = Document.ReadDocument;
 			this.type = (UndoableListType) info.GetValue("Type", typeof(UndoableListType));
 			this.arrayList = (System.Collections.ArrayList) info.GetValue("List", typeof(System.Collections.ArrayList));

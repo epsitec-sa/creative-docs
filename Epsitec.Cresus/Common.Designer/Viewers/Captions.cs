@@ -8,7 +8,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public class Captions : AbstractCaptions
 	{

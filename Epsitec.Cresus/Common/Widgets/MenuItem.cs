@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -7,7 +7,7 @@ using Epsitec.Common.Widgets.Helpers;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe MenuItem représente une case dans un menu.
+	/// La classe MenuItem reprÃ©sente une case dans un menu.
 	/// </summary>
 	public class MenuItem : AbstractButton
 	{
@@ -539,9 +539,9 @@ namespace Epsitec.Common.Widgets
 		
 		public static Widget GetMenuRoot(Widget widget)
 		{
-			//	Trouve le widget à la racine de la hiérarchie d'un menu. C'est
-			//	soit l'ancêtre de l'arbre des widgets, soit le premier parent
-			//	qui possède une définition de "menu" :
+			//	Trouve le widget Ã  la racine de la hiÃ©rarchie d'un menu. C'est
+			//	soit l'ancÃªtre de l'arbre des widgets, soit le premier parent
+			//	qui possÃ¨de une dÃ©finition de "menu" :
 			
 			if (widget == null)
 			{
@@ -567,7 +567,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static Behaviors.MenuBehavior GetMenuBehavior(Widget widget)
 		{
-			//	Trouve le "menu" associé à un widget.
+			//	Trouve le "menu" associÃ© Ã  un widget.
 			
 			Widget root   = MenuItem.GetMenuRoot (widget);
 			Widget parent = MenuItem.GetParentMenuItem (root);
@@ -598,9 +598,9 @@ namespace Epsitec.Common.Widgets
 		
 		public static Window GetMenuWindow(Widget widget)
 		{
-			//	Retourne la fenêtre utilisée par le menu. Si le menu n'avait
-			//	pas encore (ou plus) de fenêtre associée, un MenuWindow est
-			//	(re)créé pour le menu :
+			//	Retourne la fenÃªtre utilisÃ©e par le menu. Si le menu n'avait
+			//	pas encore (ou plus) de fenÃªtre associÃ©e, un MenuWindow est
+			//	(re)crÃ©Ã© pour le menu :
 			
 			Window window = widget.Window;
 			
@@ -684,9 +684,9 @@ namespace Epsitec.Common.Widgets
 		
 		private static void NotifySubmenuChanged(DependencyObject o, object oldValue, object newValue)
 		{
-			//	Quand la propriété "Submenu" est appliquée à un item d'un menu,
-			//	on réalise un lien entre le menu et l'item en question. Ce lien
-			//	est stocké dans une propriété nommée "ParentMenuItem" :
+			//	Quand la propriÃ©tÃ© "Submenu" est appliquÃ©e Ã  un item d'un menu,
+			//	on rÃ©alise un lien entre le menu et l'item en question. Ce lien
+			//	est stockÃ© dans une propriÃ©tÃ© nommÃ©e "ParentMenuItem" :
 			
 			MenuItem that = o as MenuItem;
 			
@@ -696,7 +696,7 @@ namespace Epsitec.Common.Widgets
 			if (newSubmenu != null)
 			{
 				//	Un MenuItem qui pointe sur un sous-menu ne peut pas avoir de
-				//	commande associée :
+				//	commande associÃ©e :
 				
 				that.CommandObject = null;
 			}

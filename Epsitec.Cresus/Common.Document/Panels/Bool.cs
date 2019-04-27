@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Panels
 {
 	/// <summary>
-	/// La classe Bool permet de choisir une valeur boolÈenne.
+	/// La classe Bool permet de choisir une valeur bool√©enne.
 	/// </summary>
 	public class Bool : Abstract
 	{
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Bool p = this.property as Properties.Bool;
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Bool p = this.property as Properties.Bool;
 			if ( p == null )  return;
 
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTypeChanged(object sender)
 		{
-			//	Le type a ÈtÈ changÈ.
+			//	Le type a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// Vérifie le bon fonctionnement de la classe TextTable.
+	/// VÃ©rifie le bon fonctionnement de la classe TextTable.
 	/// </summary>
 	public sealed class CheckTextTable
 	{
@@ -209,9 +209,9 @@ namespace Epsitec.Common.Text.Tests
 			
 			int cursorId = table1.NewCursor (null);
 			
-			string  sample = "ceci est un bref exemple de texte français permettant de générer des fréquences " +
-				/**/         "correctes au niveau de l'utilisation des divers caractères (si l'on fait, bien " +
-				/**/		 "sûr abstraction de l'ordre dans lequel les lettres apparaissent, et que l'on " +
+			string  sample = "ceci est un bref exemple de texte franÃ§ais permettant de gÃ©nÃ©rer des frÃ©quences " +
+				/**/         "correctes au niveau de l'utilisation des divers caractÃ¨res (si l'on fait, bien " +
+				/**/		 "sÃ»r abstraction de l'ordre dans lequel les lettres apparaissent, et que l'on " +
 				/**/		 "oublie les lettres majuscules).";
 			
 			int size = 1*1024*1024;
@@ -279,8 +279,8 @@ namespace Epsitec.Common.Text.Tests
 			/*
 			 *	Mesures sur bi-Xeon 1.7GHz :
 			 *
-			 *	Traversée --> 810ns / caractère
-			 *	Traversée <-- 750ns / caractère
+			 *	TraversÃ©e --> 810ns / caractÃ¨re
+			 *	TraversÃ©e <-- 750ns / caractÃ¨re
 			 */
 			
 			Internal.CursorId cursor3_1 = table3.NewCursor (null);
@@ -321,8 +321,8 @@ namespace Epsitec.Common.Text.Tests
 			/*
 			 *	Mesures sur bi-Xeon 1.7GHz :
 			 *
-			 *	Traversée avec lecture --> 1450ns / caractère
-			 *	Traversée avec lecture <-- 1350ns / caractère
+			 *	TraversÃ©e avec lecture --> 1450ns / caractÃ¨re
+			 *	TraversÃ©e avec lecture <-- 1350ns / caractÃ¨re
 			 */
 			
 			ulong xxx = table3[cursor3_1];
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("xxx="+xxx+"\nyyy="+yyy);
 			
 			/*
-			 *  Vérifie que les curseurs peuvent aussi être retrouvés dans un
+			 *  VÃ©rifie que les curseurs peuvent aussi Ãªtre retrouvÃ©s dans un
 			 *	texte utilisant plusieurs morceaux.
 			 */
 			

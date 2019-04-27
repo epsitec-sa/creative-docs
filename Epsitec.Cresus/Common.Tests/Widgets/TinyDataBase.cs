@@ -1,15 +1,15 @@
 namespace Epsitec.Common
 {
 	/// <summary>
-	/// La classe TinyDataBase implémente une base de données très simple.
+	/// La classe TinyDataBase implÃ©mente une base de donnÃ©es trÃ¨s simple.
 	/// </summary>
 	public class TinyDataBase : System.Object
 	{
 		public enum FieldType
 		{
 			None,			// sans type
-			String,			// chaîne
-			Tel,			// numéros de téléphone
+			String,			// chaÃ®ne
+			Tel,			// numÃ©ros de tÃ©lÃ©phone
 			Mail,			// adresse e-mail
 			Web,			// url
 			Date,			// date
@@ -28,14 +28,14 @@ namespace Epsitec.Common
 		{
 			public string					name;		// nom
 			public FieldType				type;		// type
-			public FieldRequire				require;	// présence
-			public int						rank;		// rang d'édition
+			public FieldRequire				require;	// prÃ©sence
+			public int						rank;		// rang d'Ã©dition
 			public Drawing.ContentAlignment	alignment;	// justification
-			public int						max;		// nb max de caractères
+			public int						max;		// nb max de caractÃ¨res
 			public int						lines;		// nb de lignes
-			public bool						link;		// liée à la suivante
+			public bool						link;		// liÃ©e Ã  la suivante
 			public int						width;		// largeur dans liste
-			public string					combo;		// contenu éventuel combo
+			public string					combo;		// contenu Ã©ventuel combo
 		}
 
 		//	Classe d'une fiche.
@@ -82,7 +82,7 @@ namespace Epsitec.Common
 
 		public void CreateEmptyFieldDesc(out FieldDesc desc)
 		{
-			//	Crée une nouvelle définition de rubrique vide.
+			//	CrÃ©e une nouvelle dÃ©finition de rubrique vide.
 			desc.name      = "";
 			desc.type      = FieldType.String;
 			desc.require   = FieldRequire.Optional;
@@ -97,9 +97,9 @@ namespace Epsitec.Common
 
 		public int CreateFieldDesc(FieldDesc desc)
 		{
-			//	Crée une nouvelle rubrique et retourne l'identificateur de la rubrique.
-			//	Une rubrique ne peut jamais être détruite.
-			//	Dès que la base contient une ou plusieurs fiches, il n'est plus possible
+			//	CrÃ©e une nouvelle rubrique et retourne l'identificateur de la rubrique.
+			//	Une rubrique ne peut jamais Ãªtre dÃ©truite.
+			//	DÃ¨s que la base contient une ou plusieurs fiches, il n'est plus possible
 			//	d'ajouter des rubriques.
 			System.Diagnostics.Debug.Assert(!this.inUse);
 			return this.fields.Add(desc);
@@ -107,14 +107,14 @@ namespace Epsitec.Common
 
 		public FieldDesc RetFieldDesc(int fieldID)
 		{
-			//	Donne les définitions d'une rubrique.
+			//	Donne les dÃ©finitions d'une rubrique.
 			System.Diagnostics.Debug.Assert( fieldID >= 0 && fieldID < this.TotalField );
 			return (FieldDesc)this.fields[fieldID];
 		}
 
 		public int RetFieldID(int rank)
 		{
-			//	Retourne l'identificateur de rubrique correspondant à un rang donné.
+			//	Retourne l'identificateur de rubrique correspondant Ã  un rang donnÃ©.
 			for ( int fieldID=0 ; fieldID<this.TotalField ; fieldID++ )
 			{
 				FieldDesc fieldDesc = RetFieldDesc(fieldID);
@@ -126,7 +126,7 @@ namespace Epsitec.Common
 
 		public void CreateEmptyRecord(out Record record)
 		{
-			//	Crée une fiche vide.
+			//	CrÃ©e une fiche vide.
 			record = new Record();
 			for ( int i=0 ; i<this.TotalField ; i++ )
 			{
@@ -136,7 +136,7 @@ namespace Epsitec.Common
 
 		public void CreateCopyRecord(out Record record, Record original)
 		{
-			//	Crée une copie d'une fiche.
+			//	CrÃ©e une copie d'une fiche.
 			record = new Record();
 			for ( int i=0 ; i<this.TotalField ; i++ )
 			{
@@ -163,7 +163,7 @@ namespace Epsitec.Common
 
 		public int CheckRecord(Record record)
 		{
-			//	Vérifie si une fiche est correcte.
+			//	VÃ©rifie si une fiche est correcte.
 			//	Retourne l'identificateur de la rubrique fausse, ou -1 si tout est ok.
 			FieldDesc	field;
 			int			max, i, reqTotal, reqExist, reqField;
@@ -214,25 +214,25 @@ namespace Epsitec.Common
 
 		protected bool CheckMail(string text)
 		{
-			//	Vérifie si une chaîne est une adresse e-mail.
+			//	VÃ©rifie si une chaÃ®ne est une adresse e-mail.
 			return true;
 		}
 
 		protected bool CheckWeb(string text)
 		{
-			//	Vérifie si une chaîne est une adreese web.
+			//	VÃ©rifie si une chaÃ®ne est une adreese web.
 			return true;
 		}
 
 		protected bool CheckPrix(string text)
 		{
-			//	Vérifie si une chaîne est un prix.
+			//	VÃ©rifie si une chaÃ®ne est un prix.
 			return true;
 		}
 
 		protected bool CheckDate(string text)
 		{
-			//	Vérifie si une chaîne est une date.
+			//	VÃ©rifie si une chaÃ®ne est une date.
 			return true;
 		}
 
@@ -302,12 +302,12 @@ namespace Epsitec.Common
 
 		public bool SetSortField(int rankSort, int fieldID, Widgets.SortMode mode)
 		{
-			//	Spécifie l'identificateur d'une rubrique de tri.
-			//	Si rankSort=0 -> critère principal
-			//	Si rankSort=1 -> critère secondaire (si égalité avec critère principal)
+			//	SpÃ©cifie l'identificateur d'une rubrique de tri.
+			//	Si rankSort=0 -> critÃ¨re principal
+			//	Si rankSort=1 -> critÃ¨re secondaire (si Ã©galitÃ© avec critÃ¨re principal)
 			//	Si renkSort=2 -> etc.
 			//	Si mode= 1 -> tri croissant
-			//	Si mode=-1 -> tri décroissant
+			//	Si mode=-1 -> tri dÃ©croissant
 			System.Diagnostics.Debug.Assert( fieldID >= 0 && fieldID < this.TotalField );
 			if ( rankSort < 0 || rankSort >= this.maxSort )  return false;
 			this.sortField[rankSort] = fieldID;
@@ -332,7 +332,7 @@ namespace Epsitec.Common
 
 		public void Sort()
 		{
-			//	Crée l'index de tri.
+			//	CrÃ©e l'index de tri.
 			int		max, i, ii, len;
 
 			max = this.TotalRecord;
@@ -363,7 +363,7 @@ namespace Epsitec.Common
 
 		protected void InsertIndex(int i, int ii, int lenIndex)
 		{
-			//	Insère un rang dans l'index.
+			//	InsÃ¨re un rang dans l'index.
 			int		j;
 
 			for ( j=lenIndex ; j>ii ; j-- )
@@ -375,7 +375,7 @@ namespace Epsitec.Common
 
 		protected int SearchIndexPlace(int i, int lenIndex)
 		{
-			//	Cherche à quelle place insérer un item dans l'index.
+			//	Cherche Ã  quelle place insÃ©rer un item dans l'index.
 			int		ii;
 
 			for ( ii=0 ; ii<lenIndex ; ii++ )
@@ -403,7 +403,7 @@ namespace Epsitec.Common
 				s2 = (string)r2[this.sortField[i]];
 				n = string.Compare(s1, s2);
 				
-				n = (int)n * (int)this.sortMode[i];  // tri croissant ou décroissant
+				n = (int)n * (int)this.sortMode[i];  // tri croissant ou dÃ©croissant
 				if ( n != 0 )  return n;
 			}
 			return 0;
@@ -411,7 +411,7 @@ namespace Epsitec.Common
 
 		public int InternalToSort(int i)
 		{
-			//	Conversion d'un index interne en index trié.
+			//	Conversion d'un index interne en index triÃ©.
 			int		max, ii;
 
 			if ( this.index.Length == 0 )  return -1;
@@ -426,7 +426,7 @@ namespace Epsitec.Common
 
 		public int SortToInternal(int i)
 		{
-			//	Conversion d'un index trié en index interne.
+			//	Conversion d'un index triÃ© en index interne.
 			if ( this.index.Length == 0 )  return -1;
 			if ( i == -1 )  return -1;
 			return this.index[i];
@@ -435,8 +435,8 @@ namespace Epsitec.Common
 
 		public bool SearchCritere(ref int rank, out int fieldID, int dir, string crit, out string complete)
 		{
-			//	Cherche un critère dans toutes les rubriques, à partir de la
-			//	rubrique spécifiée par rank (non comprise).
+			//	Cherche un critÃ¨re dans toutes les rubriques, Ã  partir de la
+			//	rubrique spÃ©cifiÃ©e par rank (non comprise).
 			Record	record;
 			int		maxRecord, maxField, i, index;
 			string	text, upper;
@@ -478,7 +478,7 @@ namespace Epsitec.Common
 
 		protected int IndexSubstring(string text, string subText)
 		{
-			//	Vérifie si une chaîne est contenue dans une autre.
+			//	VÃ©rifie si une chaÃ®ne est contenue dans une autre.
 			return text.IndexOf(subText);
 		}
 

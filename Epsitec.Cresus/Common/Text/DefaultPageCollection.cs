@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -31,8 +31,8 @@ namespace Epsitec.Common.Text
 			
 			Debug.Assert.IsInBounds (page, 0, this.count-1);
 			
-			//	Comme les numéros de pages "physiques" partent de 0, on convertit
-			//	en numéros "logiques" (1..n) pour la suite des opérations :
+			//	Comme les numÃ©ros de pages "physiques" partent de 0, on convertit
+			//	en numÃ©ros "logiques" (1..n) pour la suite des opÃ©rations :
 			
 			page += 1;
 			

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets.Validators
 {
 	/// <summary>
-	/// La classe AbstractValidator permet de simplifier l'implémentation de
+	/// La classe AbstractValidator permet de simplifier l'implÃ©mentation de
 	/// l'interface IValidator en relation avec des widgets.
 	/// </summary>
 	public abstract class AbstractValidator : IValidator, System.IDisposable

@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Panels
 {
 	/// <summary>
-	/// La classe Name permet de choisir une chaÓne de caractËres.
+	/// La classe Name permet de choisir une cha√Æne de caract√®res.
 	/// </summary>
 	public class Name : Abstract
 	{
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widget.
+			//	Propri√©t√© -> widget.
 			base.PropertyToWidgets();
 
 			Properties.Name p = this.property as Properties.Name;
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Name p = this.property as Properties.Name;
 			if ( p == null )  return;
 
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.field == null )  return;
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTextChanged(object sender)
 		{
-			//	Une valeur a ÈtÈ changÈe.
+			//	Une valeur a √©t√© chang√©e.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.PDF
 	using CultureInfo=System.Globalization.CultureInfo;
 	using Epsitec.Common.Drawing.Platform;
 	/// <summary>
-	/// La classe Export implémente la publication d'un document PDF.
+	/// La classe Export implÃ©mente la publication d'un document PDF.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
 	/// 
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private DrawingContext CreateDrawingContext()
 		{
-			//	Crée le DrawingContext utilisé pour l'exportation.
+			//	CrÃ©e le DrawingContext utilisÃ© pour l'exportation.
 
 			Settings.ExportPDFInfo info = this.document.Settings.ExportPDFInfo;
 
@@ -293,8 +293,8 @@ namespace Epsitec.Common.Document.PDF
 					bottom = info.BleedMargin + info.BleedOddMargins.Bottom;
 				}
 
-				//	La boîte de débord ne prend en compte que le débord effectivement
-				//	demandé (qui peut être différent entre pages de droite et pages
+				//	La boÃ®te de dÃ©bord ne prend en compte que le dÃ©bord effectivement
+				//	demandÃ© (qui peut Ãªtre diffÃ©rent entre pages de droite et pages
 				//	de gauche).
 				bleedBox.Inflate (left, right, top, bottom);
 
@@ -303,8 +303,8 @@ namespace Epsitec.Common.Document.PDF
 				top    = System.Math.Max (top, markSizeY);
 				bottom = System.Math.Max (bottom, markSizeY);
 
-				//	La boîte de média doit être assez grande pour contenir à la fois
-				//	le débord et les éventuels traits de coupe.
+				//	La boÃ®te de mÃ©dia doit Ãªtre assez grande pour contenir Ã  la fois
+				//	le dÃ©bord et les Ã©ventuels traits de coupe.
 				mediaBox.Inflate (left, right, top, bottom);
 
 				Point offset = -mediaBox.BottomLeft;
@@ -319,10 +319,10 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteString ("<< /Type /Page /Parent ");
 				writer.WriteObjectRef ("HeaderPages");
 
-				//	Définit les boîtes en utilisant soit les valeurs déterminées par CrDoc,
-				//	soit des modes forcés par l'appelant externe (ça permet par exemple de
+				//	DÃ©finit les boÃ®tes en utilisant soit les valeurs dÃ©terminÃ©es par CrDoc,
+				//	soit des modes forcÃ©s par l'appelant externe (Ã§a permet par exemple de
 				//	ne pas inclure un MediaBox ou de faire en sorte que le BleedBox ait la
-				//	taille du média d'impression).
+				//	taille du mÃ©dia d'impression).
 				switch (Support.Globals.Properties.GetProperty<string> ("PDF:MediaBoxDefinition", "MediaBox"))
 				{
 					case "MediaBox":
@@ -526,7 +526,7 @@ namespace Epsitec.Common.Document.PDF
 				{
 					if (obj.IsHide)
 					{
-						continue;  // objet caché ?
+						continue;  // objet cachÃ© ?
 					}
 
 					obj.DrawGeometry (port, drawingContext);
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Document.PDF
 
 			port.Transform = gtBeforeZoom;
 
-			this.CropToBleedBox (port, page);  // efface ce qui dépasse de la BleedBox
+			this.CropToBleedBox (port, page);  // efface ce qui dÃ©passe de la BleedBox
 			this.DrawCropMarks (port, page);  // traits de coupe
 
 			var pdf = port.GetPDF ();
@@ -553,8 +553,8 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Matrice de transformation globale:
 			Transform gt = port.Transform;
-			gt = gt.Translate (currentPageOffset);  // translation si débord et/ou traits de coupe
-			gt = gt.Scale (Export.mmToInches);  // unité = 0.1mm
+			gt = gt.Translate (currentPageOffset);  // translation si dÃ©bord et/ou traits de coupe
+			gt = gt.Scale (Export.mmToInches);  // unitÃ© = 0.1mm
 			Transform gtBeforeZoom = gt;
 			gt = gt.Scale (this.zoom, this.zoom, gt.TX, gt.TY);
 			port.Transform = gt;
@@ -682,7 +682,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			Settings.ExportPDFInfo info = this.document.Settings.ExportPDFInfo;
 			//	Dessine un masque avec une ouverture qui a exactement la taille
-			//	du BleedBox (à savoir la taille de la page avec ses débords).
+			//	du BleedBox (Ã  savoir la taille de la page avec ses dÃ©bords).
 			Size pageSize = this.document.GetPageSize (page);
 
 			double width  = pageSize.Width * this.zoom;
@@ -782,12 +782,12 @@ namespace Epsitec.Common.Document.PDF
 
 				port.LineWidth = info.CropMarksWidth * 3;
 				port.LineCap   = CapStyle.Butt;
-				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // fond blanc derrière les traits de coupe
+				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // fond blanc derriÃ¨re les traits de coupe
 				port.PaintOutline (path);
 
 				port.LineWidth = info.CropMarksWidth;
 				port.LineCap   = CapStyle.Butt;
-				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
+				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repÃ©rage
 				port.PaintOutline (path);
 			}
 
@@ -808,7 +808,7 @@ namespace Epsitec.Common.Document.PDF
 
 				path.Clear ();
 				path.Append (font, text, x, y, size);
-				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
+				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repÃ©rage
 				port.PaintSurface (path);
 			}
 		}
@@ -820,9 +820,9 @@ namespace Epsitec.Common.Document.PDF
 			//	Trouve toutes les surfaces complexes dans toutes les pages.
 			port.Reset ();
 
-			//	Il faut utiliser la bonne échelle à cause du filtre des images.
+			//	Il faut utiliser la bonne Ã©chelle Ã  cause du filtre des images.
 			Transform gt = port.Transform;
-			gt = gt.Scale (Export.mmToInches);  // unité = 0.1mm
+			gt = gt.Scale (Export.mmToInches);  // unitÃ© = 0.1mm
 			port.Transform = gt;
 
 			int id = 1;
@@ -841,7 +841,7 @@ namespace Epsitec.Common.Document.PDF
 					{
 						if (obj.IsHide)
 						{
-							continue;  // objet caché ?
+							continue;  // objet cachÃ© ?
 						}
 
 						this.report.DefineProgress (0, string.Format (Res.Strings.Export.PDF.Progress.Surface, page+1, objIndex++));
@@ -955,8 +955,8 @@ namespace Epsitec.Common.Document.PDF
 
 		private void EmitComplexSurfaces(Writer writer, Port port, DrawingContext drawingContext)
 		{
-			//	Crée toutes les surfaces complexes.
-			//	Crée le ExtGState numéro 0, pour annuler une transparence.
+			//	CrÃ©e toutes les surfaces complexes.
+			//	CrÃ©e le ExtGState numÃ©ro 0, pour annuler une transparence.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (0, PdfComplexSurfaceType.ExtGState));
 			writer.WriteLine ("<< /CA 1 /ca 1 >> endobj");
 
@@ -1008,7 +1008,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateComplexSurfaceTransparencyRegular(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
-			//	Crée une surface transparente unie.
+			//	CrÃ©e une surface transparente unie.
 			if (cs.IsSmooth)
 			{
 				this.CreateComplexSurfaceTransparencyGradientOrSmooth (writer, port, drawingContext, cs);
@@ -1033,7 +1033,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateComplexSurfaceTransparencyPattern(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
-			//	Crée deux surfaces transparentes unies pour un motif.
+			//	CrÃ©e deux surfaces transparentes unies pour un motif.
 			double a1 = 1.0;
 			double a2 = 1.0;
 			if (cs.Fill is Properties.Gradient)
@@ -1055,7 +1055,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateComplexSurfaceAlpha(Writer writer, double alpha, int id, PdfComplexSurfaceType type)
 		{
-			//	Crée un ExtGState pour une transparence unie.
+			//	CrÃ©e un ExtGState pour une transparence unie.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (id, type));
 			Port port = new Port ();
 			port.PutCommand ("<< /CA ");  // voir [*] page 192
@@ -1093,7 +1093,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateComplexSurfaceTransparencyGradientOrSmooth(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
-			//	Crée une surface dégradée transparente et/ou floue.
+			//	CrÃ©e une surface dÃ©gradÃ©e transparente et/ou floue.
 			Objects.Abstract obj = cs.Object;
 			SurfaceAnchor sa = obj.SurfaceAnchor;
 
@@ -1176,7 +1176,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateComplexSurfaceSmooth(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
-			//	Crée une surface floue.
+			//	CrÃ©e une surface floue.
 			Objects.Abstract obj = cs.Object;
 			SurfaceAnchor sa = obj.SurfaceAnchor;
 
@@ -1254,7 +1254,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateComplexSurfaceOpaqueGradient(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
-			//	Crée une surface dégradée transparente.
+			//	CrÃ©e une surface dÃ©gradÃ©e transparente.
 			if (cs.IsSmooth)
 			{
 				this.CreateComplexSurfaceTransparencyGradientOrSmooth (writer, port, drawingContext, cs);
@@ -1268,7 +1268,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void MatrixComplexSurfaceGradient(ComplexSurface cs)
 		{
-			//	Calcule la matrice de transformation pour une surface dégradée.
+			//	Calcule la matrice de transformation pour une surface dÃ©gradÃ©e.
 			Properties.Gradient gradient = cs.Fill as Properties.Gradient;
 			if (gradient == null)
 				return;
@@ -1318,7 +1318,7 @@ namespace Epsitec.Common.Document.PDF
 													ComplexSurface cs,
 													int nbColors)
 		{
-			//	Crée une surface dégradée.
+			//	CrÃ©e une surface dÃ©gradÃ©e.
 			//	Si nbColors == 0  ->  canal alpha
 			//	Si nbColors == 1  ->  espace Gray
 			//	Si nbColors == 3  ->  espace RGB
@@ -1530,7 +1530,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 				writer.WriteLine ("] >> endobj");
 
-				//	Génère les fonctions pour les couleurs.
+				//	GÃ©nÃ¨re les fonctions pour les couleurs.
 				string[] fonctions = new string[totalColors];
 				RichColor c1 = port.GetFinalColor (gradient.Color1);
 				RichColor c2 = port.GetFinalColor (gradient.Color2);
@@ -1620,7 +1620,7 @@ namespace Epsitec.Common.Document.PDF
 												   ComplexSurface cs,
 												   int nbColors)
 		{
-			//	Génère la fonction de calcul des couleurs intermédiaires, sur la base
+			//	GÃ©nÃ¨re la fonction de calcul des couleurs intermÃ©diaires, sur la base
 			//	d'une table de 3x256 valeurs 8 bits.
 			//	Si nbColors == 0  ->  canal alpha
 			//	Si nbColors == 1  ->  espace Gray
@@ -1693,8 +1693,8 @@ namespace Epsitec.Common.Document.PDF
 														double colorEnd)
 		{
 			//	Retourne la fonction permettant de calculer une couleur fondamentale
-			//	d'un dégradé en diamant. En entrés, la pile contient x et y [-1..1].
-			//	En sortie, elle contient la couleur [0..1]. Avec une répétition de 1,
+			//	d'un dÃ©gradÃ© en diamant. En entrÃ©s, la pile contient x et y [-1..1].
+			//	En sortie, elle contient la couleur [0..1]. Avec une rÃ©pÃ©tition de 1,
 			//	la fonction est la suivante:
 			//	f(c) = max(|x|,|y|)
 			//	PostScript calculator function, voir [*] page 148
@@ -1729,8 +1729,8 @@ namespace Epsitec.Common.Document.PDF
 													  double colorEnd)
 		{
 			//	Retourne la fonction permettant de calculer une couleur fondamentale
-			//	d'un dégradé conique. En entrés, la pile contient x et y [-1..1].
-			//	En sortie, elle contient la couleur [0..1]. Avec une répétition de 1,
+			//	d'un dÃ©gradÃ© conique. En entrÃ©s, la pile contient x et y [-1..1].
+			//	En sortie, elle contient la couleur [0..1]. Avec une rÃ©pÃ©tition de 1,
 			//	la fonction est la suivante:
 			//	f(c) = (360-atan(x,y))/360
 			//	PostScript calculator function, voir [*] page 148
@@ -1812,7 +1812,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateComplexSurfaceOpaquePattern(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
-			//	Crée une surface opaque contenant un motif.
+			//	CrÃ©e une surface opaque contenant un motif.
 			Properties.Gradient surface = cs.Fill as Properties.Gradient;
 			Objects.Abstract obj = cs.Object;
 			SurfaceAnchor sa = obj.SurfaceAnchor;
@@ -1838,9 +1838,9 @@ namespace Epsitec.Common.Document.PDF
 
 		private int ComplexSurfaceGradientNbColors(Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
-			//	Détermine le nombre de couleurs (1, 3 ou 4) à utiliser pour une surface
-			//	complexe. C'est la première couleur qui fait foi. La deuxième sera
-			//	convertie dans l'espace de couleur de la première, au besoin.
+			//	DÃ©termine le nombre de couleurs (1, 3 ou 4) Ã  utiliser pour une surface
+			//	complexe. C'est la premiÃ¨re couleur qui fait foi. La deuxiÃ¨me sera
+			//	convertie dans l'espace de couleur de la premiÃ¨re, au besoin.
 			Properties.Gradient gradient = cs.Fill as Properties.Gradient;
 			RichColor color = port.GetFinalColor (gradient.Color1);
 
@@ -1858,7 +1858,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void ClearComplexSurfaces()
 		{
-			//	Libère toutes les surfaces complexes.
+			//	LibÃ¨re toutes les surfaces complexes.
 			if (this.complexSurfaces != null)
 			{
 				foreach (ComplexSurface cs in this.complexSurfaces)
@@ -1876,7 +1876,7 @@ namespace Epsitec.Common.Document.PDF
 		#region Images
 		private void EmitImageSurfaces(Writer writer, Port port)
 		{
-			//	Crée toutes les images.
+			//	CrÃ©e toutes les images.
 			Export.debugTotal = 0;
 
 			foreach (ImageSurface image in this.imageSurfaces)
@@ -1893,7 +1893,7 @@ namespace Epsitec.Common.Document.PDF
 					this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObjectMask, PdfComplexSurfaceType.None);
 				}
 
-				writer.Flush ();  // écrit déjà tout ce qu'on peut sur disque, afin d'utiliser le moins possible de mémoire
+				writer.Flush ();  // Ã©crit dÃ©jÃ  tout ce qu'on peut sur disque, afin d'utiliser le moins possible de mÃ©moire
 			}
 		}
 
@@ -1902,7 +1902,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			ImageCompression compression = this.GetCompressionMode (baseType);
 
-			//	Crée une image.
+			//	CrÃ©e une image.
 
 			image.MinDpi = this.imageMinDpi;
 			image.MaxDpi = this.imageMaxDpi;
@@ -1956,7 +1956,7 @@ namespace Epsitec.Common.Document.PDF
 //+			dx = fi.Width;
 //+			dy = fi.Height;
 			// --------------------------------------------------
-			// End of JFC modification (06-févr.-2012 15:45)
+			// End of JFC modification (06-fÃ©vr.-2012 15:45)
 			// --------------------------------------------------
 			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage: after crop & resize, Size={0}x{1}\n{2}", dx, dy, fi == null ? "<null>" : fi.ToString()));
 
@@ -2058,7 +2058,7 @@ namespace Epsitec.Common.Document.PDF
 			int dx = image.DX;
 			int dy = image.DY;
 
-			//	Génération de l'en-tête.
+			//	GÃ©nÃ©ration de l'en-tÃªte.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (image.Id, baseType));
 			writer.WriteString ("<< /Subtype /Image ");
 
@@ -2302,7 +2302,7 @@ namespace Epsitec.Common.Document.PDF
 		private static NativeBitmap CropImage(ImageSurface image, NativeBitmap fi)
 		{
 			Margins crop = image.Crop;
-			if (crop != Margins.Zero)  // recadrage nécessaire ?
+			if (crop != Margins.Zero)  // recadrage nÃ©cessaire ?
 			{
 				var cropped = fi.Crop ((int) crop.Left, (int) crop.Top, fi.Width-(int) (crop.Left+crop.Right), fi.Height-(int) (crop.Top+crop.Bottom));
 				fi.Dispose ();
@@ -2320,8 +2320,8 @@ namespace Epsitec.Common.Document.PDF
 		{
 			dx = fi.Width;
 			dy = fi.Height;
-			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
-			//	Une image sans filtrage n'est jamais mise à l'échelle !
+			//	Mise Ã  l'Ã©chelle Ã©ventuelle de l'image selon les choix de l'utilisateur.
+			//	Une image sans filtrage n'est jamais mise Ã  l'Ã©chelle !
 			const double tenthMillimeterPerInch = 254;
 			double currentDpiX = dx * tenthMillimeterPerInch / image.ImageSize.Width;      	// Image size is expressed in mm/10 !!!
 			double currentDpiY = dy * tenthMillimeterPerInch / image.ImageSize.Height;
@@ -2383,7 +2383,7 @@ namespace Epsitec.Common.Document.PDF
 				System.Diagnostics.Debug.WriteLine("Dpi are different, resize is required:, now, dx = {0}, dy = {1}", dx, dy);
 			}
 			// --------------------------------------------------
-			// End of JFC modification (07-févr.-2012 14:52)
+			// End of JFC modification (07-fÃ©vr.-2012 14:52)
 			// --------------------------------------------------
 
 			if (resizeRequired)
@@ -2444,7 +2444,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			if (this.imageSurfaces != null)
 			{
-				//	Libère toutes les images.
+				//	LibÃ¨re toutes les images.
 				foreach (ImageSurface image in this.imageSurfaces)
 				{
 					image.Dispose ();
@@ -2466,7 +2466,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				return;
 			}
-			//	Crée toutes les fontes.
+			//	CrÃ©e toutes les fontes.
 			foreach (System.Collections.DictionaryEntry dict in this.fontHash)
 			{
 				FontList font = dict.Key as FontList;
@@ -2495,7 +2495,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateFontBase(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet de base d'une fonte.
+			//	CrÃ©e l'objet de base d'une fonte.
 			Rectangle bbox = font.CharacterBBox;
 
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.Base));
@@ -2521,7 +2521,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateFontEncoding(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet Encoding d'une fonte.
+			//	CrÃ©e l'objet Encoding d'une fonte.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.Encoding));
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder ();
@@ -2540,7 +2540,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateFontCharProcs(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet CharProcs d'une fonte.
+			//	CrÃ©e l'objet CharProcs d'une fonte.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.CharProcs));
 			writer.WriteString ("<< ");
 
@@ -2557,7 +2557,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateFontWidths(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet "table des chasses" d'une fonte.
+			//	CrÃ©e l'objet "table des chasses" d'une fonte.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.Widths));
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder ();
@@ -2577,9 +2577,9 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateFontToUnicode(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet ToUnicode d'une fonte, qui permet de retrouver les codes
-			//	des caractères lors d'une copie depuis Acrobat dans le clipboard.
-			//	Voir [*] pages 420 à 446.
+			//	CrÃ©e l'objet ToUnicode d'une fonte, qui permet de retrouver les codes
+			//	des caractÃ¨res lors d'une copie depuis Acrobat dans le clipboard.
+			//	Voir [*] pages 420 Ã  446.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.ToUnicode));
 
 			string fontName = font.DrawingFont.FaceName;
@@ -2622,7 +2622,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateFontCharacters(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée tous les objets des caractères d'une fonte.
+			//	CrÃ©e tous les objets des caractÃ¨res d'une fonte.
 			int firstChar = fontPage*Export.charPerFont;
 			for (int i=0; i<count; i++)
 			{
@@ -2633,7 +2633,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void CreateFontCharacter(Writer writer, FontList font, int fontPage, CharacterList cl)
 		{
-			//	Crée l'objet d'un caractère d'une fonte.
+			//	CrÃ©e l'objet d'un caractÃ¨re d'une fonte.
 			writer.WriteObjectDef (Export.GetCharacterName (font.Id, fontPage, cl));
 
 			Font drawingFont = font.DrawingFont;
@@ -2647,9 +2647,9 @@ namespace Epsitec.Common.Document.PDF
 			port.ColorForce = ColorForce.Nothing;  // pas de commande de couleur !
 			port.DefaultDecimals = 4;
 
-			//	Sans "wx wy llx lly urx ury d1", Acrobat 8 n'arrive pas à afficher les caractères.
-			//	Attention, si wx ne correspond pas à la valeur générée par CreateFontWidths, Acrobat 8 plante !
-			//	Acrobat 8 n'apprécie pas du tout si "... d1" est remplacé par "wx wy d0" !
+			//	Sans "wx wy llx lly urx ury d1", Acrobat 8 n'arrive pas Ã  afficher les caractÃ¨res.
+			//	Attention, si wx ne correspond pas Ã  la valeur gÃ©nÃ©rÃ©e par CreateFontWidths, Acrobat 8 plante !
+			//	Acrobat 8 n'apprÃ©cie pas du tout si "... d1" est remplacÃ© par "wx wy d0" !
 			Rectangle bounds = cl.Bounds;
 			port.PutValue (cl.Width);       // wx
 			port.PutValue (0);              // wy
@@ -2670,7 +2670,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private void ClearFonts()
 		{
-			//	Libère toutes les fontes.
+			//	LibÃ¨re toutes les fontes.
 			this.characterHash = null;
 			this.fontHash = null;
 		}
@@ -2679,12 +2679,12 @@ namespace Epsitec.Common.Document.PDF
 
 		private IEnumerable<Objects.Layer> GetPrintableLayers(int pageNumber)
 		{
-			//	Calcule la liste des calques, y compris ceux des pages maîtres.
-			//	Les calques cachés à l'impression ne sont pas mis dans la liste.
+			//	Calcule la liste des calques, y compris ceux des pages maÃ®tres.
+			//	Les calques cachÃ©s Ã  l'impression ne sont pas mis dans la liste.
 			List<Objects.Layer> layers     = new List<Objects.Layer> ();
 			List<Objects.Page>  masterList = this.document.Modifier.ComputeMasterPageList (pageNumber);
 
-			//	Met d'abord les premiers calques de toutes les pages maîtres.
+			//	Met d'abord les premiers calques de toutes les pages maÃ®tres.
 			foreach (Objects.Page master in masterList)
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -2709,7 +2709,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
-			//	Met finalement les derniers calques de toutes les pages maîtres.
+			//	Met finalement les derniers calques de toutes les pages maÃ®tres.
 			foreach (Objects.Page master in masterList)
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -2740,7 +2740,7 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		//	Constante pour conversion dixièmes de millimètres -> 72ème de pouce
+		//	Constante pour conversion dixiÃ¨mes de millimÃ¨tres -> 72Ã¨me de pouce
 		private static readonly double			mmToInches = 0.1*72/25.4;
 		private static readonly int				charPerFont = 256;
 		

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Widgets
 	public interface IItemPicker
 	{
 		//	Cette interface met en commun tout ce qu'il faut pour unifier ItemPicker et ItemPickerCombo.
-		//	Comme ces 2 widgets ont des héritages différents, il est nécessaire de procéder ainsi, en
-		//	redéfinissant de façon redondante les méthodes communes de provenances diverses.
+		//	Comme ces 2 widgets ont des hÃ©ritages diffÃ©rents, il est nÃ©cessaire de procÃ©der ainsi, en
+		//	redÃ©finissant de faÃ§on redondante les mÃ©thodes communes de provenances diverses.
 
 		void				IPRefreshContents();
 		void				IPUpdateText();

@@ -12,8 +12,8 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// La classe TextFieldExList implémente une variante de TextFieldCombo, permettant
-	/// d'éditer les éléments contenus dans la liste.
+	/// La classe TextFieldExList implÃ©mente une variante de TextFieldCombo, permettant
+	/// d'Ã©diter les Ã©lÃ©ments contenus dans la liste.
 	/// </summary>
 	public class TextFieldExList : TextFieldCombo
 	{
@@ -204,8 +204,8 @@ namespace Epsitec.Common.Widgets
 			if ((this.mode == TextFieldExListMode.EditPassive) &&
 				(Feel.Factory.Active.TestComboOpenKey (message)))
 			{
-				//	L'utilisateur aimerait plutôt ouvrir la list déroulante que de commencer
-				//	l'édition du champ en cours :
+				//	L'utilisateur aimerait plutÃ´t ouvrir la list dÃ©roulante que de commencer
+				//	l'Ã©dition du champ en cours :
 				
 				return base.ProcessKeyDown (message, pos);
 			}
@@ -247,8 +247,8 @@ namespace Epsitec.Common.Widgets
 			if ((this.mode == TextFieldExListMode.EditPassive) &&
 				(mode != TabNavigationMode.None))
 			{
-				//	Si on entre par un TAB dans ce widget, il faut passer en mode édition active,
-				//	si l'état précédent était passif :
+				//	Si on entre par un TAB dans ce widget, il faut passer en mode Ã©dition active,
+				//	si l'Ã©tat prÃ©cÃ©dent Ã©tait passif :
 				
 				this.SwitchToActiveEdition ();
 			}
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.SelectedItem != "")
 			{
-				//	Prend note de l'élément actuellement actif, afin de pouvoir le restaurer
+				//	Prend note de l'Ã©lÃ©ment actuellement actif, afin de pouvoir le restaurer
 				//	en cas d'annulation par la suite :
 				
 				this.acceptRejectBehavior.InitialText = this.SelectedItem;
@@ -433,8 +433,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override bool ProcessKeyPressInSelectItemBehavior(Message message)
 		{
-			//	N'utilise pas le mécanisme de sélection automatique dans la liste
-			//	si on a commencé l'édition en mode interactif.
+			//	N'utilise pas le mÃ©canisme de sÃ©lection automatique dans la liste
+			//	si on a commencÃ© l'Ã©dition en mode interactif.
 			
 			if ((this.mode == TextFieldExListMode.EditActive) ||
 				(this.mode == TextFieldExListMode.EditPassive))

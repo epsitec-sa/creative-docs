@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe VSlider implémente le potentiomètre linéaire vertical.
+	/// La classe VSlider implÃ©mente le potentiomÃ¨tre linÃ©aire vertical.
 	/// </summary>
 	public class VSlider : AbstractSlider
 	{

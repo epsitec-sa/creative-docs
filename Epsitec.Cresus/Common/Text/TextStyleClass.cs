@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'énumération TextStyleClass définit les catégories auxquelles les
+	/// L'Ã©numÃ©ration TextStyleClass dÃ©finit les catÃ©gories auxquelles les
 	/// styles TextStyle peuvent appartenir.
 	/// </summary>
 	public enum TextStyleClass
@@ -12,10 +12,10 @@ namespace Epsitec.Common.Text
 		Invalid			= 0,			//	pas valide
 		
 		Abstract		= 1,			//	style abstrait, sert uniquement de base aux autres
-		Paragraph		= 2,			//	style de paragraphe, appliqué au paragraphe entier
-		Text			= 3,			//	style de texte, appliqué à un passage de texte local
-		Symbol			= 4,			//	style de symboles, appliqué à un caractère unique
+		Paragraph		= 2,			//	style de paragraphe, appliquÃ© au paragraphe entier
+		Text			= 3,			//	style de texte, appliquÃ© Ã  un passage de texte local
+		Symbol			= 4,			//	style de symboles, appliquÃ© Ã  un caractÃ¨re unique
 		
-		MetaProperty	= 5,			//	style se comportant comme une propriété
+		MetaProperty	= 5,			//	style se comportant comme une propriÃ©tÃ©
 	}
 }

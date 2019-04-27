@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Rotate permet de tourner la sélection.
+	/// La classe Rotate permet de tourner la sÃ©lection.
 	/// </summary>
 	public class Rotate : Abstract
 	{
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonRotate90 == null )  return;
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected TextFieldReal CreateFieldRot(string tooltip)
 		{
-			//	Crée un champ éditable pour une rotation.
+			//	CrÃ©e un champ Ã©ditable pour une rotation.
 			TextFieldReal field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void AdaptFieldRot(TextFieldReal field)
 		{
-			//	Adapte un champ éditable pour une rotation.
+			//	Adapte un champ Ã©ditable pour une rotation.
 			if ( this.document == null )
 			{
 				field.Enable = false;

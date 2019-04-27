@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetViewStateGetter(System.Func<IViewState> getViewState)
 		{
-			//	Spécifie la fonction a exécuter pour obtenir le ViewState.
+			//	SpÃ©cifie la fonction a exÃ©cuter pour obtenir le ViewState.
 			this.getViewState = getViewState;
 		}
 
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public bool								IsUndoEnable
 		{
-			//	Indique s'il y a au moins une action à annuler.
+			//	Indique s'il y a au moins une action Ã  annuler.
 			get
 			{
 				return this.lastExecuted >= 0 && this.groups.Count > 0;
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public bool								IsRedoEnable
 		{
-			//	Indique s'il y a au moins une action à rétablir.
+			//	Indique s'il y a au moins une action Ã  rÃ©tablir.
 			get
 			{
 				return this.lastExecuted+1 < this.groups.Count;
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public IEnumerable<string>				UndoHistory
 		{
 			//	Retourne les descriptions des actions qu'il est possible d'annuler,
-			//	de la plus récente à la plus ancienne.
+			//	de la plus rÃ©cente Ã  la plus ancienne.
 			get
 			{
 				for (int i=this.lastExecuted; i>=0; i--)
@@ -96,8 +96,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IEnumerable<string>				RedoHistory
 		{
-			//	Retourne les descriptions des actions qu'il est possible de rétablir,
-			//	de la plus ancienne à la plus récente.
+			//	Retourne les descriptions des actions qu'il est possible de rÃ©tablir,
+			//	de la plus ancienne Ã  la plus rÃ©cente.
 			get
 			{
 				for (int i=this.lastExecuted+1; i<this.groups.Count; i++)
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Start()
 		{
-			//	Marque le début d'une action annulable. On démarre un nouveau groupe.
+			//	Marque le dÃ©but d'une action annulable. On dÃ©marre un nouveau groupe.
 			if (this.lastExecuted+1 < this.groups.Count)
 			{
 				int numCommandsToRemove = this.groups.Count - (this.lastExecuted+1);
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetDescription(string description)
 		{
-			//	Spécifie la description de l'action annulable.
+			//	SpÃ©cifie la description de l'action annulable.
 			if (this.groups.Any ())
 			{
 				var group = this.groups.Last ();
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void SetBeforeViewState()
 		{
-			//	Spécifie le ViewState initial, avant les modifications.
+			//	SpÃ©cifie le ViewState initial, avant les modifications.
 			if (this.groups.Any () && this.getViewState != null)
 			{
 				var group = this.groups.Last ();
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetAfterViewState()
 		{
-			//	Spécifie le ViewState final, après les modifications.
+			//	SpÃ©cifie le ViewState final, aprÃ¨s les modifications.
 			if (this.groups.Any () && this.getViewState != null)
 			{
 				var group = this.groups.Last ();
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IViewState Undo()
 		{
-			//	Annule la dernière action et retourne le ViewState initial.
+			//	Annule la derniÃ¨re action et retourne le ViewState initial.
 			if (this.IsUndoEnable)
 			{
 				var group = this.groups[this.lastExecuted--];
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IViewState Redo()
 		{
-			//	Refait la dernière action et retourne le ViewState final.
+			//	Refait la derniÃ¨re action et retourne le ViewState final.
 			if (this.IsRedoEnable)
 			{
 				var group = this.groups[++this.lastExecuted];
@@ -234,8 +234,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private string GetDescription(int index, bool undo)
 		{
-			//	Retourne la description d'une action undo/redo complète, par exemple
-			//	"Rétablir « Supprimer le contact - Jean Dupond »"
+			//	Retourne la description d'une action undo/redo complÃ¨te, par exemple
+			//	"RÃ©tablir Â« Supprimer le contact - Jean Dupond Â»"
 			var description = this.groups[index].Description;
 
 			if (undo)  // undo ?
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 			else
 			{
-				return string.Concat (op, " — ", objectSummary);
+				return string.Concat (op, " â€” ", objectSummary);
 			}
 		}
 

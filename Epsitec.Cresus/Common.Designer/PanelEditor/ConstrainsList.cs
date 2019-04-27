@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void Starting(Rectangle initialRectangle, bool isDot)
 		{
-			//	DÈbut des contraintes.
+			//	D√©but des contraintes.
 			if (!this.context.ShowConstrain)
 			{
 				return;
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void InvertLock()
 		{
-			//	VÈrouille ou dÈvÈrouille l'objet le plus proche.
+			//	V√©rouille ou d√©v√©rouille l'objet le plus proche.
 			if (!this.isStarted)
 			{
 				return;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void Activate(Rectangle rect, double baseLine, params Widget[] excludes)
 		{
-			//	Active les contraintes pour un rectangle donnÈ.
+			//	Active les contraintes pour un rectangle donn√©.
 			if (!this.isStarted)
 			{
 				return;
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void NearestDistance(Rectangle rect, Widget parent, out double minX, out double minY, params Widget[] excludes)
 		{
-			//	Cherche la distance ‡ l'objet le plus proche d'une position donnÈe.
+			//	Cherche la distance √† l'objet le plus proche d'une position donn√©e.
 			Point center = rect.Center;
 			minX = 1000000;
 			minY = 1000000;
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		protected void NearestObjects(Rectangle rect, Widget parent, double distanceX, double distanceY, params Widget[] excludes)
 		{
 			//	Initialise les contraintes pour tous les objets dont la distance est
-			//	infÈrieure ou Ègale ‡ une distance donnÈe.
+			//	inf√©rieure ou √©gale √† une distance donn√©e.
 			if (parent.IsEmbedded)
 			{
 				return;
@@ -324,7 +324,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void Add(Constrain toAdd)
 		{
-			//	Ajoute une contrainte dans une liste, si elle n'y est pas dÈj‡.
+			//	Ajoute une contrainte dans une liste, si elle n'y est pas d√©j√†.
 			foreach (Constrain constrain in this.list)
 			{
 				if (constrain.IsEqualTo(toAdd))

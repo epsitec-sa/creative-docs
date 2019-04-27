@@ -7,7 +7,7 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.TextPanels
 {
 	/// <summary>
-	/// La classe Font permet de choisir une police de caractères.
+	/// La classe Font permet de choisir une police de caractÃ¨res.
 	/// </summary>
 	public class Font : Abstract
 	{
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		public override void UpdateAfterAttach()
 		{
-			//	Mise à jour après avoir attaché le wrappers.
+			//	Mise Ã  jour aprÃ¨s avoir attachÃ© le wrappers.
 			this.fontSize.ButtonUnitEnable = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
 			this.buttonClear.Visibility = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
 		}
@@ -121,13 +121,13 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau étendu ?
+				if ( this.isExtendedSize )  // panneau Ã©tendu ?
 				{
-					if ( this.IsLabelProperties )  // étendu/détails ?
+					if ( this.IsLabelProperties )  // Ã©tendu/dÃ©tails ?
 					{
 						h += 30+25+25+25+40;
 					}
-					else	// étendu/compact ?
+					else	// Ã©tendu/compact ?
 					{
 						h += 30+25+25+25+40;
 					}
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Document.TextPanels
 						h -= 40;
 					}
 				}
-				else	// panneau réduit ?
+				else	// panneau rÃ©duit ?
 				{
 					h += 30+25+25;
 				}
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public override double TopMargin
 		{
-			//	Retourne la marge supérieure.
+			//	Retourne la marge supÃ©rieure.
 			get
 			{
 				return 5;
@@ -158,13 +158,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public override void OriginColorDeselect()
 		{
-			//	Désélectionne toutes les origines de couleurs possibles.
+			//	DÃ©sÃ©lectionne toutes les origines de couleurs possibles.
 			this.fontColor.ActiveState = ActiveState.No;
 		}
 
 		public override void OriginColorSelect(int rank)
 		{
-			//	Sélectionne l'origine de couleur.
+			//	SÃ©lectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		protected override void UpdateAfterChanging()
 		{
-			//	Met à jour après un changement du wrapper.
+			//	Met Ã  jour aprÃ¨s un changement du wrapper.
 			base.UpdateAfterChanging();
 			
 			if ( this.TextWrapper.IsAttached == false )  return;
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void UpdateComboStyleList(string face, string style)
 		{
-			//	Met à jour la liste d'un champ éditable pour le style de la police.
+			//	Met Ã  jour la liste d'un champ Ã©ditable pour le style de la police.
 			this.fontStyle.Items.Clear();  // vide la liste
 			face = Misc.FaceInvariantToInvariant(face, style);
 			
@@ -307,14 +307,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void HandleWrapperChanged(object sender)
 		{
-			//	Le wrapper associé a changé.
+			//	Le wrapper associÃ© a changÃ©.
 			this.UpdateAfterChanging();
 		}
 
 		
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.fontFace == null )  return;
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Document.TextPanels
 		#region FeaturesMenu
 		private void HandleFeaturesClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lors du clic sur le bouton "OpenType" pour ouvrir le menu.
+			//	AppelÃ© lors du clic sur le bouton "OpenType" pour ouvrir le menu.
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
 
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void BuildFeaturesMenu(VMenu menu, OpenType.Font font, string text, string feature, bool active, bool valid, Support.EventHandler<MessageEventArgs> message)
 		{
-			//	Crée une case du menu des variantes OpenType (features).
+			//	CrÃ©e une case du menu des variantes OpenType (features).
 			OpenType.LookupTable[] tables = font.GetLookupTables(feature);
 			foreach ( OpenType.LookupTable table in tables )
 			{
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleFeaturesMenu(object sender, MessageEventArgs e)
 		{
-			//	Appelé lors du choix dans le menu.
+			//	AppelÃ© lors du choix dans le menu.
 			MenuItem item = sender as MenuItem;
 			if ( item == null )  return;
 
@@ -547,7 +547,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleFontFaceComboOpening(object sender, CancelEventArgs e)
 		{
-			//	Le combo pour les polices va être ouvert.
+			//	Le combo pour les polices va Ãªtre ouvert.
 			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
 			string selectedFontFace = this.TextWrapper.Active.FontFace;
 			int quickCount;

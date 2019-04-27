@@ -5,22 +5,22 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum SurfaceType
 	{
 		None          = 0,
-		ParallelT     = 10,		// parallèlogramme haut
-		ParallelB     = 11,		// parallèlogramme bas
-		ParallelL     = 12,		// parallèlogramme gauche
-		ParallelR     = 13,		// parallèlogramme droite
-		TrapezeT      = 20,		// trapèze haut
-		TrapezeB      = 21,		// trapèze bas
-		TrapezeL      = 22,		// trapèze gauche
-		TrapezeR      = 23,		// trapèze droite
+		ParallelT     = 10,		// parallÃ¨logramme haut
+		ParallelB     = 11,		// parallÃ¨logramme bas
+		ParallelL     = 12,		// parallÃ¨logramme gauche
+		ParallelR     = 13,		// parallÃ¨logramme droite
+		TrapezeT      = 20,		// trapÃ¨ze haut
+		TrapezeB      = 21,		// trapÃ¨ze bas
+		TrapezeL      = 22,		// trapÃ¨ze gauche
+		TrapezeR      = 23,		// trapÃ¨ze droite
 		QuadriL       = 30,		// losange
-		QuadriP       = 31,		// parallèlogramme
+		QuadriP       = 31,		// parallÃ¨logramme
 		QuadriC       = 32,		// cerf-volant
-		QuadriX       = 33,		// quadrilatère quelconque
+		QuadriX       = 33,		// quadrilatÃ¨re quelconque
 		Grid          = 40,		// grille
 		Pattern       = 41,		// damier
 		Ring          = 50,		// anneau
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Surface représente une propriété d'un objet surface 2d.
+	/// La classe Surface reprÃ©sente une propriÃ©tÃ© d'un objet surface 2d.
 	/// </summary>
 	[System.Serializable()]
 	public class Surface : Abstract
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				return Surface.GetName(this.surfaceType);
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 			builder.Append(this.SampleText);
 			this.PutStyleBriefPostfix(builder);
@@ -146,8 +146,8 @@ namespace Epsitec.Common.Document.Properties
 
 		public static SurfaceType ConvType(int index)
 		{
-			//	Cherche le type correspondant à un index donné.
-			//	Ceci détermine l'ordre dans le TextFieldCombo du panneau.
+			//	Cherche le type correspondant Ã  un index donnÃ©.
+			//	Ceci dÃ©termine l'ordre dans le TextFieldCombo du panneau.
 			SurfaceType type = SurfaceType.None;
 			switch ( index )
 			{
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static int ConvType(SurfaceType type)
 		{
-			//	Cherche le rang d'un type donné.
+			//	Cherche le rang d'un type donnÃ©.
 			for ( int i=0 ; i<100 ; i++ )
 			{
 				SurfaceType t = Surface.ConvType(i);
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(SurfaceType type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(SurfaceType type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case SurfaceType.ParallelT:  return "SurfaceParallelT";
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static bool IsEnableFactor(SurfaceType type, int rank)
 		{
-			//	Indique si un facteur est éditable.
+			//	Indique si un facteur est Ã©ditable.
 			switch ( type )
 			{
 				case SurfaceType.ParallelT:  return (rank == 0);
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static bool IsEnableScalar(SurfaceType type, int rank)
 		{
-			//	Indique si un scalaire est éditable.
+			//	Indique si un scalaire est Ã©ditable.
 			switch ( type )
 			{
 				case SurfaceType.Grid:       return true;
@@ -318,14 +318,14 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
 		public void Reset()
 		{
-			//	Remet les paramètres standards.
+			//	Remet les paramÃ¨tres standards.
 			this.NotifyBefore();
 			this.AdjustType();
 			this.NotifyAfter();
@@ -333,7 +333,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public void AdjustType()
 		{
-			//	Ajuste les paramètres selon le type.
+			//	Ajuste les paramÃ¨tres selon le type.
 			switch ( this.surfaceType )
 			{
 				case SurfaceType.ParallelT:
@@ -429,13 +429,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignées.
+			//	Nombre de poignÃ©es.
 			return 4;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignée est visible.
+			//	Indique si une poignÃ©e est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -477,7 +477,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignée.
+			//	Retourne la position d'une poignÃ©e.
 			Point pos = new Point(0,0);
 
 			switch ( this.surfaceType )
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignée.
+			//	Modifie la position d'une poignÃ©e.
 			switch ( this.surfaceType )
 			{
 				case SurfaceType.ParallelT:
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Surface p = property as Surface;
 			p.surfaceType  = this.surfaceType;
@@ -579,7 +579,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Surface p = property as Surface;
@@ -598,7 +598,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Surface(document);
 		}
@@ -607,7 +607,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("SurfaceType", this.surfaceType, typeof(SurfaceType));
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Surface(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.surfaceType = (SurfaceType) info.GetValue("SurfaceType", typeof(SurfaceType));
 			this.factors = (double[]) info.GetValue("Factors", typeof(double[]));
 			this.scalars = (int[]) info.GetValue("Scalars", typeof(int[]));

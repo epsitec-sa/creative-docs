@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -7,8 +7,8 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe MulticastValidator représente le "et" logique d'un ensemble de
-	/// règles règles de validation.
+	/// La classe MulticastValidator reprÃ©sente le "et" logique d'un ensemble de
+	/// rÃ¨gles rÃ¨gles de validation.
 	/// </summary>
 	public sealed class MulticastValidator : IValidator
 	{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				//	TODO: détermine le message en fonction des dépendances...
+				//	TODO: dÃ©termine le message en fonction des dÃ©pendances...
 				
 				return FormattedText.Empty;
 			}
@@ -59,16 +59,16 @@ namespace Epsitec.Common.Widgets
 			bool valid   = true;
 			bool unknown = false;
 			
-			//	Recalcule l'état... Pendant toute la phase de recalcul, on passe dans un
-			//	état spécial (Unknown) pour éviter que des boucles dans les dépendances ne
-			//	puissent causer des récursions.
+			//	Recalcule l'Ã©tat... Pendant toute la phase de recalcul, on passe dans un
+			//	Ã©tat spÃ©cial (Unknown) pour Ã©viter que des boucles dans les dÃ©pendances ne
+			//	puissent causer des rÃ©cursions.
 			
 			foreach (IValidator validator in this.validators)
 			{
 				if (! validator.IsValid)
 				{
-					//	Oups... L'un des éléments dont nous dépendons n'est pas valide; c'est
-					//	soit qu'il est dans un état inconnu, soit qu'il n'est réellement pas
+					//	Oups... L'un des Ã©lÃ©ments dont nous dÃ©pendons n'est pas valide; c'est
+					//	soit qu'il est dans un Ã©tat inconnu, soit qu'il n'est rÃ©ellement pas
 					//	valide.
 					
 					if (validator.State == ValidationState.Unknown)

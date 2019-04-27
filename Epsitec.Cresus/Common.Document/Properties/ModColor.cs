@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe ModColor représente une propriété d'un objet graphique.
+	/// La classe ModColor reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class ModColor : Abstract
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void NotifyAfter(bool oplet)
 		{
-			//	Effectue toutes les notifications après un changement.
+			//	Effectue toutes les notifications aprÃ¨s un changement.
 			System.Diagnostics.Debug.Assert(this.owners.Count == 1);
 			Objects.Abstract obj = this.owners[0] as Objects.Abstract;  // objet calque
 			this.document.Notifier.NotifyLayerChanged(obj);
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool IsComplexPrinting
 		{
-			//	Indique si une impression complexe est nécessaire.
+			//	Indique si une impression complexe est nÃ©cessaire.
 			get
 			{
 				if ( this.a != 0.0 )  return true;
@@ -193,13 +193,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return false; }
 		}
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			ModColor p = property as ModColor;
 			p.h = this.h;
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			ModColor p = property as ModColor;
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.ModColor(document);
 		}
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Document.Properties
 
 			basic = Drawing.Color.FromAlphaRgb(basic.A+this.a, basic.R+this.v+this.r, basic.G+this.v+this.g, basic.B+this.v+this.b);
 
-			if ( this.n )  // négatif ?
+			if ( this.n )  // nÃ©gatif ?
 			{
 				basic = Drawing.Color.FromAlphaRgb(basic.A, 1.0-basic.R, 1.0-basic.G, 1.0-basic.B);
 			}
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("H", this.h);
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected ModColor(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.h = info.GetDouble("H");
 			this.s = info.GetDouble("S");
 			this.v = info.GetDouble("V");

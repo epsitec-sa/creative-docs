@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (kind == ViewTypeKind.Accounts)
 			{
-				//	On montre le dernier plan comptable importé.
+				//	On montre le dernier plan comptable importÃ©.
 				var range = accessor.Mandat.AccountsDateRanges.LastOrDefault ();
 				return new ViewType (kind, range);
 			}

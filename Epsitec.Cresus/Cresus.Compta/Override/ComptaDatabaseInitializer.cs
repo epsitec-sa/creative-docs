@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Entities;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;

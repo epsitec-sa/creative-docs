@@ -7,8 +7,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	public enum DataCellFlags
 	{
 		None        = 0x0000,
-		OutOfBounds = 0x0001,	// cellule hachurée
-		Group       = 0x0002,	// plusieurs lignes compactées
-		Locked      = 0x0004,	// antérieur à Locked (cadenas), cellule plus foncée
+		OutOfBounds = 0x0001,	// cellule hachurÃ©e
+		Group       = 0x0002,	// plusieurs lignes compactÃ©es
+		Locked      = 0x0004,	// antÃ©rieur Ã  Locked (cadenas), cellule plus foncÃ©e
 	}
 }

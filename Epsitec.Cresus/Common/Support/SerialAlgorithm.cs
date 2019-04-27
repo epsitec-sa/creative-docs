@@ -1,4 +1,4 @@
-//	Copyright © 2005-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Serial;
@@ -6,7 +6,7 @@ using Epsitec.Serial;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// SerialAlgorithm définit les fonctions de base nécessaires pour valider
+	/// SerialAlgorithm dÃ©finit les fonctions de base nÃ©cessaires pour valider
 	/// une clef de logiciel.
 	/// </summary>
 	public static class SerialAlgorithm

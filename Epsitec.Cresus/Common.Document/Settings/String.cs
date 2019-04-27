@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe String contient un réglage numérique.
+	/// La classe String contient un rÃ©glage numÃ©rique.
 	/// </summary>
 	[System.Serializable()]
 	public class String : Abstract
@@ -68,14 +68,14 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le réglage.
+			//	SÃ©rialise le rÃ©glage.
 			base.GetObjectData(info, context);
 			info.AddValue("Value", this.Value);
 		}
 
 		protected String(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise le réglage.
+			//	Constructeur qui dÃ©sÃ©rialise le rÃ©glage.
 			this.Value = info.GetString("Value");
 			this.Initialize();
 		}

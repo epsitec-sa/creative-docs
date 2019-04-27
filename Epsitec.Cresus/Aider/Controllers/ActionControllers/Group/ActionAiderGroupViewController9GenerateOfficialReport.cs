@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -27,7 +27,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Générer un extrait officiel");
+			return Resources.Text ("GÃ©nÃ©rer un extrait officiel");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -45,10 +45,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if(sender.IsNull ())
 			{
-				throw new BusinessRuleException ("Vous n'êtes pas définit en tant que expéditeur");
+				throw new BusinessRuleException ("Vous n'Ãªtes pas dÃ©finit en tant que expÃ©diteur");
 			}
 
-			var title1 = TextFormatter.FormatText ("Assemblée paroissiale du", date.ToShortDateString (), "à~", place.IsNull () ? null : place.Name);
+			var title1 = TextFormatter.FormatText ("AssemblÃ©e paroissiale du", date.ToShortDateString (), "Ã ~", place.IsNull () ? null : place.Name);
 			var title2 = TextFormatter.FormatText (title);
 
 			var content = new FormattedContent (title1, title2);
@@ -74,11 +74,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.InitialValue (this.Entity.Name)
 				.End ()
 				.Field<Date> ()
-					.Title ("Date de l'assemblée")
+					.Title ("Date de l'assemblÃ©e")
 					.InitialValue (Date.Today)
 				.End ()
 				.Field<AiderTownEntity> ()
-					.Title ("Lieu de l'assemblée")
+					.Title ("Lieu de l'assemblÃ©e")
 					.InitialValue (currentUser.Office.OfficeMainContact.Address.Town)
 					.WithFavorites (favorites)
 				.End ()

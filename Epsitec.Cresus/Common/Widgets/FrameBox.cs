@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -78,8 +78,8 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			//	Si le cadre est dessiné avec une épaisseur qui dépasse un pixel, il faut augmenter
-			//	la surface à redessiner pour ce widget.
+			//	Si le cadre est dessinÃ© avec une Ã©paisseur qui dÃ©passe un pixel, il faut augmenter
+			//	la surface Ã  redessiner pour ce widget.
 			double width = this.DrawFrameWidth;
 
 			if (width <= 1 || this.DrawFrameEdges == FrameEdges.None)

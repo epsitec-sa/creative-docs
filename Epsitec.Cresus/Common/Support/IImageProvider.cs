@@ -1,10 +1,10 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// L'interface IImageProvider donne accès à des images en fonction de
+	/// L'interface IImageProvider donne accÃ¨s Ã  des images en fonction de
 	/// leur nom.
 	/// </summary>
 	public interface IImageProvider

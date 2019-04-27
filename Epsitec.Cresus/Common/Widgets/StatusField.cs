@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe StatusField représente une case d'une ligne de statuts.
+	/// La classe StatusField reprÃ©sente une case d'une ligne de statuts.
 	/// </summary>
 	public class StatusField : Widget
 	{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 #if false	//#fix
 		public override Drawing.Size PreferredSize
 		{
-			//	Retourne les dimensions minimales pour représenter le texte.
+			//	Retourne les dimensions minimales pour reprÃ©senter le texte.
 			get
 			{
 				return this.TextLayout.SingleLineSize;

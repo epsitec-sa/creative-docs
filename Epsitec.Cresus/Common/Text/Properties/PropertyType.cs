@@ -1,23 +1,23 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération PropertyType définit les divers types de propriétés
-	/// supportées. Ces types servent uniquement à classer en trois catégories
-	/// les propriétés; cela n'a aucun rapport avec leur "affinité".
+	/// L'Ã©numÃ©ration PropertyType dÃ©finit les divers types de propriÃ©tÃ©s
+	/// supportÃ©es. Ces types servent uniquement Ã  classer en trois catÃ©gories
+	/// les propriÃ©tÃ©s; cela n'a aucun rapport avec leur "affinitÃ©".
 	/// 
 	/// Voir aussi Properties.PropertyAffinity.
 	/// </summary>
 	public enum PropertyType
 	{
-		Invalid			= 0,			//	définition non valide
+		Invalid			= 0,			//	dÃ©finition non valide
 		
-		CoreSetting		= 1,			//	définition de base
-		LocalSetting	= 2,			//	définition pour un réglage local
-		ExtraSetting	= 3,			//	définition pour un réglage spécial
+		CoreSetting		= 1,			//	dÃ©finition de base
+		LocalSetting	= 2,			//	dÃ©finition pour un rÃ©glage local
+		ExtraSetting	= 3,			//	dÃ©finition pour un rÃ©glage spÃ©cial
 		
-		Polymorph		= 4,			//	définition soit Style, soit Extra; utilisé par StylesProperty
+		Polymorph		= 4,			//	dÃ©finition soit Style, soit Extra; utilisÃ© par StylesProperty
 	}
 }

@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe SystemInformation donne des informations sur le système.
+	/// La classe SystemInformation donne des informations sur le systÃ¨me.
 	/// </summary>
 	public class SystemInformation
 	{

@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Surface p = this.property as Properties.Surface;
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Surface p = this.property as Properties.Surface;
 			if ( p == null )  return;
 
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			Properties.Surface p = this.property as Properties.Surface;
 			if ( p == null )  return;
 
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -236,21 +236,21 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleTypeChanged(object sender)
 		{
-			//	Le type a ÈtÈ changÈ.
+			//	Le type a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
 		private void HandleResetButton(object sender, MessageEventArgs e)
 		{
-			//	Le bouton "reset" a ÈtÈ cliquÈ.
+			//	Le bouton "reset" a √©t√© cliqu√©.
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.SurfaceReset);
 			Properties.Surface p = this.property as Properties.Surface;
 			p.Reset();

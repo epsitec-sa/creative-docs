@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Types.Exceptions;
+using Epsitec.Common.Types.Exceptions;
 
 using System.Collections;
 

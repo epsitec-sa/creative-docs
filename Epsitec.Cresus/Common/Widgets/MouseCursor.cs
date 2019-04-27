@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 	
 	/// <summary>
-	/// La classe MouseCursor décrit un curseur de souris.
+	/// La classe MouseCursor dÃ©crit un curseur de souris.
 	/// </summary>
 	public sealed class MouseCursor : System.IDisposable
 	{

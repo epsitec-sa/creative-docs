@@ -1,4 +1,4 @@
-﻿#define LOCALHOST
+#define LOCALHOST
 #define REMOTE_HOST_MARC
 
 using Epsitec.Cresus.Database;

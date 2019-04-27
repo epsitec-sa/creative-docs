@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Helpers
 {
-	public static class PrÈsentations
+	public static class Pr√©sentations
 	{
 		public static bool HasRightEditor(ControllerType type)
 		{
@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type == ControllerType.Journaux ||
 				   type == ControllerType.ListeTVA ||
 				   type == ControllerType.Monnaies ||
-				   type == ControllerType.PÈriodes ||
-				   type == ControllerType.PiËcesGenerator ||
+				   type == ControllerType.P√©riodes ||
+				   type == ControllerType.Pi√®cesGenerator ||
 				   type == ControllerType.Utilisateurs;
 		}
 
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type != ControllerType.Open &&
 				   type != ControllerType.Save &&
 				   type != ControllerType.Print &&
-				   type != ControllerType.RÈglages;
+				   type != ControllerType.R√©glages;
 		}
 
 		public static bool HasGraph(ControllerType type)
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type == ControllerType.Bilan ||
 				   type == ControllerType.PP ||
 				   type == ControllerType.ExtraitDeCompte ||
-				   type == ControllerType.RÈsumÈPÈriodique ||
+				   type == ControllerType.R√©sum√©P√©riodique ||
 				   type == ControllerType.Soldes;
 		}
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type != ControllerType.Open &&
 				   type != ControllerType.Save &&
 				   type != ControllerType.Print &&
-				   type != ControllerType.RÈglages;
+				   type != ControllerType.R√©glages;
 		}
 
 		public static bool HasFilterPanel(ControllerType type)
@@ -68,8 +68,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type == ControllerType.ExtraitDeCompte ||
 				   type == ControllerType.Journal ||
 				   type == ControllerType.PlanComptable ||
-				   type == ControllerType.RÈsumÈPÈriodique ||
-				   type == ControllerType.RÈsumÈTVA ||
+				   type == ControllerType.R√©sum√©P√©riodique ||
+				   type == ControllerType.R√©sum√©TVA ||
 				   type == ControllerType.Soldes;
 		}
 
@@ -83,8 +83,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type == ControllerType.ExtraitDeCompte ||
 				   type == ControllerType.Journal ||
 				   type == ControllerType.PlanComptable ||
-				   type == ControllerType.RÈsumÈPÈriodique ||
-				   type == ControllerType.RÈsumÈTVA ||
+				   type == ControllerType.R√©sum√©P√©riodique ||
+				   type == ControllerType.R√©sum√©TVA ||
 				   type == ControllerType.Soldes;
 		}
 
@@ -95,12 +95,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type == ControllerType.ExtraitDeCompte ||
 				   type == ControllerType.Journal ||
 				   type == ControllerType.Journaux ||
-				   type == ControllerType.LibellÈs ||
+				   type == ControllerType.Libell√©s ||
 				   type == ControllerType.ListeTVA ||
-				   type == ControllerType.ModËles ||
+				   type == ControllerType.Mod√®les ||
 				   type == ControllerType.Monnaies ||
-				   type == ControllerType.PÈriodes ||
-				   type == ControllerType.PiËcesGenerator ||
+				   type == ControllerType.P√©riodes ||
+				   type == ControllerType.Pi√®cesGenerator ||
 				   type == ControllerType.PlanComptable ||
 				   type == ControllerType.Utilisateurs;
 		}
@@ -108,51 +108,51 @@ namespace Epsitec.Cresus.Compta.Helpers
 	
 		public static string GetViewSettingsKey(ControllerType type)
 		{
-			//	Retourne la clÈ d'accËs pour les donnÈes ViewSettingsList.
-			var cmd = PrÈsentations.GetCommand (type);
-			return PrÈsentations.GetViewSettingsKey (cmd);
+			//	Retourne la cl√© d'acc√®s pour les donn√©es ViewSettingsList.
+			var cmd = Pr√©sentations.GetCommand (type);
+			return Pr√©sentations.GetViewSettingsKey (cmd);
 		}
 
 		public static string GetViewSettingsKey(Command cmd)
 		{
-			//	Retourne la clÈ d'accËs pour les donnÈes ViewSettingsList.
+			//	Retourne la cl√© d'acc√®s pour les donn√©es ViewSettingsList.
 			return string.Concat (cmd.Name + ".ViewSettings");
 		}
 
 		public static string GetSearchSettingsKey(ControllerType type)
 		{
-			//	Retourne la clÈ d'accËs pour les donnÈes SearchData.
-			return string.Concat ("PrÈsentation." + PrÈsentations.ControllerTypeToString (type) + ".Search");
+			//	Retourne la cl√© d'acc√®s pour les donn√©es SearchData.
+			return string.Concat ("Pr√©sentation." + Pr√©sentations.ControllerTypeToString (type) + ".Search");
 		}
 
 		public static string GetSearchSettingsCollectionKey(ControllerType type)
 		{
-			//	Retourne la clÈ d'accËs pour les donnÈes SearchDataCollection des recherches.
-			return string.Concat ("PrÈsentation." + PrÈsentations.ControllerTypeToString (type) + ".SearchCollection");
+			//	Retourne la cl√© d'acc√®s pour les donn√©es SearchDataCollection des recherches.
+			return string.Concat ("Pr√©sentation." + Pr√©sentations.ControllerTypeToString (type) + ".SearchCollection");
 		}
 
 		public static string GetFilterSettingsCollectionKey(ControllerType type)
 		{
-			//	Retourne la clÈ d'accËs pour les donnÈes SearchDataCollection du filtre.
-			return string.Concat ("PrÈsentation." + PrÈsentations.ControllerTypeToString (type) + ".FilterCollection");
+			//	Retourne la cl√© d'acc√®s pour les donn√©es SearchDataCollection du filtre.
+			return string.Concat ("Pr√©sentation." + Pr√©sentations.ControllerTypeToString (type) + ".FilterCollection");
 		}
 
 		public static string GetPermanentsSettingsKey(ControllerType type)
 		{
-			//	Retourne la clÈ d'accËs pour les donnÈes AbstractPermanents.
-			return string.Concat ("PrÈsentation." + PrÈsentations.ControllerTypeToString (type) + ".Permanents");
+			//	Retourne la cl√© d'acc√®s pour les donn√©es AbstractPermanents.
+			return string.Concat ("Pr√©sentation." + Pr√©sentations.ControllerTypeToString (type) + ".Permanents");
 		}
 
 
 		public static FormattedText GetGroupName(ControllerType type)
 		{
-			//	Retourne le nom du groupe d'une prÈsnetation.
-			//	Par exemple, ControllerType.ModËles retourne "Journal", puisque la prÈsentation
-			//	des Ècritures modËles fait partir du groupe Res.Commands.PrÈsentation.Journal.
-			var cmd = PrÈsentations.GetCommand (type);
+			//	Retourne le nom du groupe d'une pr√©snetation.
+			//	Par exemple, ControllerType.Mod√®les retourne "Journal", puisque la pr√©sentation
+			//	des √©critures mod√®les fait partir du groupe Res.Commands.Pr√©sentation.Journal.
+			var cmd = Pr√©sentations.GetCommand (type);
 			if (cmd != null)
 			{
-				type = PrÈsentations.GetControllerType (cmd);
+				type = Pr√©sentations.GetControllerType (cmd);
 
 				switch (type)
 				{
@@ -163,13 +163,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 						return "Journal";
 
 					case ControllerType.PlanComptable:
-						return "RÈglages";
+						return "R√©glages";
 
-					case ControllerType.RÈsumÈTVA:
+					case ControllerType.R√©sum√©TVA:
 						return "TVA";
 				}
 	
-				return PrÈsentations.GetName (type);
+				return Pr√©sentations.GetName (type);
 			}
 
 			return FormattedText.Empty;
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static FormattedText GetName(ControllerType type)
 		{
-			//	Retourne le nom d'une prÈsnetation.
+			//	Retourne le nom d'une pr√©snetation.
 			switch (type)
 			{
 				case ControllerType.Open:
@@ -192,26 +192,26 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ControllerType.Login:
 					return "Identification";
 
-				case ControllerType.ModËles:
-					return "Ecritures modËles";
+				case ControllerType.Mod√®les:
+					return "Ecritures mod√®les";
 
-				case ControllerType.LibellÈs:
-					return "LibellÈs usuels";
+				case ControllerType.Libell√©s:
+					return "Libell√©s usuels";
 
-				case ControllerType.PÈriodes:
+				case ControllerType.P√©riodes:
 					return "Exercices comptables";
 
 				case ControllerType.Journaux:
 					return "Journaux";
 
 				case ControllerType.Journal:
-					return "Journal des Ècritures";
+					return "Journal des √©critures";
 
 				case ControllerType.PlanComptable:
 					return "Plan comptable";
 
 				case ControllerType.Balance:
-					return "Balance de vÈrification";
+					return "Balance de v√©rification";
 
 				case ControllerType.ExtraitDeCompte:
 					return "Extrait de compte";
@@ -231,17 +231,17 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ControllerType.Monnaies:
 					return "Taux de change";
 
-				case ControllerType.RÈsumÈPÈriodique:
-					return "RÈsumÈ pÈriodique";
+				case ControllerType.R√©sum√©P√©riodique:
+					return "R√©sum√© p√©riodique";
 
 				case ControllerType.Soldes:
 					return "Soldes";
 
-				case ControllerType.RÈsumÈTVA:
-					return "RÈsumÈ TVA";
+				case ControllerType.R√©sum√©TVA:
+					return "R√©sum√© TVA";
 
-				case ControllerType.DÈcompteTVA:
-					return "DÈcompte TVA";
+				case ControllerType.D√©compteTVA:
+					return "D√©compte TVA";
 
 				case ControllerType.CodesTVA:
 					return "Codes TVA";
@@ -249,17 +249,17 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ControllerType.ListeTVA:
 					return "Listes de taux de TVA";
 
-				case ControllerType.DiffÈrencesChange:
-					return "DiffÈrences de change";
+				case ControllerType.Diff√©rencesChange:
+					return "Diff√©rences de change";
 
-				case ControllerType.PiËcesGenerator:
-					return "GÈnÈrateur de piËces";
+				case ControllerType.Pi√®cesGenerator:
+					return "G√©n√©rateur de pi√®ces";
 
 				case ControllerType.Utilisateurs:
 					return "Utilisateurs";
 
-				case ControllerType.RÈglages:
-					return "RÈglages";
+				case ControllerType.R√©glages:
+					return "R√©glages";
 
 				default:
 					return FormattedText.Empty;
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string GetTabIcon(ViewSettingsData data)
 		{
-			//	Retourne l'icÙne ‡ afficher dans l'onglet, ‡ gauche de la description.
+			//	Retourne l'ic√¥ne √† afficher dans l'onglet, √† gauche de la description.
 			if (data.Readonly == false)
 			{
 				return "Edit.Tab.User";
@@ -281,37 +281,37 @@ namespace Epsitec.Cresus.Compta.Helpers
 				type == ControllerType.Print ||
 				type == ControllerType.Login ||
 
-				type == ControllerType.RÈsumÈTVA ||
-				type == ControllerType.DÈcompteTVA ||
+				type == ControllerType.R√©sum√©TVA ||
+				type == ControllerType.D√©compteTVA ||
 				type == ControllerType.CodesTVA ||
 				type == ControllerType.ListeTVA ||
 				
 				type == ControllerType.PlanComptable ||
 				type == ControllerType.Monnaies ||
-				type == ControllerType.PÈriodes ||
-				type == ControllerType.PiËcesGenerator ||
+				type == ControllerType.P√©riodes ||
+				type == ControllerType.Pi√®cesGenerator ||
 				type == ControllerType.Utilisateurs ||
-				type == ControllerType.RÈglages)
+				type == ControllerType.R√©glages)
 			{
-				return PrÈsentations.GetIcon (type);
+				return Pr√©sentations.GetIcon (type);
 			}
 
-			return null;  // pas d'icÙne
+			return null;  // pas d'ic√¥ne
 #if false
-				yield return ControllerType.RÈsumÈTVA;  // prÈsentation principale
-				yield return ControllerType.DÈcompteTVA;
+				yield return ControllerType.R√©sum√©TVA;  // pr√©sentation principale
+				yield return ControllerType.D√©compteTVA;
 				yield return ControllerType.CodesTVA;
 				yield return ControllerType.ListeTVA;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.RÈglages)
+			if (cmd == Res.Commands.Pr√©sentation.R√©glages)
 			{
-				yield return ControllerType.PlanComptable;  // prÈsentation principale
+				yield return ControllerType.PlanComptable;  // pr√©sentation principale
 				yield return ControllerType.Monnaies;
-				yield return ControllerType.PÈriodes;
-				yield return ControllerType.PiËcesGenerator;
+				yield return ControllerType.P√©riodes;
+				yield return ControllerType.Pi√®cesGenerator;
 				yield return ControllerType.Utilisateurs;
-				yield return ControllerType.RÈglages;
+				yield return ControllerType.R√©glages;
 
 	
 			
@@ -324,9 +324,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 				type == ControllerType.Bilan ||
 				type == ControllerType.PP ||
 				type == ControllerType.Exploitation ||
-				type == ControllerType.RÈsumÈPÈriodique ||
+				type == ControllerType.R√©sum√©P√©riodique ||
 				type == ControllerType.Soldes ||
-				type == ControllerType.RÈsumÈTVA)
+				type == ControllerType.R√©sum√©TVA)
 			{
 				return "Edit.Tab.System";
 			}
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				return "Edit.Tab.Settings";
 			}
 #else
-			return PrÈsentations.GetIcon (data.ControllerType);
+			return Pr√©sentations.GetIcon (data.ControllerType);
 #endif
 		}
 
@@ -343,30 +343,30 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			if (type == ControllerType.Open)
 			{
-				return "PrÈsentation.Group.Open";
+				return "Pr√©sentation.Group.Open";
 			}
 			else if (type == ControllerType.PlanComptable)
 			{
-				return "PrÈsentation.Group.PlanComptable";
+				return "Pr√©sentation.Group.PlanComptable";
 			}
 			else
 			{
-				return PrÈsentations.GetIcon (type);
+				return Pr√©sentations.GetIcon (type);
 			}
 		}
 
 		public static string GetIcon(ControllerType type)
 		{
-			//	Retourne l'icÙne d'une prÈsentation.
-			return "PrÈsentation." + type.ToString ();  // requiert des noms d'icÙnes parfaitement synchrones avec les noms des ControllerType !
+			//	Retourne l'ic√¥ne d'une pr√©sentation.
+			return "Pr√©sentation." + type.ToString ();  // requiert des noms d'ic√¥nes parfaitement synchrones avec les noms des ControllerType !
 		}
 
 
-		#region Liste de prÈsentations
-		public static void SetPrÈsentationType(ref string list, ControllerType type, bool state)
+		#region Liste de pr√©sentations
+		public static void SetPr√©sentationType(ref string list, ControllerType type, bool state)
 		{
-			//	Ajoute ou enlËve une prÈsentation dans une liste.
-			var s = PrÈsentations.ControllerTypeToString (type);
+			//	Ajoute ou enl√®ve une pr√©sentation dans une liste.
+			var s = Pr√©sentations.ControllerTypeToString (type);
 
 			if (string.IsNullOrEmpty (list))
 			{
@@ -398,9 +398,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		public static bool ContainsPrÈsentationType(string list, ControllerType type)
+		public static bool ContainsPr√©sentationType(string list, ControllerType type)
 		{
-			//	Indique si une liste contient une prÈsentation.
+			//	Indique si une liste contient une pr√©sentation.
 			if (string.IsNullOrEmpty (list))
 			{
 				return false;
@@ -408,13 +408,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 			else
 			{
 				var words = list.Split (',');
-				return words.Contains (PrÈsentations.ControllerTypeToString (type));
+				return words.Contains (Pr√©sentations.ControllerTypeToString (type));
 			}
 		}
 
-		public static int PrÈsentationTypeCount(string list)
+		public static int Pr√©sentationTypeCount(string list)
 		{
-			//	Retourne le nombre de prÈsentations contenues dans une liste.
+			//	Retourne le nombre de pr√©sentations contenues dans une liste.
 			if (string.IsNullOrEmpty (list))
 			{
 				return 0;
@@ -428,9 +428,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static ControllerType StringToControllerType(string text)
 		{
-			foreach (var type in PrÈsentations.ControllerTypes)
+			foreach (var type in Pr√©sentations.ControllerTypes)
 			{
-				if (PrÈsentations.ControllerTypeToString (type) == text)
+				if (Pr√©sentations.ControllerTypeToString (type) == text)
 				{
 					return type;
 				}
@@ -448,11 +448,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static ControllerType GetGroupControllerType(ControllerType type)
 		{
-			foreach (var cmd in PrÈsentations.PrÈsentationCommands)
+			foreach (var cmd in Pr√©sentations.Pr√©sentationCommands)
 			{
 				var mainType = ControllerType.Unknown;
 
-				foreach (var t in PrÈsentations.GetControllerTypes (cmd))
+				foreach (var t in Pr√©sentations.GetControllerTypes (cmd))
 				{
 					if (mainType == ControllerType.Unknown)
 					{
@@ -471,10 +471,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		private static Command GetCommand(ControllerType type)
 		{
-			//	Retourne la commande de base permettant d'accÈder ‡ une prÈsentation.
-			foreach (var cmd in PrÈsentations.PrÈsentationCommands)
+			//	Retourne la commande de base permettant d'acc√©der √† une pr√©sentation.
+			foreach (var cmd in Pr√©sentations.Pr√©sentationCommands)
 			{
-				foreach (var t in PrÈsentations.GetControllerTypes (cmd))
+				foreach (var t in Pr√©sentations.GetControllerTypes (cmd))
 				{
 					if (t == type)
 					{
@@ -489,13 +489,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static IEnumerable<ControllerType> ControllerTypes
 		{
-			//	Liste de toutes les prÈsentations existantes.
-			//	L'ordre est utilisÈ lors du choix d'un utilisateur, pour afficher les boutons ‡ cocher.
+			//	Liste de toutes les pr√©sentations existantes.
+			//	L'ordre est utilis√© lors du choix d'un utilisateur, pour afficher les boutons √† cocher.
 			get
 			{
-				foreach (var cmd in PrÈsentations.PrÈsentationCommands)
+				foreach (var cmd in Pr√©sentations.Pr√©sentationCommands)
 				{
-					foreach (var type in PrÈsentations.GetControllerTypes (cmd))
+					foreach (var type in Pr√©sentations.GetControllerTypes (cmd))
 					{
 						yield return type;
 					}
@@ -505,15 +505,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static ControllerType GetControllerType(Command cmd)
 		{
-			//	Retourne la prÈsentation principale associÈe ‡ une commande.
-			return PrÈsentations.GetControllerTypes (cmd).FirstOrDefault ();
+			//	Retourne la pr√©sentation principale associ√©e √† une commande.
+			return Pr√©sentations.GetControllerTypes (cmd).FirstOrDefault ();
 		}
 
 		public static IEnumerable<ControllerType> GetControllerTypes(Command cmd)
 		{
-			//	Retourne la liste des prÈsentations associÈes ‡ une commande.
-			//	La premiËre est toujours la prÈsentation priccipale.
-			if (cmd == Res.Commands.PrÈsentation.Open)
+			//	Retourne la liste des pr√©sentations associ√©es √† une commande.
+			//	La premi√®re est toujours la pr√©sentation priccipale.
+			if (cmd == Res.Commands.Pr√©sentation.Open)
 			{
 				yield return ControllerType.Open;
 				yield return ControllerType.Save;
@@ -521,92 +521,92 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return ControllerType.Login;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.Journal)
+			if (cmd == Res.Commands.Pr√©sentation.Journal)
 			{
-				yield return ControllerType.Journal;  // prÈsentation principale
-				yield return ControllerType.LibellÈs;
-				yield return ControllerType.ModËles;
+				yield return ControllerType.Journal;  // pr√©sentation principale
+				yield return ControllerType.Libell√©s;
+				yield return ControllerType.Mod√®les;
 				yield return ControllerType.Journaux;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.Balance)
+			if (cmd == Res.Commands.Pr√©sentation.Balance)
 			{
 				yield return ControllerType.Balance;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.ExtraitDeCompte)
+			if (cmd == Res.Commands.Pr√©sentation.ExtraitDeCompte)
 			{
 				yield return ControllerType.ExtraitDeCompte;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.Bilan)
+			if (cmd == Res.Commands.Pr√©sentation.Bilan)
 			{
 				yield return ControllerType.Bilan;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.PP)
+			if (cmd == Res.Commands.Pr√©sentation.PP)
 			{
 				yield return ControllerType.PP;
 				yield return ControllerType.Exploitation;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.Budgets)
+			if (cmd == Res.Commands.Pr√©sentation.Budgets)
 			{
 				yield return ControllerType.Budgets;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.DiffÈrencesChange)
+			if (cmd == Res.Commands.Pr√©sentation.Diff√©rencesChange)
 			{
-				yield return ControllerType.DiffÈrencesChange;
+				yield return ControllerType.Diff√©rencesChange;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.RÈsumÈPÈriodique)
+			if (cmd == Res.Commands.Pr√©sentation.R√©sum√©P√©riodique)
 			{
-				yield return ControllerType.RÈsumÈPÈriodique;
+				yield return ControllerType.R√©sum√©P√©riodique;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.Soldes)
+			if (cmd == Res.Commands.Pr√©sentation.Soldes)
 			{
 				yield return ControllerType.Soldes;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.TVA)
+			if (cmd == Res.Commands.Pr√©sentation.TVA)
 			{
-				yield return ControllerType.RÈsumÈTVA;  // prÈsentation principale
-				yield return ControllerType.DÈcompteTVA;
+				yield return ControllerType.R√©sum√©TVA;  // pr√©sentation principale
+				yield return ControllerType.D√©compteTVA;
 				yield return ControllerType.CodesTVA;
 				yield return ControllerType.ListeTVA;
 			}
 
-			if (cmd == Res.Commands.PrÈsentation.RÈglages)
+			if (cmd == Res.Commands.Pr√©sentation.R√©glages)
 			{
-				yield return ControllerType.PlanComptable;  // prÈsentation principale
+				yield return ControllerType.PlanComptable;  // pr√©sentation principale
 				yield return ControllerType.Monnaies;
-				yield return ControllerType.PÈriodes;
-				yield return ControllerType.PiËcesGenerator;
+				yield return ControllerType.P√©riodes;
+				yield return ControllerType.Pi√®cesGenerator;
 				yield return ControllerType.Utilisateurs;
-				yield return ControllerType.RÈglages;
+				yield return ControllerType.R√©glages;
 			}
 		}
 
-		public static IEnumerable<Command> PrÈsentationCommands
+		public static IEnumerable<Command> Pr√©sentationCommands
 		{
-			//	Liste de toutes les commandes de groupes de prÈsentations.
-			//	L'ordre dÈtermine la position dans PrÈsentationController.
+			//	Liste de toutes les commandes de groupes de pr√©sentations.
+			//	L'ordre d√©termine la position dans Pr√©sentationController.
 			get
 			{
-				yield return Res.Commands.PrÈsentation.Open;
-				yield return Res.Commands.PrÈsentation.Journal;
-				yield return Res.Commands.PrÈsentation.ExtraitDeCompte;
-				yield return Res.Commands.PrÈsentation.RÈsumÈPÈriodique;
-				yield return Res.Commands.PrÈsentation.Soldes;
-				yield return Res.Commands.PrÈsentation.Bilan;
-				yield return Res.Commands.PrÈsentation.PP;
-				yield return Res.Commands.PrÈsentation.Balance;
-				yield return Res.Commands.PrÈsentation.TVA;
-				yield return Res.Commands.PrÈsentation.Budgets;
-				yield return Res.Commands.PrÈsentation.DiffÈrencesChange;
-				yield return Res.Commands.PrÈsentation.RÈglages;
+				yield return Res.Commands.Pr√©sentation.Open;
+				yield return Res.Commands.Pr√©sentation.Journal;
+				yield return Res.Commands.Pr√©sentation.ExtraitDeCompte;
+				yield return Res.Commands.Pr√©sentation.R√©sum√©P√©riodique;
+				yield return Res.Commands.Pr√©sentation.Soldes;
+				yield return Res.Commands.Pr√©sentation.Bilan;
+				yield return Res.Commands.Pr√©sentation.PP;
+				yield return Res.Commands.Pr√©sentation.Balance;
+				yield return Res.Commands.Pr√©sentation.TVA;
+				yield return Res.Commands.Pr√©sentation.Budgets;
+				yield return Res.Commands.Pr√©sentation.Diff√©rencesChange;
+				yield return Res.Commands.Pr√©sentation.R√©glages;
 			}
 		}
 	}

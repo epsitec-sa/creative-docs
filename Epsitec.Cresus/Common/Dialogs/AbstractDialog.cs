@@ -1,4 +1,4 @@
-//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -315,9 +315,9 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (window.IsActive)
 				{
-					//	Si la fenêtre est active, il faut faire attention à rendre d'abord
-					//	le parent actif, avant de cacher la fenêtre, pour éviter que le focus
-					//	ne parte dans le décor.
+					//	Si la fenÃªtre est active, il faut faire attention Ã  rendre d'abord
+					//	le parent actif, avant de cacher la fenÃªtre, pour Ã©viter que le focus
+					//	ne parte dans le dÃ©cor.
 
 					Window owner = this.OwnerWindow;
 

@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant d'éditer les informations d'un module.
+	/// Dialogue permettant d'Ã©diter les informations d'un module.
 	/// </summary>
 	public class ModuleInfoDialog : AbstractDialog
 	{
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();

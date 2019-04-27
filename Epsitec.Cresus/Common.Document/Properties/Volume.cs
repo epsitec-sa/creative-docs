@@ -5,18 +5,18 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum VolumeType
 	{
 		None          = 0,
-		BoxClose      = 10,		// boîte fermée
-		BoxOpen       = 11,		// boîte ouverte
+		BoxClose      = 10,		// boÃ®te fermÃ©e
+		BoxOpen       = 11,		// boÃ®te ouverte
 		Pyramid       = 20,		// pyramide
 		Cylinder      = 30,		// cylindre
 	}
 
 	/// <summary>
-	/// La classe Volume représente une propriété d'un objet volume 3d.
+	/// La classe Volume reprÃ©sente une propriÃ©tÃ© d'un objet volume 3d.
 	/// </summary>
 	[System.Serializable()]
 	public class Volume : Abstract
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				return Volume.GetName(this.volumeType);
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 			builder.Append(this.SampleText);
 			this.PutStyleBriefPostfix(builder);
@@ -136,8 +136,8 @@ namespace Epsitec.Common.Document.Properties
 
 		public static VolumeType ConvType(int index)
 		{
-			//	Cherche le type correspondant à un index donné.
-			//	Ceci détermine l'ordre dans le TextFieldCombo du panneau.
+			//	Cherche le type correspondant Ã  un index donnÃ©.
+			//	Ceci dÃ©termine l'ordre dans le TextFieldCombo du panneau.
 			VolumeType type = VolumeType.None;
 			switch ( index )
 			{
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static int ConvType(VolumeType type)
 		{
-			//	Cherche le rang d'un type donné.
+			//	Cherche le rang d'un type donnÃ©.
 			for ( int i=0 ; i<100 ; i++ )
 			{
 				VolumeType t = Volume.ConvType(i);
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(VolumeType type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(VolumeType type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case VolumeType.BoxClose:  return "VolumeBoxClose";
@@ -191,14 +191,14 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
 		protected void AdjustType()
 		{
-			//	Ajuste les paramètres selon le type.
+			//	Ajuste les paramÃ¨tres selon le type.
 			switch ( this.volumeType )
 			{
 				case VolumeType.BoxClose:
@@ -212,13 +212,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignées.
+			//	Nombre de poignÃ©es.
 			return 4;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignée est visible.
+			//	Indique si une poignÃ©e est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignée.
+			//	Retourne la position d'une poignÃ©e.
 			Point pos = new Point(0,0);
 
 			switch ( this.volumeType )
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignée.
+			//	Modifie la position d'une poignÃ©e.
 			switch ( this.volumeType )
 			{
 				case VolumeType.BoxClose:
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Volume p = property as Volume;
 			p.volumeType  = this.volumeType;
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Volume p = property as Volume;
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Volume(document);
 		}
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("VolumeType", this.volumeType, typeof(VolumeType));
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Volume(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.volumeType = (VolumeType) info.GetValue("VolumeType", typeof(VolumeType));
 			this.rapport = (double) info.GetValue("Rapport", typeof(double));
 			this.angleLeft = (double) info.GetValue("AngleLeft", typeof(double));

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Permet d'éditer une valeur hexadécimale et binaire.
+	/// Permet d'Ã©diter une valeur hexadÃ©cimale et binaire.
 	/// </summary>
 	public class TextFieldHexa : AbstractGroup
 	{
@@ -111,7 +111,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public bool IsBackHilite
 		{
-			//	Détermine si le widget à un fond mis en évidence.
+			//	DÃ©termine si le widget Ã  un fond mis en Ã©vidence.
 			get
 			{
 				return this.isBackHilite;
@@ -128,15 +128,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void SetTabIndex(int index)
 		{
-			//	Spécifie l'ordre pour la navigation avec Tab.
-			//	Attention, il ne doit pas y avoir 2x les mêmes numéros, même dans des widgets de parents différents !
+			//	SpÃ©cifie l'ordre pour la navigation avec Tab.
+			//	Attention, il ne doit pas y avoir 2x les mÃªmes numÃ©ros, mÃªme dans des widgets de parents diffÃ©rents !
 			this.textField.TabIndex = index;
 			this.textField.TabNavigationMode = TabNavigationMode.None;  // gestion maison, dans MainPanel
 		}
 
 		public MemoryAccessor MemoryAccessor
 		{
-			//	MemoryAccessor associé au widget, facultatif.
+			//	MemoryAccessor associÃ© au widget, facultatif.
 			get
 			{
 				return this.memoryAccessor;
@@ -149,7 +149,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int BitCount
 		{
-			//	Nombre de bits de la valeur (à priori 8 ou 12).
+			//	Nombre de bits de la valeur (Ã  priori 8 ou 12).
 			get
 			{
 				return this.bitCount;
@@ -177,7 +177,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public string BitNames
 		{
-			//	Noms des bits représentés.
+			//	Noms des bits reprÃ©sentÃ©s.
 			get
 			{
 				return this.bitNames;
@@ -188,7 +188,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				if (string.IsNullOrEmpty(this.bitNames))
 				{
-					//	Numérote les bits 0..n.
+					//	NumÃ©rote les bits 0..n.
 					for (int i=0; i<this.buttons.Count; i++)
 					{
 						this.buttons[i].Text = Misc.FontSize(i.ToString(), 70);
@@ -211,7 +211,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public string Label
 		{
-			//	Label affiché à gauche.
+			//	Label affichÃ© Ã  gauche.
 			get
 			{
 				return this.label.Text;
@@ -246,7 +246,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public static double GetHexaWidth(int bitCount)
 		{
-			//	Retourne la largeur nécessaire pour représenter un certain nombre de bits en hexa dans un TextField.
+			//	Retourne la largeur nÃ©cessaire pour reprÃ©senter un certain nombre de bits en hexa dans un TextField.
 			return 8 + ((bitCount+3)/4)*6;
 		}
 
@@ -260,7 +260,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			//	Met à jour les boutons binaires en fonction de la valeur actuelle.
+			//	Met Ã  jour les boutons binaires en fonction de la valeur actuelle.
 			int value = this.HexaValue;
 
 			for (int i=0; i<this.buttons.Count; i++)
@@ -303,14 +303,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleFieldTextChanged(object sender)
 		{
-			//	La valeur hexa éditée a changé.
+			//	La valeur hexa Ã©ditÃ©e a changÃ©.
 			this.UpdateButtons();
 			this.OnHexaValueChanged();
 		}
 
 		private void HandleFieldIsFocusedChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	La ligne éditable a pris ou perdu le focus.
+			//	La ligne Ã©ditable a pris ou perdu le focus.
 			Widget widget = sender as Widget;
 			bool focused = (bool) e.NewValue;
 
@@ -330,7 +330,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "+/-/0" cliqué.
+			//	Bouton "+/-/0" cliquÃ©.
 			if (sender == this.buttonPlus)
 			{
 				this.HexaValue = this.HexaValue+1;
@@ -349,7 +349,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleSwitchClicked(object sender, MessageEventArgs e)
 		{
-			//	Switch binaire basculé.
+			//	Switch binaire basculÃ©.
 			PushButton button = sender as PushButton;
 
 			if (button.ActiveState == ActiveState.No)
@@ -376,7 +376,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		#region EventHandler
 		protected virtual void OnHexaValueChanged()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("HexaValueChanged");
 			if (handler != null)
 			{
@@ -398,7 +398,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		#endregion
 
 
-		// Pour forcer l'initialisation la première fois qu'une valeur est donnée.
+		// Pour forcer l'initialisation la premiÃ¨re fois qu'une valeur est donnÃ©e.
 		protected static readonly string	initValue = "??";
 
 		protected int							bitCount = -1;

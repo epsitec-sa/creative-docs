@@ -1,12 +1,12 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe ManagedInfoProperty associe à un paragraphe marqué par une
-	/// propriété ManagedParagraphProperty une information spécifique utilisée
-	/// pour modifier le fonctionnement du générateur.
+	/// La classe ManagedInfoProperty associe Ã  un paragraphe marquÃ© par une
+	/// propriÃ©tÃ© ManagedParagraphProperty une information spÃ©cifique utilisÃ©e
+	/// pour modifier le fonctionnement du gÃ©nÃ©rateur.
 	/// </summary>
 	public class ManagedInfoProperty : Property
 	{

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum FrameType
 	{
 		None           = 0,		// ni cadre ni ombre
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Frame représente une propriété d'un cadre.
+	/// La classe Frame reprÃ©sente une propriÃ©tÃ© d'un cadre.
 	/// </summary>
 	[System.Serializable()]
 	public class Frame : Abstract
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Properties
 			this.shadowInflate = 0.0;
 			this.shadowConvexity = 0.0;
 			this.shadowSize = 0.0;
-			this.shadowColor = RichColor.FromAGray (60.0/255.0, 0);  // noir très transparent (alpha = 60)
+			this.shadowColor = RichColor.FromAGray (60.0/255.0, 0);  // noir trÃ¨s transparent (alpha = 60)
 			this.shadowOffsetX = 0.0;
 			this.shadowOffsetY = 0.0;
 		}
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				return Frame.GetName(this.frameType);
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 			builder.Append(this.SampleText);
 			this.PutStyleBriefPostfix(builder);
@@ -287,8 +287,8 @@ namespace Epsitec.Common.Document.Properties
 
 		public static FrameType ConvType(int index)
 		{
-			//	Cherche le type correspondant à un index donné.
-			//	Ceci détermine l'ordre dans le TextFieldCombo du panneau.
+			//	Cherche le type correspondant Ã  un index donnÃ©.
+			//	Ceci dÃ©termine l'ordre dans le TextFieldCombo du panneau.
 			FrameType type = FrameType.None;
 			switch ( index )
 			{
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static int ConvType(FrameType type)
 		{
-			//	Cherche le rang d'un type donné.
+			//	Cherche le rang d'un type donnÃ©.
 			for ( int i=0 ; i<100 ; i++ )
 			{
 				FrameType t = Frame.ConvType(i);
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(FrameType type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(FrameType type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case FrameType.None:            return "FrameNone";
@@ -342,26 +342,26 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
 		protected void AdjustType()
 		{
-			//	Ajuste les paramètres selon le type.
+			//	Ajuste les paramÃ¨tres selon le type.
 		}
 
 
 		public override int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignées.
+			//	Nombre de poignÃ©es.
 			return 4;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignée est visible.
+			//	Indique si une poignÃ©e est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignée.
+			//	Retourne la position d'une poignÃ©e.
 			Point pos = new Point ();
 			var polygon = obj.PropertyHandleSupport;
 
@@ -433,7 +433,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignée.
+			//	Modifie la position d'une poignÃ©e.
 			var polygon = obj.PropertyHandleSupport;
 
 			if (polygon != null)
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void DrawEdit(Graphics graphics, DrawingContext drawingContext, Objects.Abstract obj)
 		{
-			//	Dessine les traits de construction avant les poignées.
+			//	Dessine les traits de construction avant les poignÃ©es.
 			if (!obj.IsSelected ||
 				 obj.IsGlobalSelected ||
 				 obj.IsEdited ||
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Document.Properties
 					{
 						center = Point.Move (center, pa, radius);
 						graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 0));
-						graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flèche
+						graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flÃ¨che
 						graphics.AddLine (center, pa);
 					}
 				}
@@ -535,7 +535,7 @@ namespace Epsitec.Common.Document.Properties
 	
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Frame p = property as Frame;
 
@@ -555,7 +555,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Frame p = property as Frame;
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Frame(document);
 		}
@@ -586,7 +586,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public void AddShapes(Objects.Abstract obj, List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner)
 		{
-			//	Ajoute les éléments pour dessiner l'objet avec son cadre.
+			//	Ajoute les Ã©lÃ©ments pour dessiner l'objet avec son cadre.
 			if (polygons == null || polygons.Count == 0 || polygons[0].Count < 2)
 			{
 				shapes.AddRange (objectShapes);
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Document.Properties
 				var pp = Polygon.InflateAndMakeConvexe (polygons, this.marginWidth, this.marginConvexity);
 				var path = Polygon.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
-				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
+				//	Ajoute les Ã©lÃ©ments qui permettront de dessiner le cadre sous l'image.
 				if (this.frameType == Properties.FrameType.OnlyShadow ||
 					this.frameType == Properties.FrameType.FrameAndShadow)
 				{
@@ -634,10 +634,10 @@ namespace Epsitec.Common.Document.Properties
 					shapes.Add (shape);
 				}
 
-				//	Ajoute les éléments qui permettront de dessiner l'objet.
+				//	Ajoute les Ã©lÃ©ments qui permettront de dessiner l'objet.
 				shapes.AddRange (objectShapes);
 
-				//	Ajoute les éléments qui permettront de dessiner le cadre sur l'image.
+				//	Ajoute les Ã©lÃ©ments qui permettront de dessiner le cadre sur l'image.
 				if (this.FrameType == Properties.FrameType.OnlyFrame ||
 					this.FrameType == Properties.FrameType.FrameAndShadow)
 				{
@@ -655,7 +655,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Line GetPropertyFrameStroke (Objects.Abstract obj)
 		{
-			//	Retourne une propriété additionnelle permettant de dessiner le trait du cadre.
+			//	Retourne une propriÃ©tÃ© additionnelle permettant de dessiner le trait du cadre.
 			var line = obj.AdditionnalPropertyFrameStroke;
 
 			line.IsOnlyForCreation = true;
@@ -667,7 +667,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Gradient GetPropertyFrameSurface (Objects.Abstract obj)
 		{
-			//	Retourne une propriété additionnelle permettant de dessiner la surface du cadre.
+			//	Retourne une propriÃ©tÃ© additionnelle permettant de dessiner la surface du cadre.
 			var surface = obj.AdditionnalPropertyFrameSurface;
 
 			surface.IsOnlyForCreation = true;
@@ -678,7 +678,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Gradient GetPropertyFrameBackground (Objects.Abstract obj)
 		{
-			//	Retourne une propriété additionnelle permettant de dessiner le fond du cadre.
+			//	Retourne une propriÃ©tÃ© additionnelle permettant de dessiner le fond du cadre.
 			var surface = obj.AdditionnalPropertyFrameBackground;
 
 			surface.IsOnlyForCreation = true;
@@ -689,7 +689,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Gradient GetPropertyFrameShadow (Objects.Abstract obj)
 		{
-			//	Retourne une propriété additionnelle permettant de dessiner l'ombre du cadre.
+			//	Retourne une propriÃ©tÃ© additionnelle permettant de dessiner l'ombre du cadre.
 			var surface = obj.AdditionnalPropertyFrameShadow;
 
 			surface.IsOnlyForCreation = true;
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue ("FrameType", this.frameType, typeof (FrameType));
@@ -726,7 +726,7 @@ namespace Epsitec.Common.Document.Properties
 		protected Frame(SerializationInfo info, StreamingContext context)
 			: base (info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			if (this.document.IsRevisionGreaterOrEqual (3, 0, 4))
 			{
 				try

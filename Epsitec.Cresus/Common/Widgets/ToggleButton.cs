@@ -1,8 +1,8 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ToggleButton implémente un bouton qui peut être enclenché et
-	/// déclenché (ActiveState.On/Off/Maybe).
+	/// La classe ToggleButton implÃ©mente un bouton qui peut Ãªtre enclenchÃ© et
+	/// dÃ©clenchÃ© (ActiveState.On/Off/Maybe).
 	/// </summary>
 	public class ToggleButton : Button
 	{

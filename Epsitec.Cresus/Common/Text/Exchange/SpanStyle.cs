@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
 
@@ -8,7 +8,7 @@ using System.Text;
 namespace Epsitec.Common.Text.Exchange
 {
 	/// <summary>
-	/// La classe SpanStyle gère la création de la valeur de l'attribut style du tag html <span ...>
+	/// La classe SpanStyle gÃ¨re la crÃ©ation de la valeur de l'attribut style du tag html <span ...>
 	/// Par exempe: "span style='font-size:8.0pt;font-family: ....'>"
 	/// </summary>
 	/// 

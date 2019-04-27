@@ -304,8 +304,8 @@ namespace Epsitec.Common.Tests.Drawing
 				
 				System.Diagnostics.Debug.Assert (mapping != null);
 				
-				//	Vérifions d'abord que le mapping du texte vers les glyphes est
-				//	correct et correspond à quelque chose de valide :
+				//	VÃ©rifions d'abord que le mapping du texte vers les glyphes est
+				//	correct et correspond Ã  quelque chose de valide :
 				
 				int offset = 0;
 				
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Tests.Drawing
 				double x1 = 0;
 				double y1 = 0;
 				
-				//	Dans ce test, la couleur est stockée directement comme LineStyle pour la propriété
+				//	Dans ce test, la couleur est stockÃ©e directement comme LineStyle pour la propriÃ©tÃ©
 				//	"underline".
 				
 				string color = "Yellow";
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Tests.Drawing
 			public void CreateWindow(Window owner)
 			{
 				this.window = new Window ();
-				this.window.Text = "Réglages pour TextTest/CheckPainting";
+				this.window.Text = "RÃ©glages pour TextTest/CheckPainting";
 				this.window.MakeSecondaryWindow ();
 				this.window.MakeFixedSizeWindow ();
 				this.window.MakeToolWindow ();
@@ -459,17 +459,17 @@ namespace Epsitec.Common.Tests.Drawing
 				cb7.Dock = DockStyle.Top;
 				cb7.Margins = new Margins (4, 4, 0, 0);
 				
-				st1.Text = "Réglages pour le rendu du pavé de texte :";
+				st1.Text = "RÃ©glages pour le rendu du pavÃ© de texte :";
 				
 				cb1.Name = "liga";			cb1.Text = "ligatures simples";		cb1.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
-				cb2.Name = "dlig";			cb2.Text = "ligatures avancées";	cb2.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
-				cb3.Name = "kern";			cb3.Text = "crénage";				cb3.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
+				cb2.Name = "dlig";			cb2.Text = "ligatures avancÃ©es";	cb2.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
+				cb3.Name = "kern";			cb3.Text = "crÃ©nage";				cb3.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
 				cb4.Name = "Mgr=System";	cb4.Text = "utilise GDI";			cb4.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
 				
 				rb1.Text = "paragraphes avec diverses justifications";			rb1.ActiveStateChanged += this.HandleRadioButtonActiveStateChanged;
 				rb2.Text = "paragraphes avec tabulateurs";						rb2.ActiveStateChanged += this.HandleRadioButtonActiveStateChanged;
 				
-				cb5.Name = "equal frames";	cb5.Text = "2 colonnes égales";				cb5.ActiveStateChanged += this.HandleCheckButton5ActiveStateChanged;
+				cb5.Name = "equal frames";	cb5.Text = "2 colonnes Ã©gales";				cb5.ActiveStateChanged += this.HandleCheckButton5ActiveStateChanged;
 				cb6.Name = "condition true";cb6.Text = "affiche texte conditionnel";	cb6.ActiveStateChanged += this.HandleCheckButton6ActiveStateChanged;
 				cb7.Name = "cursors";		cb7.Text = "affiche la pos. des curseurs";	cb7.ActiveStateChanged += this.HandleCheckButton7ActiveStateChanged;
 				
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Tests.Drawing
 					properties.Add (new LanguageProperty ("fr-ch", 1.0));
 					properties.Add (new LeadingProperty (10.0, SizeUnits.Points, 15.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
-					words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
+					words = "Bonjour, ceci est un texte d'exemple permettant de vÃ©rifier le bon fonctionnement des divers algorithmes de dÃ©coupe et d'affichage. Le nombre de mots moyen s'Ã©lÃ¨ve Ã  environ 40 mots par paragraphe, ce qui correspond Ã  des paragraphes de taille rÃ©duite. Quelle idÃ©e, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 					
 					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -587,7 +587,7 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
-					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".\n";
+					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwÃ¼rdig\". Voici une cÃ©sure mongloienne au milieu du mot \"Abra\u1806cadabra\".\n";
 					
 					properties.Clear ();
 					fp = new FontProperty ("Verdana", "Regular", this.features);
@@ -615,10 +615,10 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.ConvertToStyledText ("\uFFFC", style_normal, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("< et la suite juste après, pour voir ce que ça donne dans un paragraphe.\n", style_normal, null, out text);
+					this.painter.TextStory.ConvertToStyledText ("< et la suite juste aprÃ¨s, pour voir ce que Ã§a donne dans un paragraphe.\n", style_normal, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					//	Un texte avec quelque passages soulignés...
+					//	Un texte avec quelque passages soulignÃ©s...
 					
 					double just = 1.0;
 					double disp = 0.0;
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Tests.Drawing
 					properties.Add (new UnderlineProperty (double.NaN, SizeUnits.None, double.NaN, SizeUnits.None, "underline", "Black"));
 					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("passages soulignés", no_styles, properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("passages soulignÃ©s", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -664,7 +664,7 @@ namespace Epsitec.Common.Tests.Drawing
 					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
 					properties.Add (new FontColorProperty ("Black"));
 					properties.Add (new FontSizeProperty (0.75, SizeUnits.Percent));
-					properties.Add (new FontOffsetProperty (0.80, SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
+					properties.Add (new FontOffsetProperty (0.80, SizeUnits.Percent));	//	 80% de l'ascender Ã  75% de Verdana 16pt
 					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("(a)", no_styles, properties, out text);
@@ -701,7 +701,7 @@ namespace Epsitec.Common.Tests.Drawing
 					properties.Add (new FontColorProperty ("Black"));
 					properties.Add (new UnderlineProperty (double.NaN, SizeUnits.None, double.NaN, SizeUnits.None, "wave", "Red"));
 					properties.Add (new FontSizeProperty (0.75, SizeUnits.Percent));
-					properties.Add (new FontOffsetProperty (0.80, SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
+					properties.Add (new FontOffsetProperty (0.80, SizeUnits.Percent));	//	 80% de l'ascender Ã  75% de Verdana 16pt
 					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("\u2060(b)", no_styles, properties, out text);
@@ -787,7 +787,7 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.ConvertToStyledText ("Tab1", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche.\tTab2; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur alignÃ© Ã  gauche.\tTab2; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if true
@@ -811,7 +811,7 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.ConvertToStyledText ("Tab3", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré.\tTab4; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centrÃ©.\tTab4; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if true
@@ -836,7 +836,7 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.ConvertToStyledText ("Tab5", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe justifié."
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur alignÃ© Ã  gauche dans un paragraphe justifiÃ©."
 						+ "\tTab6-a; enfin du texte pour la suite..."
 						+ "\tTab6-b; et aussi pour afficher la fin.\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -861,7 +861,7 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.ConvertToStyledText ("Tab7", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe aligné à droite.\tTab8; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur alignÃ© Ã  gauche dans un paragraphe alignÃ© Ã  droite.\tTab8; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if true
@@ -885,7 +885,7 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.ConvertToStyledText ("Tab9", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré dans un paragraphe aligné à droite.\tTab-10 centré...\n\n", no_styles, properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centrÃ© dans un paragraphe alignÃ© Ã  droite.\tTab-10 centrÃ©...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 					properties_1.Clear ();
@@ -916,7 +916,7 @@ namespace Epsitec.Common.Tests.Drawing
 					
 					Epsitec.Common.Text.TextStyle style2 = this.painter.TextStory.StyleList.NewTextStyle (null, "Puces", TextStyleClass.Paragraph, properties_1);
 					
-					words = "Voici une liste à puces pour faire un test.\n";
+					words = "Voici une liste Ã  puces pour faire un test.\n";
 					
 					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -924,16 +924,16 @@ namespace Epsitec.Common.Tests.Drawing
 					Epsitec.Common.Text.TextNavigator navigator = new Epsitec.Common.Text.TextNavigator (this.painter.TextFitter);
 					
 					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.TextEnd, 1);
-					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste après le point final
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste aprÃ¨s le point final
 					navigator.SetParagraphStyles (style1, style2);
-					navigator.Insert ("..\nComplément 1.\nComplément 2.");
+					navigator.Insert ("..\nComplÃ©ment 1.\nComplÃ©ment 2.");
 					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
 					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("Texte normal.\n");
 					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphStart, 1);		//	juste avant "Texte normal.\n"
-					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 2);	//	juste avant le "." de la ligne précédente
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 2);	//	juste avant le "." de la ligne prÃ©cÃ©dente
 					navigator.StartSelection ();
-					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 3);		//	sélectionne ".\nT"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 3);		//	sÃ©lectionne ".\nT"
 					navigator.EndSelection ();
 					navigator.Delete ();
 					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.TextEnd, 1);
@@ -945,16 +945,16 @@ namespace Epsitec.Common.Tests.Drawing
 					navigator.Insert ("ddd\neee\nfff\n");
 					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("Texte final.\n");
-					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphStart, 5);		//	au début de "ccc"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphStart, 5);		//	au dÃ©but de "ccc"
 					navigator.StartSelection ();
-					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 2);	//	après "bb" et avant "b\n"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 2);	//	aprÃ¨s "bb" et avant "b\n"
 //-					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 4);	//	avant "bbb\n"
 					navigator.EndSelection ();
 					navigator.Delete ();
-					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ccc"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphEnd, 0);		//	aprÃ¨s "ccc"
 					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);		//	entre "e)" et "ddd"
 					navigator.StartSelection ();
-					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ddd" (sans la marque de fin de paragraphe)
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphEnd, 0);		//	aprÃ¨s "ddd" (sans la marque de fin de paragraphe)
 					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);		//	y compris le "\n"
 					navigator.EndSelection ();
 					navigator.Delete ();

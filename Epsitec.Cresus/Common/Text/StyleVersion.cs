@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
 	/// La classe StyleVersion abrite un compteur qui permet d'associer des
-	/// numéros de version aux styles, tabulateurs, etc. afin de détecter les
+	/// numÃ©ros de version aux styles, tabulateurs, etc. afin de dÃ©tecter les
 	/// modifications.
 	/// </summary>
 	public sealed class StyleVersion
@@ -34,8 +34,8 @@ namespace Epsitec.Common.Text
 		
 		public long ChangeVersion()
 		{
-			//	Il faut appeler cette méthode chaque fois qu'un style est
-			//	modifié.
+			//	Il faut appeler cette mÃ©thode chaque fois qu'un style est
+			//	modifiÃ©.
 			
 			long value = System.Threading.Interlocked.Increment (ref this.current);
 			this.time = System.DateTime.Now;

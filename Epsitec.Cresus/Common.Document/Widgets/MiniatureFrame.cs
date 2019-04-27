@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe MiniatureFrame est un widget servant de cadre pour une miniature, avec possibilité de drag & drop.
+	/// La classe MiniatureFrame est un widget servant de cadre pour une miniature, avec possibilitÃ© de drag & drop.
 	/// Normalement, MiniatureFrame a deux enfants: un Viewer et un StaticText.
 	/// </summary>
 	public class MiniatureFrame : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsLeftRightPlacement
 		{
-			//	Indique si le drag & drop s'effectue sur les bord gauche/droite ou supérieur/inférieur.
+			//	Indique si le drag & drop s'effectue sur les bord gauche/droite ou supÃ©rieur/infÃ©rieur.
 			get
 			{
 				return this.isLeftRightPlacement;
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsBefore
 		{
-			//	Si le widget a été utilisé comme destination d'un drag & drop, indique la moitié visée.
+			//	Si le widget a Ã©tÃ© utilisÃ© comme destination d'un drag & drop, indique la moitiÃ© visÃ©e.
 			get
 			{
 				return this.isBefore;
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsDuplicate
 		{
-			//	Indique si le widget doit être dupliqué.
+			//	Indique si le widget doit Ãªtre dupliquÃ©.
 			get
 			{
 				return this.isDuplicate;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private ArrowHilite SourceHilite
 		{
-			//	Indique comment le widget doit être dessiné comme source du drag & drop.
+			//	Indique comment le widget doit Ãªtre dessinÃ© comme source du drag & drop.
 			get
 			{
 				return this.sourceHilite;
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private PartialHilite TargetHilite
 		{
-			//	Indique comment le widget doit être dessiné comme destination du drag & drop.
+			//	Indique comment le widget doit Ãªtre dessinÃ© comme destination du drag & drop.
 			get
 			{
 				return this.targetHilite;
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Document.Widgets
 		private MiniatureFrame FindDropTarget(Point mouse)
 		{
 			//	Cherche un widget MiniatureFrame destinataire du drag & drop.
-			//	Si on est dans le Viewer ou le StaticText enfant du MiniatureFrame, considère que l'on
+			//	Si on est dans le Viewer ou le StaticText enfant du MiniatureFrame, considÃ¨re que l'on
 			//	est dans le MiniatureFrame parent.
 			Widget widget = this.Window.Root.FindChild (this.MapClientToRoot (mouse), WidgetChildFindMode.SkipHidden | WidgetChildFindMode.Deep | WidgetChildFindMode.SkipDisabled);
 			MiniatureFrame finded = null;
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void DragHilite(PartialHilite hilite)
 		{
-			//	Met en évidence le widget MiniatureFrame destinataire du drag & drop.
+			//	Met en Ã©vidence le widget MiniatureFrame destinataire du drag & drop.
 			if (this.dragInfo.Target == this)
 			{
 				return;
@@ -239,12 +239,12 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			MiniatureFrame dragHost = this.DragHost;
 
-			//	Est-ce que l'événement clavier est reçu dans un échantillon en
+			//	Est-ce que l'Ã©vÃ©nement clavier est reÃ§u dans un Ã©chantillon en
 			//	cours de drag dans un DragWindow ? C'est possible, car le focus
 			//	clavier change quand on montre le DragWindow.
 			if (dragHost != null && message.IsKeyType)
 			{
-				//	Signalons l'événement clavier à l'auteur du drag :
+				//	Signalons l'Ã©vÃ©nement clavier Ã  l'auteur du drag :
 				dragHost.ProcessMessage(message, pos);
 			}
 			else
@@ -294,14 +294,14 @@ namespace Epsitec.Common.Document.Widgets
 			if (this.sourceHilite != ArrowHilite.None)  // source du drag & drop ?
 			{
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(Color.FromBrightness(0.9));  // dessine le fond gris très clair
+				graphics.RenderSolid(Color.FromBrightness(0.9));  // dessine le fond gris trÃ¨s clair
 
 				double dim = System.Math.Min(rect.Width, rect.Height);
 				Rectangle square = new Rectangle(rect.Center.X-dim/2, rect.Center.Y-dim/2, dim, dim);
 				Point goal;
 
-				graphics.LineWidth = dim*0.15;  // trait très épais...
-				graphics.LineCap = CapStyle.Round;  // ...à bords ronds
+				graphics.LineWidth = dim*0.15;  // trait trÃ¨s Ã©pais...
+				graphics.LineCap = CapStyle.Round;  // ...Ã  bords ronds
 
 				if (this.isLeftRightPlacement)
 				{
@@ -309,14 +309,14 @@ namespace Epsitec.Common.Document.Widgets
 					Point p2 = new Point(square.Left+square.Width*0.8, square.Center.Y);
 					double len = square.Width*0.2;
 
-					if (this.sourceHilite == ArrowHilite.Before)  // flèche <- ?
+					if (this.sourceHilite == ArrowHilite.Before)  // flÃ¨che <- ?
 					{
 						graphics.AddLine(p1, p2);
 						graphics.AddLine(p1, new Point(p1.X+len, p1.Y-len));
 						graphics.AddLine(p1, new Point(p1.X+len, p1.Y+len));
 						goal = p1;
 					}
-					else  // flèche -> ?
+					else  // flÃ¨che -> ?
 					{
 						graphics.AddLine(p2, p1);
 						graphics.AddLine(p2, new Point(p2.X-len, p2.Y-len));
@@ -330,14 +330,14 @@ namespace Epsitec.Common.Document.Widgets
 					Point p2 = new Point(square.Center.X, square.Bottom+square.Height*0.8);
 					double len = square.Height*0.2;
 
-					if (this.sourceHilite == ArrowHilite.Before)  // flèche v ?
+					if (this.sourceHilite == ArrowHilite.Before)  // flÃ¨che v ?
 					{
 						graphics.AddLine(p1, p2);
 						graphics.AddLine(p1, new Point(p1.X-len, p1.Y+len));
 						graphics.AddLine(p1, new Point(p1.X+len, p1.Y+len));
 						goal = p1;
 					}
-					else  // flèche ^ ?
+					else  // flÃ¨che ^ ?
 					{
 						graphics.AddLine(p2, p1);
 						graphics.AddLine(p2, new Point(p2.X-len, p2.Y-len));
@@ -346,17 +346,17 @@ namespace Epsitec.Common.Document.Widgets
 					}
 				}
 
-				graphics.RenderSolid(Color.FromBrightness(1.0));  // dessine la grosse flèche blanche
+				graphics.RenderSolid(Color.FromBrightness(1.0));  // dessine la grosse flÃ¨che blanche
 				graphics.LineWidth = 1;
 				graphics.LineCap = CapStyle.Square;
 
 				if (this.isDuplicate)
 				{
 					double d = square.Width*0.14;
-					graphics.LineWidth = dim*0.10;  // trait épais
+					graphics.LineWidth = dim*0.10;  // trait Ã©pais
 					graphics.AddLine(new Point(goal.X-d, goal.Y), new Point(goal.X+d, goal.Y));
 					graphics.AddLine(new Point(goal.X, goal.Y-d), new Point(goal.X, goal.Y+d));
-					graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // dessine le gros "+" rouge à l'extrémité de la flèche
+					graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // dessine le gros "+" rouge Ã  l'extrÃ©mitÃ© de la flÃ¨che
 					graphics.LineWidth = 1;
 				}
 			}
@@ -395,18 +395,18 @@ namespace Epsitec.Common.Document.Widgets
 					path.MoveTo(r.Center.X, r.Bottom);
 					path.LineTo(r.Center.X, r.Top);
 				}
-				Drawer.DrawPathDash(graphics, 1.0, path, 2.0, 4.0, 5.0, Color.FromRgb(1, 0, 0));  // dessine une bande latérale traitillée rouge
+				Drawer.DrawPathDash(graphics, 1.0, path, 2.0, 4.0, 5.0, Color.FromRgb(1, 0, 0));  // dessine une bande latÃ©rale traitillÃ©e rouge
 				path.Dispose();
 			}
 
-			if (this.IsEnabled && this.DragHost != null)  // contenu de la fenêtre flottante ?
+			if (this.IsEnabled && this.DragHost != null)  // contenu de la fenÃªtre flottante ?
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(0.8));  // fond gris clair
 
 				rect.Deflate(0.5, 0.5);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(Color.FromBrightness(0.3));  // cadre gris foncé
+				graphics.RenderSolid(Color.FromBrightness(0.3));  // cadre gris foncÃ©
 			}
 		}
 
@@ -430,8 +430,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.isDuplicate = false;
 
-			//	Crée un échantillon utilisable pour l'opération de drag & drop (il
-			//	va représenter visuellement l'échantillon de couleur). On le place
+			//	CrÃ©e un Ã©chantillon utilisable pour l'opÃ©ration de drag & drop (il
+			//	va reprÃ©senter visuellement l'Ã©chantillon de couleur). On le place
 			//	dans un DragWindow et hop.
 			MiniatureFrame box = new MiniatureFrame();
 			box.Padding = this.Padding;

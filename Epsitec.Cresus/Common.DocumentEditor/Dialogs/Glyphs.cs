@@ -12,8 +12,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	using Document       = Common.Document.Document;
 
 	/// <summary>
-	/// Dialogue permettant de choisir un caractère quelconque à insérer dans
-	/// un texte en édition.
+	/// Dialogue permettant de choisir un caractÃ¨re quelconque Ã  insÃ©rer dans
+	/// un texte en Ã©dition.
 	/// </summary>
 	public class Glyphs : Abstract
 	{
@@ -31,7 +31,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -49,7 +49,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				resize.Margins = new Margins(0, 0, 0, 0);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				//	Crée les onglets.
+				//	CrÃ©e les onglets.
 				this.book = new TabBook(this.window.Root);
 				this.book.Arrows = TabBookArrows.Stretch;
 				this.book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
@@ -272,7 +272,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("Glyphs");
 		}
 
@@ -286,14 +286,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void SetAlternatesDirty()
 		{
-			//	Indique que l'onglet "caractères alternatifs" n'est plus à jour.
+			//	Indique que l'onglet "caractÃ¨res alternatifs" n'est plus Ã  jour.
 			this.alternatesDirty = true;
 			this.UpdateAlternates();
 		}
 
 		protected void UpdateAlternates()
 		{
-			//	Met à jour l'onglet "caractères alternatifs".
+			//	Met Ã  jour l'onglet "caractÃ¨res alternatifs".
 			if ( this.window == null )  return;
 			if ( this.book.ActivePage.Name != "Alternates" )  return;
 			if ( !this.alternatesDirty )  return;
@@ -348,11 +348,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void UpdateList()
 		{
-			//	Met à jour la liste des glyphs selon la famille choisie.
+			//	Met Ã  jour la liste des glyphs selon la famille choisie.
 			int family = this.family.SelectedItemIndex;
 
 			this.ignoreChanged = true;
-			this.list.Items.Clear();  // vide le contenu précédent
+			this.list.Items.Clear();  // vide le contenu prÃ©cÃ©dent
 
 			if ( family == 7 )  // textes de substitutions ?
 			{
@@ -383,7 +383,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected int[] UnicodeList(int family)
 		{
-			//	Donne la liste des caractères Unicode d'une famille.
+			//	Donne la liste des caractÃ¨res Unicode d'une famille.
 			if ( family == 0 )  return UnicodeTypo;
 			if ( family == 1 )  return UnicodeSpace;
 			if ( family == 2 )  return UnicodeBusiness;
@@ -404,7 +404,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			0x2039, 0x203A,  // guillemets
 			0x201C, 0x201D, 0x201E,  // guillemets
 			0x2018, 0x2019, 0x201A, 0x201B,  // guillemets
-			0x00C7,  // ç maj
+			0x00C7,  // Ã§ maj
 			0x00DF,  // double s allemand
 			0x0153,  // oe
 			0x0152,  // OE
@@ -417,7 +417,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			0x00A0, 0x202F,  // NoBreakSpace, NarrowNoBreakSpace
 			0x2001, 0x2000,  // cadratin
 			0x2004, 0x2005, 0x2006,  // 1/3, 1/4, 1/6 cadratin
-			0x2007,  // espace numérique
+			0x2007,  // espace numÃ©rique
 			0x2008,  // espace ponctuation
 			0x2009,  // espace fine
 			0x200A,  // espace untra-fine
@@ -430,11 +430,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			0x2212,  // -
 			0x00D7,  // x
 			0x00F7,  // /
-			0x2248,  // environ égal
-			0x2260,  // différent
+			0x2248,  // environ Ã©gal
+			0x2260,  // diffÃ©rent
 			0x2261,  // identique
 			0x2264, 0x2265,  // <=, >=
-			0x00B0,  // degré
+			0x00B0,  // degrÃ©
 			0x221E,  // infini
 			0x00B5,  // micro
 			0x03C0,  // pi
@@ -442,9 +442,9 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			0x221A,  // racine
 			0x2211,  // somme
 			0x220F,  // produit
-			0x2206,  // incrément
-			0x2202,  // dérivée partielle
-			0x222B,  // intégrale
+			0x2206,  // incrÃ©ment
+			0x2202,  // dÃ©rivÃ©e partielle
+			0x222B,  // intÃ©grale
 			0x2219,  // .
 			0x2032, 0x2033,  // prime
 			0x00BD,  // 1/2
@@ -492,7 +492,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			0x2122,  // TM
 			0x20AC,  // Euro
 			0x00A2,  // centime
-			0x20A3,  // Franc français
+			0x20A3,  // Franc franÃ§ais
 			0x00A3,  // Livre
 			0x00A5,  // Yen
 			0x20A4,  // Lire
@@ -503,23 +503,23 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		{
 			0x00A7,  // paragraphe
 			0x2022,  // puce
-			0x25A0, 0x25A1,  // carrés
-			0x25AA, 0x25AB,  // petits carrés
+			0x25A0, 0x25A1,  // carrÃ©s
+			0x25AA, 0x25AB,  // petits carrÃ©s
 			0x25CF, 0x25CB,  // cercles
 			0x25CA,  // losange
-			0x2190, 0x2192, 0x2191, 0x2193, 0x2194, 0x2195,  // flèches
+			0x2190, 0x2192, 0x2191, 0x2193, 0x2194, 0x2195,  // flÃ¨ches
 			0x25C4, 0x25BA, 0x25B2, 0x25BC,  // triangles
-			0x00AC,  // négation
+			0x00AC,  // nÃ©gation
 			0x00B6,  // pied de mouche
-			0x2020, 0x2021,  // obèle
-			0x00BA, 0x00AA,  // indicateurs ordinal masculin/féminin
-			0x2642, 0x2640,  // mâle/femelle
+			0x2020, 0x2021,  // obÃ¨le
+			0x00BA, 0x00AA,  // indicateurs ordinal masculin/fÃ©minin
+			0x2642, 0x2640,  // mÃ¢le/femelle
 		};
 
 
 		protected void EditInsert()
 		{
-			//	Insère le glyphe selon l'onglet actif dans le texte en édition.
+			//	InsÃ¨re le glyphe selon l'onglet actif dans le texte en Ã©dition.
 			if ( !this.editor.HasCurrentDocument )  return;
 
 			if ( this.book.ActivePage.Name == "List" )
@@ -594,7 +594,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void UpdateFontStyle()
 		{
-			//	Met à jour le TextFieldCombo des styles de police.
+			//	Met Ã  jour le TextFieldCombo des styles de police.
 			this.fieldFontStyle.Items.Clear();  // vide la liste
 
 			Common.OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(this.fontFace);
@@ -656,13 +656,13 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleBookActivePageChanged(object sender, CancelEventArgs e)
 		{
-			//	L'onglet actif a changé.
+			//	L'onglet actif a changÃ©.
 			this.UpdateAlternates();
 		}
 
 		private void HandleFontFaceComboOpening(object sender, CancelEventArgs e)
 		{
-			//	Le combo pour les polices va être ouvert.
+			//	Le combo pour les polices va Ãªtre ouvert.
 			bool quickOnly = false;
 			System.Collections.ArrayList quickFonts = new System.Collections.ArrayList();
 			double height = 30;
@@ -685,14 +685,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleFontFaceChanged(object sender)
 		{
-			//	Police changée.
+			//	Police changÃ©e.
 			if ( this.ignoreChanged )  return;
 			this.SetFontFace(TextLayout.ConvertToSimpleText(this.fieldFontFace.Text));
 		}
 
 		private void HandleCurrentFontClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "<-" cliqué.
+			//	Bouton "<-" cliquÃ©.
 			if ( !this.editor.HasCurrentDocument )  return;
 
 			string fontFace, fontStyle;
@@ -704,20 +704,20 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleFontStyleChanged(object sender)
 		{
-			//	Style de la police changé.
+			//	Style de la police changÃ©.
 			if ( this.ignoreChanged )  return;
 			this.SetFontStyle(this.fieldFontStyle.Text);
 		}
 
 		private void HandleFamilyChanged(object sender)
 		{
-			//	Famille changée.
+			//	Famille changÃ©e.
 			this.UpdateList();
 		}
 
 		private void HandleGlyphSelected(object sender)
 		{
-			//	Le glyphe dans la liste est sélectionné.
+			//	Le glyphe dans la liste est sÃ©lectionnÃ©.
 			if ( this.ignoreChanged )  return;
 
 			int family = this.family.SelectedItemIndex;
@@ -726,7 +726,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleArraySelected(object sender)
 		{
-			//	Le glyphe dans le tableau est sélectionné.
+			//	Le glyphe dans le tableau est sÃ©lectionnÃ©.
 			string text = "";
 			if (this.Array.SelectedItemIndex != -1)
 			{
@@ -750,7 +750,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleDoubleClicked(object sender, MessageEventArgs e)
 		{
-			//	Le glyphe est double-cliqué.
+			//	Le glyphe est double-cliquÃ©.
 			this.EditInsert();
 		}
 

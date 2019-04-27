@@ -1,13 +1,13 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe MarginsProperty définit les marges gauche/droite d'un bloc de
+	/// La classe MarginsProperty dÃ©finit les marges gauche/droite d'un bloc de
 	/// texte, ainsi que sa justification (0 = aucune, 1 = 100%), son centrage
-	/// (0 = aligné à gauche, 0.5 = centré, 1 = aligné à droite) et les réglages
-	/// liés à la césure.
+	/// (0 = alignÃ© Ã  gauche, 0.5 = centrÃ©, 1 = alignÃ© Ã  droite) et les rÃ©glages
+	/// liÃ©s Ã  la cÃ©sure.
 	/// </summary>
 	public class MarginsProperty : Property
 	{
@@ -339,9 +339,9 @@ namespace Epsitec.Common.Text.Properties
 		
 		private double							justificationBody;			//	0.0 = pas de justification, 1.0 = justification pleine
 		private double							justificationLastLine;
-		private double							disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
+		private double							disposition;				//	0.0 = alignÃ© Ã  gauche, 0.5 = centrÃ©, 1.0 = alignÃ© Ã  droite
 		
-		private int								level;						//	-1 => pas de niveau spécifié
-		private string							levelAttribute;			//	null => pas d'indentations particulières
+		private int								level;						//	-1 => pas de niveau spÃ©cifiÃ©
+		private string							levelAttribute;			//	null => pas d'indentations particuliÃ¨res
 	}
 }

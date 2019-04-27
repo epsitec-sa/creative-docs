@@ -60,42 +60,42 @@ namespace Epsitec.Common.Tests.Widgets
 		{
 			Widget widget = sender as Widget;
 			
-			System.Diagnostics.Debug.WriteLine ("CliquÈ sur " + widget.Name + " avec le bouton " + e.Message.Button.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Cliqu√© sur " + widget.Name + " avec le bouton " + e.Message.Button.ToString ());
 		}
 
 		private void HandleWidgetPressed(object sender, MessageEventArgs e)
 		{
 			Widget widget = sender as Widget;
 			
-			System.Diagnostics.Debug.WriteLine ("Souris pressÈe dans " + widget.Name + ", bouton " + e.Message.Button.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Souris press√©e dans " + widget.Name + ", bouton " + e.Message.Button.ToString ());
 		}
 		
 		private void HandleWidgetReleased(object sender, MessageEventArgs e)
 		{
 			Widget widget = sender as Widget;
 			
-			System.Diagnostics.Debug.WriteLine ("Souris rel‚chÈe dans " + widget.Name + ", bouton " + e.Message.Button.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Souris rel√¢ch√©e dans " + widget.Name + ", bouton " + e.Message.Button.ToString ());
 		}
 
 		private void HandleWidgetEngaged(object sender)
 		{
 			Widget widget = sender as Widget;
 			
-			System.Diagnostics.Debug.WriteLine ("PressÈ Widget " + widget.Name);
+			System.Diagnostics.Debug.WriteLine ("Press√© Widget " + widget.Name);
 		}
 
 		private void HandleWidgetDisengaged(object sender)
 		{
 			Widget widget = sender as Widget;
 			
-			System.Diagnostics.Debug.WriteLine ("Rel‚chÈ Widget  " + widget.Name);
+			System.Diagnostics.Debug.WriteLine ("Rel√¢ch√© Widget  " + widget.Name);
 		}
 
 		private void HandleWidgetStillEngaged(object sender)
 		{
 			Widget widget = sender as Widget;
 			
-			System.Diagnostics.Debug.WriteLine ("Toujours pressÈ Widget " + widget.Name);
+			System.Diagnostics.Debug.WriteLine ("Toujours press√© Widget " + widget.Name);
 		}
 	}
 	

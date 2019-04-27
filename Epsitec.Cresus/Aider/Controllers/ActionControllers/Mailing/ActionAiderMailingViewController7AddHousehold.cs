@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter un ménage");
+			return Resources.FormattedText ("Ajouter un mÃ©nage");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -35,9 +35,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> form)
 		{
 			form
-				.Title ("Ajouter un ménage")
+				.Title ("Ajouter un mÃ©nage")
 				.Field<AiderHouseholdEntity> ()
-					.Title ("Ménage")
+					.Title ("MÃ©nage")
 				.End ()
 			.End ();
 		}

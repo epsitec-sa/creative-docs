@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// La classe ZoomHistory permet de mémoriser l'historique des zooms.
+	/// La classe ZoomHistory permet de mÃ©moriser l'historique des zooms.
 	/// </summary>
 	public class ZoomHistory
 	{
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document
 
 		public void Add(ZoomElement item)
 		{
-			//	Ajoute un élément à la fin de la liste.
+			//	Ajoute un Ã©lÃ©ment Ã  la fin de la liste.
 			int total = this.list.Count;
 			if ( total > 0 )
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document
 
 		public ZoomElement Remove()
 		{
-			//	Enlève et retourne le dernier élément de la liste.
+			//	EnlÃ¨ve et retourne le dernier Ã©lÃ©ment de la liste.
 			//	Retourne null s'il n'y en a plus.
 			int total = this.list.Count;
 			if (total == 0)
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document
 
 		static public bool IsNearlyEqual(ZoomElement a, ZoomElement b)
 		{
-			//	Retourne true si deux éléments sont presque égaux.
+			//	Retourne true si deux Ã©lÃ©ments sont presque Ã©gaux.
 			if (System.Math.Abs(a.Zoom-b.Zoom) > 0.001)
 			{
 				return false;

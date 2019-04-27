@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Tests.Dialogs
 			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
 			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
 			prix1.Ht = 10.0M;
-			prix1.Monnaie.Désignation = "CHF";
+			prix1.Monnaie.DÃ©signation = "CHF";
 			prix1.Monnaie.TauxChangeVersChf = 1.00M;
 			
 			DialogData data = new DialogData (prix1, DialogDataMode.Isolated);
@@ -40,15 +40,15 @@ namespace Epsitec.Common.Tests.Dialogs
 			PrixEntity prix2 = data.Data as PrixEntity;
 
 			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix2.Monnaie.DÃ©signation);
 
 			prix2.Ht = 15.0M;
-			prix2.Monnaie.Désignation = "EUR";
+			prix2.Monnaie.DÃ©signation = "EUR";
 			
 			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix1.Monnaie.DÃ©signation);
 			Assert.AreEqual (15.0M, prix2.Ht);
-			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("EUR", prix2.Monnaie.DÃ©signation);
 
 			List<string> results = new List<string> ();
 
@@ -70,16 +70,16 @@ namespace Epsitec.Common.Tests.Dialogs
 			Assert.AreEqual (3, Collection.Count (data.Changes));
 
 			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix1.Monnaie.DÃ©signation);
 			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
 			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix2.Monnaie.DÃ©signation);
 			Assert.AreEqual (3, Collection.Count (data.Changes));
 //-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);	//	read access => snapshot
 //-			Assert.AreEqual (4, Collection.Count (data.Changes));
 
 			MonnaieEntity monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
-			monnaie.Désignation = "USD";
+			monnaie.DÃ©signation = "USD";
 			monnaie.TauxChangeVersChf = 1.08M;
 
 			prix2.Monnaie.TauxChangeVersChf = 2.00M;
@@ -106,13 +106,13 @@ namespace Epsitec.Common.Tests.Dialogs
 			data.RevertChanges ();
 
 			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix1.Monnaie.DÃ©signation);
 			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
 			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix2.Monnaie.DÃ©signation);
 			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);
 
-			Assert.AreEqual ("USD", monnaie.Désignation);
+			Assert.AreEqual ("USD", monnaie.DÃ©signation);
 			Assert.AreEqual (1.06M, monnaie.TauxChangeVersChf);
 			
 			Assert.AreEqual (4, Collection.Count (data.Changes));
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Tests.Dialogs
 			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
 			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
 			prix1.Ht = 10.0M;
-			prix1.Monnaie.Désignation = "CHF";
+			prix1.Monnaie.DÃ©signation = "CHF";
 			prix1.Monnaie.TauxChangeVersChf = 1.00M;
 
 			DialogData data = new DialogData (prix1, DialogDataMode.RealTime);
@@ -143,16 +143,16 @@ namespace Epsitec.Common.Tests.Dialogs
 			Assert.AreNotEqual (monnaiePrix1, monnaiePrix2);
 
 			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix2.Monnaie.DÃ©signation);
 
 			prix2.Ht = 15.0M;
-			prix2.Monnaie.Désignation = "EUR";
+			prix2.Monnaie.DÃ©signation = "EUR";
 
 			Assert.AreEqual (15.0M, prix1.Ht);
-			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("EUR", prix1.Monnaie.DÃ©signation);
 			Assert.AreEqual (monnaiePrix1, prix1.Monnaie);
 			Assert.AreEqual (15.0M, prix2.Ht);
-			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("EUR", prix2.Monnaie.DÃ©signation);
 			Assert.AreEqual (monnaiePrix2, prix2.Monnaie);
 
 			List<string> results = new List<string> ();
@@ -175,16 +175,16 @@ namespace Epsitec.Common.Tests.Dialogs
 			Assert.AreEqual (3, Collection.Count (data.Changes));
 
 			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix1.Monnaie.DÃ©signation);
 			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
 			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix2.Monnaie.DÃ©signation);
 			Assert.AreEqual (3, Collection.Count (data.Changes));
 //-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);	//	read access => snapshot
 //-			Assert.AreEqual (4, Collection.Count (data.Changes));
 
 			MonnaieEntity monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
-			monnaie.Désignation = "USD";
+			monnaie.DÃ©signation = "USD";
 			monnaie.TauxChangeVersChf = 1.08M;
 
 			prix2.Monnaie.TauxChangeVersChf = 2.00M;
@@ -215,13 +215,13 @@ namespace Epsitec.Common.Tests.Dialogs
 			Assert.AreEqual (monnaiePrix2, prix2.Monnaie);
 
 			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix1.Monnaie.DÃ©signation);
 			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
 			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix2.Monnaie.DÃ©signation);
 			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);
 
-			Assert.AreEqual ("USD", monnaie.Désignation);
+			Assert.AreEqual ("USD", monnaie.DÃ©signation);
 			Assert.AreEqual (1.06M, monnaie.TauxChangeVersChf);
 
 			Assert.AreEqual (4, Collection.Count (data.Changes));
@@ -246,22 +246,22 @@ namespace Epsitec.Common.Tests.Dialogs
 			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
 			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
 			prix1.Ht = 10.0M;
-			prix1.Monnaie.Désignation = "CHF";
+			prix1.Monnaie.DÃ©signation = "CHF";
 
 			DialogData data = new DialogData (prix1, DialogDataMode.Transparent);
 
 			PrixEntity prix2 = data.Data as PrixEntity;
 
 			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("CHF", prix2.Monnaie.DÃ©signation);
 
 			MonnaieEntity monnaie = prix2.Monnaie;
 
 			prix2.Ht = 15.0M;
-			prix2.Monnaie.Désignation = "EUR";
+			prix2.Monnaie.DÃ©signation = "EUR";
 
 			Assert.AreEqual (15.0M, prix1.Ht);
-			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("EUR", prix1.Monnaie.DÃ©signation);
 
 			Assert.AreEqual (prix1, prix2);
 			Assert.AreEqual (0, Collection.Count (data.Changes));
@@ -275,8 +275,8 @@ namespace Epsitec.Common.Tests.Dialogs
 
 			Assert.IsNotNull (prix1.Monnaie);
 			Assert.IsNotNull (prix2.Monnaie);
-			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
-			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
+			Assert.AreEqual ("EUR", prix1.Monnaie.DÃ©signation);
+			Assert.AreEqual ("EUR", prix2.Monnaie.DÃ©signation);
 		}
 
 		[Test]
@@ -285,22 +285,22 @@ namespace Epsitec.Common.Tests.Dialogs
 			EntityContext entityContext = new EntityContext ();
 
 			Epsitec.Cresus.AddressBook.Entities.AdresseEntity originalAdr = DialogTest.CreateDefaultAdresseEntity (entityContext);
-			Epsitec.Cresus.AddressBook.Entities.LocalitéEntity loc = entityContext.CreateEmptyEntity<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
+			Epsitec.Cresus.AddressBook.Entities.LocalitÃ©Entity loc = entityContext.CreateEmptyEntity<Epsitec.Cresus.AddressBook.Entities.LocalitÃ©Entity> ();
 			
 			DialogData data = new DialogData (originalAdr, DialogDataMode.Isolated);
 
 			Epsitec.Cresus.AddressBook.Entities.AdresseEntity dialogAdr = data.Data as Epsitec.Cresus.AddressBook.Entities.AdresseEntity;
 
 			Assert.IsNotNull (originalAdr);
-			Assert.IsNotNull (originalAdr.Localité);
-			Assert.IsNotNull (originalAdr.Localité.Pays);
+			Assert.IsNotNull (originalAdr.LocalitÃ©);
+			Assert.IsNotNull (originalAdr.LocalitÃ©.Pays);
 			Assert.AreEqual (0, Collection.Count (data.Changes));
 
 			Assert.IsNotNull (dialogAdr);
 			Assert.AreEqual (0, Collection.Count (data.Changes));
-			Assert.IsNotNull (dialogAdr.Localité);
+			Assert.IsNotNull (dialogAdr.LocalitÃ©);
 			Assert.AreEqual (1, Collection.Count (data.Changes));
-			Assert.IsNotNull (dialogAdr.Localité.Pays);
+			Assert.IsNotNull (dialogAdr.LocalitÃ©.Pays);
 			Assert.AreEqual (2, Collection.Count (data.Changes));
 
 			int count = 0;
@@ -313,11 +313,11 @@ namespace Epsitec.Common.Tests.Dialogs
 
 			Assert.AreEqual (0, count);
 
-			loc.Pays = originalAdr.Localité.Pays;
+			loc.Pays = originalAdr.LocalitÃ©.Pays;
 			loc.Nom = "Lausanne";
-			loc.Numéro = "1007";
+			loc.NumÃ©ro = "1007";
 
-			dialogAdr.Localité.Nom = "Yverdon";
+			dialogAdr.LocalitÃ©.Nom = "Yverdon";
 			
 			count = 0;
 
@@ -328,8 +328,8 @@ namespace Epsitec.Common.Tests.Dialogs
 				});
 
 			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon-les-Bains", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon-les-Bains", originalAdr.LocalitÃ©.Nom);
+			Assert.AreEqual ("Yverdon", dialogAdr.LocalitÃ©.Nom);
 
 			data.ApplyChanges ();
 			
@@ -342,8 +342,8 @@ namespace Epsitec.Common.Tests.Dialogs
 			});
 
 			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon", originalAdr.LocalitÃ©.Nom);
+			Assert.AreEqual ("Yverdon", dialogAdr.LocalitÃ©.Nom);
 
 			data.SetReferenceReplacement (EntityFieldPath.CreateRelativePath ("[8V15]"), loc);
 			
@@ -356,18 +356,18 @@ namespace Epsitec.Common.Tests.Dialogs
 			});
 
 			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon", originalAdr.LocalitÃ©.Nom);
+			Assert.AreEqual ("Yverdon", dialogAdr.LocalitÃ©.Nom);
 
 			data.ApplyChanges ();
 
-			Assert.AreEqual ("Lausanne", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);	//	!
+			Assert.AreEqual ("Lausanne", originalAdr.LocalitÃ©.Nom);
+			Assert.AreEqual ("Yverdon", dialogAdr.LocalitÃ©.Nom);	//	!
 
 			data.RevertChanges ();
 			
-			Assert.AreEqual ("Lausanne", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon-les-Bains", dialogAdr.Localité.Nom);	//	!
+			Assert.AreEqual ("Lausanne", originalAdr.LocalitÃ©.Nom);
+			Assert.AreEqual ("Yverdon-les-Bains", dialogAdr.LocalitÃ©.Nom);	//	!
 			Assert.AreEqual ("Lausanne", loc.Nom);
 		}
 	}

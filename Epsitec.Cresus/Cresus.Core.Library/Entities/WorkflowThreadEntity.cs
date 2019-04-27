@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -32,12 +32,12 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText ("Créé le ", this.History.First ().Date);
+			return TextFormatter.FormatText ("CrÃ©Ã© le ", this.History.First ().Date);
 		}
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("Créé le ", this.History.First ().Date);
+			return TextFormatter.FormatText ("CrÃ©Ã© le ", this.History.First ().Date);
 		}
 
 		/// <summary>

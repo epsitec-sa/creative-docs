@@ -1,10 +1,10 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal.Sequences
 {
 	/// <summary>
-	/// La classe Roman produit des numéros i, ii, iii, iv, etc.
+	/// La classe Roman produit des numÃ©ros i, ii, iii, iv, etc.
 	/// </summary>
 	public class Roman : Generator.Sequence
 	{

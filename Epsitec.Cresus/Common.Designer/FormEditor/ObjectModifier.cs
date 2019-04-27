@@ -9,7 +9,7 @@ using Epsitec.Common.FormEngine;
 namespace Epsitec.Common.Designer.FormEditor
 {
 	/// <summary>
-	/// La classe ObjectModifier permet de gérer les 'widgets' de Designer.
+	/// La classe ObjectModifier permet de gÃ©rer les 'widgets' de Designer.
 	/// </summary>
 	public class ObjectModifier
 	{
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsField(Widget obj)
 		{
-			//	Indique si l'objet correspond à un champ.
+			//	Indique si l'objet correspond Ã  un champ.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsCommand(Widget obj)
 		{
-			//	Indique si l'objet correspond à une commande.
+			//	Indique si l'objet correspond Ã  une commande.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsBox(Widget obj)
 		{
-			//	Indique si l'objet correspond à une boîte.
+			//	Indique si l'objet correspond Ã  une boÃ®te.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsGlue(Widget obj)
 		{
-			//	Indique si l'objet correspond à de la colle.
+			//	Indique si l'objet correspond Ã  de la colle.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsTitle(Widget obj)
 		{
-			//	Indique si l'objet correspond à un titre.
+			//	Indique si l'objet correspond Ã  un titre.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsLine(Widget obj)
 		{
-			//	Indique si l'objet correspond à une ligne.
+			//	Indique si l'objet correspond Ã  une ligne.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription.SeparatorType GetSeparatorBottom(Widget obj)
 		{
-			//	Retourne le type du séparateur d'un champ.
+			//	Retourne le type du sÃ©parateur d'un champ.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetSeparatorBottom(Widget obj, FieldDescription.SeparatorType sep)
 		{
-			//	Choix du type du séparateur d'un champ.
+			//	Choix du type du sÃ©parateur d'un champ.
 			if (this.IsReadonly)
 			{
 				return;
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription.BoxLayoutType GetBoxLayout(Widget obj)
 		{
-			//	Retourne le type du contenu d'une boîte.
+			//	Retourne le type du contenu d'une boÃ®te.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetBoxLayout(Widget obj, FieldDescription.BoxLayoutType type)
 		{
-			//	Choix du type du contenu d'une boîte.
+			//	Choix du type du contenu d'une boÃ®te.
 			if (this.IsReadonly)
 			{
 				return;
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription.BoxPaddingType GetBoxPadding(Widget obj)
 		{
-			//	Retourne le type des marges intérieures d'une boîte.
+			//	Retourne le type des marges intÃ©rieures d'une boÃ®te.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetBoxPadding(Widget obj, FieldDescription.BoxPaddingType type)
 		{
-			//	Choix du type des marges intérieures d'une boîte.
+			//	Choix du type des marges intÃ©rieures d'une boÃ®te.
 			if (this.IsReadonly)
 			{
 				return;
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription.FontColorType GetLabelFontColor(Widget obj)
 		{
-			//	Retourne la couleur de la police d'une étiquette.
+			//	Retourne la couleur de la police d'une Ã©tiquette.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetLabelFontColor(Widget obj, FieldDescription.FontColorType color)
 		{
-			//	Choix de la couleur de la police d'une étiquette.
+			//	Choix de la couleur de la police d'une Ã©tiquette.
 			if (this.IsReadonly)
 			{
 				return;
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription.FontFaceType GetLabelFontFace(Widget obj)
 		{
-			//	Retourne le nom de la police d'une étiquette.
+			//	Retourne le nom de la police d'une Ã©tiquette.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetLabelFontFace(Widget obj, FieldDescription.FontFaceType face)
 		{
-			//	Choix du nom de la police d'une étiquette.
+			//	Choix du nom de la police d'une Ã©tiquette.
 			if (this.IsReadonly)
 			{
 				return;
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription.FontStyleType GetLabelFontStyle(Widget obj)
 		{
-			//	Retourne le style de la police d'une étiquette.
+			//	Retourne le style de la police d'une Ã©tiquette.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetLabelFontStyle(Widget obj, FieldDescription.FontStyleType style)
 		{
-			//	Choix du style de la police d'une étiquette.
+			//	Choix du style de la police d'une Ã©tiquette.
 			if (this.IsReadonly)
 			{
 				return;
@@ -494,7 +494,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription.FontSizeType GetLabelFontSize(Widget obj)
 		{
-			//	Retourne la taille de la police d'une étiquette.
+			//	Retourne la taille de la police d'une Ã©tiquette.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetLabelFontSize(Widget obj, FieldDescription.FontSizeType size)
 		{
-			//	Choix de la taille de la police d'une étiquette.
+			//	Choix de la taille de la police d'une Ã©tiquette.
 			if (this.IsReadonly)
 			{
 				return;
@@ -588,7 +588,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FrameEdges GetBoxFrameEdges(Widget obj)
 		{
-			//	Retourne le type du cadre d'une boîte.
+			//	Retourne le type du cadre d'une boÃ®te.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetBoxFrameEdges(Widget obj, FrameEdges state)
 		{
-			//	Choix du type du cadre d'une boîte.
+			//	Choix du type du cadre d'une boÃ®te.
 			if (this.IsReadonly)
 			{
 				return;
@@ -620,7 +620,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public double GetBoxFrameWidth(Widget obj)
 		{
-			//	Retourne l'épaisseur du cadre d'une boîte.
+			//	Retourne l'Ã©paisseur du cadre d'une boÃ®te.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -634,7 +634,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetBoxFrameWidth(Widget obj, double width)
 		{
-			//	Choix de l'épaisseur du cadre d'une boîte.
+			//	Choix de l'Ã©paisseur du cadre d'une boÃ®te.
 			if (this.IsReadonly)
 			{
 				return;
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public double GetLineWidth(Widget obj)
 		{
-			//	Retourne la largeur d'un séparateur.
+			//	Retourne la largeur d'un sÃ©parateur.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -666,7 +666,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetLineWidth(Widget obj, double width)
 		{
-			//	Choix de la largeur d'un séparateur.
+			//	Choix de la largeur d'un sÃ©parateur.
 			if (this.IsReadonly)
 			{
 				return;
@@ -684,7 +684,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public double GetPreferredWidth(Widget obj)
 		{
-			//	Retourne la largeur préférentielle
+			//	Retourne la largeur prÃ©fÃ©rentielle
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -698,7 +698,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetPreferredWidth(Widget obj, double width)
 		{
-			//	Choix de la largeur préférentielle.
+			//	Choix de la largeur prÃ©fÃ©rentielle.
 			if (this.IsReadonly)
 			{
 				return;
@@ -716,7 +716,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public Druid GetLabelReplacement(Widget obj)
 		{
-			//	Retourne la largeur préférentielle.
+			//	Retourne la largeur prÃ©fÃ©rentielle.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -730,7 +730,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetLabelReplacement(Widget obj, Druid captionId)
 		{
-			//	Choix du Druid optionnel du caption qui remplace le texte par défaut.
+			//	Choix du Druid optionnel du caption qui remplace le texte par dÃ©faut.
 			if (this.IsReadonly)
 			{
 				return;
@@ -779,19 +779,19 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void UndoMemorize(string actionName)
 		{
-			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.
+			//	MÃ©morise l'Ã©tat actuel, avant d'effectuer une modification dans le masque.
 			this.UndoMemorize(actionName, true);
 		}
 
 		protected void UndoMemorize(string actionName, bool merge)
 		{
-			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.
+			//	MÃ©morise l'Ã©tat actuel, avant d'effectuer une modification dans le masque.
 			this.formEditor.ViewersForms.UndoMemorize(actionName, merge);
 		}
 
 		protected void DeltaUpdate(FieldDescription field)
 		{
-			//	Si on est dans un masque delta, le champ modifié doit être copié dans la liste delta.
+			//	Si on est dans un masque delta, le champ modifiÃ© doit Ãªtre copiÃ© dans la liste delta.
 			if (this.IsDelta)
 			{
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, field.Guid);
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					copy.DeltaModified = true;
 					this.formEditor.WorkingForm.Fields.Add(copy);
 
-					this.formEditor.OnUpdateCommands();  // pour mettre à jour le bouton fieldsButtonReset
+					this.formEditor.OnUpdateCommands();  // pour mettre Ã  jour le bouton fieldsButtonReset
 				}
 				else
 				{
@@ -819,7 +819,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public Widget GetWidget(System.Guid guid)
 		{
-			//	Cherche le widget correspondant à un Guid.
+			//	Cherche le widget correspondant Ã  un Guid.
 			if (this.formEditor.FinalFields != null)
 			{
 				foreach (FieldDescription field in this.formEditor.FinalFields)
@@ -870,7 +870,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription GetFieldDescription(TableItem item)
 		{
-			//	Retourne un champ d'après son TableItem.
+			//	Retourne un champ d'aprÃ¨s son TableItem.
 			int index = this.GetFieldDescriptionIndex(item.Guid);
 
 			if (index == -1)
@@ -890,7 +890,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription GetFieldDescription(Widget obj)
 		{
-			//	Retourne un champ d'après l'identificateur unique d'un widget.
+			//	Retourne un champ d'aprÃ¨s l'identificateur unique d'un widget.
 			int index = this.GetFieldDescriptionIndex(obj);
 			if (index == -1)
 			{
@@ -904,7 +904,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription GetFieldDescription(System.Guid guid)
 		{
-			//	Retourne un champ d'après l'identificateur unique d'un widget.
+			//	Retourne un champ d'aprÃ¨s l'identificateur unique d'un widget.
 			int index = this.GetFieldDescriptionIndex(guid);
 			if (index == -1)
 			{
@@ -918,7 +918,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FieldDescription GetFieldDescription(int index)
 		{
-			//	Retourne un champ d'après l'identificateur unique d'un widget.
+			//	Retourne un champ d'aprÃ¨s l'identificateur unique d'un widget.
 			if (index == -1)
 			{
 				return null;
@@ -931,7 +931,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public int GetFieldDescriptionIndex(Widget obj)
 		{
-			//	Retourne l'index d'un champ d'après l'identificateur unique d'un widget.
+			//	Retourne l'index d'un champ d'aprÃ¨s l'identificateur unique d'un widget.
 			if (string.IsNullOrEmpty(obj.Name))
 			{
 				return -1;
@@ -943,7 +943,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public int GetFieldDescriptionIndex(System.Guid guid)
 		{
-			//	Retourne l'index d'un champ d'après le Guid.
+			//	Retourne l'index d'un champ d'aprÃ¨s le Guid.
 			if (this.formEditor.FinalFields != null)
 			{
 				for (int i=0; i<this.formEditor.FinalFields.Count; i++)
@@ -962,7 +962,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected int GetFieldDescriptionIndex(string druidsPath)
 		{
-			//	Retourne l'index d'un champ d'après le chemin de Druis.
+			//	Retourne l'index d'un champ d'aprÃ¨s le chemin de Druis.
 			if (this.formEditor.FinalFields != null)
 			{
 				for (int i=0; i<this.formEditor.FinalFields.Count; i++)
@@ -997,10 +997,10 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public Rectangle AdjustBounds(Widget obj, Rectangle bounds)
 		{
-			//	Retourne le rectangle ajusté d'un objet.
+			//	Retourne le rectangle ajustÃ© d'un objet.
 			if (obj.Index == FormEngine.Engine.GlueNull)  // objet FieldDescription.FieldType.Glue avec un ColumnRequired = 0 ?
 			{
-				bounds.Width = 0;  // fait croire à un trait vertical calé à gauche
+				bounds.Width = 0;  // fait croire Ã  un trait vertical calÃ© Ã  gauche
 			}
 
 			return bounds;
@@ -1029,7 +1029,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public bool IsReadonly
 		{
 			//	Indique si Designer est en mode "consultation", lorsque l'identificateur est anonyme
-			//	ou lorsqu'on est en mode "bloqué".
+			//	ou lorsqu'on est en mode "bloquÃ©".
 			get
 			{
 				return this.formEditor.Module.DesignerApplication.IsReadonly;
@@ -1056,7 +1056,7 @@ namespace Epsitec.Common.Designer.FormEditor
 #if false
 		public void ChangeForwardTab(System.Guid fieldGuid, System.Guid forwardTabGuid)
 		{
-			//	Modifie l'élément suivant pour la navigation avec Tab.
+			//	Modifie l'Ã©lÃ©ment suivant pour la navigation avec Tab.
 			this.formEditor.ViewersForms.UndoMemorize(Res.Strings.Undo.Action.ForwardTab, false);
 
 			FieldDescription field = this.GetFieldDescription(fieldGuid);
@@ -1069,14 +1069,14 @@ namespace Epsitec.Common.Designer.FormEditor
 					copy.DeltaForwardTab = true;
 					copy.ForwardTabGuid = forwardTabGuid;
 
-					this.formEditor.WorkingForm.Fields.Add(copy);  // met l'élément à la fin de la liste delta
+					this.formEditor.WorkingForm.Fields.Add(copy);  // met l'Ã©lÃ©ment Ã  la fin de la liste delta
 				}
 			}
 			else
 			{
 				if (forwardTabGuid == System.Guid.Empty)
 				{
-					this.formEditor.WorkingForm.Fields.RemoveAt(index);  // supprime l'élément dans la liste delta
+					this.formEditor.WorkingForm.Fields.RemoveAt(index);  // supprime l'Ã©lÃ©ment dans la liste delta
 				}
 				else
 				{
@@ -1091,11 +1091,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region TableContent
 		public void FormDeltaMove(int index, int direction)
 		{
-			//	Déplace un élément en le montant ou en le descendant d'une ligne. Pour cela, les déplacements
-			//	de tous les éléments sont recalculés, à partir de la situation initiale.
+			//	DÃ©place un Ã©lÃ©ment en le montant ou en le descendant d'une ligne. Pour cela, les dÃ©placements
+			//	de tous les Ã©lÃ©ments sont recalculÃ©s, Ã  partir de la situation initiale.
 			//	this.formEditor.BaseFields			= liste initiale
 			//	this.formEditor.WorkingForm.Fields	= liste delta
-			//	this.formEditor.FinalFields			= liste résultante
+			//	this.formEditor.FinalFields			= liste rÃ©sultante
 
 			//	Construit la liste originale.
 			List<System.Guid> original = new List<System.Guid>();
@@ -1104,7 +1104,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				original.Add(field.Guid);
 			}
 
-			//	Construit la liste finale souhaitée.
+			//	Construit la liste finale souhaitÃ©e.
 			List<System.Guid> final = new List<System.Guid>();
 			foreach (FieldDescription field in this.formEditor.FinalFields)
 			{
@@ -1112,12 +1112,12 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			System.Guid guid = final[index];
 			final.RemoveAt(index);
-			final.Insert(index+direction, guid);  // effectue le mouvement (monter ou descendre un élément)
+			final.Insert(index+direction, guid);  // effectue le mouvement (monter ou descendre un Ã©lÃ©ment)
 
-			//	Construit la liste de tous les éléments déplacés.
+			//	Construit la liste de tous les Ã©lÃ©ments dÃ©placÃ©s.
 			List<System.Guid> moved = new List<System.Guid>();
 
-			moved.Add(guid);  // ce n'est pas grave si cet élément est 2x dans la liste
+			moved.Add(guid);  // ce n'est pas grave si cet Ã©lÃ©ment est 2x dans la liste
 
 			foreach (FieldDescription field in this.formEditor.WorkingForm.Fields)
 			{
@@ -1127,32 +1127,32 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			//	Si l'élément déplacé est cassé, enlève immédiatement son état cassé.
+			//	Si l'Ã©lÃ©ment dÃ©placÃ© est cassÃ©, enlÃ¨ve immÃ©diatement son Ã©tat cassÃ©.
 			index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, guid);
 			if (index != -1)
 			{
 				this.formEditor.WorkingForm.Fields[index].DeltaBrokenAttach = false;
 			}
 
-			//	Génére la liste des opérations de déplacement nécessaires.
-			//	1) Traite d'abord les éléments qu'on sait devoir déplacer (selon la liste moved).
+			//	GÃ©nÃ©re la liste des opÃ©rations de dÃ©placement nÃ©cessaires.
+			//	1) Traite d'abord les Ã©lÃ©ments qu'on sait devoir dÃ©placer (selon la liste moved).
 			List<LinkAfter> oper = new List<LinkAfter>();
 			index = 0;
 			while (index < final.Count)
 			{
 				if (moved.Contains(final[index]) && (index >= original.Count || original[index] != final[index]))
 				{
-					System.Guid element = final[index];  // élément à déplacer
-					System.Guid link = (index==0) ? System.Guid.Empty : final[index-1];  // *après* cet élément
-					bool isInserted = !original.Contains(element);  // true = nouvel élément, false = élément existant
-					oper.Insert(0, new LinkAfter(element, link, isInserted));  // insère au début
+					System.Guid element = final[index];  // Ã©lÃ©ment Ã  dÃ©placer
+					System.Guid link = (index==0) ? System.Guid.Empty : final[index-1];  // *aprÃ¨s* cet Ã©lÃ©ment
+					bool isInserted = !original.Contains(element);  // true = nouvel Ã©lÃ©ment, false = Ã©lÃ©ment existant
+					oper.Insert(0, new LinkAfter(element, link, isInserted));  // insÃ¨re au dÃ©but
 
-					final.RemoveAt(index);  // supprime l'élément déplacé
+					final.RemoveAt(index);  // supprime l'Ã©lÃ©ment dÃ©placÃ©
 
 					int i = original.IndexOf(element);
 					if (i != -1)
 					{
-						original.RemoveAt(i);  // supprime l'élément déplacé
+						original.RemoveAt(i);  // supprime l'Ã©lÃ©ment dÃ©placÃ©
 					}
 				}
 				else
@@ -1161,70 +1161,70 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			//	2) Traite ensuite les éventuels autres éléments.
+			//	2) Traite ensuite les Ã©ventuels autres Ã©lÃ©ments.
 			index = 0;
 			while (index < final.Count)
 			{
-				if (index < original.Count && final[index] == original[index])  // élément en place ?
+				if (index < original.Count && final[index] == original[index])  // Ã©lÃ©ment en place ?
 				{
 					index++;  // passe au suivant
 				}
-				else  // élément déplacé ?
+				else  // Ã©lÃ©ment dÃ©placÃ© ?
 				{
-					System.Guid element = final[index];  // élément à déplacer
-					System.Guid link = (index==0) ? System.Guid.Empty : final[index-1];  // *après* cet élément
-					bool isInserted = !original.Contains(element);  // true = nouvel élément, false = élément existant
-					oper.Insert(0, new LinkAfter(element, link, isInserted));  // insère au début
+					System.Guid element = final[index];  // Ã©lÃ©ment Ã  dÃ©placer
+					System.Guid link = (index==0) ? System.Guid.Empty : final[index-1];  // *aprÃ¨s* cet Ã©lÃ©ment
+					bool isInserted = !original.Contains(element);  // true = nouvel Ã©lÃ©ment, false = Ã©lÃ©ment existant
+					oper.Insert(0, new LinkAfter(element, link, isInserted));  // insÃ¨re au dÃ©but
 
-					final.RemoveAt(index);  // supprime l'élément déplacé
+					final.RemoveAt(index);  // supprime l'Ã©lÃ©ment dÃ©placÃ©
 
 					int i = original.IndexOf(element);
 					if (i != -1)
 					{
-						original.RemoveAt(i);  // supprime l'élément déplacé
+						original.RemoveAt(i);  // supprime l'Ã©lÃ©ment dÃ©placÃ©
 					}
 				}
 			}
 
-			//	Supprime tous les déplacements dans la liste delta actuelle, mais en conservant les éléments.
+			//	Supprime tous les dÃ©placements dans la liste delta actuelle, mais en conservant les Ã©lÃ©ments.
 			foreach (FieldDescription field in this.formEditor.WorkingForm.Fields)
 			{
 				field.DeltaMoved = false;
 				field.DeltaInserted = false;
 			}
 
-			//	Remet tous les déplacements selon la liste des opérations.
+			//	Remet tous les dÃ©placements selon la liste des opÃ©rations.
 			foreach (LinkAfter item in oper)
 			{
 				int i = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Element);
-				if (i == -1)  // élément pas (ou pas encore) adapté ?
+				if (i == -1)  // Ã©lÃ©ment pas (ou pas encore) adaptÃ© ?
 				{
 					i = FormEngine.Arrange.IndexOfGuid(this.formEditor.BaseFields, item.Element);
-					if (i != -1)  // élément dans la liste de référence ?
+					if (i != -1)  // Ã©lÃ©ment dans la liste de rÃ©fÃ©rence ?
 					{
-						FieldDescription field = new FieldDescription(this.formEditor.BaseFields[i]);  // copie de l'élément
+						FieldDescription field = new FieldDescription(this.formEditor.BaseFields[i]);  // copie de l'Ã©lÃ©ment
 
 						field.DeltaMoved = !item.IsInserted;
 						field.DeltaInserted = item.IsInserted;
 						field.DeltaAttachGuid = item.Link;
 
-						this.formEditor.WorkingForm.Fields.Add(field);  // met l'élément à la fin de la liste delta
+						this.formEditor.WorkingForm.Fields.Add(field);  // met l'Ã©lÃ©ment Ã  la fin de la liste delta
 					}
 				}
-				else  // élément déjà dans la liste delta ?
+				else  // Ã©lÃ©ment dÃ©jÃ  dans la liste delta ?
 				{
 					FieldDescription field = this.formEditor.WorkingForm.Fields[i];
-					this.formEditor.WorkingForm.Fields.RemoveAt(i);  // supprime l'élément dans la liste delta
+					this.formEditor.WorkingForm.Fields.RemoveAt(i);  // supprime l'Ã©lÃ©ment dans la liste delta
 
 					field.DeltaMoved = !item.IsInserted;
 					field.DeltaInserted = item.IsInserted;
 					field.DeltaAttachGuid = item.Link;
 
-					this.formEditor.WorkingForm.Fields.Add(field);  // remet l'élément à la fin de la liste delta
+					this.formEditor.WorkingForm.Fields.Add(field);  // remet l'Ã©lÃ©ment Ã  la fin de la liste delta
 				}
 			}
 
-			//	Supprime réellement tous les éléments dans la liste delta qui n'ont plus aucune fonction.
+			//	Supprime rÃ©ellement tous les Ã©lÃ©ments dans la liste delta qui n'ont plus aucune fonction.
 			index = 0;
 			while (index < this.formEditor.WorkingForm.Fields.Count)
 			{
@@ -1250,14 +1250,14 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.IsInserted = isInserted;
 			}
 
-			public System.Guid Element;  // élément à déplacer
-			public System.Guid Link;  // *après* cet élément
-			public bool IsInserted;  // true = nouvel élément, false = élément existant 
+			public System.Guid Element;  // Ã©lÃ©ment Ã  dÃ©placer
+			public System.Guid Link;  // *aprÃ¨s* cet Ã©lÃ©ment
+			public bool IsInserted;  // true = nouvel Ã©lÃ©ment, false = Ã©lÃ©ment existant 
 		}
 
 		public string GetLabelReplacementNameToCreate(Widget obj)
 		{
-			//	Retourne le préfixe à utiliser pour un Caption permettant de remplacer le label d'un champ dans un Form.
+			//	Retourne le prÃ©fixe Ã  utiliser pour un Caption permettant de remplacer le label d'un champ dans un Form.
 			CultureMap cultureMap = this.formEditor.Module.AccessForms.CollectionView.CurrentItem as CultureMap;
 
 			FieldDescription field = this.GetFieldDescription(obj);
@@ -1278,7 +1278,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public string GetTableContentDescription(TableItem item, bool isImage, bool isShowPrefix, bool isShowGuid)
 		{
-			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
+			//	Retourne le texte permettant de dÃ©crire un TableItem dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
@@ -1344,7 +1344,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public string GetTableContentIcon1(TableItem item)
 		{
-			//	Retourne le texte permettant de décrire l'opération delta d'un TableItem dans une liste.
+			//	Retourne le texte permettant de dÃ©crire l'opÃ©ration delta d'un TableItem dans une liste.
 			string icon = null;
 
 			if (this.formEditor.WorkingForm != null)
@@ -1358,23 +1358,23 @@ namespace Epsitec.Common.Designer.FormEditor
 						{
 							if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
 							{
-								icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
+								icon = Misc.Image("FormDeltaHidden");  // peu prioritaire Ã  cause du fond rouge
 							}
 
 							if (this.formEditor.WorkingForm.Fields[index].DeltaShowed)
 							{
-								icon = Misc.Image("FormDeltaShowed");  // peu prioritaire à cause du fond rouge
+								icon = Misc.Image("FormDeltaShowed");  // peu prioritaire Ã  cause du fond rouge
 							}
 						}
 
 						if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
 						{
-							icon = Misc.Image("FormDeltaInserted");  // peu prioritaire à cause du fond vert
+							icon = Misc.Image("FormDeltaInserted");  // peu prioritaire Ã  cause du fond vert
 						}
 
 						if (this.formEditor.WorkingForm.Fields[index].DeltaMoved)
 						{
-							icon = Misc.Image("FormDeltaMoved");  // prioritaire, car pas de fond coloré
+							icon = Misc.Image("FormDeltaMoved");  // prioritaire, car pas de fond colorÃ©
 						}
 					}
 				}
@@ -1385,7 +1385,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					{
 						if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
 						{
-							icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
+							icon = Misc.Image("FormDeltaHidden");  // peu prioritaire Ã  cause du fond rouge
 						}
 					}
 				}
@@ -1396,7 +1396,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public string GetTableContentIcon2(TableItem item)
 		{
-			//	Retourne le texte permettant de décrire la relation d'un TableItem dans une liste.
+			//	Retourne le texte permettant de dÃ©crire la relation d'un TableItem dans une liste.
 			string icon = null;
 
 			if (item.FieldType == FieldDescription.FieldType.SubForm)
@@ -1409,7 +1409,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public Color GetTableContentUseColor(TableItem item)
 		{
-			//	Retourne la couleur décrivant un TableItem dans une liste.
+			//	Retourne la couleur dÃ©crivant un TableItem dans une liste.
 			Color color = Color.Empty;
 
 			if (this.formEditor.WorkingForm != null)
@@ -1424,24 +1424,24 @@ namespace Epsitec.Common.Designer.FormEditor
 							if (this.formEditor.WorkingForm.Fields[index].DeltaHidden ||
 								this.formEditor.WorkingForm.Fields[index].DeltaShowed)
 							{
-								color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+								color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ cachÃ©
 							}
 						}
 
 						if (this.formEditor.WorkingForm.Fields[index].DeltaModified)
 						{
-							color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifié
+							color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifiÃ©
 						}
 
 						if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
 						{
-							color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
+							color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ insÃ©rÃ©
 						}
 
 
 						if (this.formEditor.WorkingForm.Fields[index].DeltaBrokenAttach)
 						{
-							color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncé = lien cassé
+							color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncÃ© = lien cassÃ©
 						}
 					}
 				}
@@ -1452,7 +1452,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					{
 						if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
 						{
-							color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+							color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ cachÃ©
 						}
 					}
 				}
@@ -1463,9 +1463,9 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsTableContentInheritHidden(TableItem item)
 		{
-			//	Indique si un champ est caché par un delta plus profond que simplement le précédent.
-			//	Dans ce cas, il ne faut pas afficher le champ sur un fond rosé, mais simplement ajouter
-			//	l'indication "(caché)" après son nom.
+			//	Indique si un champ est cachÃ© par un delta plus profond que simplement le prÃ©cÃ©dent.
+			//	Dans ce cas, il ne faut pas afficher le champ sur un fond rosÃ©, mais simplement ajouter
+			//	l'indication "(cachÃ©)" aprÃ¨s son nom.
 			if (this.IsDelta)
 			{
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.FinalFields, item.Guid);
@@ -1484,7 +1484,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void UpdateTableContent()
 		{
-			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
+			//	Met Ã  jour la liste qui reflÃ¨te le contenu de la table des champs, visible en haut Ã  droite.
 			this.tableContent.Clear();
 
 			if (this.formEditor.WorkingForm == null)
@@ -1492,7 +1492,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
+			//	Construit la liste des chemins de Druids, en commenÃ§ant par ceux qui font
 			//	partie du masque de saisie.
 			int level = 0;
 			foreach (FieldDescription field in this.formEditor.FinalFields)
@@ -1564,7 +1564,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public struct TableItem
 		{
-			//	Cette structure représente un élément dans la liste de droite des champs.
+			//	Cette structure reprÃ©sente un Ã©lÃ©ment dans la liste de droite des champs.
 			public System.Guid					Guid;
 			public FieldDescription.FieldType	FieldType;
 			public FieldDescription.FieldType	SourceFieldType;
@@ -1578,7 +1578,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region TableRelation
 		public List<RelationItem> TableRelations
 		{
-			//	Retourne la liste pour la table des relations. Chaque RelationItem correspondra à une ligne dans la table.
+			//	Retourne la liste pour la table des relations. Chaque RelationItem correspondra Ã  une ligne dans la table.
 			get
 			{
 				return this.tableRelations;
@@ -1587,7 +1587,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public string GetTableRelationDescription(int index)
 		{
-			//	Retourne le texte permettant de décrire une relation dans une liste, avec un effet
+			//	Retourne le texte permettant de dÃ©crire une relation dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
 			string druidsPath = this.tableRelations[index].DruidsPath;
 			string name = this.formEditor.Module.AccessFields.GetFieldNames(druidsPath);
@@ -1631,7 +1631,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public string GetTableRelationRelIcon(int index)
 		{
-			//	Retourne le texte "icône" permettant de décrire une relation dans une liste.
+			//	Retourne le texte "icÃ´ne" permettant de dÃ©crire une relation dans une liste.
 			FieldRelation rel = this.tableRelations[index].Relation;
 
 			string icon = null;
@@ -1650,7 +1650,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public string GetTableRelationUseIcon(int index)
 		{
-			//	Retourne le texte "icône" permettant de décrire l'utilisation dans une liste.
+			//	Retourne le texte "icÃ´ne" permettant de dÃ©crire l'utilisation dans une liste.
 			string icon = null;
 
 			if (this.IsTableRelationUsed(index))
@@ -1667,20 +1667,20 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public Color GetTableRelationUseColor(int index)
 		{
-			//	Retourne la couleur décrivant l'utilisation d'une relation.
+			//	Retourne la couleur dÃ©crivant l'utilisation d'une relation.
 			if (this.IsTableRelationUsed(index))
 			{
-				return Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ utilisé
+				return Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ utilisÃ©
 			}
 			else
 			{
-				return Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ inutilisé
+				return Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ inutilisÃ©
 			}
 		}
 
 		public bool IsTableRelationUseable(int index)
 		{
-			//	Indique si l'opération "utiliser" est autorisée.
+			//	Indique si l'opÃ©ration "utiliser" est autorisÃ©e.
 			if (index == -1 || this.IsReadonly)
 			{
 				return false;
@@ -1691,7 +1691,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsTableRelationExpandable(int index)
 		{
-			//	Indique si l'opération "étendre" est autorisée.
+			//	Indique si l'opÃ©ration "Ã©tendre" est autorisÃ©e.
 			if (index == -1 || this.IsReadonly)
 			{
 				return false;
@@ -1702,7 +1702,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsTableRelationCompactable(int index)
 		{
-			//	Indique si l'opération "compacter" est autorisée.
+			//	Indique si l'opÃ©ration "compacter" est autorisÃ©e.
 			if (index == -1 || this.IsReadonly)
 			{
 				return false;
@@ -1763,7 +1763,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void UpdateTableRelation(Druid entityId, IList<StructuredData> entityFields, FormDescription form)
 		{
 			//	Initialise la table des relations possibles avec le premier niveau et les champs du masque.
-			//	Tous les champs frères d'un champ faisant partie du masque sont également pris.
+			//	Tous les champs frÃ¨res d'un champ faisant partie du masque sont Ã©galement pris.
 			this.UpdateTableRelation(entityId, entityFields);
 
 			foreach (FieldDescription field in form.Fields)
@@ -1865,7 +1865,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected bool IsTableRelationUsed(int index)
 		{
-			//	Indique si une relation est utilisée dans le masque de saisie.
+			//	Indique si une relation est utilisÃ©e dans le masque de saisie.
 			string druidsPath = this.tableRelations[index].DruidsPath;
 
 			foreach (FieldDescription field in this.formEditor.FinalFields)
@@ -1881,7 +1881,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected int TableRelationSearchIndex(string druidsPath)
 		{
-			//	Cherche l'index correspondant à un chemin de Druids.
+			//	Cherche l'index correspondant Ã  un chemin de Druids.
 			for (int i=0; i<this.tableRelations.Count; i++)
 			{
 				if (this.tableRelations[i].DruidsPath == druidsPath)
@@ -1933,7 +1933,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public class RelationItem
 		{
-			//	Cette classe représente une ligne dans la table des relations.
+			//	Cette classe reprÃ©sente une ligne dans la table des relations.
 			public string						DruidsPath;
 			public Druid						typeId;
 			public FieldRelation				Relation;

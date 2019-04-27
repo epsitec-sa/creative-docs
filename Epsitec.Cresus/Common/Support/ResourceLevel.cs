@@ -1,20 +1,20 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// L'énumération ResourceLevel décrit à quel niveau il faut accéder
+	/// L'Ã©numÃ©ration ResourceLevel dÃ©crit Ã  quel niveau il faut accÃ©der
 	/// aux ressources.
 	/// </summary>
 	public enum ResourceLevel
 	{
-		None,							//	pas d'accès
-		Merged,							//	fusion (accès standard)
+		None,							//	pas d'accÃ¨s
+		Merged,							//	fusion (accÃ¨s standard)
 		
-		Default,						//	ressources par défaut
-		Localized,						//	ressources localisées
-		Customized,						//	ressources personnalisées
+		Default,						//	ressources par dÃ©faut
+		Localized,						//	ressources localisÃ©es
+		Customized,						//	ressources personnalisÃ©es
 		
 		All								//	toutes les variantes (pour GetBundleIds)
 	}

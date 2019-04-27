@@ -8,8 +8,8 @@ namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
 	/// Dialogue permettant de choisir le type d'un Caption.Type.
-	/// Pour les énumérations natives, il est possible d'étendre le dialogue
-	/// et de choisir une énumération C# dans une liste.
+	/// Pour les Ã©numÃ©rations natives, il est possible d'Ã©tendre le dialogue
+	/// et de choisir une Ã©numÃ©ration C# dans une liste.
 	/// </summary>
 	public class ResourceTypeCodeDialog : AbstractDialog
 	{
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window ();
@@ -146,8 +146,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public TypeCode ContentType
 		{
-			//	Set: spécifie le type initial.
-			//	Get: retourne le type choisi (None si le bouton Annuler est utilisé)
+			//	Set: spÃ©cifie le type initial.
+			//	Get: retourne le type choisi (None si le bouton Annuler est utilisÃ©)
 			set
 			{
 				this.typeEdited = value;
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public System.Type SystemType
 		{
-			//	Retourne le Sytem.Type à utiliser, lors d'une énumération C# native.
+			//	Retourne le Sytem.Type Ã  utiliser, lors d'une Ã©numÃ©ration C# native.
 			get
 			{
 				if (this.typeAccepted == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedItemIndex != -1)
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateRadio(Caption caption)
 		{
-			//	Crée un bouton radio.
+			//	CrÃ©e un bouton radio.
 			RadioButton button = new RadioButton(this.leftPanel);
 			button.CaptionId = caption.Id;
 			System.Diagnostics.Debug.Assert(button.Name.StartsWith("Types.Type."));
@@ -194,13 +194,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateRadios()
 		{
-			//	Met à jour le bouton radio enfoncé en fonction du type.
+			//	Met Ã  jour le bouton radio enfoncÃ© en fonction du type.
 			string actual = ResourceAccess.TypeCodeToName(this.typeEdited);
 
 			foreach (RadioButton button in this.radioButtons)
 			{
 				string name = button.Name;
-				name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
+				name = name.Substring(name.LastIndexOf('.')+1);  // enlÃ¨ve "Res.Captions.Types.Type."
 
 				button.ActiveState = (name == actual) ? ActiveState.Yes : ActiveState.No;
 
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateExtended()
 		{
-			//	Met à jour le bouton pour montrer/cacher les options.
+			//	Met Ã  jour le bouton pour montrer/cacher les options.
 			bool isExtended = (this.typeEdited == TypeCode.Enum);
 
 			this.rightPanel.Visibility = isExtended;
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateButtons()
 		{
-			//	Met à jour le bouton D'accord.
+			//	Met Ã  jour le bouton D'accord.
 			bool enable = true;
 
 			if (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedItemIndex == -1)
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateFilter()
 		{
-			//	Met à jour la liste des filtres.
+			//	Met Ã  jour la liste des filtres.
 			this.filters = new List<string>();
 
 			foreach (System.Type stype in EnumLister.GetDesignerVisibleEnums())
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateEnumList()
 		{
-			//	Met à jour la liste des énumérations C# natives en fonction du filtre.
+			//	Met Ã  jour la liste des Ã©numÃ©rations C# natives en fonction du filtre.
 			string filter = null;
 			if (this.comboFilterField.SelectedItemIndex > 0)  // pas "tout montrer" ?
 			{
@@ -308,13 +308,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleRadioButtonActiveStateChanged(object sender)
 		{
-			//	Bouton radio activé ?
+			//	Bouton radio activÃ© ?
 			RadioButton button = sender as RadioButton;
 
 			if (button.ActiveState == ActiveState.Yes)
 			{
 				string name = button.Name;
-				name = name.Substring (name.LastIndexOf ('.')+1);  // enlève "Res.Captions.Types.Type."
+				name = name.Substring (name.LastIndexOf ('.')+1);  // enlÃ¨ve "Res.Captions.Types.Type."
 				this.typeEdited = ResourceAccess.NameToTypeCode (name);
 
 				this.UpdateRadios ();
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleCheckNativeActiveStateChanged(object sender)
 		{
-			//	Bouton C# native cliqué.
+			//	Bouton C# native cliquÃ©.
 			this.UpdateRadios();
 			this.UpdateButtons();
 		}
@@ -338,20 +338,20 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleComboFilterFieldClosed(object sender)
 		{
-			//	Menu pour choisir le filtre fermé.
+			//	Menu pour choisir le filtre fermÃ©.
 			this.UpdateEnumList();
 			this.UpdateButtons();
 		}
 
 		private void HandleEnumListSelectionActivated(object sender)
 		{
-			//	Sélection changée dans la liste des énumérations C# natives.
+			//	SÃ©lection changÃ©e dans la liste des Ã©numÃ©rations C# natives.
 			this.UpdateButtons();
 		}
 
 		private void HandleWindowCloseClicked(object sender)
 		{
-			//	Fenêtre fermée.
+			//	FenÃªtre fermÃ©e.
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton Annuler cliqué.
+			//	Bouton Annuler cliquÃ©.
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonOKClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton D'accord cliqué.
+			//	Bouton D'accord cliquÃ©.
 			this.typeAccepted = this.typeEdited;
 
 			this.parentWindow.MakeActive();

@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// La classe AdditionalSettings sert de base pour les réglages aditionnels,
+	/// La classe AdditionalSettings sert de base pour les rÃ©glages aditionnels,
 	/// en particulier LocalSettings et ExtraSettings.
 	/// </summary>
 	public abstract class AdditionalSettings : PropertyContainer, IContentsComparer

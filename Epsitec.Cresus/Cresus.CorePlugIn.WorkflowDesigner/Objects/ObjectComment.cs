@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public string AttachedNodeDescription
 		{
-			//	Texte de la description du noeud auquel est rattaché le commentaire.
+			//	Texte de la description du noeud auquel est rattachÃ© le commentaire.
 			get
 			{
 				if (this.attachObject is ObjectNode)
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			switch (element)
 			{
 				case ActiveElement.CommentAttachTo:
-					return "Déplace l'attache du commentaire";
+					return "DÃ©place l'attache du commentaire";
 
 				case ActiveElement.CommentClose:
 					return "Ferme le commentaire";
@@ -164,8 +164,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			base.MouseMove (message, pos);
 
 			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.hilitedElement == ActiveElement.CommentMove)
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 					Rectangle bounds = this.bounds;
 					bounds.Offset(newPos-oldPos);
-					this.Bounds = bounds;  // déplace le commentaire
+					this.Bounds = bounds;  // dÃ©place le commentaire
 
 					this.editor.Invalidate();
 				}
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			base.MouseDown (message, pos);
 
 			if (this.HilitedElement == ActiveElement.CommentWidth)
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			base.MouseUp (message, pos);
 
 			if (this.HilitedElement == ActiveElement.CommentEdit && this.draggingMode == DraggingMode.None)
@@ -333,19 +333,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
 			}
 
-			//	Souris dans l'en-tête ?
+			//	Souris dans l'en-tÃªte ?
 			if (this.HeaderRectangle.Contains (pos))
 			{
 				return ActiveElement.CommentMove;
 			}
 
-			//	Souris dans la boîte ?
+			//	Souris dans la boÃ®te ?
 			if (this.bounds.Contains (pos))
 			{
 				return ActiveElement.CommentEdit;
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsHeaderHilite
 		{
-			//	Indique si la souris est dans l'en-tête.
+			//	Indique si la souris est dans l'en-tÃªte.
 			get
 			{
 				return (this.hilitedElement == ActiveElement.CommentEdit ||

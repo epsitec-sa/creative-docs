@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Denis DUMOULIN & Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe Utilities propose quelques fonctions d'utilité générale
+	/// La classe Utilities propose quelques fonctions d'utilitÃ© gÃ©nÃ©rale
 	/// </summary>
 
 	public static class Utilities
@@ -42,10 +42,10 @@ namespace Epsitec.Common.Support
 		
 		public static bool StringSimplify(ref string value, char startQuote, char endQuote)
 		{
-			//	Convertit une chaîne entre guillemets en une chaîne sans guillemets
-			//	retourne "true" si la chaîne avait des guillemets "false" sinon
-			//	une exception est levée si des guillemets non apparentés sont trouvés
-			//	enlève les doubles guillemets en milieu de chaîne pour n'en mettre qu'un.
+			//	Convertit une chaÃ®ne entre guillemets en une chaÃ®ne sans guillemets
+			//	retourne "true" si la chaÃ®ne avait des guillemets "false" sinon
+			//	une exception est levÃ©e si des guillemets non apparentÃ©s sont trouvÃ©s
+			//	enlÃ¨ve les doubles guillemets en milieu de chaÃ®ne pour n'en mettre qu'un.
 			
 			if (value.IndexOf (startQuote) == 0)
 			{
@@ -104,14 +104,14 @@ namespace Epsitec.Common.Support
 
 		public static IEnumerable<string> StringToTokens(string value, char sep, string trimchars)
 		{
-			//	transforme une chaîne en une série de Tokens strings
-			//	en fonction du séparateur donné.
-			//	Rend le nombre de tokens trouvé en sortie,
-			//	les chaînes entre guillemets ou apostrophes sont conservées.
-			//	Une exception est levée s'il y a un nombre impair de guillemets.
+			//	transforme une chaÃ®ne en une sÃ©rie de Tokens strings
+			//	en fonction du sÃ©parateur donnÃ©.
+			//	Rend le nombre de tokens trouvÃ© en sortie,
+			//	les chaÃ®nes entre guillemets ou apostrophes sont conservÃ©es.
+			//	Une exception est levÃ©e s'il y a un nombre impair de guillemets.
 
-			//	trimchars permet de supprimer les espaces (et autres) excédentaires 
-			//	devant et derrière les strings
+			//	trimchars permet de supprimer les espaces (et autres) excÃ©dentaires 
+			//	devant et derriÃ¨re les strings
 			//			par exemple pour accepter
 			//			un, deux,    trois , quatre
 
@@ -281,10 +281,10 @@ namespace Epsitec.Common.Support
 		
 		public static int SkipXmlChars(string text, int n)
 		{
-			//	Saute le nombre de caractères "logiques" indiqué et retourne le nombre
-			//	de caractères réels dans 'text' qui ont été sautés.
+			//	Saute le nombre de caractÃ¨res "logiques" indiquÃ© et retourne le nombre
+			//	de caractÃ¨res rÃ©els dans 'text' qui ont Ã©tÃ© sautÃ©s.
 			
-			//	Une entité XML (par ex. "&quot;") compte comme 1 caractère, tout comme
+			//	Une entitÃ© XML (par ex. "&quot;") compte comme 1 caractÃ¨re, tout comme
 			//	les tags <br/>, <tab/> et <img>.
 			
 			int offset = 0;
@@ -322,9 +322,9 @@ namespace Epsitec.Common.Support
 		
 		public static int CountXmlChars(string text)
 		{
-			//	Compte le nombre de caractères "logiques" dans le texte.
+			//	Compte le nombre de caractÃ¨res "logiques" dans le texte.
 			
-			//	Une entité XML (par ex. "&quot;") compte comme 1 caractère, tout comme
+			//	Une entitÃ© XML (par ex. "&quot;") compte comme 1 caractÃ¨re, tout comme
 			//	les tags <br/>, <tab/> et <img>.
 			
 			int i      = 0;
@@ -413,11 +413,11 @@ namespace Epsitec.Common.Support
 		
 		public static string[] Split(string text, char sep)
 		{
-			//	Comme string.Split, mais en mieux, en ce sens que cette méthode gère les
+			//	Comme string.Split, mais en mieux, en ce sens que cette mÃ©thode gÃ¨re les
 			//	guillemets simples (') et doubles ("), ainsi que les tags <>. Voir aussi
-			//	la méthode StringToTokens qui fait la même chose sans gérer les tags.
+			//	la mÃ©thode StringToTokens qui fait la mÃªme chose sans gÃ©rer les tags.
 			//
-			//	Si un séparateur se trouve entre guillemets ou dans un tag, il est sauté.
+			//	Si un sÃ©parateur se trouve entre guillemets ou dans un tag, il est sautÃ©.
 			
 			if (text == null)
 			{
@@ -426,8 +426,8 @@ namespace Epsitec.Common.Support
 			
 			if (text.IndexOf (sep) < 0)
 			{
-				//	Optimisation pour le cas le plus fréquent : il n'y a qu'un seul élément
-				//	et aucun séparateur.
+				//	Optimisation pour le cas le plus frÃ©quent : il n'y a qu'un seul Ã©lÃ©ment
+				//	et aucun sÃ©parateur.
 				
 				return new string[1] { text };
 			}
@@ -506,8 +506,8 @@ namespace Epsitec.Common.Support
 
 		public static string[] Split(string text, string separator)
 		{
-			//	Comme ci-dessus, avec une chaîne de caractères comme séparateur
-			//	Tous texte entre guillemets ou dans un tag est sauté.
+			//	Comme ci-dessus, avec une chaÃ®ne de caractÃ¨res comme sÃ©parateur
+			//	Tous texte entre guillemets ou dans un tag est sautÃ©.
 
 			if (text == null)
 			{
@@ -522,8 +522,8 @@ namespace Epsitec.Common.Support
 
 			if (text.IndexOf (separator) < 0)
 			{
-				//	Optimisation pour le cas le plus fréquent : il n'y a qu'un seul élément
-				//	et aucun séparateur.
+				//	Optimisation pour le cas le plus frÃ©quent : il n'y a qu'un seul Ã©lÃ©ment
+				//	et aucun sÃ©parateur.
 				
 				return new string[1] { text };
 			}

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -2376,8 +2376,8 @@ namespace Epsitec.Common.UI
 		private bool ProcessNavigationKeysRowsOfTiles(ItemView current, Widgets.KeyCode keyCode)
 		{
 #if true
-			//	TODO: écrire ici un code "géographique" qui se base exclusivement
-			//	sur les informations géométriques retournées par la méthode 
+			//	TODO: Ã©crire ici un code "gÃ©ographique" qui se base exclusivement
+			//	sur les informations gÃ©omÃ©triques retournÃ©es par la mÃ©thode 
 			//	ItemPanel.GetItemViewBounds(ItemView).
 
 			ItemPanelNavigator navigator = this.GetNavigator ();
@@ -2619,8 +2619,8 @@ namespace Epsitec.Common.UI
 
 		private void ProcessVerticalListPageUpMove()
 		{
-			//	Déplace sur le premier visible entièrement ou, s'il est déjà l'élément courant,
-			//	une page avant, en tenant compte de la géométrie des items.
+			//	DÃ©place sur le premier visible entiÃ¨rement ou, s'il est dÃ©jÃ  l'Ã©lÃ©ment courant,
+			//	une page avant, en tenant compte de la gÃ©omÃ©trie des items.
 			int pos = this.Items.CurrentPosition;
 			int first, last;
 			this.GetFirstAndLastVisibleItem(out first, out last);
@@ -2660,8 +2660,8 @@ namespace Epsitec.Common.UI
 
 		private void ProcessVerticalListPageDownMove()
 		{
-			//	Déplace sur le dernier visible entièrement ou, s'il est déjà l'élément courant,
-			//	une page après, en tenant compte de la géométrie des items.
+			//	DÃ©place sur le dernier visible entiÃ¨rement ou, s'il est dÃ©jÃ  l'Ã©lÃ©ment courant,
+			//	une page aprÃ¨s, en tenant compte de la gÃ©omÃ©trie des items.
 			int pos = this.Items.CurrentPosition;
 			int first, last;
 			this.GetFirstAndLastVisibleItem(out first, out last);
@@ -2721,7 +2721,7 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					if (inside)  // premier caché ?
+					if (inside)  // premier cachÃ© ?
 					{
 						last = index-1;
 						inside = false;

@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Types;
+using Epsitec.Common.Types;
 
 using Epsitec.Common.UnitTesting;
 

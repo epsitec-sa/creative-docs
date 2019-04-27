@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 {
 	/// <summary>
 	/// The <c>ExchangeRateType</c> defines who specifies the exchange rate.
-	/// See §1.1.3.1 of the document "Info TVA 7".
+	/// See Â§1.1.3.1 of the document "Info TVA 7".
 	/// </summary>
 	[DesignerVisible]
 	public enum ExchangeRateSourceType

@@ -1,11 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'énumération MouseButtons définit les boutons de la souris connus.
-	/// Plusieurs boutons peuvent être combinés.
+	/// L'Ã©numÃ©ration MouseButtons dÃ©finit les boutons de la souris connus.
+	/// Plusieurs boutons peuvent Ãªtre combinÃ©s.
 	/// </summary>
 	[System.Flags] public enum MouseButtons
 	{

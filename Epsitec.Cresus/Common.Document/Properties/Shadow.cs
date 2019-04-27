@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe Shadow représente une propriété d'un objet graphique.
+	/// La classe Shadow reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Shadow : Abstract
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Shadow p = property as Shadow;
 			p.color  = this.color;
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Shadow p = property as Shadow;
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Shadow(document);
 		}
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Color", this.color);
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Shadow(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
 			{
 				this.color = (Drawing.RichColor) info.GetValue("Color", typeof(Drawing.RichColor));

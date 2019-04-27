@@ -1,18 +1,18 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération AlignMode définit les modes utilisés pour synchroniser
+	/// L'Ã©numÃ©ration AlignMode dÃ©finit les modes utilisÃ©s pour synchroniser
 	/// l'interligne avec une grille globale.
 	/// </summary>
 	public enum AlignMode
 	{
-		Undefined,					//	non défini
+		Undefined,					//	non dÃ©fini
 		
 		None,						//	sans alignment
-		First,						//	aligne la première ligne du paragraphe
+		First,						//	aligne la premiÃ¨re ligne du paragraphe
 		All,						//	aligne toutes les lignes du paragraphe
 	}
 }

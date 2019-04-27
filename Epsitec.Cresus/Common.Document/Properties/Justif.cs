@@ -5,16 +5,16 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum JustifHorizontal
 	{
 		None    = 0,
 		Left    = 1,			// |abc  |
 		Center  = 2,			// | abc |
 		Right   = 3,			// |  abc|
-		Justif  = 4,			// |a b c| sauf la dernière ligne
-		All     = 5,			// |a b c| avec la dernière ligne
-		Stretch = 6,			// |abc| étendu pour ObjectTextLine
+		Justif  = 4,			// |a b c| sauf la derniÃ¨re ligne
+		All     = 5,			// |a b c| avec la derniÃ¨re ligne
+		Stretch = 6,			// |abc| Ã©tendu pour ObjectTextLine
 	}
 
 	public enum JustifVertical
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Justif représente une propriété d'un objet graphique.
+	/// La classe Justif reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Justif : Abstract
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				if ( this.horizontal == JustifHorizontal.Left    )  return "|ab |";
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(JustifHorizontal type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(JustifHorizontal type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case JustifHorizontal.Left:      return "JustifHLeft";
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(JustifVertical type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(JustifVertical type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case JustifVertical.Top:     return "JustifVTop";
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(JustifOrientation type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(JustifOrientation type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case JustifOrientation.LeftToRight:  return "JustifOLR";
@@ -283,13 +283,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Justif p = property as Justif;
 			p.horizontal  = this.horizontal;
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Justif p = property as Justif;
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Justif(document);
 		}
@@ -326,7 +326,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool DeflateBox(ref Point pbl, ref Point pbr, ref Point ptl, ref Point ptr)
 		{
-			//	Diminue la boîte qui contient le texte en fonction des marges.
+			//	Diminue la boÃ®te qui contient le texte en fonction des marges.
 			//	Retourne false si elle est trop petite.
 			double mh = this.marginH;
 			double mv = this.marginV;
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void MoveGlobalStarting()
 		{
-			//	Début du déplacement global de la propriété.
+			//	DÃ©but du dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			this.InsertOpletProperty();
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		public override void MoveGlobalProcess(Selector selector)
 		{
-			//	Effectue le déplacement global de la propriété.
+			//	Effectue le dÃ©placement global de la propriÃ©tÃ©.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			double scale = selector.GetTransformScale;
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Horizontal", this.horizontal);
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Justif(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.horizontal = (JustifHorizontal) info.GetValue("Horizontal", typeof(JustifHorizontal));
 			this.vertical = (JustifVertical) info.GetValue("Vertical", typeof(JustifVertical));
 			this.orientation = (JustifOrientation) info.GetValue("Orientation", typeof(JustifOrientation));

@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -9,7 +9,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta
 {
 	[DesignerVisible]
-	public enum RaccourciModèle
+	public enum RaccourciModÃ¨le
 	{
 		None,
 		Ctrl0,

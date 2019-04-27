@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Placer la personne dans un autre ménage...");
+			return Resources.Text ("Placer la personne dans un autre mÃ©nage...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -41,12 +41,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			form
-				.Title ("Changement de ménage")
+				.Title ("Changement de mÃ©nage")
 				.Field<AiderHouseholdEntity> ()
-					.Title ("Choix du nouveau ménage")
+					.Title ("Choix du nouveau mÃ©nage")
 				.End ()
 				.Field<bool> ()
-					.Title ("En tant que chef de ménage ?")
+					.Title ("En tant que chef de mÃ©nage ?")
 					.InitialValue (false)
 				.End ()
 			.End ();

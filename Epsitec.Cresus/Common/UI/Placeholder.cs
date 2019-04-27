@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// La classe Placeholder représente un conteneur utilisé par des widgets
+	/// La classe Placeholder reprÃ©sente un conteneur utilisÃ© par des widgets
 	/// intelligents, remplis par data binding.
 	/// </summary>
 	public class Placeholder : AbstractPlaceholder, Widgets.Layouts.IGridPermeable

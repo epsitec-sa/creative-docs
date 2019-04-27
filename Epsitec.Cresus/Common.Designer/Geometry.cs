@@ -3,15 +3,15 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer
 {
 	/// <summary>
-	/// La classe Geometry contient quelques routines générales.
+	/// La classe Geometry contient quelques routines gÃ©nÃ©rales.
 	/// </summary>
 	public class Geometry
 	{
 		public static bool IsOver(Rectangle rect, Point a, Point b, double margin)
 		{
 			//	Retourne true si la droite ab passe sur le rectangle.
-			//	Les 4 droites du rectangle sont étendues selon margin, pour éviter des liaisons
-			//	presque parallèles:
+			//	Les 4 droites du rectangle sont Ã©tendues selon margin, pour Ã©viter des liaisons
+			//	presque parallÃ¨les:
 			//	    o        o
 			//	    |        |
 			//	o---o--------o---o
@@ -64,25 +64,25 @@ namespace Epsitec.Common.Designer
 		public static Point[] Intersect(Point a, Point b, Point c, Point d)
 		{
 			//	Calcule le point d'intersection entre deux droites ab et cd.
-			//	Utilise l'algorithme de Gauss-Jordan utilisé pour le calcul
-			//	matriciel. Les calculs ont été spécialisés au cas simple de
-			//	l'intersection de segments pour des questions de rapidité.
+			//	Utilise l'algorithme de Gauss-Jordan utilisÃ© pour le calcul
+			//	matriciel. Les calculs ont Ã©tÃ© spÃ©cialisÃ©s au cas simple de
+			//	l'intersection de segments pour des questions de rapiditÃ©.
 			//
 			//		Q=BX-AX : T=BY-AY
 			//		R=CX-DX : U=CY-DY   matrice  [ Q R | S ]
 			//		S=CX-AX : V=CY-AY            [ T U | V ]
 			//
-			//	Cette matrice représente les coefficients de l'équation
+			//	Cette matrice reprÃ©sente les coefficients de l'Ã©quation
 			//	vectorielle suivante :
 			//		AB*a + CD*b = AC
 			//
-			//	La coordonnée du point "P" s'obtient par :
+			//	La coordonnÃ©e du point "P" s'obtient par :
 			//		P = OA + a*AB
 			//
 			//	ou encore :
 			//		P = OC + b*CD
 			//
-			//	Traite les cas particuliers des segments confondus ou parallèles.
+			//	Traite les cas particuliers des segments confondus ou parallÃ¨les.
 			double	q,r,s,t,u,v;
 
 			q = b.X-a.X;

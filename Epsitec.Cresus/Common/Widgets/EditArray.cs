@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 #if false
@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// La classe EditArray implémente un ScrollArray éditable.
+	/// La classe EditArray implÃ©mente un ScrollArray Ã©ditable.
 	/// </summary>
 	public class EditArray : ScrollArray
 	{
@@ -268,8 +268,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void UpdateEditGeometry()
 		{
-			//	Si la géométrie a changé, on met à jour la position des divers widgets utilisés
-			//	pour l'édition, ainsi que la géométrie du conteneur EditWidget :
+			//	Si la gÃ©omÃ©trie a changÃ©, on met Ã  jour la position des divers widgets utilisÃ©s
+			//	pour l'Ã©dition, ainsi que la gÃ©omÃ©trie du conteneur EditWidget :
 			
 			Drawing.Rectangle bounds = this.GetEditBounds ();
 			
@@ -401,8 +401,8 @@ namespace Epsitec.Common.Widgets
 								(row >= 0) && (row < this.maxRows) &&
 								(this.CheckChangeSelectedIndexTo (row)))
 							{
-								//	L'utilisateur a cliqué dans une cellule de la table. On va faire en sorte
-								//	de changer la cellule active (repositionner les lignes éditables) :
+								//	L'utilisateur a cliquÃ© dans une cellule de la table. On va faire en sorte
+								//	de changer la cellule active (repositionner les lignes Ã©ditables) :
 								
 								this.SelectedIndex = row;
 								this.Update ();
@@ -574,8 +574,8 @@ namespace Epsitec.Common.Widgets
 		
 		#region EditWidget Class
 		/// <summary>
-		/// La classe EditWidget est utilisée comme conteneur pour les widgets en cours
-		/// d'édition. C'est elle qui gère la navigation au moyen de TAB.
+		/// La classe EditWidget est utilisÃ©e comme conteneur pour les widgets en cours
+		/// d'Ã©dition. C'est elle qui gÃ¨re la navigation au moyen de TAB.
 		/// </summary>
 		protected class EditWidget : Widget
 		{
@@ -639,7 +639,7 @@ namespace Epsitec.Common.Widgets
 				}
 				set
 				{
-					//	Evite de générer des événements EditTextChanged pendant la mise à jour
+					//	Evite de gÃ©nÃ©rer des Ã©vÃ©nements EditTextChanged pendant la mise Ã  jour
 					//	des divers champs :
 					
 					this.settingValues = true;
@@ -653,8 +653,8 @@ namespace Epsitec.Common.Widgets
 						
 						if (this.editWidgets[i].IsPropertyDefined (EditArray.propModelBased))
 						{
-							//	Si c'est une ligne éditable créée à partir d'un modèle, on ne touche pas
-							//	à la propriété "read only", car elle a été définie dans le modèle !
+							//	Si c'est une ligne Ã©ditable crÃ©Ã©e Ã  partir d'un modÃ¨le, on ne touche pas
+							//	Ã  la propriÃ©tÃ© "read only", car elle a Ã©tÃ© dÃ©finie dans le modÃ¨le !
 						}
 						else
 						{
@@ -667,7 +667,7 @@ namespace Epsitec.Common.Widgets
 					this.settingValues = false;
 					
 					//	S'il y a effectivement eu des changements dans les contenus de champs,
-					//	on envoie l'événement maintenant et une seule fois :
+					//	on envoie l'Ã©vÃ©nement maintenant et une seule fois :
 					
 					if (this.textChangeCount > 0)
 					{
@@ -768,14 +768,14 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						//	On ne peut plus avancer/reculer, car est arrivé en extrémité de table.
+						//	On ne peut plus avancer/reculer, car est arrivÃ© en extrÃ©mitÃ© de table.
 						
 						if ((move > 0) &&
 							(this.host.InteractionMode == ScrollInteractionMode.Edition) &&
 							(this.host.TextArrayStore != null) &&
 							(this.host.TextArrayStore.CheckInsertRows (this.host.RowCount, 1)))
 						{
-							//	Il s'avère que la table est en cours d'édition et que le "store" associé
+							//	Il s'avÃ¨re que la table est en cours d'Ã©dition et que le "store" associÃ©
 							//	avec celle-ci permet l'insertion en fin de table. Profitons-en !
 							
 							this.host.TextArrayStore.InsertRows (this.host.RowCount, 1);
@@ -820,7 +820,7 @@ namespace Epsitec.Common.Widgets
 						}
 						if (this.host.ProcessKeyEvent (message))
 						{
-							//	L'événement a été traité par la liste; on va donc le consommer.
+							//	L'Ã©vÃ©nement a Ã©tÃ© traitÃ© par la liste; on va donc le consommer.
 							
 							message.Consumer = this;
 							message.Swallowed = true;
@@ -1351,10 +1351,10 @@ namespace Epsitec.Common.Widgets
 				
 				this.SaveModeAndReset (out mode, out row, out column);
 				
-				//	Si le passage en mode "read only" a déjà provoqué un changement du nombre
-				//	de lignes dans la table, on ne va rien détruire. En effet, dans l'éditeur
-				//	de ressources, StringEditController supprime des lignes vides dès que l'on
-				//	quitte le mode "edition"; détruire la ligne à notre tour produirait une
+				//	Si le passage en mode "read only" a dÃ©jÃ  provoquÃ© un changement du nombre
+				//	de lignes dans la table, on ne va rien dÃ©truire. En effet, dans l'Ã©diteur
+				//	de ressources, StringEditController supprime des lignes vides dÃ¨s que l'on
+				//	quitte le mode "edition"; dÃ©truire la ligne Ã  notre tour produirait une
 				//	double destruction.
 				
 				if (this.host.RowCount == nRows)

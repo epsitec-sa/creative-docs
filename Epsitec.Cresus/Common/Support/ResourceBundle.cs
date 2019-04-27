@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Globalization;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
+	/// ImplÃ©mentation d'un ResourceBundle basÃ© sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
 	public sealed class ResourceBundle : Types.DependencyObject, System.ICloneable
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Support
 					if ((this.refInclusion == false) ||
 						(this.fieldNameRequired == false))
 					{
-						//	Cas particulier: si l'utilisateur a désactivé l'inclusion des <ref>
+						//	Cas particulier: si l'utilisateur a dÃ©sactivÃ© l'inclusion des <ref>
 						//	alors il se peut qu'un champ soit en fait un <ref> sans nom, auquel
 						//	cas on doit le copier tel quel, sans faire de merge.
 
@@ -665,7 +665,7 @@ namespace Epsitec.Common.Support
 				}
 				else if (hash.TryGetValue (name, out index))
 				{
-					//	Le champ est déjà connu: on remplace simplement l'ancienne occurrence
+					//	Le champ est dÃ©jÃ  connu: on remplace simplement l'ancienne occurrence
 					//	dans la liste.
 					
 					Field original = list[index];
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Support
 				else
 				{
 					//	Le champ n'est pas connu: on ajoute le champ en fin de liste et on prend
-					//	note de son index, pour pouvoir y accéder rapidement par la suite.
+					//	note de son index, pour pouvoir y accÃ©der rapidement par la suite.
 
 					hash[name] = list.Count;
 					list.Add (field);
@@ -719,9 +719,9 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			//	La compilation des données part du principe que le bundle XML est "well formed",
-			//	c'est-à-dire qu'il comprend un seul bloc à la racine (<bundle>..</bundle>), et
-			//	que son contenu est valide (l'en-tête <?xml ...?> n'est pas requis).
+			//	La compilation des donnÃ©es part du principe que le bundle XML est "well formed",
+			//	c'est-Ã -dire qu'il comprend un seul bloc Ã  la racine (<bundle>..</bundle>), et
+			//	que son contenu est valide (l'en-tÃªte <?xml ...?> n'est pas requis).
 			
 			if (ResourceBundle.CheckBundleHeader (data))
 			{
@@ -950,7 +950,7 @@ namespace Epsitec.Common.Support
 			decoder.GetChars (data, 0, byteLength, chars, 0);
 
 			//	Le header peut commencer par un "byte order mark" Unicode; il faut le sauter
-			//	car il n'est pas signifiant pour le fichier XML considéré :
+			//	car il n'est pas signifiant pour le fichier XML considÃ©rÃ© :
 
 			int start  = chars[0] == 0xfeff ? 1 : 0;
 			string header = new string (chars, start, chars.Length - start);
@@ -1028,7 +1028,7 @@ namespace Epsitec.Common.Support
 					if ((node.Name == "ref") && (this.refInclusion))
 					{
 						//	Cas particulier: on inclut des champs en provenance d'un bundle
-						//	référencé par un tag <ref>.
+						//	rÃ©fÃ©rencÃ© par un tag <ref>.
 						
 						ResourceBundle bundle = this.ResolveRefBundle (node);
 						
@@ -1043,8 +1043,8 @@ namespace Epsitec.Common.Support
 					}
 					else
 					{
-						//	Tous les autres tags sont stockés sous la forme d'un "field" qui
-						//	ne sera analysé que lorsque le besoin s'en fera sentir.
+						//	Tous les autres tags sont stockÃ©s sous la forme d'un "field" qui
+						//	ne sera analysÃ© que lorsque le besoin s'en fera sentir.
 						
 						list.Add (new Field (this, node));
 					}
@@ -1935,8 +1935,8 @@ namespace Epsitec.Common.Support
 				
 				this.parent.CreateFieldList (this.xml, list, false);
 				
-				//	Les champs stockés dans la liste ont des noms qui sont du type 'nom[n]' où 'nom' est
-				//	le nom donné à la liste, et 'n' l'index (à partir de 0..)
+				//	Les champs stockÃ©s dans la liste ont des noms qui sont du type 'nom[n]' oÃ¹ 'nom' est
+				//	le nom donnÃ© Ã  la liste, et 'n' l'index (Ã  partir de 0..)
 				
 				for (int i = 0; i < list.Count; i++)
 				{

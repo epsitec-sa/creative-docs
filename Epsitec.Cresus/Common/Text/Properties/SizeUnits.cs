@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération SizeUnits détermine les unités à utiliser pour décrire
+	/// L'Ã©numÃ©ration SizeUnits dÃ©termine les unitÃ©s Ã  utiliser pour dÃ©crire
 	/// la taille d'une fonte, etc.
 	/// </summary>
 	public enum SizeUnits : byte

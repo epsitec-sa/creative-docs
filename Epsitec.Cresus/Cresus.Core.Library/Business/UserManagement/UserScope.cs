@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Cresus.Core.Business.UserManagement
+namespace Epsitec.Cresus.Core.Business.UserManagement
 {
 	public sealed class UserScope
 	{

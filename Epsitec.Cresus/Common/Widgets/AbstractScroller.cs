@@ -1,10 +1,10 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe AbstractScroller implémente la classe de base des ascenseurs
+	/// La classe AbstractScroller implÃ©mente la classe de base des ascenseurs
 	/// HScroller et VScroller.
 	/// </summary>
 	public abstract class AbstractScroller : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
@@ -66,10 +66,10 @@ namespace Epsitec.Common.Widgets
 		public bool							IsInverted
 		{
 			//	Inversion du fonctionnement.
-			//	Ascenseur vertical:   false -> zéro en bas
-			//	Ascenseur vertical:   true  -> zéro en haut
-			//	Ascenseur horizontal: false -> zéro à gauche
-			//	Ascenseur horizontal: true  -> zéro à droite
+			//	Ascenseur vertical:   false -> zÃ©ro en bas
+			//	Ascenseur vertical:   true  -> zÃ©ro en haut
+			//	Ascenseur horizontal: false -> zÃ©ro Ã  gauche
+			//	Ascenseur horizontal: true  -> zÃ©ro Ã  droite
 			
 			get
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		
 		public decimal						VisibleRangeRatio
 		{
-			//	Hauteur visible représentée par l'ascenseur (de 0 à 1).
+			//	Hauteur visible reprÃ©sentÃ©e par l'ascenseur (de 0 Ã  1).
 			
 			get
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Widgets
 		
 		public decimal						SmallChange
 		{
-			//	Valeur avancée par les boutons.
+			//	Valeur avancÃ©e par les boutons.
 			get
 			{
 				return this.smallChange;
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets
 		
 		public decimal						LargeChange
 		{
-			//	Valeur avancée en cliquant hors de la cabine.
+			//	Valeur avancÃ©e en cliquant hors de la cabine.
 			get
 			{
 				return this.largeChange;
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Widgets
 				if (arrowLength < AbstractScroller.minimalArrow)
 				{
 					//	S'il n'y a plus assez de place pour afficher un bouton visible,
-					//	autant les cacher complètement !
+					//	autant les cacher complÃ¨tement !
 					
 					arrowLength = 0;
 				}

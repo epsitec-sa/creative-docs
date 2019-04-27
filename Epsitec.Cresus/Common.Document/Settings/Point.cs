@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe Point contient un réglage numérique.
+	/// La classe Point contient un rÃ©glage numÃ©rique.
 	/// </summary>
 	[System.Serializable()]
 	public class Point : Abstract
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le réglage.
+			//	SÃ©rialise le rÃ©glage.
 			base.GetObjectData(info, context);
 			info.AddValue("Link", this.Link);
 			info.AddValue("Value", this.Value);
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected Point(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise le réglage.
+			//	Constructeur qui dÃ©sÃ©rialise le rÃ©glage.
 			this.link = false;
 			this.Value = (Drawing.Point) info.GetValue("Value", typeof(Drawing.Point));
 			this.Initialize();

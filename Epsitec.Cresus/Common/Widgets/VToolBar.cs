@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe VToolBar permet de réaliser des tool bars verticales.
+	/// La classe VToolBar permet de rÃ©aliser des tool bars verticales.
 	/// </summary>
 	public class VToolBar : AbstractToolBar
 	{

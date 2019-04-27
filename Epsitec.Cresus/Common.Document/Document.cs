@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document
 	public enum DocumentType
 	{
 		Graphic,		// document graphique
-		Pictogram,		// icône
+		Pictogram,		// icÃ´ne
 		Text,			// document texte
 	}
 
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document
 	{
 		Demo,			// version demo
 		Full,			// version pleine valide
-		Expired,		// version pleine échue
+		Expired,		// version pleine Ã©chue
 		Freeware,		// version freeware
 	}
 
@@ -42,17 +42,17 @@ namespace Epsitec.Common.Document
 
 	public enum StyleCategory
 	{
-		//	Attention: les membres de cette énumération sont utilisés comme index
-		//	dans certaines tables; il ne faut donc pas changer leur numérotation.
+		//	Attention: les membres de cette Ã©numÃ©ration sont utilisÃ©s comme index
+		//	dans certaines tables; il ne faut donc pas changer leur numÃ©rotation.
 		//	cf. Containers.Styles.SelectorName, par exemple.
 		
 		None		= -1,
 		
 		Graphic		= 0,	// style graphique
 		Paragraph	= 1,	// style de paragraphe
-		Character	= 2,	// style de caractère
+		Character	= 2,	// style de caractÃ¨re
 		
-		Count				// nombre d'éléments dans l'énumération (3)
+		Count				// nombre d'Ã©lÃ©ments dans l'Ã©numÃ©ration (3)
 	}
 
 	public enum CacheBitmapChanging
@@ -79,21 +79,21 @@ namespace Epsitec.Common.Document
 		public enum FontIncludeMode
 		{
 			//	Mode d'inclusion des polices dans le document crdoc/zip.
-			//	Ne pas changer les valeurs à cause des sérialisations existantes !
+			//	Ne pas changer les valeurs Ã  cause des sÃ©rialisations existantes !
 
 			None	= 0,	// n'inclut aucune police
-			Used	= 1,	// inclut les polices utilisées
-			All		= 2,	// inclut les polices utilisées plus toutes les polices définies
+			Used	= 1,	// inclut les polices utilisÃ©es
+			All		= 2,	// inclut les polices utilisÃ©es plus toutes les polices dÃ©finies
 		}
 
 		public enum ImageIncludeMode
 		{
 			//	Mode d'inclusion des images dans le document crdoc/zip.
-			//	Ne pas changer les valeurs à cause des sérialisations existantes !
+			//	Ne pas changer les valeurs Ã  cause des sÃ©rialisations existantes !
 
 			None	= 0,	// n'inclut aucune image
-			Defined	= 1,	// inclut les images selons leurs définitions
-			All		= 2,	// inclut toutes les images définies
+			Defined	= 1,	// inclut les images selons leurs dÃ©finitions
+			All		= 2,	// inclut toutes les images dÃ©finies
 		}
 
 		public enum DocumentFileExtension
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document
 
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext, Window mainWindow)
 		{
-			//	Crée un nouveau document vide.
+			//	CrÃ©e un nouveau document vide.
 			this.UniqueIDCreate();
 			this.type = type;
 			this.mode = mode;
@@ -176,8 +176,8 @@ namespace Epsitec.Common.Document
 				this.notifier  = new Notifier(this);
 			}
 
-			//	Il ne faut pas créer de ImageCache lorsqu'on crée un document
-			//	juste pour une icône !
+			//	Il ne faut pas crÃ©er de ImageCache lorsqu'on crÃ©e un document
+			//	juste pour une icÃ´ne !
 			if ( this.mode == DocumentMode.Modify )
 			{
 				this.imageCache = new ImageCache(this);
@@ -299,13 +299,13 @@ namespace Epsitec.Common.Document
 
 		public Settings.GlobalSettings GlobalSettings
 		{
-			//	Réglages globaux.
+			//	RÃ©glages globaux.
 			get { return this.globalSettings; }
 		}
 		
 		public CommandDispatcher CommandDispatcher
 		{
-			//	CommandDispatcher de l'éditeur.
+			//	CommandDispatcher de l'Ã©diteur.
 			get { return this.commandDispatcher; }
 		}
 
@@ -323,7 +323,7 @@ namespace Epsitec.Common.Document
 
 		public Document Clipboard
 		{
-			//	Bloc-notes associé.
+			//	Bloc-notes associÃ©.
 			get { return this.clipboard; }
 			set { this.clipboard = value; }
 		}
@@ -338,21 +338,21 @@ namespace Epsitec.Common.Document
 
 		public Containers.PageMiniatures PageMiniatures
 		{
-			//	Gestionnaire des pages miniatures associé.
+			//	Gestionnaire des pages miniatures associÃ©.
 			get { return this.pageMiniatures; }
 			set { this.pageMiniatures = value; }
 		}
 
 		public Containers.LayerMiniatures LayerMiniatures
 		{
-			//	Gestionnaire des calques miniatures associé.
+			//	Gestionnaire des calques miniatures associÃ©.
 			get { return this.layerMiniatures; }
 			set { this.layerMiniatures = value; }
 		}
 
 		protected void MainWindowSetFrozen()
 		{
-			//	Gèle la fenêtre principale.
+			//	GÃ¨le la fenÃªtre principale.
 			if (this.mainWindow != null)
 			{
 				this.isMainWindowFrozen = this.mainWindow.Root.IsFrozen;
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Document
 
 		protected void MainWindowClearFrozen()
 		{
-			//	Dégèle la fenêtre principale.
+			//	DÃ©gÃ¨le la fenÃªtre principale.
 			if (this.mainWindow != null)
 			{
 				this.mainWindow.Root.SetFrozen(this.isMainWindowFrozen);
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Document
 
 		public void Close()
 		{
-			//	Appelé juste avant le fermeture du document.
+			//	AppelÃ© juste avant le fermeture du document.
 			if (this.modifier != null)
 			{
 				this.modifier.MiniaturesTimerStop();
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document
 		#region ForSamples
 		public Document DocumentForSamples
 		{
-			//	Donne le document spécial servant à dessiner les échantillons.
+			//	Donne le document spÃ©cial servant Ã  dessiner les Ã©chantillons.
 			get
 			{
 				if ( this.documentForSamples == null )
@@ -396,7 +396,7 @@ namespace Epsitec.Common.Document
 
 		public Objects.TextBox2 ObjectForSamplesParagraph
 		{
-			//	Donne l'objet TextBox2 servant à dessiner les échantillons des styles de paragraphe.
+			//	Donne l'objet TextBox2 servant Ã  dessiner les Ã©chantillons des styles de paragraphe.
 			get
 			{
 				if ( this.objectForSamplesParagraph == null )
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Document
 
 		public Objects.TextLine2 ObjectForSamplesCharacter
 		{
-			//	Donne l'objet TextLine2 servant à dessiner les échantillons des styles de caractère.
+			//	Donne l'objet TextLine2 servant Ã  dessiner les Ã©chantillons des styles de caractÃ¨re.
 			get
 			{
 				if ( this.objectForSamplesCharacter == null )
@@ -460,14 +460,14 @@ namespace Epsitec.Common.Document
 
 		public Widgets.HRuler HRuler
 		{
-			//	Règle horizontale.
+			//	RÃ¨gle horizontale.
 			get { return this.hRuler; }
 			set { this.hRuler = value; }
 		}
 
 		public Widgets.VRuler VRuler
 		{
-			//	Règle verticale.
+			//	RÃ¨gle verticale.
 			get { return this.vRuler; }
 			set { this.vRuler = value; }
 		}
@@ -475,19 +475,19 @@ namespace Epsitec.Common.Document
 
 		public UndoableList PropertiesAuto
 		{
-			//	Liste des propriétés automatiques de ce document.
+			//	Liste des propriÃ©tÃ©s automatiques de ce document.
 			get { return this.propertiesAuto; }
 		}
 
 		public UndoableList PropertiesSel
 		{
-			//	Liste des propriétés sélectionnées de ce document.
+			//	Liste des propriÃ©tÃ©s sÃ©lectionnÃ©es de ce document.
 			get { return this.propertiesSel; }
 		}
 
 		public UndoableList Aggregates
 		{
-			//	Liste des aggrégats de ce document.
+			//	Liste des aggrÃ©gats de ce document.
 			get { return this.aggregates; }
 		}
 
@@ -500,13 +500,13 @@ namespace Epsitec.Common.Document
 
 		public Settings.Settings Settings
 		{
-			//	Réglages de ce document.
+			//	RÃ©glages de ce document.
 			get { return this.settings; }
 		}
 
 		public Modifier Modifier
 		{
-			//	Modificateur éventuel pour ce document.
+			//	Modificateur Ã©ventuel pour ce document.
 			get
 			{
 				return this.modifier;
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Document
 
 		public DocumentManager DocumentManager
 		{
-			//	Retourne le gestionnaire de document associé; il est créé s'il n'existait
+			//	Retourne le gestionnaire de document associÃ©; il est crÃ©Ã© s'il n'existait
 			//	pas avant.
 			get
 			{
@@ -539,19 +539,19 @@ namespace Epsitec.Common.Document
 
 		public Wrappers Wrappers
 		{
-			//	Wrappers éventuel pour ce document.
+			//	Wrappers Ã©ventuel pour ce document.
 			get { return this.wrappers; }
 		}
 
 		public Notifier Notifier
 		{
-			//	Notificateur éventuel pour ce document.
+			//	Notificateur Ã©ventuel pour ce document.
 			get { return this.notifier; }
 		}
 
 		public DocumentDialogs Dialogs
 		{
-			//	Dialogues éventuels pour ce document.
+			//	Dialogues Ã©ventuels pour ce document.
 			get { return this.dialogs; }
 		}
 
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsSurfaceRotation
 		{
-			//	Rotation spéciale pour calculer SurfaceAnchor en cours.
+			//	Rotation spÃ©ciale pour calculer SurfaceAnchor en cours.
 			get
 			{
 				return this.isSurfaceRotation;
@@ -585,7 +585,7 @@ namespace Epsitec.Common.Document
 
 		public double SurfaceRotationAngle
 		{
-			//	Angle de la rotation spéciale pour calculer SurfaceAnchor.
+			//	Angle de la rotation spÃ©ciale pour calculer SurfaceAnchor.
 			get
 			{
 				return this.surfaceRotationAngle;
@@ -633,7 +633,7 @@ namespace Epsitec.Common.Document
 
 		public Canvas.IconKey[] IconKeys
 		{
-			//	Donne les clés pour les icônes de toutes les pages.
+			//	Donne les clÃ©s pour les icÃ´nes de toutes les pages.
 			get
 			{
 				Canvas.IconKey[] keys = new Canvas.IconKey[this.objects.Count];
@@ -724,7 +724,7 @@ namespace Epsitec.Common.Document
 
 		public string Filename
 		{
-			//	Nom du fichier associé.
+			//	Nom du fichier associÃ©.
 			get
 			{
 				return this.filename;
@@ -746,7 +746,7 @@ namespace Epsitec.Common.Document
 
 		public string ExportDirectory
 		{
-			//	Nom du dossier d'exportation associé.
+			//	Nom du dossier d'exportation associÃ©.
 			get
 			{
 				return this.exportDirectory;
@@ -760,7 +760,7 @@ namespace Epsitec.Common.Document
 
 		public string ExportFilename
 		{
-			//	Nom du fichier (sans dossier) d'exportation associé.
+			//	Nom du fichier (sans dossier) d'exportation associÃ©.
 			get
 			{
 				return this.exportFilename;
@@ -774,7 +774,7 @@ namespace Epsitec.Common.Document
 
 		public int ExportFilter
 		{
-			//	Type du fichier d'exportation associé.
+			//	Type du fichier d'exportation associÃ©.
 			get
 			{
 				return this.exportFilter;
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsDirtySerialize
 		{
-			//	Indique si la sérialisation est nécessaire.
+			//	Indique si la sÃ©rialisation est nÃ©cessaire.
 			get
 			{
 				return this.isDirtySerialize;
@@ -798,7 +798,7 @@ namespace Epsitec.Common.Document
 
 		public void ClearDirtySerialize()
 		{
-			//	Considère le document comme propre, c'est-à-dire à jour.
+			//	ConsidÃ¨re le document comme propre, c'est-Ã -dire Ã  jour.
 			if (this.isDirtySerialize)
 			{
 				this.isDirtySerialize = false;
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Document
 
 		public void SetDirtySerialize(CacheBitmapChanging changing)
 		{
-			//	Considère le document comme sale, c'est-à-dire devant être mis à jour.
+			//	ConsidÃ¨re le document comme sale, c'est-Ã -dire devant Ãªtre mis Ã  jour.
 			if (!this.isDirtySerialize)
 			{
 				this.isDirtySerialize = true;
@@ -846,11 +846,11 @@ namespace Epsitec.Common.Document
 			int currentPage = this.Modifier.ActiveViewer.DrawingContext.CurrentPage;
 			int currentLayer = this.Modifier.ActiveViewer.DrawingContext.CurrentLayer;
 
-			//	Si on effectue un changement local dans une page modèle, il faut invalider toutes les miniatures.
+			//	Si on effectue un changement local dans une page modÃ¨le, il faut invalider toutes les miniatures.
 			if (changing == CacheBitmapChanging.Local)
 			{
 				Objects.Page page = this.DocumentObjects[currentPage] as Objects.Page;
-				if (page.MasterType != Objects.MasterType.Slave)  // page modèle ?
+				if (page.MasterType != Objects.MasterType.Slave)  // page modÃ¨le ?
 				{
 					changing = CacheBitmapChanging.All;
 				}
@@ -900,7 +900,7 @@ namespace Epsitec.Common.Document
 				if (ext != DocumentFileExtension.Icon &&
 					zip.TryLoadFile(sourceStream, delegate(string entryName) { return entryName == "document.data" || entryName.StartsWith("fonts/"); }))
 				{
-					// Fichier CrDoc au format ZIP, chargé avec succès.
+					// Fichier CrDoc au format ZIP, chargÃ© avec succÃ¨s.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
 					{
 						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), zip, isCrDoc);
@@ -908,7 +908,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					// Désérialisation standard; c'est un ancien fichier CrDoc.
+					// DÃ©sÃ©rialisation standard; c'est un ancien fichier CrDoc.
 					err = this.Read(sourceStream, System.IO.Path.GetDirectoryName(filename), null, isCrDoc);
 				}
 
@@ -945,7 +945,7 @@ namespace Epsitec.Common.Document
 
 		public string Read(Stream stream, string directory)
 		{
-			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
+			//	Ouvre un document sÃ©rialisÃ©, soit parce que l'utilisateur veut ouvrir
 			//	explicitement un fichier, soit par Engine.
 			return this.Read(stream, directory, null, false);
 		}
@@ -955,9 +955,9 @@ namespace Epsitec.Common.Document
 			return new GenericDeserializationBinder (
 				(assemblyName, typeName) =>
 				{
-					//	Retourne un type correspondant à l'application courante, afin
-					//	d'accepter de désérialiser un fichier généré par une application
-					//	ayant un autre numéro de révision.
+					//	Retourne un type correspondant Ã  l'application courante, afin
+					//	d'accepter de dÃ©sÃ©rialiser un fichier gÃ©nÃ©rÃ© par une application
+					//	ayant un autre numÃ©ro de rÃ©vision.
 					//	Application courante: Version=1.0.1777.18519
 					//	Version dans le fichier: Version=1.0.1777.11504
 					if (typeName == "Epsitec.Common.Document.Document")
@@ -994,7 +994,7 @@ namespace Epsitec.Common.Document
 
 		private string Read(Stream stream, string directory, ZipFile zip, bool isCrDoc)
 		{
-			//	Ouvre un document sérialisé, zippé ou non.
+			//	Ouvre un document sÃ©rialisÃ©, zippÃ© ou non.
 			this.ioDirectory = directory;
 			this.readWarnings = new System.Collections.ArrayList();
 
@@ -1004,8 +1004,8 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadFile;
 			}
 
-			//	Initialise la variable statique permettant à tous les constructeurs
-			//	de connaître le pointeur au document.
+			//	Initialise la variable statique permettant Ã  tous les constructeurs
+			//	de connaÃ®tre le pointeur au document.
 			Document.ReadDocument = this;
 
 			if ( this.Modifier != null )
@@ -1100,7 +1100,7 @@ namespace Epsitec.Common.Document
 			if ((this.imageCache != null) &&
 				(doc.imageCache != null))
 			{
-				this.imageCache.Document = null;	//	évite de vider le cache global qui vient d'être rempli
+				this.imageCache.Document = null;	//	Ã©vite de vider le cache global qui vient d'Ãªtre rempli
 				this.imageCache.Dispose ();
 				this.imageCache = null;
 			}
@@ -1155,7 +1155,7 @@ namespace Epsitec.Common.Document
 
 				if ( this.Modifier != null && doc.readRootStack != null )
 				{
-					int pageNumber = this.Modifier.PrintablePageRank(0);  // numéro de la première page non modèle du document
+					int pageNumber = this.Modifier.PrintablePageRank(0);  // numÃ©ro de la premiÃ¨re page non modÃ¨le du document
 					this.Modifier.ActiveViewer.DrawingContext.InternalPageLayer(pageNumber, 0);
 				}
 			}
@@ -1172,7 +1172,7 @@ namespace Epsitec.Common.Document
 
 		public System.Collections.ArrayList ReadWarnings
 		{
-			//	Retourne la liste éventuelle des warnings de lecture.
+			//	Retourne la liste Ã©ventuelle des warnings de lecture.
 			get
 			{
 				return this.readWarnings;
@@ -1180,14 +1180,14 @@ namespace Epsitec.Common.Document
 		}
 
 		
-		//	Utilisé par les constructeurs de désérialisation du genre:
+		//	UtilisÃ© par les constructeurs de dÃ©sÃ©rialisation du genre:
 		//	protected Toto(SerializationInfo info, StreamingContext context)
 		public static Document ReadDocument = null;
 		public static long ReadRevision = 0;
 
 		private void ReadFinalize()
 		{
-			//	Adapte tous les objets après une désérialisation.
+			//	Adapte tous les objets aprÃ¨s une dÃ©sÃ©rialisation.
 			if ( this.Modifier != null )
 			{
 				this.Modifier.OpletQueueEnable = false;
@@ -1239,7 +1239,7 @@ namespace Epsitec.Common.Document
 				if ( list.Length == 0 )
 				{
 					//	Le document n'a aucun style. Il faut rechercher si par hasard, il
-					//	y en a quand-même certains qui seraient utilisables.
+					//	y en a quand-mÃªme certains qui seraient utilisables.
 					
 					Text.TextStyle paraStyle = this.textContext.StyleList["Default", Text.TextStyleClass.Paragraph];
 					Text.TextStyle charStyle = this.textContext.StyleList["Default", Text.TextStyleClass.Text];
@@ -1250,7 +1250,7 @@ namespace Epsitec.Common.Document
 					}
 					
 					//	Tous les documents qui contenaient du texte ont toujours au moins
-					//	défini un style nommé 'Default'. Si ça ne devait pas être le cas,
+					//	dÃ©fini un style nommÃ© 'Default'. Si Ã§a ne devait pas Ãªtre le cas,
 					//	crash garanti.
 					
 					if ( paraStyle == null )  throw new System.ArgumentNullException("No default paragraph style found");
@@ -1259,10 +1259,10 @@ namespace Epsitec.Common.Document
 					this.textContext.StyleList.StyleMap.SetRank(null, paraStyle, 0);
 					this.textContext.StyleList.StyleMap.SetCaption(null, paraStyle, Res.Strings.Style.Paragraph.Base);
 
-					//	Cherche un style de caractère; si aucun n'est trouvé, on en crée
-					//	un nouveau de toutes pièces (c'est facile). Toute une série de
-					//	documents créés avec des versions de décembre 2005 n'avaient pas
-					//	de style de caractère par défaut.
+					//	Cherche un style de caractÃ¨re; si aucun n'est trouvÃ©, on en crÃ©e
+					//	un nouveau de toutes piÃ¨ces (c'est facile). Toute une sÃ©rie de
+					//	documents crÃ©Ã©s avec des versions de dÃ©cembre 2005 n'avaient pas
+					//	de style de caractÃ¨re par dÃ©faut.
 					
 					if ( charStyle == null )
 					{
@@ -1305,7 +1305,7 @@ namespace Epsitec.Common.Document
 		#region OldStylesToAggregates
 		protected void OldStylesToAggregates()
 		{
-			//	Adapte les anciens styles en agrégats.
+			//	Adapte les anciens styles en agrÃ©gats.
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				Properties.Type[] list = obj.PropertiesStyle();
@@ -1558,7 +1558,7 @@ namespace Epsitec.Common.Document
 
 		private static IOType ReadIdentifier(Stream stream)
 		{
-			//	Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
+			//	Lit les 8 bytes d'en-tÃªte et vÃ©rifie qu'ils contiennent bien "<?icon?>".
 			byte[] buffer = new byte[8];
 			Common.IO.ReaderHelper.Read(stream, buffer, 0, 8);
 			if ( buffer[0] != (byte) '<' )  return IOType.Unknown;
@@ -1576,7 +1576,7 @@ namespace Epsitec.Common.Document
 
 		private static void WriteIdentifier(Stream stream, IOType type)
 		{
-			//	Ecrit les 8 bytes d'en-tête "<?icon?>".
+			//	Ecrit les 8 bytes d'en-tÃªte "<?icon?>".
 			byte[] buffer = new byte[8];
 			buffer[0] = (byte) '<';
 			buffer[1] = (byte) '?';
@@ -1603,7 +1603,7 @@ namespace Epsitec.Common.Document
 
 		public static string OriginalSamplesDisplayName
 		{
-			//	Retourne le nom à afficher pour le dossier contenant les exemples originaux.
+			//	Retourne le nom Ã  afficher pour le dossier contenant les exemples originaux.
 			get
 			{
 				return Res.Strings.Directory.OriginalSamples;
@@ -1612,7 +1612,7 @@ namespace Epsitec.Common.Document
 
 		public static string MySamplesDisplayName
 		{
-			//	Retourne le nom à afficher pour le dossier contenant les exemples personnels.
+			//	Retourne le nom Ã  afficher pour le dossier contenant les exemples personnels.
 			get
 			{
 				return Res.Strings.Directory.MySamples;
@@ -1634,14 +1634,14 @@ namespace Epsitec.Common.Document
 			get
 			{
 #if false
-				//	Attention, on reçoit:
-				//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus Documents\2.0.2.0
-				//	'Crésus Documents' au lieu de 'Crésus documents' qui est le vrai nom !
+				//	Attention, on reÃ§oit:
+				//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\CrÃ©sus Documents\2.0.2.0
+				//	'CrÃ©sus Documents' au lieu de 'CrÃ©sus documents' qui est le vrai nom !
 				string path = Common.Support.Globals.Directories.UserAppData;
 				int i = path.LastIndexOf("\\");
 				if (i > 0)
 				{
-					path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
+					path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" Ã  la fin
 				}
 				return string.Concat(path, "\\", Document.DisplayMySamples);
 #else
@@ -1654,7 +1654,7 @@ namespace Epsitec.Common.Document
 
 		public static bool RedirectPath(ref string path)
 		{
-			//	Redirige un nom de dossier de 'Exemples originaux' vers 'Mes exemples', si nécessaire.
+			//	Redirige un nom de dossier de 'Exemples originaux' vers 'Mes exemples', si nÃ©cessaire.
 			if (string.IsNullOrEmpty(path))
 			{
 				return false;
@@ -1691,7 +1691,7 @@ namespace Epsitec.Common.Document
 		#region Serialization
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le document.
+			//	SÃ©rialise le document.
 			info.AddValue("Type", this.type);
 			info.AddValue("Name", this.name);
 
@@ -1731,7 +1731,7 @@ namespace Epsitec.Common.Document
 
 		protected Document(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise le document.
+			//	Constructeur qui dÃ©sÃ©rialise le document.
 			this.type = (DocumentType) info.GetValue("Type", typeof(DocumentType));
 			this.name = info.GetString("Name");
 
@@ -1847,13 +1847,13 @@ namespace Epsitec.Common.Document
 
 		public string IoDirectory
 		{
-			//	Retourne le nom du dossier en cours de lecture/écriture.
+			//	Retourne le nom du dossier en cours de lecture/Ã©criture.
 			get { return this.ioDirectory; }
 		}
 
 		public bool IsRevisionGreaterOrEqual(int revision, int version, int subversion)
 		{
-			//	Indique si un fichier est compatible avec une révision/version.
+			//	Indique si un fichier est compatible avec une rÃ©vision/version.
 			long r = ((long)revision<<32) + ((long)version<<16) + (long)subversion;
 			return ( Document.ReadRevision >= r );
 		}
@@ -1862,7 +1862,7 @@ namespace Epsitec.Common.Document
 		#region Miniature
 		protected void WriteMiniature(ZipFile zip, int priority, bool isModel)
 		{
-			//	Ecrit la miniature de la première page dans le fichier zip.
+			//	Ecrit la miniature de la premiÃ¨re page dans le fichier zip.
 			string filename;
 			byte[] data;
 			if (this.printer.Miniature(new Size(100, 100), isModel, out filename, out data))
@@ -1876,7 +1876,7 @@ namespace Epsitec.Common.Document
 		#region DocumentInfo
 		public static IDocumentInfo GetDocumentInfo(string path)
 		{
-			//	Extrait des informations pour le document spécifié.
+			//	Extrait des informations pour le document spÃ©cifiÃ©.
 
 			byte[] dataImage;
 			byte[] dataDocInfo;
@@ -1924,7 +1924,7 @@ namespace Epsitec.Common.Document
 
 		private static void ReadDocumentData(string path, out byte[] dataImage, out byte[] dataDocInfo)
 		{
-			//	Lit les données (miniature et statistique) associées au fichier.
+			//	Lit les donnÃ©es (miniature et statistique) associÃ©es au fichier.
 			ZipFile zip = new ZipFile ();
 
 			dataImage = null;
@@ -1941,7 +1941,7 @@ namespace Epsitec.Common.Document
 			{
 				try
 				{
-					dataImage = zip["preview.png"].Data;  // lit les données dans le fichier zip
+					dataImage = zip["preview.png"].Data;  // lit les donnÃ©es dans le fichier zip
 				}
 				catch
 				{
@@ -1950,7 +1950,7 @@ namespace Epsitec.Common.Document
 
 				try
 				{
-					dataDocInfo = zip["statistics.data"].Data;  // lit les données dans le fichier zip
+					dataDocInfo = zip["statistics.data"].Data;  // lit les donnÃ©es dans le fichier zip
 				}
 				catch
 				{
@@ -2006,7 +2006,7 @@ namespace Epsitec.Common.Document
 			string format = DocumentDialogs.PaperFormat(stat.PageSize);
 			if (format == null)
 			{
-				stat.PageFormat = string.Format("{0} × {1}", this.modifier.RealToString(stat.PageSize.Width), this.modifier.RealToString(stat.PageSize.Height));
+				stat.PageFormat = string.Format("{0} Ã— {1}", this.modifier.RealToString(stat.PageSize.Width), this.modifier.RealToString(stat.PageSize.Height));
 			}
 			else
 			{
@@ -2036,7 +2036,7 @@ namespace Epsitec.Common.Document
 		#region Fonts
 		protected void FontUpdate()
 		{
-			//	Met à jour la liste de toutes les polices utilisées dans le document.
+			//	Met Ã  jour la liste de toutes les polices utilisÃ©es dans le document.
 			this.fontList = new List<OpenType.FontName>();
 
 			TextFlow.StatisticFonts (this.fontList, this.textFlows, TextStats.FontNaming.Invariant);
@@ -2044,7 +2044,7 @@ namespace Epsitec.Common.Document
 
 			if (this.fontIncludeMode == FontIncludeMode.All)
 			{
-				//	Fouille tous les styles à la recherche des polices définies.
+				//	Fouille tous les styles Ã  la recherche des polices dÃ©finies.
 				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
 				foreach (Text.TextStyle style in list)
 				{
@@ -2067,7 +2067,7 @@ namespace Epsitec.Common.Document
 
 		protected void FontWriteAll(ZipFile zip)
 		{
-			//	Ecrit sur disque tous les fichiers des polices utilisées dans le document.
+			//	Ecrit sur disque tous les fichiers des polices utilisÃ©es dans le document.
 			if (this.fontList == null || this.fontIncludeMode == FontIncludeMode.None)
 			{
 				return;
@@ -2093,7 +2093,7 @@ namespace Epsitec.Common.Document
 
 		protected void FontReadAll(ZipFile zip)
 		{
-			//	Lit sur disque tous les fichiers des polices utilisées dans le document.
+			//	Lit sur disque tous les fichiers des polices utilisÃ©es dans le document.
 			if (this.fontList == null || this.fontIncludeMode == FontIncludeMode.None)
 			{
 				return;
@@ -2109,7 +2109,7 @@ namespace Epsitec.Common.Document
 				}
 
 				string name = Document.GetFontFilename(fontName, i);
-				byte[] data = zip[name].Data;  // lit les données dans le fichier zip
+				byte[] data = zip[name].Data;  // lit les donnÃ©es dans le fichier zip
 				if (data != null)
 				{
 					Drawing.Font.RegisterDynamicFont(data);
@@ -2128,8 +2128,8 @@ namespace Epsitec.Common.Document
 
 		protected static string GetFontFilename(OpenType.FontName fontName, int rank)
 		{
-			//	Retourne le nom de fichier à utiliser pour une police donnée.
-			//	Un nom très simple 'n.font' est tout à fait suffisant.
+			//	Retourne le nom de fichier Ã  utiliser pour une police donnÃ©e.
+			//	Un nom trÃ¨s simple 'n.font' est tout Ã  fait suffisant.
 			return string.Format("fonts/{0}.font", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 		}
 		#endregion
@@ -2150,7 +2150,7 @@ namespace Epsitec.Common.Document
 
 		public void ImageLockInPage(int pageRank)
 		{
-			//	Verrouille les images de la page en cours, en déverrouillant
+			//	Verrouille les images de la page en cours, en dÃ©verrouillant
 			//	toutes les autres.
 			if (this.imageCache != null)
 			{
@@ -2164,7 +2164,7 @@ namespace Epsitec.Common.Document
 
 		protected void ImageFlushUnused()
 		{
-			//	Supprime toutes les images inutilisées du cache des images.
+			//	Supprime toutes les images inutilisÃ©es du cache des images.
 			if (this.imageCache != null)
 			{
 				this.imageCache.ResetUsedFlags ();
@@ -2184,9 +2184,9 @@ namespace Epsitec.Common.Document
 
 		protected void ImageUpdate()
 		{
-			//	Met à jour les informations ShortName et InsideDoc.
-			//	ShortName est mis à jour dans les propriétés des objets Image du document.
-			//	InsideDoc est mis à jour dans le cache des images.
+			//	Met Ã  jour les informations ShortName et InsideDoc.
+			//	ShortName est mis Ã  jour dans les propriÃ©tÃ©s des objets Image du document.
+			//	InsideDoc est mis Ã  jour dans le cache des images.
 			if (this.imageCache != null)
 			{
 				this.imageCache.ClearEmbeddedInDocument ();
@@ -2204,7 +2204,7 @@ namespace Epsitec.Common.Document
 
 		protected void ImageCacheReadAll(ZipFile zip, ImageIncludeMode imageIncludeMode)
 		{
-			//	Cache toutes les données pour les objets Images du document.
+			//	Cache toutes les donnÃ©es pour les objets Images du document.
 			this.imageCache = new ImageCache(this);
 
 			foreach (Objects.Abstract obj in this.Deep(null))
@@ -2223,7 +2223,7 @@ namespace Epsitec.Common.Document
 		protected void AdjustOutsideArea()
 		{
 			//	Ajuste la marge autour de la page physique pour que tous les objets du document
-			//	puisse être vus. Cette marge est éventuellement augmentée, mais jamais réduite.
+			//	puisse Ãªtre vus. Cette marge est Ã©ventuellement augmentÃ©e, mais jamais rÃ©duite.
 			Rectangle bbox = this.GetGlobalObjectsBoundingBox();
 			if (bbox.IsEmpty)
 			{
@@ -2335,7 +2335,7 @@ namespace Epsitec.Common.Document
 
 					foreach ( Objects.Abstract obj in this.Deep(layer) )
 					{
-						if ( obj.IsHide )  continue;  // objet caché ?
+						if ( obj.IsHide )  continue;  // objet cachÃ© ?
 						if ( !obj.BoundingBox.IntersectsWith(clipRect) )  continue;
 
 						obj.DrawGeometry(graphics, drawingContext);
@@ -2386,7 +2386,7 @@ namespace Epsitec.Common.Document
 						Objects.Abstract obj = entry.Object;
 						if ( !obj.BoundingBox.IntersectsWith(clipRect) )  continue;
 
-						if ( obj.IsHide )  // objet caché ?
+						if ( obj.IsHide )  // objet cachÃ© ?
 						{
 							if ( !drawingContext.HideHalfActive )  continue;
 							drawingContext.IsDimmed = true;
@@ -2432,8 +2432,8 @@ namespace Epsitec.Common.Document
 			//	Exporte le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
-			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
-			//	si la fenêtre doit être repeinte !
+			//	MainWindowSetFrozen Ã©vite des appels Ã  ImageCache.SetResolution pendant l'exportation,
+			//	si la fenÃªtre doit Ãªtre repeinte !
 			this.MainWindowSetFrozen();
 
 			if (this.imageCache != null)
@@ -2452,7 +2452,7 @@ namespace Epsitec.Common.Document
 
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
-			//	Exécute sur le processus principal (celui qui a accès à la fenêtre d'application)
+			//	ExÃ©cute sur le processus principal (celui qui a accÃ¨s Ã  la fenÃªtre d'application)
 			this.mainWindow.Invoke (this.BeforeExportPdf);
 
 			if (this.imageCache != null)
@@ -2462,12 +2462,12 @@ namespace Epsitec.Common.Document
 			
 			string err = this.exportPdf.ExportToFile(filename, report);
 			
-			//	Libérer toute la mémoire accumulée pendant l'exportation PDF est une bonne idée, car
+			//	LibÃ©rer toute la mÃ©moire accumulÃ©e pendant l'exportation PDF est une bonne idÃ©e, car
 			//	cela peut occuper pas loing d'un GB de RAM...
 			GlobalImageCache.FreeEverything ();
 
 
-			//	Exécute sur le processus principal (celui qui a accès à la fenêtre d'application)
+			//	ExÃ©cute sur le processus principal (celui qui a accÃ¨s Ã  la fenÃªtre d'application)
 			this.mainWindow.Invoke (this.AfterExportPdf);
 			
 			return err;
@@ -2479,8 +2479,8 @@ namespace Epsitec.Common.Document
 
 			this.Modifier.DeselectAll ();
 
-			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
-			//	si la fenêtre doit être repeinte !
+			//	MainWindowSetFrozen Ã©vite des appels Ã  ImageCache.SetResolution pendant l'exportation,
+			//	si la fenÃªtre doit Ãªtre repeinte !
 			
 			this.MainWindowSetFrozen ();
 		}
@@ -2497,8 +2497,8 @@ namespace Epsitec.Common.Document
 			//	Exporte le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
-			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
-			//	si la fenêtre doit être repeinte !
+			//	MainWindowSetFrozen Ã©vite des appels Ã  ImageCache.SetResolution pendant l'exportation,
+			//	si la fenÃªtre doit Ãªtre repeinte !
 			this.MainWindowSetFrozen();
 
 			if (this.imageCache != null)
@@ -2515,7 +2515,7 @@ namespace Epsitec.Common.Document
 		#region TextContext
 		protected void CreateDefaultTextContext()
 		{
-			//	Crée le TextContext et les styles par défaut.
+			//	CrÃ©e le TextContext et les styles par dÃ©faut.
 			this.textContext = new Text.TextContext();
 			this.textContext.IsDegradedLayoutEnabled = true;
 			this.textContext.IsPropertiesPropertyEnabled = false;
@@ -2635,7 +2635,7 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.StyleMap.SetCaption(null, t3, "P.Titre 3");
 			
 			this.textContext.StyleList.StyleMap.SetRank(null, l1, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "P.Liste à puces");
+			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "P.Liste Ã  puces");
 
 			this.textContext.StyleList.StyleMap.SetRank(null, l2, rank++);
 			this.textContext.StyleList.StyleMap.SetCaption(null, l2, "P.Liste 1./2./...");
@@ -2659,13 +2659,13 @@ namespace Epsitec.Common.Document
 		
 		private void HandleStyleListStyleRedefined(object sender)
 		{
-			//	Appelé quand un TextStyle est modifié dans StyleList.
+			//	AppelÃ© quand un TextStyle est modifiÃ© dans StyleList.
 			this.textContext.StyleList.UpdateTextStyles();
 		}
 		
 		public Text.TextStyle[] TextStyles(StyleCategory category)
 		{
-			//	Liste des styles de paragraphe ou de caractère de ce document.
+			//	Liste des styles de paragraphe ou de caractÃ¨re de ce document.
 			System.Diagnostics.Debug.Assert(category == StyleCategory.Paragraph || category == StyleCategory.Character);
 			Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
 			int total = 0;
@@ -2690,7 +2690,7 @@ namespace Epsitec.Common.Document
 
 		public int GetSelectedTextStyle(StyleCategory category)
 		{
-			//	Donne le style de paragraphe ou de caractère sélectionné.
+			//	Donne le style de paragraphe ou de caractÃ¨re sÃ©lectionnÃ©.
 			System.Diagnostics.Debug.Assert(category == StyleCategory.Paragraph || category == StyleCategory.Character);
 			if ( category == StyleCategory.Paragraph )  return this.selectedParagraphStyle;
 			if ( category == StyleCategory.Character )  return this.selectedCharacterStyle;
@@ -2699,7 +2699,7 @@ namespace Epsitec.Common.Document
 
 		public void SetSelectedTextStyle(StyleCategory category, int rank)
 		{
-			//	Modifie le style de paragraphe ou de caractère sélectionné.
+			//	Modifie le style de paragraphe ou de caractÃ¨re sÃ©lectionnÃ©.
 			System.Diagnostics.Debug.Assert(category == StyleCategory.Paragraph || category == StyleCategory.Character);
 			
 			if ( this.modifier.OpletQueue.IsActionDefinitionInProgress )
@@ -2721,7 +2721,7 @@ namespace Epsitec.Common.Document
 
 		public int GetNextUniqueAggregateId()
 		{
-			//	Retourne le prochain identificateur unique pour les noms d'agrégats.
+			//	Retourne le prochain identificateur unique pour les noms d'agrÃ©gats.
 			return ++this.uniqueAggregateId;
 		}
 
@@ -2733,7 +2733,7 @@ namespace Epsitec.Common.Document
 
 		public int GetNextUniqueCharacterStyleId()
 		{
-			//	Retourne le prochain identificateur unique pour les noms de style de caractère.
+			//	Retourne le prochain identificateur unique pour les noms de style de caractÃ¨re.
 			return ++this.uniqueCharacterStyleId;
 		}
 		#endregion
@@ -2749,7 +2749,7 @@ namespace Epsitec.Common.Document
 			return new FlatEnumerable(this, root, onlySelected);
 		}
 
-		//	Enumérateur permettant de parcourir à plat l'arbre des objets.
+		//	EnumÃ©rateur permettant de parcourir Ã  plat l'arbre des objets.
 		protected class FlatEnumerable : System.Collections.IEnumerable,
 										 System.Collections.IEnumerator
 		{
@@ -2772,19 +2772,19 @@ namespace Epsitec.Common.Document
 
 			public System.Collections.IEnumerator GetEnumerator()
 			{
-				//	Implémentation de IEnumerable:
+				//	ImplÃ©mentation de IEnumerable:
 				return this;
 			}
 
 			public void Reset()
 			{
-				//	Implémentation de IEnumerator:
+				//	ImplÃ©mentation de IEnumerator:
 				this.index = -1;
 			}
 
 			public bool MoveNext()
 			{
-				if ( this.onlySelected )  // seulement les objets sélectionnés ?
+				if ( this.onlySelected )  // seulement les objets sÃ©lectionnÃ©s ?
 				{
 					while ( true )
 					{
@@ -2835,7 +2835,7 @@ namespace Epsitec.Common.Document
 			return new FlatReverseEnumerable(this, root, onlySelected);
 		}
 
-		//	Enumérateur permettant de parcourir à plat depuis la fin l'arbre des objets.
+		//	EnumÃ©rateur permettant de parcourir Ã  plat depuis la fin l'arbre des objets.
 		protected class FlatReverseEnumerable : System.Collections.IEnumerable,
 												System.Collections.IEnumerator
 		{
@@ -2858,19 +2858,19 @@ namespace Epsitec.Common.Document
 
 			public System.Collections.IEnumerator GetEnumerator()
 			{
-				//	Implémentation de IEnumerable:
+				//	ImplÃ©mentation de IEnumerable:
 				return this;
 			}
 
 			public void Reset()
 			{
-				//	Implémentation de IEnumerator:
+				//	ImplÃ©mentation de IEnumerator:
 				this.index = this.list.Count;
 			}
 
 			public bool MoveNext()
 			{
-				if ( this.onlySelected )  // seulement les objets sélectionnés ?
+				if ( this.onlySelected )  // seulement les objets sÃ©lectionnÃ©s ?
 				{
 					while ( true )
 					{
@@ -2921,10 +2921,10 @@ namespace Epsitec.Common.Document
 			return new DeepEnumerable(this, root, onlySelected);
 		}
 
-		//	Enumérateur permettant de parcourir en profondeur l'arbre des objets.
-		//	En mode onlySelected, seuls les objets sélectionnés du premier niveau
-		//	sont concernés. Un objet fils d'un objet sélectionné du premier niveau
-		//	est toujours considéré comme sélectionné, bien qu'il ne le soit pas
+		//	EnumÃ©rateur permettant de parcourir en profondeur l'arbre des objets.
+		//	En mode onlySelected, seuls les objets sÃ©lectionnÃ©s du premier niveau
+		//	sont concernÃ©s. Un objet fils d'un objet sÃ©lectionnÃ© du premier niveau
+		//	est toujours considÃ©rÃ© comme sÃ©lectionnÃ©, bien qu'il ne le soit pas
 		//	physiquement !
 		protected class DeepEnumerable : System.Collections.IEnumerable,
 										 System.Collections.IEnumerator
@@ -2939,13 +2939,13 @@ namespace Epsitec.Common.Document
 
 			public System.Collections.IEnumerator GetEnumerator()
 			{
-				//	Implémentation de IEnumerable:
+				//	ImplÃ©mentation de IEnumerable:
 				return this;
 			}
 
 			public void Reset()
 			{
-				//	Implémentation de IEnumerator:
+				//	ImplÃ©mentation de IEnumerator:
 				this.stack = new System.Collections.Stack();
 
 				UndoableList list = this.document.DocumentObjects;
@@ -2976,7 +2976,7 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = ti.List[this.index] as Objects.Abstract;
 				if ( obj.Objects != null && obj.Objects.Count > 0 )  // objet avec fils ?
 				{
-					if ( this.onlySelected )  // seulement les objets sélectionnés ?
+					if ( this.onlySelected )  // seulement les objets sÃ©lectionnÃ©s ?
 					{
 						if ( this.stack.Count > 1 || obj.IsSelected )
 						{
@@ -3008,7 +3008,7 @@ namespace Epsitec.Common.Document
 
 			public bool MoveNext()
 			{
-				if ( this.onlySelected )  // seulement les objets sélectionnés ?
+				if ( this.onlySelected )  // seulement les objets sÃ©lectionnÃ©s ?
 				{
 					while ( true )
 					{
@@ -3056,9 +3056,9 @@ namespace Epsitec.Common.Document
 			return new DeepBranchEnumerable(this, root, branch);
 		}
 
-		//	Enumérateur permettant de parcourir en profondeur l'arbre des objets.
+		//	EnumÃ©rateur permettant de parcourir en profondeur l'arbre des objets.
 		//	L'objet rendu est de type DeepBranchEntry. Ceci permet de savoir si
-		//	l'on est ou non à l'intérieur d'une branche quelconque.
+		//	l'on est ou non Ã  l'intÃ©rieur d'une branche quelconque.
 		protected class DeepBranchEnumerable : System.Collections.IEnumerable,
 											   System.Collections.IEnumerator
 		{
@@ -3072,13 +3072,13 @@ namespace Epsitec.Common.Document
 
 			public System.Collections.IEnumerator GetEnumerator()
 			{
-				//	Implémentation de IEnumerable:
+				//	ImplÃ©mentation de IEnumerable:
 				return this;
 			}
 
 			public void Reset()
 			{
-				//	Implémentation de IEnumerator:
+				//	ImplÃ©mentation de IEnumerator:
 				this.stack = new System.Collections.Stack();
 
 				UndoableList list = this.document.DocumentObjects;
@@ -3218,7 +3218,7 @@ namespace Epsitec.Common.Document
 		#region Ressources
 		public static string GetRes(string name)
 		{
-			//	Retourne une ressource string d'après son nom.
+			//	Retourne une ressource string d'aprÃ¨s son nom.
 			return Res.Strings.GetString (name);
 		}
 		#endregion
@@ -3281,7 +3281,7 @@ namespace Epsitec.Common.Document
 		#region UniqueID
 		protected void UniqueIDCreate()
 		{
-			//	Assigne un numéro unique à ce document.
+			//	Assigne un numÃ©ro unique Ã  ce document.
 			this.uniqueID = Document.uniqueIDGenerator++;
 		}
 

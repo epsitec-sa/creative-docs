@@ -7,23 +7,23 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Objects
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum MasterType
 	{
 		Slave    = 0,	// page normale
-		All      = 1,	// page modèle appliquée à toutes les pages
-		Even     = 2,	// page modèle appliquée aux pages paires
-		Odd      = 3,	// page modèle appliquée aux page impaires
-		None     = 4,	// page modèle appliquée à la demande
+		All      = 1,	// page modÃ¨le appliquÃ©e Ã  toutes les pages
+		Even     = 2,	// page modÃ¨le appliquÃ©e aux pages paires
+		Odd      = 3,	// page modÃ¨le appliquÃ©e aux page impaires
+		None     = 4,	// page modÃ¨le appliquÃ©e Ã  la demande
 	}
 
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum MasterUse
 	{
-		Never    = 0,	// n'utilise jamais de page modèle
-		Default  = 1,	// utilise une page modèle
-		Specific = 2,	// utilise une page modèle donnée
+		Never    = 0,	// n'utilise jamais de page modÃ¨le
+		Default  = 1,	// utilise une page modÃ¨le
+		Specific = 2,	// utilise une page modÃ¨le donnÃ©e
 	}
 
 	/// <summary>
@@ -80,8 +80,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public int Rank
 		{
-			//	Rang de la page (0..n). Les pages normales et les pages maîtres
-			//	ont chacune un rang indépendant commençant à zéro.
+			//	Rang de la page (0..n). Les pages normales et les pages maÃ®tres
+			//	ont chacune un rang indÃ©pendant commenÃ§ant Ã  zÃ©ro.
 			get
 			{
 				return this.rank;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public string LongName
 		{
-			//	Nom de la page suivi éventuellement du format.
+			//	Nom de la page suivi Ã©ventuellement du format.
 			get
 			{
 				string text = this.Name;
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public MasterType MasterType
 		{
-			//	Type de la page maître. Le type Slave indique qu'il s'agit d'une
+			//	Type de la page maÃ®tre. Le type Slave indique qu'il s'agit d'une
 			//	page normale.
 			get
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public MasterUse MasterUse
 		{
-			//	Pour une page normale, indique quelle page maître il faut utiliser.
+			//	Pour une page normale, indique quelle page maÃ®tre il faut utiliser.
 			get
 			{
 				return this.masterUse;
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Page MasterPageToUse
 		{
-			//	Si MasterUse = Specific, donne directement la page maître à utiliser.
+			//	Si MasterUse = Specific, donne directement la page maÃ®tre Ã  utiliser.
 			get
 			{
 				return this.masterPageToUse;
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool MasterGuides
 		{
-			//	Indique s'il faut utiliser les guides des pages maîtres.
+			//	Indique s'il faut utiliser les guides des pages maÃ®tres.
 			get
 			{
 				return this.masterGuides;
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool MasterAutoStop
 		{
-			//	Indique si l'application s'arrête à la prochaine page modèle.
+			//	Indique si l'application s'arrÃªte Ã  la prochaine page modÃ¨le.
 			get
 			{
 				return this.masterAutoStop;
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool MasterSpecific
 		{
-			//	Indique si la page modèle utilise elle-même une page modèle.
+			//	Indique si la page modÃ¨le utilise elle-mÃªme une page modÃ¨le.
 			get
 			{
 				return this.masterSpecific;
@@ -298,12 +298,12 @@ namespace Epsitec.Common.Document.Objects
 
 		public int MasterFirstFrontLayer
 		{
-			//	Pour une page maître, retourne le rang du premier calque qui sera
-			//	à l'avant.
-			//	- S'il n'y a qu'un calque, il vient derrière.
-			//	- S'il y a 2 calques, le premier vient derrière et le dernier devant.
-			//	- S'il y a 3 calques, 1-2 derrière et 3 devant
-			//	- S'il y a 4 calques, 1-2 derrière et 3-4 devant
+			//	Pour une page maÃ®tre, retourne le rang du premier calque qui sera
+			//	Ã  l'avant.
+			//	- S'il n'y a qu'un calque, il vient derriÃ¨re.
+			//	- S'il y a 2 calques, le premier vient derriÃ¨re et le dernier devant.
+			//	- S'il y a 3 calques, 1-2 derriÃ¨re et 3 devant
+			//	- S'il y a 4 calques, 1-2 derriÃ¨re et 3-4 devant
 			get
 			{
 				int totalLayer = this.objects.Count;
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public UndoableList Guides
 		{
-			//	Liste de repères pour cette page.
+			//	Liste de repÃ¨res pour cette page.
 			get
 			{
 				return this.guides;
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Size PageSize
 		{
-			//	Taille de la page. Si Empty, c'est la taille globale qui est utilisée.
+			//	Taille de la page. Si Empty, c'est la taille globale qui est utilisÃ©e.
 			get
 			{
 				return this.pageSize;
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Point HotSpot
 		{
-			//	Position du point chaud de l'icône, uniquement pour Pictogram.
+			//	Position du point chaud de l'icÃ´ne, uniquement pour Pictogram.
 			get
 			{
 				return this.hotSpot;
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CloneObject(Objects.Abstract src)
 		{
-			//	Reprend toutes les caractéristiques d'un objet.
+			//	Reprend toutes les caractÃ©ristiques d'un objet.
 			base.CloneObject(src);
 			Page page = src as Page;
 
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Document.Objects
 		#region CacheBitmap
 		protected override void CacheBitmapCreate()
 		{
-			//	Crée le bitmap caché.
+			//	CrÃ©e le bitmap cachÃ©.
 			//?System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate page #{0}", this.PageNumber));
 			if (this.cacheBitmapSize.IsEmpty)
 			{
@@ -591,13 +591,13 @@ namespace Epsitec.Common.Document.Objects
 		#region OpletType
 		protected void InsertOpletType()
 		{
-			//	Ajoute un oplet pour mémoriser les types de la page.
+			//	Ajoute un oplet pour mÃ©moriser les types de la page.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletType oplet = new OpletType(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		//	Mémorise le nom de l'objet.
+		//	MÃ©morise le nom de l'objet.
 		protected class OpletType : AbstractOplet
 		{
 			public OpletType(Page host)
@@ -686,7 +686,7 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			base.GetObjectData(info, context);
 
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -713,7 +713,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Page(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 			bool master = false;
 			this.masterAutoStop = false;
 			this.masterSpecific = false;

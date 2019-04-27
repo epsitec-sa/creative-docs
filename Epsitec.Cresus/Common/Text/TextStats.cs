@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe TextStats permet d'accéder à des statistiques relatives à un
+	/// La classe TextStats permet d'accÃ©der Ã  des statistiques relatives Ã  un
 	/// TextStory.
 	/// </summary>
 	public class TextStats
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Text
 					{
 						if (count > 0)
 						{
-							//	Génère les statistiques pour ce style et ces réglages.
+							//	GÃ©nÃ¨re les statistiques pour ce style et ces rÃ©glages.
 							
 							this.Record (cache, count);
 						}

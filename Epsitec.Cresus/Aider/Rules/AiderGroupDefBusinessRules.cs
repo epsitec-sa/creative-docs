@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Rules
 		{
 			if (string.IsNullOrEmpty (groupDef.Name))
 			{
-				Logic.BusinessRuleException (groupDef, "Le nom de la définition de groupe doit être défini.");
+				Logic.BusinessRuleException (groupDef, "Le nom de la dÃ©finition de groupe doit Ãªtre dÃ©fini.");
 			}
 		}
 		
@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Rules
 			if ((AiderGroupIds.IsParish (path)) ||
 				(AiderGroupIds.IsRegion (path)))
 			{
-				//	We don't want to update groups named "Régions" and "Paroisses", as their
+				//	We don't want to update groups named "RÃ©gions" and "Paroisses", as their
 				//	name is not the same as the group definition, but specific to the group.
 
 				return;

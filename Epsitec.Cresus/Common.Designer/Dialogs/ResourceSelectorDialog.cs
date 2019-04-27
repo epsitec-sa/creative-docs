@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if (this.window == null)
 			{
 				this.window = new Window();
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void CreateUI(Widget parent)
 		{
-			//	Titre supérieur.
+			//	Titre supÃ©rieur.
 			int tabIndex = 1;
 
 			var mainPane = new FrameBox
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.title.Dock = DockStyle.Fill;
 
 			this.radioEntities = new RadioButton (header);
-			this.radioEntities.Text = "Entités";
+			this.radioEntities.Text = "EntitÃ©s";
 			this.radioEntities.Name = "Entities";
 			this.radioEntities.PreferredWidth = 70;
 			this.radioEntities.Dock = DockStyle.Right;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.checkInterface.TabIndex = tabIndex++;
 
 			this.radioAlone = new RadioButton (header);
-			this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'héritage</b></font>";
+			this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'hÃ©ritage</b></font>";
 			this.radioAlone.Name = "Alone";
 			this.radioAlone.PreferredWidth = 130;
 			this.radioAlone.Dock = DockStyle.Left;
@@ -137,14 +137,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.radioAlone.TabIndex = tabIndex++;
 
 			this.radioInherit = new RadioButton (header);
-			this.radioInherit.Text = "<font size=\"130%\"><b>Hérite de l'entité ci-dessous :</b></font>";
+			this.radioInherit.Text = "<font size=\"130%\"><b>HÃ©rite de l'entitÃ© ci-dessous :</b></font>";
 			this.radioInherit.Name = "Inherit";
 			this.radioInherit.PreferredWidth = 240;
 			this.radioInherit.Dock = DockStyle.Left;
 			this.radioInherit.Clicked += this.HandleRadioClicked;
 			this.radioInherit.TabIndex = tabIndex++;
 
-			Separator sep = new Separator (mainPane);  // trait horizontal de séparation
+			Separator sep = new Separator (mainPane);  // trait horizontal de sÃ©paration
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 
@@ -218,14 +218,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			//	Pied.
 			this.buttonIsNullable = new CheckButton (mainPane);
-			this.buttonIsNullable.Text = "Accepte d'être nul";
+			this.buttonIsNullable.Text = "Accepte d'Ãªtre nul";
 			this.buttonIsNullable.Dock = DockStyle.Bottom;
 			this.buttonIsNullable.Margins = new Margins (0, 0, 5, 0);
 			this.buttonIsNullable.TabIndex = tabIndex++;
 			this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.buttonIsNullable.TabIndex = tabIndex++;
 
-			sep = new Separator (mainPane);  // trait horizontal de séparation
+			sep = new Separator (mainPane);  // trait horizontal de sÃ©paration
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Bottom;
 		}
@@ -245,8 +245,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, bool isNullable, List<Druid> exclude, Druid typeId)
 		{
-			//	Début de l'accès aux ressources pour le dialogue.
-			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
+			//	DÃ©but de l'accÃ¨s aux ressources pour le dialogue.
+			//	Le type peut Ãªtre inconnu ou la ressource inconnue, mais pas les deux.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknown || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels || type == ResourceAccess.Type.Forms);
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
@@ -269,14 +269,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					this.module = this.lastModule;  // utilise le dernier module utilisé
+					this.module = this.lastModule;  // utilise le dernier module utilisÃ©
 				}
 			}
 
 			if (this.operation == Operation.Form)
 			{
-				//	Met dans la liste this.listTypeId le Druid de l'entité de base ainsi que tous les Druids
-				//	des entités dont l'entité de base hérite.
+				//	Met dans la liste this.listTypeId le Druid de l'entitÃ© de base ainsi que tous les Druids
+				//	des entitÃ©s dont l'entitÃ© de base hÃ©rite.
 				this.typeIds = this.module.AccessEntities.GetInheriedEntities(typeId);
 			}
 			else if (this.operation == Operation.Entities)
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (!typeId.IsEmpty)
 				{
 					//	Dans ce cas, typeId correspond au Druid du Form delta. Il ne faudra donc lister
-					//	que les entités qui héritent de l'entité de base de ce masque.
+					//	que les entitÃ©s qui hÃ©ritent de l'entitÃ© de base de ce masque.
 					FormEngine.FormDescription form = this.module.AccessForms.GetForm(typeId);
 					if (form != null)
 					{
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void AccessChange(Module module)
 		{
-			//	Change l'accès aux ressources dans un autre module.
+			//	Change l'accÃ¨s aux ressources dans un autre module.
 			this.module = module;
 			this.lastModule = module;
 
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private bool BestAccess()
 		{
 			//	Si le type courant ne contient aucune ressource, mais que l'autre type en contient,
-			//	bascule sur l'autre type (Types ou Entities). L'idée est d'anticiper sur l'utilisateur,
+			//	bascule sur l'autre type (Types ou Entities). L'idÃ©e est d'anticiper sur l'utilisateur,
 			//	qui voudra vraissemblablement changer de type s'il voit une liste vide.
 			if (this.operation == Operation.TypesOrEntities)
 			{
@@ -402,8 +402,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool CollectionViewFilter(object obj)
 		{
-			//	Méthode passée comme paramètre System.Predicate<object> à CollectionView.Filter.
-			//	Retourne false si la ressource doit être exclue.
+			//	MÃ©thode passÃ©e comme paramÃ¨tre System.Predicate<object> Ã  CollectionView.Filter.
+			//	Retourne false si la ressource doit Ãªtre exclue.
 			CultureMap cultureMap = obj as CultureMap;
 
 			if (this.exclude != null)
@@ -462,14 +462,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			
 		public Common.Dialogs.DialogResult AccessClose()
 		{
-			//	Fin de l'accès aux ressources pour le dialogue.
+			//	Fin de l'accÃ¨s aux ressources pour le dialogue.
 			return this.result;
 		}
 
 
 		private void UpdateTitle()
 		{
-			//	Met à jour le titre qui dépend du type des ressources éditées.
+			//	Met Ã  jour le titre qui dÃ©pend du type des ressources Ã©ditÃ©es.
 			string name = ResourceAccess.TypeDisplayName(this.resourceType);
 			if (this.operation == Operation.InterfaceEntities)
 			{
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateArray()
 		{
-			//	Met à jour tout le contenu du tableau et sélectionne la ressource actuelle.
+			//	Met Ã  jour tout le contenu du tableau et sÃ©lectionne la ressource actuelle.
 			this.listResources.Items.Clear();
 			this.allModules.Clear ();
 			this.allIndexesInModules.Clear ();
@@ -589,10 +589,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateButtons()
 		{
-			//	Met à jour tous les boutons.
+			//	Met Ã  jour tous les boutons.
 			this.allModulesButton.ActiveState = ResourceSelectorDialog.showAllModules ? ActiveState.Yes : ActiveState.No;
 
-			//	Met à jour le bouton "Utiliser".
+			//	Met Ã  jour le bouton "Utiliser".
 			if (this.buttonUse != null)
 			{
 				if (this.operation == Operation.InheritEntities)
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateRadios()
 		{
-			//	Met à jour les boutons radio pour changer le type.
+			//	Met Ã  jour les boutons radio pour changer le type.
 			if (this.operation == Operation.TypesOrEntities)
 			{
 				this.title.Visibility = true;
@@ -663,7 +663,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateInherit()
 		{
-			//	Met à jour en fonction du bouton pour l'héritage.
+			//	Met Ã  jour en fonction du bouton pour l'hÃ©ritage.
 			if (this.operation == Operation.InheritEntities)
 			{
 				this.ignoreChanged = true;
@@ -721,7 +721,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (this.collectionView != null)
 			{
-				this.collectionView.Filter = null;  // pour éviter un appel ultérieur de CollectionViewFilter !
+				this.collectionView.Filter = null;  // pour Ã©viter un appel ultÃ©rieur de CollectionViewFilter !
 				this.collectionView.Dispose ();
 				this.collectionView = null;
 			}
@@ -738,7 +738,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private Druid CurrentSelectedResource
 		{
-			//	Retourne le Druid de la ressource actuellement sélectionnée.
+			//	Retourne le Druid de la ressource actuellement sÃ©lectionnÃ©e.
 			get
 			{
 				if (this.operation == Operation.InheritEntities && !this.IsInherit)
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleListResourcesSelected(object sender)
 		{
-			//	La ressource sélectionnée a changé.
+			//	La ressource sÃ©lectionnÃ©e a changÃ©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -899,7 +899,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleListResourcesDoubleClicked(object sender, MessageEventArgs e)
 		{
-			//	La liste des ressources a été double-cliquée.
+			//	La liste des ressources a Ã©tÃ© double-cliquÃ©e.
 			if (this.buttonUse != null)  // mode "dialogue" (par opposition au mode "volet") ?
 			{
 				this.Close ();

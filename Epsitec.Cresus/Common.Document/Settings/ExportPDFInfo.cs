@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe ExportPDFInfo contient tous les réglages pour l'exportation PDF.
+	/// La classe ExportPDFInfo contient tous les rÃ©glages pour l'exportation PDF.
 	/// </summary>
 	[System.Serializable()]
 	public class ExportPDFInfo : ISerializable
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise les réglages.
+			//	SÃ©rialise les rÃ©glages.
 			info.AddValue("Rev", 8);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected ExportPDFInfo(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise les réglages.
+			//	Constructeur qui dÃ©sÃ©rialise les rÃ©glages.
 			this.document = Document.ReadDocument;
 			this.Initialize();
 

@@ -1,8 +1,8 @@
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// L'interface ICanvasEngine définit un moteur capable de peindre dans
-	/// une surface de type Bitmap pour remplir un Canvas à une taille donnée.
+	/// L'interface ICanvasEngine dÃ©finit un moteur capable de peindre dans
+	/// une surface de type Bitmap pour remplir un Canvas Ã  une taille donnÃ©e.
 	/// </summary>
 	public interface ICanvasEngine
 	{

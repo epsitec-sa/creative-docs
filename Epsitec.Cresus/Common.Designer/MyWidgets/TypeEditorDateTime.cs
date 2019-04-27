@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant d'éditer un Caption.Type.
+	/// Widget permettant d'Ã©diter un Caption.Type.
 	/// </summary>
 	public class TypeEditorDateTime : AbstractTypeEditor
 	{
@@ -41,14 +41,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Months);
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Years);
 
-			//	Valeur par défaut.
+			//	Valeur par dÃ©faut.
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.DateTime.Default, right, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 0, 10);
 			this.groupDefault.ResetButton.Clicked += this.HandleResetButtonClicked;
 			this.fieldDefault.EditionAccepted += this.HandleTextFieldChanged;
 
-			//	Date, à gauche.
+			//	Date, Ã  gauche.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMin, left, out this.groupMinDate, out this.fieldMinDate);
 			this.groupMinDate.Dock = DockStyle.StackBegin;
 			this.groupMinDate.Margins = new Margins(0, 0, 0, 2);
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupDateStep.ResetButton.Clicked += this.HandleResetButtonClicked;
 			this.fieldDateStep.EditionAccepted += this.HandleTextFieldChanged;
 
-			//	Heure, à droite.
+			//	Heure, Ã  droite.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMin, right, out this.groupMinTime, out this.fieldMinTime);
 			this.groupMinTime.Dock = DockStyle.StackBegin;
 			this.groupMinTime.Margins = new Margins(0, 0, 20+10, 2);
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override string GetSummary()
 		{
-			//	Retourne le texte du résumé.
+			//	Retourne le texte du rÃ©sumÃ©.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
 			object value;
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override void UpdateContent()
 		{
-			//	Met à jour le contenu de l'éditeur.
+			//	Met Ã  jour le contenu de l'Ã©diteur.
 			this.ignoreChange = true;
 			object value;
 			bool usesOriginalData;

@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Core.Controllers.SpecialFieldControllers;
 

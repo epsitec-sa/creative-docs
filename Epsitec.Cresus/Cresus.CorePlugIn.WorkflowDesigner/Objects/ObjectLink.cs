@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public LinkableObject DstObject
 		{
-			//	Objet destination de la connexion (si la connexion dÈbouche sur un noeud).
+			//	Objet destination de la connexion (si la connexion d√©bouche sur un noeud).
 			get
 			{
 				return this.dstObject;
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public ObjectComment Comment
 		{
-			//	Commentaire liÈ.
+			//	Commentaire li√©.
 			get
 			{
 				return this.comment;
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public double CommentAttach
 		{
-			//	Position relative le long de la courbe du commentaire liÈ (0..1).
+			//	Position relative le long de la courbe du commentaire li√© (0..1).
 			get
 			{
 				return this.commentAttach;
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public bool IsSrcHilited
 		{
-			//	Indique si la boÓte source est survolÈe par la souris.
+			//	Indique si la bo√Æte source est survol√©e par la souris.
 			get
 			{
 				return this.isSrcHilited;
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override Rectangle Bounds
 		{
-			//	Retourne la boÓte de l'objet.
+			//	Retourne la bo√Æte de l'objet.
 			get
 			{
 				Rectangle bounds = this.Path.ComputeBounds ();
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void Move(double dx, double dy)
 		{
-			//	DÈplace l'objet.
+			//	D√©place l'objet.
 			this.SetPathDirty ();
 			this.UpdateVectors ();
 			this.UpdateGeometry ();
@@ -143,12 +143,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 				if (this.srcObject is ObjectNode)
 				{
-					this.editor.CreateMenuItem (null, "CrÈe une nouvelle transition", "Link.CreateEdge");
+					this.editor.CreateMenuItem (null, "Cr√©e une nouvelle transition", "Link.CreateEdge");
 				}
 				else
 				{
-					this.editor.CreateMenuItem (null, "CrÈe un nouveau núud privÈ", "Link.CreatePrivateNode");
-					this.editor.CreateMenuItem (null, "Choisi un núud public...",   "Link.CreatePublicNode");
+					this.editor.CreateMenuItem (null, "Cr√©e un nouveau n≈ìud priv√©", "Link.CreatePrivateNode");
+					this.editor.CreateMenuItem (null, "Choisi un n≈ìud public...",   "Link.CreatePublicNode");
 				}
 			}
 
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 	
 		public override List<AbstractObject> FriendObjects
 		{
-			//	Les objets amis sont les node/edge ‡ chaque extrÈmitÈ de la connexion.
+			//	Les objets amis sont les node/edge √† chaque extr√©mit√© de la connexion.
 			get
 			{
 				var list = new List<AbstractObject> ();
@@ -218,21 +218,21 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				case ActiveElement.LinkChangeDst:
 					if (this.dstObject == null)
 					{
-						return (this.srcObject is ObjectNode) ? "Connecte ‡ une transition" : "Connecte ‡ un núud";
+						return (this.srcObject is ObjectNode) ? "Connecte √† une transition" : "Connecte √† un n≈ìud";
 					}
 					else
 					{
-						return (this.srcObject is ObjectNode) ? "Connecte ‡ une autre transition" : "Connecte ‡ un autre núud";
+						return (this.srcObject is ObjectNode) ? "Connecte √† une autre transition" : "Connecte √† un autre n≈ìud";
 					}
 
 				case ActiveElement.LinkCreateDst:
-					return (this.srcObject is ObjectNode) ? "CrÈe une nouvelle transition" : "CrÈe un nouveau núud<br/>Ctrl+clic choisi un núud public";
+					return (this.srcObject is ObjectNode) ? "Cr√©e une nouvelle transition" : "Cr√©e un nouveau n≈ìud<br/>Ctrl+clic choisi un n≈ìud public";
 
 				case ActiveElement.LinkClose:
 					return "Supprime la connexion";
 
 				case ActiveElement.LinkComment:
-					return "Ajoute un commentaire ‡ la connexion";
+					return "Ajoute un commentaire √† la connexion";
 
 				case ActiveElement.LinkCustomizeStart:
 				case ActiveElement.LinkCustomizeEnd:
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	La souris est bougÈe.
+			//	La souris est boug√©e.
 			base.MouseMove (message, pos);
 
 			if (this.draggingMode == DraggingMode.MoveLinkDst)
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressÈ.
+			//	Le bouton de la souris est press√©.
 			base.MouseDown (message, pos);
 
 			if (this.hilitedElement == ActiveElement.LinkChangeDst)
@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est rel‚chÈ.
+			//	Le bouton de la souris est rel√¢ch√©.
 			base.MouseUp (message, pos);
 
 			if (this.draggingMode == DraggingMode.MoveLinkDst)
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
-			//	DÈtecte l'ÈlÈment actif visÈ par la souris.
+			//	D√©tecte l'√©l√©ment actif vis√© par la souris.
 			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
-			//	DÈtecte l'ÈlÈment actif visÈ par la souris.
+			//	D√©tecte l'√©l√©ment actif vis√© par la souris.
 			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool DetectOver(Point pos, double margin)
 		{
-			//	DÈtecte si la souris est le long de la connexion.
+			//	D√©tecte si la souris est le long de la connexion.
 			var rect = this.Bounds;
 			rect.Inflate (margin*2);
 
@@ -473,7 +473,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void MoveObjectToFreeArea(LinkableObject obj, Point start, Point end)
 		{
-			//	Essaie de trouver une place libre, pour dÈplacer le moins possible d'ÈlÈments.
+			//	Essaie de trouver une place libre, pour d√©placer le moins possible d'√©l√©ments.
 			Point offset = Point.Move (start, end, 2);
 
 			Rectangle bounds = obj.Bounds;
@@ -564,7 +564,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public void UpdateLink()
 		{
-			//	Met ‡ jour les deux vecteurs permettant de dÈfinir le chemin de la connexion.
+			//	Met √† jour les deux vecteurs permettant de d√©finir le chemin de la connexion.
 			this.SetPathDirty ();
 
 			this.UpdateAngles ();
@@ -669,7 +669,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void SwapComment()
 		{
-			//	Ajoute un commentaire ‡ la connexion.
+			//	Ajoute un commentaire √† la connexion.
 			if (this.comment == null)
 			{
 				this.comment = new ObjectComment(this.editor, this.entity);
@@ -732,7 +732,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 					graphics.PaintDashedOutline (this.CustomizeConstrainPath, 1, 1, 4, CapStyle.Round, this.colorFactory.GetColorMain ());
 				}
 
-				//	Dessine la connexion et la flËche.
+				//	Dessine la connexion et la fl√®che.
 				Color color = (this.IsHilite || this.draggingMode == DraggingMode.MoveLinkDst) ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
 
 				if (this.draggingMode == DraggingMode.MoveLinkDst && this.hilitedDstObject == null)
@@ -759,7 +759,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				this.DrawArrow (graphics, color);
 			}
 
-			//	Dessine la pastille au dÈpart.
+			//	Dessine la pastille au d√©part.
 			bool triangle = false;
 			if (this.srcObject.AbstractEntity is WorkflowNodeEntity)
 			{
@@ -832,7 +832,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void DrawSquare(Graphics graphics, Point center, double radius)
 		{
-			//	Dessine un carrÈ vide.
+			//	Dessine un carr√© vide.
 			var rect = new Rectangle (new Point (center.X-radius, center.Y-radius), new Size (radius*2, radius*2));
 			rect.Deflate (0.5);
 
@@ -845,7 +845,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void DrawTriangle(Graphics graphics, Point origin, Point center, double dim)
 		{
-			//	Dessine un triangle vide, dont la base est dirigÈe vers l'origine.
+			//	Dessine un triangle vide, dont la base est dirig√©e vers l'origine.
 			Point p1 = Point.Move (center, origin, -dim);
 			Point pp = Point.Move (center, origin,  dim);
 			Point v = center-pp;
@@ -875,7 +875,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsHilite
 		{
-			//	Indique si la souris est dans l'en-tÍte.
+			//	Indique si la souris est dans l'en-t√™te.
 			get
 			{
 				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked || this.draggingMode == DraggingMode.MoveLinkDst)
@@ -920,7 +920,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private Point PositionLinkCreateDst
 		{
-			//	Retourne la position du bouton pour crÈer la destination.
+			//	Retourne la position du bouton pour cr√©er la destination.
 			get
 			{
 				if (this.IsNoneDstObject)
@@ -937,8 +937,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		private bool HasLinkCommentButton
 		{
 			//	Indique s'il faut afficher le bouton pour montrer le commentaire.
-			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a dÈj‡
-			//	le bouton CommentAttachTo pour dÈplacer le point d'attache.
+			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a d√©j√†
+			//	le bouton CommentAttachTo pour d√©placer le point d'attache.
 			get
 			{
 				return this.dstObject != null && this.comment == null;
@@ -947,7 +947,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public Point PositionLinkComment
 		{
-			//	Retourne la position du bouton pour commenter la connexion, ou pour dÈplacer
+			//	Retourne la position du bouton pour commenter la connexion, ou pour d√©placer
 			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
@@ -1076,9 +1076,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		{
 			var obj = this.editor.DetectLinkableObject (pos, filteredType: this.srcObject.GetType ());
 
-			if (obj != this.dstObject && this.DraggingDstAlreadyLinked (obj))  // dÈj‡ une connexion sur cet objet ?
+			if (obj != this.dstObject && this.DraggingDstAlreadyLinked (obj))  // d√©j√† une connexion sur cet objet ?
 			{
-				obj = null;  // on n'en veut pas une 2Ëme !
+				obj = null;  // on n'en veut pas une 2√®me !
 			}
 
 			if (this.hilitedDstObject != obj)
@@ -1161,7 +1161,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsUsablePath
 		{
-			//	Si les objets source et destination sont trËs proches ou se chevauchent, le chemin n'est plus utilisable.
+			//	Si les objets source et destination sont tr√®s proches ou se chevauchent, le chemin n'est plus utilisable.
 			get
 			{
 				if (this.dstObject == null)

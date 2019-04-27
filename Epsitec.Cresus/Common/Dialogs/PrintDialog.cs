@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// La classe Print présente le dialogue pour imprimer un document.
+	/// La classe Print prÃ©sente le dialogue pour imprimer un document.
 	/// </summary>
 	public class PrintDialog
 	{

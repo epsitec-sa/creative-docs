@@ -1,4 +1,4 @@
-﻿using Epsitec.Aider.BusinessCases;
+using Epsitec.Aider.BusinessCases;
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 

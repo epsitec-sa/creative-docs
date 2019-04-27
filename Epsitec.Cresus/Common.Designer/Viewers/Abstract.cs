@@ -10,16 +10,16 @@ namespace Epsitec.Common.Designer.Viewers
 	public enum Changing
 	{
 		Show,			// changement d'interface
-		Selection,		// sélection ou désélection
-		Create,			// création d'un nouvel objet
+		Selection,		// sÃ©lection ou dÃ©sÃ©lection
+		Create,			// crÃ©ation d'un nouvel objet
 		Delete,			// suppression d'un objet
-		Move,			// déplacement d'un objet dans l'arbre (mais pas un déplacement géométrique)
-		Regenerate,		// régénération du contenu
+		Move,			// dÃ©placement d'un objet dans l'arbre (mais pas un dÃ©placement gÃ©omÃ©trique)
+		Regenerate,		// rÃ©gÃ©nÃ©ration du contenu
 	}
 
 
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public abstract class Abstract : AbstractGroup
 	{
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.ResourceType = this.ResourceType;
 			this.itemViewFactory = new ItemViewFactory (this);
 
-			//	Crée les deux volets séparés d'un splitter.
+			//	CrÃ©e les deux volets sÃ©parÃ©s d'un splitter.
 			this.firstPane = new FrameBox (this);
 			this.firstPane.Name = "FirstPane";
 			if (this.IsDisplayModeHorizontal)
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastPane.Dock = DockStyle.Fill;
 			this.lastPane.TabIndex = this.tabIndex++;
 
-			//	Crée la première partie (gauche ou supérieure).
+			//	CrÃ©e la premiÃ¨re partie (gauche ou supÃ©rieure).
 			{
 				this.filterController = new Controllers.FilterController ();
 
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Dock = Widgets.DockStyle.Fill;
 			this.table.Margins = Drawing.Margins.Zero;
 
-			//	Crée la dernière partie (droite ou inférieure), bande supérieure pour les boutons des cultures.
+			//	CrÃ©e la derniÃ¨re partie (droite ou infÃ©rieure), bande supÃ©rieure pour les boutons des cultures.
 			this.lastGroup = new FrameBox (this.lastPane);
 			this.lastGroup.Padding = new Margins (10, 10, 10, 10);
 			this.lastGroup.Dock = DockStyle.Fill;
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.cultureMenuButton.Margins = new Margins (1, 0, 2, 7);
 			this.cultureMenuButton.Dock = DockStyle.Right;
 
-			//	Crée le titre.
+			//	CrÃ©e le titre.
 			this.titleBox = new FrameBox (this.lastGroup);
 			this.titleBox.DrawFullFrame = true;
 			this.titleBox.PreferredHeight = 26;
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.titleText.Dock = DockStyle.Fill;
 			this.titleText.Margins = new Margins (4, 4, 0, 0);
 
-			//	Crée la dernière partie (droite ou inférieure), bande inférieure pour la zone d'étition scrollable.
+			//	CrÃ©e la derniÃ¨re partie (droite ou infÃ©rieure), bande infÃ©rieure pour la zone d'Ã©tition scrollable.
 			this.scrollable = new Scrollable (this.lastGroup);
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected string TwoLettersSecondaryCulture
 		{
-			//	Culture secondaire utilisée.
+			//	Culture secondaire utilisÃ©e.
 			get
 			{
 				return this.secondaryCulture;
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public string GetTwoLetters(int row)
 		{
-			//	Retourne la culture primaire ou secondaire utilisée.
+			//	Retourne la culture primaire ou secondaire utilisÃ©e.
 			System.Diagnostics.Debug.Assert(row == 0 || row == 1);
 			return (row == 0) ? Resources.DefaultTwoLetterISOLanguageName : this.secondaryCulture;
 		}
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 		{
-			//	Crée un Viewer d'un type donné.
+			//	CrÃ©e un Viewer d'un type donnÃ©.
 			if (type == ResourceAccess.Type.Strings )  return new Strings (module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Fields  )  return new Fields  (module, context, access, designerApplication);
@@ -393,7 +393,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual bool HasUsefulViewerWindow
 		{
-			//	Indique si cette vue a l'utilité d'une fenêtre supplémentaire.
+			//	Indique si cette vue a l'utilitÃ© d'une fenÃªtre supplÃ©mentaire.
 			get
 			{
 				return false;
@@ -403,7 +403,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual AbstractTextField CurrentTextField
 		{
-			//	Retourne le texte éditable en cours d'édition.
+			//	Retourne le texte Ã©ditable en cours d'Ã©dition.
 			get
 			{
 				return this.currentTextField;
@@ -541,7 +541,7 @@ namespace Epsitec.Common.Designer.Viewers
 					return;
 				}
 
-				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
+				searcher.Skip(replace.Length);  // saute les caractÃ¨res sÃ©lectionnÃ©s
 			}
 			this.access.SortUndefer();
 
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			if (filter.Count == 0)  // tout filtré ?
+			if (filter.Count == 0)  // tout filtrÃ© ?
 			{
 				return null;
 			}
@@ -593,7 +593,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected string ReplaceDo(Searcher searcher, string replace)
 		{
 			//	Effectue le remplacement.
-			//	Retourne la chaîne complète contenant le remplacement.
+			//	Retourne la chaÃ®ne complÃ¨te contenant le remplacement.
 			string cultureName;
 			ResourceAccess.FieldType fieldType;
 			this.access.SearcherIndexToAccess(searcher.Field, this.secondaryCulture, out cultureName, out fieldType);
@@ -684,7 +684,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public void DoModification(string name)
 		{
-			//	Change la ressource modifiée visible.
+			//	Change la ressource modifiÃ©e visible.
 			int sel = this.access.AccessIndex;
 
 			if (name == "ModificationAll")
@@ -756,7 +756,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public void DoDelete()
 		{
-			//	Supprime la ressource sélectionnée.
+			//	Supprime la ressource sÃ©lectionnÃ©e.
 			if (this.IsDeleteOrDuplicateForViewer)
 			{
 				this.DoCommand("PanelDelete");
@@ -780,7 +780,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public void DoDuplicate(bool duplicate)
 		{
-			//	Duplique la ressource sélectionnée.
+			//	Duplique la ressource sÃ©lectionnÃ©e.
 			if (this.IsDeleteOrDuplicateForViewer)
 			{
 				if (duplicate)
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					//	Rien d'intelligent à faire pour l'instant !
+					//	Rien d'intelligent Ã  faire pour l'instant !
 				}
 			}
 			else
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.UpdateArray();
 					this.SelectedRow = this.access.AccessIndex;
 					this.UpdateEdit();
-					this.access.SetLocalDirty();  // nécessaire, car UpdateEdit à fait un ClearLocalDirty !
+					this.access.SetLocalDirty();  // nÃ©cessaire, car UpdateEdit Ã  fait un ClearLocalDirty !
 					this.UpdateCommands();
 					this.designerApplication.LocatorFix();
 
@@ -827,14 +827,14 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
 
-				//	TODO: à finir...
+				//	TODO: Ã  finir...
 				//destModule.AccessStrings.SetField();
 			}
 		}
 
 		public void DoNewCulture()
 		{
-			//	Crée une nouvelle culture.
+			//	CrÃ©e une nouvelle culture.
 			string name = this.designerApplication.DlgNewCulture(this.access);
 			if (name == null)  return;
 			this.access.CreateCulture(name);
@@ -939,7 +939,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual void DoCommand(string name)
 		{
-			//	Exécute une commande.
+			//	ExÃ©cute une commande.
 			if (name == "ShowBothCulture")
 			{
 				Abstract.showPrimaryCulture = true;
@@ -970,7 +970,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual int SelectedRow
 		{
-			//	Ligne sélectionnée dans la table.
+			//	Ligne sÃ©lectionnÃ©e dans la table.
 			get
 			{
 				return this.access.CollectionView.CurrentPosition;
@@ -985,7 +985,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual void UpdateViewer(Viewers.Changing oper)
 		{
-			//	Met à jour le visualisateur en cours.
+			//	Met Ã  jour le visualisateur en cours.
 		}
 
 		public virtual string InfoViewerText
@@ -999,7 +999,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public string InfoAccessText
 		{
-			//	Donne le texte d'information sur l'accès en cours.
+			//	Donne le texte d'information sur l'accÃ¨s en cours.
 			get
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -1038,7 +1038,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual bool IsDeleteOrDuplicateForViewer
 		{
-			//	Indique s'il faut aiguiller ici une opération delete ou duplicate.
+			//	Indique s'il faut aiguiller ici une opÃ©ration delete ou duplicate.
 			get
 			{
 				return false;
@@ -1055,14 +1055,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void PrepareForDelete()
 		{
-			//	Préparation en vue d'une suppression.
+			//	PrÃ©paration en vue d'une suppression.
 		}
 
 		public void UpdateWhenModuleUsed()
 		{
-			//	Met à jour les ressources lorsque le module est utilisé.
-			//	Il faut mettre à jour le contenu de la ressource en cours d'édition,
-			//	car un Name peut avoir changé (par exemple dans le tableau Structured).
+			//	Met Ã  jour les ressources lorsque le module est utilisÃ©.
+			//	Il faut mettre Ã  jour le contenu de la ressource en cours d'Ã©dition,
+			//	car un Name peut avoir changÃ© (par exemple dans le tableau Structured).
 			this.ClearCache();
 			this.UpdateArray();
 			this.UpdateEdit();
@@ -1072,13 +1072,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void ClearCache()
 		{
-			//	Force une nouvelle mise à jour lors du prochain Update.
+			//	Force une nouvelle mise Ã  jour lors du prochain Update.
 		}
 
 		protected virtual void UpdateArray()
 		{
-			//	Met à jour tout le contenu du tableau.
-			//	TODO: à supprimer le jour où une modification dans la liste ObservableList se rafraichit automatiquement !
+			//	Met Ã  jour tout le contenu du tableau.
+			//	TODO: Ã  supprimer le jour oÃ¹ une modification dans la liste ObservableList se rafraichit automatiquement !
 			this.ignoreChange = true;
 			this.table.ItemPanel.Refresh();
 			this.ignoreChange = false;
@@ -1088,7 +1088,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual void ShowSelectedRow()
 		{
-			//	Montre la ressource sélectionnée dans le tableau.
+			//	Montre la ressource sÃ©lectionnÃ©e dans le tableau.
 			if (this.table != null)
 			{
 				int pos = this.access.CollectionView.CurrentPosition;
@@ -1099,7 +1099,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void UpdateTitle()
 		{
-			//	Met à jour le titre en dessus de la zone scrollable.
+			//	Met Ã  jour le titre en dessus de la zone scrollable.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
 			if (item == null)
@@ -1167,7 +1167,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.titleBox.BackColor = backColor;
 			}
 
-			//	S'il existe une fenêtre supplémentaire, affiche son titre.
+			//	S'il existe une fenÃªtre supplÃ©mentaire, affiche son titre.
 			if (this.designerApplication.ViewersWindow != null)
 			{
 				string title = string.Concat(Res.Strings.Application.Title, " - ", this.designerApplication.CurrentModule.ModuleId.Name, " - ", ResourceAccess.TypeDisplayName(this.access.ResourceType));
@@ -1183,7 +1183,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateColor()
 		{
-			//	Met à jour les couleurs dans toutes les bandes.
+			//	Met Ã  jour les couleurs dans toutes les bandes.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			ResourceAccess.ModificationState state1 = this.access.GetModification(item, this.GetTwoLetters(0));
 			ResourceAccess.ModificationState state2 = this.access.GetModification(item, this.GetTwoLetters(1));
@@ -1192,14 +1192,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void UpdateModificationsState()
 		{
-			//	Met à jour en fonction des modifications (fonds de couleur, etc).
+			//	Met Ã  jour en fonction des modifications (fonds de couleur, etc).
 			this.UpdateColor();
 			this.UpdateModificationsCulture();
 		}
 
 		protected virtual void UpdateModificationsCulture()
 		{
-			//	Met à jour les pastilles dans les boutons des cultures.
+			//	Met Ã  jour les pastilles dans les boutons des cultures.
 			if (this.secondaryButtonsCulture == null)  // pas de culture secondaire ?
 			{
 				return;
@@ -1224,7 +1224,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void UpdateSelectedCulture()
 		{
-			//	Sélectionne le bouton correspondant à la culture secondaire.
+			//	SÃ©lectionne le bouton correspondant Ã  la culture secondaire.
 			if (this.PrimaryColumn != -1)
 			{
 				this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, this.access.GetCultureName(this.access.GetPrimaryCultureName()));
@@ -1255,7 +1255,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateDisplayMode()
 		{
-			//	Met à jour le mode d'affichage des bandes.
+			//	Met Ã  jour le mode d'affichage des bandes.
 			for (int i=0; i<this.bands.Count; i++)
 			{
 				switch (bands[i].bandMode)
@@ -1281,7 +1281,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateFieldName(AbstractTextField edit, int sel)
 		{
-			//	Change le 'Name' d'une ressource, en gérant les diverses impossibilités.
+			//	Change le 'Name' d'une ressource, en gÃ©rant les diverses impossibilitÃ©s.
 			sel = this.access.SortDefer(sel);
 
 			string editedName = edit.Text;
@@ -1291,10 +1291,10 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.Items[sel] as CultureMap;
 			if (item != null && !string.IsNullOrEmpty(item.Prefix))
 			{
-				//	Si on est sur sur ressource de type 'Field', il faut tenir compte du préfixe.
-				//	Par exemple, le champ Client de l'entité Facture a un préfixe 'Facture' et il
-				//	faut comparer le nom 'Facture.Client', pour éviter de confondre avec les champs
-				//	d'une autre entité comme 'Adresse.Client'.
+				//	Si on est sur sur ressource de type 'Field', il faut tenir compte du prÃ©fixe.
+				//	Par exemple, le champ Client de l'entitÃ© Facture a un prÃ©fixe 'Facture' et il
+				//	faut comparer le nom 'Facture.Client', pour Ã©viter de confondre avec les champs
+				//	d'une autre entitÃ© comme 'Adresse.Client'.
 				prefix = item.Prefix;
 			}
 
@@ -1330,7 +1330,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual Widget CultureParentWidget
 		{
-			//	Retourne le parent à utiliser pour les boutons des cultures.
+			//	Retourne le parent Ã  utiliser pour les boutons des cultures.
 			get
 			{
 				return this;
@@ -1339,7 +1339,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void UpdateCultures()
 		{
-			//	Met à jour les boutons des cultures en fonction des cultures existantes.
+			//	Met Ã  jour les boutons des cultures en fonction des cultures existantes.
 			if (this.secondaryButtonsCulture != null)
 			{
 				foreach (IconButtonMark button in this.secondaryButtonsCulture)
@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void UpdateEdit()
 		{
-			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			//	Met Ã  jour les lignes Ã©ditables en fonction de la sÃ©lection dans le tableau.
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
@@ -1415,14 +1415,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual void UpdateList()
 		{
-			//	Met à jour le contenu de la liste de gauche.
+			//	Met Ã  jour le contenu de la liste de gauche.
 			this.access.CollectionView.Refresh();
 			this.UpdateTitle();
 		}
 
 		public virtual void Update()
 		{
-			//	Met à jour le contenu du Viewer.
+			//	Met Ã  jour le contenu du Viewer.
 			this.UpdateEdit();
 			this.UpdateColor();
 			this.UpdateModificationsCulture();
@@ -1442,7 +1442,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public void UpdateCommands()
 		{
-			//	Met à jour les commandes en fonction de la ressource sélectionnée.
+			//	Met Ã  jour les commandes en fonction de la ressource sÃ©lectionnÃ©e.
 			int sel = this.access.AccessIndex;
 			int count = this.access.AccessCount;
 			bool build = this.module.Mode == DesignerMode.Build;
@@ -1744,7 +1744,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateUndoRedoCommands()
 		{
-			//	Met à jour les commandes undo/redo.
+			//	Met Ã  jour les commandes undo/redo.
 			this.GetCommandState("Undo").Enable = this.IsUndoEnable;
 			this.GetCommandState("Redo").Enable = this.IsRedoEnable;
 			this.GetCommandState("UndoRedoList").Enable = this.IsUndoRedoListEnable;
@@ -1754,7 +1754,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
-			if (this.designerApplication.IsReadonly || item == null)  // mode bloqué ou aucune ressource ?
+			if (this.designerApplication.IsReadonly || item == null)  // mode bloquÃ© ou aucune ressource ?
 			{
 				this.GetCommandState(name).ActiveState = ActiveState.No;
 				this.GetCommandState(name).Enable = false;
@@ -1773,7 +1773,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual string GetSummary(string twoLettersCulture)
 		{
-			//	Retourne le texte résumé de la ressource sélectionnée.
+			//	Retourne le texte rÃ©sumÃ© de la ressource sÃ©lectionnÃ©e.
 			return null;
 		}
 
@@ -1781,17 +1781,17 @@ namespace Epsitec.Common.Designer.Viewers
 		#region UndoRedo
 		public virtual void Undo()
 		{
-			//	Annule la dernière action.
+			//	Annule la derniÃ¨re action.
 		}
 
 		public virtual void Redo()
 		{
-			//	Refait la dernière action.
+			//	Refait la derniÃ¨re action.
 		}
 
 		public virtual VMenu UndoRedoCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
-			//	Crée le menu undo/redo.
+			//	CrÃ©e le menu undo/redo.
 			return null;
 		}
 
@@ -1807,7 +1807,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual bool IsUndoEnable
 		{
-			//	Retourne true si la commande "Undo" doit être active.
+			//	Retourne true si la commande "Undo" doit Ãªtre active.
 			get
 			{
 				return false;
@@ -1816,7 +1816,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual bool IsRedoEnable
 		{
-			//	Retourne true si la commande "Redo" doit être active.
+			//	Retourne true si la commande "Redo" doit Ãªtre active.
 			get
 			{
 				return false;
@@ -1825,7 +1825,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual bool IsUndoRedoListEnable
 		{
-			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
+			//	Retourne true si la commande "UndoRedoList" pour le menu doit Ãªtre active.
 			get
 			{
 				return false;
@@ -1836,7 +1836,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SetValue(CultureMap item, StructuredData data, Druid id, object value, bool update)
 		{
-			//	Méthode appelée pour modifier un champ.
+			//	MÃ©thode appelÃ©e pour modifier un champ.
 			ResourceAccess.SetStructuredDataValue(this.access.Accessor, item, data, id.ToString(), value);
 			this.access.SetLocalDirty();
 			this.UpdateColor();
@@ -1862,8 +1862,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual bool Terminate(bool soft)
 		{
-			//	Termine le travail sur une ressource, avant de passer à une autre.
-			//	Si soft = true, on sérialise temporairement sans poser de question.
+			//	Termine le travail sur une ressource, avant de passer Ã  une autre.
+			//	Si soft = true, on sÃ©rialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
 			if (!soft)
 			{
@@ -1880,18 +1880,18 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void PersistChanges()
 		{
-			//	Accepte les changements effectués dans les ressources.
+			//	Accepte les changements effectuÃ©s dans les ressources.
 			if (this.access.IsLocalDirty)
 			{
 				this.access.PersistChanges();
 				this.access.ClearLocalDirty();
-				this.UpdateList();  // met à jour la liste de gauche avec les données modifiées
+				this.UpdateList();  // met Ã  jour la liste de gauche avec les donnÃ©es modifiÃ©es
 			}
 		}
 
 		public void RevertChanges()
 		{
-			//	Annule les changements effectués dans les ressources.
+			//	Annule les changements effectuÃ©s dans les ressources.
 			this.UndoFlush();
 
 			if (this.access.IsLocalDirty)
@@ -1904,8 +1904,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.access.RevertChanges();
 				this.access.ClearLocalDirty();
-				this.UpdateList();  // met à jour la liste de gauche avec les données modifiées
-				this.Update();  // met à jour la partie éditable centrale avec les données initiales
+				this.UpdateList();  // met Ã  jour la liste de gauche avec les donnÃ©es modifiÃ©es
+				this.Update();  // met Ã  jour la partie Ã©ditable centrale avec les donnÃ©es initiales
 			}
 		}
 
@@ -1936,20 +1936,20 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
-			//	Cherche les index correspondant à un texte éditable.
+			//	Cherche les index correspondant Ã  un texte Ã©ditable.
 			field = -1;
 			subfield = -1;
 		}
 
 		protected virtual AbstractTextField IndexToTextField(int field, int subfield)
 		{
-			//	Cherche le TextField permettant d'éditer des index.
+			//	Cherche le TextField permettant d'Ã©diter des index.
 			return null;
 		}
 
 		public static void SearchCreateFilterGroup(AbstractGroup parent, EventHandler handler, ResourceAccess.Type type)
 		{
-			//	Crée le contenu du groupe 'filtre'.
+			//	CrÃ©e le contenu du groupe 'filtre'.
 			switch (type)
 			{
 				case ResourceAccess.Type.Strings:
@@ -1965,7 +1965,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public static List<int> SearchGetFilterGroup(AbstractGroup parent, ResourceAccess.Type type)
 		{
-			//	Donne le résultat du groupe 'filtre', sous forme d'une liste des index autorisés.
+			//	Donne le rÃ©sultat du groupe 'filtre', sous forme d'une liste des index autorisÃ©s.
 			List<int> filter = new List<int>();
 
 			foreach (Widget widget in parent.Children)
@@ -1987,7 +1987,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual double GetColumnWidth(int column)
 		{
-			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			//	Retourne la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.IsDisplayModeHorizontal)
 			{
 				return Abstract.columnWidthHorizontal[column];
@@ -2000,7 +2000,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void SetColumnWidth(int column, double value)
 		{
-			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			//	MÃ©morise la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.IsDisplayModeHorizontal)
 			{
 				Abstract.columnWidthHorizontal[column] = value;
@@ -2013,7 +2013,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected bool IsDisplayModeHorizontal
 		{
-			//	Retourne true si le mode s'apparentele plus possible à une disposition horizontale normale.
+			//	Retourne true si le mode s'apparentele plus possible Ã  une disposition horizontale normale.
 			get
 			{
 				return (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal ||
@@ -2025,7 +2025,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region Band
 		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
 		{
-			//	Crée une bande horizontale avec deux containers gauche/droite pour les
+			//	CrÃ©e une bande horizontale avec deux containers gauche/droite pour les
 			//	ressources primaire/secondaire.
 			FrameBox band = new FrameBox(this.scrollable.Viewport);
 			band.Name = "BandForLeftAndRight";
@@ -2060,7 +2060,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
 		{
-			//	Crée une bande horizontale avec un seul container gauche pour la
+			//	CrÃ©e une bande horizontale avec un seul container gauche pour la
 			//	ressource primaire.
 			FrameBox band = new FrameBox(this.scrollable.Viewport);
 			band.Name = "BandForLeft";
@@ -2113,7 +2113,7 @@ namespace Epsitec.Common.Designer.Viewers
 				MyWidgets.StackedPanel lc = band.leftContainer;
 				MyWidgets.StackedPanel rc = band.rightContainer;
 
-				if (rc == null)  // pas de panneau à droite ?
+				if (rc == null)  // pas de panneau Ã  droite ?
 				{
 					lc.Visibility = true;  // panneau unique traversant, toujours visible
 					lc.IsLeftPart = true;
@@ -2159,7 +2159,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
 		{
-			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
+			//	Retourne le "factory" a utiliser pour les Ã©lÃ©ments reprÃ©sentÃ©s dans cet ItemTable/ItemPanel.
 			if (itemView.Item == null)
 			{
 				return null;
@@ -2171,8 +2171,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		/// <summary>
-		/// Cette classe peuple les colonnes du tableau. Elle résoud tous les types de colonnes, afin
-		/// de pouvoir être utilisée par tous les Viewers.
+		/// Cette classe peuple les colonnes du tableau. Elle rÃ©soud tous les types de colonnes, afin
+		/// de pouvoir Ãªtre utilisÃ©e par tous les Viewers.
 		/// </summary>
 		private class ItemViewFactory : UI.AbstractItemViewFactory
 		{
@@ -2223,7 +2223,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateName(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour le nom de la ressource.
+				//	CrÃ©e le contenu pour le nom de la ressource.
 				string text = (shape == UI.ItemViewShape.ToolTip) ? item.FullName : this.owner.GetItemName (item);
 				if (shape == UI.ItemViewShape.ToolTip && string.IsNullOrEmpty(text))
 				{
@@ -2236,14 +2236,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateSource(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour la source de la ressource.
+				//	CrÃ©e le contenu pour la source de la ressource.
 				string text = this.owner.GetSourceText(item);
 				return this.CreateItemViewText (item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
 			private Widget CreateType(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour le type de la ressource.
+				//	CrÃ©e le contenu pour le type de la ressource.
 				StructuredData data = item.GetCultureData(Support.Resources.DefaultTwoLetterISOLanguageName);
 				object typeCodeValue = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
 
@@ -2264,7 +2264,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreatePrefix(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour le préfixe de la ressource.
+				//	CrÃ©e le contenu pour le prÃ©fixe de la ressource.
 				if (shape == UI.ItemViewShape.ToolTip)
 				{
 					return null;
@@ -2276,19 +2276,19 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreatePrimary(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour la colonne primaire.
+				//	CrÃ©e le contenu pour la colonne primaire.
 				return this.CreateContent(item, shape, this.owner.GetTwoLetters(0));
 			}
 
 			private Widget CreateSecondary(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour la colonne secondaire.
+				//	CrÃ©e le contenu pour la colonne secondaire.
 				return this.CreateContent(item, shape, this.owner.GetTwoLetters(1));
 			}
 			
 			private Widget CreateContent(CultureMap item, UI.ItemViewShape shape, string twoLettersCulture)
 			{
-				//	Crée le contenu pour une colonne primaire ou secondaire.
+				//	CrÃ©e le contenu pour une colonne primaire ou secondaire.
 				string text = this.owner.GetColumnText(item, twoLettersCulture) ?? ResourceBundle.Field.Null;
 				if (shape == UI.ItemViewShape.ToolTip && string.IsNullOrEmpty(text))
 				{
@@ -2314,7 +2314,7 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			private Widget CreateDruid(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour le druid de la ressource.
+				//	CrÃ©e le contenu pour le druid de la ressource.
 				string text = this.owner.GetDruidText(item);
 
 				if (shape == UI.ItemViewShape.ToolTip)
@@ -2333,7 +2333,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateLocal(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour le numéro local du druid de la ressource.
+				//	CrÃ©e le contenu pour le numÃ©ro local du druid de la ressource.
 				if (shape == UI.ItemViewShape.ToolTip)
 				{
 					return null;
@@ -2345,7 +2345,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateIdentity(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour l'identité du créateur de la ressource.
+				//	CrÃ©e le contenu pour l'identitÃ© du crÃ©ateur de la ressource.
 				if (shape == UI.ItemViewShape.ToolTip)
 				{
 					return null;
@@ -2357,7 +2357,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreatePatchLevel(CultureMap item, UI.ItemViewShape shape)
 			{
-				//	Crée le contenu pour le niveau de patch du créateur de la ressource.
+				//	CrÃ©e le contenu pour le niveau de patch du crÃ©ateur de la ressource.
 				if (shape == UI.ItemViewShape.ToolTip)
 				{
 					return null;
@@ -2369,10 +2369,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private UI.ItemViewText CreateItemViewText(CultureMap item, string text, ContentAlignment alignment, Color backColor)
 			{
-				//	Crée un ou deux UI.ItemViewText, avec éventuellement un fond coloré.
-				//	S'il y a un fond coloré, il faut créer deux widgets, afin que la couleur remplisse toute
+				//	CrÃ©e un ou deux UI.ItemViewText, avec Ã©ventuellement un fond colorÃ©.
+				//	S'il y a un fond colorÃ©, il faut crÃ©er deux widgets, afin que la couleur remplisse toute
 				//	la surface, y compris les marges.
-				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
+				//	Par optimisation, un seul widget est crÃ©Ã© s'il n'y a pas de couleur de fond.
 				UI.ItemViewText main, st;
 
 				if (backColor.IsEmpty && this.owner.module.IsPatch)  // module de patch ?
@@ -2555,7 +2555,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public void ColorizeResetBox(MyWidgets.ResetBox box, CultureMapSource source, bool usesOriginalData)
 		{
-			//	Colore la boîte si on est dans un module de patch avec redéfinition de la donnée.
+			//	Colore la boÃ®te si on est dans un module de patch avec redÃ©finition de la donnÃ©e.
 			if (!box.IsPatch || source != CultureMapSource.DynamicMerge || usesOriginalData)
 			{
 				box.BackColor = Color.Empty;
@@ -2571,14 +2571,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private VMenu CreateCultureMenu()
 		{
-			//	Crée le petit menu associé au bouton "v" des cultures.
+			//	CrÃ©e le petit menu associÃ© au bouton "v" des cultures.
 			VMenu menu = new VMenu();
 			MenuItem item;
 
 			item = new MenuItem("ShowBothCulture", Misc.GetMenuIconRadioState(Abstract.showPrimaryCulture && Abstract.showSecondaryCulture), "Afficher les deux cultures", "", "ShowBothCulture");
 			menu.Items.Add(item);
 
-			item = new MenuItem("ShowPrimaryCulture", Misc.GetMenuIconRadioState(Abstract.showPrimaryCulture && !Abstract.showSecondaryCulture), "Afficher seulement la culture de référence", "", "ShowPrimaryCulture");
+			item = new MenuItem("ShowPrimaryCulture", Misc.GetMenuIconRadioState(Abstract.showPrimaryCulture && !Abstract.showSecondaryCulture), "Afficher seulement la culture de rÃ©fÃ©rence", "", "ShowPrimaryCulture");
 			menu.Items.Add(item);
 
 			item = new MenuItem("ShowSecondaryCulture", Misc.GetMenuIconRadioState(!Abstract.showPrimaryCulture && Abstract.showSecondaryCulture), "Afficher seulement la culture secondaire", "", "ShowSecondaryCulture");
@@ -2591,7 +2591,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region Handle methods
 		private void HandleCultureMenuButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton "v" pour le menu est cliqué.
+			//	AppelÃ© lorsque le bouton "v" pour le menu est cliquÃ©.
 			AbstractButton button = sender as AbstractButton;
 
 			VMenu menu = this.CreateCultureMenu();
@@ -2602,7 +2602,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	Appelé lorsqu'une ligne éditable voit son focus changer.
+			//	AppelÃ© lorsqu'une ligne Ã©ditable voit son focus changer.
 			bool focused = (bool) e.NewValue;
 
 			if (focused)
@@ -2613,7 +2613,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleSplitterDragged(object sender)
 		{
-			//	Le splitter a été bougé.
+			//	Le splitter a Ã©tÃ© bougÃ©.
 			if (this.IsDisplayModeHorizontal)
 			{
 				Abstract.leftArrayWidth = this.firstPane.ActualWidth;
@@ -2626,7 +2626,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleButtonSecondaryCultureClicked(object sender, MessageEventArgs e)
 		{
-			//	Un bouton pour changer de culture secondaire a été cliqué.
+			//	Un bouton pour changer de culture secondaire a Ã©tÃ© cliquÃ©.
 			IconButtonMark button = sender as IconButtonMark;
 			this.TwoLettersSecondaryCulture = button.Name;
 
@@ -2637,7 +2637,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
 		{
-			//	La ligne sélectionnée dans le tableau a changé.
+			//	La ligne sÃ©lectionnÃ©e dans le tableau a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -2645,7 +2645,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (!this.designerApplication.Terminate())
 			{
-				e.Cancel = true;  // revient à la sélection précédente
+				e.Cancel = true;  // revient Ã  la sÃ©lection prÃ©cÃ©dente
 				return;
 			}
 
@@ -2660,7 +2660,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTableSizeChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	Les dimensions du tableau ont changé.
+			//	Les dimensions du tableau ont changÃ©.
 #if false
 			UI.ItemTable table = (UI.ItemTable) sender;
 			Drawing.Size size = (Drawing.Size) e.NewValue;
@@ -2674,13 +2674,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleColumnHeaderColumnWidthChanged(object sender, UI.ColumnWidthChangeEventArgs e)
 		{
-			//	La largeur d'une colonne du tableau a changé.
+			//	La largeur d'une colonne du tableau a changÃ©.
 			this.SetColumnWidth(e.Column, e.NewWidth);
 		}
 
 		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
 		{
-			//	Un bouton pour changer le mode d'affichage a été cliqué.
+			//	Un bouton pour changer le mode d'affichage a Ã©tÃ© cliquÃ©.
 			if (!this.designerApplication.Terminate(true))
 			{
 				return;
@@ -2707,12 +2707,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateDisplayMode();
-			this.UpdateEdit();  // pour que le résumé prenne en compte les modifications
+			this.UpdateEdit();  // pour que le rÃ©sumÃ© prenne en compte les modifications
 		}
 
 		private void HandleTextChanged(object sender)
 		{
-			//	Un texte éditable a changé.
+			//	Un texte Ã©ditable a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -2739,7 +2739,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit != null)
 			{
-				edit.RejectEdition();  // TODO: devrait être inutile
+				edit.RejectEdition();  // TODO: devrait Ãªtre inutile
 			}
 		}
 
@@ -2750,7 +2750,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
+			//	AppelÃ© lorsque la ligne Ã©ditable pour le label voit son focus changer.
 			TextFieldEx field = sender as TextFieldEx;
 			field.AcceptEdition();
 			this.HandleEditKeyboardFocusChanged(sender, e);
@@ -2758,7 +2758,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void HandleCursorChanged(object sender)
 		{
-			//	Le curseur a été déplacé dans un texte éditable.
+			//	Le curseur a Ã©tÃ© dÃ©placÃ© dans un texte Ã©ditable.
 			if (this.ignoreChange)
 			{
 				return;

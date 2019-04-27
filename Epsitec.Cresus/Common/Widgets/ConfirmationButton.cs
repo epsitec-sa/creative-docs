@@ -1,4 +1,4 @@
-//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La class ConfirmationButton représente un bouton pour le dialogue ConfirmationDialog.
+	/// La class ConfirmationButton reprÃ©sente un bouton pour le dialogue ConfirmationDialog.
 	/// </summary>
 	public class ConfirmationButton : Button
 	{
@@ -30,16 +30,16 @@ namespace Epsitec.Common.Widgets
 		public static FormattedText FormatContent(FormattedText subtitle, FormattedText text)
 		{
 			//	Formate un texte pour le bouton.
-			//	La première partie contient le titre en gros caractère.
-			//	La deuxième partie contient le texte explicatif en taille standard.
+			//	La premiÃ¨re partie contient le titre en gros caractÃ¨re.
+			//	La deuxiÃ¨me partie contient le texte explicatif en taille standard.
 			return FormattedText.Concat (new FormattedText ("<font size=\"150%\">"), subtitle, new FormattedText ("</font><br/>"), text);
 		}
 
 		public static string FormatContent(string subtitle, string text)
 		{
 			//	Formate un texte pour le bouton.
-			//	La première partie contient le titre en gros caractère.
-			//	La deuxième partie contient le texte explicatif en taille standard.
+			//	La premiÃ¨re partie contient le titre en gros caractÃ¨re.
+			//	La deuxiÃ¨me partie contient le texte explicatif en taille standard.
 			return string.Concat("<font size=\"150%\">", subtitle, "</font><br/>", text);
 		}
 		
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnSizeChanged(oldValue, newValue);
 
-			if (oldValue.Width != newValue.Width)  // largeur changée ?
+			if (oldValue.Width != newValue.Width)  // largeur changÃ©e ?
 			{
 				double h = this.TextLayout.FindTextHeight();
 				this.PreferredHeight = h+ConfirmationButton.marginY*2+2;  // TODO: pourquoi +2 ?
@@ -86,12 +86,12 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.BackColor.IsTransparent )
 			{
-				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement défini
+				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement dÃ©fini
 				//	comme "transparent".
 			}
 			else
 			{
-				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
+				//	Ne reproduit pas l'Ã©tat sÃ©lectionnÃ© si on peint nous-mÃªme le fond du bouton.
 				state &= ~WidgetPaintState.Selected;
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.ButtonStyle);
 			}
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Widgets
 
 			double lineY = System.Math.Floor (pos.Y + this.TextLayout.GetLineOrigin (0).Y);
 
-			//	Dessine un petit ">" positionné de façon empyrique.
+			//	Dessine un petit ">" positionnÃ© de faÃ§on empyrique.
 			rect = new Drawing.Rectangle(rect.Left+2, /*rect.Top-20-13*/ lineY-5, 20, 20);
 			adorner.PaintGlyph(graphics, rect, state, adorner.ColorCaption, GlyphShape.TriangleRight, PaintTextStyle.StaticText);
 		}

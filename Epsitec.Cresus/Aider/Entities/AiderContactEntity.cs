@@ -1,4 +1,4 @@
-//	Copyright © 2013-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Entities
 			switch (this.ContactType)
 			{
 				case ContactType.None:
-					return Resources.FormattedText ("Ce contact n'est pas défini.<br/><br/>Utilisez une <i>action</i> pour associer ce contact à une personne ou à une entreprise.");
+					return Resources.FormattedText ("Ce contact n'est pas dÃ©fini.<br/><br/>Utilisez une <i>action</i> pour associer ce contact Ã  une personne ou Ã  une entreprise.");
 			}
 
 			return TextFormatter.FormatText (this.DisplayName, "\n", this.DisplayZipCode, this.DisplayAddress);
@@ -684,7 +684,7 @@ namespace Epsitec.Aider.Entities
 		
 		private string GetNoneDisplayName()
 		{
-			return "—";
+			return "â€”";
 		}
 
 		private string GetLegalDisplayName()
@@ -804,6 +804,6 @@ namespace Epsitec.Aider.Entities
 		private IList<AiderGroupParticipantEntity>	participations;
 
 
-		public static readonly string			AddressContactSuffix	= " (°)";
+		public static readonly string			AddressContactSuffix	= " (Â°)";
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -11,8 +11,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.UI.Controllers
 {
 	/// <summary>
-	/// La classe AbstractController sert de base à tous les contrôleurs qui lient
-	/// des données à des widgets créés dynamiquement dans un widget Placeholder.
+	/// La classe AbstractController sert de base Ã  tous les contrÃ´leurs qui lient
+	/// des donnÃ©es Ã  des widgets crÃ©Ã©s dynamiquement dans un widget Placeholder.
 	/// </summary>
 	public abstract class AbstractController : Types.DependencyObject, IController, IGridPermeable
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Designer;
@@ -15,8 +15,8 @@ namespace Epsitec.Designer
 		private static void Start(string[] args)
 		{
 			System.Diagnostics.Debug.Assert (System.Windows.Forms.Application.ExecutablePath.Contains ("vshost") == false,
-				"Designer ne doit pas être lancé dans le processus de hosting de Visual Studio, car il ne trouvera pas les ressources.\n\n" +
-				"Il faut enlever la coche '[x] Enable the Visual Studio hosting process' dans l'onglet 'Debug' des propriétés du projet 'App.CresusDesigner'.");
+				"Designer ne doit pas Ãªtre lancÃ© dans le processus de hosting de Visual Studio, car il ne trouvera pas les ressources.\n\n" +
+				"Il faut enlever la coche '[x] Enable the Visual Studio hosting process' dans l'onglet 'Debug' des propriÃ©tÃ©s du projet 'App.CresusDesigner'.");
 			
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();

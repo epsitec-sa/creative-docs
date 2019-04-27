@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Cresus.Core.Business;

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe Bool représente une propriété d'un objet graphique.
+	/// La classe Bool reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Bool : Abstract
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool BoolValue
 		{
-			//	Valeur de la propriété.
+			//	Valeur de la propriÃ©tÃ©.
 			get
 			{
 				return this.boolValue;
@@ -40,27 +40,27 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(bool type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			if ( type )  return Res.Strings.Property.Close.Yes;
 			else         return Res.Strings.Property.Close.No;
 		}
 
 		public static string GetIconText(bool type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			if ( type )  return "CloseYes";
 			else         return "CloseNo";
 		}
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return ( this.type == Type.PolyClose ); }
 		}
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Bool p = property as Bool;
 			p.boolValue = this.boolValue;
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Bool p = property as Bool;
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Bool(document);
 		}
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("BoolValue", this.boolValue);
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Bool(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.boolValue = info.GetBoolean("BoolValue");
 		}
 		#endregion

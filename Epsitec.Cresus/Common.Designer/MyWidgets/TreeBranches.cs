@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public TreeBrancheStyle Style
 		{
-			//	Style de représentation pour les liaisons.
+			//	Style de reprÃ©sentation pour les liaisons.
 			get
 			{
 				return this.style;
@@ -50,8 +50,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void AddBranche(double p1, double p2)
 		{
 			//	Ajoute une nouvelle liaison.
-			//	p1 est la position supérieure en X.
-			//	p2 est la position inférieure en X.
+			//	p1 est la position supÃ©rieure en X.
+			//	p2 est la position infÃ©rieure en X.
 			this.branches.Add(new TreeBranche(p1, p2));
 			this.isDirtyShift = true;
 		}
@@ -170,8 +170,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateShift()
 		{
-			//	Met à jour le décalage, pour que les points de départ d'un même
-			//	parent soient répartis.
+			//	Met Ã  jour le dÃ©calage, pour que les points de dÃ©part d'un mÃªme
+			//	parent soient rÃ©partis.
 			if (this.isDirtyShift)
 			{
 				this.isDirtyShift = false;
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public class TreeBranche
 		{
-			//	Classe décrivant une liaison, donc un trait.
+			//	Classe dÃ©crivant une liaison, donc un trait.
 			public TreeBranche(double p1, double p2)
 			{
 				this.p1 = p1;

@@ -221,11 +221,11 @@ namespace Epsitec.Common.Document.Panels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau Ètendu ?
+				if ( this.isExtendedSize )  // panneau √©tendu ?
 				{
 					h += 30+25*8+10;
 				}
-				else	// panneau rÈduit ?
+				else	// panneau r√©duit ?
 				{
 					h += 30;
 				}
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			var p = this.property as Properties.Frame;
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			var p = this.property as Properties.Frame;
 			if ( p == null )  return;
 
@@ -295,14 +295,14 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			this.UpdateClientGeometry ();
 		}
 
 
 		public override void OriginColorDeselect()
 		{
-			//	DÈsÈlectionne toutes les origines de couleurs possibles.
+			//	D√©s√©lectionne toutes les origines de couleurs possibles.
 			this.fieldFrameColor.ActiveState = ActiveState.No;
 			this.fieldBackgroundColor.ActiveState = ActiveState.No;
 			this.fieldShadowColor.ActiveState = ActiveState.No;
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Document.Panels
 
 		public override void OriginColorSelect(int rank)
 		{
-			//	SÈlectionne l'origine de couleur.
+			//	S√©lectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.gridType == null )  return;
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleSampleChanged(object sender)
 		{
-			//	L'exemple a changÈ.
+			//	L'exemple a chang√©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleTypeChanged(object sender)
 		{
-			//	Le type a ÈtÈ changÈ.
+			//	Le type a √©t√© chang√©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -547,7 +547,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Document.Panels
 
 		#region Sample
 		/// <summary>
-		/// La structure Sample permet de dÈcrire un exemple de cadre.
+		/// La structure Sample permet de d√©crire un exemple de cadre.
 		/// </summary>
 		private struct Sample
 		{
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Document.Panels
 
 			public bool Compare(Properties.Frame frame)
 			{
-				//	Compare un exemple avec une propriÈtÈ.
+				//	Compare un exemple avec une propri√©t√©.
 				return (frame.FrameType       == this.FrameType       &&
 						frame.FrameWidth      == this.FrameWidth      &&
 						frame.MarginWidth     == this.MarginWidth     &&
@@ -625,14 +625,14 @@ namespace Epsitec.Common.Document.Panels
 			public double					ShadowOffsetY;
 		}
 
-		//	Liste des exemples accessibles avec la liste dÈroulante.
+		//	Liste des exemples accessibles avec la liste d√©roulante.
 		static private Sample[] Samples =
 		{
 			//																									<-------frame------> <------------shadow-------------->
 			new Sample (Res.Strings.Panel.Frame.Sample01, "FrameSample01", Properties.FrameType.None,             0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // pas de cadre
 			new Sample (Res.Strings.Panel.Frame.Sample02, "FrameSample02", Properties.FrameType.OnlyFrame,        2.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // cadre fin sans bordure
 			new Sample (Res.Strings.Panel.Frame.Sample03, "FrameSample03", Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,   0.0,   0.0,  20.0,   0.0,   0.0),  // cadre fin sans bordure avec halo
-			new Sample (Res.Strings.Panel.Frame.Sample04, "FrameSample04", Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // cadre Èpais sans bordure
+			new Sample (Res.Strings.Panel.Frame.Sample04, "FrameSample04", Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // cadre √©pais sans bordure
 			new Sample (Res.Strings.Panel.Frame.Sample05, "FrameSample05", Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0,   0.0, -10.0,  20.0,   0.0,   0.0),  // cadre avec bordure et halo
 			new Sample (Res.Strings.Panel.Frame.Sample06, "FrameSample06", Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0, -20.0, -10.0,  40.0,  20.0, -20.0),  // cadre avec bordure et ombre
 			new Sample (Res.Strings.Panel.Frame.Sample07, "FrameSample07", Properties.FrameType.OnlyShadow,       0.0,   0.0,   0.0, -20.0,   0.0,  40.0,  20.0, -20.0),  // petite ombre

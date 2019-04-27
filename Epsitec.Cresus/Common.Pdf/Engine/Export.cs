@@ -1,4 +1,4 @@
-//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -14,7 +14,7 @@ namespace Epsitec.Common.Pdf.Engine
 	using Path = Epsitec.Common.Drawing.Path;
 
 	/// <summary>
-	/// La classe Export implémente la publication d'un document PDF.
+	/// La classe Export implÃ©mente la publication d'un document PDF.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
 	/// 
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Pdf.Engine
 		public void ExportToFile(Stream stream, int pageCount, System.Action<Port, int> renderPage)
 		{
 			//	Exporte le document dans un stream.
-			//	Le renderer reçoit le port et le numéro de la page à générer (1..n).
+			//	Le renderer reÃ§oit le port et le numÃ©ro de la page Ã  gÃ©nÃ©rer (1..n).
 			System.Diagnostics.Debug.Assert (stream != null);
 			System.Diagnostics.Debug.Assert (pageCount > 0);
 			System.Diagnostics.Debug.Assert (renderPage != null);
@@ -159,9 +159,9 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void PreProcess(Port port)
 		{
-			//	Il faut passer en revue tous les caractères de tous les textes, pour
-			//	pouvoir ensuite créer les polices pdf.
-			//	Il faut également passer en revue toutes les surfaces complexes, en
+			//	Il faut passer en revue tous les caractÃ¨res de tous les textes, pour
+			//	pouvoir ensuite crÃ©er les polices pdf.
+			//	Il faut Ã©galement passer en revue toutes les surfaces complexes, en
 			//	l'occurrence les surfaces transparentes.
 			{
 				port.IsPreProcess = true;
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Pdf.Engine
 					port.Reset ();
 					port.CurrentPage = page;
 
-					this.renderPageAction (port, page);  // pré-prossessing de la page
+					this.renderPageAction (port, page);  // prÃ©-prossessing de la page
 				}
 
 				port.IsPreProcess = false;
@@ -249,8 +249,8 @@ namespace Epsitec.Common.Pdf.Engine
 					bottom = this.info.BleedMargin + this.info.BleedOddMargins.Bottom;
 				}
 
-				//	La boîte de débord ne prend en compte que le débord effectivement
-				//	demandé (qui peut être différent entre pages de droite et pages
+				//	La boÃ®te de dÃ©bord ne prend en compte que le dÃ©bord effectivement
+				//	demandÃ© (qui peut Ãªtre diffÃ©rent entre pages de droite et pages
 				//	de gauche).
 				bleedBox.Inflate (left, right, top, bottom);
 
@@ -259,8 +259,8 @@ namespace Epsitec.Common.Pdf.Engine
 				top    = System.Math.Max (top,    markSizeY);
 				bottom = System.Math.Max (bottom, markSizeY);
 
-				//	La boîte de média doit être assez grande pour contenir à la fois
-				//	le débord et les éventuels traits de coupe.
+				//	La boÃ®te de mÃ©dia doit Ãªtre assez grande pour contenir Ã  la fois
+				//	le dÃ©bord et les Ã©ventuels traits de coupe.
 				mediaBox.Inflate (left, right, top, bottom);
 
 				Point offset = -mediaBox.BottomLeft;
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Pdf.Engine
 			this.renderPageAction (port, page);  // effectue le rendu de la page
 			port.Transform = gtBeforeZoom;
 
-			this.CropToBleedBox (port, page);  // efface ce qui dépasse de la BleedBox
+			this.CropToBleedBox (port, page);  // efface ce qui dÃ©passe de la BleedBox
 			this.DrawCropMarks (port, page);  // traits de coupe
 
 			var pdf = port.GetPDF ();
@@ -396,8 +396,8 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			//	Matrice de transformation globale:
 			Transform gt = port.Transform;
-			gt = gt.Translate (currentPageOffset);  // translation si débord et/ou traits de coupe
-			gt = gt.Scale (Export.mmToInches);  // unité = 0.1mm
+			gt = gt.Translate (currentPageOffset);  // translation si dÃ©bord et/ou traits de coupe
+			gt = gt.Scale (Export.mmToInches);  // unitÃ© = 0.1mm
 			Transform gtBeforeZoom = gt;
 			gt = gt.Scale (this.zoom, this.zoom, gt.TX, gt.TY);
 			port.Transform = gt;
@@ -524,7 +524,7 @@ namespace Epsitec.Common.Pdf.Engine
 		private void CropToBleedBox(Port port, int page)
 		{
 			//	Dessine un masque avec une ouverture qui a exactement la taille
-			//	du BleedBox (à savoir la taille de la page avec ses débords).
+			//	du BleedBox (Ã  savoir la taille de la page avec ses dÃ©bords).
 			Size pageSize = this.info.PageSize;
 
 			double width  = pageSize.Width * this.zoom;
@@ -618,12 +618,12 @@ namespace Epsitec.Common.Pdf.Engine
 
 				port.LineWidth = this.info.CropMarksWidth * 3;
 				port.LineCap   = CapStyle.Butt;
-				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // fond blanc derrière les traits de coupe
+				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // fond blanc derriÃ¨re les traits de coupe
 				port.PaintOutline (path);
 
 				port.LineWidth = this.info.CropMarksWidth;
 				port.LineCap   = CapStyle.Butt;
-				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
+				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repÃ©rage
 				port.PaintOutline (path);
 			}
 
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 				path.Clear ();
 				path.Append (font, text, x, y, size);
-				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
+				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repÃ©rage
 				port.PaintSurface (path);
 			}
 		}
@@ -687,8 +687,8 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void EmitComplexSurfaces(Writer writer, Port port)
 		{
-			//	Crée toutes les surfaces complexes.
-			//	Crée le ExtGState numéro 0, pour annuler une transparence.
+			//	CrÃ©e toutes les surfaces complexes.
+			//	CrÃ©e le ExtGState numÃ©ro 0, pour annuler une transparence.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (0, PdfComplexSurfaceType.ExtGState));
 			writer.WriteLine ("<< /CA 1 /ca 1 >> endobj");
 
@@ -707,14 +707,14 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateComplexSurfaceTransparencyRegular(Writer writer, Port port, ComplexSurface cs)
 		{
-			//	Crée une surface transparente unie.
+			//	CrÃ©e une surface transparente unie.
 			double a = cs.Color.A;
 			this.CreateComplexSurfaceAlpha (writer, a, cs.Id, PdfComplexSurfaceType.ExtGState);
 		}
 
 		private void CreateComplexSurfaceAlpha(Writer writer, double alpha, int id, PdfComplexSurfaceType type)
 		{
-			//	Crée un ExtGState pour une transparence unie.
+			//	CrÃ©e un ExtGState pour une transparence unie.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (id, type));
 			using (Port port = new Port ())
 			{
@@ -732,7 +732,7 @@ namespace Epsitec.Common.Pdf.Engine
 		#region Images
 		private void EmitImageSurfaces(Writer writer, Port port)
 		{
-			//	Crée toutes les images.
+			//	CrÃ©e toutes les images.
 			Export.debugTotal = 0;
 
 			foreach (ImageSurface image in port.ImageSurfaces)
@@ -746,13 +746,13 @@ namespace Epsitec.Common.Pdf.Engine
 					this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObjectMask, PdfComplexSurfaceType.None);
 				}
 
-				writer.Flush ();  // écrit déjà tout ce qu'on peut sur disque, afin d'utiliser le moins possible de mémoire
+				writer.Flush ();  // Ã©crit dÃ©jÃ  tout ce qu'on peut sur disque, afin d'utiliser le moins possible de mÃ©moire
 			}
 		}
 
 		private void CreateImageSurface(Writer writer, ImageSurface image, PdfComplexSurfaceType baseType, PdfComplexSurfaceType maskType)
 		{
-			//	Crée une image.
+			//	CrÃ©e une image.
 			ImageCompression compression = this.GetCompressionMode (baseType);
 			image = this.ProcessImageAndCreatePdfStream (image, baseType, compression);
 			
@@ -805,7 +805,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private static void EmitImageHeader(Writer writer, PdfComplexSurfaceType baseType, ImageSurface image, ImageCompression compression, ColorConversion colorConversion)
 		{
-			//	Génération de l'en-tête.
+			//	GÃ©nÃ©ration de l'en-tÃªte.
 			int dx = (int) image.Image.Width;
 			int dy = (int) image.Image.Height;
 
@@ -1121,7 +1121,7 @@ namespace Epsitec.Common.Pdf.Engine
 				return;
 			}
 
-			//	Crée toutes les fontes.
+			//	CrÃ©e toutes les fontes.
 			foreach (System.Collections.DictionaryEntry dict in port.FontHash)
 			{
 				FontList font = dict.Key as FontList;
@@ -1152,7 +1152,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateFontBase(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet de base d'une fonte.
+			//	CrÃ©e l'objet de base d'une fonte.
 			Rectangle bbox = font.CharacterBBox;
 
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.Base));
@@ -1178,7 +1178,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateFontEncoding(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet Encoding d'une fonte.
+			//	CrÃ©e l'objet Encoding d'une fonte.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.Encoding));
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder ();
@@ -1197,7 +1197,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateFontCharProcs(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet CharProcs d'une fonte.
+			//	CrÃ©e l'objet CharProcs d'une fonte.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.CharProcs));
 			writer.WriteString ("<< ");
 
@@ -1214,7 +1214,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateFontWidths(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet "table des chasses" d'une fonte.
+			//	CrÃ©e l'objet "table des chasses" d'une fonte.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.Widths));
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder ();
@@ -1234,9 +1234,9 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateFontToUnicode(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée l'objet ToUnicode d'une fonte, qui permet de retrouver les codes
-			//	des caractères lors d'une copie depuis Acrobat dans le clipboard.
-			//	Voir [*] pages 420 à 446.
+			//	CrÃ©e l'objet ToUnicode d'une fonte, qui permet de retrouver les codes
+			//	des caractÃ¨res lors d'une copie depuis Acrobat dans le clipboard.
+			//	Voir [*] pages 420 Ã  446.
 			writer.WriteObjectDef (Export.GetFontName (font.Id, fontPage, PdfFontType.ToUnicode));
 
 			string fontName = font.DrawingFont.FaceName;
@@ -1279,7 +1279,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateFontCharacters(Writer writer, FontList font, int fontPage, int count)
 		{
-			//	Crée tous les objets des caractères d'une fonte.
+			//	CrÃ©e tous les objets des caractÃ¨res d'une fonte.
 			int firstChar = fontPage*Export.charPerFont;
 			for (int i=0; i<count; i++)
 			{
@@ -1290,7 +1290,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void CreateFontCharacter(Writer writer, FontList font, int fontPage, CharacterList cl)
 		{
-			//	Crée l'objet d'un caractère d'une fonte.
+			//	CrÃ©e l'objet d'un caractÃ¨re d'une fonte.
 			writer.WriteObjectDef (Export.GetCharacterName (font.Id, fontPage, cl));
 
 			Font drawingFont = font.DrawingFont;
@@ -1307,9 +1307,9 @@ namespace Epsitec.Common.Pdf.Engine
 			})
 			{
 
-				//	Sans "wx wy llx lly urx ury d1", Acrobat 8 n'arrive pas à afficher les caractères.
-				//	Attention, si wx ne correspond pas à la valeur générée par CreateFontWidths, Acrobat 8 plante !
-				//	Acrobat 8 n'apprécie pas du tout si "... d1" est remplacé par "wx wy d0" !
+				//	Sans "wx wy llx lly urx ury d1", Acrobat 8 n'arrive pas Ã  afficher les caractÃ¨res.
+				//	Attention, si wx ne correspond pas Ã  la valeur gÃ©nÃ©rÃ©e par CreateFontWidths, Acrobat 8 plante !
+				//	Acrobat 8 n'apprÃ©cie pas du tout si "... d1" est remplacÃ© par "wx wy d0" !
 				Rectangle bounds = cl.Bounds;
 				port.PutValue (cl.Width);       // wx
 				port.PutValue (0);              // wy
@@ -1333,7 +1333,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private IEnumerable<int> Pages
 		{
-			//	Retourne la liste des pages à imprimer.
+			//	Retourne la liste des pages Ã  imprimer.
 			get
 			{
 				var start = this.info.PageFrom ?? 1;
@@ -1371,7 +1371,7 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		//	Constante pour conversion dixièmes de millimètres -> 72ème de pouce
+		//	Constante pour conversion dixiÃ¨mes de millimÃ¨tres -> 72Ã¨me de pouce
 		private static readonly double			mmToInches = 0.1*72/25.4;
 		private static readonly int				charPerFont = 256;
 		

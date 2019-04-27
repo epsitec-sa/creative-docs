@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleHypertextClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsqu'un hyperlien est cliqué.
+			//	AppelÃ© lorsqu'un hyperlien est cliquÃ©.
 			StaticText text = sender as StaticText;
 
 			Druid druid = Druid.Parse(text.Hypertext);

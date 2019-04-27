@@ -25,7 +25,7 @@ namespace Epsitec.Common.Tests.Widgets
 			xs.Foo ();
 			Assert.AreEqual (1, xs.Count);
 
-			//	Travailler avec une interface pointant sur une structure crée
+			//	Travailler avec une interface pointant sur une structure crÃ©e
 			//	en fait une version "boxed" de la structure, ce qui signifie
 			//	que l'on travaille sur une copie, plus sur un original...
 			
@@ -92,10 +92,10 @@ namespace Epsitec.Common.Tests.Widgets
 
 			visual.CommandObject = ApplicationCommands.SelectAll;
 
-			Assert.AreEqual ("Sélectionner tout", visual.GetDisplayCaption ().Description);
+			Assert.AreEqual ("SÃ©lectionner tout", visual.GetDisplayCaption ().Description);
 			Assert.AreEqual ("Tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 0));
-			Assert.AreEqual ("Sél. tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 1));
-			Assert.AreEqual ("Sélectionner tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 2));
+			Assert.AreEqual ("SÃ©l. tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 1));
+			Assert.AreEqual ("SÃ©lectionner tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 2));
 		}
 
 		[Test]
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Tests.Widgets
 			c2.Name = "c2";
 			
 			//	Triche pour que 'a' se comporte comme WindowRoot dans une
-			//	fenêtre visible; sans cela, 'a' resterait tout le temps
+			//	fenÃªtre visible; sans cela, 'a' resterait tout le temps
 			//	invisible :
 
 			a.SetValueBase (Visual.IsVisibleProperty, true);

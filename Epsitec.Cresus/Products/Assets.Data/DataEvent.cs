@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DataEvent(UndoManager undoManager, DataEvent model)
 		{
-			//	Copie un événement avec toutes ses propriétés.
+			//	Copie un Ã©vÃ©nement avec toutes ses propriÃ©tÃ©s.
 			this.undoManager = undoManager;
 			this.guid        = model.guid;
 			this.Timestamp   = model.Timestamp;
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetUndefinedProperties(DataEvent model)
 		{
-			//	Ajoute toutes les propriétés de model à l'événement courant, pour autant
+			//	Ajoute toutes les propriÃ©tÃ©s de model Ã  l'Ã©vÃ©nement courant, pour autant
 			//	que ce dernier ne les aient pas encore.
 			foreach (var property in model.properties)
 			{
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetProperties(DataEvent model)
 		{
-			//	Ajoute toutes les propriétés de model à l'événement courant.
+			//	Ajoute toutes les propriÃ©tÃ©s de model Ã  l'Ã©vÃ©nement courant.
 			this.properties.Clear ();
 
 			foreach (var property in model.properties)
@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AbstractDataProperty GetProperty(ObjectField field)
 		{
-			//	Les propriétés ObjectField.Event* ne sont pas de vraies propriétés.
-			//	On ne peut pas les modifier. Elles sont là uniquement pour le moteur
+			//	Les propriÃ©tÃ©s ObjectField.Event* ne sont pas de vraies propriÃ©tÃ©s.
+			//	On ne peut pas les modifier. Elles sont lÃ  uniquement pour le moteur
 			//	de tri.
 			switch (field)
 			{
@@ -191,12 +191,12 @@ namespace Epsitec.Cresus.Assets.Data
 						var p = this.properties.Where (x => x.Field == field).FirstOrDefault ();
 						if (p == null)
 						{
-							//	Si la propriété n'existe pas, elle est créé à la volée.
+							//	Si la propriÃ©tÃ© n'existe pas, elle est crÃ©Ã© Ã  la volÃ©e.
 							return new DataDateProperty (field, this.Timestamp.Date);
 						}
 						else
 						{
-							//	Si la propriété existe, on la retourne comme n'importe quelle autre propriété.
+							//	Si la propriÃ©tÃ© existe, on la retourne comme n'importe quelle autre propriÃ©tÃ©.
 							return p;
 						}
 					}
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Assets.Data
 					return new DataDateProperty (field, this.Timestamp.Date);
 
 				//	Si on trie selon la colonne du glyph, on trie en fait selon le
-				//	nom du type de l'événement. Cela parait plausible.
+				//	nom du type de l'Ã©vÃ©nement. Cela parait plausible.
 				case ObjectField.EventGlyph:
 				case ObjectField.EventType:
 					return new DataStringProperty (field, DataDescriptions.GetEventDescription (this.Type));

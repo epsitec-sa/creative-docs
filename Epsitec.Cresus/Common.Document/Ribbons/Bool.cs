@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Bool permet de choisir les opérations booléennes.
+	/// La classe Bool permet de choisir les opÃ©rations boolÃ©ennes.
 	/// </summary>
 	public class Bool : Abstract
 	{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonBooleanOr == null )  return;

@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -46,48 +46,48 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			//classic case
 			if (p1.IsGovernmentDefined && !p2.IsGovernmentDefined)
 			{
-				return TextFormatter.FormatText ("Fusion des données non-officelles de:\n",
+				return TextFormatter.FormatText ("Fusion des donnÃ©es non-officelles de:\n",
 				p2Summary,
-				"\navec les données officielles de:\n",
+				"\navec les donnÃ©es officielles de:\n",
 				p1Summary,
 				"\nRappel:\n",
-				"Ce contact sera supprimé:\n",
+				"Ce contact sera supprimÃ©:\n",
 				p2Summary,
-				"\nCe contact sera conservé:\n",
+				"\nCe contact sera conservÃ©:\n",
 				p1Summary
 				);
 			}
 			else if (!p1.IsGovernmentDefined && p2.IsGovernmentDefined)
 			{
-				return TextFormatter.FormatText ("Fusion des données non-officelles de:\n",
+				return TextFormatter.FormatText ("Fusion des donnÃ©es non-officelles de:\n",
 				p1Summary,
-				"\navec les données officielles de:\n",
+				"\navec les donnÃ©es officielles de:\n",
 				p2Summary,
 				"\nRappel:\n",
-				"Ce contact sera supprimé:\n",
+				"Ce contact sera supprimÃ©:\n",
 				p1Summary,
-				"\nCe contact sera conservé:\n",
+				"\nCe contact sera conservÃ©:\n",
 				p2Summary
 				);
 			}
 			else if (!p1.IsGovernmentDefined && !p2.IsGovernmentDefined)
 			{
 				return TextFormatter.FormatText ("Aucun des contacts n'appartient au registre ECh!\n",
-												 "Fusion des données non-officelles de:\n",
+												 "Fusion des donnÃ©es non-officelles de:\n",
 				p1Summary,
-				"\navec les données non-officielles de:\n",
+				"\navec les donnÃ©es non-officielles de:\n",
 				p2Summary,
 				"\nRappel:\n",
 				"Aucun des contacts n'appartient au registre ECh!\n",
-				"Ce contact sera supprimé:\n",
+				"Ce contact sera supprimÃ©:\n",
 				p2Summary,
-				"\nCe contact sera conservé:\n",
+				"\nCe contact sera conservÃ©:\n",
 				p1Summary
 				);
 			}
 			else
 			{
-				return TextFormatter.FormatText ("Les deux contacts ont des données officielles.\n",
+				return TextFormatter.FormatText ("Les deux contacts ont des donnÃ©es officielles.\n",
 												 "Il s'agit probablement d'une erreur sur la personne.\n",
 												 "La Fusion va echouer.");
 			}
@@ -120,7 +120,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
-			form.Title("Fusion de données")
+			form.Title("Fusion de donnÃ©es")
 				.Text(this.GetText())
 				.Field<bool>()
 					.Title("Oui, je souhaite fusionner ces deux personnes")

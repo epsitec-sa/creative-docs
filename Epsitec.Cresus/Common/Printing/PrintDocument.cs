@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Printing
 {
 	/// <summary>
-	/// La classe PrintDocument représente les réglages d'un "job" d'impression.
+	/// La classe PrintDocument reprÃ©sente les rÃ©glages d'un "job" d'impression.
 	/// </summary>
 	public class PrintDocument
 	{

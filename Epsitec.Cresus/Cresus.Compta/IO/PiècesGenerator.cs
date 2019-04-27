@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -14,11 +14,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.IO
 {
 	/// <summary>
-	/// Cette classe s'occupe de générer les numéros de pièces.
+	/// Cette classe s'occupe de gÃ©nÃ©rer les numÃ©ros de piÃ¨ces.
 	/// </summary>
-	public class PiècesGenerator
+	public class PiÃ¨cesGenerator
 	{
-		public PiècesGenerator(MainWindowController mainWindowController)
+		public PiÃ¨cesGenerator(MainWindowController mainWindowController)
 		{
 			this.mainWindowController = mainWindowController;
 
@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		public FormattedText GetRemoveError(ComptaPiècesGeneratorEntity generator)
+		public FormattedText GetRemoveError(ComptaPiÃ¨cesGeneratorEntity generator)
 		{
-			//	Retourne le message d'erreur éventuel, si on souhaite supprimer ce générateur.
-			int utilisateurCount, périodeCount, journalCount;
-			int total = this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
+			//	Retourne le message d'erreur Ã©ventuel, si on souhaite supprimer ce gÃ©nÃ©rateur.
+			int utilisateurCount, pÃ©riodeCount, journalCount;
+			int total = this.GetStatistics (generator, out utilisateurCount, out pÃ©riodeCount, out journalCount);
 
 			if (total == 0)
 			{
@@ -38,34 +38,34 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 			else
 			{
-				return string.Format ("Ce générateur ne peut pas être supprimé,<br/>car il est utilisé {0} fois.", total.ToString ());
+				return string.Format ("Ce gÃ©nÃ©rateur ne peut pas Ãªtre supprimÃ©,<br/>car il est utilisÃ© {0} fois.", total.ToString ());
 			}
 		}
 
-		public FormattedText GetSample(ComptaPiècesGeneratorEntity generator)
+		public FormattedText GetSample(ComptaPiÃ¨cesGeneratorEntity generator)
 		{
 			var list = new List<string> ();
 
-			int numéro = generator.Numéro;
+			int numÃ©ro = generator.NumÃ©ro;
 			for (int i = 0; i < 10; i++)
 			{
-				list.Add (this.GetFormattedPièce (generator, numéro).ToString ());
-				numéro += generator.Incrément;
+				list.Add (this.GetFormattedPiÃ¨ce (generator, numÃ©ro).ToString ());
+				numÃ©ro += generator.IncrÃ©ment;
 			}
 			list.Add ("...");
 
 			return string.Join (" ", list);
 		}
 
-		public FormattedText GetSummary(ComptaPiècesGeneratorEntity generator)
+		public FormattedText GetSummary(ComptaPiÃ¨cesGeneratorEntity generator)
 		{
-			//	Retourne un résumé de l'utilisation du générateur.
-			int utilisateurCount, périodeCount, journalCount;
-			int total = this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
+			//	Retourne un rÃ©sumÃ© de l'utilisation du gÃ©nÃ©rateur.
+			int utilisateurCount, pÃ©riodeCount, journalCount;
+			int total = this.GetStatistics (generator, out utilisateurCount, out pÃ©riodeCount, out journalCount);
 
 			if (total == 0)
 			{
-				return "Inutilisé";
+				return "InutilisÃ©";
 			}
 			else
 			{
@@ -76,9 +76,9 @@ namespace Epsitec.Cresus.Compta.IO
 					list.Add (string.Format ("{0} utilisateur{1}", utilisateurCount.ToString (), utilisateurCount <= 1 ? "":"s"));
 				}
 
-				if (périodeCount != 0)
+				if (pÃ©riodeCount != 0)
 				{
-					list.Add (string.Format ("{0} période{1}", périodeCount.ToString (), périodeCount <= 1 ? "":"s"));
+					list.Add (string.Format ("{0} pÃ©riode{1}", pÃ©riodeCount.ToString (), pÃ©riodeCount <= 1 ? "":"s"));
 				}
 
 				if (journalCount != 0)
@@ -86,15 +86,15 @@ namespace Epsitec.Cresus.Compta.IO
 					list.Add (string.Format ("{0} journa{1}", journalCount.ToString (), journalCount <= 1 ? "l":"ux"));
 				}
 
-				return "Utilisé par " + Strings.SentenceConcat (list);
+				return "UtilisÃ© par " + Strings.SentenceConcat (list);
 			}
 		}
 
-		private bool IsPerso(ComptaPiècesGeneratorEntity generator)
+		private bool IsPerso(ComptaPiÃ¨cesGeneratorEntity generator)
 		{
-			//	On considère qu'un générateur est personnel s'il n'a qu'un seul utilisateur.
-			int utilisateurCount, périodeCount, journalCount;
-			this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
+			//	On considÃ¨re qu'un gÃ©nÃ©rateur est personnel s'il n'a qu'un seul utilisateur.
+			int utilisateurCount, pÃ©riodeCount, journalCount;
+			this.GetStatistics (generator, out utilisateurCount, out pÃ©riodeCount, out journalCount);
 
 			if (utilisateurCount == 1)
 			{
@@ -104,118 +104,118 @@ namespace Epsitec.Cresus.Compta.IO
 			return this.mainWindowController.Compta.Utilisateurs.Count <= 1;
 		}
 
-		private int GetStatistics(ComptaPiècesGeneratorEntity generator, out int utilisateurCount, out int périodeCount, out int journalCount)
+		private int GetStatistics(ComptaPiÃ¨cesGeneratorEntity generator, out int utilisateurCount, out int pÃ©riodeCount, out int journalCount)
 		{
-			utilisateurCount = this.mainWindowController.Compta.Utilisateurs.Where (x => x.PiècesGenerator == generator).Count ();
-			périodeCount     = this.mainWindowController.Compta.Périodes    .Where (x => x.PiècesGenerator == generator).Count ();
-			journalCount     = this.mainWindowController.Compta.Journaux    .Where (x => x.PiècesGenerator == generator).Count ();
+			utilisateurCount = this.mainWindowController.Compta.Utilisateurs.Where (x => x.PiÃ¨cesGenerator == generator).Count ();
+			pÃ©riodeCount     = this.mainWindowController.Compta.PÃ©riodes    .Where (x => x.PiÃ¨cesGenerator == generator).Count ();
+			journalCount     = this.mainWindowController.Compta.Journaux    .Where (x => x.PiÃ¨cesGenerator == generator).Count ();
 
-			return utilisateurCount + périodeCount + journalCount;
+			return utilisateurCount + pÃ©riodeCount + journalCount;
 		}
 
 
-		public void Burn(ComptaJournalEntity journal, List<FormattedText> pièces)
+		public void Burn(ComptaJournalEntity journal, List<FormattedText> piÃ¨ces)
 		{
-			//	Brûle les numéros utilisés, ce qui revient à vider le congélateur.
-			var generator = this.GetGenerator (this.mainWindowController.CurrentUser, this.mainWindowController.Période, journal);
+			//	BrÃ»le les numÃ©ros utilisÃ©s, ce qui revient Ã  vider le congÃ©lateur.
+			var generator = this.GetGenerator (this.mainWindowController.CurrentUser, this.mainWindowController.PÃ©riode, journal);
 
 			if (generator != null)
 			{
-				this.Adjust (generator, pièces);
+				this.Adjust (generator, piÃ¨ces);
 			}
 		}
 
-		public FormattedText GetProchainePièce(ComptaJournalEntity journal, int rank = 0)
+		public FormattedText GetProchainePiÃ¨ce(ComptaJournalEntity journal, int rank = 0)
 		{
-			//	Retourne le prochain numéro de pièce à utiliser. Tant que les numéros n'ont pas été brûlés,
-			//	des appels successifs à cette méthode retournent toujours les mêmes numéros de pièce.
-			var generator = this.GetGenerator (this.mainWindowController.CurrentUser, this.mainWindowController.Période, journal);
+			//	Retourne le prochain numÃ©ro de piÃ¨ce Ã  utiliser. Tant que les numÃ©ros n'ont pas Ã©tÃ© brÃ»lÃ©s,
+			//	des appels successifs Ã  cette mÃ©thode retournent toujours les mÃªmes numÃ©ros de piÃ¨ce.
+			var generator = this.GetGenerator (this.mainWindowController.CurrentUser, this.mainWindowController.PÃ©riode, journal);
 			if (generator == null)
 			{
 				return FormattedText.Null;
 			}
 
-			var pièce = this.SearchInsideFreezer (generator, rank);  // cherche dans le congélateur
+			var piÃ¨ce = this.SearchInsideFreezer (generator, rank);  // cherche dans le congÃ©lateur
 
-			if (pièce.IsNullOrEmpty ())  // pas trouvé ?
+			if (piÃ¨ce.IsNullOrEmpty ())  // pas trouvÃ© ?
 			{
-				//	Si on a mis les pièces de rangs 0, 1 et 2 dans le congélateur et qu'on demande la pièce de rang 7,
-				//	on va générer et mettre dans le congélateur les pièces 3 à 7.
+				//	Si on a mis les piÃ¨ces de rangs 0, 1 et 2 dans le congÃ©lateur et qu'on demande la piÃ¨ce de rang 7,
+				//	on va gÃ©nÃ©rer et mettre dans le congÃ©lateur les piÃ¨ces 3 Ã  7.
 				int max = this.GetMaxRankInsideFreezer (generator);
 
 				for (int i = max+1; i <= rank; i++)
 				{
-					int numéro = PiècesGenerator.GetPièceProchainNuméro (generator);
-					pièce = this.GetFormattedPièce (generator, numéro);  // génère un nouveau numéro de pièce
-					this.AddInsideFreezer (generator, numéro, i, pièce);
+					int numÃ©ro = PiÃ¨cesGenerator.GetPiÃ¨ceProchainNumÃ©ro (generator);
+					piÃ¨ce = this.GetFormattedPiÃ¨ce (generator, numÃ©ro);  // gÃ©nÃ¨re un nouveau numÃ©ro de piÃ¨ce
+					this.AddInsideFreezer (generator, numÃ©ro, i, piÃ¨ce);
 				}
 
-				//	On effectue à nouveau la recherche dans le congélateur, qui doit forcément aboutir.
-				pièce = this.SearchInsideFreezer (generator, rank);
+				//	On effectue Ã  nouveau la recherche dans le congÃ©lateur, qui doit forcÃ©ment aboutir.
+				piÃ¨ce = this.SearchInsideFreezer (generator, rank);
 			}
 
-			return pièce;
+			return piÃ¨ce;
 		}
 
 
-		private ComptaPiècesGeneratorEntity GetGenerator(ComptaUtilisateurEntity utilisateur, ComptaPériodeEntity période, ComptaJournalEntity journal)
+		private ComptaPiÃ¨cesGeneratorEntity GetGenerator(ComptaUtilisateurEntity utilisateur, ComptaPÃ©riodeEntity pÃ©riode, ComptaJournalEntity journal)
 		{
-			//	Retourne le générateur de numéros de pièces à utiliser.
-			//	TODO: Priorités à revoir éventuellement ?
-			if (journal != null && journal.PiècesGenerator != null)
+			//	Retourne le gÃ©nÃ©rateur de numÃ©ros de piÃ¨ces Ã  utiliser.
+			//	TODO: PrioritÃ©s Ã  revoir Ã©ventuellement ?
+			if (journal != null && journal.PiÃ¨cesGenerator != null)
 			{
-				return journal.PiècesGenerator;
+				return journal.PiÃ¨cesGenerator;
 			}
 
-			if (période != null && période.PiècesGenerator != null)
+			if (pÃ©riode != null && pÃ©riode.PiÃ¨cesGenerator != null)
 			{
-				return période.PiècesGenerator;
+				return pÃ©riode.PiÃ¨cesGenerator;
 			}
 
-			if (utilisateur != null && utilisateur.PiècesGenerator != null)
+			if (utilisateur != null && utilisateur.PiÃ¨cesGenerator != null)
 			{
-				return utilisateur.PiècesGenerator;
+				return utilisateur.PiÃ¨cesGenerator;
 			}
 
-			return this.mainWindowController.Compta.PiècesGenerator.FirstOrDefault ();
+			return this.mainWindowController.Compta.PiÃ¨cesGenerator.FirstOrDefault ();
 		}
 
-		private FormattedText GetFormattedPièce(ComptaPiècesGeneratorEntity generator, int numéro)
+		private FormattedText GetFormattedPiÃ¨ce(ComptaPiÃ¨cesGeneratorEntity generator, int numÃ©ro)
 		{
-			//	Retourne un numéro de pièce formaté, avec préfixe, suffixe, etc.
+			//	Retourne un numÃ©ro de piÃ¨ce formatÃ©, avec prÃ©fixe, suffixe, etc.
 			if (generator == null)
 			{
-				return numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				return numÃ©ro.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else
 			{
-				return PiècesGenerator.FormatPièce (generator.Préfixe, generator.Suffixe, generator.Format, numéro);
+				return PiÃ¨cesGenerator.FormatPiÃ¨ce (generator.PrÃ©fixe, generator.Suffixe, generator.Format, numÃ©ro);
 			}
 		}
 
-		private static FormattedText FormatPièce(FormattedText préfixe, FormattedText suffixe, FormattedText format, int numéro)
+		private static FormattedText FormatPiÃ¨ce(FormattedText prÃ©fixe, FormattedText suffixe, FormattedText format, int numÃ©ro)
 		{
-			var pièce = PiècesGenerator.FormatPièce (format, numéro);
-			return FormattedText.Concat (préfixe, pièce, suffixe);
+			var piÃ¨ce = PiÃ¨cesGenerator.FormatPiÃ¨ce (format, numÃ©ro);
+			return FormattedText.Concat (prÃ©fixe, piÃ¨ce, suffixe);
 		}
 
-		private static FormattedText FormatPièce(FormattedText format, int numéro)
+		private static FormattedText FormatPiÃ¨ce(FormattedText format, int numÃ©ro)
 		{
-			//	Retourne un numéro de pièce formaté.
+			//	Retourne un numÃ©ro de piÃ¨ce formatÃ©.
 			if (format.IsNullOrEmpty ())
 			{
-				return numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				return numÃ©ro.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else
 			{
-				string numString = numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string numString = numÃ©ro.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
 				var minimumdigits = Converters.ParseInt (format);
 				if (minimumdigits.HasValue)
 				{
-					if (minimumdigits.Value > numString.Length)  // numéro trop court ?
+					if (minimumdigits.Value > numString.Length)  // numÃ©ro trop court ?
 					{
-						numString = new string ('0', minimumdigits.Value - numString.Length) + numString;  // complète avec des zéros
+						numString = new string ('0', minimumdigits.Value - numString.Length) + numString;  // complÃ¨te avec des zÃ©ros
 					}
 
 					return numString;
@@ -223,22 +223,22 @@ namespace Epsitec.Cresus.Compta.IO
 
 				string f = format.ToString ();
 
-				//	Construit la chaîne du numéro avec le bon nombre de digits.
+				//	Construit la chaÃ®ne du numÃ©ro avec le bon nombre de digits.
 				int digits = f.Where (x => x == '#').Count ();
 				if (digits != 0)
 				{
-					if (digits > numString.Length)  // numéro trop court ?
+					if (digits > numString.Length)  // numÃ©ro trop court ?
 					{
-						numString = new string ('0', digits - numString.Length) + numString;  // complète avec des zéros
+						numString = new string ('0', digits - numString.Length) + numString;  // complÃ¨te avec des zÃ©ros
 					}
 
-					if (digits < numString.Length)  // numéro trop long ?
+					if (digits < numString.Length)  // numÃ©ro trop long ?
 					{
 						numString = numString.Substring (numString.Length-digits);  // tronque
 					}
 				}
 
-				//	Construit le numéro final d'après le format.
+				//	Construit le numÃ©ro final d'aprÃ¨s le format.
 				var builder = new System.Text.StringBuilder ();
 
 				int i = 0;
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Compta.IO
 					{
 						builder.Append (numString[i++]);
 					}
-					else  // un caractère fixe ?
+					else  // un caractÃ¨re fixe ?
 					{
 						builder.Append (c);
 					}
@@ -258,11 +258,11 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private static int? ParsePièce(FormattedText prefixe, FormattedText suffixe, FormattedText format, FormattedText pièce)
+		private static int? ParsePiÃ¨ce(FormattedText prefixe, FormattedText suffixe, FormattedText format, FormattedText piÃ¨ce)
 		{
 			string p = prefixe.ToString ();
 			string s = suffixe.ToString ();
-			string t = pièce.ToString ();
+			string t = piÃ¨ce.ToString ();
 
 			if (t.StartsWith (p))
 			{
@@ -287,15 +287,15 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 				else
 				{
-					return PiècesGenerator.ParsePièce (format, t);
+					return PiÃ¨cesGenerator.ParsePiÃ¨ce (format, t);
 				}
 			}
 		}
 
-		private static int? ParsePièce(FormattedText format, FormattedText pièce)
+		private static int? ParsePiÃ¨ce(FormattedText format, FormattedText piÃ¨ce)
 		{
 			string f = format.ToString ();
-			string p = pièce.ToString ();
+			string p = piÃ¨ce.ToString ();
 
 			if (f.Length != p.Length)
 			{
@@ -330,38 +330,38 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private static int GetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator)
+		private static int GetPiÃ¨ceProchainNumÃ©ro(ComptaPiÃ¨cesGeneratorEntity generator)
 		{
-			//	Retourne le prochain numéro de pièce à utiliser.
-			//	TODO: Il faudra vérifier que cette procédure fonctionne en multi-utilisateur !
-			int n = generator.Numéro;
-			generator.Numéro += generator.Incrément;
+			//	Retourne le prochain numÃ©ro de piÃ¨ce Ã  utiliser.
+			//	TODO: Il faudra vÃ©rifier que cette procÃ©dure fonctionne en multi-utilisateur !
+			int n = generator.NumÃ©ro;
+			generator.NumÃ©ro += generator.IncrÃ©ment;
 			return n;
 		}
 
-		private static void SetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator, int numéro)
+		private static void SetPiÃ¨ceProchainNumÃ©ro(ComptaPiÃ¨cesGeneratorEntity generator, int numÃ©ro)
 		{
-			//	Modifie le prochain numéro de pièce à utiliser.
-			//	TODO: Il faudra vérifier que cette procédure fonctionne en multi-utilisateur !
-			generator.Numéro = numéro;
+			//	Modifie le prochain numÃ©ro de piÃ¨ce Ã  utiliser.
+			//	TODO: Il faudra vÃ©rifier que cette procÃ©dure fonctionne en multi-utilisateur !
+			generator.NumÃ©ro = numÃ©ro;
 		}
 
 
-		private void Adjust(ComptaPiècesGeneratorEntity generator, List<FormattedText> pièces)
+		private void Adjust(ComptaPiÃ¨cesGeneratorEntity generator, List<FormattedText> piÃ¨ces)
 		{
-			//	Si un générateur n'est utilisé que par un seul utilisateur, la modification par l'utilisateur
-			//	de la pièce proposée modifie le prochain numéro généré.
+			//	Si un gÃ©nÃ©rateur n'est utilisÃ© que par un seul utilisateur, la modification par l'utilisateur
+			//	de la piÃ¨ce proposÃ©e modifie le prochain numÃ©ro gÃ©nÃ©rÃ©.
 			if (this.IsPerso (generator))
 			{
-				//	Cherche tous les numéros qui ont été entrés manuellement et qui ne correspondent pas
-				//	à un numéro automatique.
+				//	Cherche tous les numÃ©ros qui ont Ã©tÃ© entrÃ©s manuellement et qui ne correspondent pas
+				//	Ã  un numÃ©ro automatique.
 				var outsiders = new List<FormattedText> ();
 
-				foreach (var pièce in pièces)
+				foreach (var piÃ¨ce in piÃ¨ces)
 				{
-					if (!this.freezer.Where (x => x.Generator == generator && x.Pièce == pièce).Any ())
+					if (!this.freezer.Where (x => x.Generator == generator && x.PiÃ¨ce == piÃ¨ce).Any ())
 					{
-						outsiders.Add (pièce);
+						outsiders.Add (piÃ¨ce);
 					}
 				}
 
@@ -371,10 +371,10 @@ namespace Epsitec.Cresus.Compta.IO
 
 					for (int i = outsiders.Count-1; i >= 0; i--)
 					{
-						int? numéro = PiècesGenerator.ParsePièce (generator.Préfixe, generator.Suffixe, generator.Format, outsiders[i]);
-						if (numéro.HasValue)
+						int? numÃ©ro = PiÃ¨cesGenerator.ParsePiÃ¨ce (generator.PrÃ©fixe, generator.Suffixe, generator.Format, outsiders[i]);
+						if (numÃ©ro.HasValue)
 						{
-							PiècesGenerator.SetPièceProchainNuméro (generator, numéro.Value+generator.Incrément);
+							PiÃ¨cesGenerator.SetPiÃ¨ceProchainNumÃ©ro (generator, numÃ©ro.Value+generator.IncrÃ©ment);
 							this.ClearFreezer (generator);
 							return;
 						}
@@ -382,31 +382,31 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
-			this.ClearFreezer (generator, pièces);
+			this.ClearFreezer (generator, piÃ¨ces);
 		}
 
 
-		private void ClearFreezer(ComptaPiècesGeneratorEntity generator, List<FormattedText> pièces)
+		private void ClearFreezer(ComptaPiÃ¨cesGeneratorEntity generator, List<FormattedText> piÃ¨ces)
 		{
-			//	Vide le congélateur de tous les numéros utilisés avec un générateur donné.
+			//	Vide le congÃ©lateur de tous les numÃ©ros utilisÃ©s avec un gÃ©nÃ©rateur donnÃ©.
 			//	Contenu initial:
-			//		Numéro	Rank
+			//		NumÃ©ro	Rank
 			//		15		0
 			//		16		1
 			//		17		2
 			//		18		3 <-- last=3
 			//		19		4
 			//		20		5
-			//	Numéros utilisés:
+			//	NumÃ©ros utilisÃ©s:
 			//		16 et 18
 			//	Contenu final:
-			//		Numéro	Rank
+			//		NumÃ©ro	Rank
 			//		19		0
 			//		20		1
-			//	Dans cet exemple, les numéros 15 et 17 n'ont pas été utilisés, mais ils doivent tout
-			//	de même être brûlés, afin de garantir une numérotation sans trous.
+			//	Dans cet exemple, les numÃ©ros 15 et 17 n'ont pas Ã©tÃ© utilisÃ©s, mais ils doivent tout
+			//	de mÃªme Ãªtre brÃ»lÃ©s, afin de garantir une numÃ©rotation sans trous.
 
-			//	Cherche le rang du dernier numéro utilisé.
+			//	Cherche le rang du dernier numÃ©ro utilisÃ©.
 			int i = this.freezer.Count-1;
 			int last = -1;
 			while (i >= 0)
@@ -415,7 +415,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 				if (data.Generator == generator)
 				{
-					if (pièces.Contains (data.Pièce))
+					if (piÃ¨ces.Contains (data.PiÃ¨ce))
 					{
 						last = data.Rank;
 						break;
@@ -425,7 +425,7 @@ namespace Epsitec.Cresus.Compta.IO
 				i--;
 			}
 
-			//	Supprime tous les numéros <= last.
+			//	Supprime tous les numÃ©ros <= last.
 			i = 0;
 			while (i < this.freezer.Count)
 			{
@@ -441,7 +441,7 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
-			//	Renumérote les rangs des numéros restants de 0 à n.
+			//	RenumÃ©rote les rangs des numÃ©ros restants de 0 Ã  n.
 			foreach (var data in this.freezer)
 			{
 				if (data.Generator == generator)
@@ -451,9 +451,9 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private void ClearFreezer(ComptaPiècesGeneratorEntity generator)
+		private void ClearFreezer(ComptaPiÃ¨cesGeneratorEntity generator)
 		{
-			//	Vide le congélateur de tous les numéros d'un générateur donné.
+			//	Vide le congÃ©lateur de tous les numÃ©ros d'un gÃ©nÃ©rateur donnÃ©.
 			int i = 0;
 			while (i < this.freezer.Count)
 			{
@@ -470,9 +470,9 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private int GetMaxRankInsideFreezer(ComptaPiècesGeneratorEntity generator)
+		private int GetMaxRankInsideFreezer(ComptaPiÃ¨cesGeneratorEntity generator)
 		{
-			//	Retourne le rang le plus grand contenu dans le congélateur.
+			//	Retourne le rang le plus grand contenu dans le congÃ©lateur.
 			int max = -1;
 
 			foreach (var data in this.freezer)
@@ -486,47 +486,47 @@ namespace Epsitec.Cresus.Compta.IO
 			return max;
 		}
 
-		private FormattedText SearchInsideFreezer(ComptaPiècesGeneratorEntity generator, int rank)
+		private FormattedText SearchInsideFreezer(ComptaPiÃ¨cesGeneratorEntity generator, int rank)
 		{
-			//	Cherche un numéro de pièce contenu dans le congélateur.
+			//	Cherche un numÃ©ro de piÃ¨ce contenu dans le congÃ©lateur.
 			foreach (var data in this.freezer)
 			{
 				if (data.Generator == generator &&
 					data.Rank      == rank      )
 				{
-					return data.Pièce;
+					return data.PiÃ¨ce;
 				}
 			}
 
 			return FormattedText.Null;
 		}
 
-		private void AddInsideFreezer(ComptaPiècesGeneratorEntity generator, int numéro, int rank, FormattedText pièce)
+		private void AddInsideFreezer(ComptaPiÃ¨cesGeneratorEntity generator, int numÃ©ro, int rank, FormattedText piÃ¨ce)
 		{
-			//	Ajoute un numéro de pièce dans le congélateur.
-			var data = new FreezerData (generator, numéro, rank, pièce);
+			//	Ajoute un numÃ©ro de piÃ¨ce dans le congÃ©lateur.
+			var data = new FreezerData (generator, numÃ©ro, rank, piÃ¨ce);
 			this.freezer.Add (data);
 		}
 
 
 		private class FreezerData
 		{
-			//	Donnée du congélateur.
-			public FreezerData(ComptaPiècesGeneratorEntity generator, int numéro, int rank, FormattedText pièce)
+			//	DonnÃ©e du congÃ©lateur.
+			public FreezerData(ComptaPiÃ¨cesGeneratorEntity generator, int numÃ©ro, int rank, FormattedText piÃ¨ce)
 			{
 				this.Generator = generator;
-				this.Numéro    = numéro;
+				this.NumÃ©ro    = numÃ©ro;
 				this.Rank      = rank;
-				this.Pièce     = pièce;
+				this.PiÃ¨ce     = piÃ¨ce;
 			}
 
-			public ComptaPiècesGeneratorEntity Generator
+			public ComptaPiÃ¨cesGeneratorEntity Generator
 			{
 				get;
 				private set;
 			}
 
-			public int Numéro
+			public int NumÃ©ro
 			{
 				get;
 				private set;
@@ -538,7 +538,7 @@ namespace Epsitec.Cresus.Compta.IO
 				set;
 			}
 
-			public FormattedText Pièce
+			public FormattedText PiÃ¨ce
 			{
 				get;
 				private set;

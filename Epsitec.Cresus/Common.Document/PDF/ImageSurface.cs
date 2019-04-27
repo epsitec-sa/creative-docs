@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.PDF
 	/// <summary>
 	/// La classe ImageSurface enregistre les informations sur une image bitmap.
 	/// Il existe une seule instance de ImageSurface par nom de fichier, si
-	/// plusieurs Objects.Image utilisent la même image.
+	/// plusieurs Objects.Image utilisent la mÃªme image.
 	/// </summary>
 	public sealed class ImageSurface : System.IDisposable
 	{
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public bool Exists
 		{
-			//	Retourne true si l'image a pu être chargée au moins une fois avec succès.
+			//	Retourne true si l'image a pu Ãªtre chargÃ©e au moins une fois avec succÃ¨s.
 			get
 			{
 				return this.BitmapSize != Size.Zero;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public static ImageSurface Search(IEnumerable<ImageSurface> list, string filename, Size size, Margins crop, ImageFilter filter)
 		{
-			//	Cherche une image d'après son nom dans une liste.
+			//	Cherche une image d'aprÃ¨s son nom dans une liste.
 			foreach (ImageSurface image in list)
 			{
 				if ((image.imageName == filename) &&

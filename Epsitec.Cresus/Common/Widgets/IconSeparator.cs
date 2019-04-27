@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe IconSeparator permet de dessiner des séparations utiles
+	/// La classe IconSeparator permet de dessiner des sÃ©parations utiles
 	/// pour remplir une ToolBar.
 	/// </summary>
 	public class IconSeparator : Button
@@ -40,9 +40,9 @@ namespace Epsitec.Common.Widgets
 		
 		public bool IsHorizontal
 		{
-			//	Si IsHorizontal=true, on est dans une ToolBar horizontale, et le trait de séparation
-			//	est donc vertical. Mais attention, selon l'adorner utilisé, le trait de séparation
-			//	n'est pas dessiné !
+			//	Si IsHorizontal=true, on est dans une ToolBar horizontale, et le trait de sÃ©paration
+			//	est donc vertical. Mais attention, selon l'adorner utilisÃ©, le trait de sÃ©paration
+			//	n'est pas dessinÃ© !
 			get
 			{
 				return this.isHorizontal;

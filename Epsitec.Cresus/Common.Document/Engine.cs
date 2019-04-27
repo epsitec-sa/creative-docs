@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document
 					context.ContainerSize = size;
 					context.PreviewActive = true;
 					context.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-					context.RootStackPush(page);  // première page
+					context.RootStackPush(page);  // premiÃ¨re page
 					context.RootStackPush(0);  // premier calque
 
 					Point scale = context.Scale;

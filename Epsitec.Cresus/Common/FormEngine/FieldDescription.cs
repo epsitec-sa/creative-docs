@@ -10,7 +10,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.FormEngine
 {
 	/// <summary>
-	/// Décrit un noeud, un champ ou un séparateur dans un masque de saisie.
+	/// DÃ©crit un noeud, un champ ou un sÃ©parateur dans un masque de saisie.
 	/// </summary>
 	public sealed class FieldDescription : System.IEquatable<FieldDescription>
 	{
@@ -20,11 +20,11 @@ namespace Epsitec.Common.FormEngine
 			Field			= 1,	// champ
 			SubForm			= 2,	// sous-masque
 			Node			= 3,	// noeud
-			Glue			= 10,	// colle deux éléments sur la même ligne
-			Line			= 20,	// séparateur trait horizontal
-			Title			= 21,	// séparateur titre automatique
-			BoxBegin		= 30,	// début d'une boîte
-			BoxEnd			= 31,	// fin d'une boîte
+			Glue			= 10,	// colle deux Ã©lÃ©ments sur la mÃªme ligne
+			Line			= 20,	// sÃ©parateur trait horizontal
+			Title			= 21,	// sÃ©parateur titre automatique
+			BoxBegin		= 30,	// dÃ©but d'une boÃ®te
+			BoxEnd			= 31,	// fin d'une boÃ®te
 			Command			= 40,	// commande
 		}
 
@@ -33,16 +33,16 @@ namespace Epsitec.Common.FormEngine
 		{
 			Normal			= 0,	// les champs sont proches
 			Compact			= 1,	// les champs se touchent (chevauchement d'un pixel)
-			Extend			= 2,	// les champs sont très espacés
+			Extend			= 2,	// les champs sont trÃ¨s espacÃ©s
 		}
 
 		[DesignerVisible]
 		public enum BoxLayoutType
 		{
 			Grid			= 0,	// grille
-			HorizontalLeft	= 1,	// empilement horizontal calé à gauche
-			HorizontalCenter= 2,	// empilement horizontal centré
-			HorizontalRight	= 3,	// empilement horizontal calé à droite
+			HorizontalLeft	= 1,	// empilement horizontal calÃ© Ã  gauche
+			HorizontalCenter= 2,	// empilement horizontal centrÃ©
+			HorizontalRight	= 3,	// empilement horizontal calÃ© Ã  droite
 		}
 
 		[DesignerVisible]
@@ -50,7 +50,7 @@ namespace Epsitec.Common.FormEngine
 		{
 			Normal			= 0,	// marge standard
 			Compact			= 1,	// marge nulle
-			Extend			= 2,	// marge étendue
+			Extend			= 2,	// marge Ã©tendue
 		}
 
 		[DesignerVisible]
@@ -58,8 +58,8 @@ namespace Epsitec.Common.FormEngine
 		{
 			None			= 0,	// transparent
 			Gray			= 1,	// gris clair
-			Yellow			= 2,	// jaune pâle
-			Red				= 3,	// rouge pâle
+			Yellow			= 2,	// jaune pÃ¢le
+			Red				= 3,	// rouge pÃ¢le
 		}
 
 		[DesignerVisible]
@@ -95,22 +95,22 @@ namespace Epsitec.Common.FormEngine
 			Normal			= 0,	// normal
 			Small			= 1,	// petit
 			Large			= 2,	// grand
-			VeryLarge		= 3,	// très grand
+			VeryLarge		= 3,	// trÃ¨s grand
 		}
 
 		[DesignerVisible]
 		public enum CommandButtonClass
 		{
-			Default			= 0,	// utilise les réglages par défaut définis au niveau de la commande
+			Default			= 0,	// utilise les rÃ©glages par dÃ©faut dÃ©finis au niveau de la commande
 			DialogButton	= 1,	// bouton pour les dialogues
-			RichDialogButton= 2,	// comme ci-dessus, avec icône
+			RichDialogButton= 2,	// comme ci-dessus, avec icÃ´ne
 			FlatButton		= 3,	// bouton plat pour barre d'outils
 		}
 
 
 		private FieldDescription()
 		{
-			//	Constructeur protégé, commun à tous les autres.
+			//	Constructeur protÃ©gÃ©, commun Ã  tous les autres.
 			this.Reset();
 			this.subFormId = Druid.Empty;
 			this.deltaHidden = false;
@@ -124,7 +124,7 @@ namespace Epsitec.Common.FormEngine
 		public FieldDescription(FieldType type) : this()
 		{
 			//	Constructeur.
-			//	Le type est toujours déterminé à la création. Il ne pourra plus changer par la suite.
+			//	Le type est toujours dÃ©terminÃ© Ã  la crÃ©ation. Il ne pourra plus changer par la suite.
 			this.guid = System.Guid.NewGuid();
 			this.type = type;
 		}
@@ -172,13 +172,13 @@ namespace Epsitec.Common.FormEngine
 
 		public FieldDescription(XmlReader reader) : this()
 		{
-			//	Constructeur qui désérialise.
+			//	Constructeur qui dÃ©sÃ©rialise.
 			this.ReadXml(reader);
 		}
 
 		public void Reset()
 		{
-			//	Remet à zéro les propriétés liées à l'aspect.
+			//	Remet Ã  zÃ©ro les propriÃ©tÃ©s liÃ©es Ã  l'aspect.
 			this.backColor = BackColorType.None;
 			this.labelFontColor = FontColorType.Default;
 			this.fieldFontColor = FontColorType.Default;
@@ -218,7 +218,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FieldType Type
 		{
-			//	Retourne le type immuable de cet élément (déterminé lors de la création de l'objet).
+			//	Retourne le type immuable de cet Ã©lÃ©ment (dÃ©terminÃ© lors de la crÃ©ation de l'objet).
 			get
 			{
 				return this.type;
@@ -227,7 +227,7 @@ namespace Epsitec.Common.FormEngine
 
 		public bool IsForwardTab
 		{
-			//	Retourne true si cet élément gère la touche Tab.
+			//	Retourne true si cet Ã©lÃ©ment gÃ¨re la touche Tab.
 			get
 			{
 				return this.type == FieldType.Field || this.type == FieldType.Command;
@@ -236,7 +236,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FieldDescription Source
 		{
-			//	Descripteur source, non sérialisé. Est utilisé pour les champs en provenance d'un sous-masque.
+			//	Descripteur source, non sÃ©rialisÃ©. Est utilisÃ© pour les champs en provenance d'un sous-masque.
 			get
 			{
 				return this.source;
@@ -283,16 +283,16 @@ namespace Epsitec.Common.FormEngine
 						return "Colle";
 
 					case FieldType.Line:
-						return "Séparateur";
+						return "SÃ©parateur";
 
 					case FieldType.Title:
 						return "Titre";
 
 					case FieldType.BoxBegin:
-						return "Boîte";
+						return "BoÃ®te";
 
 					case FieldType.BoxEnd:
-						return "Fin de boîte";
+						return "Fin de boÃ®te";
 
 					default:
 						return null;
@@ -325,7 +325,7 @@ namespace Epsitec.Common.FormEngine
 
 		public List<Druid> FieldIds
 		{
-			//	Liste des Druids qui représentent le champ.
+			//	Liste des Druids qui reprÃ©sentent le champ.
 			get
 			{
 				return this.fieldIds;
@@ -341,7 +341,7 @@ namespace Epsitec.Common.FormEngine
 
 		public void SetFields(string druidsPath)
 		{
-			//	Donne d'une liste de Druids séparés par des points.
+			//	Donne d'une liste de Druids sÃ©parÃ©s par des points.
 			//	Par exemple: druidsPath = "[630B2].[630S2]"
 			if (string.IsNullOrEmpty(druidsPath))
 			{
@@ -363,13 +363,13 @@ namespace Epsitec.Common.FormEngine
 
 		public Support.EntityEngine.EntityFieldPath GetFieldPath()
 		{
-			//	Retourne le chemin encodé pour le champ correspondant.
+			//	Retourne le chemin encodÃ© pour le champ correspondant.
 			return Support.EntityEngine.EntityFieldPath.CreateRelativePath(this.GetPath(null));
 		}
 
 		public string GetPath(string prefix)
 		{
-			//	Retourne le chemin permettant d'accéder au champ.
+			//	Retourne le chemin permettant d'accÃ©der au champ.
 			//	Par exemple, si prefix = "Data": retourne "Data.[630B2].[630S2]"
 			//	Par exemple, si prefix = null:   retourne "[630B2].[630S2]"
 			if (this.type == FieldType.Field || this.type == FieldType.SubForm || this.type == FieldType.Command)
@@ -417,7 +417,7 @@ namespace Epsitec.Common.FormEngine
 
 		public SeparatorType SeparatorBottom
 		{
-			//	Type de séparation après le champ suivant.
+			//	Type de sÃ©paration aprÃ¨s le champ suivant.
 			get
 			{
 				return this.separatorBottom;
@@ -443,7 +443,7 @@ namespace Epsitec.Common.FormEngine
 
 		public bool HasTextStyle
 		{
-			//	Indique si au moins un style de texte est défini.
+			//	Indique si au moins un style de texte est dÃ©fini.
 			get
 			{
 				return this.HasLabelTextStyle || this.HasFieldTextStyle;
@@ -452,7 +452,7 @@ namespace Epsitec.Common.FormEngine
 
 		public bool HasLabelTextStyle
 		{
-			//	Indique si au moins un style de texte est défini pour l'étiquette.
+			//	Indique si au moins un style de texte est dÃ©fini pour l'Ã©tiquette.
 			get
 			{
 				return this.labelFontColor != FontColorType.Default ||
@@ -464,7 +464,7 @@ namespace Epsitec.Common.FormEngine
 
 		public bool HasFieldTextStyle
 		{
-			//	Indique si au moins un style de texte est défini pour le champ.
+			//	Indique si au moins un style de texte est dÃ©fini pour le champ.
 			get
 			{
 				return this.fieldFontColor != FontColorType.Default ||
@@ -476,7 +476,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FontColorType LabelFontColor
 		{
-			//	Couleur de la police pour l'étiquette.
+			//	Couleur de la police pour l'Ã©tiquette.
 			get
 			{
 				return this.labelFontColor;
@@ -502,7 +502,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FontFaceType LabelFontFace
 		{
-			//	Nom de la police pour l'étiquette.
+			//	Nom de la police pour l'Ã©tiquette.
 			get
 			{
 				return this.labelFontFace;
@@ -528,7 +528,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FontStyleType LabelFontStyle
 		{
-			//	Style de la police pour l'étiquette.
+			//	Style de la police pour l'Ã©tiquette.
 			get
 			{
 				return this.labelFontStyle;
@@ -554,7 +554,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FontSizeType LabelFontSize
 		{
-			//	Taille de la police pour l'étiquette.
+			//	Taille de la police pour l'Ã©tiquette.
 			get
 			{
 				return this.labelFontSize;
@@ -623,7 +623,7 @@ namespace Epsitec.Common.FormEngine
 
 		public BoxLayoutType BoxLayout
 		{
-			//	Type du contenu pour les boîtes.
+			//	Type du contenu pour les boÃ®tes.
 			get
 			{
 				return this.boxLayoutType;
@@ -637,7 +637,7 @@ namespace Epsitec.Common.FormEngine
 
 		public BoxPaddingType BoxPadding
 		{
-			//	Type de marge intérieure pour les boîtes.
+			//	Type de marge intÃ©rieure pour les boÃ®tes.
 			get
 			{
 				return this.boxPaddingType;
@@ -651,7 +651,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FrameEdges BoxFrameEdges
 		{
-			//	Bordures d'une boîte.
+			//	Bordures d'une boÃ®te.
 			get
 			{
 				return this.boxFrameEdges;
@@ -665,7 +665,7 @@ namespace Epsitec.Common.FormEngine
 
 		public double BoxFrameWidth
 		{
-			//	Epaisseur des bordures d'une boîte.
+			//	Epaisseur des bordures d'une boÃ®te.
 			get
 			{
 				return this.boxFrameWidth;
@@ -679,7 +679,7 @@ namespace Epsitec.Common.FormEngine
 
 		public double LineWidth
 		{
-			//	Epaisseur des traits de séparation.
+			//	Epaisseur des traits de sÃ©paration.
 			get
 			{
 				return this.lineWidth;
@@ -693,7 +693,7 @@ namespace Epsitec.Common.FormEngine
 
 		public double PreferredWidth
 		{
-			//	Largeur préférentielle, si le parent est en mode BoxLayoutType.Horizontal*.
+			//	Largeur prÃ©fÃ©rentielle, si le parent est en mode BoxLayoutType.Horizontal*.
 			get
 			{
 				return this.preferredWidth;
@@ -706,7 +706,7 @@ namespace Epsitec.Common.FormEngine
 
 		public Druid LabelReplacement
 		{
-			//	Druid optionnel du caption qui remplace le texte par défaut.
+			//	Druid optionnel du caption qui remplace le texte par dÃ©faut.
 			get
 			{
 				return this.labelReplacement;
@@ -748,9 +748,9 @@ namespace Epsitec.Common.FormEngine
 		public bool DeltaHidden
 		{
 			//	Dans un Form delta, indique un champ qu'il faut cacher dans la liste finale.
-			//	Dans un Form final, indique un champ caché. Il est important que le champ soit là, même si
-			//	FormEngine ne générera pas les widgets correspondant.
-			//	Guid = champ à cacher
+			//	Dans un Form final, indique un champ cachÃ©. Il est important que le champ soit lÃ , mÃªme si
+			//	FormEngine ne gÃ©nÃ©rera pas les widgets correspondant.
+			//	Guid = champ Ã  cacher
 			get
 			{
 				return this.deltaHidden;
@@ -763,10 +763,10 @@ namespace Epsitec.Common.FormEngine
 
 		public bool DeltaShowed
 		{
-			//	Dans un Form delta, indique un champ qu'il faut montrer (décacher) dans la liste finale.
+			//	Dans un Form delta, indique un champ qu'il faut montrer (dÃ©cacher) dans la liste finale.
 			//	Dans un Form final, indique un champ visible.
-			//	En fait, cette propriété annule l'effet DeltaHidden du parent.
-			//	Guid = champ à montrer
+			//	En fait, cette propriÃ©tÃ© annule l'effet DeltaHidden du parent.
+			//	Guid = champ Ã  montrer
 			get
 			{
 				return this.deltaShowed;
@@ -779,10 +779,10 @@ namespace Epsitec.Common.FormEngine
 
 		public bool DeltaMoved
 		{
-			//	Dans un Form delta, indique un champ qu'il faut déplacer dans la liste finale.
-			//	Guid = champ à déplacer
-			//	DeltaAttachGuid = champ *après* lequel on s'attache
-			//	... = paramètres du champ
+			//	Dans un Form delta, indique un champ qu'il faut dÃ©placer dans la liste finale.
+			//	Guid = champ Ã  dÃ©placer
+			//	DeltaAttachGuid = champ *aprÃ¨s* lequel on s'attache
+			//	... = paramÃ¨tres du champ
 			get
 			{
 				return this.deltaMoved;
@@ -795,10 +795,10 @@ namespace Epsitec.Common.FormEngine
 
 		public bool DeltaInserted
 		{
-			//	Dans un Form delta, indique un champ supplémentaire qu'il faut insérer dans la liste finale.
-			//	Guid = champ inséré dans le masque final
-			//	DeltaAttachGuid = champ *après* lequel on s'attache
-			//	... = paramètres du champ
+			//	Dans un Form delta, indique un champ supplÃ©mentaire qu'il faut insÃ©rer dans la liste finale.
+			//	Guid = champ insÃ©rÃ© dans le masque final
+			//	DeltaAttachGuid = champ *aprÃ¨s* lequel on s'attache
+			//	... = paramÃ¨tres du champ
 			get
 			{
 				return this.deltaInserted;
@@ -812,8 +812,8 @@ namespace Epsitec.Common.FormEngine
 		public bool DeltaModified
 		{
 			//	Dans un Form delta, indique un champ qu'il faut modifier dans la liste finale.
-			//	Guid = champ modifié
-			//	... = paramètres du champ
+			//	Guid = champ modifiÃ©
+			//	... = paramÃ¨tres du champ
 			get
 			{
 				return this.deltaModified;
@@ -827,8 +827,8 @@ namespace Epsitec.Common.FormEngine
 		public bool DeltaForwardTab
 		{
 			//	Dans un Form delta, indique une destination pour Tab dans la liste finale.
-			//	Guid = champ modifié
-			//	... = paramètres du champ
+			//	Guid = champ modifiÃ©
+			//	... = paramÃ¨tres du champ
 			get
 			{
 				return this.deltaForwardTab;
@@ -841,8 +841,8 @@ namespace Epsitec.Common.FormEngine
 
 		public System.Guid DeltaAttachGuid
 		{
-			//	Retourne l'identificateur unique *après* lequel est attaché un champ déplacé par un delta.
-			//	Utilisé uniquement si this.type == FieldType.DeltaAttach ou DeltaInsert !
+			//	Retourne l'identificateur unique *aprÃ¨s* lequel est attachÃ© un champ dÃ©placÃ© par un delta.
+			//	UtilisÃ© uniquement si this.type == FieldType.DeltaAttach ou DeltaInsert !
 			get
 			{
 				return this.deltaAttachGuid;
@@ -855,8 +855,8 @@ namespace Epsitec.Common.FormEngine
 
 		public bool DeltaBrokenAttach
 		{
-			//	Indique si un lien DeltaAttachGuid est cassé, c'est-à-dire si le Guid n'existe plus.
-			//	Utilisé uniquement si this.type == FieldType.DeltaAttach ou DeltaInsert !
+			//	Indique si un lien DeltaAttachGuid est cassÃ©, c'est-Ã -dire si le Guid n'existe plus.
+			//	UtilisÃ© uniquement si this.type == FieldType.DeltaAttach ou DeltaInsert !
 			get
 			{
 				return this.deltaBrokenAttach;
@@ -869,7 +869,7 @@ namespace Epsitec.Common.FormEngine
 
 		public System.Guid ForwardTabGuid
 		{
-			//	Retourne l'identificateur unique où doit amener la touche Tab (exception).
+			//	Retourne l'identificateur unique oÃ¹ doit amener la touche Tab (exception).
 			get
 			{
 				return this.forwardTabGuid;
@@ -902,7 +902,7 @@ namespace Epsitec.Common.FormEngine
 		
 		public static bool Equals(FieldDescription a, FieldDescription b)
 		{
-			//	Retourne true si les deux objets sont égaux.
+			//	Retourne true si les deux objets sont Ã©gaux.
 			if ((a == null) != (b == null))
 			{
 				return false;
@@ -978,11 +978,11 @@ namespace Epsitec.Common.FormEngine
 		#region Serialisation
 		public void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise toute la description.
-			//	NodeDescription n'est pas sérialisé, car on ne peut sérialiser que des listes (pas d'arbres).
+			//	SÃ©rialise toute la description.
+			//	NodeDescription n'est pas sÃ©rialisÃ©, car on ne peut sÃ©rialiser que des listes (pas d'arbres).
 			if (this.type == FieldType.Node)
 			{
-				throw new System.InvalidOperationException("WriteXml: le type Node ne peut pas être sérialisé.");
+				throw new System.InvalidOperationException("WriteXml: le type Node ne peut pas Ãªtre sÃ©rialisÃ©.");
 			}
 
 			writer.WriteStartElement(Xml.FieldDescription);
@@ -1117,8 +1117,8 @@ namespace Epsitec.Common.FormEngine
 
 		private void ReadXml(XmlReader reader)
 		{
-			//	Désérialise toute la description.
-			//	NodeDescription n'est pas désérialisé, car on ne peut sérialiser que des listes (pas d'arbres).
+			//	DÃ©sÃ©rialise toute la description.
+			//	NodeDescription n'est pas dÃ©sÃ©rialisÃ©, car on ne peut sÃ©rialiser que des listes (pas d'arbres).
 			reader.Read();
 
 			while (true)
@@ -1292,12 +1292,12 @@ namespace Epsitec.Common.FormEngine
 
 		public static double GetRealSeparator(SeparatorType type, bool isLastOfBox)
 		{
-			//	Retourne la valeur réelle d'une marge d'après son type.
+			//	Retourne la valeur rÃ©elle d'une marge d'aprÃ¨s son type.
 			switch (type)
 			{
 				case SeparatorType.Compact:
-					//	Lorsqu'il s'agit du dernier élément d'une boîte, il ne faut pas
-					//	utiliser une marge négative !
+					//	Lorsqu'il s'agit du dernier Ã©lÃ©ment d'une boÃ®te, il ne faut pas
+					//	utiliser une marge nÃ©gative !
 					return isLastOfBox ? 0 : -1;
 
 				case SeparatorType.Extend:
@@ -1310,7 +1310,7 @@ namespace Epsitec.Common.FormEngine
 
 		public static Margins GetRealBoxPadding(BoxPaddingType type)
 		{
-			//	Retourne la valeur réelle d'une marge d'après son type.
+			//	Retourne la valeur rÃ©elle d'une marge d'aprÃ¨s son type.
 			switch (type)
 			{
 				case BoxPaddingType.Compact:
@@ -1326,7 +1326,7 @@ namespace Epsitec.Common.FormEngine
 
 		public static Color GetRealBackColor(BackColorType type)
 		{
-			//	Retourne la couleur réelle d'après son type.
+			//	Retourne la couleur rÃ©elle d'aprÃ¨s son type.
 			switch (type)
 			{
 				case BackColorType.Gray:
@@ -1345,7 +1345,7 @@ namespace Epsitec.Common.FormEngine
 
 		public static Color GetRealFontColor(FontColorType type)
 		{
-			//	Retourne la couleur réelle d'après son type.
+			//	Retourne la couleur rÃ©elle d'aprÃ¨s son type.
 			switch (type)
 			{
 				case FontColorType.Red:
@@ -1364,7 +1364,7 @@ namespace Epsitec.Common.FormEngine
 
 		public static void GetRealFontStrings(FontFaceType faceType, FontStyleType styleType, out string faceName, out string styleName)
 		{
-			//	Retourne la police réelle d'après son type.
+			//	Retourne la police rÃ©elle d'aprÃ¨s son type.
 			faceName = Font.DefaultFontFamily;
 			styleName = "Regular";
 
@@ -1401,7 +1401,7 @@ namespace Epsitec.Common.FormEngine
 
 		public static double GetRealFontSize(FontSizeType type)
 		{
-			//	Retourne la taille réelle d'après son type.
+			//	Retourne la taille rÃ©elle d'aprÃ¨s son type.
 			//	Rappel: la taille standard vaut 10.8 !
 			switch (type)
 			{

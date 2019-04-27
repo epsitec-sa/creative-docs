@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 using System.Linq;
 using Epsitec.Aider.Entities;
@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return "Associer à une gestion";
+			return "Associer Ã  une gestion";
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)
 		{
 			form
-				.Title ("Associer l'utilisateur à une gestion")		
+				.Title ("Associer l'utilisateur Ã  une gestion")		
 					.Field<AiderOfficeManagementEntity> ()
 						.Title ("Choix de la gestion")
 						.InitialValue (this.Entity.Office)

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphSurfaceId HilitedSurfaceId
 		{
-			//	Identificateur de la surface survolÈe par la souris.
+			//	Identificateur de la surface survol√©e par la souris.
 			get
 			{
 				return this.hilitedSurfaceId;
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphSurfaceId SelectedSurfaceId
 		{
-			//	Identificateur de la surface sÈlectionnÈe.
+			//	Identificateur de la surface s√©lectionn√©e.
 			get
 			{
 				return this.selectedSurfaceId;
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void SetHandle(int rank, Point pos)
 		{
-			//	Modifie la position d'une poignÈe. Ceci est enregistrÈ dans les options GraphOptions.
+			//	Modifie la position d'une poign√©e. Ceci est enregistr√© dans les options GraphOptions.
 			if (this.selectedSurfaceId != GraphSurfaceId.Empty)
 			{
 				var surface = this.GetSurface (this.selectedSurfaceId);
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public int DetectHandle(Point pos)
 		{
-			//	Retourne la poignÈe visÈe par la souris.
+			//	Retourne la poign√©e vis√©e par la souris.
 			if (this.selectedSurfaceId != GraphSurfaceId.Empty)
 			{
 				var surface = this.GetSurface (this.selectedSurfaceId);
@@ -100,8 +100,8 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphSurfaceId DetectSurface(Point pos)
 		{
-			//	Retourne la surface visÈe par la souris.
-			for (int i = this.surfacesList.Count-1; i >= 0; i--)  // du dernier (avant-plan) au premier (arriËre-plan)
+			//	Retourne la surface vis√©e par la souris.
+			for (int i = this.surfacesList.Count-1; i >= 0; i--)  // du dernier (avant-plan) au premier (arri√®re-plan)
 			{
 				var surface = this.surfacesList[i];
 
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public string GetTooltip(GraphSurfaceId surface)
 		{
-			//	Retourne le texte du tooltip ‡ utiliser pour une surface donnÈe.
+			//	Retourne le texte du tooltip √† utiliser pour une surface donn√©e.
 			if (surface != null && surface.CubeX >= 0 && surface.CubeY >= 0)
 			{
 				var value = this.cube.GetValue (surface.CubeX, surface.CubeY);
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			var frameRect = new Rectangle (drawingRect.Left+labelDx, drawingRect.Bottom+labelDy, drawingRect.Width-labelDx, drawingRect.Height-labelDy);
 			this.PaintGrid (graphics, frameRect, nx, dx, ny, dy);
 
-			//	Initialisation des Èchelles.
+			//	Initialisation des √©chelles.
 			switch (this.options.Mode)
 			{
 				case GraphMode.SideBySide:
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 			}
 
-			//	Dessine les lÈgendes des axes.
+			//	Dessine les l√©gendes des axes.
 			if (this.HasHorizontalLabels)
 			{
 				var labelsRect = new Rectangle (drawingRect.Left+labelDx, drawingRect.Bottom, drawingRect.Width-labelDx, labelDy);
@@ -252,13 +252,13 @@ namespace Epsitec.Cresus.Compta.Graph
 			//	Dessine le titre.
 			this.PaintTitle (graphics);
 
-			//	Dessine la boÓte des lÈgendes.
+			//	Dessine la bo√Æte des l√©gendes.
 			if (this.options.Mode != GraphMode.Array && this.options.HasLegend)
 			{
 				this.PaintLegends (graphics, this.LegendsRect);
 			}
 
-			//	Dessine les surfaces mises en Èvidence.
+			//	Dessine les surfaces mises en √©vidence.
 			var surface = this.GetSurface (this.hilitedSurfaceId);
 			if (surface != null)
 			{
@@ -612,7 +612,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			int ty = 0;
 			int titleHeight = (int) (this.fontSize*1.6);
 
-			//	On cherche la disposition tx/ty gÈnÈrant une surface maximale pour chaque cammembert.
+			//	On cherche la disposition tx/ty g√©n√©rant une surface maximale pour chaque cammembert.
 			for (int x = 1; x <= nx; x++)
 			{
 				for (int y = 1; y <= nx; y++)
@@ -636,7 +636,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 
 			//?int ox = (int) (frameRect.Width - tx*max) / 2;
-			int ox = 0;  // ‡ gauche pour laisser la place pour la lÈgende
+			int ox = 0;  // √† gauche pour laisser la place pour la l√©gende
 			int oy = (int) (frameRect.Height - ty*titleHeight - ty*max) / 2;
 
 			for (int x = 0; x < tx; x++)
@@ -748,7 +748,7 @@ namespace Epsitec.Cresus.Compta.Graph
 								graphics.LineWidth = 1;
 								graphics.LineJoin = JoinStyle.Miter;
 
-								if (a2-a1 >= 20)  // plus de 20 degrÈs ?
+								if (a2-a1 >= 20)  // plus de 20 degr√©s ?
 								{
 									var p = Transform.RotatePointDeg (center, (double) this.GetPieAngle((a1+a2)/2), new Point (center.X+offset+radius*0.5, center.Y));
 									this.PaintPiePercent (graphics, p, (a2-a1)/360.0m, value, this.GetIndexedColor (y, ny));
@@ -795,7 +795,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private decimal GetPieAngle(decimal angle)
 		{
-			//	In:  0 -> ‡ droite, ccw
+			//	In:  0 -> √† droite, ccw
 			//	Out: 0 -> en haut, cw
 			angle = 90-angle;
 
@@ -829,7 +829,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private double ConvValueToY(decimal value)
 		{
-			//	Conversion d'un montant en coordonnÈe Y, selon le type du graphe.
+			//	Conversion d'un montant en coordonn√©e Y, selon le type du graphe.
 			if (this.minValue == decimal.MaxValue ||
 				this.maxValue == decimal.MinValue ||
 				this.minValue == this.maxValue)
@@ -878,7 +878,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		#region Legends
 		public Rectangle LegendsRect
 		{
-			//	Retourne le rectangle occupÈ par la lÈgende.
+			//	Retourne le rectangle occup√© par la l√©gende.
 			get
 			{
 				var size = this.LegendsSize;
@@ -892,7 +892,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Size LegendsSize
 		{
-			//	Retourne la taille nÈcessaire pour la lÈgende.
+			//	Retourne la taille n√©cessaire pour la l√©gende.
 			get
 			{
 				int c = this.options.LegendColumns;
@@ -931,7 +931,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintLegends(Graphics graphics, Rectangle rect)
 		{
-			//	Dessine la lÈgende complËte.
+			//	Dessine la l√©gende compl√®te.
 			this.AddSurface (GraphSurfaceType.Legend, rect);
 
 			int total = this.cube.GetCount (1);
@@ -971,7 +971,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintLegend(Graphics graphics, Rectangle rect, Color color, FormattedText text)
 		{
-			//	Dessine un ÈlÈment de la lÈgende.
+			//	Dessine un √©l√©ment de la l√©gende.
 			rect.Deflate (1);
 
 			var sampleRect = new Rectangle (rect.Left, rect.Bottom, rect.Height, rect.Height);
@@ -1027,7 +1027,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintGridX(Graphics graphics, Rectangle frameRect, int nx, int dx, int h)
 		{
-			//	Dessine la grille en avanÁant horizontalement, composÈe de traits verticaux.
+			//	Dessine la grille en avan√ßant horizontalement, compos√©e de traits verticaux.
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, h);
@@ -1041,7 +1041,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintGridY(Graphics graphics, Rectangle frameRect, int ny, int dy, int w)
 		{
-			//	Dessine la grille en avanÁant verticalement, composÈe de traits horizontaux.
+			//	Dessine la grille en avan√ßant verticalement, compos√©e de traits horizontaux.
 			for (int y = 0; y < ny; y++)
 			{
 				var rect = new Rectangle (frameRect.Left+0.5, frameRect.Bottom+y*dy+0.5, w, dy);
@@ -1097,7 +1097,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintVerticalLabelsTitles(Graphics graphics, Rectangle labelsRect, int ny, int dy)
 		{
-			//	Dessine les lÈgendes de l'axe vertical.
+			//	Dessine les l√©gendes de l'axe vertical.
 			for (int y = 0; y < ny; y++)
 			{
 				var rect = new Rectangle (labelsRect.Left, labelsRect.Bottom+dy*y, labelsRect.Width-5, dy);
@@ -1107,7 +1107,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintVerticalLabelsUnits(Graphics graphics, Rectangle labelsRect, int ny)
 		{
-			//	Dessine les unitÈs de l'axe vertical.
+			//	Dessine les unit√©s de l'axe vertical.
 			decimal step = 1;
 			decimal bigStep = 1;
 
@@ -1127,7 +1127,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				1000000000,
 			};
 
-			//	On cherche le plus petit step suffisamment espacÈ.
+			//	On cherche le plus petit step suffisamment espac√©.
 			bool found = false;
 			for (int i = 0; i < steps.Length-1; i++)
 			{
@@ -1136,7 +1136,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				var y2 = this.ConvValueToY (step);
 
-				if (y2-y1 > this.fontSize*3)  // assez espacÈs ?
+				if (y2-y1 > this.fontSize*3)  // assez espac√©s ?
 				{
 					found = true;
 					break;
@@ -1148,7 +1148,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				return;
 			}
 
-			//	Dessine les unitÈ positives, y compris le zÈro.
+			//	Dessine les unit√© positives, y compris le z√©ro.
 			decimal value = 0;
 			while (true)
 			{
@@ -1167,7 +1167,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				value += step;
 			}
 
-			//	Dessine les unitÈ nÈgatives, sans le zÈro.
+			//	Dessine les unit√© n√©gatives, sans le z√©ro.
 			value = -step;
 			while (true)
 			{
@@ -1189,7 +1189,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintUnit(Graphics graphics, Rectangle labelsRect, double y, decimal value, decimal bigStep)
 		{
-			//	Dessine une unitÈ composÈe d'un montant et d'un trait horizontal.
+			//	Dessine une unit√© compos√©e d'un montant et d'un trait horizontal.
 			y = System.Math.Floor (y) + 0.5;
 			int h = (int) (this.fontSize/0.6);
 
@@ -1226,13 +1226,13 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private int GetHorizontalLabelsHeight(Rectangle rect)
 		{
-			//	Retourne la hauteur pour les lÈgendes de l'axe horizontal.
+			//	Retourne la hauteur pour les l√©gendes de l'axe horizontal.
 			return (int) (this.fontSize / 0.6);
 		}
 
 		private int GetVerticalLabelsWidth(Rectangle rect, int ny)
 		{
-			//	Retourne la largeur pour les lÈgendes de l'axe vertical.
+			//	Retourne la largeur pour les l√©gendes de l'axe vertical.
 			if (this.options.Mode == GraphMode.Array)
 			{
 				var textLayout = new TextLayout
@@ -1254,7 +1254,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 			else
 			{
-				return (int) (this.fontSize*7);  // place fixe ok jusqu'‡ 1'000'000 environ
+				return (int) (this.fontSize*7);  // place fixe ok jusqu'√† 1'000'000 environ
 			}
 		}
 		#endregion
@@ -1287,15 +1287,15 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void AddSurface(GraphSurfaceId id, GraphSurface surface)
 		{
-			//	La liste permet de parcourir les surfaces dans l'ordre inverse du dessin, pour la dÈtection.
-			//	Le dictionnaire permet de retrouver rapidement une surface d'aprËs son id.
+			//	La liste permet de parcourir les surfaces dans l'ordre inverse du dessin, pour la d√©tection.
+			//	Le dictionnaire permet de retrouver rapidement une surface d'apr√®s son id.
 			this.surfacesList.Add (surface);
 			this.surfacesDict.Add (id, surface);
 		}
 
 		private GraphSurface GetSurface(GraphSurfaceId id)
 		{
-			//	Retrouve rapidement une surface d'aprËs son identificateur.
+			//	Retrouve rapidement une surface d'apr√®s son identificateur.
 			if (!id.IsEmpty)
 			{
 				GraphSurface surface;
@@ -1313,7 +1313,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		#region Direct array painting
 		public void PaintRow(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect, string text)
 		{
-			//	Dessine une cellule correspondant ‡ une ligne, d'aprËs le texte contenu dans StringList.
+			//	Dessine une cellule correspondant √† une ligne, d'apr√®s le texte contenu dans StringList.
 			//	Le texte est au format "$${_graphic_}$$;row".
 			this.cube = cube;
 			this.options = options;
@@ -1378,7 +1378,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintStackedRow(Graphics graphics, Rectangle rect, decimal min, decimal max, int row)
 		{
-			//	Dessine le graphique avec plusieurs barres cumulÈes.
+			//	Dessine le graphique avec plusieurs barres cumul√©es.
 			if (max-min == 0)
 			{
 				return;
@@ -1449,7 +1449,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintSideBySideRow(Graphics graphics, Rectangle rect, decimal min, decimal max, int row)
 		{
-			//	Dessine le graphique avec plusieurs barres cÙte ‡ cÙte.
+			//	Dessine le graphique avec plusieurs barres c√¥te √† c√¥te.
 			min = System.Math.Min (min, 0);
 			max = System.Math.Max (max, 0);
 
@@ -1535,7 +1535,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BackExtColor
 		{
-			//	Couleur du cadre extÈrieur contenant les lÈgendes des axes.
+			//	Couleur du cadre ext√©rieur contenant les l√©gendes des axes.
 			get
 			{
 				if (this.options.Mode == GraphMode.Pie)
@@ -1600,7 +1600,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BackLegendsColor
 		{
-			//	Couleur du fond de la lÈgende.
+			//	Couleur du fond de la l√©gende.
 			get
 			{
 				if (this.options.Style == GraphStyle.BlackAndWhite)
@@ -1625,7 +1625,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BorderColor
 		{
-			//	Couleur des bordures, axes, traits de sÈparation, etc.
+			//	Couleur des bordures, axes, traits de s√©paration, etc.
 			get
 			{
 				if (this.options.Style == GraphStyle.Rainbow)
@@ -1650,7 +1650,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color GetIndexedColor(int index, int total)
 		{
-			//	Couleur d'un ÈlÈment numÈrotÈ du graphe.
+			//	Couleur d'un √©l√©ment num√©rot√© du graphe.
 			switch (this.options.Style)
 			{
 				case GraphStyle.Rainbow:
@@ -1713,7 +1713,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-		//	La difficultÈ consiste a avoir un maximun de couleurs, tout en garantissant
+		//	La difficult√© consiste a avoir un maximun de couleurs, tout en garantissant
 		//	qu'elles sont visuellement identifiables les unes par rapport aux autres.
 		private static int[] rainbow          = { 0, 40, 60, 90, 190, 210, 240, 270, 290 };
 		private static double[] grey          = { 0.7, 0.5, 0.9, 0.4, 1.0 };

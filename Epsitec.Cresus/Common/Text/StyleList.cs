@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text
 	using EventHandler = Common.Support.EventHandler;
 	
 	/// <summary>
-	/// La classe StyleList gère la liste des styles associés à un ou plusieurs
+	/// La classe StyleList gÃ¨re la liste des styles associÃ©s Ã  un ou plusieurs
 	/// textes.
 	/// Note: "StyleList" se prononce comme "stylist" :-)
 	/// </summary>
@@ -162,8 +162,8 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle CreateOrGetMetaProperty(string metaId, params Property[] properties)
 		{
-			//	Crée ou réutilise une méta propriété déjà existante s'il en existe
-			//	une qui soit 100% équivalente à celle demandée.
+			//	CrÃ©e ou rÃ©utilise une mÃ©ta propriÃ©tÃ© dÃ©jÃ  existante s'il en existe
+			//	une qui soit 100% Ã©quivalente Ã  celle demandÃ©e.
 			
 			TextStyle   temp = this.NewMetaProperty (null, metaId, properties);
 			TextStyle[] find = this.FindEqualTextStyles (temp);
@@ -182,8 +182,8 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle CreateOrGetMetaProperty(string metaId, int priority, params Property[] properties)
 		{
-			//	Crée ou réutilise une méta propriété déjà existante s'il en existe
-			//	une qui soit 100% équivalente à celle demandée.
+			//	CrÃ©e ou rÃ©utilise une mÃ©ta propriÃ©tÃ© dÃ©jÃ  existante s'il en existe
+			//	une qui soit 100% Ã©quivalente Ã  celle demandÃ©e.
 			
 			TextStyle   temp = this.NewMetaProperty (null, metaId, priority, properties);
 			TextStyle[] find = this.FindEqualTextStyles (temp);
@@ -203,16 +203,16 @@ namespace Epsitec.Common.Text
 		
 		public void RedefineTextStyle(Common.Support.OpletQueue queue, TextStyle style, System.Collections.ICollection properties)
 		{
-			//	Change les propriétés d'un style. Le style devient un style "plat"
-			//	indépendant d'autres styles.
+			//	Change les propriÃ©tÃ©s d'un style. Le style devient un style "plat"
+			//	indÃ©pendant d'autres styles.
 			
 			this.RedefineTextStyle (queue, style, properties, null);
 		}
 		
 		public void RedefineTextStyle(Common.Support.OpletQueue queue, TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parentStyles)
 		{
-			//	Change les propriétés et les parents d'un style. Le style devient
-			//	un style dérivé.
+			//	Change les propriÃ©tÃ©s et les parents d'un style. Le style devient
+			//	un style dÃ©rivÃ©.
 			
 			System.Diagnostics.Debug.Assert (this.textStyleList.Contains (style));
 			
@@ -230,8 +230,8 @@ namespace Epsitec.Common.Text
 		
 		public void DeleteTextStyle(Common.Support.OpletQueue queue, TextStyle style)
 		{
-			//	Supprime un style : le style est vidé, ses parents remplacés par le style
-			//	par défaut correspondant à la classe du style et le style marqué "deleted".
+			//	Supprime un style : le style est vidÃ©, ses parents remplacÃ©s par le style
+			//	par dÃ©faut correspondant Ã  la classe du style et le style marquÃ© "deleted".
 			
 			System.Diagnostics.Debug.Assert (style != null);
 			System.Diagnostics.Debug.Assert (style.IsDeleted == false);
@@ -281,9 +281,9 @@ namespace Epsitec.Common.Text
 		
 		public void UpdateTextStyles()
 		{
-			//	Met à jour tous les styles, à la suite d'éventuels changements.
+			//	Met Ã  jour tous les styles, Ã  la suite d'Ã©ventuels changements.
 			//	Ne fait rien si aucune modification n'a eu lieu depuis le der-
-			//	nier appel à UpdateTextStyles.
+			//	nier appel Ã  UpdateTextStyles.
 			
 			long version = this.Version;
 			int  changes = 0;
@@ -385,9 +385,9 @@ namespace Epsitec.Common.Text
 				{
 					if (candidate.GetContentsSignature () == signature)
 					{
-						//	Candidat intéressant; la signature correspond déjà. Il faut
-						//	procéder à une comparaison détaillée pour vérifier s'il est
-						//	bien complètement identique au style recherché :
+						//	Candidat intÃ©ressant; la signature correspond dÃ©jÃ . Il faut
+						//	procÃ©der Ã  une comparaison dÃ©taillÃ©e pour vÃ©rifier s'il est
+						//	bien complÃ¨tement identique au style recherchÃ© :
 						
 						if (candidate.CompareEqualContents (style))
 						{
@@ -483,9 +483,9 @@ namespace Epsitec.Common.Text
 		
 		public static bool IsAutomaticName(string value)
 		{
-			//	Retourne true si un nom a été généré avec GenerateUniqueName
+			//	Retourne true si un nom a Ã©tÃ© gÃ©nÃ©rÃ© avec GenerateUniqueName
 			//	(c'est un nom "automatique" par opposition avec un nom qui est
-			//	défini à la main).
+			//	dÃ©fini Ã  la main).
 			
 			if ((value != null) &&
 				(value.Length > 4) &&
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Text
 			
 			TabList list = this.context.TabList;
 			
-			//	Tient compte des tabulateurs définis directement dans le style :
+			//	Tient compte des tabulateurs dÃ©finis directement dans le style :
 			
 			if (tabs != null)
 			{
@@ -567,7 +567,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			//	Tient compte des tabulateurs utilisés par des managed paragraphs :
+			//	Tient compte des tabulateurs utilisÃ©s par des managed paragraphs :
 			
 			if (mpp != null)
 			{
@@ -614,7 +614,7 @@ namespace Epsitec.Common.Text
 			
 			GeneratorList list = this.context.GeneratorList;
 			
-			//	Tient compte des générateurs utilisés par des managed paragraphs :
+			//	Tient compte des gÃ©nÃ©rateurs utilisÃ©s par des managed paragraphs :
 			
 			if (mpp != null)
 			{
@@ -714,9 +714,9 @@ namespace Epsitec.Common.Text
 		
 		private bool UpdateTextStories()
 		{
-			//	Met à jour tous les textes attaché au même TextContext que ce
-			//	styliste, en regénérant toutes les propriétés pour les styles
-			//	qui ont changé (qui retournent TextStyle.IsFlagged == true).
+			//	Met Ã  jour tous les textes attachÃ© au mÃªme TextContext que ce
+			//	styliste, en regÃ©nÃ©rant toutes les propriÃ©tÃ©s pour les styles
+			//	qui ont changÃ© (qui retournent TextStyle.IsFlagged == true).
 			
 			Patcher patcher = new Patcher ();
 			ulong[] buffer  = new ulong[1000];
@@ -744,7 +744,7 @@ namespace Epsitec.Common.Text
 					try
 					{
 						//	Passe en revue tout le texte et substitue les infos de
-						//	formatage là où les styles ont changé :
+						//	formatage lÃ  oÃ¹ les styles ont changÃ© :
 						
 						while (length > 0)
 						{
@@ -772,12 +772,12 @@ namespace Epsitec.Common.Text
 							length -= count;
 						}
 						
-						//	S'il y a des "managed paragraphs" dans le texte qui a été
-						//	mis à jour, il faut encore les passer en revue pour ajuster
+						//	S'il y a des "managed paragraphs" dans le texte qui a Ã©tÃ©
+						//	mis Ã  jour, il faut encore les passer en revue pour ajuster
 						//	les textes automatiques.
 						//
-						//	On commence par la fin, ainsi les positions intermédiaires
-						//	ne seront pas altérées par l'insertion ou la suppression de
+						//	On commence par la fin, ainsi les positions intermÃ©diaires
+						//	ne seront pas altÃ©rÃ©es par l'insertion ou la suppression de
 						//	textes automatiques.
 						
 						while (this.pendingManagerPatches.Count > 0)
@@ -809,8 +809,8 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			//	Signale encore que les diverses instances de TextStory ont été
-			//	modifiées :
+			//	Signale encore que les diverses instances de TextStory ont Ã©tÃ©
+			//	modifiÃ©es :
 			
 			foreach (TextStory story in dirtyStories)
 			{
@@ -856,8 +856,8 @@ namespace Epsitec.Common.Text
 		
 		private bool UpdateTextRun(TextStory story, Patcher patcher, ulong[] buffer, ulong code, int absPos, int pos, int length)
 		{
-			//	La tranche définie par 'pos' et 'length' est définie avec les
-			//	mêmes propriétés. On peut donc procéder au même remplacement
+			//	La tranche dÃ©finie par 'pos' et 'length' est dÃ©finie avec les
+			//	mÃªmes propriÃ©tÃ©s. On peut donc procÃ©der au mÃªme remplacement
 			//	partout :
 			
 			ulong replacement;
@@ -872,9 +872,9 @@ namespace Epsitec.Common.Text
 				
 				bool isFlagged = false;
 				
-				//	Regarde si l'un des styles appliqués au "run" actuel a été marqué
-				//	comme modifié. Ce n'est que dans ce cas qu'une substitution sera
-				//	nécessaire :
+				//	Regarde si l'un des styles appliquÃ©s au "run" actuel a Ã©tÃ© marquÃ©
+				//	comme modifiÃ©. Ce n'est que dans ce cas qu'une substitution sera
+				//	nÃ©cessaire :
 				
 				for (int i = 0; i < styles.Length; i++)
 				{
@@ -887,15 +887,15 @@ namespace Epsitec.Common.Text
 				
 				if (isFlagged)
 				{
-					//	Trouve le remplacement adéquat pour les styles et propriétés
-					//	définies pour l'ancien 'code' :
+					//	Trouve le remplacement adÃ©quat pour les styles et propriÃ©tÃ©s
+					//	dÃ©finies pour l'ancien 'code' :
 					
 					story.ConvertToStyledText (story.FlattenStylesAndProperties (styles, properties), out replacement);
 				}
 				else
 				{
-					//	Aucun des styles composant ce code n'a été modifié. Il n'est
-					//	donc pas nécessaire de remplacer quoi que ce soit :
+					//	Aucun des styles composant ce code n'a Ã©tÃ© modifiÃ©. Il n'est
+					//	donc pas nÃ©cessaire de remplacer quoi que ce soit :
 					
 					replacement = code;
 				}
@@ -904,7 +904,7 @@ namespace Epsitec.Common.Text
 				
 				if (replacement != code)
 				{
-					//	Si les propriétés sont remplacées, regarde encore s'il y a un
+					//	Si les propriÃ©tÃ©s sont remplacÃ©es, regarde encore s'il y a un
 					//	changement de "manged paragraph" qui s'en suit :
 					
 					Properties.ManagedParagraphProperty mpp1;
@@ -924,12 +924,12 @@ namespace Epsitec.Common.Text
 			
 			int end = pos + length;
 			
-			//	Le remplacement se fait par une série d'opérations XOR, ce qui
-			//	évite de devoir masquer et combiner les bits :
+			//	Le remplacement se fait par une sÃ©rie d'opÃ©rations XOR, ce qui
+			//	Ã©vite de devoir masquer et combiner les bits :
 			//
 			//	nouveau-car = ancien-car XOR ancien-code XOR nouveau-code
 			//
-			//	Note: si ancien-code == nouveau-code, le XOR des deux donne zéro
+			//	Note: si ancien-code == nouveau-code, le XOR des deux donne zÃ©ro
 			//	et cela implique qu'il n'y aura aucune modification.
 			
 			replacement ^= code;
@@ -940,10 +940,10 @@ namespace Epsitec.Common.Text
 				{
 					if (this.isPatcherOnBreak)
 					{
-						//	Au début de chaque paragraphe, vérifie si nous avons un
+						//	Au dÃ©but de chaque paragraphe, vÃ©rifie si nous avons un
 						//	changement de "managed paragraph". Si c'est le cas, il
 						//	faut prendre note de la position pour pouvoir y revenir
-						//	plus tard pour faire les attach/detach nécessaires sur
+						//	plus tard pour faire les attach/detach nÃ©cessaires sur
 						//	les IParagraphManager :
 						
 						if (mppi != null)
@@ -956,7 +956,7 @@ namespace Epsitec.Common.Text
 					
 					buffer[i] ^= replacement;
 					
-					//	Regarde encore si l'on se trouve à une fin de paragraphe;
+					//	Regarde encore si l'on se trouve Ã  une fin de paragraphe;
 					//	c'est utile pour la suite :
 					
 					this.isPatcherOnBreak = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[i]));
@@ -966,7 +966,7 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				//	Aucune modification n'a été nécessaire. Vérifie encore si le
+				//	Aucune modification n'a Ã©tÃ© nÃ©cessaire. VÃ©rifie encore si le
 				//	"run" se termine par une fin de paragraphe :
 				
 				this.isPatcherOnBreak = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[end-1]));
@@ -1061,9 +1061,9 @@ namespace Epsitec.Common.Text
 		#region ManagedParagraphPropertyInfo Class
 		private class ManagedParagraphPropertyInfo
 		{
-			//	Représente la transition d'une propriété Managed Paragraph à une
-			//	autre; utilisé par la méthode de patch lors de mise à jour des
-			//	propriétés associées à un style dans TextStory.
+			//	ReprÃ©sente la transition d'une propriÃ©tÃ© Managed Paragraph Ã  une
+			//	autre; utilisÃ© par la mÃ©thode de patch lors de mise Ã  jour des
+			//	propriÃ©tÃ©s associÃ©es Ã  un style dans TextStory.
 			
 			public ManagedParagraphPropertyInfo(Properties.ManagedParagraphProperty mpp1, Properties.ManagedParagraphProperty mpp2)
 			{

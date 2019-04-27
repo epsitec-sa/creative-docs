@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Dialogs
 
 		protected override Rectangle GetOwnerBounds()
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			if (this.ownerWindow == null)
 			{
 				return this.globalSettings.MainWindowBounds;

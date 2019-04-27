@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
@@ -8,16 +8,16 @@ namespace Epsitec.Common.Text.Wrappers
 	/// </summary>
 	public enum JustificationMode
 	{
-		Unknown,						//	réglage inconnu
+		Unknown,						//	rÃ©glage inconnu
 		
-		AlignLeft,						//	aligné sur la marge gauche
-		AlignRight,						//	aligné sur la marge droite
+		AlignLeft,						//	alignÃ© sur la marge gauche
+		AlignRight,						//	alignÃ© sur la marge droite
 		
-		Center,							//	centré
+		Center,							//	centrÃ©
 		
-		JustifyAlignLeft,				//	justifié, dernière ligne AlignLeft
-		JustifyCenter,					//	justifié, dernière ligne Center
-		JustifyAlignRight,				//	justifié, dernière ligne AlignRight
-		JustifyJustfy					//	justifié, dernière ligne Justify
+		JustifyAlignLeft,				//	justifiÃ©, derniÃ¨re ligne AlignLeft
+		JustifyCenter,					//	justifiÃ©, derniÃ¨re ligne Center
+		JustifyAlignRight,				//	justifiÃ©, derniÃ¨re ligne AlignRight
+		JustifyJustfy					//	justifiÃ©, derniÃ¨re ligne Justify
 	}
 }

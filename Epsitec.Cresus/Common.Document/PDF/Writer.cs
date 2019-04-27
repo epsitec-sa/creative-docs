@@ -1,4 +1,4 @@
-//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -8,32 +8,32 @@ namespace Epsitec.Common.Document.PDF
 	using CultureInfo=System.Globalization.CultureInfo;
 
 	/// <summary>
-	/// La classe Writer gère la création du fichier PDF.
-	/// Les objets PDF sont nommés par des objectName, qui seront remplacés par
-	/// des numéros dans le fichier PDF. Supposons le fichier suivant:
+	/// La classe Writer gÃ¨re la crÃ©ation du fichier PDF.
+	/// Les objets PDF sont nommÃ©s par des objectName, qui seront remplacÃ©s par
+	/// des numÃ©ros dans le fichier PDF. Supposons le fichier suivant:
 	/// 
-	/// << /Resources 6 0 R >>  % référence à un objet qui n'existe pas encore
+	/// << /Resources 6 0 R >>  % rÃ©fÃ©rence Ã  un objet qui n'existe pas encore
 	/// ...
-	/// 6 0 obj  % définition de l'objet
+	/// 6 0 obj  % dÃ©finition de l'objet
 	/// << /ProcSet [/PDF /Text] >>
 	/// endobj
 	/// 
-	/// Pour générer ce fichier, il suffit d'écrire:
+	/// Pour gÃ©nÃ©rer ce fichier, il suffit d'Ã©crire:
 	/// 
 	/// writer.WriteString("<< /Resources ");
-	/// writer.WriteObjectRef("Tralala");  // référence à un objet qui n'existe pas encore
+	/// writer.WriteObjectRef("Tralala");  // rÃ©fÃ©rence Ã  un objet qui n'existe pas encore
 	/// writer.WriteString(">>");
 	/// ...
-	/// writer.WriteObjectDef("Tralala");  // définition de l'objet
+	/// writer.WriteObjectDef("Tralala");  // dÃ©finition de l'objet
 	/// writer.WriteString("<< /ProcSet [/PDF /Text] >> endobj");
 	/// </summary>
 	public sealed class Writer : System.IDisposable
 	{
 		public Writer(string filename)
 		{
-			//	Constructeur qui reçoit le nom du fichier.
-			//	En fait, le fichier n'est écrit qu'au moment du Flush().
-			//	Il n'est pas nécessaire de se soucier du "%PDF-1.4" en début de fichier,
+			//	Constructeur qui reÃ§oit le nom du fichier.
+			//	En fait, le fichier n'est Ã©crit qu'au moment du Flush().
+			//	Il n'est pas nÃ©cessaire de se soucier du "%PDF-1.4" en dÃ©but de fichier,
 			//	ni des tables "xref..startxref..%%EOF" en fin de fichier.
 			this.filename = filename;
 			this.parts = new List<Part> ();
@@ -44,29 +44,29 @@ namespace Epsitec.Common.Document.PDF
 
 		public void WriteObjectDef(string objectName)
 		{
-			//	Ecrit une définition d'objet sous la forme "n 0 obj".
-			//	L'objet racine doit être nommé "Root" et être le premier défini et référencé.
-			this.WriteObject(objectName, " 0 obj ", "D");  // définition
+			//	Ecrit une dÃ©finition d'objet sous la forme "n 0 obj".
+			//	L'objet racine doit Ãªtre nommÃ© "Root" et Ãªtre le premier dÃ©fini et rÃ©fÃ©rencÃ©.
+			this.WriteObject(objectName, " 0 obj ", "D");  // dÃ©finition
 		}
 
 		public void WriteObjectRef(string objectName)
 		{
-			//	Ecrit une référence à un objet sous la forme "n 0 R".
-			this.WriteObject(objectName, " 0 R ", "R");  // référence
+			//	Ecrit une rÃ©fÃ©rence Ã  un objet sous la forme "n 0 R".
+			this.WriteObject(objectName, " 0 R ", "R");  // rÃ©fÃ©rence
 		}
 
 		private void WriteObject(string objectName, string ending, string type)
 		{
-			//	Ecrit une définition ou une référence d'objet.
+			//	Ecrit une dÃ©finition ou une rÃ©fÃ©rence d'objet.
 			if ( !this.dictionary.ContainsKey(objectName) )
 			{
 				Object obj = new Object(this.objectNextId++, 0);
 				this.dictionary.Add(objectName, obj);
 			}
 
-			if ( type == "D" )  // définition ?
+			if ( type == "D" )  // dÃ©finition ?
 			{
-				//	On vérifie qu'un objet n'est pas défini 2 fois:
+				//	On vÃ©rifie qu'un objet n'est pas dÃ©fini 2 fois:
 				Object obj = this.dictionary[objectName];
 				System.Diagnostics.Debug.Assert(obj != null);
 				System.Diagnostics.Debug.Assert(!obj.Defined, "PDF.Writer: Attempt to redefine a object");
@@ -119,9 +119,9 @@ namespace Epsitec.Common.Document.PDF
 		public void Flush()
 		{
 			//	Ecrit tout ce qui est possible dans le fichier sur disque. On peut appeler Flush
-			//	autant de fois qu'on veut, pour écrire les données dans le fichier au fur et à mesure,
-			//	afin d'utiliser le moins possible de mémoire.
-			//	Les objectName sont remplacés par des numéros.
+			//	autant de fois qu'on veut, pour Ã©crire les donnÃ©es dans le fichier au fur et Ã  mesure,
+			//	afin d'utiliser le moins possible de mÃ©moire.
+			//	Les objectName sont remplacÃ©s par des numÃ©ros.
 			if (this.streamIO == null)  // fichier pas encore ouvert ?
 			{
 				this.FileOpen(this.filename);
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Document.PDF
 						this.FileWriteString (part.Text);
 						break;
 
-					case "D":	// définition d'un objet ?
+					case "D":	// dÃ©finition d'un objet ?
 						{
 							Object obj = this.dictionary[part.Text];
 							obj.Offset = this.streamOffset;
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Document.PDF
 						}
 						break;
 
-					case "R":	// référence à un objet ?
+					case "R":	// rÃ©fÃ©rence Ã  un objet ?
 						{
 							Object obj = this.dictionary[part.Text];
 							this.FileWriteString (Writer.ToString (obj.Id));
@@ -157,13 +157,13 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
-			this.parts.Clear();  // libère les données écrites, afin d'utiliser le moins possible de mémoire
+			this.parts.Clear();  // libÃ¨re les donnÃ©es Ã©crites, afin d'utiliser le moins possible de mÃ©moire
 		}
 
 		public void Finish()
 		{
 			//	Ecrit l'objet xref final.
-			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
+			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont crÃ©Ã©es.
 			System.Diagnostics.Debug.Assert(this.streamIO != null);
 			int startXref = this.streamOffset;
 			this.FileWriteLine(string.Format(CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document.PDF
 
 		private Object DictionarySearch(int id)
 		{
-			//	Cherche un objet dans le dictionnaire d'après son identificateur.
+			//	Cherche un objet dans le dictionnaire d'aprÃ¨s son identificateur.
 			foreach ( Object obj in this.dictionary.Values )
 			{
 				if ( obj.Id == id )  return obj;
@@ -279,13 +279,13 @@ namespace Epsitec.Common.Document.PDF
 
 		private static string ToString(int value)
 		{
-			//	Conversion d'un entier en chaîne.
+			//	Conversion d'un entier en chaÃ®ne.
 			return value.ToString(CultureInfo.InvariantCulture);
 		}
 
 		private static string ToStringD10(int value)
 		{
-			//	Conversion d'un entier en chaîne.
+			//	Conversion d'un entier en chaÃ®ne.
 			return value.ToString("D10", CultureInfo.InvariantCulture);
 		}
 
@@ -300,8 +300,8 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			public int		Id;			// identificateur unique 1..n
-			public int		Offset;		// offset de la définition dans le fichier
-			public bool		Defined;	// true -> objet défini
+			public int		Offset;		// offset de la dÃ©finition dans le fichier
+			public bool		Defined;	// true -> objet dÃ©fini
 		}
 
 

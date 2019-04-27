@@ -1,4 +1,4 @@
-//	Copyright © 2007-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Types
 		
 		/// <summary>
 		/// If the field requires sorting (it is a string), then apply an accent
-		/// insensitive collation (i.e. "a" is equal to "à"/"ä"/...).
+		/// insensitive collation (i.e. "a" is equal to "Ã "/"Ã¤"/...).
 		/// </summary>
 		CollationAccentInsensitive = 0x40,
 

@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.DocumentEditor
 {
 	/// <summary>
-	/// La classe Application démarre l'éditeur de documents.
+	/// La classe Application dÃ©marre l'Ã©diteur de documents.
 	/// </summary>
 	public class Application : Epsitec.Common.Widgets.Application
 	{
@@ -15,8 +15,8 @@ namespace Epsitec.Common.DocumentEditor
 			System.Diagnostics.Debug.Assert (mode != null);
 			System.Diagnostics.Debug.Assert (mode.Length > 0);
 
-			//	Evite de créer la liste des fontes complète maintenant si elle n'existe
-			//	pas, puisque l'on veut tout d'abord être capable d'afficher le splash:
+			//	Evite de crÃ©er la liste des fontes complÃ¨te maintenant si elle n'existe
+			//	pas, puisque l'on veut tout d'abord Ãªtre capable d'afficher le splash:
 			Epsitec.Common.Text.TextContext.PostponeFullFontCollectionInitialization ();
 
 			Widget.Initialize ();
@@ -24,8 +24,8 @@ namespace Epsitec.Common.DocumentEditor
 			
 			Res.Initialize();
 			
-			//	Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
-			//	être mise à jour chaque fois que l'on génère un nouveau CD :
+			//	Il faut indiquer ci-aprÃ¨s la date de diffusion du logiciel, qui doit
+			//	Ãªtre mise Ã  jour chaque fois que l'on gÃ©nÃ¨re un nouveau CD :
 			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2013, 04, 19));
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(84, 6);	// Accepte CDID = 84
 			
@@ -151,9 +151,9 @@ namespace Epsitec.Common.DocumentEditor
 
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			//	Evite que cette commande ne soit exécutée par Widgets.Application,
+			//	Evite que cette commande ne soit exÃ©cutÃ©e par Widgets.Application,
 			//	car cela provoquerait la fin du programme, quelle que soit la
-			//	réponse donnée par l'utilisateur au dialogue affiché par DocumentEditor.
+			//	rÃ©ponse donnÃ©e par l'utilisateur au dialogue affichÃ© par DocumentEditor.
 		}
 
 		private void HandleMainWindowWindowDragEntered(object sender, WindowDragEventArgs e)

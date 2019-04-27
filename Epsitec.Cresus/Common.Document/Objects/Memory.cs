@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Objects
 {
 	/// <summary>
-	/// La classe Memory est un objet caché qui collectionne toutes les propriétés.
+	/// La classe Memory est un objet cachÃ© qui collectionne toutes les propriÃ©tÃ©s.
 	/// </summary>
 	[System.Serializable()]
 	public class Memory : Objects.Abstract
@@ -35,13 +35,13 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
 		protected Memory(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 		}
 		#endregion
 	}

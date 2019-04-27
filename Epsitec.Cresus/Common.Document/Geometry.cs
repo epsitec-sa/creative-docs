@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// La classe Geometry contient quelques routines générales.
+	/// La classe Geometry contient quelques routines gÃ©nÃ©rales.
 	/// </summary>
 	public class Geometry
 	{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document
 
 		public static Point ComputeArrowExtremity(Point p1, Point p2, double para, double perp, int rank)
 		{
-			//	Calcule l'extrémité gauche ou droite d'une flèche.
+			//	Calcule l'extrÃ©mitÃ© gauche ou droite d'une flÃ¨che.
 			double distPara = Point.Distance (p1, p2)*para;
 			double distPerp = Point.Distance (p1, p2)*perp;
 
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Document
 		public static Path PathExtract(Path path, int rank)
 		{
 			//	Extrait un fragment d'un chemin.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			Point p1, s1, s2, p2;
 			Objects.SelectedSegment.Type type;
 			type = Geometry.PathExtract(path, rank, out p1, out s1, out s2, out p2);
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Document
 		public static Objects.SelectedSegment.Type PathExtract(Path path, int rank, out Point pp1, out Point ss1, out Point ss2, out Point pp2)
 		{
 			//	Extrait un fragment de droite ou de courbe d'un chemin.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
@@ -253,15 +253,15 @@ namespace Epsitec.Common.Document
 
 		public static bool DetectOutline(Path path, double width, Point pos)
 		{
-			//	Détecte si la souris est sur le trait d'un chemin.
+			//	DÃ©tecte si la souris est sur le trait d'un chemin.
 			return (Geometry.DetectOutlineRank(path, width, pos) != -1);
 		}
 
 		public static int DetectOutlineRank(Path path, double width, Point pos)
 		{
-			//	Détecte sur quel trait d'un chemin est la souris.
+			//	DÃ©tecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			Point p1,s1,s2,p2;
 			return Geometry.DetectOutlineRank(path, width, pos, out p1, out s1, out s2, out p2);
 		}
@@ -269,9 +269,9 @@ namespace Epsitec.Common.Document
 		public static int DetectOutlineRank(Path path, double width, Point pos,
 											out Point bp1, out Point bs1, out Point bs2, out Point bp2)
 		{
-			//	Détecte sur quel trait d'un chemin est la souris.
+			//	DÃ©tecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			bp1 = Point.Zero;
 			bs1 = Point.Zero;
 			bs2 = Point.Zero;
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Document
 
 		public static bool DetectSurface(Path path, Point pos)
 		{
-			//	Détecte si la souris est dans un chemin.
+			//	DÃ©tecte si la souris est dans un chemin.
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
@@ -493,10 +493,10 @@ namespace Epsitec.Common.Document
 				realPath.Append(shape.Path, width, cap, join, limit, 0.5);  // (*)
 				return Geometry.ComputeBoundingBox(realPath);
 
-				// (*)	Si approximation_zoom vaut 0.1, certaines bboxGeom sont calculées de façon imprécises.
-				//		Ceci est surtout visible lors de forts grossissements, ce qui est très marqué avec
-				//		Pictogram, mais également visible avec CrDoc. Avec 0.5, le calcul semble plus précis,
-				//		mais je ne comprends pas la signification de ce paramètre !
+				// (*)	Si approximation_zoom vaut 0.1, certaines bboxGeom sont calculÃ©es de faÃ§on imprÃ©cises.
+				//		Ceci est surtout visible lors de forts grossissements, ce qui est trÃ¨s marquÃ© avec
+				//		Pictogram, mais Ã©galement visible avec CrDoc. Avec 0.5, le calcul semble plus prÃ©cis,
+				//		mais je ne comprends pas la signification de ce paramÃ¨tre !
 			}
 
 			if ( shape.Type == Type.Surface && surface != null && shape.IsVisible )
@@ -574,7 +574,7 @@ namespace Epsitec.Common.Document
 
 		protected static void BoundingBoxAddBezier(ref Rectangle bbox, Point p1, Point s1, Point s2, Point p2)
 		{
-			//	Ajoute une courbe de Bézier dans la bbox.
+			//	Ajoute une courbe de BÃ©zier dans la bbox.
 			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions
 			for ( double t=0 ; t<=1.0 ; t+=step )
 			{
@@ -585,8 +585,8 @@ namespace Epsitec.Common.Document
 
 		public static void BezierS1ToS2(Point p1, ref Point s1, ref Point s2, Point p2)
 		{
-			//	Convertit une courbe de Bézier définie par un seul point secondaire en
-			//	une courbe "traditionnelle" définie par deux points secondaires.
+			//	Convertit une courbe de BÃ©zier dÃ©finie par un seul point secondaire en
+			//	une courbe "traditionnelle" dÃ©finie par deux points secondaires.
 			//	Il s'agit ici d'une approximation empyrique !
 			s1 = Point.Scale(p1, s1, 2.0/3.0);
 			s2 = Point.Scale(p2, s2, 2.0/3.0);
@@ -596,8 +596,8 @@ namespace Epsitec.Common.Document
 		#region PathToCurve
 		public static Path PathToCurve(Path path)
 		{
-			//	Convertit un chemin composé de segments de droites en un chemin composé
-			//	de courbes de Bézier.
+			//	Convertit un chemin composÃ© de segments de droites en un chemin composÃ©
+			//	de courbes de BÃ©zier.
 			Path newPath = new Path();
 
 			PathElement[] elements;
@@ -705,25 +705,25 @@ namespace Epsitec.Common.Document
 		public static Point[] Intersect(Point a, Point b, Point c, Point d)
 		{
 			//	Calcule le point d'intersection entre deux droites ab et cd.
-			//	Utilise l'algorithme de Gauss-Jordan utilisé pour le calcul
-			//	matriciel. Les calculs ont été spécialisés au cas simple de
-			//	l'intersection de segments pour des questions de rapidité.
+			//	Utilise l'algorithme de Gauss-Jordan utilisÃ© pour le calcul
+			//	matriciel. Les calculs ont Ã©tÃ© spÃ©cialisÃ©s au cas simple de
+			//	l'intersection de segments pour des questions de rapiditÃ©.
 			//
 			//		Q=BX-AX : T=BY-AY
 			//		R=CX-DX : U=CY-DY   matrice  [ Q R | S ]
 			//		S=CX-AX : V=CY-AY            [ T U | V ]
 			//
-			//	Cette matrice représente les coefficients de l'équation
+			//	Cette matrice reprÃ©sente les coefficients de l'Ã©quation
 			//	vectorielle suivante :
 			//		AB*a + CD*b = AC
 			//
-			//	La coordonnée du point "P" s'obtient par :
+			//	La coordonnÃ©e du point "P" s'obtient par :
 			//		P = OA + a*AB
 			//
 			//	ou encore :
 			//		P = OC + b*CD
 			//
-			//	Traite les cas particuliers des segments confondus ou parallèles.
+			//	Traite les cas particuliers des segments confondus ou parallÃ¨les.
 			double	q,r,s,t,u,v;
 
 			q = b.X-a.X;
@@ -911,15 +911,15 @@ namespace Epsitec.Common.Document
 
 		public static double Hypothenus(double a, double b)
 		{
-			//	Calcule l'hypothénuse d'un triangle rectangle.
+			//	Calcule l'hypothÃ©nuse d'un triangle rectangle.
 			return System.Math.Sqrt(a*a + b*b);
 		}
 
 	
 		public static Point ArcBezierDeg(Path path, Stretcher stretcher, Point c, double rx, double ry, double a1, double a2, bool ccw, bool continuePath)
 		{
-			//	Génère un arc de cercle à l'aide d'un maximun de 4 courbes de Bézier.
-			//	Retourne le point d'arrivée.
+			//	GÃ©nÃ¨re un arc de cercle Ã  l'aide d'un maximun de 4 courbes de BÃ©zier.
+			//	Retourne le point d'arrivÃ©e.
 			Point r = new Point(rx, ry);
 			Point p2 = new Point();
 			
@@ -1001,7 +1001,7 @@ namespace Epsitec.Common.Document
 
 		protected static void ArcBezierPSRad(double a, double k, bool ccw, out Point p, out Point s)
 		{
-			//	Calcule le point principal et le point secondaire d'un arc de Bézier
+			//	Calcule le point principal et le point secondaire d'un arc de BÃ©zier
 			//	de rayon 1 et de centre (0;0).
 			p = new Point(System.Math.Cos(a), System.Math.Sin(a));
 			s = (ccw) ? new Point(p.X - System.Math.Sin(a)*k, p.Y + System.Math.Cos(a)*k)
@@ -1010,7 +1010,7 @@ namespace Epsitec.Common.Document
 
 		protected static double GetArcBezierKappaRad(double a)
 		{
-			//	Détermine le facteur kappa en fonction de l'angle (0..PI/2).
+			//	DÃ©termine le facteur kappa en fonction de l'angle (0..PI/2).
 			double sin = System.Math.Sin(a/2.0);
 			double cos = System.Math.Cos(a/2.0);
 			

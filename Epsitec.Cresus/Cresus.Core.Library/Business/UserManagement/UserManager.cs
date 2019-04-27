@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -126,8 +126,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				user = this.FindActiveUser (user.Code);
 			}
 
-			//	Si on est dans le dialogue initial (celui qui s'affiche à l'exécution du logiciel),
-			//	et que l'utilisateur correspond à celui de la session Windows, on effectue le login
+			//	Si on est dans le dialogue initial (celui qui s'affiche Ã  l'exÃ©cution du logiciel),
+			//	et que l'utilisateur correspond Ã  celui de la session Windows, on effectue le login
 			//	sans afficher le dialogue.
 			if ((softwareStartup) &&
 				(user != null) &&

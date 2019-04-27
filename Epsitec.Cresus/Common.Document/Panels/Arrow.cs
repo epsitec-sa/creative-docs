@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Panels
 {
 	/// <summary>
-	/// La classe Arrow permet de choisir un type d'extrÈmitÈ.
+	/// La classe Arrow permet de choisir un type d'extr√©mit√©.
 	/// </summary>
 	public class Arrow : Abstract
 	{
@@ -123,20 +123,20 @@ namespace Epsitec.Common.Document.Panels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau Ètendu ?
+				if ( this.isExtendedSize )  // panneau √©tendu ?
 				{
-					if ( this.IsLabelProperties )  // Ètendu/dÈtails ?
+					if ( this.IsLabelProperties )  // √©tendu/d√©tails ?
 					{
 						h += 52*2;
 						h += this.GetTotalTextField(0)*25;
 						h += this.GetTotalTextField(1)*25;
 					}
-					else	// Ètendu/compact ?
+					else	// √©tendu/compact ?
 					{
 						h += 74*2;
 					}
 				}
-				else	// panneau rÈduit ?
+				else	// panneau r√©duit ?
 				{
 					h += 30;
 				}
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Arrow p = this.property as Properties.Arrow;
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Arrow p = this.property as Properties.Arrow;
 			if ( p == null )  return;
 
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			Properties.Arrow p = this.property as Properties.Arrow;
 
 			//	Initialise les min/max en fonction du type choisi.
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected int GetTotalTextField(int j)
 		{
-			//	Retourne le nombre de lignes Èditables selon le type.
+			//	Retourne le nombre de lignes √©ditables selon le type.
 			Properties.ArrowType type = (Properties.ArrowType) this.grid[j].SelectedValue;
 
 			if ( type == Properties.ArrowType.Right        )  return 0;
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTypeChanged(object sender)
 		{
-			//	Le type a ÈtÈ changÈ.
+			//	Le type a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 
 			if ( this.IsLabelProperties )
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document.Panels
 				val *= Arrow.TypeFactor(type);
 				this.fieldLength[j].TextFieldReal.InternalValue = (decimal) val;
 
-				//	Met les valeurs par dÈfaut correspondant au type choisi.
+				//	Met les valeurs par d√©faut correspondant au type choisi.
 				bool enableRadius, enable1, enable2;
 				double effect1, min1, max1;
 				double effect2, min2, max2;
@@ -396,8 +396,8 @@ namespace Epsitec.Common.Document.Panels
 
 		protected static double TypeFactor(Properties.ArrowType type)
 		{
-			//	Retourne le facteur de rÈduction selon le type de flËche.
-			//	L'idÈe est de rÈduire les points par rapport aux flËches.
+			//	Retourne le facteur de r√©duction selon le type de fl√®che.
+			//	L'id√©e est de r√©duire les points par rapport aux fl√®ches.
 			if ( type == Properties.ArrowType.Slash   )  return 0.5;
 			if ( type == Properties.ArrowType.Dot     )  return 0.5;
 			if ( type == Properties.ArrowType.Square  )  return 0.5;
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

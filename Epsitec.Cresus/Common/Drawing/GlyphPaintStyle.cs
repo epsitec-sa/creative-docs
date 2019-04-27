@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -7,10 +7,10 @@ namespace Epsitec.Common.Drawing
 	{
 		Invalid		= -1,
 		
-		Normal		= 0,	//	texte/icône peints normalement
-		Disabled	= 1,	//	texte/icône grisés
-		Selected	= 2,	//	texte/icône sélectionnés (couleurs "inversées")
-		Entered		= 3,	//	texte/icône survolés par la souris
-		Shadow		= 4,	//	texte/icône ombre spéciale pour certains adorners
+		Normal		= 0,	//	texte/icÃ´ne peints normalement
+		Disabled	= 1,	//	texte/icÃ´ne grisÃ©s
+		Selected	= 2,	//	texte/icÃ´ne sÃ©lectionnÃ©s (couleurs "inversÃ©es")
+		Entered		= 3,	//	texte/icÃ´ne survolÃ©s par la souris
+		Shadow		= 4,	//	texte/icÃ´ne ombre spÃ©ciale pour certains adorners
 	}
 }

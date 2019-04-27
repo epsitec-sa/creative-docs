@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant d'éditer un Caption.Type.
+	/// Widget permettant d'Ã©diter un Caption.Type.
 	/// </summary>
 	public class TypeEditorNumeric : AbstractTypeEditor
 	{
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupLargeStep.ResetButton.Clicked += this.HandleResetButtonClicked;
 			this.fieldLargeStep.EditionAccepted += this.HandleTextFieldChanged;
 
-			//	Valeur par défaut.
+			//	Valeur par dÃ©faut.
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Default, left, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override string GetSummary()
 		{
-			//	Retourne le texte du résumé.
+			//	Retourne le texte du rÃ©sumÃ©.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
 			object value;
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override void UpdateContent()
 		{
-			//	Met à jour le contenu de l'éditeur.
+			//	Met Ã  jour le contenu de l'Ã©diteur.
 			this.ignoreChange = true;
 			object value;
 			bool usesOriginalData;
@@ -432,12 +432,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected DecimalRange DefaultRange
 		{
-			//	Retourne le range par défaut avec les valeurs min/max les plus grandes possibles.
+			//	Retourne le range par dÃ©faut avec les valeurs min/max les plus grandes possibles.
 			get
 			{
 				decimal min = decimal.MinValue;
 				decimal max = decimal.MaxValue;
-				decimal res = 0.01M;  // TODO: mettre une résolution plus grande ?
+				decimal res = 0.01M;  // TODO: mettre une rÃ©solution plus grande ?
 
 				if (this.typeCode == TypeCode.Integer)
 				{
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					//min = (decimal) double.MinValue;  // trop grand !
 					//max = (decimal) double.MaxValue;
-					res = 0.01M;  // TODO: mettre une résolution plus grande ?
+					res = 0.01M;  // TODO: mettre une rÃ©solution plus grande ?
 				}
 
 				return new DecimalRange(min, max, res);

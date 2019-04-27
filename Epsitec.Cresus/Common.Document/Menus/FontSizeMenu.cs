@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Menus
 					
 					value = this.value*100;
 					value *= 1000000.0;
-					value = System.Math.Floor(value+0.5);  // arrondi ‡ la 6Ëme dÈcimale
+					value = System.Math.Floor(value+0.5);  // arrondi √† la 6√®me d√©cimale
 					value /= 1000000.0;
 					this.text = string.Format("{0}{1}", value.ToString(), this.units);
 				}
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Menus
 					
 					value = this.value/Modifier.FontSizeScale;
 					value *= 1000000.0;
-					value = System.Math.Floor(value+0.5);  // arrondi ‡ la 6Ëme dÈcimale
+					value = System.Math.Floor(value+0.5);  // arrondi √† la 6√®me d√©cimale
 					value /= 1000000.0;
 					this.text = string.Format("{0}", value.ToString());
 				}
@@ -42,18 +42,18 @@ namespace Epsitec.Common.Document.Menus
 
 		public int CompareTo(object obj)
 		{
-			//	DÈfini par System.IComparable.
+			//	D√©fini par System.IComparable.
 			FontSizeMenu that = obj as FontSizeMenu;
 
 			if ( double.IsNaN(this.value) &&
 				 double.IsNaN(that.value) )  return 0;
 
-			if ( double.IsNaN(this.value) )  return -1;  // "Aucun" toujours au dÈbut
+			if ( double.IsNaN(this.value) )  return -1;  // "Aucun" toujours au d√©but
 			if ( double.IsNaN(that.value) )  return  1;
 
 			if ( this.units != that.units )
 			{
-				if ( this.units == "%" )  return -1;  // les % toujours au dÈbut
+				if ( this.units == "%" )  return -1;  // les % toujours au d√©but
 				if ( that.units == "%" )  return  1;
 			}
 
@@ -64,12 +64,12 @@ namespace Epsitec.Common.Document.Menus
 
 		protected static void Add(System.Collections.ArrayList list, double value, string units)
 		{
-			//	Ajoute une entrÈe dans une liste si elle n'existe pas encore.
+			//	Ajoute une entr√©e dans une liste si elle n'existe pas encore.
 			FontSizeMenu fs = new FontSizeMenu(value, units);
 
 			foreach ( FontSizeMenu current in list )
 			{
-				if ( current.CompareTo(fs) == 0 )  return;  // n'ajoute pas si existe dÈj‡
+				if ( current.CompareTo(fs) == 0 )  return;  // n'ajoute pas si existe d√©j√†
 			}
 
 			list.Add(fs);

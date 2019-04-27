@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// La class PaneButton représente un bouton pour déplacer une frontière.
+	/// La class PaneButton reprÃ©sente un bouton pour dÃ©placer une frontiÃ¨re.
 	/// </summary>
 	public class PaneButton : AbstractButton
 	{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 		
 		public PaneButtonStyle PaneButtonStyle
 		{
-			//	Bouton dans en-tête supérieure ou gauche ?
+			//	Bouton dans en-tÃªte supÃ©rieure ou gauche ?
 			get
 			{
 				return this.paneButtonStyle;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	Gestion d'un événement.
+			//	Gestion d'un Ã©vÃ©nement.
 			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDragStarted(MessageEventArgs e)
 		{
-			//	Le slider va être déplacé.
+			//	Le slider va Ãªtre dÃ©placÃ©.
 			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragStarted");
 			if (handler != null)
 			{
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDragMoved(MessageEventArgs e)
 		{
-			//	Le slider est déplacé.
+			//	Le slider est dÃ©placÃ©.
 			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragMoved");
 			if (handler != null)
 			{
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDragEnded(MessageEventArgs e)
 		{
-			//	Le slider est fini de déplacer.
+			//	Le slider est fini de dÃ©placer.
 			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragEnded");
 			if (handler != null)
 			{

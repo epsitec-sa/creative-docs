@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Aider.Enumerations
+namespace Epsitec.Aider.Enumerations
 {
 
 

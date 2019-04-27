@@ -1,11 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Data
 {
 	/// <summary>
-	/// La classe ComponentCollection gère le stockage des références sur les
-	/// instances implémentant IComponent.
+	/// La classe ComponentCollection gÃ¨re le stockage des rÃ©fÃ©rences sur les
+	/// instances implÃ©mentant IComponent.
 	/// </summary>
 	public class ComponentCollection : System.Collections.ICollection, System.IDisposable
 	{

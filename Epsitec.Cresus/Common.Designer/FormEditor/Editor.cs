@@ -9,7 +9,7 @@ using Epsitec.Common.FormEngine;
 namespace Epsitec.Common.Designer.FormEditor
 {
 	/// <summary>
-	/// Widget venant par-dessus le conteneur UI.Panel pour éditer ce dernier.
+	/// Widget venant par-dessus le conteneur UI.Panel pour Ã©diter ce dernier.
 	/// </summary>
 	public class Editor : AbstractGroup, IPaintFilter
 	{
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public Module Module
 		{
-			//	Module associé.
+			//	Module associÃ©.
 			get
 			{
 				return this.module;
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FormDescription WorkingForm
 		{
-			//	Masque de saisie associé.
+			//	Masque de saisie associÃ©.
 			get
 			{
 				return this.workingForm;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public PanelsContext Context
 		{
-			//	Contexte asocié.
+			//	Contexte asociÃ©.
 			get
 			{
 				return this.context;
@@ -131,8 +131,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public UI.Panel Panel
 		{
-			//	Panneau associé qui est le conteneur de tous les widgets.
-			//	Editor est frère de Panel et vient par-dessus.
+			//	Panneau associÃ© qui est le conteneur de tous les widgets.
+			//	Editor est frÃ¨re de Panel et vient par-dessus.
 			get
 			{
 				return this.panel;
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public List<Widget> SelectedObjects
 		{
-			//	Retourne la liste des objets sélectionnés.
+			//	Retourne la liste des objets sÃ©lectionnÃ©s.
 			get
 			{
 				return this.selectedObjects;
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public List<System.Guid> GetSelectedGuids()
 		{
-			//	Retourne la liste des Guids de tous les champs sélectionnés.
+			//	Retourne la liste des Guids de tous les champs sÃ©lectionnÃ©s.
 			List<System.Guid> guids = new List<System.Guid>();
 
 			foreach (Widget obj in this.selectedObjects)
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetSelectedGuids(List<System.Guid> guids)
 		{
-			//	Sélectionne tous les objets dont on donne les Guids.
+			//	SÃ©lectionne tous les objets dont on donne les Guids.
 			this.selectedObjects.Clear();
 
 			foreach (System.Guid guid in guids)
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsEditEnabled
 		{
-			//	Est-ce que l'édition est possible ? Pour cela, il faut avoir sélectionné un bundle
+			//	Est-ce que l'Ã©dition est possible ? Pour cela, il faut avoir sÃ©lectionnÃ© un bundle
 			//	dans la liste de gauche.
 			get
 			{
@@ -230,13 +230,13 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void UpdateGeometry()
 		{
-			//	Mise à jour après avoir changé la géométrie d'un ou plusieurs objets.
+			//	Mise Ã  jour aprÃ¨s avoir changÃ© la gÃ©omÃ©trie d'un ou plusieurs objets.
 		}
 
 
 		public void DoCommand(string name)
 		{
-			//	Exécute une commande.
+			//	ExÃ©cute une commande.
 			switch (name)
 			{
 				case "PanelDelete":
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void GetSelectionInfo(out int selected, out int count, out bool isRoot)
 		{
-			//	Donne des informations sur la sélection en cours.
+			//	Donne des informations sur la sÃ©lection en cours.
 			selected = this.selectedObjects.Count;
 			count = this.panel.Children.Count;
 			isRoot = false;
@@ -355,25 +355,25 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region ProcessMouse
 		void ProcessMouseDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a été pressée.
+			//	La souris a Ã©tÃ© pressÃ©e.
 			this.SelectDown(pos, isRightButton, isControlPressed, isShiftPressed);
 		}
 
 		void ProcessMouseMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a été déplacée.
+			//	La souris a Ã©tÃ© dÃ©placÃ©e.
 			this.SelectMove(pos, isRightButton, isControlPressed, isShiftPressed);
 		}
 
 		void ProcessMouseUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a été relâchée.
+			//	La souris a Ã©tÃ© relÃ¢chÃ©e.
 			this.SelectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 		}
 
 		void ProcessKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a été relâchée.
+			//	La souris a Ã©tÃ© relÃ¢chÃ©e.
 			this.SelectKeyChanged(isControlPressed, isShiftPressed);
 		}
 		#endregion
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region ProcessMouse select
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection ponctuelle, souris pressée.
+			//	SÃ©lection ponctuelle, souris pressÃ©e.
 			Widget obj;
 			
 			obj = this.DetectForwardTab(pos);
@@ -396,7 +396,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			obj = this.Detect(pos);
 			bool selectionChanged = false;
 
-			if (!isControlPressed && this.selectedObjects.Count > 0)  // touche Ctrl relâchée ?
+			if (!isControlPressed && this.selectedObjects.Count > 0)  // touche Ctrl relÃ¢chÃ©e ?
 			{
 				this.selectedObjects.Clear();
 				selectionChanged = true;
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection ponctuelle, souris déplacée.
+			//	SÃ©lection ponctuelle, souris dÃ©placÃ©e.
 			Widget obj;
 
 			if (this.draggingForwardTab != null)
@@ -440,22 +440,22 @@ namespace Epsitec.Common.Designer.FormEditor
 						obj = null;
 					}
 				}
-				this.SetHilitedObject(obj);  // met en évidence l'objet survolé par la souris
+				this.SetHilitedObject(obj);  // met en Ã©vidence l'objet survolÃ© par la souris
 				this.posForwardTab = pos;
 				this.Invalidate();
 				return;
 			}
 
 			obj = this.DetectForwardTab(pos);
-			this.SetHilitedForwardTab(obj);  // met en évidence l'objet survolé par la souris
+			this.SetHilitedForwardTab(obj);  // met en Ã©vidence l'objet survolÃ© par la souris
 
 			obj = this.Detect(pos);
-			this.SetHilitedObject(obj);  // met en évidence l'objet survolé par la souris
+			this.SetHilitedObject(obj);  // met en Ã©vidence l'objet survolÃ© par la souris
 		}
 
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection ponctuelle, souris relâchée.
+			//	SÃ©lection ponctuelle, souris relÃ¢chÃ©e.
 			if (this.draggingForwardTab != null)
 			{
 				FieldDescription field = this.objectModifier.GetFieldDescription(this.draggingForwardTab);
@@ -481,7 +481,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection ponctuelle, touche pressée ou relâchée.
+			//	SÃ©lection ponctuelle, touche pressÃ©e ou relÃ¢chÃ©e.
 			if (isControlPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
@@ -505,17 +505,17 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region Dragging
 		protected void DraggingStart(Point pos)
 		{
-			//	Début du drag pour déplacer les objets sélectionnés.
+			//	DÃ©but du drag pour dÃ©placer les objets sÃ©lectionnÃ©s.
 		}
 
 		protected void DraggingMove(Point pos)
 		{
-			//	Mouvement du drag pour déplacer les objets sélectionnés.
+			//	Mouvement du drag pour dÃ©placer les objets sÃ©lectionnÃ©s.
 		}
 
 		protected void DraggingEnd(Point pos)
 		{
-			//	Fin du drag pour déplacer les objets sélectionnés.
+			//	Fin du drag pour dÃ©placer les objets sÃ©lectionnÃ©s.
 		}
 		#endregion
 
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region Selection
 		protected Widget DetectForwardTab(Point pos)
 		{
-			//	Détecte la poignée (à l'extrémité de la flèche 'ForwardTab' de l'objet sélectionné) visée par la souris.
+			//	DÃ©tecte la poignÃ©e (Ã  l'extrÃ©mitÃ© de la flÃ¨che 'ForwardTab' de l'objet sÃ©lectionnÃ©) visÃ©e par la souris.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				Rectangle rect = this.GetForwardTabHandle(obj);
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Widget Detect(Point pos)
 		{
-			//	Détecte l'objet visé par la souris, avec priorité au dernier objet dessiné (donc placé dessus).
+			//	DÃ©tecte l'objet visÃ© par la souris, avec prioritÃ© au dernier objet dessinÃ© (donc placÃ© dessus).
 			return this.Detect(pos, this.panel);
 		}
 
@@ -575,13 +575,13 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void PrepareForDelete()
 		{
-			//	Préparation en vue de la suppression de l'interface.
+			//	PrÃ©paration en vue de la suppression de l'interface.
 			this.DeselectAll();
 		}
 
 		public void DeselectAll()
 		{
-			//	Désélectionne tous les objets.
+			//	DÃ©sÃ©lectionne tous les objets.
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
@@ -593,7 +593,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectAll()
 		{
-			//	Sélectionne tous les objets.
+			//	SÃ©lectionne tous les objets.
 			this.selectedObjects.Clear();
 
 			foreach (Widget obj in this.panel.Children)
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectInvert()
 		{
-			//	Inverse la sélection.
+			//	Inverse la sÃ©lection.
 			List<Widget> list = new List<Widget>();
 
 			foreach (Widget obj in this.panel.Children)
@@ -628,7 +628,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectRoot()
 		{
-			//	Sélectionne le panneau de base.
+			//	SÃ©lectionne le panneau de base.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(this.panel);
 
@@ -639,7 +639,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectParent()
 		{
-			//	Sélectionne l'objet parent de l'actuelle sélection.
+			//	SÃ©lectionne l'objet parent de l'actuelle sÃ©lection.
 			System.Diagnostics.Debug.Assert(this.selectedObjects.Count != 0);
 			Widget parent = this.selectedObjects[0].Parent;
 			this.selectedObjects.Clear();
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SelectOneObject(Widget obj)
 		{
-			//	Sélectionne un objet.
+			//	SÃ©lectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
 			this.UpdateAfterChanging(Viewers.Changing.Selection);
@@ -662,7 +662,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SelectListObject(List<System.Guid> guids)
 		{
-			//	Sélectionne une liste d'objets d'après une liste de Guids.
+			//	SÃ©lectionne une liste d'objets d'aprÃ¨s une liste de Guids.
 			this.selectedObjects.Clear();
 
 			foreach (System.Guid guid in guids)
@@ -681,8 +681,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectObjectsInRectangle(Rectangle sel)
 		{
-			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
-			//	Tous les objets sélectionnés doivent avoir le même parent.
+			//	SÃ©lectionne tous les objets entiÃ¨rement inclus dans un rectangle.
+			//	Tous les objets sÃ©lectionnÃ©s doivent avoir le mÃªme parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
 			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
@@ -696,26 +696,26 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void RegenerateForm()
 		{
-			//	Régénère le masque de saisie s'il y a eu un changement.
+			//	RÃ©gÃ©nÃ¨re le masque de saisie s'il y a eu un changement.
 			this.UpdateAfterChanging(Viewers.Changing.Regenerate);
 		}
 
 		public void UpdateAfterSelectionGridChanged()
 		{
-			//	Mise à jour après un changement de sélection dans un tableau.
-			this.OnChildrenSelected();  // met à jour les panneaux des proxies à droite
+			//	Mise Ã  jour aprÃ¨s un changement de sÃ©lection dans un tableau.
+			this.OnChildrenSelected();  // met Ã  jour les panneaux des proxies Ã  droite
 		}
 
 		protected void UpdateAfterChanging(Viewers.Changing oper)
 		{
-			//	Mise à jour après un changement de sélection, ou après un changement dans
-			//	l'arbre des objets (création, changement de parenté, etc.).
+			//	Mise Ã  jour aprÃ¨s un changement de sÃ©lection, ou aprÃ¨s un changement dans
+			//	l'arbre des objets (crÃ©ation, changement de parentÃ©, etc.).
 			this.module.DesignerApplication.UpdateViewer(oper);
 		}
 
 		protected void SetHilitedObject(Widget obj)
 		{
-			//	Détermine l'objet à mettre en évidence lors d'un survol.
+			//	DÃ©termine l'objet Ã  mettre en Ã©vidence lors d'un survol.
 			if (this.hilitedObject != obj)
 			{
 				this.hilitedObject = obj;
@@ -725,7 +725,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SetHilitedForwardTab(Widget obj)
 		{
-			//	Détermine l'objet à mettre en évidence lors d'un survol.
+			//	DÃ©termine l'objet Ã  mettre en Ã©vidence lors d'un survol.
 			if (this.hilitedForwardTab != obj)
 			{
 				this.hilitedForwardTab = obj;
@@ -741,20 +741,20 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Dessine le panneau.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			//	Dessine les surfaces inutilisées.
+			//	Dessine les surfaces inutilisÃ©es.
 			Rectangle box = this.Client.Bounds;
 			Rectangle bounds = this.ConvPanelToEditor(this.RealBounds);
 
 			if (this.isEditEnabled)
 			{
-				if (bounds.Top < box.Top)  // bande supérieure ?
+				if (bounds.Top < box.Top)  // bande supÃ©rieure ?
 				{
 					Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
 					graphics.AddFilledRectangle(part);
 					graphics.RenderSolid(PanelsContext.ColorOutsurface);
 				}
 
-				if (box.Bottom < bounds.Bottom)  // bande inférieure ?
+				if (box.Bottom < bounds.Bottom)  // bande infÃ©rieure ?
 				{
 					Rectangle part = new Rectangle(box.Left, box.Bottom, box.Width, bounds.Bottom-box.Bottom);
 					graphics.AddFilledRectangle(part);
@@ -782,7 +782,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			bounds = this.RealBounds;
 
-			//	Dessine la grille magnétique
+			//	Dessine la grille magnÃ©tique
 			if (this.isEditEnabled && this.context.ShowGrid)
 			{
 				double step = this.context.GridStep;
@@ -800,7 +800,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			//	Dessine les numéros d'index pour la touche Tab.
+			//	Dessine les numÃ©ros d'index pour la touche Tab.
 			if (this.context.ShowTabIndex)
 			{
 				this.DrawTabIndex(graphics, this.panel);
@@ -808,13 +808,13 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.isEditEnabled)
 			{
-				//	Dessine les objets sélectionnés.
+				//	Dessine les objets sÃ©lectionnÃ©s.
 				if (this.selectedObjects.Count > 0 && !this.isDragging)
 				{
 					this.DrawSelectedObjects(graphics);
 				}
 
-				//	Dessine l'objet survolé.
+				//	Dessine l'objet survolÃ©.
 				if (this.hilitedObject != null)
 				{
 					this.DrawHilitedObject(graphics, this.hilitedObject);
@@ -826,7 +826,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					}
 				}
 
-				//	Dessine le rectangle de sélection.
+				//	Dessine le rectangle de sÃ©lection.
 				if (!this.selectedRectangle.IsEmpty)
 				{
 					Rectangle sel = this.selectedRectangle;
@@ -841,7 +841,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawTabIndex(Graphics graphics, Widget parent)
 		{
-			//	Dessine les numéros d'index pour la touche Tab et les flèches 'ForwardTab'.
+			//	Dessine les numÃ©ros d'index pour la touche Tab et les flÃ¨ches 'ForwardTab'.
 			foreach (Widget obj in parent.Children)
 			{
 				FieldDescription field = this.objectModifier.GetFieldDescription(obj);
@@ -865,7 +865,7 @@ namespace Epsitec.Common.Designer.FormEditor
 						graphics.RenderSolid(PanelsContext.ColorTabIndex);
 					}
 
-					if (field.ForwardTabGuid != System.Guid.Empty && this.draggingForwardTab == null)  // flèche 'ForwardTab' ?
+					if (field.ForwardTabGuid != System.Guid.Empty && this.draggingForwardTab == null)  // flÃ¨che 'ForwardTab' ?
 					{
 						Point src, dst;
 						if (this.GetForwardTabArrow(obj, false, out src, out dst))
@@ -884,7 +884,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected string GetObjectTabIndex(Widget obj)
 		{
-			//	Retourne la chaîne indiquant l'ordre pour la touche Tab.
+			//	Retourne la chaÃ®ne indiquant l'ordre pour la touche Tab.
 			if (Editor.IsObjectTabActive(obj))
 			{
 				return obj.TabIndex.ToString();
@@ -897,13 +897,13 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected static bool IsObjectTabActive(Widget obj)
 		{
-			//	Indique si l'objet à un ordre pour la touche Tab.
+			//	Indique si l'objet Ã  un ordre pour la touche Tab.
 			return (obj.TabNavigationMode & TabNavigationMode.ActivateOnTab) != 0;
 		}
 
 		protected void DrawSelectedObjects(Graphics graphics)
 		{
-			//	Dessine tous les objets sélectionnés.
+			//	Dessine tous les objets sÃ©lectionnÃ©s.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				this.DrawSelectedObject(graphics, obj);
@@ -912,7 +912,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
-			//	Dessine un objet sélectionné.
+			//	Dessine un objet sÃ©lectionnÃ©.
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			bounds.Deflate(0.5);
 
@@ -934,8 +934,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawForwardTabArrow(Graphics graphics, bool selected, bool hilited, Point start, Point end)
 		{
-			//	Dessine une flèche de 'start' à l'extrémité 'end'.
-			//	Si selected = true, on dessine une poignée à l'extrémité 'end'.
+			//	Dessine une flÃ¨che de 'start' Ã  l'extrÃ©mitÃ© 'end'.
+			//	Si selected = true, on dessine une poignÃ©e Ã  l'extrÃ©mitÃ© 'end'.
 			start = graphics.Align(start);
 			end   = graphics.Align(end);
 			start.X += 0.5;
@@ -959,7 +959,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
 
-			if (selected)  // dessine une poignée à l'extrémité 'end' ?
+			if (selected)  // dessine une poignÃ©e Ã  l'extrÃ©mitÃ© 'end' ?
 			{
 				Rectangle rect = new Rectangle(end, end);
 				rect.Inflate(Editor.forwardTabHalfHandle);
@@ -976,10 +976,10 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj)
 		{
-			//	Met en évidence l'objet survolé par la souris.
+			//	Met en Ã©vidence l'objet survolÃ© par la souris.
 			Color color = PanelsContext.ColorHiliteSurface;
 
-			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
+			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissÃ©.
 			Rectangle rect = this.objectModifier.GetActualBounds(obj);
 			rect = this.objectModifier.InflateMinimalSize(rect);
 
@@ -989,7 +989,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Rectangle GetForwardTabHandle(Widget obj)
 		{
-			//	Retourne le rectangle de la poignée 'ForwardTab'.
+			//	Retourne le rectangle de la poignÃ©e 'ForwardTab'.
 			Point src, dst;
 			if (this.GetForwardTabArrow(obj, true, out src, out dst))
 			{
@@ -1003,9 +1003,9 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected bool GetForwardTabArrow(Widget obj, bool selected, out Point src, out Point dst)
 		{
-			//	Retourne les positions pour la flèche 'ForwardTab'.
-			//	Si l'objet est sélectionné (selected = true), on retourne une flèche sur soi-même
-			//	s'il n'existe aucun objet destination (ForwardTabGuid indéfini).
+			//	Retourne les positions pour la flÃ¨che 'ForwardTab'.
+			//	Si l'objet est sÃ©lectionnÃ© (selected = true), on retourne une flÃ¨che sur soi-mÃªme
+			//	s'il n'existe aucun objet destination (ForwardTabGuid indÃ©fini).
 			src = Point.Zero;
 			dst = Point.Zero;
 
@@ -1021,7 +1021,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return false;
 			}
 
-			double offset = (index%10)*Editor.forwardTabSpaceX;  // offset horizontal, pour éviter les superpositions
+			double offset = (index%10)*Editor.forwardTabSpaceX;  // offset horizontal, pour Ã©viter les superpositions
 
 			if (srcField.ForwardTabGuid == System.Guid.Empty)
 			{
@@ -1029,7 +1029,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					src = this.objectModifier.GetActualBounds(obj).Center;
 					src.X += offset;
-					dst = src;  // flèche sur soi-même
+					dst = src;  // flÃ¨che sur soi-mÃªme
 					return true;
 				}
 				else
@@ -1060,8 +1060,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Rectangle GetDrawBox(Graphics graphics, Point p1, Point p2, double thickness)
 		{
-			//	Donne le rectangle d'une boîte horizontale ou verticale.
-			if (p1.Y == p2.Y)  // boîte horizontale ?
+			//	Donne le rectangle d'une boÃ®te horizontale ou verticale.
+			if (p1.Y == p2.Y)  // boÃ®te horizontale ?
 			{
 				p1.Y -= thickness+1;
 				p2.Y += thickness-1;
@@ -1070,7 +1070,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				Misc.AlignForLine(graphics, ref p2);
 				return new Rectangle(p1, p2);
 			}
-			else if (p1.X == p2.X)  // boîte verticale ?
+			else if (p1.X == p2.X)  // boÃ®te verticale ?
 			{
 				p1.X -= thickness+1;
 				p2.X += thickness-1;
@@ -1090,7 +1090,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region Misc
 		public void AdaptAfterToolChanged()
 		{
-			//	Adaptation après un changement d'outil ou d'objet.
+			//	Adaptation aprÃ¨s un changement d'outil ou d'objet.
 		}
 
 		public Rectangle RealBounds
@@ -1104,7 +1104,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected bool IsInside(Point pos)
 		{
-			//	Indique si une position est dans la fenêtre.
+			//	Indique si une position est dans la fenÃªtre.
 			return this.Client.Bounds.Contains(pos);
 		}
 
@@ -1135,8 +1135,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Point ConvOffset
 		{
-			//	Retourne l'offset à ajouter/soustraire lors d'une conversion Editor <-> Panel.
-			//	On suppose que le Form sous-jascent est aligné en mode TopLeft (voir Viewers.Form.UpdateMiscPagePanel,
+			//	Retourne l'offset Ã  ajouter/soustraire lors d'une conversion Editor <-> Panel.
+			//	On suppose que le Form sous-jascent est alignÃ© en mode TopLeft (voir Viewers.Form.UpdateMiscPagePanel,
 			//	this.panelContainer.HorizontalAlignment et this.panelContainer.VerticalAlignment).
 			get
 			{
@@ -1150,8 +1150,8 @@ namespace Epsitec.Common.Designer.FormEditor
 		bool IPaintFilter.IsWidgetFullyDiscarded(Widget widget)
 		{
 			//	Retourne true pour indiquer que le widget en question ne doit
-			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
-			//	widgets sélectionnés ne soient peints.
+			//	pas Ãªtre peint, ni ses enfants d'ailleurs. Ceci Ã©vite que les
+			//	widgets sÃ©lectionnÃ©s ne soient peints.
 			return this.isDragging && this.selectedObjects.Contains(widget);
 		}
 

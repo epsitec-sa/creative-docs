@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Debug donne accès aux commandes provisoires de debug.
+	/// La classe Debug donne accÃ¨s aux commandes provisoires de debug.
 	/// </summary>
 	public class Debug : Abstract
 	{
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonOthers == null )  return;
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleOthersPressed(object sender, MessageEventArgs e)
 		{
-			//	Bouton pour ouvrir le menu des autres opérations.
+			//	Bouton pour ouvrir le menu des autres opÃ©rations.
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;
 			VMenu menu = this.BuildOthersMenu();
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected VMenu BuildOthersMenu()
 		{
-			//	Construit le sous-menu des autres opérations.
+			//	Construit le sous-menu des autres opÃ©rations.
 			VMenu menu = new VMenu();
 
 #if false

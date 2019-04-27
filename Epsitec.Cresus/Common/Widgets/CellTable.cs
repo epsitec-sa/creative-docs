@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe CellTable représente un tableau à deux dimensions contenant
+	/// La classe CellTable reprÃ©sente un tableau Ã  deux dimensions contenant
 	/// des cellules.
 	/// </summary>
 	public class CellTable : AbstractCellArray

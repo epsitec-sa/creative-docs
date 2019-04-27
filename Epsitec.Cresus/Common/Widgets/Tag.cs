@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Statut : OK/PA, 12/02/2004
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Tag implémente une petite étiquette (pastille) qui peut servir
-	/// à l'implémentation de "smart tags".
+	/// La classe Tag implÃ©mente une petite Ã©tiquette (pastille) qui peut servir
+	/// Ã  l'implÃ©mentation de "smart tags".
 	/// </summary>
 	public class Tag : GlyphButton
 	{

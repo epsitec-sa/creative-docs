@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -133,7 +133,7 @@ namespace Epsitec.Aider.Override
 				((path.Length < 5) && (user.EnableGroupEditionRegion)) ||
 				((path.Length < 10) && (user.EnableGroupEditionParish)))
 			{
-				Logic.BusinessRuleException (user, TextFormatter.FormatText ("L'utilisateur", user.DisplayName, "n'a pas de paroisse ou région associée."));
+				Logic.BusinessRuleException (user, TextFormatter.FormatText ("L'utilisateur", user.DisplayName, "n'a pas de paroisse ou rÃ©gion associÃ©e."));
 			}
 			
 			if (user.EnableGroupEditionRegion)

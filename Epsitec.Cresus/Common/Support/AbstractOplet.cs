@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe AbstractOplet implémente le canevas de base pour un
-	/// "oplet" (petite opération) utilisée par OpletQueue pour réaliser
+	/// La classe AbstractOplet implÃ©mente le canevas de base pour un
+	/// "oplet" (petite opÃ©ration) utilisÃ©e par OpletQueue pour rÃ©aliser
 	/// le UNDO/REDO.
 	/// </summary>
 	public abstract class AbstractOplet : IOplet

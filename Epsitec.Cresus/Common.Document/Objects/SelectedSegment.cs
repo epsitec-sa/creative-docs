@@ -4,7 +4,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Document.Objects
 {
 	/// <summary>
-	/// La classe SelectedSegment représente un segment sélectionné par le modeleur.
+	/// La classe SelectedSegment reprÃ©sente un segment sÃ©lectionnÃ© par le modeleur.
 	/// </summary>
 	public class SelectedSegment
 	{
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public int Rank
 		{
-			//	Rang du segment dans le chemin simplifié (GetMagnetPath) de l'objet.
+			//	Rang du segment dans le chemin simplifiÃ© (GetMagnetPath) de l'objet.
 			get
 			{
 				return this.rank;
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Point Position
 		{
-			//	Position de la poignée sur le segment.
+			//	Position de la poignÃ©e sur le segment.
 			get
 			{
 				return this.handle.Position;
@@ -72,13 +72,13 @@ namespace Epsitec.Common.Document.Objects
 
 		public bool Detect(Point pos)
 		{
-			//	Détecte si la souris est sur la poignée.
+			//	DÃ©tecte si la souris est sur la poignÃ©e.
 			return this.handle.Detect(pos);
 		}
 
 		public void Draw(Graphics graphics, DrawingContext drawingContext)
 		{
-			//	Dessine la poignée sur le segment.
+			//	Dessine la poignÃ©e sur le segment.
 			this.handle.Draw(graphics, drawingContext);
 		}
 
@@ -86,13 +86,13 @@ namespace Epsitec.Common.Document.Objects
 		#region OpletGeometry
 		protected void InsertOpletGeometry()
 		{
-			//	Ajoute un oplet pour mémoriser la géométrie du segment.
+			//	Ajoute un oplet pour mÃ©moriser la gÃ©omÃ©trie du segment.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletGeometry oplet = new OpletGeometry(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		//	Mémorise toutes les informations sur la géométrie de l'objet.
+		//	MÃ©morise toutes les informations sur la gÃ©omÃ©trie de l'objet.
 		protected class OpletGeometry : AbstractOplet
 		{
 			public OpletGeometry(SelectedSegment host)
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		public static int Search(UndoableList list, int rank)
 		{
-			//	Cherche un segment sélectionné dans une liste.
+			//	Cherche un segment sÃ©lectionnÃ© dans une liste.
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				SelectedSegment ss = list[i] as SelectedSegment;
@@ -139,8 +139,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public static int[] Sort(UndoableList list)
 		{
-			//	Retourne un index trié de tous les segments sélectionnés pour que ceux ayant
-			//	un rang élévé soient traités en premier.
+			//	Retourne un index triÃ© de tous les segments sÃ©lectionnÃ©s pour que ceux ayant
+			//	un rang Ã©lÃ©vÃ© soient traitÃ©s en premier.
 			int[] index = new int[list.Count];
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public static void InsertOpletGeometry(UndoableList list, Objects.Abstract obj)
 		{
-			//	Mémorise pour le undo.
+			//	MÃ©morise pour le undo.
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				SelectedSegment ss = list[i] as SelectedSegment;
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public static void Update(UndoableList list, Objects.Abstract obj)
 		{
-			//	Mise à jour après un changement de géométrie.
+			//	Mise Ã  jour aprÃ¨s un changement de gÃ©omÃ©trie.
 			Path path = obj.GetShaperPath();
 
 			for ( int i=0 ; i<list.Count ; i++ )

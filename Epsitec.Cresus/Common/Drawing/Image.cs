@@ -1,10 +1,10 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// La classe Image permet de représenter une image de type bitmap.
+	/// La classe Image permet de reprÃ©senter une image de type bitmap.
 	/// </summary>
 	public abstract class Image : System.IDisposable
 	{
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Drawing
 
 		public string							Id
 		{
-			//	L'identificateur permet de retrouver l'image lors de la désérialisation du port graphique XmlPort.
+			//	L'identificateur permet de retrouver l'image lors de la dÃ©sÃ©rialisation du port graphique XmlPort.
 			get;
 			set;
 		}

@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe ObjectDictMapper permet de faire correspondre les propriétés
+	/// La classe ObjectDictMapper permet de faire correspondre les propriÃ©tÃ©s
 	/// publiques d'un objet avec celles d'un dictionnaire de paires clef/valeur
 	/// de type string.
 	/// </summary>
@@ -77,9 +77,9 @@ namespace Epsitec.Common.Support
 		
 		public static void UpdateToDict(object data, Types.IStringDict dict)
 		{
-			//	Comme CopyToDict, mais ne crée pas de nouvelles entrées dans le
-			//	dictionnaire (on met uniquement à jour des valeurs qui existaient
-			//	déjà).
+			//	Comme CopyToDict, mais ne crÃ©e pas de nouvelles entrÃ©es dans le
+			//	dictionnaire (on met uniquement Ã  jour des valeurs qui existaient
+			//	dÃ©jÃ ).
 			
 			System.Type type = data.GetType ();
 			System.Reflection.PropertyInfo[] props = type.GetProperties (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);

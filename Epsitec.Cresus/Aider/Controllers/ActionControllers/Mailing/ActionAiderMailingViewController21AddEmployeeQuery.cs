@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -55,9 +55,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Ajouter une requête sur les collaborateurs")
+				.Title ("Ajouter une requÃªte sur les collaborateurs")
 				.Field<List<string>> ()
-					.Title ("Requête")
+					.Title ("RequÃªte")
 					.WithStringCollection (queries)
 				.End ()
 			.End ();

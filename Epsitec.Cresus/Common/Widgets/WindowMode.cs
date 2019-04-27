@@ -1,17 +1,17 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'énumération WindowMode définit comment une fenêtre doit être
-	/// affichée et gérée.
+	/// L'Ã©numÃ©ration WindowMode dÃ©finit comment une fenÃªtre doit Ãªtre
+	/// affichÃ©e et gÃ©rÃ©e.
 	/// </summary>
 	public enum WindowMode
 	{
 		Undefined			= 0,
 		
-		Window				= 1,				//	montre comme une fenêtre normale
+		Window				= 1,				//	montre comme une fenÃªtre normale
 		ModalDialog			= 2					//	montre comme un dialogue modal
 	}
 }

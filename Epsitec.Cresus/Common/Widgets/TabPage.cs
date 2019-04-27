@@ -3,7 +3,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TabPage représente une page du TabBook.
+	/// La classe TabPage reprÃ©sente une page du TabBook.
 	/// </summary>
 	public class TabPage : AbstractGroup
 	{

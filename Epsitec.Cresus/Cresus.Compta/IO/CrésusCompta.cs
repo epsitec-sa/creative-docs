@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -14,11 +14,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.IO
 {
 	/// <summary>
-	/// Cette classe s'occupe des import/export avec l'ancien logiciel Crésus Comptabilité (DR/MW).
+	/// Cette classe s'occupe des import/export avec l'ancien logiciel CrÃ©sus ComptabilitÃ© (DR/MW).
 	/// </summary>
-	public class CrésusCompta
+	public class CrÃ©susCompta
 	{
-		public string ImportFile(ComptaEntity compta, ref ComptaPériodeEntity période, string filename)
+		public string ImportFile(ComptaEntity compta, ref ComptaPÃ©riodeEntity pÃ©riode, string filename)
 		{
 			this.compta = compta;
 
@@ -26,20 +26,20 @@ namespace Epsitec.Cresus.Compta.IO
 
 			if (ext == ".crp")
 			{
-				return this.ImportPlanComptable(filename, ref période);
+				return this.ImportPlanComptable(filename, ref pÃ©riode);
 			}
 
 			if (ext == ".txt")
 			{
-				return this.ImportEcritures (filename, ref période);
+				return this.ImportEcritures (filename, ref pÃ©riode);
 			}
 
-			return "Le fichier ne contient pas des données connues.";
+			return "Le fichier ne contient pas des donnÃ©es connues.";
 		}
 
 
 		#region Plan comptable
-		private string ImportPlanComptable(string filename, ref ComptaPériodeEntity période)
+		private string ImportPlanComptable(string filename, ref ComptaPÃ©riodeEntity pÃ©riode)
 		{
 			//	Importe un plan comptable "crp".
 			try
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 				try
 				{
-					string err = this.ImportPlanComptable (ref période);
+					string err = this.ImportPlanComptable (ref pÃ©riode);
 
 					if (string.IsNullOrEmpty (err) && this.compta.Nom.IsNullOrEmpty ())
 					{
@@ -68,15 +68,15 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private string ImportPlanComptable(ref ComptaPériodeEntity période)
+		private string ImportPlanComptable(ref ComptaPÃ©riodeEntity pÃ©riode)
 		{
 			NewCompta.NewNull (this.compta);
-			NewCompta.CreatePériodes (this.compta);
+			NewCompta.CreatePÃ©riodes (this.compta);
 
 			var now = Date.Today;
-			période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
+			pÃ©riode = this.compta.PÃ©riodes.Where (x => x.DateDÃ©but.Year == now.Year).FirstOrDefault ();
 
-			//	Importe les données globales.
+			//	Importe les donnÃ©es globales.
 			{
 				int i = this.IndexOfLine ("TITLE=");
 				if (i != -1)
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Compta.IO
 				if (i != -1)
 				{
 					var date = this.GetDate (this.lines[i].Substring (8));
-					période = this.compta.Périodes.Where (x => x.DateDébut.Year == date.Year).FirstOrDefault ();
+					pÃ©riode = this.compta.PÃ©riodes.Where (x => x.DateDÃ©but.Year == date.Year).FirstOrDefault ();
 				}
 			}
 
@@ -121,9 +121,9 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
-			var journauxTriés = journaux.OrderBy (x => x.Key);
+			var journauxTriÃ©s = journaux.OrderBy (x => x.Key);
 
-			foreach (var j in journauxTriés)
+			foreach (var j in journauxTriÃ©s)
 			{
 				var journal = new ComptaJournalEntity ();
 				journal.Id = this.compta.GetJournalId ();
@@ -155,19 +155,19 @@ namespace Epsitec.Cresus.Compta.IO
 
 				if (line.StartsWith ("ENTRY"))
 				{
-					var numéro = this.GetEntryContentText (indexCompte, "NUM");
+					var numÃ©ro = this.GetEntryContentText (indexCompte, "NUM");
 					var titre  = this.GetEntryContentText (indexCompte, "NAME");
 
-					if (string.IsNullOrEmpty (numéro) || numéro.Contains ("/") || string.IsNullOrEmpty (titre))
+					if (string.IsNullOrEmpty (numÃ©ro) || numÃ©ro.Contains ("/") || string.IsNullOrEmpty (titre))
 					{
 						continue;
 					}
 
 					var compte = new ComptaCompteEntity ();
 
-					compte.Numéro    = numéro;
+					compte.NumÃ©ro    = numÃ©ro;
 					compte.Titre     = titre;
-					compte.Catégorie = this.GetEntryContentCatégorie (indexCompte, "CAT");
+					compte.CatÃ©gorie = this.GetEntryContentCatÃ©gorie (indexCompte, "CAT");
 					compte.Type      = this.GetEntryContentType (indexCompte, "STATUS");
 
 					var monnaie = this.GetEntryContentInt (indexCompte, "CURRENCY").GetValueOrDefault (0);
@@ -197,13 +197,13 @@ namespace Epsitec.Cresus.Compta.IO
 					var group = this.GetEntryContentText (indexCompte, "GROUP");
 					if (!string.IsNullOrEmpty (group))
 					{
-						groups.Add (numéro, group);
+						groups.Add (numÃ©ro, group);
 					}
 
 					var boucle = this.GetEntryContentText (indexCompte, "BOUCLE");
 					if (!string.IsNullOrEmpty (boucle))
 					{
-						boucles.Add (numéro, boucle);
+						boucles.Add (numÃ©ro, boucle);
 					}
 
 					var codeTVA = this.GetEntryContentText (indexCompte, "VATCODE");
@@ -216,11 +216,11 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
-			//	Met après-coup les champs qui pointent sur des comptes.
+			//	Met aprÃ¨s-coup les champs qui pointent sur des comptes.
 			foreach (var item in groups)
 			{
-				var c1 = this.compta.PlanComptable.Where (x => x.Numéro == item.Key).FirstOrDefault ();
-				var c2 = this.compta.PlanComptable.Where (x => x.Numéro == item.Value).FirstOrDefault ();
+				var c1 = this.compta.PlanComptable.Where (x => x.NumÃ©ro == item.Key).FirstOrDefault ();
+				var c2 = this.compta.PlanComptable.Where (x => x.NumÃ©ro == item.Value).FirstOrDefault ();
 
 				if (c1 != null && c2 != null)
 				{
@@ -230,8 +230,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 			foreach (var item in boucles)
 			{
-				var c1 = this.compta.PlanComptable.Where (x => x.Numéro == item.Key).FirstOrDefault ();
-				var c2 = this.compta.PlanComptable.Where (x => x.Numéro == item.Value).FirstOrDefault ();
+				var c1 = this.compta.PlanComptable.Where (x => x.NumÃ©ro == item.Key).FirstOrDefault ();
+				var c2 = this.compta.PlanComptable.Where (x => x.NumÃ©ro == item.Value).FirstOrDefault ();
 
 				if (c1 != null && c2 != null)
 				{
@@ -242,8 +242,8 @@ namespace Epsitec.Cresus.Compta.IO
 			this.compta.UpdateNiveauCompte ();
 
 #if true
-			//	Plutôt que d'essayer d'importer difficilement les données de Crésus Comptabilité, je préfère les
-			//	recréer de toutes pièces. A priori, il n'y a pas de raison qu'elles soient différentes, non !?
+			//	PlutÃ´t que d'essayer d'importer difficilement les donnÃ©es de CrÃ©sus ComptabilitÃ©, je prÃ©fÃ¨re les
+			//	recrÃ©er de toutes piÃ¨ces. A priori, il n'y a pas de raison qu'elles soient diffÃ©rentes, non !?
 			NewCompta.CreateTVA (this.compta);
 #else
 			//	Importe les taux de TVA.
@@ -299,12 +299,12 @@ namespace Epsitec.Cresus.Compta.IO
 					{
 						Code        = this.GetEntryContentText (indexTVA, "NAME"),
 						Description = this.GetEntryContentText (indexTVA, "COMMENT"),
-						Compte      = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexTVA, "COMPTE")).FirstOrDefault (),
-						Déduction   = this.GetMontant (this.GetEntryContentText (indexTVA, "PCTDEDUCT")),
+						Compte      = this.compta.PlanComptable.Where (x => x.NumÃ©ro == this.GetEntryContentText (indexTVA, "COMPTE")).FirstOrDefault (),
+						DÃ©duction   = this.GetMontant (this.GetEntryContentText (indexTVA, "PCTDEDUCT")),
 						ListeTaux   = this.compta.GetListeTVA (this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100),
 					};
 
-					if (codeTVA.ListeTaux != null && !codeTVA.Description.ToString ().ToLower ().Contains ("obsolète"))
+					if (codeTVA.ListeTaux != null && !codeTVA.Description.ToString ().ToLower ().Contains ("obsolÃ¨te"))
 					{
 						codesTVAList.Add (codeTVA);
 					}
@@ -316,13 +316,13 @@ namespace Epsitec.Cresus.Compta.IO
 				this.compta.CodesTVA.Add (code);
 			}
 
-			//	Met à jour les codes TVA dans les comptes.
+			//	Met Ã  jour les codes TVA dans les comptes.
 			foreach (var pair in codesTVA)
 			{
 				var compte  = pair.Key;
 				var codeTVA = pair.Value;
 
-				compte.CodeTVAParDéfaut = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
+				compte.CodeTVAParDÃ©faut = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
 				this.SetCodeTVA (compte);
 			}
 
@@ -331,15 +331,15 @@ namespace Epsitec.Cresus.Compta.IO
 			this.compta.Monnaies.Clear ();
 
 			{
-				//	Crée la monnaie CHF de base.
+				//	CrÃ©e la monnaie CHF de base.
 				var monnaie = new ComptaMonnaieEntity ()
 				{
 					CodeISO     = "CHF",
 					Description = Currencies.GetCurrencySpecies ("CHF"),
-					Décimales   = 2,
+					DÃ©cimales   = 2,
 					Arrondi     = 0.01m,
 					Cours       = 1.0m,
-					Unité       = 1,
+					UnitÃ©       = 1,
 				};
 
 				this.compta.Monnaies.Add (monnaie);
@@ -367,12 +367,12 @@ namespace Epsitec.Cresus.Compta.IO
 					{
 						CodeISO     = iso,
 						Description = Currencies.GetCurrencySpecies (iso),
-						Décimales   = 2,
+						DÃ©cimales   = 2,
 						Arrondi     = 0.01m,
 						Cours       = Converters.ParseDecimal (this.GetEntryContentText (indexCurrencies, "COURS")).GetValueOrDefault (1),
-						Unité       = Converters.ParseInt (this.GetEntryContentText (indexCurrencies, "UNITE")).GetValueOrDefault (1),
-						CompteGain  = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexCurrencies, "CGAIN")).FirstOrDefault (),
-						ComptePerte = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexCurrencies, "CPERTE")).FirstOrDefault (),
+						UnitÃ©       = Converters.ParseInt (this.GetEntryContentText (indexCurrencies, "UNITE")).GetValueOrDefault (1),
+						CompteGain  = this.compta.PlanComptable.Where (x => x.NumÃ©ro == this.GetEntryContentText (indexCurrencies, "CGAIN")).FirstOrDefault (),
+						ComptePerte = this.compta.PlanComptable.Where (x => x.NumÃ©ro == this.GetEntryContentText (indexCurrencies, "CPERTE")).FirstOrDefault (),
 					};
 
 					this.compta.Monnaies.Add (monnaie);
@@ -407,8 +407,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SetCodeTVA(ComptaCompteEntity compte)
 		{
-			//	Essaie de "deviner" les codes TVA possibles à partir d'un code défini.
-			if (compte.CodeTVAParDéfaut != null)
+			//	Essaie de "deviner" les codes TVA possibles Ã  partir d'un code dÃ©fini.
+			if (compte.CodeTVAParDÃ©faut != null)
 			{
 				var zero = this.compta.CodesTVA.Where (x => x.Code == "EXPORT").FirstOrDefault ();
 				if (zero != null)
@@ -416,9 +416,9 @@ namespace Epsitec.Cresus.Compta.IO
 					compte.CodesTVAPossibles.Add (zero);
 				}
 
-				if (compte.CodeTVAParDéfaut.Code.Length >= 3)
+				if (compte.CodeTVAParDÃ©faut.Code.Length >= 3)
 				{
-					var prefix = compte.CodeTVAParDéfaut.Code.ToString ().Substring (0, 3);
+					var prefix = compte.CodeTVAParDÃ©faut.Code.ToString ().Substring (0, 3);
 
 					foreach (var codeTVA in this.compta.CodesTVA)
 					{
@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 				else
 				{
-					compte.CodesTVAPossibles.Add (compte.CodeTVAParDéfaut);
+					compte.CodesTVAPossibles.Add (compte.CodeTVAParDÃ©faut);
 				}
 			}
 		}
@@ -446,7 +446,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return Date.Today;
 		}
 
-		private CatégorieDeCompte GetEntryContentCatégorie(int index, string key)
+		private CatÃ©gorieDeCompte GetEntryContentCatÃ©gorie(int index, string key)
 		{
 			var value = this.GetEntryContentInt (index, key);
 
@@ -455,19 +455,19 @@ namespace Epsitec.Cresus.Compta.IO
 				switch (value.Value)
 				{
 					case 0x02:
-						return CatégorieDeCompte.Actif;
+						return CatÃ©gorieDeCompte.Actif;
 					case 0x04:
-						return CatégorieDeCompte.Passif;
+						return CatÃ©gorieDeCompte.Passif;
 					case 0x08:
-						return CatégorieDeCompte.Charge;
+						return CatÃ©gorieDeCompte.Charge;
 					case 0x10:
-						return CatégorieDeCompte.Produit;
+						return CatÃ©gorieDeCompte.Produit;
 					case 0x20:
-						return CatégorieDeCompte.Exploitation;
+						return CatÃ©gorieDeCompte.Exploitation;
 				}
 			}
 
-			return CatégorieDeCompte.Inconnu;
+			return CatÃ©gorieDeCompte.Inconnu;
 		}
 
 		private TypeDeCompte GetEntryContentType(int index, string key)
@@ -520,7 +520,7 @@ namespace Epsitec.Cresus.Compta.IO
 					return this.lines[index].Substring (key.Length).Trim ();
 				}
 
-				if (this.lines[index].StartsWith ("ENTRY") ||  // est-on sur l'entrée suivante ?
+				if (this.lines[index].StartsWith ("ENTRY") ||  // est-on sur l'entrÃ©e suivante ?
 					this.lines[index].StartsWith ("END="))     // fin du bloc ?
 				{
 					break;
@@ -545,10 +545,10 @@ namespace Epsitec.Cresus.Compta.IO
 		#endregion
 
 
-		#region Ecritures tabulées
-		private string ImportEcritures(string filename, ref ComptaPériodeEntity période)
+		#region Ecritures tabulÃ©es
+		private string ImportEcritures(string filename, ref ComptaPÃ©riodeEntity pÃ©riode)
 		{
-			//	Importe un texte tabulé "txt".
+			//	Importe un texte tabulÃ© "txt".
 			try
 			{
 				this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
@@ -563,21 +563,21 @@ namespace Epsitec.Cresus.Compta.IO
 						return err;
 					}
 
-					période = this.CreatePériode (journal);
+					pÃ©riode = this.CreatePÃ©riode (journal);
 
-					//	Met tous les libellés des écritures dans les libellés usuels.
-					foreach (var écriture in journal)
+					//	Met tous les libellÃ©s des Ã©critures dans les libellÃ©s usuels.
+					foreach (var Ã©criture in journal)
 					{
-						this.compta.AddLibellé (période, écriture.Libellé);
+						this.compta.AddLibellÃ© (pÃ©riode, Ã©criture.LibellÃ©);
 					}
 
-					this.GenerateBudgets (période);
+					this.GenerateBudgets (pÃ©riode);
 
 					return null;  // ok
 				}
 				catch (System.Exception ex)
 				{
-					return string.Concat ("Le fichier ne contient pas un texte tabulé conforme.<br/>", ex.Message);
+					return string.Concat ("Le fichier ne contient pas un texte tabulÃ© conforme.<br/>", ex.Message);
 				}
 			}
 			catch (System.Exception ex)
@@ -606,10 +606,10 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 
 				var date    = Converters.ParseDate (words[0]);
-				var débit   = this.GetCompte (words[1]);
-				var crédit  = this.GetCompte (words[2]);
-				var pièce   = words[3];
-				var libellé = words[4];
+				var dÃ©bit   = this.GetCompte (words[1]);
+				var crÃ©dit  = this.GetCompte (words[2]);
+				var piÃ¨ce   = words[3];
+				var libellÃ© = words[4];
 				var montant = this.GetMontant (words[5]);
 				var multi   = this.GetInt (words[8]);
 				var jp      = this.compta.Journaux[0];
@@ -620,32 +620,32 @@ namespace Epsitec.Cresus.Compta.IO
 					continue;
 				}
 
-				if (débit == null && crédit == null)
+				if (dÃ©bit == null && crÃ©dit == null)
 				{
 					continue;
 				}
 
-				var écriture = new ComptaEcritureEntity
+				var Ã©criture = new ComptaEcritureEntity
 				{
 					Date    = date.Value,
-					Débit   = débit,
-					Crédit  = crédit,
-					Pièce   = pièce,
-					Libellé = libellé,
+					DÃ©bit   = dÃ©bit,
+					CrÃ©dit  = crÃ©dit,
+					PiÃ¨ce   = piÃ¨ce,
+					LibellÃ© = libellÃ©,
 					Montant = montant,
 					Monnaie = this.compta.Monnaies[0],
 					MultiId = multi,
 					Journal = jp,
 				};
 
-				journal.Add (écriture);
+				journal.Add (Ã©criture);
 
-				if (lastEcriture != null && lastEcriture.MultiId != 0 && lastEcriture.MultiId != écriture.MultiId)
+				if (lastEcriture != null && lastEcriture.MultiId != 0 && lastEcriture.MultiId != Ã©criture.MultiId)
 				{
 					lastEcriture.TotalAutomatique = true;
 				}
 
-				lastEcriture = écriture;
+				lastEcriture = Ã©criture;
 				count++;
 			}
 
@@ -656,7 +656,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			if (count == 0)
 			{
-				return "Le fichier ne contient aucune écriture.";
+				return "Le fichier ne contient aucune Ã©criture.";
 			}
 
 			this.MergeStep1 (journal);
@@ -664,15 +664,15 @@ namespace Epsitec.Cresus.Compta.IO
 			return null;  // ok
 		}
 
-		private ComptaPériodeEntity CreatePériode(List<ComptaEcritureEntity> journal)
+		private ComptaPÃ©riodeEntity CreatePÃ©riode(List<ComptaEcritureEntity> journal)
 		{
 			Date beginDate, endDate;
 			this.GetYear (journal,  out beginDate, out endDate);
 
-			//	Cherche si les écritures lues sont compatibles avec une période existante.
-			foreach (var p in this.compta.Périodes)
+			//	Cherche si les Ã©critures lues sont compatibles avec une pÃ©riode existante.
+			foreach (var p in this.compta.PÃ©riodes)
 			{
-				if (beginDate >= p.DateDébut && endDate <= p.DateFin)
+				if (beginDate >= p.DateDÃ©but && endDate <= p.DateFin)
 				{
 					p.Journal.Clear ();
 					journal.ForEach (x => p.Journal.Add (x));
@@ -680,17 +680,17 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
-			//	Crée une nouvelle période.
-			var np = new ComptaPériodeEntity ();
+			//	CrÃ©e une nouvelle pÃ©riode.
+			var np = new ComptaPÃ©riodeEntity ();
 
 			beginDate = new Date (beginDate.Year,  1,  1);
 			endDate   = new Date (  endDate.Year, 12, 31);
 
-			np.DateDébut    = beginDate;
+			np.DateDÃ©but    = beginDate;
 			np.DateFin      =   endDate;
-			np.DernièreDate = beginDate;
+			np.DerniÃ¨reDate = beginDate;
 
-			this.compta.Périodes.Add (np);
+			this.compta.PÃ©riodes.Add (np);
 			return np;
 		}
 
@@ -704,7 +704,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			if (!string.IsNullOrEmpty (text) && text != "...")
 			{
-				return this.compta.PlanComptable.Where (x => x.Numéro == text).FirstOrDefault ();
+				return this.compta.PlanComptable.Where (x => x.NumÃ©ro == text).FirstOrDefault ();
 			}
 
 			return null;
@@ -729,15 +729,15 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void MergeStep1(List<ComptaEcritureEntity> journal)
 		{
-			//	Fusionne les 2 écritures de TVA (lignes 'brut' et 'TVA').
+			//	Fusionne les 2 Ã©critures de TVA (lignes 'brut' et 'TVA').
 			int i = 0;
 			while (i < journal.Count-1)
 			{
-				var écriture = journal[i];
+				var Ã©criture = journal[i];
 				var suivante = journal[i+1];
 				var encore   = (i+2 < journal.Count) ? journal[i+2] : null;
 
-				if (this.MergeEcritures1 (écriture, suivante, encore))
+				if (this.MergeEcritures1 (Ã©criture, suivante, encore))
 				{
 					i += 2;
 				}
@@ -748,46 +748,46 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private bool MergeEcritures1(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante, ComptaEcritureEntity encore)
+		private bool MergeEcritures1(ComptaEcritureEntity Ã©criture, ComptaEcritureEntity suivante, ComptaEcritureEntity encore)
 		{
-			if (écriture.MultiId == 0 || écriture.MultiId != suivante.MultiId)
+			if (Ã©criture.MultiId == 0 || Ã©criture.MultiId != suivante.MultiId)
 			{
 				return false;
 			}
 
-			if ((écriture.Débit  != null || suivante.Débit  != null) &&
-				(écriture.Crédit != null || suivante.Crédit != null))
+			if ((Ã©criture.DÃ©bit  != null || suivante.DÃ©bit  != null) &&
+				(Ã©criture.CrÃ©dit != null || suivante.CrÃ©dit != null))
 			{
 				return false;
 			}
 
-			var compteBase = (écriture.Débit == null) ? écriture.Crédit : écriture.Débit;
-			var compteTVA  = (suivante.Débit == null) ? suivante.Crédit : suivante.Débit;
+			var compteBase = (Ã©criture.DÃ©bit == null) ? Ã©criture.CrÃ©dit : Ã©criture.DÃ©bit;
+			var compteTVA  = (suivante.DÃ©bit == null) ? suivante.CrÃ©dit : suivante.DÃ©bit;
 
 			if (compteTVA.Type != TypeDeCompte.TVA)
 			{
 				return false;
 			}
 
-			var lib1 = écriture.Libellé.ToString ();
-			var lib2 = suivante.Libellé.ToString ();
+			var lib1 = Ã©criture.LibellÃ©.ToString ();
+			var lib2 = suivante.LibellÃ©.ToString ();
 
-			//	Exemples d'écritures possibles:
+			//	Exemples d'Ã©critures possibles:
 
 			//	4200 ...  Achats Roger, (IPM) net
 			//	1170 ...  Achats Roger, 7.6% de TVA (IPM)
 
 			//	5283 ...  Invitation client, (IPFREP) net
-			//	1171 ...  Invitation client, 7.6% de TVA déduit à 50.00%
+			//	1171 ...  Invitation client, 7.6% de TVA dÃ©duit Ã  50.00%
 
 			//	...  3900 Escompte net
 			//	...  2200 Part TVA escompte (TVA)
 
-			//	Cherche le code TVA, dans le 2ème libellé puis dans le 1er.
-			string code = CrésusCompta.ExtractCodeTVA (lib2);
+			//	Cherche le code TVA, dans le 2Ã¨me libellÃ© puis dans le 1er.
+			string code = CrÃ©susCompta.ExtractCodeTVA (lib2);
 			if (string.IsNullOrEmpty (code))
 			{
-				code = CrésusCompta.ExtractCodeTVA (lib1);
+				code = CrÃ©susCompta.ExtractCodeTVA (lib1);
 				if (string.IsNullOrEmpty (code))
 				{
 					return false;
@@ -800,74 +800,74 @@ namespace Epsitec.Cresus.Compta.IO
 				return false;
 			}
 
-			//	Cherche le taux, dans le 2ème libellé puis en le calculant.
-			decimal? taux = CrésusCompta.GetTaux (lib2);
+			//	Cherche le taux, dans le 2Ã¨me libellÃ© puis en le calculant.
+			decimal? taux = CrÃ©susCompta.GetTaux (lib2);
 			if (!taux.HasValue)
 			{
-				taux = CrésusCompta.GetTaux (écriture.Montant, suivante.Montant);
+				taux = CrÃ©susCompta.GetTaux (Ã©criture.Montant, suivante.Montant);
 			}
 			if (!taux.HasValue)
 			{
 				return false;
 			}
 
-			écriture.Type              = (int) TypeEcriture.BaseTVA;
-			écriture.OrigineTVA        = (compteBase == écriture.Débit) ? "D" : "C";
-			écriture.Libellé           = CrésusCompta.SimplifyLibellé (lib1);
-			écriture.MontantComplément = suivante.Montant;
-			écriture.CodeTVA           = codeTVA;
-			écriture.TauxTVA           = taux;
+			Ã©criture.Type              = (int) TypeEcriture.BaseTVA;
+			Ã©criture.OrigineTVA        = (compteBase == Ã©criture.DÃ©bit) ? "D" : "C";
+			Ã©criture.LibellÃ©           = CrÃ©susCompta.SimplifyLibellÃ© (lib1);
+			Ã©criture.MontantComplÃ©ment = suivante.Montant;
+			Ã©criture.CodeTVA           = codeTVA;
+			Ã©criture.TauxTVA           = taux;
 
 			suivante.Type              = (int) TypeEcriture.CodeTVA;
-			suivante.OrigineTVA        = (compteBase == écriture.Débit) ? "D" : "C";
-			suivante.Libellé           = écriture.Libellé;
-			suivante.MontantComplément = écriture.Montant;
+			suivante.OrigineTVA        = (compteBase == Ã©criture.DÃ©bit) ? "D" : "C";
+			suivante.LibellÃ©           = Ã©criture.LibellÃ©;
+			suivante.MontantComplÃ©ment = Ã©criture.Montant;
 			suivante.CodeTVA           = codeTVA;
 			suivante.TauxTVA           = taux;
 
 			if (encore != null)
 			{
 				string ending = string.Concat (" Total, (", codeTVA.Code, ")");
-				var lib = encore.Libellé.ToString ();
+				var lib = encore.LibellÃ©.ToString ();
 
 				if (lib.EndsWith (ending))
 				{
-					encore.Libellé = lib.Substring (0, lib.Length-ending.Length);
+					encore.LibellÃ© = lib.Substring (0, lib.Length-ending.Length);
 				}
 			}
 
 			return true;
 		}
 
-		private static string ExtractCodeTVA(string libellé)
+		private static string ExtractCodeTVA(string libellÃ©)
 		{
-			//	Extrait le code TVA d'un libellé.
+			//	Extrait le code TVA d'un libellÃ©.
 			//	"Eau avril, 2.4% de TVA (IPIRED)"	-> IPIRED
 			//	"Elec avril, (IPI) net"				-> IPI
 			//	"Part TVA escompte (TVA)"			-> TVA
-			if (string.IsNullOrEmpty (libellé))
+			if (string.IsNullOrEmpty (libellÃ©))
 			{
 				return null;
 			}
 
-			int i1 = libellé.LastIndexOf ('(');
+			int i1 = libellÃ©.LastIndexOf ('(');
 			if (i1 == -1)
 			{
 				return null;
 			}
 
-			int i2 = libellé.LastIndexOf (')');
+			int i2 = libellÃ©.LastIndexOf (')');
 			if (i2 == -1)
 			{
 				return null;
 			}
 
-			return libellé.Substring (i1+1, i2-i1-1);
+			return libellÃ©.Substring (i1+1, i2-i1-1);
 		}
 
 		private static decimal? GetTaux(decimal montantHT, decimal montantTVA)
 		{
-			//	Retourne le taux de TVA arrondi à une décimale.
+			//	Retourne le taux de TVA arrondi Ã  une dÃ©cimale.
 			//	HT = 255.81, TVA = 19.44 -> 0.07599 -> 0.076
 			if (montantHT == 0)
 			{
@@ -880,16 +880,16 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private static decimal? GetTaux(string libellé)
+		private static decimal? GetTaux(string libellÃ©)
 		{
-			//	Retourne le taux de TVA contenu dans un libellé.
+			//	Retourne le taux de TVA contenu dans un libellÃ©.
 			//	"Eau avril, 2.4% de TVA (IPIRED)"	-> 0.024
-			if (string.IsNullOrEmpty (libellé))
+			if (string.IsNullOrEmpty (libellÃ©))
 			{
 				return null;
 			}
 
-			var words = libellé.Replace (",", " ").Split (' ');
+			var words = libellÃ©.Replace (",", " ").Split (' ');
 
 			foreach (var word in words)
 			{
@@ -907,32 +907,32 @@ namespace Epsitec.Cresus.Compta.IO
 			return null;
 		}
 
-		private static string SimplifyLibellé(string libellé)
+		private static string SimplifyLibellÃ©(string libellÃ©)
 		{
-			//	Simplifie le libellé de base.
+			//	Simplifie le libellÃ© de base.
 			//	"Elec mars, (IPI) net" -> "Elec mars"
-			if (string.IsNullOrEmpty (libellé))
+			if (string.IsNullOrEmpty (libellÃ©))
 			{
 				return null;
 			}
 
-			int i = libellé.LastIndexOf (',');
+			int i = libellÃ©.LastIndexOf (',');
 			if (i == -1)
 			{
-				return libellé;
+				return libellÃ©;
 			}
 
-			return libellé.Substring (0, i);
+			return libellÃ©.Substring (0, i);
 		}
 		#endregion
 
 
 		#region Budgets
-		private void GenerateBudgets(ComptaPériodeEntity période)
+		private void GenerateBudgets(ComptaPÃ©riodeEntity pÃ©riode)
 		{
-			//	Hack qui génère des montants bidons au budget.
+			//	Hack qui gÃ©nÃ¨re des montants bidons au budget.
 			var m = new SoldesJournalManager (this.compta);
-			m.Initialize (période.Journal);
+			m.Initialize (pÃ©riode.Journal);
 
 			decimal[] factors = {1.25m, 2.50m, 0.50m, 0.75m, 1.50m};
 
@@ -946,7 +946,7 @@ namespace Epsitec.Cresus.Compta.IO
 					var budget = new ComptaBudgetEntity ();
 					var factor = factors[(i++)%factors.Length];
 
-					budget.Période = période;
+					budget.PÃ©riode = pÃ©riode;
 					budget.Montant = solde.Value*factor;
 
 					compte.Budgets.Add (budget);

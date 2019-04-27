@@ -91,7 +91,7 @@ namespace Epsitec.Common.Tests.Widgets
 			Assert.AreEqual (12, dyMeasure.Min);
 			Assert.AreEqual (30, dyMeasure.Max);
 
-			//	Au sein d'une même passe de layout, un minimum ne peut que croître
+			//	Au sein d'une mÃªme passe de layout, un minimum ne peut que croÃ®tre
 			//	et un maximum que diminuer.
 			
 			c1.MinWidth = 15;
@@ -199,8 +199,8 @@ namespace Epsitec.Common.Tests.Widgets
 			c1.MinWidth = 20;
 			c1.MinHeight = 10;
 
-			Assert.AreEqual (2, context.MeasureQueueLength);	//	"c1" et "a" à mesurer
-			Assert.AreEqual (1, context.ArrangeQueueLength);	//	"a" à arranger
+			Assert.AreEqual (2, context.MeasureQueueLength);	//	"c1" et "a" Ã  mesurer
+			Assert.AreEqual (1, context.ArrangeQueueLength);	//	"a" Ã  arranger
 
 			context.ExecuteMeasure ();
 
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 			LayoutContext context = VisualTree.GetLayoutContext (a);
 
-			//	Oublie tout ce qui a pu être généré par la construction de l'arbre
+			//	Oublie tout ce qui a pu Ãªtre gÃ©nÃ©rÃ© par la construction de l'arbre
 			//	ci-dessus :
 
 			context.ExecuteArrange ();
@@ -312,7 +312,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 			LayoutContext context = VisualTree.GetLayoutContext (a);
 
-			//	Oublie tout ce qui a pu être généré par la construction de l'arbre
+			//	Oublie tout ce qui a pu Ãªtre gÃ©nÃ©rÃ© par la construction de l'arbre
 			//	ci-dessus :
 
 			context.ExecuteArrange ();

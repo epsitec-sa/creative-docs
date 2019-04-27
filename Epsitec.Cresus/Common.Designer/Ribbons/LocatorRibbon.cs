@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Locator correspond aux commandes de navigation précédent/suivant.
+	/// La classe Locator correspond aux commandes de navigation prÃ©cÃ©dent/suivant.
 	/// </summary>
 	public class LocatorRibbon : AbstractRibbon
 	{
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonPrev == null )  return;
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		private void HandleListPressed(object sender, MessageEventArgs e)
 		{
-			//	Bouton pour ouvrir la liste cliqué.
+			//	Bouton pour ouvrir la liste cliquÃ©.
 			if (!this.designerApplication.HasCurrentModule)
 			{
 				return;

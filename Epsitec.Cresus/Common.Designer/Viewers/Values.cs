@@ -8,7 +8,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public class Values : AbstractCaptions
 	{
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override double GetColumnWidth(int column)
 		{
-			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			//	Retourne la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				return Values.columnWidthHorizontal[column];
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void SetColumnWidth(int column, double value)
 		{
-			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			//	MÃ©morise la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				Values.columnWidthHorizontal[column] = value;
@@ -141,8 +141,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				//	Il n'est pas possible de créer ou de supprimer une ressource, puisque cela
-				//	se fait depuis l'éditeur d'entités.
+				//	Il n'est pas possible de crÃ©er ou de supprimer une ressource, puisque cela
+				//	se fait depuis l'Ã©diteur d'entitÃ©s.
 				return false;
 			}
 		}

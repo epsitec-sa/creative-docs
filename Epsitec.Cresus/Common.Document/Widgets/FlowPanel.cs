@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// Conteneur qui place les widgets contenus comme des caractËres dans un texte.
+	/// Conteneur qui place les widgets contenus comme des caract√®res dans un texte.
 	/// </summary>
 	public class FlowPanel : Widget
 	{
@@ -24,26 +24,26 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void MeasureMinMax(ref Size min, ref Size max)
 		{
-			//	AppelÈ dans une premiËre passe pour prendre note des besoins du widget.
+			//	Appel√© dans une premi√®re passe pour prendre note des besoins du widget.
 			base.MeasureMinMax(ref min, ref max);
 
-			double h = this.Justif(false);  // calcule la hauteur nÈcessaire
+			double h = this.Justif(false);  // calcule la hauteur n√©cessaire
 			min.Height = h;
 			max.Height = h;
 		}
 
 		protected override void ManualArrange()
 		{
-			//	AppelÈ dans une deuxiËme passe pour arranger les widgets.
+			//	Appel√© dans une deuxi√®me passe pour arranger les widgets.
 			base.ManualArrange();
 
-			this.Justif(true);  // dÈplace les widgets enfants
+			this.Justif(true);  // d√©place les widgets enfants
 		}
 
 		protected double Justif(bool setManuelBounds)
 		{
-			//	Justifie tous les widgets contenus comme des caractËres dans un paragraphe en drapeau.
-			//	Retourne la hauteur nÈcessaire.
+			//	Justifie tous les widgets contenus comme des caract√®res dans un paragraphe en drapeau.
+			//	Retourne la hauteur n√©cessaire.
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(this.Padding);
 			rect.Deflate(this.GetInternalPadding());
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document.Widgets
 					i++;
 				}
 
-				if (x+childWidth > rect.Width || i == this.Children.Count)  // dÈpasse ‡ droite, ou dernier ?
+				if (x+childWidth > rect.Width || i == this.Children.Count)  // d√©passe √† droite, ou dernier ?
 				{
 					if (i == first)  // aucune place ?
 					{
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public override void PaintHandler(Graphics graphics, Rectangle repaint, IPaintFilter paintFilter)
 		{
-			//	PaintHandler exÈcute dans l'ordre:
+			//	PaintHandler ex√©cute dans l'ordre:
 			//	1.	PaintBackgroundImplementation
 			//	2.	PaintHandler de tous les enfants
 			//	3.	PaintForegroundImplementation

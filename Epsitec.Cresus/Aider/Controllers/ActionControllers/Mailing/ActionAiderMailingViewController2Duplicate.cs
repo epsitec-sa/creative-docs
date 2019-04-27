@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Override;
@@ -51,12 +51,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (string.IsNullOrEmpty (newName))
 			{
-				Logic.BusinessRuleException (this.Entity, "L'intitulé est obligatoire.");
+				Logic.BusinessRuleException (this.Entity, "L'intitulÃ© est obligatoire.");
 			}
 
 			if (cat.IsNull ())
 			{
-				Logic.BusinessRuleException (this.Entity, "La catégorie est obligatoire.");
+				Logic.BusinessRuleException (this.Entity, "La catÃ©gorie est obligatoire.");
 			}
 
 			var copy = AiderMailingEntity.Create (this.BusinessContext, aiderUser, newName, newDesc, cat, isReady: false);
@@ -84,7 +84,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			form
 				.Title (this.GetTitle ())
 				.Field<string> ()
-					.Title ("Nouvel Intitulé")
+					.Title ("Nouvel IntitulÃ©")
 					.InitialValue ("Copie de " + this.Entity.Name)
 				.End ()
 				.Field<string> ()
@@ -93,7 +93,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.End ()
 				.Field<AiderMailingCategoryEntity> ()
 					.WithFavorites (categories, favoritesOnly: true)
-					.Title ("Catégorie")
+					.Title ("CatÃ©gorie")
 					.InitialValue(this.Entity.Category)
 				.End ()
 			.End ();

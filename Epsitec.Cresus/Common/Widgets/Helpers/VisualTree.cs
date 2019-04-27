@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -786,8 +786,8 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public static Visual FindParentUsingEvent(Visual visual, Types.DependencyProperty property)
 		{
-			//	Cherche le premier parent dans la hiérarchie pour lequel un
-			//	événement a été attaché pour la propriété spécifiée.
+			//	Cherche le premier parent dans la hiÃ©rarchie pour lequel un
+			//	Ã©vÃ©nement a Ã©tÃ© attachÃ© pour la propriÃ©tÃ© spÃ©cifiÃ©e.
 			
 			if (visual != null)
 			{

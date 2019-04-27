@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,10 +9,10 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Simule un affichage à 7 segments et un point décimal pour afficher un digit.
-	/// Il est possible de représenter une valeur hexadécimale (propriété HexValue)
-	/// ou d'allumer n'importes quels segments (propriété SegmentValue).
-	/// Les proportions idéales sont une hauteur 1.5x plus grande que la largeur.
+	/// Simule un affichage Ã  7 segments et un point dÃ©cimal pour afficher un digit.
+	/// Il est possible de reprÃ©senter une valeur hexadÃ©cimale (propriÃ©tÃ© HexValue)
+	/// ou d'allumer n'importes quels segments (propriÃ©tÃ© SegmentValue).
+	/// Les proportions idÃ©ales sont une hauteur 1.5x plus grande que la largeur.
 	/// </summary>
 	public class Digit : Widget
 	{
@@ -25,7 +25,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			TopLeft     = 0x10,  // segment vertical
 			Top         = 0x20,  // segment horizontal
 			Middle      = 0x40,  // segment horizontal
-			Dot         = 0x80,  // point décimal en bas à droite
+			Dot         = 0x80,  // point dÃ©cimal en bas Ã  droite
 		}
 
 
@@ -41,7 +41,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public DigitSegment SegmentValue
 		{
-			//	Segments allumés.
+			//	Segments allumÃ©s.
 			get
 			{
 				return this.segmentValue;
@@ -58,8 +58,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int HexValue
 		{
-			//	Valeur hexadécimale [0..15] représentée.
-			//	Retourne -1 si les segments correspondent à autre chose.
+			//	Valeur hexadÃ©cimale [0..15] reprÃ©sentÃ©e.
+			//	Retourne -1 si les segments correspondent Ã  autre chose.
 			get
 			{
 				return Digit.SegmentToHex(this.SegmentValue);
@@ -86,8 +86,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected static int SegmentToHex(DigitSegment segment)
 		{
-			//	Retourne la valeur [0..15] correspondant aux segments allumés.
-			//	Retourne -1 si les segments correspondent à autre chose.
+			//	Retourne la valeur [0..15] correspondant aux segments allumÃ©s.
+			//	Retourne -1 si les segments correspondent Ã  autre chose.
 			for (int i=0; i<Digit.HexTable.Length; i++)
 			{
 				if (segment == Digit.HexTable[i])
@@ -206,7 +206,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected Point GetSegmentPoint(double x, double y)
 		{
-			//	Retourne les coordonnées d'un point d'un segment.
+			//	Retourne les coordonnÃ©es d'un point d'un segment.
 			Rectangle rect = this.Client.Bounds;
 			return new Point(rect.Left+rect.Width*x, rect.Bottom+rect.Height*y);
 		}

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Database
 			TypeConverter.sysTypeToSimpleType = new Dictionary<System.Type, DbSimpleType> ();
 			
 			//	Remplit la table de correspondances entre les types natifs et les types
-			//	simplifiés. Cette table est utilisée par la méthode IsCompatibleToSimpleType
+			//	simplifiÃ©s. Cette table est utilisÃ©e par la mÃ©thode IsCompatibleToSimpleType
 			
 			TypeConverter.sysTypeToSimpleType[typeof (bool)]    = DbSimpleType.Decimal;
 			TypeConverter.sysTypeToSimpleType[typeof (byte)]    = DbSimpleType.Decimal;
@@ -313,8 +313,8 @@ namespace Epsitec.Cresus.Database
 					
 					if (numDef.InternalRawType == DbRawType.Unknown)
 					{
-						//	Ce n'est pas un type numérique standard, donc il faut prévoir
-						//	une conversion éventuelle.
+						//	Ce n'est pas un type numÃ©rique standard, donc il faut prÃ©voir
+						//	une conversion Ã©ventuelle.
 						
 						int bits = numDef.MinimumBits;
 						
@@ -441,10 +441,10 @@ namespace Epsitec.Cresus.Database
 			{
 				case DbSimpleType.Decimal:
 					
-					//	Le type numérique "Decimal" regroupe tous les types numériques stockés dans la
-					//	base de données. Il faut donc convertir le type utilisé par ADO.NET en son type
-					//	générique, en faisant attention aux types nécessitant une conversion supplémen-
-					//	taire (dénotés par IsConversionNeeded).
+					//	Le type numÃ©rique "Decimal" regroupe tous les types numÃ©riques stockÃ©s dans la
+					//	base de donnÃ©es. Il faut donc convertir le type utilisÃ© par ADO.NET en son type
+					//	gÃ©nÃ©rique, en faisant attention aux types nÃ©cessitant une conversion supplÃ©men-
+					//	taire (dÃ©notÃ©s par IsConversionNeeded).
 					
 					decimal num;
 					
@@ -562,16 +562,16 @@ namespace Epsitec.Cresus.Database
 				case DbSimpleType.Decimal:
 					System.Diagnostics.Debug.Assert (value is decimal);
 					
-					//	Le type simplifié numérique "Decimal" est toujours représenté au moyen du
-					//	type decimal de .NET. Par contre, son type ADO.NET peut être très différent,
-					//	en fonction des définitions numériques fournies par numDef.
+					//	Le type simplifiÃ© numÃ©rique "Decimal" est toujours reprÃ©sentÃ© au moyen du
+					//	type decimal de .NET. Par contre, son type ADO.NET peut Ãªtre trÃ¨s diffÃ©rent,
+					//	en fonction des dÃ©finitions numÃ©riques fournies par numDef.
 					//
 					//	En particulier:
 					//
-					//	- Entiers 16, 32 et 64-bits, booléens, stockés comme tels.
-					//	- Nombres à virgule fixe (SmallDecimal, LargeDecimal) stockés comme tels.
-					//	- Autres formats à virgule ou offset, nécessitant une conversion vers un
-					//	  format numérique neutre Int64.
+					//	- Entiers 16, 32 et 64-bits, boolÃ©ens, stockÃ©s comme tels.
+					//	- Nombres Ã  virgule fixe (SmallDecimal, LargeDecimal) stockÃ©s comme tels.
+					//	- Autres formats Ã  virgule ou offset, nÃ©cessitant une conversion vers un
+					//	  format numÃ©rique neutre Int64.
 					
 					decimal num = (decimal) value;
 					
@@ -585,9 +585,9 @@ namespace Epsitec.Cresus.Database
 						case DbRawType.LargeDecimal:	return num;
 					}
 					
-					//	Le format numérique est vraiment particulier... il faut le convertir en
-					//	quelque chose d'universellement stockable (int) et déterminer ensuite
-					//	la précision requise.
+					//	Le format numÃ©rique est vraiment particulier... il faut le convertir en
+					//	quelque chose d'universellement stockable (int) et dÃ©terminer ensuite
+					//	la prÃ©cision requise.
 					
 					long i64 = numDef.ConvertToInt64 (num);
 					

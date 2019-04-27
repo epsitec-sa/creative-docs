@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Déroger vers...");
+			return Resources.Text ("DÃ©roger vers...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -45,14 +45,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var defaultDestParish	= this.BusinessContext.GetLocalEntity (aiderUser.Office.ParishGroup);
 
 			form
-				.Title ("Déroger vers...")
+				.Title ("DÃ©roger vers...")
 				.Field<AiderGroupEntity> ()
 					.Title ("Paroisse")
 					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
 					.InitialValue (this.Entity.GetDerogationGeoParishGroup (this.BusinessContext) ?? defaultDestParish)
 				.End ()
 				.Field<Date> ()
-					.Title ("Date de la dérogation")
+					.Title ("Date de la dÃ©rogation")
 					.InitialValue (Date.Today)
 				.End ()
 			.End ();
@@ -67,7 +67,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (!user.CanDerogateTo (derogationParishGroup))
 			{
-				throw new BusinessRuleException ("Vos droits ne vous permettent pas de déroger vers cette paroisse");
+				throw new BusinessRuleException ("Vos droits ne vous permettent pas de dÃ©roger vers cette paroisse");
 			}
 
 			System.Diagnostics.Trace.WriteLine ("Derogating from " + currentParishGroup.Name);

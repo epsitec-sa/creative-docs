@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter une répondance...");
+			return Resources.Text ("Ajouter une rÃ©pondance...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -44,12 +44,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if(user.IsAdmin ())
 			{
 				form
-					.Title ("Ajouter une répondance")
+					.Title ("Ajouter une rÃ©pondance")
 					.Field<AiderGroupEntity> ()
-						.Title ("Région")
+						.Title ("RÃ©gion")
 					.End ()
 					.Field<EmployeeReferenceType> ()
-						.Title ("Répondance")
+						.Title ("RÃ©pondance")
 					.End ()
 				.End ();
 			}
@@ -57,14 +57,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				var region = user.Office.ParishGroup.GetRootGroup ();
 				form
-					.Title ("Ajouter une répondance")
+					.Title ("Ajouter une rÃ©pondance")
 					.Field<AiderGroupEntity> ()
-						.Title ("Région")
+						.Title ("RÃ©gion")
 						.InitialValue (this.BusinessContext.GetLocalEntity (region))
 						.ReadOnly ()
 					.End ()
 					.Field<EmployeeReferenceType> ()
-						.Title ("Répondance")
+						.Title ("RÃ©pondance")
 					.End ()
 				.End ();			
 			}
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 			if (group.IsRegion () == false)
 			{
-				throw new BusinessRuleException ("Le groupe ne fait pas référence à une région");
+				throw new BusinessRuleException ("Le groupe ne fait pas rÃ©fÃ©rence Ã  une rÃ©gion");
 			}
 
 			var referee = this.BusinessContext.CreateAndRegisterEntity<AiderRefereeEntity> ();

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Simule un bouton poussoir généralement carré.
+	/// Simule un bouton poussoir gÃ©nÃ©ralement carrÃ©.
 	/// </summary>
 	public class PushButton : Button
 	{
@@ -62,12 +62,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			
 			if ( this.BackColor.IsTransparent )
 			{
-				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement défini
+				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement dÃ©fini
 				//	comme "transparent".
 			}
 			else
 			{
-				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
+				//	Ne reproduit pas l'Ã©tat sÃ©lectionnÃ© si on peint nous-mÃªme le fond du bouton.
 				Rectangle rectExt = rect;
 				Path pathExt = new Path();
 				pathExt.AppendRoundedRectangle(rectExt, little?3:5);

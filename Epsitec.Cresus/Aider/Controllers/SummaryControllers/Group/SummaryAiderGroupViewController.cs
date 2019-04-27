@@ -1,4 +1,4 @@
-//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			else
 			{
 				wall.AddBrick ()
-						.Title ("Groupe hors d'accès")
+						.Title ("Groupe hors d'accÃ¨s")
 						.Text ("Vos droits ne vous permettent pas de consulter ce groupe");
 			}
 		}

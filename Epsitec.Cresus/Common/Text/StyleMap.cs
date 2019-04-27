@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe StyleMap permet de faire correspondre des styles à des noms
+	/// La classe StyleMap permet de faire correspondre des styles Ã  des noms
 	/// de haut niveau, tels que vus par l'utilisateur.
 	/// </summary>
 	public sealed class StyleMap : System.Collections.IEnumerable
@@ -194,8 +194,8 @@ namespace Epsitec.Common.Text
 				this.rankHash[key] = entry.Value;
 			}
 			
-			//	Construit encore le dictionnaire inverse utilisé pour retrouver
-			//	rapidement un style d'après son nom (caption) :
+			//	Construit encore le dictionnaire inverse utilisÃ© pour retrouver
+			//	rapidement un style d'aprÃ¨s son nom (caption) :
 			
 			foreach (System.Collections.DictionaryEntry entry in this.tStyleHash)
 			{

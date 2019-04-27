@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	/// <summary>
-	/// Boîte pour représenter un lien entre des entités.
+	/// BoÃ®te pour reprÃ©senter un lien entre des entitÃ©s.
 	/// </summary>
 	public class ObjectConnection : AbstractObject
 	{
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Field Field
 		{
-			//	Champ de référence pour la connection.
+			//	Champ de rÃ©fÃ©rence pour la connection.
 			get
 			{
 				return this.field;
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public ObjectComment Comment
 		{
-			//	Commentaire lié.
+			//	Commentaire liÃ©.
 			get
 			{
 				return this.comment;
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public List<Point> Points
 		{
-			//	Retourne la liste des points. Si la connection est fermée, il s'agit des points
+			//	Retourne la liste des points. Si la connection est fermÃ©e, il s'agit des points
 			//	droite et gauche. Aurement, il s'agit d'un nombre variable de points.
 			get
 			{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsSrcHilited
 		{
-			//	Indique si la boîte source est survolée par la souris.
+			//	Indique si la boÃ®te source est survolÃ©e par la souris.
 			get
 			{
 				return this.isSrcHilited;
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override Rectangle Bounds
 		{
-			//	Retourne la boîte de l'objet.
+			//	Retourne la boÃ®te de l'objet.
 			get
 			{
 				Rectangle bounds = Rectangle.Empty;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			for (int i=0; i<this.points.Count; i++)
 			{
 				this.points[i] = new Point(this.points[i].X+dx, this.points[i].Y+dy);
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	La souris est bougée.
+			//	La souris est bougÃ©e.
 			if (this.isDraggingRoute)
 			{
 				this.RouteMove(pos);
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			if (this.hilitedElement == ActiveElement.ConnectionMove1 ||
 				this.hilitedElement == ActiveElement.ConnectionMove2)
 			{
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			if (this.isDraggingRoute)
 			{
 				this.isDraggingRoute = false;
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						ObjectBox box = this.editor.SearchBox (item.Name);
 						if (box == null)
 						{
-							//	Ouvre la connection sur une nouvelle boîte.
+							//	Ouvre la connection sur une nouvelle boÃ®te.
 							box = new ObjectBox (this.editor);
 							box.BackgroundMainColor = this.boxColor;
 							box.SetContent (item);
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							bounds.Location = new Point(src.Bounds.Right+ox, src.Bounds.Top-box.Bounds.Height);
 						}
 #else
-							//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+							//	Essaie de trouver une place libre, pour dÃ©placer le moins possible d'Ã©lÃ©ments.
 							Rectangle bounds;
 							double posv = src.GetConnectionSrcVerticalPosition (this.field.Index) - (Editor.connectionDetour+12);
 
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							//	Ouvre la connection sur une boîte existante.
+							//	Ouvre la connection sur une boÃ®te existante.
 							this.field.DstBox = box;
 							this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
 						}
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			element = ActiveElement.None;
 			fieldRank = -1;
 
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return false;
 			}
 
-			//	Souris dans la pastille ronde du départ de la connection ?
+			//	Souris dans la pastille ronde du dÃ©part de la connection ?
 			if (this.field.IsSourceExpanded)
 			{
 				if (this.field.IsExplored)
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return true;
 			}
 
-			//	Souris dans le bouton pour déplacer le point milieu ?
+			//	Souris dans le bouton pour dÃ©placer le point milieu ?
 			if (this.DetectRoundButton(pos, this.PositionRouteMove1))
 			{
 				element = ActiveElement.ConnectionMove1;
@@ -353,7 +353,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private bool DetectOver(Point pos, double margin)
 		{
-			//	Détecte si la souris est le long de la connection.
+			//	DÃ©tecte si la souris est le long de la connection.
 			if (this.points.Count >= 2 && this.field.IsExplored)
 			{
 				for (int i=0; i<this.points.Count-1; i++)
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void AddComment()
 		{
-			//	Ajoute un commentaire à la connection.
+			//	Ajoute un commentaire Ã  la connection.
 			if (this.comment == null)
 			{
 				this.comment = new ObjectComment(this.editor);
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.AddComment(this.comment);
 				this.editor.UpdateAfterCommentChanged();
 
-				this.comment.EditComment();  // édite tout de suite le texte du commentaire
+				this.comment.EditComment();  // Ã©dite tout de suite le texte du commentaire
 			}
 			else
 			{
@@ -480,7 +480,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.points.Count != 0 && this.field.IsSourceExpanded)
 			{
-				//	Dessine les cercles aux points de départ.
+				//	Dessine les cercles aux points de dÃ©part.
 				for (int i=0; i<this.points.Count; i++)
 				{
 					Point start = this.points[i];
@@ -541,7 +541,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Dessine le bouton pour déplacer le point milieu.
+			//	Dessine le bouton pour dÃ©placer le point milieu.
 			Point m = this.PositionRouteMove1;
 			if (!m.IsZero)
 			{
@@ -573,8 +573,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private bool IsConnectionCommentButton
 		{
 			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
-			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
-			//	le bouton CommentAttachToConnection pour déplacer le point d'attache.
+			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a dÃ©jÃ 
+			//	le bouton CommentAttachToConnection pour dÃ©placer le point d'attache.
 			get
 			{
 				return (this.comment == null || !this.comment.IsVisible);
@@ -583,7 +583,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Point PositionConnectionComment
 		{
-			//	Retourne la position du bouton pour commenter la connection, ou pour déplacer
+			//	Retourne la position du bouton pour commenter la connection, ou pour dÃ©placer
 			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
@@ -599,8 +599,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private Point AttachToPoint(double d)
 		{
 			//	Conversion d'une distance le long de la connection en position.
-			//	Une distance positive commence depuis le début de la connection.
-			//	Une distance négative commence depuis la fin de la connection.
+			//	Une distance positive commence depuis le dÃ©but de la connection.
+			//	Une distance nÃ©gative commence depuis la fin de la connection.
 			if (this.points.Count < 2)
 			{
 				return Point.Zero;
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			bool fromBegin = true;
-			if (d < 0)  // attaché depuis la fin ?
+			if (d < 0)  // attachÃ© depuis la fin ?
 			{
 				d = d+total;
 				fromBegin = false;
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			d = System.Math.Min(d, total-AbstractObject.minAttach);
 			d = System.Math.Max(d, AbstractObject.minAttach);
 
-			if (fromBegin)  // attaché depuis le début ?
+			if (fromBegin)  // attachÃ© depuis le dÃ©but ?
 			{
 				for (int i=0; i<this.points.Count-1; i++)
 				{
@@ -637,7 +637,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 			}
-			else  // attaché depuis la fin ?
+			else  // attachÃ© depuis la fin ?
 			{
 				d = total-d;
 				for (int i=this.points.Count-2; i>=0; i--)
@@ -659,8 +659,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double PointToAttach(Point p)
 		{
-			//	Conversion d'une position le long de la connection en distance depuis le début (si positif)
-			//	ou depuis la fin (si négatif).
+			//	Conversion d'une position le long de la connection en distance depuis le dÃ©but (si positif)
+			//	ou depuis la fin (si nÃ©gatif).
 			if (this.points.Count < 2)
 			{
 				return 0;
@@ -702,7 +702,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (dj > total/2)  // plus proche de la fin ?
 			{
-				dj = dj-total;  // attaché depuis la fin (valeur négative)
+				dj = dj-total;  // attachÃ© depuis la fin (valeur nÃ©gative)
 			}
 
 			return dj;
@@ -843,19 +843,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			Point newPos = this.PositionConnectionComment;  // point d'attache après re-routage
+			Point newPos = this.PositionConnectionComment;  // point d'attache aprÃ¨s re-routage
 
 			if (this.comment != null)
 			{
 				Rectangle bounds = this.comment.Bounds;
 				bounds.Offset(newPos-oldPos);
-				this.comment.SetBounds(bounds);  // déplace le commentaire
+				this.comment.SetBounds(bounds);  // dÃ©place le commentaire
 			}
 		}
 
 		public void UpdateRoute()
 		{
-			//	Met à jour le routage de la connection, dans les cas ou le routage dépend des choix de l'utilisateur.
+			//	Met Ã  jour le routage de la connection, dans les cas ou le routage dÃ©pend des choix de l'utilisateur.
 			retry:
 			if (this.field.Route == Field.RouteType.A)
 			{
@@ -890,7 +890,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						d2 = System.Math.Max(d2, ObjectConnection.arrowMinimalLength);
 						if (d2 > d1)
 						{
-							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
+							this.field.RouteAbsoluteAYClear();  // revient Ã  un cas simple, puis recommencer le routage
 							goto retry;
 						}
 					}
@@ -899,7 +899,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						d2 = -System.Math.Max(-d2, ObjectConnection.arrowMinimalLength);
 						if (d2 < d1)
 						{
-							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
+							this.field.RouteAbsoluteAYClear();  // revient Ã  un cas simple, puis recommencer le routage
 							goto retry;
 						}
 					}
@@ -959,7 +959,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.field.Route == Field.RouteType.C)
 			{
-				//	Met à jour les points milieu de la connection.
+				//	Met Ã  jour les points milieu de la connection.
 				double d = this.points[3].X-this.points[0].X;
 				double d1 = d*this.field.RouteRelativeCX;
 

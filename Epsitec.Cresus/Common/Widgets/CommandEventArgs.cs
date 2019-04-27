@@ -1,4 +1,4 @@
-//	Copyright © 2003-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -110,8 +110,8 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// Le delegate CommandEventHandler permet d'exécuter une commande envoyée
-	/// par un CommandDispatcher et décrite par l'événement associé.
+	/// Le delegate CommandEventHandler permet d'exÃ©cuter une commande envoyÃ©e
+	/// par un CommandDispatcher et dÃ©crite par l'Ã©vÃ©nement associÃ©.
 	/// </summary>
 	public delegate void CommandEventHandler(CommandDispatcher sender, CommandEventArgs e);
 }

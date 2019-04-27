@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -29,8 +29,8 @@ namespace Epsitec.Common.Widgets.Layouts
 					(dock == DockStyle.StackFill) ||
 					(dock == DockStyle.StackEnd))
 				{
-					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
-					//	positionnés par d'autres moyens.
+					//	Saute les widgets qui ne sont pas "docked", car ils doivent Ãªtre
+					//	positionnÃ©s par d'autres moyens.
 					
 					continue;
 				}
@@ -53,11 +53,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (dx.IsSafeNaN ())
 				{
-					dx = child.GetCurrentBounds ().Width;		//	TODO: améliorer
+					dx = child.GetCurrentBounds ().Width;		//	TODO: amÃ©liorer
 				}
 				if (dy.IsSafeNaN ())
 				{
-					dy = child.GetCurrentBounds ().Height;		//	TODO: améliorer
+					dy = child.GetCurrentBounds ().Height;		//	TODO: amÃ©liorer
 				}
 
 				dx += child.Margins.Width;
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
-			//	Décompose les dimensions comme suit :
+			//	DÃ©compose les dimensions comme suit :
 			//
 			//	|											|
 			//	|<---minOx1--->| zone de travail |<-minOx2->|
@@ -204,8 +204,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			//	minOx = minOx1 + minOx2
 			//	minDx = minimum courant
 			//
-			//	La partie centrale (DockStyle.Fill) va s'additionner au reste de manière
-			//	indépendante au moyen du fill_min_dx.
+			//	La partie centrale (DockStyle.Fill) va s'additionner au reste de maniÃ¨re
+			//	indÃ©pendante au moyen du fill_min_dx.
 			//
 			//	Idem par analogie pour dy et max.
 

@@ -1,11 +1,11 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe SerializerSupport implémente une série de méthodes utiles
-	/// pour la sérialisation/désérialisation.
+	/// La classe SerializerSupport implÃ©mente une sÃ©rie de mÃ©thodes utiles
+	/// pour la sÃ©rialisation/dÃ©sÃ©rialisation.
 	/// </summary>
 	public sealed class SerializerSupport
 	{

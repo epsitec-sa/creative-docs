@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Common.Types
+namespace Epsitec.Common.Types
 {
 
 

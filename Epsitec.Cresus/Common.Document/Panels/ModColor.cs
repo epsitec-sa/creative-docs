@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.ModColor p = this.property as Properties.ModColor;
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.ModColor p = this.property as Properties.ModColor;
 			if ( p == null )  return;
 
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			for ( int i=0 ; i<7 ; i++ )
 			{
 				this.fieldArray[i].Visibility = (this.isExtendedSize);
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldArray == null )  return;
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleValueChanged(object sender)
 		{
-			//	Une valeur a ÈtÈ changÈe.
+			//	Une valeur a √©t√© chang√©e.
 			if ( this.ignoreChanged )  return;
 			this.ColoriseSliders();
 			this.OnChanged();

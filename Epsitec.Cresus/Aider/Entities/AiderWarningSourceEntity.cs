@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -21,7 +21,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Description, "\n", "Création:", this.CreationDate);
+			return TextFormatter.FormatText (this.Description, "\n", "CrÃ©ation:", this.CreationDate);
 		}
 
 		public override FormattedText GetCompactSummary()

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Permet d'afficher et de modifier de la mémoire émulée.
+	/// Permet d'afficher et de modifier de la mÃ©moire Ã©mulÃ©e.
 	/// </summary>
 	public class MemoryAccessor : Widget
 	{
@@ -52,7 +52,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public Components.Memory Memory
 		{
-			//	Mémoire émulée affichée/modifée par ce widget.
+			//	MÃ©moire Ã©mulÃ©e affichÃ©e/modifÃ©e par ce widget.
 			get
 			{
 				return this.memory;
@@ -71,7 +71,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public bool IsDeferUpdateData
 		{
-			//	Indique s'il faut différer UpdateData, pendant l'exécution d'un programme.
+			//	Indique s'il faut diffÃ©rer UpdateData, pendant l'exÃ©cution d'un programme.
 			get
 			{
 				return this.isDeferUpdateData;
@@ -104,7 +104,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int FirstAddress
 		{
-			//	Indique la première adresse affichée (relative dans la banque).
+			//	Indique la premiÃ¨re adresse affichÃ©e (relative dans la banque).
 			get
 			{
 				return this.firstAddress;
@@ -127,7 +127,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public string Bank
 		{
-			//	Choix de la banque affichée.
+			//	Choix de la banque affichÃ©e.
 			get
 			{
 				return this.bank;
@@ -145,13 +145,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void DirtyMarkPC()
 		{
-			//	Force le prochain MarkPC à faire son travail.
+			//	Force le prochain MarkPC Ã  faire son travail.
 			this.markPC = Misc.undefined;
 		}
 
 		public int MarkPC
 		{
-			//	Indique l'adresse pointée par le registre PC.
+			//	Indique l'adresse pointÃ©e par le registre PC.
 			get
 			{
 				return this.markPC;
@@ -199,7 +199,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			int total = (int) (this.Client.Bounds.Height/(MemoryAccessor.LineHeight+1));
@@ -216,7 +216,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void CreateFields(int total)
 		{
-			//	Crée tous les champs éditables, en fonction de la hauteur du widget.
+			//	CrÃ©e tous les champs Ã©ditables, en fonction de la hauteur du widget.
 			this.fields.Clear();
 			this.panel.Children.Clear();
 
@@ -241,7 +241,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void UpdateScroller()
 		{
-			//	Met à jour l'ascenseur.
+			//	Met Ã  jour l'ascenseur.
 			if (this.fields.Count == 0)
 			{
 				return;
@@ -252,7 +252,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.scroller.MinValue = (decimal) 0;
 				this.scroller.MaxValue = (decimal) (this.MemoryLength - this.fields.Count);
 				this.scroller.Value = (decimal) this.firstAddress;
-				this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.MemoryLength, 0.2);  // évite cabine trop petite
+				this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.MemoryLength, 0.2);  // Ã©vite cabine trop petite
 				this.scroller.LargeChange = (decimal) this.fields.Count;
 				this.scroller.SmallChange = (decimal) 1;
 				this.scroller.Enable = true;

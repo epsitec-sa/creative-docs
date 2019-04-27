@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant d'éditer un Caption.Type.
+	/// Widget permettant d'Ã©diter un Caption.Type.
 	/// </summary>
 	public class TypeEditorEnum : AbstractTypeEditor
 	{
@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.module = module;
 
-			//	Crée la toolbar.
+			//	CrÃ©e la toolbar.
 			this.groupToolbar = new ResetBox(this);
 			this.groupToolbar.IsPatch = this.module.IsPatch;
 			this.groupToolbar.Dock = DockStyle.StackBegin;
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Value = (decimal) TypeEditorEnum.arrayLineHeight;
 			this.slider.Dock = DockStyle.Right;
 
-			//	Crée l'en-tête du tableau.
+			//	CrÃ©e l'en-tÃªte du tableau.
 			this.header = new FrameBox(this);
 			this.header.Dock = DockStyle.StackBegin;
 			this.header.Margins = new Margins(0, 0, 4, 0);
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.headerIcon.Style = HeaderButtonStyle.Top;
 			this.headerIcon.Dock = DockStyle.Left;
 
-			//	Crée le tableau principal.
+			//	CrÃ©e le tableau principal.
 			this.array = new StringArray(this);
 			this.array.Columns = 3;
 			this.array.SetColumnsRelativeWidth(0, 0.40);
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override string GetSummary()
 		{
-			//	Retourne le texte du résumé.
+			//	Retourne le texte du rÃ©sumÃ©.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values);
@@ -138,14 +138,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				IList<StructuredData> list = value as IList<StructuredData>;
 				builder.Append(list.Count.ToString());
-				builder.Append("×: ");
+				builder.Append("Ã—: ");
 
 				for (int i=0; i<list.Count; i++)
 				{
 					StructuredData data = list[i];
 
 					Druid druid = (Druid) data.GetValue(Support.Res.Fields.EnumValue.CaptionId);
-					//	La valeur est forcément dans le même module que l'énumération.
+					//	La valeur est forcÃ©ment dans le mÃªme module que l'Ã©numÃ©ration.
 					CultureMap cultureMap = this.module.AccessValues.Accessor.Collection[druid];
 					string name = (cultureMap == null) ? "" : cultureMap.Name;
 					builder.Append(name);
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override void UpdateContent()
 		{
-			//	Met à jour le contenu de l'éditeur.
+			//	Met Ã  jour le contenu de l'Ã©diteur.
 			this.array.SelectedRow = -1;
 			this.UpdateArray();
 			this.UpdateButtons();
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			//	Met à jour les boutons.
+			//	Met Ã  jour les boutons.
 			bool native = this.IsNativeEnum;
 			bool prev   = false;
 			bool next   = false;
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				Druid druid;
 				CultureMapSource source;
-				this.GetDruid(sel, out druid, out source);  // Druid de la ligne sélectionnée
+				this.GetDruid(sel, out druid, out source);  // Druid de la ligne sÃ©lectionnÃ©e
 
 				lgoto = druid.IsValid;
 				patch = this.module.IsPatch && source == CultureMapSource.ReferenceModule;
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateArray()
 		{
-			//	Met à jour tout le contenu du tableau.
+			//	Met Ã  jour tout le contenu du tableau.
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (druid.IsValid)
 				{
-					//	La valeur est forcément dans le même module que l'énumération.
+					//	La valeur est forcÃ©ment dans le mÃªme module que l'Ã©numÃ©ration.
 					CultureMap cultureMap = this.module.AccessValues.Accessor.Collection[druid];
 					if (cultureMap != null)
 					{
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateReset()
 		{
-			//	Met à jour la couleur de fond du bouton 'reset'.
+			//	Met Ã  jour la couleur de fond du bouton 'reset'.
 			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
 			bool usesOriginalData;
 			this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values, out usesOriginalData);
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ArrayCreate()
 		{
-			//	Crée une nouvelle valeur dans l'énumération.
+			//	CrÃ©e une nouvelle valeur dans l'Ã©numÃ©ration.
 			string name = this.GetNewName();
 			name = this.module.DesignerApplication.DlgResourceName(Dialogs.ResourceNameDialog.Operation.Create, Dialogs.ResourceNameDialog.Type.Value, name);
 			if (string.IsNullOrEmpty(name))
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				sel = this.array.TotalRows-1;
 			}
 
-			//	Code complexe écrit par Pierre permettant de créer une nouvelle valeur pour une énumération.
+			//	Code complexe Ã©crit par Pierre permettant de crÃ©er une nouvelle valeur pour une Ã©numÃ©ration.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 
 			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessTypes.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ArrayDelete()
 		{
-			//	Supprime une valeur dans l'énumération.
+			//	Supprime une valeur dans l'Ã©numÃ©ration.
 			int sel = this.array.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 			string name = this.array.GetLineString(0, sel);
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Supprime la ressource "valeur".
-			//	Cette ressource est forcément dans le même module.
+			//	Cette ressource est forcÃ©ment dans le mÃªme module.
 			Druid druid;
 			CultureMapSource source;
 			this.GetDruid(sel, out druid, out source);
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			System.Diagnostics.Debug.Assert(cultureMap != null);
 			this.module.AccessValues.Accessor.Collection.Remove(cultureMap);
 
-			//	Supprime la valeur de la liste de l'énumération.
+			//	Supprime la valeur de la liste de l'Ã©numÃ©ration.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 			list.RemoveAt(sel);
 
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ArrayMove(int direction)
 		{
-			//	Déplace une valeur dans l'énumération.
+			//	DÃ©place une valeur dans l'Ã©numÃ©ration.
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ArrayGoto()
 		{
-			//	Va sur la valeur de l'énumération sélectionnée.
+			//	Va sur la valeur de l'Ã©numÃ©ration sÃ©lectionnÃ©e.
 			Druid druid;
 			CultureMapSource source;
 			this.GetDruid(this.array.SelectedRow, out druid, out source);
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected int EnumCount
 		{
-			//	Retourne le nombre de valeurs de l'énumération.
+			//	Retourne le nombre de valeurs de l'Ã©numÃ©ration.
 			get
 			{
 				IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void GetDruid(int index, out Druid druid, out CultureMapSource source)
 		{
-			//	Retourne le Druid d'une valeur de l'énumération.
+			//	Retourne le Druid d'une valeur de l'Ã©numÃ©ration.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 
 			if (index < 0 || index >= list.Count)
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected string GetNewName()
 		{
-			//	Cherche un nouveau nom jamais utilisé.
+			//	Cherche un nouveau nom jamais utilisÃ©.
 			for (int i=1; i<10000; i++)
 			{
 				string name = string.Format("Value", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		
 		protected bool IsNativeEnum
 		{
-			//	Indique s'il s'agit d'une énumération native.
+			//	Indique s'il s'agit d'une Ã©numÃ©ration native.
 			get
 			{
 				System.Type systemType = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType) as System.Type;
@@ -481,7 +481,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if (this.header == null)
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void HandleSliderChanged(object sender)
 		{
-			//	Appelé lorsque le slider a été déplacé.
+			//	AppelÃ© lorsque le slider a Ã©tÃ© dÃ©placÃ©.
 			if (this.array == null)
 			{
 				return;
@@ -542,25 +542,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void HandleArrayColumnsWidthChanged(object sender)
 		{
-			//	La largeur des colonnes a changé.
+			//	La largeur des colonnes a changÃ©.
 			this.UpdateClientGeometry();
 		}
 
 		private void HandleArrayCellCountChanged(object sender)
 		{
-			//	Le nombre de lignes a changé.
+			//	Le nombre de lignes a changÃ©.
 			this.UpdateArray();
 		}
 
 		private void HandleArrayCellsContentChanged(object sender)
 		{
-			//	Le contenu des cellules a changé.
+			//	Le contenu des cellules a changÃ©.
 			this.UpdateArray();
 		}
 
 		private void HandleArraySelectedRowChanged(object sender)
 		{
-			//	La ligne sélectionnée a changé.
+			//	La ligne sÃ©lectionnÃ©e a changÃ©.
 			this.UpdateButtons();
 		}
 

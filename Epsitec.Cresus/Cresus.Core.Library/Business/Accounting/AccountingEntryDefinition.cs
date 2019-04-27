@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 	public struct AccountingEntryDefinition
 	{
 		/// <summary>
-		/// Cette classe représente une écriture simple (c'est-à-dire non multiple).
+		/// Cette classe reprÃ©sente une Ã©criture simple (c'est-Ã -dire non multiple).
 		/// </summary>
 		public AccountingEntryDefinition(string debit, string credit, string description, decimal montant, string typeTva = null, string numeroTva = null, string codeTva = null, string codeAnalytique = null)
 		{

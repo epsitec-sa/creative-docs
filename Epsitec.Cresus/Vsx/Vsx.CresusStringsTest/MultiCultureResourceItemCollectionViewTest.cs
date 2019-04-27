@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Epsitec.Cresus.ResourceManagement;
 using Epsitec.Cresus.Strings.Views;

@@ -3,7 +3,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe AbstractToolBar implémente ce qui est commun à HToolBar et à VToolBar.
+	/// La classe AbstractToolBar implÃ©mente ce qui est commun Ã  HToolBar et Ã  VToolBar.
 	/// </summary>
 	public abstract class AbstractToolBar : Widget, Collections.IWidgetCollectionHost<Widget>
 	{

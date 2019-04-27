@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Culture permet de gérer les cultures.
+	/// La classe Culture permet de gÃ©rer les cultures.
 	/// </summary>
 	public class CultureRibbon : AbstractRibbon
 	{
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonNewCulture == null )  return;

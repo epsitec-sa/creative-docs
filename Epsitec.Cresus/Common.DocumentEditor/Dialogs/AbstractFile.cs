@@ -42,7 +42,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected override Rectangle GetOwnerBounds()
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			Window window = this.editor.Window;
 
 			if (window == null)

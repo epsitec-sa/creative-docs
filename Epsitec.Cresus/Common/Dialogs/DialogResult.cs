@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// L'énumération DialogResult décrit le résultat d'un choix dans un
+	/// L'Ã©numÃ©ration DialogResult dÃ©crit le rÃ©sultat d'un choix dans un
 	/// dialogue.
 	/// </summary>
 	public enum DialogResult

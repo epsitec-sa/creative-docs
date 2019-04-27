@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document
 	{
 		public SurfaceAnchor(Document document, Objects.Abstract obj)
 		{
-			//	Constructeur d'une surface liée à un document.
+			//	Constructeur d'une surface liÃ©e Ã  un document.
 			this.document = document;
 			this.obj = obj;
 			this.dirty = true;
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document
 
 		public SurfaceAnchor(Rectangle box)
 		{
-			//	Constructeur d'une surface simple rectangulaire indépendante d'un objet.
+			//	Constructeur d'une surface simple rectangulaire indÃ©pendante d'un objet.
 			this.document = null;
 			this.obj = null;
 			this.dirty = false;
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document
 
 		public void SetSurface(Rectangle rect)
 		{
-			//	Force la surface à utiliser.
+			//	Force la surface Ã  utiliser.
 			this.surfaceThin = rect;
 			this.surfaceGeom = rect;
 			this.dirty = false;
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document
 
 		public void Move(Point move)
 		{
-			//	Déplace la surface.
+			//	DÃ©place la surface.
 			if ( this.dirty )  return;
 
 			this.surfaceThin.Offset(move);
@@ -48,13 +48,13 @@ namespace Epsitec.Common.Document
 
 		public void SetDirty()
 		{
-			//	Indique que l'objet a été modifié.
+			//	Indique que l'objet a Ã©tÃ© modifiÃ©.
 			this.dirty = true;
 		}
 
 		public bool LineUse
 		{
-			//	Indique s'il faut tenir compte de l'épaisseur du trait lors
+			//	Indique s'il faut tenir compte de l'Ã©paisseur du trait lors
 			//	des conversions ToAbs et ToRel.
 			get
 			{
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document
 
 		public double Direction
 		{
-			//	Retourne la direction de l'objet lié.
+			//	Retourne la direction de l'objet liÃ©.
 			get
 			{
 				if ( this.obj == null )
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Document
 
 		public double RotateRadius
 		{
-			//	Retourne le rayon à utiliser pour la poignée des rotations.
+			//	Retourne le rayon Ã  utiliser pour la poignÃ©e des rotations.
 			get
 			{
 				this.Update();
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document
 
 		public Point ToAbs(Point rel)
 		{
-			//	Conversion d'une coordonnée relative en coordonnée absolue.
+			//	Conversion d'une coordonnÃ©e relative en coordonnÃ©e absolue.
 			this.Update();
 
 			Rectangle surface = this.Surface;
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document
 
 		public Point ToRel(Point abs)
 		{
-			//	Conversion d'une coordonnée absolue en coordonnée relative.
+			//	Conversion d'une coordonnÃ©e absolue en coordonnÃ©e relative.
 			this.Update();
 
 			if ( this.obj != null )
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Document
 
 		protected Rectangle Surface
 		{
-			//	Retourne la surface rectangulaire à utiliser.
+			//	Retourne la surface rectangulaire Ã  utiliser.
 			get
 			{
 				if ( this.lineUse )
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Document
 
 		protected void Update()
 		{
-			//	Met à jour les surfaces en fonction de l'objet.
+			//	Met Ã  jour les surfaces en fonction de l'objet.
 			if ( !this.dirty || this.obj == null )  return;
 
 			this.obj.UpdateSurfaceBox(out this.surfaceThin, out this.surfaceGeom);

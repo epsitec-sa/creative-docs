@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Cursors
 {
 	/// <summary>
-	/// La classe SimpleCursor décrit un curseur tout simple (il ne stocke que
-	/// l'identificateur interne du curseur utilisé dans TextStory).
+	/// La classe SimpleCursor dÃ©crit un curseur tout simple (il ne stocke que
+	/// l'identificateur interne du curseur utilisÃ© dans TextStory).
 	/// </summary>
 	public class SimpleCursor : ICursor
 	{

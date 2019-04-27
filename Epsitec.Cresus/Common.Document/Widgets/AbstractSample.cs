@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe AbstractSample est un widget affichant un échantillon quelconque.
+	/// La classe AbstractSample est un widget affichant un Ã©chantillon quelconque.
 	/// </summary>
 	public abstract class AbstractSample : Widget
 	{
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public Document Document
 		{
-			//	Document associé.
+			//	Document associÃ©.
 			get
 			{
 				return this.document;

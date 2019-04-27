@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -6,8 +6,8 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Viewport représente un widget qui permet de grouper d'autres widgets
-	/// tout en limitant la surface affichée à une ouverture (aperture). Un Viewport
+	/// La classe Viewport reprÃ©sente un widget qui permet de grouper d'autres widgets
+	/// tout en limitant la surface affichÃ©e Ã  une ouverture (aperture). Un Viewport
 	/// s'utilise en principe en association avec un Scrollable.
 	/// </summary>
 	public class Viewport : AbstractGroup
@@ -25,12 +25,12 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Size						SurfaceSize
 		{
-			//	La taille de la surface indique une taille minimale idéale, en-dessous de laquelle
-			//	le contenu ne sera plus entièrement visible. Scrollable utilise cette information
-			//	pour décider du moment à partir duquel afficher les ascenceurs.
+			//	La taille de la surface indique une taille minimale idÃ©ale, en-dessous de laquelle
+			//	le contenu ne sera plus entiÃ¨rement visible. Scrollable utilise cette information
+			//	pour dÃ©cider du moment Ã  partir duquel afficher les ascenceurs.
 			
-			//	Par défaut, la taille de la surface est zéro, ce qui signifie qu'il n'y aura jamais
-			//	d'ascenceurs montrés, quelle que soit la taille du panel.
+			//	Par dÃ©faut, la taille de la surface est zÃ©ro, ce qui signifie qu'il n'y aura jamais
+			//	d'ascenceurs montrÃ©s, quelle que soit la taille du panel.
 			
 			get
 			{
@@ -72,11 +72,11 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Rectangle				Aperture
 		{
-			//	L'ouverture, si elle est définie pour un panel, permet de définir quelle
-			//	partie est actuellement visible, relativement au système de coordonnées
+			//	L'ouverture, si elle est dÃ©finie pour un panel, permet de dÃ©finir quelle
+			//	partie est actuellement visible, relativement au systÃ¨me de coordonnÃ©es
 			//	client du panel.
 
-			//	Pour indiquer que le panel complet est visible, il faut assigner à Aperture
+			//	Pour indiquer que le panel complet est visible, il faut assigner Ã  Aperture
 			//	la valeur Drawing.Rectangle.MaxValue.
 
 			get
@@ -138,13 +138,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.aperture == Drawing.Rectangle.MaxValue)
 			{
-				//	Si aucune ouverture n'a été définie, elle a une taille infinie et on
-				//	peut donc utiliser la région de clipping retournée par la super-classe.
+				//	Si aucune ouverture n'a Ã©tÃ© dÃ©finie, elle a une taille infinie et on
+				//	peut donc utiliser la rÃ©gion de clipping retournÃ©e par la super-classe.
 			}
 			else
 			{
-				//	Une ouverture limite la surface visible; il faut donc réaliser
-				//	l'intersection de la région complète avec l'ouverture.
+				//	Une ouverture limite la surface visible; il faut donc rÃ©aliser
+				//	l'intersection de la rÃ©gion complÃ¨te avec l'ouverture.
 				
 				clip = Drawing.Rectangle.Intersection (clip, this.aperture);
 			}

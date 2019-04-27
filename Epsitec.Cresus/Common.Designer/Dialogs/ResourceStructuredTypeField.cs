@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir un champ d'un type structuré.
+	/// Dialogue permettant de choisir un champ d'un type structurÃ©.
 	/// </summary>
 	public class ResourceStructuredTypeField : Abstract
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();

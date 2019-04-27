@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -132,8 +132,8 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Rectangle GetButtonBounds()
 		{
-			//	Retourne le rectangle à utiliser pour les boutons Accept/Reject.
-			//	Ce rectangle est positionné en bas à droite du widget.
+			//	Retourne le rectangle Ã  utiliser pour les boutons Accept/Reject.
+			//	Ce rectangle est positionnÃ© en bas Ã  droite du widget.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle ();
 
@@ -344,8 +344,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ScrollVertical(double dist)
 		{
-			//	Décale le texte vers le haut (+) ou le bas (-), lorsque la
-			//	souris dépasse pendant une sélection.
+			//	DÃ©cale le texte vers le haut (+) ou le bas (-), lorsque la
+			//	souris dÃ©passe pendant une sÃ©lection.
 			this.scrollOffset.Y += dist;
 			Drawing.Point end = this.GetTextEndPosition ();
 			double min = System.Math.Min (end.Y, AbstractTextField.Infinity-this.realSize.Height);
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateScroller()
 		{
-			//	Met à jour l'asceuseur en fonction de this.scrollOffset.
+			//	Met Ã  jour l'asceuseur en fonction de this.scrollOffset.
 			if (this.scroller == null)
 			{
 				return;
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Widgets
 
 		private double ScrollerRightMargin
 		{
-			//	Espace horizontal occupé par l'ascenseur.
+			//	Espace horizontal occupÃ© par l'ascenseur.
 			get
 			{
 				return this.scrollerRightMargin;
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Widgets
 
 		private double ButtonsRightMargin
 		{
-			//	Espace horizontal occupé par les boutons Accept/Reject.
+			//	Espace horizontal occupÃ© par les boutons Accept/Reject.
 			get
 			{
 				return this.buttonsRightMargin;
@@ -514,8 +514,8 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateRightMargin()
 		{
-			//	Met à jour la marge droite du widget, qui dépend de l'espace occupé par l'ascenseur et de celui
-			//	occupé par les boutons Accept/Reject.
+			//	Met Ã  jour la marge droite du widget, qui dÃ©pend de l'espace occupÃ© par l'ascenseur et de celui
+			//	occupÃ© par les boutons Accept/Reject.
 			if (this.preferredLayout == TextFieldMultiExPreferredLayout.PreserveTextWidth)
 			{
 				this.margins.Right = System.Math.Max (this.scrollerRightMargin, this.buttonsRightMargin);
@@ -551,8 +551,8 @@ namespace Epsitec.Common.Widgets
 
 		public static double SingleLineDefaultHeight
 		{
-			//	Retourne la hauteur qu'aurait ce widget s'il était 'single line'.
-			//	On a besoin de cela pour déterminer la hauteur des boutons Accept/Reject.
+			//	Retourne la hauteur qu'aurait ce widget s'il Ã©tait 'single line'.
+			//	On a besoin de cela pour dÃ©terminer la hauteur des boutons Accept/Reject.
 			get
 			{
 				return Widget.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin);

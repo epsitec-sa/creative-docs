@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.IO;
@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 {
 	/// <summary>
 	/// The <c>CresusChartOfAccounts</c> class describes the chart of accounts of a
-	/// given Crésus Comptabilité file (in French: "plan comptable").
+	/// given CrÃ©sus ComptabilitÃ© file (in French: "plan comptable").
 	/// </summary>
 	public sealed class CresusChartOfAccounts
 	{

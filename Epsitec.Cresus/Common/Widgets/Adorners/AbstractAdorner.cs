@@ -1,4 +1,4 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -7,9 +7,9 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets.Adorners
 {
 	/// <summary>
-	/// La classe AbstractAdorner définit les méthodes et propriétés communes
-	/// aux divers adorners. Ceci permet d'éviter la multiplication du code
-	/// pour les réglages partagés par beaucoup d'adorners.
+	/// La classe AbstractAdorner dÃ©finit les mÃ©thodes et propriÃ©tÃ©s communes
+	/// aux divers adorners. Ceci permet d'Ã©viter la multiplication du code
+	/// pour les rÃ©glages partagÃ©s par beaucoup d'adorners.
 	/// </summary>
 	public abstract class AbstractAdorner : IAdorner
 	{
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		protected static void DrawFocusedRectangle(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Color color)
 		{
-			//	Dessine un rectangle pointillé correspondant à un widget ayant le focus.
+			//	Dessine un rectangle pointillÃ© correspondant Ã  un widget ayant le focus.
 			rect.Deflate(0.5);
 			using (Drawing.Path path = new Epsitec.Common.Drawing.Path (rect))
 			{
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		protected static void DrawFocusedPath(Drawing.Graphics graphics, Drawing.Path path, Drawing.Color color)
 		{
-			//	Dessine un chemin pointillé correspondant à un widget ayant le focus.
+			//	Dessine un chemin pointillÃ© correspondant Ã  un widget ayant le focus.
 			AbstractAdorner.DrawPathDash(graphics, path, 1, 0, 2, color);
 		}
 

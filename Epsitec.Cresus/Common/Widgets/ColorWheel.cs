@@ -124,7 +124,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			double dim = System.Math.Min(rect.Width, rect.Height);
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void ComputePosHandler()
 		{
-			//	Calcule la position des poignées.
+			//	Calcule la position des poignÃ©es.
 			double radius = (this.radiusCircleMax+this.radiusCircleMin)/2;
 			
 			this.posHandlerH    = this.centerCircle + Drawing.Transform.RotatePointDeg(this.h, new Drawing.Point(0, radius));
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	Gestion d'un événement.
+			//	Gestion d'un Ã©vÃ©nement.
 			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool DetectH(Drawing.Point pos, bool restricted, ref double h)
 		{
-			//	Détecte la teinte dans le cercle des couleurs.
+			//	DÃ©tecte la teinte dans le cercle des couleurs.
 			if ( this.colorSpace == Drawing.ColorSpace.Gray )  return false;
 			if ( this.IsGrey )  return false;
 
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool DetectSV(Drawing.Point pos, bool restricted, ref double s, ref double v)
 		{
-			//	Détecte la saturation et l'intensité dans le carré des couleurs.
+			//	DÃ©tecte la saturation et l'intensitÃ© dans le carrÃ© des couleurs.
 			if ( this.colorSpace == Drawing.ColorSpace.Gray )  return false;
 
 			if ( restricted )
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool DetectG(Drawing.Point pos, bool restricted, ref double g)
 		{
-			//	Détecte le niveau de gris.
+			//	DÃ©tecte le niveau de gris.
 			if ( this.colorSpace != Drawing.ColorSpace.Gray )  return false;
 
 			if ( restricted )
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnChanged()
 		{
-			//	Génère un événement pour dire ça a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire Ã§a a changÃ©.
 			var handler = this.GetUserEventHandler("Changed");
 			if (handler != null)
 			{
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool IsGrey
 		{
-			//	Indique si la couleur représente un niveau de gris.
+			//	Indique si la couleur reprÃ©sente un niveau de gris.
 			get
 			{
 				return ( this.s == 0.0 || this.v == 0.0 );
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Widgets
 										   Drawing.Color colorBorder,
 										   Drawing.Color colorWindow)
 		{
-			//	Dessine un cercle dégradé pour la teinte (H).
+			//	Dessine un cercle dÃ©gradÃ© pour la teinte (H).
 			if ( this.IsEnabled )
 			{
 				double cx = rect.Left+rect.Width/2;
@@ -387,7 +387,7 @@ namespace Epsitec.Common.Widgets
 					graphics.RenderGradient();
 				}
 
-				//	Dessine l'échantillon au milieu.
+				//	Dessine l'Ã©chantillon au milieu.
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(this.rectCircle.Width*0.125);
 				path = new Drawing.Path();
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Widgets
 									   Drawing.Color colorBorder,
 									   Drawing.Color colorWindow)
 		{
-			//	Dessine un cercle gris échantillon.
+			//	Dessine un cercle gris Ã©chantillon.
 			if ( this.IsEnabled )
 			{
 				double cx = rect.Left+rect.Width/2;
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Widgets
 			
 				Drawing.Path path;
 
-				//	Dessine l'échantillon au milieu.
+				//	Dessine l'Ã©chantillon au milieu.
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(this.rectCircle.Width*0.125);
 				path = new Drawing.Path();
@@ -473,7 +473,7 @@ namespace Epsitec.Common.Widgets
 										   Drawing.Rectangle rect,
 										   Drawing.Color colorBorder)
 	{
-			//	Dessine un carré dégradé pour représenter SV.
+			//	Dessine un carrÃ© dÃ©gradÃ© pour reprÃ©senter SV.
 			if ( this.IsEnabled )
 			{
 #if true
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 										 Drawing.Rectangle rect,
 										 Drawing.Color colorBorder)
 		{
-			//	Dessine un carré dégradé pour représenter le niveau de gris.
+			//	Dessine un carrÃ© dÃ©gradÃ© pour reprÃ©senter le niveau de gris.
 			if ( this.IsEnabled )
 			{
 				Drawing.Color c1 = Drawing.Color.FromBrightness(0);
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Widgets
 									double radius,
 									Drawing.Color color)
 		{
-			//	Dessine une poignée.
+			//	Dessine une poignÃ©e.
 			if ( this.IsEnabled )
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle();
@@ -587,7 +587,7 @@ namespace Epsitec.Common.Widgets
 									Drawing.Point center,
 									double radius)
 		{
-			//	Dessine une poignée.
+			//	Dessine une poignÃ©e.
 			double originalWidth = graphics.LineWidth;
 			graphics.LineWidth = 2;
 			this.PaintHandler(graphics, center, radius+1, Drawing.Color.FromBrightness(1));

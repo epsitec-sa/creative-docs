@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Compta.Widgets
 {
 	/// <summary>
-	/// Tableau de plusieurs colonnes, où chaque colonne est un StringList.
+	/// Tableau de plusieurs colonnes, oÃ¹ chaque colonne est un StringList.
 	/// </summary>
 	public class StringArray : Widget
 	{
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.isDirtyGeometry = true;
 				}
 
-				this.columns = new StringList[value];  // crée les nouvelles colonnes
+				this.columns = new StringList[value];  // crÃ©e les nouvelles colonnes
 
 				for (int i=0; i<this.columns.Length; i++)
 				{
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public void SetColumnsAbsoluteWidth(int column, double width)
 		{
 			//	Modifie la largeur absolue d'une colonne.
-			//	Il faut au préalable spécifier les largeurs relatives de toutes
+			//	Il faut au prÃ©alable spÃ©cifier les largeurs relatives de toutes
 			//	les colonnes, avec SetColumnsRelativeWidth !
 			this.absoluteColumn = column;  // ce sera fait au prochain UpdateClientGeometry
 			this.absoluteWidth = width;
@@ -183,19 +183,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetColumnBreakMode(int column, TextBreakMode breakMode)
 		{
-			//	Modifie la césure d'une colonne.
+			//	Modifie la cÃ©sure d'une colonne.
 			this.columns[column].BreakMode = breakMode;
 		}
 
 		public TextBreakMode GetColumnBreakMode(int column)
 		{
-			//	Retourne la césure d'une colonne.
+			//	Retourne la cÃ©sure d'une colonne.
 			return this.columns[column].BreakMode;
 		}
 
 		public Color ColorSelection
 		{
-			//	Couleur utilisée pour les lignes sélectionnées.
+			//	Couleur utilisÃ©e pour les lignes sÃ©lectionnÃ©es.
 			get
 			{
 				if (this.columns == null)
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public Color ColorHilite
 		{
-			//	Couleur utilisée pour les lignes mises en évidence.
+			//	Couleur utilisÃ©e pour les lignes mises en Ã©vidence.
 			get
 			{
 				if (this.columns == null)
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineString(int column, int row, string text)
 		{
-			//	Spécifie le texte contenu dans une ligne.
+			//	SpÃ©cifie le texte contenu dans une ligne.
 			if (this.columns == null || column < 0 || column >= this.columns.Length)
 			{
 				return;
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineTooltip(int column, int row, string text)
 		{
-			//	Spécifie le tooltip d'une ligne.
+			//	SpÃ©cifie le tooltip d'une ligne.
 			if (this.columns == null || column < 0 || column >= this.columns.Length)
 			{
 				return;
@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineState(int column, int row, StringList.CellState state)
 		{
-			//	Spécifie l'état d'une ligne.
+			//	SpÃ©cifie l'Ã©tat d'une ligne.
 			if (this.columns == null)
 			{
 				return;
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public StringList.CellState GetLineState(int column, int row)
 		{
-			//	Retourne l'état d'une ligne.
+			//	Retourne l'Ã©tat d'une ligne.
 			if (this.columns == null)
 			{
 				return StringList.CellState.Normal;
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineColor(int column, int row, Color color)
 		{
-			//	Spécifie la couleur de fond d'une ligne.
+			//	SpÃ©cifie la couleur de fond d'une ligne.
 			if (this.columns == null)
 			{
 				return;
@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetLineBottomSeparator(int column, int row, bool state)
 		{
-			//	Spécifie la couleur de fond d'une ligne.
+			//	SpÃ©cifie la couleur de fond d'une ligne.
 			if (this.columns == null)
 			{
 				return;
@@ -409,13 +409,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetDynamicToolTips(int column, bool state)
 		{
-			//	Spécifie si une colonne génère des tooltips dynamiques.
+			//	SpÃ©cifie si une colonne gÃ©nÃ¨re des tooltips dynamiques.
 			this.columns[column].IsDynamicToolTips = state;
 		}
 
 		public bool GetDynamicToolTips(int column)
 		{
-			//	Retourne si une colonne génère des tooltips dynamiques.
+			//	Retourne si une colonne gÃ©nÃ¨re des tooltips dynamiques.
 			return this.columns[column].IsDynamicToolTips;
 		}
 
@@ -440,9 +440,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public bool AllowMultipleSelection
 		{
-			//	Indique si les sélections multiples de lignes sont possibles.
-			//	En mode 'true' la sélection multiple est forcée, c'est-à-dire qu'il
-			//	n'est pas nécessaire d'utiliser la touche Ctrl.
+			//	Indique si les sÃ©lections multiples de lignes sont possibles.
+			//	En mode 'true' la sÃ©lection multiple est forcÃ©e, c'est-Ã -dire qu'il
+			//	n'est pas nÃ©cessaire d'utiliser la touche Ctrl.
 			get
 			{
 				return this.allowMultipleSelection;
@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public int SelectedRow
 		{
-			//	Ligne sélectionnée.
+			//	Ligne sÃ©lectionnÃ©e.
 			get
 			{
 				return this.selectedRow;
@@ -489,8 +489,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public List<int> SelectedRows
 		{
-			//	Lignes sélectionnées. L'ordre obtenu dépend de l'ordre dans lequel
-			//	l'utilisateur a cliqué sur les lignes.
+			//	Lignes sÃ©lectionnÃ©es. L'ordre obtenu dÃ©pend de l'ordre dans lequel
+			//	l'utilisateur a cliquÃ© sur les lignes.
 			get
 			{
 				return this.selectedRows;
@@ -507,7 +507,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetSelectedRow(int row, int column)
 		{
-			//	Sélectionne une ligne, en indiquant également la colonne cliquée, pour SelectedColumn.
+			//	SÃ©lectionne une ligne, en indiquant Ã©galement la colonne cliquÃ©e, pour SelectedColumn.
 			this.selectedColumn = column;
 
 			row = System.Math.Max(row, -1);
@@ -520,13 +520,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 				this.Invalidate();
 			}
 
-			//	Il faut envoyer l'événement même si la ligne n'a pas changé !
+			//	Il faut envoyer l'Ã©vÃ©nement mÃªme si la ligne n'a pas changÃ© !
 			//?this.OnSelectedRowChanged();
 		}
 
 		public int SelectedColumn
 		{
-			//	Colonne dans laquelle on a cliqué pour sélectionner la ligne.
+			//	Colonne dans laquelle on a cliquÃ© pour sÃ©lectionner la ligne.
 			get
 			{
 				return this.selectedColumn;
@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetHilitedRows(int firstRow, int countRow)
 		{
-			//	Met en évidence un groupe de lignes.
+			//	Met en Ã©vidence un groupe de lignes.
 			this.hilitedFirstRow = firstRow;
 			this.hilitedCountRow = countRow;
 
@@ -579,7 +579,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public int InsertionPointRow
 		{
-			//	Ligne sélectionnée.
+			//	Ligne sÃ©lectionnÃ©e.
 			get
 			{
 				return this.insertionPointRow;
@@ -602,7 +602,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public int FirstVisibleRow
 		{
-			//	Première ligne visible.
+			//	PremiÃ¨re ligne visible.
 			get
 			{
 				return this.firstVisibleRow;
@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void ShowSelectedRow()
 		{
-			//	Montre la ligne sélectionnée.
+			//	Montre la ligne sÃ©lectionnÃ©e.
 			this.ShowRow (this.selectedRow, 1);
 		}
 
@@ -662,14 +662,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public bool IsShowedRow(int firstRow, int countRow)
 		{
-			//	Retourne true si la sélection est actuellement intégralement visible.
+			//	Retourne true si la sÃ©lection est actuellement intÃ©gralement visible.
 			return !this.GetFirstRowToShow (firstRow, countRow).HasValue;
 		}
 
 		private int? GetFirstRowToShow(int firstRow, int countRow)
 		{
-			//	Retourne la ligne qui doit servir de première ligne visible, ou null
-			//	si la sélection est actuellement intégralement visible.
+			//	Retourne la ligne qui doit servir de premiÃ¨re ligne visible, ou null
+			//	si la sÃ©lection est actuellement intÃ©gralement visible.
 			if (firstRow == -1)
 			{
 				return null;
@@ -699,7 +699,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void UpdateSelectedRow()
 		{
-			//	Met à jour la ligne sélectionnée, si nécessaire.
+			//	Met Ã  jour la ligne sÃ©lectionnÃ©e, si nÃ©cessaire.
 			if (this.isDirtySelected)
 			{
 				this.isDirtySelected = false;
@@ -736,7 +736,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void UpdateScroller()
 		{
-			//	Met à jour l'ascenseur, si nécessaire.
+			//	Met Ã  jour l'ascenseur, si nÃ©cessaire.
 			int count = this.LineCount;
 			if (this.lastLineCount != count)
 			{
@@ -769,8 +769,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 		internal bool ProcessListMessage(StringList list, Message message, Point pos)
 		{
 			//	Avant que StringList ne traite ses messages, il nous appelle afin
-			//	que nous ayons une chance de détecter le drag sur les colonnes de
-			//	séparation... avant que StringList ne nous mange l'événement sous
+			//	que nous ayons une chance de dÃ©tecter le drag sur les colonnes de
+			//	sÃ©paration... avant que StringList ne nous mange l'Ã©vÃ©nement sous
 			//	notre nez.
 			this.ProcessMessage(message, list.MapClientToParent(pos));
 			
@@ -987,7 +987,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private int WidthDraggingDetect(Point pos)
 		{
-			//	Détecte dans quel séparateur de colonne est la souris.
+			//	DÃ©tecte dans quel sÃ©parateur de colonne est la souris.
 			double x = this.Client.Bounds.Left;
 			for (int i=0; i<this.columns.Length-1; i++)
 			{
@@ -1004,7 +1004,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if (this.columns == null)
@@ -1012,7 +1012,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				return;
 			}
 
-			if (this.absoluteColumn != -1 && this.columns.Length > 1)  // une position absolue à imposer ?
+			if (this.absoluteColumn != -1 && this.columns.Length > 1)  // une position absolue Ã  imposer ?
 			{
 				//	Cherche toutes les largeurs absolues actuelles.
 				double[] aw = new double[this.columns.Length];
@@ -1028,7 +1028,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					if (c == this.absoluteColumn)
 					{
-						aw[c] = this.absoluteWidth;  // met la largeur imposée
+						aw[c] = this.absoluteWidth;  // met la largeur imposÃ©e
 					}
 					else
 					{
@@ -1038,7 +1038,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					total += aw[c];
 				}
 
-				//	Modifie toute les largeurs relatives, en fonction des largeurs absolues souhaitées.
+				//	Modifie toute les largeurs relatives, en fonction des largeurs absolues souhaitÃ©es.
 				for (int c=0; c<this.columns.Length; c++)
 				{
 					this.SetColumnsRelativeWidth(c, aw[c]/total);
@@ -1069,7 +1069,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			rect.Left = rect.Right-this.scroller.PreferredWidth;
 			this.scroller.SetManualBounds(rect);
 
-			//	Force le recalcul de la première ligne visible.
+			//	Force le recalcul de la premiÃ¨re ligne visible.
 			int f = this.firstVisibleRow;
 			this.firstVisibleRow = -1;
 			this.FirstVisibleRow = f;
@@ -1169,7 +1169,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 				else
 				{
-					this.selectedRow = -2;  // pour forcer la mise à jour !
+					this.selectedRow = -2;  // pour forcer la mise Ã  jour !
 					this.SetSelectedRow (-1, -1);
 					this.OnSelectedRowChanged ();
 				}
@@ -1193,7 +1193,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		#region Events handler
 		protected virtual void OnColumnsWidthChanged()
 		{
-			//	Génère un événement pour dire que la largeur de colonnes a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la largeur de colonnes a changÃ©.
 			var handler = this.GetUserEventHandler("ColumnsWidthChanged");
 			if (handler != null)
 			{
@@ -1216,7 +1216,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected virtual void OnCellCountChanged()
 		{
-			//	Génère un événement pour dire que le nombre de cellules a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le nombre de cellules a changÃ©.
 			var handler = this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
@@ -1239,7 +1239,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected virtual void OnUpdateCellContent()
 		{
-			//	Génère un événement pour dire que le contenu des cellules a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le contenu des cellules a changÃ©.
 			var handler = this.GetUserEventHandler ("UpdateCellContent");
 			if (handler != null)
 			{
@@ -1262,7 +1262,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected virtual void OnSelectedRowChanged()
 		{
-			//	Génère un événement pour dire que la ligne sélectionnée a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la ligne sÃ©lectionnÃ©e a changÃ©.
 			var handler = this.GetUserEventHandler("SelectedRowChanged");
 			if (handler != null)
 			{
@@ -1307,7 +1307,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected virtual void OnFirstVisibleRowChanged()
 		{
-			//	Génère un événement pour dire que la ligne sélectionnée a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la ligne sÃ©lectionnÃ©e a changÃ©.
 			var handler = this.GetUserEventHandler ("FirstVisibleRowChanged");
 			if (handler != null)
 			{
@@ -1330,7 +1330,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected virtual void OnSelectedRowDoubleClicked()
 		{
-			//	Génère un événement pour dire que la ligne sélectionnée a été double cliquée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la ligne sÃ©lectionnÃ©e a Ã©tÃ© double cliquÃ©e.
 			var handler = this.GetUserEventHandler("SelectedRowDoubleClicked");
 			if (handler != null)
 			{

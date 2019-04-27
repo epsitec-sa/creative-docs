@@ -4,7 +4,7 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe RadioIcon est un IconButton pour une collection dont un seul
-	/// bouton sera sélectionné.
+	/// bouton sera sÃ©lectionnÃ©.
 	/// </summary>
 	public class RadioIcon : IconButton
 	{

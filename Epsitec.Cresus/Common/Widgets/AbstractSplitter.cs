@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Widgets
 							((right == null) || (right.Dock != DockStyle.Fill)))
 						{
 							//	Aucun des voisins directs n'utilise le mode Fill. S'il y a un
-							//	widget avec Fill quelque part, on va lui donner la préférence
-							//	pour répartir l'espace :
+							//	widget avec Fill quelque part, on va lui donner la prÃ©fÃ©rence
+							//	pour rÃ©partir l'espace :
 
 							for (int j = 0; j < siblings.Length; j++)
 							{
@@ -112,8 +112,8 @@ namespace Epsitec.Common.Widgets
 							((top == null) || (top.Dock != DockStyle.Fill)))
 						{
 							//	Aucun des voisins directs n'utilise le mode Fill. S'il y a un
-							//	widget avec Fill quelque part, on va lui donner la préférence
-							//	pour répartir l'espace :
+							//	widget avec Fill quelque part, on va lui donner la prÃ©fÃ©rence
+							//	pour rÃ©partir l'espace :
 
 							for (int j = 0; j < siblings.Length; j++)
 							{

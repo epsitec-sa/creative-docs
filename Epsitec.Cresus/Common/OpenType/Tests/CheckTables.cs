@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.OpenType.Tests
@@ -24,7 +24,7 @@ namespace Epsitec.Common.OpenType.Tests
 //				if ((pFamily != null) ||
 //					(pSubF!= null))
 //				{
-//					System.Diagnostics.Debug.WriteLine ("La fonte " + font.FullName + " a des infos préférées.");
+//					System.Diagnostics.Debug.WriteLine ("La fonte " + font.FullName + " a des infos prÃ©fÃ©rÃ©es.");
 //				}
 				
 				string fontFace  = font.InvariantFaceName;
@@ -40,7 +40,7 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			foreach (int size in sizes)
 			{
-				ushort[] glyphs = arial.GenerateGlyphs ("Affiche un petit texte pour vérifier le bon fonctionnement du calcul des largeurs.");
+				ushort[] glyphs = arial.GenerateGlyphs ("Affiche un petit texte pour vÃ©rifier le bon fonctionnement du calcul des largeurs.");
 				
 				arial.SelectFontManager (FontManagerType.System);
 				double system = arial.GetTotalWidth (glyphs, size);

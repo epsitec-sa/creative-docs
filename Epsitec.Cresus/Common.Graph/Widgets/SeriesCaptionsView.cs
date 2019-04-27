@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Drawing;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Styles;

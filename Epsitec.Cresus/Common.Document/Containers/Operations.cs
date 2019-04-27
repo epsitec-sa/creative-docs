@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Containers
 {
 	/// <summary>
-	/// La classe Containers.Operations contient toutes les opérations.
+	/// La classe Containers.Operations contient toutes les opÃ©rations.
 	/// </summary>
 	public class Operations : Abstract
 	{
@@ -13,7 +13,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.tabIndex = 0;
 
-			//	Déplacement.
+			//	DÃ©placement.
 			this.CreateHeader(ref this.boxMove, ref this.toolBarMove, Res.Strings.Action.MoveMain);
 			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
 			this.CreateButton(this.toolBarMove, ref this.buttonMoveHi, "MoveHi", Res.Strings.Action.MoveLeft,  this.HandleButtonMoveHi);
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateHeader(ref GroupBox group, ref HToolBar bar, string title)
 		{
-			//	Crée l'en-tête d'un groupe.
+			//	CrÃ©e l'en-tÃªte d'un groupe.
 			group = new GroupBox(this);
 			group.PreferredHeight = 45;
 			group.Text = title;
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateButton(HToolBar bar, ref IconButton button, string icon, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
-			//	Crée un IconButton. 
+			//	CrÃ©e un IconButton. 
 			button = new IconButton(Misc.Icon(icon));
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateFieldMove(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour un déplacement.
+			//	CrÃ©e un champ Ã©ditable pour un dÃ©placement.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealDimension(field);
 			field.PreferredWidth = 50;
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateFieldRot(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour une rotation.
+			//	CrÃ©e un champ Ã©ditable pour une rotation.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealAngle(field);
 			field.PreferredWidth = 50;
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateFieldScale(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour une échelle.
+			//	CrÃ©e un champ Ã©ditable pour une Ã©chelle.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealScalar(field);
 			field.PreferredWidth = 50;
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateFieldColor(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour une couleur.
+			//	CrÃ©e un champ Ã©ditable pour une couleur.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealPercent(field);
 			field.PreferredWidth = 50;
@@ -186,14 +186,14 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateSeparator(HToolBar bar)
 		{
-			//	Crée un séparateur.
+			//	CrÃ©e un sÃ©parateur.
 			bar.Items.Add(new IconSeparator());
 		}
 		
 
 		protected override void DoUpdateContent()
 		{
-			//	Effectue la mise à jour du contenu.
+			//	Effectue la mise Ã  jour du contenu.
 			bool enabled  = (this.document.Modifier.TotalSelected > 0);
 			bool enabled2 = (this.document.Modifier.TotalSelected > 1);
 			bool enabled3 = (this.document.Modifier.TotalSelected > 2);

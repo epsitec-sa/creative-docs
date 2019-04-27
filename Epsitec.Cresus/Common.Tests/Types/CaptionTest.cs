@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Tests.Types
 			caption.Labels.Add ("A");
 			caption.Labels.Add ("Angle");
 			caption.Labels.Add ("Angle de la trame");
-			caption.Description = "Angle de rotation de la trame, exprimé en degrés.";
+			caption.Description = "Angle de rotation de la trame, exprimÃ© en degrÃ©s.";
 
 			string xml = caption.SerializeToString ();
 
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual ("FrameAngle", caption.Name);
 			Assert.AreEqual ("A", Collection.Extract (caption.SortedLabels, 0));
 			Assert.AreEqual ("Angle", Collection.Extract (caption.SortedLabels, 1));
-			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", caption.Description);
+			Assert.AreEqual ("Angle de rotation de la trame, exprimÃ© en degrÃ©s.", caption.Description);
 		}
 
 		[Test]

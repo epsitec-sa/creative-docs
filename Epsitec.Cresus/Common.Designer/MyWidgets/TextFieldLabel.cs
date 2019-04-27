@@ -53,12 +53,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetRangeDimension(double min, double max, double def, double step)
 		{
-			//	Spécifie les bornes pour une dimension.
+			//	SpÃ©cifie les bornes pour une dimension.
 			this.textFieldReal.InternalMinValue     = (decimal) min;
 			this.textFieldReal.InternalMaxValue     = (decimal) max;
 			this.textFieldReal.InternalDefaultValue = (decimal) def;
 			this.textFieldReal.Step                 = (decimal) step;
-			this.textFieldReal.Resolution           = 10.0M;  // une décimale de moins
+			this.textFieldReal.Resolution           = 10.0M;  // une dÃ©cimale de moins
 		}
 
 
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool LabelVisibility
 		{
-			//	Visibilité du label.
+			//	VisibilitÃ© du label.
 			get
 			{
 				return this.labelVisibility;
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public static double DefaultLabelWidth
 		{
-			//	Largeur par défaut du label.
+			//	Largeur par dÃ©faut du label.
 			get
 			{
 				return 10;
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public static double DefaultMarginWidth
 		{
-			//	Largeur par défaut de la marge entre le label et le texte.
+			//	Largeur par dÃ©faut de la marge entre le label et le texte.
 			get
 			{
 				return 2;
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public static double DefaultTextWidth
 		{
-			//	Largeur par défaut du texte.
+			//	Largeur par dÃ©faut du texte.
 			get
 			{
 				return 48;

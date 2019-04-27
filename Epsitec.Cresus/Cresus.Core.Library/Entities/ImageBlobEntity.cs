@@ -1,4 +1,4 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -33,15 +33,15 @@ namespace Epsitec.Cresus.Core.Entities
 				(
 					"Creation :  ",     this.CreationDate.ToString (), "\n",
 					"Modification :  ", this.LastModificationDate.ToString (), "\n",
-					"—\n",
+					"â€”\n",
 					"Utilisateur :  ",  builder.UserName, "\n",
 					"Ordinateur :  ",   builder.Host, "\n",
 					"Dossier :  ",      directory, "\n",
 					"Fichier :  ",      filename, "\n",
 					//"Code :  ",         Common.Widgets.TextLayout.ConvertToTaggedText (this.Code), "\n",
-					"—\n",
-					"Dimensions :  ", this.PixelWidth.ToString (), "×", this.PixelHeight.ToString (), " pixels\n",
-					"Résolution :  ",   dpi.ToString (), " dpi\n",
+					"â€”\n",
+					"Dimensions :  ", this.PixelWidth.ToString (), "Ã—", this.PixelHeight.ToString (), " pixels\n",
+					"RÃ©solution :  ",   dpi.ToString (), " dpi\n",
 					"Profondeur :  ",   this.BitsPerPixel.ToString (), "bits"
 				);
 		}

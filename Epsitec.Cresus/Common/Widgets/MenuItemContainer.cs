@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	
 	/// <summary>
 	/// La classe MenuItemContainer permet d'incorporer dans une case de menu
-	/// des widgets divers et variés.
+	/// des widgets divers et variÃ©s.
 	/// </summary>
 	public class MenuItemContainer : MenuItem
 	{
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (isVisible == false)
 			{
-				//	Si le widget devient invisible, il faut réactiver le filtre
+				//	Si le widget devient invisible, il faut rÃ©activer le filtre
 				//	clavier du gestionnaire de menus !
 				
 				this.EnableFilter ();
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnIconSizeChanged()
 		{
-			//	Met à jour le positionnement des éléments internes en fonction
+			//	Met Ã  jour le positionnement des Ã©lÃ©ments internes en fonction
 			//	de la place disponible :
 			
 			double width = this.IconWidth;
@@ -191,8 +191,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnUserAction(MessageEventArgs e)
 		{
-			//	Mange l'événement. Un item "riche" ne peut pas générer d'actions
-			//	lui-même !
+			//	Mange l'Ã©vÃ©nement. Un item "riche" ne peut pas gÃ©nÃ©rer d'actions
+			//	lui-mÃªme !
 		}
 
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)

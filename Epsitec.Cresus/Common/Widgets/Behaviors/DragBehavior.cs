@@ -1,11 +1,11 @@
-//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
 	/// <summary>
-	/// La classe DragBehavior implémente le comportement de dragging, à savoir
-	/// détecter la condition de début de drag, gérer le déplacement et terminer
+	/// La classe DragBehavior implÃ©mente le comportement de dragging, Ã  savoir
+	/// dÃ©tecter la condition de dÃ©but de drag, gÃ©rer le dÃ©placement et terminer
 	/// le drag.
 	/// </summary>
 	public sealed class DragBehavior

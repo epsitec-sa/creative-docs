@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération ThreeState est un booléen à trois états.
+	/// L'Ã©numÃ©ration ThreeState est un boolÃ©en Ã  trois Ã©tats.
 	/// </summary>
 	public enum ThreeState
 	{

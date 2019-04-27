@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Dialogs;
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		protected override Rectangle GetOwnerBounds()
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		protected override void CreateOptionsUserInterface()
 		{
-			//	Crée le panneau facultatif pour les options d'enregistrement.
+			//	CrÃ©e le panneau facultatif pour les options d'enregistrement.
 			this.optionsContainer = new Widget (this.window.Root);
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 			//	Options pour le zoom.
 			GroupBox groupZoom = new GroupBox (this.optionsContainer);
-			groupZoom.Text = "Zoom de l'image à générer";
+			groupZoom.Text = "Zoom de l'image Ã  gÃ©nÃ©rer";
 			groupZoom.PreferredWidth = 200;
 			groupZoom.Padding = new Margins (10, 0, 0, 3);
 			groupZoom.Dock = DockStyle.StackEnd;
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			string x = System.Math.Floor (this.ImageSize.Width*zoom).ToString ();
 			string y = System.Math.Floor (this.ImageSize.Height*zoom).ToString ();
 
-			return string.Format ("{0}% ({1} × {2} pixels)", z, x, y);
+			return string.Format ("{0}% ({1} Ã— {2} pixels)", z, x, y);
 		}
 
 		protected void UpdateZoom()
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		private void HandleOptionsZoomClicked(object sender, MessageEventArgs e)
 		{
-			//	Un bouton radio pour le mode d'inclusion des polices a été cliqué.
+			//	Un bouton radio pour le mode d'inclusion des polices a Ã©tÃ© cliquÃ©.
 			if (sender == this.optionsZoom1)
 			{
 				this.Zoom = 1;
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 		}
 
 
-		//	Tous les réglages sont conservés dans des variables statiques,
+		//	Tous les rÃ©glages sont conservÃ©s dans des variables statiques,
 		//	ce qui est une solution rapide et provisoire !
 		private static Settings			settings = new Settings ();
 		private static string			initialDirectory = null;

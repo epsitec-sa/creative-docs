@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 
@@ -663,8 +663,8 @@ namespace Epsitec.Common.Widgets
 				case Win32Const.WM_NCMBUTTONDOWN:
 				case Win32Const.WM_NCXBUTTONDOWN:
 					
-					//	Spécial : événement bouton pressé dans la partie non-client (barre de titre ou cadre).
-					//	En principe, l'application ne doit pas traiter cet événement !
+					//	SpÃ©cial : Ã©vÃ©nement bouton pressÃ© dans la partie non-client (barre de titre ou cadre).
+					//	En principe, l'application ne doit pas traiter cet Ã©vÃ©nement !
 					
 					Message.XYFromLParam (msg.LParam, out x, out y);
 					point = form.PointToClient (new System.Drawing.Point (x, y));
@@ -749,7 +749,7 @@ namespace Epsitec.Common.Widgets
 				Message.state.screenCursor = Message.CurrentState.window == null ? Drawing.Point.Zero : Message.CurrentState.window.MapWindowToScreen (message.cursor);
 			}
 			
-			//	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.
+			//	GÃ¨re les clics multiples, en tenant compte des rÃ©glages de l'utilisateur.
 			
 			if (type == MessageType.MouseDown)
 			{
@@ -846,8 +846,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message FromKeyEvent(int msg, System.IntPtr wParam, System.IntPtr lParam)
 		{
-			//	Synthétise un événement clavier à partir de la description de
-			//	très bas niveau...
+			//	SynthÃ©tise un Ã©vÃ©nement clavier Ã  partir de la description de
+			//	trÃ¨s bas niveau...
 
 			MessageType messageType = MessageType.None;
 
@@ -997,8 +997,8 @@ namespace Epsitec.Common.Widgets
 		
 		#region Message State Structure
 		/// <summary>
-		/// La structure State décrit l'état des boutons et des touches super-
-		/// shift, la dernière position de la souris, la dernière fenêtre visitée,
+		/// La structure State dÃ©crit l'Ã©tat des boutons et des touches super-
+		/// shift, la derniÃ¨re position de la souris, la derniÃ¨re fenÃªtre visitÃ©e,
 		/// etc.
 		/// </summary>
 		public struct State

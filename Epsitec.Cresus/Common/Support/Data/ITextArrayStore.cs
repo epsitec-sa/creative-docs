@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Data
 {
 	/// <summary>
-	/// L'interface ITextArrayStore permet d'accéder à des textes stockés dans
-	/// une table bidimensionnelle, en lecture et en écriture.
+	/// L'interface ITextArrayStore permet d'accÃ©der Ã  des textes stockÃ©s dans
+	/// une table bidimensionnelle, en lecture et en Ã©criture.
 	/// </summary>
 	public interface ITextArrayStore
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 			
-			//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
+			//	VÃ©rifie qu'il y a bien tous les tags dans le fragment HTML :
 			
 			int idxVersion    = rawHtml.IndexOf ("Version:");
 			int idxStartHtml  = rawHtml.IndexOf ("StartHTML:");
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 			
-			//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
+			//	VÃ©rifie qu'il y a bien tous les tags dans le fragment HTML :
 			
 			int idxVersion    = rawHtml.IndexOf ("Version:");
 			int idxStartHtml  = rawHtml.IndexOf ("StartHTML:");

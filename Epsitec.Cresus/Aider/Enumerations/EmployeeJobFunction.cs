@@ -1,4 +1,4 @@
-//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -14,12 +14,12 @@ namespace Epsitec.Aider.Enumerations
 		Suffragant			= 2,
 		Stagiaire			= 3,
 		Vicaire				= 4,
-		Remplaçant			= 5,
+		RemplaÃ§ant			= 5,
 		Auxiliaire			= 6,
 
 		UtilisateurAIDER    = 20,
 		GestionnaireAIDER   = 21,
-		SuppléantAIDER      = 22,
+		SupplÃ©antAIDER      = 22,
 
 		[Hidden]
 		PublicJob			= 99,

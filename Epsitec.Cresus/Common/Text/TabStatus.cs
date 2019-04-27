@@ -1,18 +1,18 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'énumération TabStatus définit comment/si un tabulateur est défini et
-	/// référencé dans le texte.
+	/// L'Ã©numÃ©ration TabStatus dÃ©finit comment/si un tabulateur est dÃ©fini et
+	/// rÃ©fÃ©rencÃ© dans le texte.
 	/// </summary>
 	public enum TabStatus
 	{
 		None				= 0,
 		
-		Definition			= 1,				//	tab défini mais pas utilisé
-		Live				= 2,				//	tab défini et utilisé
-		Zombie				= 3					//	tab pas défini mais utilisé
+		Definition			= 1,				//	tab dÃ©fini mais pas utilisÃ©
+		Live				= 2,				//	tab dÃ©fini et utilisÃ©
+		Zombie				= 3					//	tab pas dÃ©fini mais utilisÃ©
 	}
 }

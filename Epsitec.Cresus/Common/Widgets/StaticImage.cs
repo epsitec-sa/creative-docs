@@ -1,10 +1,10 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe StaticImage dessine une image. Cette image est spécifiée
+	/// La classe StaticImage dessine une image. Cette image est spÃ©cifiÃ©e
 	/// par son nom.
 	/// </summary>
 	public class StaticImage : StaticText

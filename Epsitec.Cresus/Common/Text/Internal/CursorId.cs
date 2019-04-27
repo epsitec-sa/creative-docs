@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La structure CursorId encapsule un identificateur lié à une structure
+	/// La structure CursorId encapsule un identificateur liÃ© Ã  une structure
 	/// de type Internal.Cursor.
 	/// </summary>
 	internal struct CursorId
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public bool								IsValid
 		{
-			//	Un curseur est déclaré comme étant valide s'il a un identificateur
+			//	Un curseur est dÃ©clarÃ© comme Ã©tant valide s'il a un identificateur
 			//	strictement positif.
 			
 			//	CursorId = 0 n'est donc pas valide.

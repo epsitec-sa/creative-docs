@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using FirebirdSql.Data.FirebirdClient;
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					return null;
 				}
 				
-				//	Un booléen est représenté au moyen d'une valeur 0 ou 1 dans
+				//	Un boolÃ©en est reprÃ©sentÃ© au moyen d'une valeur 0 ou 1 dans
 				//	Firebird.
 
 				System.Diagnostics.Debug.Assert (value.GetType () == typeof (short));
@@ -148,8 +148,8 @@ namespace Epsitec.Cresus.Database.Implementation
 					return null;
 				}
 				
-				//	Un booléen est représenté au moyen d'une valeur 0 ou 1 dans
-				//	Firebird. On génère un Int16 en sortie, c'est le mieux que
+				//	Un boolÃ©en est reprÃ©sentÃ© au moyen d'une valeur 0 ou 1 dans
+				//	Firebird. On gÃ©nÃ¨re un Int16 en sortie, c'est le mieux que
 				//	l'on puisse faire.
 
 				System.Diagnostics.Debug.Assert (value.GetType () == typeof (bool));

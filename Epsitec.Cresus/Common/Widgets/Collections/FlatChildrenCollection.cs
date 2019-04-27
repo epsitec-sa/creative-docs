@@ -1,4 +1,4 @@
-//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -7,8 +7,8 @@ using System.Linq;
 namespace Epsitec.Common.Widgets.Collections
 {
 	/// <summary>
-	/// La classe FlatChildrenCollection stocke un ensemble de widgets de manière
-	/// ordonnée.
+	/// La classe FlatChildrenCollection stocke un ensemble de widgets de maniÃ¨re
+	/// ordonnÃ©e.
 	/// </summary>
 	public class FlatChildrenCollection : IList<Visual>, ICollection<Types.DependencyObject>, System.Collections.ICollection
 	{
@@ -218,9 +218,9 @@ namespace Epsitec.Common.Widgets.Collections
 
 		private void AttachVisual(Visual visual)
 		{
-			//	Attache le visual à son nouveau parent; il est au préalable détaché
-			//	de son ancien parent. Cette méthode ne s'occupe pas de la question
-			//	des propriétés héritées.
+			//	Attache le visual Ã  son nouveau parent; il est au prÃ©alable dÃ©tachÃ©
+			//	de son ancien parent. Cette mÃ©thode ne s'occupe pas de la question
+			//	des propriÃ©tÃ©s hÃ©ritÃ©es.
 
 			System.Diagnostics.Debug.Assert (visual != null);
 			System.Diagnostics.Debug.Assert (this.visuals.Contains (visual));
@@ -239,13 +239,13 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			else if (this.host == parent)
 			{
-				//	Le visual a déjà le même parent; il n'y a donc rien à faire
+				//	Le visual a dÃ©jÃ  le mÃªme parent; il n'y a donc rien Ã  faire
 				//	au niveau des liens.
 			}
 			else
 			{
-				//	Le visual est encore attaché à un parent. Il faut commencer par
-				//	le détacher de son ancien parent, puis notifier l'ancien parent
+				//	Le visual est encore attachÃ© Ã  un parent. Il faut commencer par
+				//	le dÃ©tacher de son ancien parent, puis notifier l'ancien parent
 				//	du changement :
 
 				FlatChildrenCollection others = parent.Children;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		private void DetachVisual(Visual visual)
 		{
-			//	Détache le visual de son parent.
+			//	DÃ©tache le visual de son parent.
 			
 			System.Diagnostics.Debug.Assert (visual != null);
 			System.Diagnostics.Debug.Assert (this.visuals.Contains (visual) == false);
@@ -641,9 +641,9 @@ namespace Epsitec.Common.Widgets.Collections
 
 			public void NotifyChanges()
 			{
-				//	Maintenant que tous les visuals ont leur parent définitif, il
-				//	faut tous les passer en revue pour déterminer les changements
-				//	de propriétés héritées.
+				//	Maintenant que tous les visuals ont leur parent dÃ©finitif, il
+				//	faut tous les passer en revue pour dÃ©terminer les changements
+				//	de propriÃ©tÃ©s hÃ©ritÃ©es.
 				
 				foreach (Visual visual in this.visuals)
 				{
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Widgets.Collections
 			{
 				if (this.visuals.Contains (visual))
 				{
-					//	Rien à faire, car ce visual est déjà connu et a déjà été analysé.
+					//	Rien Ã  faire, car ce visual est dÃ©jÃ  connu et a dÃ©jÃ  Ã©tÃ© analysÃ©.
 				}
 				else
 				{

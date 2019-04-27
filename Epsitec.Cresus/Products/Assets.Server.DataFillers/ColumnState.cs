@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ using Epsitec.Cresus.Assets.Data.Helpers;
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	/// <summary>
-	/// Etat d'une colonne, qui peut être visible ou cachée. Lorsqu'une colonne est cachée,
-	/// on conserve sa largeur originale, utilisée lorsqu'elle est rendue visible à nouveau.
+	/// Etat d'une colonne, qui peut Ãªtre visible ou cachÃ©e. Lorsqu'une colonne est cachÃ©e,
+	/// on conserve sa largeur originale, utilisÃ©e lorsqu'elle est rendue visible Ã  nouveau.
 	/// </summary>
 	public struct ColumnState
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public void Dispose()
 		{
-			//	Libère la surface.
+			//	LibÃ¨re la surface.
 			this.layer    = null;
 			this.obj      = null;
 			this.fill     = null;
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public int Page
 		{
-			//	Numéro de la page (1..n).
+			//	NumÃ©ro de la page (1..n).
 			get { return this.page; }
 		}
 
@@ -71,13 +71,13 @@ namespace Epsitec.Common.Document.PDF
 
 		public Properties.Abstract Fill
 		{
-			//	Propriété ayant généré cette surface (Gradient ou Font).
+			//	PropriÃ©tÃ© ayant gÃ©nÃ©rÃ© cette surface (Gradient ou Font).
 			get { return this.fill; }
 		}
 
 		public Properties.Line Stroke
 		{
-			//	Propriété ayant généré cette surface.
+			//	PropriÃ©tÃ© ayant gÃ©nÃ©rÃ© cette surface.
 			get { return this.stroke; }
 		}
 

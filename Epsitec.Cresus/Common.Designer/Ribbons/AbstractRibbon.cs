@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		public IconButton SearchIconButton(string command)
 		{
-			//	Cherche le bouton utilisÈ pour une commande, dans le ruban.
+			//	Cherche le bouton utilis√© pour une commande, dans le ruban.
 			Command c = Common.Widgets.Command.Get(command);
 			string icon = c.Icon;
 
@@ -38,13 +38,13 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected IconButton CreateIconButton(string command)
 		{
-			//	CrÈe un bouton pour une commande.
+			//	Cr√©e un bouton pour une commande.
 			return this.CreateIconButton(command, "Normal");
 		}
 
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
-			//	CrÈe un bouton pour une commande, en prÈcisant la taille prÈfÈrÈe pour l'icÙne.
+			//	Cr√©e un bouton pour une commande, en pr√©cisant la taille pr√©f√©r√©e pour l'ic√¥ne.
 			Command c = Widgets.Command.Get(command);
 			IconButton button = new IconButton(this);
 
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected IconButtonCombo CreateIconButtonCombo(string command)
 		{
-			//	CrÈe un bouton combo pour une commande.
+			//	Cr√©e un bouton combo pour une commande.
 			Command c = Widgets.Command.Get(command);
 			IconButtonCombo button = new IconButtonCombo(this);
 
@@ -109,14 +109,14 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected void BriefIconButtonComboDyn(IconButtonCombo combo, string briefIcon, string parameter)
 		{
-			//	SpÈcifie le contenu (au repos, c‡d menu fermÈ) d'un IconButtonCombo.
+			//	Sp√©cifie le contenu (au repos, c√†d menu ferm√©) d'un IconButtonCombo.
 			briefIcon = Misc.IconDyn(briefIcon, parameter);
 			combo.IconButton.IconUri = briefIcon;
 		}
 
 		protected IconButtonsCombo CreateIconButtonsCombo(string command)
 		{
-			//	CrÈe un bouton combo pour une commande.
+			//	Cr√©e un bouton combo pour une commande.
 			Command c = Widgets.Command.Get(command);
 			IconButtonsCombo button = new IconButtonsCombo(this);
 
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected GlyphButton CreateMenuButton(string command, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
-			//	CrÈe un bouton "v" pour un menu.
+			//	Cr√©e un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
 			button.CommandObject = Command.Get(command);
 			button.ButtonStyle = ButtonStyle.ToolItem;
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
 		{
-			//	Ajoute une icÙne.
+			//	Ajoute une ic√¥ne.
 			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
 		}
 		

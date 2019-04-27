@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -57,7 +57,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public Components.AbstractProcessor Processor
 		{
-			//	Processeur émulé affichée/modifée par ce widget.
+			//	Processeur Ã©mulÃ© affichÃ©e/modifÃ©e par ce widget.
 			get
 			{
 				return this.processor;
@@ -70,7 +70,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public Components.Memory Memory
 		{
-			//	Mémoire émulée affichée/modifée par ce widget.
+			//	MÃ©moire Ã©mulÃ©e affichÃ©e/modifÃ©e par ce widget.
 			get
 			{
 				return this.memory;
@@ -90,7 +90,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public bool IsDeferUpdateData
 		{
-			//	Indique s'il faut différer UpdateData, pendant l'exécution d'un programme.
+			//	Indique s'il faut diffÃ©rer UpdateData, pendant l'exÃ©cution d'un programme.
 			get
 			{
 				return this.isDeferUpdateData;
@@ -123,7 +123,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int FirstAddress
 		{
-			//	Indique la première adresse affichée (relative dans la banque).
+			//	Indique la premiÃ¨re adresse affichÃ©e (relative dans la banque).
 			get
 			{
 				return this.firstAddress;
@@ -147,7 +147,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int NextFirstAddress(int offset)
 		{
-			//	Retourne la prochaine première adresse affichée (relative dans la banque).
+			//	Retourne la prochaine premiÃ¨re adresse affichÃ©e (relative dans la banque).
 			int index = this.GetInstructionIndex(this.firstAddress) + offset;
 
 			if (index < 0)
@@ -162,7 +162,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int AddressSelected
 		{
-			//	Adresse sélectionnée.
+			//	Adresse sÃ©lectionnÃ©e.
 			get
 			{
 				return this.addressSelected;
@@ -179,7 +179,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int LengthSelected
 		{
-			//	Longueur de l'instruction à l'adresse sélectionnée.
+			//	Longueur de l'instruction Ã  l'adresse sÃ©lectionnÃ©e.
 			get
 			{
 				if (this.addressSelected == Misc.undefined)
@@ -195,7 +195,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public string Bank
 		{
-			//	Choix de la banque affichée.
+			//	Choix de la banque affichÃ©e.
 			get
 			{
 				return this.bank;
@@ -211,13 +211,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void DirtyMarkPC()
 		{
-			//	Force le prochain MarkPC à faire son travail.
+			//	Force le prochain MarkPC Ã  faire son travail.
 			this.markPC = Misc.undefined;
 		}
 
 		public int MarkPC
 		{
-			//	Indique l'adresse pointée par le registre PC.
+			//	Indique l'adresse pointÃ©e par le registre PC.
 			get
 			{
 				return this.markPC;
@@ -284,7 +284,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			int total = (int) (this.Client.Bounds.Height/(CodeAccessor.LineHeight-1));
@@ -301,7 +301,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void CreateFields(int total)
 		{
-			//	Crée tous les champs éditables, en fonction de la hauteur du widget.
+			//	CrÃ©e tous les champs Ã©ditables, en fonction de la hauteur du widget.
 			this.fields.Clear();
 			this.panel.Children.Clear();
 
@@ -330,7 +330,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void UpdateScroller()
 		{
-			//	Met à jour l'ascenseur.
+			//	Met Ã  jour l'ascenseur.
 			if (this.fields.Count == 0)
 			{
 				return;
@@ -341,7 +341,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.scroller.MinValue = (decimal) 0;
 				this.scroller.MaxValue = (decimal) (this.instructionAddresses.Count - this.fields.Count);
 				this.scroller.Value = (decimal) this.GetInstructionIndex(this.firstAddress);
-				this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.instructionAddresses.Count, 0.1);  // évite cabine trop petite
+				this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.instructionAddresses.Count, 0.1);  // Ã©vite cabine trop petite
 				this.scroller.LargeChange = (decimal) this.fields.Count;
 				this.scroller.SmallChange = (decimal) 1;
 				this.scroller.Enable = true;
@@ -355,7 +355,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 #if false
 		public void UpdateData(int address)
 		{
-			//	Met à jour la table des instructions suite au changement d'un seul byte.
+			//	Met Ã  jour la table des instructions suite au changement d'un seul byte.
 			if (this.isDeferUpdateData)
 			{
 				return;
@@ -373,7 +373,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				if (this.instructionAddresses[index].Type == 1)  // sur un BYTE d'une table ?
 				{
-					// rien à faire !
+					// rien Ã  faire !
 				}
 				else
 				{
@@ -444,7 +444,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void UpdateData()
 		{
-			//	Met à jour la table des instructions.
+			//	Met Ã  jour la table des instructions.
 			if (this.isDeferUpdateData)
 			{
 				return;
@@ -462,7 +462,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void UpdateTable()
 		{
-			//	Met à jour la table des instructions.
+			//	Met Ã  jour la table des instructions.
 			if (this.processor == null || this.memory == null)
 			{
 				return;
@@ -531,7 +531,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Far, baseAddress, 0, false);
 						level--;
 					}
-					else if (address+length <= arrowAddress)  // flèche de haut en bas ?
+					else if (address+length <= arrowAddress)  // flÃ¨che de haut en bas ?
 					{
 						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToDown, baseAddress, level, false);
 
@@ -554,7 +554,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							this.fields[j].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.ArrowFromUp, baseAddress, level, address != arrowAddress);
 						}
 					}
-					else if (address > arrowAddress)  // flèche de bas en haut ?
+					else if (address > arrowAddress)  // flÃ¨che de bas en haut ?
 					{
 						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToUp, baseAddress, level, false);
 
@@ -573,7 +573,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							this.fields[j].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.ArrowFromDown, baseAddress, level, address != arrowAddress);
 						}
 					}
-					else  // flèche sur soi-même ?
+					else  // flÃ¨che sur soi-mÃªme ?
 					{
 						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Arrow, baseAddress, level, address != arrowAddress);
 					}
@@ -585,7 +585,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void UpdateInstructionAddresses()
 		{
-			//	Met à jour la table des adresses des instructions.
+			//	Met Ã  jour la table des adresses des instructions.
 			if (this.processor == null || this.memory == null)
 			{
 				return;
@@ -638,7 +638,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected int AdjustAddress(int address)
 		{
-			//	Retourne une adresse (relative dans la banque) ajustée pour commencer sur un début d'instruction.
+			//	Retourne une adresse (relative dans la banque) ajustÃ©e pour commencer sur un dÃ©but d'instruction.
 			for (int i=1; i<this.instructionAddresses.Count; i++)
 			{
 				if (address < this.instructionAddresses[i].Address)
@@ -721,7 +721,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected int DetectAddress(Point pos)
 		{
-			//	Détecte la flèche visée par la souris.
+			//	DÃ©tecte la flÃ¨che visÃ©e par la souris.
 			//	Retourne son adresse de base, ou Misc.undefined.
 			for (int i=this.fields.Count-1; i>=0; i--)
 			{
@@ -729,7 +729,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				Point p = code.MapParentToClient(pos);
 				p = code.CodeAddress.MapParentToClient(p);
-				p.X -= 17;  // TODO: je n'ai décidément rien compris à ces MapTrucToMachin !
+				p.X -= 17;  // TODO: je n'ai dÃ©cidÃ©ment rien compris Ã  ces MapTrucToMachin !
 
 				int baseAddress = code.CodeAddress.DetectAddress(p);
 				if (baseAddress != Misc.undefined)
@@ -743,8 +743,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void HiliteBaseAddress(int baseAddress)
 		{
-			//	Met en évidence une flèche qui part d'une adresse de base donnée.
-			//	Il faut mettre en évidence tous les fragments, dans différents objets CodeAddress.
+			//	Met en Ã©vidence une flÃ¨che qui part d'une adresse de base donnÃ©e.
+			//	Il faut mettre en Ã©vidence tous les fragments, dans diffÃ©rents objets CodeAddress.
 			foreach (MyWidgets.Code code in this.fields)
 			{
 				code.CodeAddress.HiliteBaseAddress(baseAddress);
@@ -753,7 +753,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected MyWidgets.Code SearchCode(int baseAddress)
 		{
-			//	Cherche le Code utilisant une adresse de base donnée.
+			//	Cherche le Code utilisant une adresse de base donnÃ©e.
 			foreach (MyWidgets.Code code in this.fields)
 			{
 				if (baseAddress == code.Address)
@@ -862,7 +862,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			foreach (int code in codes)
 			{
-				this.memory.WriteWithDirty(address++, code);  // écrit la nouvelle instruction assemblée
+				this.memory.WriteWithDirty(address++, code);  // Ã©crit la nouvelle instruction assemblÃ©e
 			}
 
 			while (oldLength > codes.Count)  // trop de place ?
@@ -886,7 +886,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleCodeAddressClicked(object sender)
 		{
-			//	Flèche cliquée.
+			//	FlÃ¨che cliquÃ©e.
 			if (this.addressHilited == Misc.undefined)
 			{
 				return;
@@ -918,7 +918,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		#region EventHandler
 		protected virtual void OnInstructionSelected()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("InstructionSelected");
 			if (handler != null)
 			{
@@ -940,7 +940,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected virtual void OnBankChanged()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("BankChanged");
 			if (handler != null)
 			{
@@ -964,7 +964,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		/// <summary>
 		/// Une instance de CodeAddress regroupe les informations sur une instruction. Toutes les instructions,
-		/// visibles ou cachées, ont une instance de CodeAddress.
+		/// visibles ou cachÃ©es, ont une instance de CodeAddress.
 		/// </summary>
 		protected struct CodeAddress
 		{

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Implementation
@@ -6,8 +6,8 @@ namespace Epsitec.Common.Support.Implementation
 	using System.Globalization;
 	
 	/// <summary>
-	/// La classe AbstractProvider regroupe les méthodes communes aux divers
-	/// providers de ressources et offre une implémentation par défaut de
+	/// La classe AbstractProvider regroupe les mÃ©thodes communes aux divers
+	/// providers de ressources et offre une implÃ©mentation par dÃ©faut de
 	/// l'interface IResourceProvider.
 	/// </summary>
 	public abstract class AbstractResourceProvider : Epsitec.Common.Support.IResourceProvider

@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir le nom d'une ressource qui va être créée.
+	/// Dialogue permettant de choisir le nom d'une ressource qui va Ãªtre crÃ©Ã©e.
 	/// </summary>
 	public class ResourceNameDialog : AbstractDialog
 	{
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if (this.window == null)
 			{
 				this.window = new Window();
@@ -80,13 +80,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void CreateUI(Widget parent)
 		{
-			//	Titre supérieur.
+			//	Titre supÃ©rieur.
 			this.title = new StaticText (parent);
 			this.title.ContentAlignment = ContentAlignment.TopLeft;
 			this.title.PreferredHeight = 34;
 			this.title.Dock = DockStyle.Top;
 
-			Separator sep = new Separator (parent);  // trait horizontal de séparation
+			Separator sep = new Separator (parent);  // trait horizontal de sÃ©paration
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 
@@ -142,14 +142,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateTitle()
 		{
-			//	Initialise le titre dans la partie supérieure du dialogue, qui explique
-			//	l'opération effectuée.
+			//	Initialise le titre dans la partie supÃ©rieure du dialogue, qui explique
+			//	l'opÃ©ration effectuÃ©e.
 			string text, ok;
 			switch (this.operation)
 			{
 				case Operation.Create:
-					text = "Création {0}";
-					ok = "Créer";
+					text = "CrÃ©ation {0}";
+					ok = "CrÃ©er";
 					break;
 
 				case Operation.Modify:
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			switch (this.type)
 			{
 				case Type.Entity:
-					type = "d'une entité";
+					type = "d'une entitÃ©";
 					break;
 
 				case Type.Field:

@@ -2,8 +2,8 @@ namespace Epsitec.Common.Widgets
 {
 	public enum HeaderButtonStyle
 	{
-		Top,			// bouton dans en-tête supérieure
-		Left,			// bouton dans en-tête gauche
+		Top,			// bouton dans en-tÃªte supÃ©rieure
+		Left,			// bouton dans en-tÃªte gauche
 	}
 	
 	public enum SortMode
@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// La class HeaderButton représente un bouton d'un en-tête de tableau.
+	/// La class HeaderButton reprÃ©sente un bouton d'un en-tÃªte de tableau.
 	/// </summary>
 	public class HeaderButton : AbstractButton
 	{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 		
 		public HeaderButtonStyle			Style
 		{
-			//	Bouton dans en-tête supérieure ou gauche ?
+			//	Bouton dans en-tÃªte supÃ©rieure ou gauche ?
 			get
 			{
 				return this.headerButtonStyle;
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Widgets
 		public bool							IsDynamic
 		{
 			//	Bouton statique ou dynamique ? Un clic sur un bouton dynamique permet de changer
-			//	l'ordre des tris (c'est géré par ScrollArray, entre autres).
+			//	l'ordre des tris (c'est gÃ©rÃ© par ScrollArray, entre autres).
 			get
 			{
 				return this.isDynamic;

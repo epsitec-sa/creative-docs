@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.DoubleType))]
@@ -6,7 +6,7 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DoubleType décrit des valeurs de type System.Double.
+	/// La classe DoubleType dÃ©crit des valeurs de type System.Double.
 	/// </summary>
 	public class DoubleType : AbstractNumericType
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.StaticText))]
@@ -6,7 +6,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe StaticText représente du texte non éditable. Ce texte
+	/// La classe StaticText reprÃ©sente du texte non Ã©ditable. Ce texte
 	/// peut comprendre des images et des liens hypertexte.
 	/// </summary>
 	public class StaticText : Widget

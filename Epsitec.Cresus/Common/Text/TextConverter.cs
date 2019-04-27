@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -10,14 +10,14 @@ namespace Epsitec.Common.Text
 	{
 		public static void ConvertFromString(string text, out uint[] result)
 		{
-			//	Convertit un texte 'string' codé sous une forme UTF-16 en un
-			//	texte interne (21 bits + bits de contrôle).
+			//	Convertit un texte 'string' codÃ© sous une forme UTF-16 en un
+			//	texte interne (21 bits + bits de contrÃ´le).
 			
-			//	On part de l'hypothèse que le texte passé en entrée ne contient
-			//	aucun caractère nécessitant un traitement particulier, ce qui
+			//	On part de l'hypothÃ¨se que le texte passÃ© en entrÃ©e ne contient
+			//	aucun caractÃ¨re nÃ©cessitant un traitement particulier, ce qui
 			//	veut dire que l'on va avoir une relation 1 <-> 1 entre 'text'
 			//	et 'result'; on peut donc allouer le buffer avec la taille
-			//	adéquate tout de suite :
+			//	adÃ©quate tout de suite :
 			
 			result = new uint[text.Length];
 			
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text
 			{
 				char c = text[i];
 				
-				//	S'agit-il là d'un caractère potentiellement complexe ?
+				//	S'agit-il lÃ  d'un caractÃ¨re potentiellement complexe ?
 				
 				if ((c >= Unicode.SurrogateMin) &&
 					(c <= Unicode.SurrogateMax))
@@ -39,8 +39,8 @@ namespace Epsitec.Common.Text
 				
 				if (c == '\r')
 				{
-					//	On vient de tomber sur un CR qui doit être filtré du texte
-					//	car il n'est pas considéré comme valide en aval. Il faut
+					//	On vient de tomber sur un CR qui doit Ãªtre filtrÃ© du texte
+					//	car il n'est pas considÃ©rÃ© comme valide en aval. Il faut
 					//	donc traiter tout le texte comme un texte complexe :
 					
 					TextConverter.ConvertFromComplexString (text, i, ref result);
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Text
 			{
 				char c = text[i];
 				
-				//	S'agit-il là d'un caractère potentiellement complexe ?
+				//	S'agit-il lÃ  d'un caractÃ¨re potentiellement complexe ?
 				
 				if ((c >= Unicode.SurrogateMin) &&
 					(c <= Unicode.SurrogateMax))
@@ -77,8 +77,8 @@ namespace Epsitec.Common.Text
 				
 				if (c == '\r')
 				{
-					//	On vient de tomber sur un CR qui doit être filtré du texte
-					//	car il n'est pas considéré comme valide en aval. Il faut
+					//	On vient de tomber sur un CR qui doit Ãªtre filtrÃ© du texte
+					//	car il n'est pas considÃ©rÃ© comme valide en aval. Il faut
 					//	donc traiter tout le texte comme un texte complexe :
 					
 					TextConverter.ConvertFromComplexString (text, i, ref result);
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Text
 						throw new Unicode.IllegalCodeException ();
 					}
 					
-					//	Il faut coder ce caractère comme un surrogate pair.
+					//	Il faut coder ce caractÃ¨re comme un surrogate pair.
 					
 					code -= 0x010000;
 					
@@ -130,8 +130,8 @@ namespace Epsitec.Common.Text
 					if ((code >= Unicode.SurrogateMin) &&
 						(code <= Unicode.SurrogateMax))
 					{
-						//	Un surrogate pair n'a pas le droit d'apparaître dans le texte
-						//	source, car UTF-32 considère ces codes comme non valides.
+						//	Un surrogate pair n'a pas le droit d'apparaÃ®tre dans le texte
+						//	source, car UTF-32 considÃ¨re ces codes comme non valides.
 						
 						throw new Unicode.IllegalCodeException ();
 					}
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Text
 						throw new Unicode.IllegalCodeException ();
 					}
 					
-					//	Il faut coder ce caractère comme un surrogate pair.
+					//	Il faut coder ce caractÃ¨re comme un surrogate pair.
 					
 					code -= 0x010000;
 					
@@ -192,8 +192,8 @@ namespace Epsitec.Common.Text
 					if ((code >= Unicode.SurrogateMin) &&
 						(code <= Unicode.SurrogateMax))
 					{
-						//	Un surrogate pair n'a pas le droit d'apparaître dans le texte
-						//	source, car UTF-32 considère ces codes comme non valides.
+						//	Un surrogate pair n'a pas le droit d'apparaÃ®tre dans le texte
+						//	source, car UTF-32 considÃ¨re ces codes comme non valides.
 						
 						throw new Unicode.IllegalCodeException ();
 					}
@@ -211,8 +211,8 @@ namespace Epsitec.Common.Text
 		private static void ConvertFromComplexString(string text, int index, ref uint[] result)
 		{
 			//	Conversion d'un texte contenant des surrogate pairs. L'appelant
-			//	a alloué un buffer suffisamment grand pour stocker le résultat
-			//	de la conversion, mais peut-être sera-t-il trop grand ?
+			//	a allouÃ© un buffer suffisamment grand pour stocker le rÃ©sultat
+			//	de la conversion, mais peut-Ãªtre sera-t-il trop grand ?
 			
 			for (int i = index; i < text.Length; i++)
 			{
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Text
 					
 					Debug.Assert.IsInBounds (code, 0x010000, 0x10FFFF);
 					
-					//	Saute le caractère suivant dans la source...
+					//	Saute le caractÃ¨re suivant dans la source...
 					
 					i++;
 				}
@@ -258,7 +258,7 @@ namespace Epsitec.Common.Text
 				}
 				else if (c == '\r')
 				{
-					//	Saut le caractère dans la source...
+					//	Saut le caractÃ¨re dans la source...
 					
 					continue;
 				}
@@ -284,8 +284,8 @@ namespace Epsitec.Common.Text
 		private static void ConvertFromComplexString(string text, int index, ref ulong[] result)
 		{
 			//	Conversion d'un texte contenant des surrogate pairs. L'appelant
-			//	a alloué un buffer suffisamment grand pour stocker le résultat
-			//	de la conversion, mais peut-être sera-t-il trop grand ?
+			//	a allouÃ© un buffer suffisamment grand pour stocker le rÃ©sultat
+			//	de la conversion, mais peut-Ãªtre sera-t-il trop grand ?
 			
 			for (int i = index; i < text.Length; i++)
 			{
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Text
 					
 					Debug.Assert.IsInBounds (code, 0x010000, 0x10FFFF);
 					
-					//	Saute le caractère suivant dans la source...
+					//	Saute le caractÃ¨re suivant dans la source...
 					
 					i++;
 				}
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Text
 				}
 				else if (c == '\r')
 				{
-					//	Saut le caractère dans la source...
+					//	Saut le caractÃ¨re dans la source...
 					
 					continue;
 				}

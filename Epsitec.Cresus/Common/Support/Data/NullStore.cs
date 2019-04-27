@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Data
 {
 	/// <summary>
-	/// La classe NullStore retourne toujours null, pour tous les éléments du
+	/// La classe NullStore retourne toujours null, pour tous les Ã©lÃ©ments du
 	/// pseudo-tableau.
 	/// </summary>
 	public class NullStore : ITextArrayStore

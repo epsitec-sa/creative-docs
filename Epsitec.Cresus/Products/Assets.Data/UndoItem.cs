@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	/// <summary>
 	/// Cette classe contient toute l'information permettant d'annuler une action,
-	/// à savoir la fonction à appeler pour annuler et les données correspondantes.
+	/// Ã  savoir la fonction Ã  appeler pour annuler et les donnÃ©es correspondantes.
 	/// </summary>
 	public class UndoItem
 	{
@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Assets.Data
 			this.description   = description;
 		}
 
-		//	La fonction permettant d'annuler est définie ainsi:
+		//	La fonction permettant d'annuler est dÃ©finie ainsi:
 		//	
 		//		public UndoItem UndoOperation(IUndoData data)
 		//		{
 		//		}
 		//	
 		//	Elle retourne toujours l'information permettant de s'annuler
-		//	elle-même (opération inverse).
+		//	elle-mÃªme (opÃ©ration inverse).
 
 		public readonly System.Func<IUndoData, UndoItem>	undoOperation;
 		public readonly IUndoData							undoData;

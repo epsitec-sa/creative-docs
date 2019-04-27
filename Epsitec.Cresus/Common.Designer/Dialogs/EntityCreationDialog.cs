@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue en 3 volets permettant de créer une entité.
+	/// Dialogue en 3 volets permettant de crÃ©er une entitÃ©.
 	/// </summary>
 	public class EntityCreationDialog : AbstractDialog
 	{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			this.isEditOk = false;
 			this.closed = false;
 
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit ("EntityCreation", 500, 306, true);
-				this.window.Text = "Créeation d'une nouvelle entité";  // Res.Strings.Dialog.EntityCreation.Title;
+				this.window.Text = "CrÃ©eation d'une nouvelle entitÃ©";  // Res.Strings.Dialog.EntityCreation.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(200, 150);
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					Dock = DockStyle.Fill,
 				};
 
-				//	Prépare les panneaux.
+				//	PrÃ©pare les panneaux.
 				this.selectedFrameBox = 0;
 				this.frameBoxes = new List<FrameBox> ();
 
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonPrev = new Button (footer);
 				this.buttonPrev.PreferredWidth = 75;
-				this.buttonPrev.Text = "&lt; Précédent";
+				this.buttonPrev.Text = "&lt; PrÃ©cÃ©dent";
 				this.buttonPrev.Dock = DockStyle.Right;
 				this.buttonPrev.Margins = new Margins (0, 1, 0, 0);
 				this.buttonPrev.Clicked += this.HandleButtonPrevClicked;
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.resourceSelector.Update ();
 			this.entityParameters.Update ();
 
-			this.selectedFrameBox = 0;  // commence toujours à la première "page"
+			this.selectedFrameBox = 0;  // commence toujours Ã  la premiÃ¨re "page"
 			this.UpdateWidgets ();
 
 			this.window.ShowDialog();
@@ -176,11 +176,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.levelLabel.Text = string.Format ("{0} / {1}", (this.selectedFrameBox+1).ToString (), this.frameBoxes.Count.ToString ());
 			this.buttonPrev.Enable = (this.selectedFrameBox != 0);
-			this.buttonNext.Text = (this.selectedFrameBox < this.frameBoxes.Count-1) ? "Suivant &gt;" : "Créer";
+			this.buttonNext.Text = (this.selectedFrameBox < this.frameBoxes.Count-1) ? "Suivant &gt;" : "CrÃ©er";
 
 			if (this.selectedFrameBox == 2)
 			{
-				//	Récupère le nom de l'entité à créer, choisi dans le premier volet.
+				//	RÃ©cupÃ¨re le nom de l'entitÃ© Ã  crÃ©er, choisi dans le premier volet.
 				this.entityParameters.TitleEntity = this.resourceName.SelectedName;
 			}
 		}

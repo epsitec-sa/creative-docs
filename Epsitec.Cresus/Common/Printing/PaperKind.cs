@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Statut : OK/PA, 21/03/2004
 
 namespace Epsitec.Common.Printing
 {
 	/// <summary>
-	/// L'énumération PaperKind indique la nature d'un papier.
+	/// L'Ã©numÃ©ration PaperKind indique la nature d'un papier.
 	/// </summary>
 	public enum PaperKind
 	{

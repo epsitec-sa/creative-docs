@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int DetectAddress(Point pos)
 		{
-			//	Détecte la flèche visée par la souris.
+			//	DÃ©tecte la flÃ¨che visÃ©e par la souris.
 			//	Retourne l'adresse de base ou Misc.undefined.
 			if (!this.Client.Bounds.Contains(pos))
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void HiliteBaseAddress(int baseAddress)
 		{
-			//	Met en évidence les fragments de flèches utilisant une adresse de base donnée.
+			//	Met en Ã©vidence les fragments de flÃ¨ches utilisant une adresse de base donnÃ©e.
 			bool changed = false;
 
 			for (int i=0; i<this.addresses.Count; i++)
@@ -110,7 +110,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					graphics.RenderSolid(Color.FromRgb(1.0, 0.8, 0.0));  // orange
 
 					graphics.AddRectangle(box);
-					graphics.RenderSolid(DolphinApplication.FromBrightness(0.41));  // gris foncé
+					graphics.RenderSolid(DolphinApplication.FromBrightness(0.41));  // gris foncÃ©
 
 					graphics.Color = DolphinApplication.FromBrightness(0);
 					graphics.PaintText(box.Left, box.Bottom+1, box.Width, box.Height, "!", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
@@ -235,7 +235,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 
 		/// <summary>
-		/// Cette classe correspond à un fragment de flèche.
+		/// Cette classe correspond Ã  un fragment de flÃ¨che.
 		/// </summary>
 		public class Address
 		{

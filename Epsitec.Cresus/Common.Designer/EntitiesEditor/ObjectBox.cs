@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -14,7 +14,7 @@ using System.Xml;
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	/// <summary>
-	/// Boîte pour représenter une entité.
+	/// BoÃ®te pour reprÃ©senter une entitÃ©.
 	/// </summary>
 	public class ObjectBox : AbstractObject
 	{
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public string Title
 		{
-			//	Titre au sommet de la boîte (nom de l'entité).
+			//	Titre au sommet de la boÃ®te (nom de l'entitÃ©).
 			get
 			{
 				return this.titleString;
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public string Subtitle
 		{
-			//	Sous-titre au sommet de la boîte, juste sous le titre (nom du module).
+			//	Sous-titre au sommet de la boÃ®te, juste sous le titre (nom du module).
 			get
 			{
 				return this.subtitleString;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void SetContent(CultureMap cultureMap)
 		{
-			//	Initialise le contenu de la boîte.
+			//	Initialise le contenu de la boÃ®te.
 			this.cultureMap = cultureMap;
 
 			this.Title = this.cultureMap.Name;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public List<ObjectComment> Comments
 		{
-			//	Commentaires liés.
+			//	Commentaires liÃ©s.
 			get
 			{
 				return this.comments;
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public ObjectInfo Info
 		{
-			//	Informations liées.
+			//	Informations liÃ©es.
 			get
 			{
 				return this.info;
@@ -160,8 +160,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override Rectangle Bounds
 		{
-			//	Retourne la boîte de l'objet.
-			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
+			//	Retourne la boÃ®te de l'objet.
+			//	Attention: le dessin peut dÃ©border, par exemple pour l'ombre.
 			get
 			{
 				return this.bounds;
@@ -170,18 +170,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			this.bounds.Offset(dx, dy);
 		}
 
 		public void SetBounds(Rectangle bounds)
 		{
-			//	Modifie la boîte de l'objet.
+			//	Modifie la boÃ®te de l'objet.
 			Point p1 = this.bounds.TopLeft;
 			this.bounds = bounds;
 			Point p2 = this.bounds.TopLeft;
 
-			//	S'il existe des commentaires associés, ils doivent aussi être déplacés.
+			//	S'il existe des commentaires associÃ©s, ils doivent aussi Ãªtre dÃ©placÃ©s.
 			foreach (var comment in this.comments)
 			{
 				Rectangle rect = comment.InternalBounds;
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				comment.SetBounds (rect);
 			}
 
-			//	S'il existe des informations associées, elles doivent aussi être déplacées.
+			//	S'il existe des informations associÃ©es, elles doivent aussi Ãªtre dÃ©placÃ©es.
 			if (this.info != null)
 			{
 				Rectangle rect = this.info.InternalBounds;
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override MainColor BackgroundMainColor
 		{
-			//	Couleur de fond de la boîte.
+			//	Couleur de fond de la boÃ®te.
 			get
 			{
 				return this.boxColor;
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.boxColor = value;
 
-					//	Change la couleur de toutes les connections liées.
+					//	Change la couleur de toutes les connections liÃ©es.
 					foreach (Field field in this.fields)
 					{
 						if (field.Connection != null)
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 
-					//	Change la couleur des informations liées.
+					//	Change la couleur des informations liÃ©es.
 					if (this.info != null)
 					{
 						this.info.BackgroundMainColor = this.boxColor;
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsRoot
 		{
-			//	Indique s'il s'agit de la boîte racine, c'est-à-dire de la boîte sélectionnée
+			//	Indique s'il s'agit de la boÃ®te racine, c'est-Ã -dire de la boÃ®te sÃ©lectionnÃ©e
 			//	dans la liste de gauche.
 			get
 			{
@@ -261,9 +261,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsExtended
 		{
-			//	Etat de la boîte (compact ou étendu).
+			//	Etat de la boÃ®te (compact ou Ã©tendu).
 			//	En mode compact, seul le titre est visible.
-			//	En mode étendu, les champs sont visibles.
+			//	En mode Ã©tendu, les champs sont visibles.
 			get
 			{
 				return this.isExtended;
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsConnectedToRoot
 		{
-			//	Indique si cet objet est connecté à la racine (flag temporaire).
+			//	Indique si cet objet est connectÃ© Ã  la racine (flag temporaire).
 			get
 			{
 				return this.isConnectedToRoot;
@@ -296,7 +296,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateTitle()
 		{
-			//	Met à jour le titre de la boîte.
+			//	Met Ã  jour le titre de la boÃ®te.
 			this.Title = this.cultureMap.Name;
 		}
 
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double GetBestHeight()
 		{
-			//	Retourne la hauteur requise selon le nombre de champs définis.
+			//	Retourne la hauteur requise selon le nombre de champs dÃ©finis.
 			if (this.isExtended)
 			{
 				return AbstractObject.headerHeight + ObjectBox.fieldHeight*this.fields.Count + AbstractObject.footerHeight + 20;
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public double GetConnectionSrcVerticalPosition(int rank)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
-			//	Il s'agit toujours de la position de départ d'une liaison.
+			//	Il s'agit toujours de la position de dÃ©part d'une liaison.
 			if (this.isExtended && rank < this.fields.Count && rank != -1)
 			{
 				Rectangle rect = this.GetFieldBounds(rank);
@@ -372,8 +372,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Point GetConnectionDstPosition(double posv, ConnectionAnchor anchor)
 		{
-			//	Retourne la position où accrocher la destination.
-			//	Il s'agit toujours de la position d'arrivée d'une liaison.
+			//	Retourne la position oÃ¹ accrocher la destination.
+			//	Il s'agit toujours de la position d'arrivÃ©e d'une liaison.
 			switch (anchor)
 			{
 				case ConnectionAnchor.Left:
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private bool IsVerticalPositionFree(double posv, bool right)
 		{
-			//	Cherche si une position verticale n'est occupée par aucun départ de liaison.
+			//	Cherche si une position verticale n'est occupÃ©e par aucun dÃ©part de liaison.
 			if (!right && this.isExtended && this.sourcesClosedCount > 0)
 			{
 				double y = this.bounds.Top-AbstractObject.headerHeight;
@@ -568,8 +568,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			if (this.isDragging)
 			{
 				Rectangle bounds = this.editor.BoxGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
@@ -625,8 +625,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
-			if (this.isSourcesMenu)  // menu resté du clic précédent ?
+			//	Le bouton de la souris est pressÃ©.
+			if (this.isSourcesMenu)  // menu restÃ© du clic prÃ©cÃ©dent ?
 			{
 				if (this.sourcesMenuSelected == -1)  // clic en dehors ?
 				{
@@ -677,7 +677,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			if (this.isDragging)
 			{
 				this.editor.UpdateAfterMoving(this);
@@ -721,8 +721,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.editor.LockObject(null);
 					this.editor.Invalidate();
 				}
-				//	Si on est pas dans une case valide (par exemple si on a cliqué sans bouger
-				//	dans l'en-tête), le menu reste.
+				//	Si on est pas dans une case valide (par exemple si on a cliquÃ© sans bouger
+				//	dans l'en-tÃªte), le menu reste.
 			}
 			else
 			{
@@ -870,7 +870,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			element = ActiveElement.None;
 			fieldRank = -1;
 			this.SetConnectionsHilited(false);
@@ -882,7 +882,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (pos.IsZero)
 			{
-				//	Si l'une des connection est dans l'état ConnectionOpen*, il faut afficher
+				//	Si l'une des connection est dans l'Ã©tat ConnectionOpen*, il faut afficher
 				//	aussi les petits cercles de gauche.
 				if (this.IsConnectionReadyForOpen())
 				{
@@ -909,7 +909,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				//	Souris dans le bouton compact/étendu ?
+				//	Souris dans le bouton compact/Ã©tendu ?
 				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionExtendButton, pos))
 				{
 					element = ActiveElement.BoxExtend;
@@ -998,7 +998,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.isExtended)
 				{
-					//	Souris dans le bouton des paramètres ?
+					//	Souris dans le bouton des paramÃ¨tres ?
 					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionParametersButton, pos) && !this.IsInterface)
 					{
 						element = ActiveElement.BoxParameters;
@@ -1006,7 +1006,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					//	Souris dans le bouton pour changer la largeur ?
-					//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
+					//	Souris dans le bouton pour dÃ©placer le sÃ©parateur des colonnes ?
 					double d1 = Point.Distance(this.PositionChangeWidthButton, pos);
 					double d2;
 					
@@ -1028,7 +1028,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 
-					//	Souris dans l'en-tête ?
+					//	Souris dans l'en-tÃªte ?
 					if (this.bounds.Contains(pos) && 
 						(pos.Y >= this.bounds.Top-AbstractObject.headerHeight ||
 						 pos.Y <= this.bounds.Bottom+AbstractObject.footerHeight))
@@ -1083,7 +1083,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 
-					//	Souris sur le séparateur des colonnes ?
+					//	Souris sur le sÃ©parateur des colonnes ?
 					double sep = this.ColumnsSeparatorAbsolute(0);
 					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked &&
 						this.columnsSeparatorRelative1 < 1.0 && pos.X >= sep-4 && pos.X <= sep+4 &&
@@ -1168,7 +1168,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 				}
-				else  // boîte compactée ?
+				else  // boÃ®te compactÃ©e ?
 				{
 					if (this.bounds.Contains(pos))
 					{
@@ -1190,10 +1190,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override bool IsMousePossible(ActiveElement element, int fieldRank)
 		{
-			//	Indique si l'opération est possible.
-			//	Dans un module de patch, un champ provenant du module de référence ne doit pas pouvoir
-			//	être modifié, mais la détection (BoxFieldName et BoxFieldType) doit tout de même fonctionner,
-			//	pour permettre la navigation. Cette méthode indique si l'opération de modification est
+			//	Indique si l'opÃ©ration est possible.
+			//	Dans un module de patch, un champ provenant du module de rÃ©fÃ©rence ne doit pas pouvoir
+			//	Ãªtre modifiÃ©, mais la dÃ©tection (BoxFieldName et BoxFieldType) doit tout de mÃªme fonctionner,
+			//	pour permettre la navigation. Cette mÃ©thode indique si l'opÃ©ration de modification est
 			//	possible.
 			if (element == ActiveElement.BoxFieldName ||
 				element == ActiveElement.BoxFieldType)
@@ -1209,8 +1209,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void SetConnectionsHilited(bool isHilited)
 		{
-			//	Modifie l'état 'hilited' de toutes les connections qui partent de l'objet.
-			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
+			//	Modifie l'Ã©tat 'hilited' de toutes les connections qui partent de l'objet.
+			//	Avec false, les petits cercles des liaisons fermÃ©es ne sont affichÃ©s qu'Ã  droite.
 			if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				isHilited = false;
@@ -1246,7 +1246,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldRemoveBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par le bouton (-) d'un champ.
+			//	Retourne le rectangle occupÃ© par le bouton (-) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 
 			rect.Width = rect.Height;
@@ -1256,7 +1256,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldAddBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par le bouton (+) d'un champ.
+			//	Retourne le rectangle occupÃ© par le bouton (+) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
 			rect.Width = rect.Height;
@@ -1268,7 +1268,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldMovableBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par le bouton (|) d'un champ.
+			//	Retourne le rectangle occupÃ© par le bouton (|) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 
 			rect.Left = rect.Right-rect.Height;
@@ -1278,7 +1278,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldMovingBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
+			//	Retourne le rectangle occupÃ© par la destination d'un dÃ©placement de champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
 			rect.Bottom -= ObjectBox.fieldHeight/2;
@@ -1289,7 +1289,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldInterfaceBounds()
 		{
-			//	Retourne le rectangle occupé par le bouton interface.
+			//	Retourne le rectangle occupÃ© par le bouton interface.
 			Rectangle rect = this.GetFieldBounds(this.skippedField-1);
 			
 			rect.Left = rect.Right-rect.Height;
@@ -1301,7 +1301,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldNameBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par le nom d'un champ.
+			//	Retourne le rectangle occupÃ© par le nom d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 
 			rect.Deflate(ObjectBox.textMargin, 0);
@@ -1312,7 +1312,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldTypeBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par le type d'un champ.
+			//	Retourne le rectangle occupÃ© par le type d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
 			rect.Deflate(ObjectBox.textMargin, 0);
@@ -1324,7 +1324,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldExpressionBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par l'expression d'un champ.
+			//	Retourne le rectangle occupÃ© par l'expression d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
 			rect.Deflate(9.5, 0);
@@ -1335,8 +1335,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldGroupBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par un groupe, c'est-à-dire un ensemble de champs IsReadOnly
-			//	ayant le même DeepDefiningTypeId.
+			//	Retourne le rectangle occupÃ© par un groupe, c'est-Ã -dire un ensemble de champs IsReadOnly
+			//	ayant le mÃªme DeepDefiningTypeId.
 			if (rank == 0 || !this.fields[rank].IsReadOnly)
 			{
 				return Rectangle.Empty;
@@ -1373,7 +1373,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Rectangle GetFieldBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par un champ, en tenant compte du niveau.
+			//	Retourne le rectangle occupÃ© par un champ, en tenant compte du niveau.
 			Rectangle rect = this.bounds;
 			rect.Deflate(2, 0);
 			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
@@ -1381,7 +1381,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (rank >= 0 && rank < this.fields.Count)  // rang d'un champ existant ?
 			{
-				rect.Deflate(ObjectBox.indentWidth*this.fields[rank].Level, 0);  // plus étroit si Level > 0
+				rect.Deflate(ObjectBox.indentWidth*this.fields[rank].Level, 0);  // plus Ã©troit si Level > 0
 			}
 
 			return rect;
@@ -1390,7 +1390,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsInterface
 		{
-			//	Indique si l'entité est une interface.
+			//	Indique si l'entitÃ© est une interface.
 			get
 			{
 				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -1401,7 +1401,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void LocateEntity()
 		{
-			//	Montre l'entité cliquée avec le bouton de droite.
+			//	Montre l'entitÃ© cliquÃ©e avec le bouton de droite.
 			Module module = this.SearchModule(this.cultureMap.Id);
 
 			if (module != null)
@@ -1412,7 +1412,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void LocateTitle(int rank)
 		{
-			//	Montre l'entité héritée ou l'interface cliquée avec le bouton de droite.
+			//	Montre l'entitÃ© hÃ©ritÃ©e ou l'interface cliquÃ©e avec le bouton de droite.
 			System.Diagnostics.Debug.Assert(this.fields[rank].IsTitle || this.fields[rank].IsSubtitle);
 			Druid druid = this.fields[rank].CaptionId;
 			System.Diagnostics.Debug.Assert(druid.IsValid);
@@ -1427,7 +1427,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void LocateField(int rank)
 		{
-			//	Montre le champ cliqué avec le bouton de droite.
+			//	Montre le champ cliquÃ© avec le bouton de droite.
 			int fieldRank = this.fields[rank].Rank;
 			if (fieldRank == -1)
 			{
@@ -1450,7 +1450,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void LocateType(int rank)
 		{
-			//	Montre le type cliqué avec le bouton de droite.
+			//	Montre le type cliquÃ© avec le bouton de droite.
 			int fieldRank = this.fields[rank].Rank;
 			if (fieldRank == -1)
 			{
@@ -1476,7 +1476,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void MoveField(int srcRank, int dstRank)
 		{
-			//	Déplace un champ.
+			//	DÃ©place un champ.
 			if (dstRank != srcRank && dstRank != srcRank-1)
 			{
 				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -1593,7 +1593,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void AddInterface()
 		{
-			//	Ajoute une interface à l'entité.
+			//	Ajoute une interface Ã  l'entitÃ©.
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
@@ -1630,7 +1630,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void RemoveInterface(int rank)
 		{
-			//	Supprime une interface de l'entité.
+			//	Supprime une interface de l'entitÃ©.
 			string question = string.Format(Res.Strings.Entities.Question.RemoveInterface.Base, this.fields[rank].FieldName);
 			if (this.Application.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
@@ -1670,7 +1670,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool EditExpression(Druid fieldId)
 		{
-			//	Edite l'expresion associée à un champ.
+			//	Edite l'expresion associÃ©e Ã  un champ.
 			Field field = this.AdjustAfterReadSearchField(fieldId);
 			if (field == null)
 			{
@@ -1683,7 +1683,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void EditExpression(int rank)
 		{
-			//	Edite l'expresion associée à un champ.
+			//	Edite l'expresion associÃ©e Ã  un champ.
 
 			if (rank < 0 || rank >= this.fields.Count)
 			{
@@ -1707,8 +1707,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (isUnchanged)
 			{
-				//	Le champ reprend de manière transparente ce qui est défini au
-				//	niveau de l'interface. Le source local est donc à ignorer ici.
+				//	Le champ reprend de maniÃ¨re transparente ce qui est dÃ©fini au
+				//	niveau de l'interface. Le source local est donc Ã  ignorer ici.
 				localSource = null;
 			}
 			
@@ -1732,10 +1732,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (localSource.Length == 0)
 				{
-					//	L'utilisateur désire utiliser une valeur plutôt qu'une expression
-					//	pour ce champ. Vérifie que ce soit autorisé dans ce contexte : il
-					//	faut que ce soit un champ local, sinon c'est illégal de changer
-					//	d'expression à valeur.
+					//	L'utilisateur dÃ©sire utiliser une valeur plutÃ´t qu'une expression
+					//	pour ce champ. VÃ©rifie que ce soit autorisÃ© dans ce contexte : il
+					//	faut que ce soit un champ local, sinon c'est illÃ©gal de changer
+					//	d'expression Ã  valeur.
 					if (membership != FieldMembership.Local ||
 						(field.IsPatch && !string.IsNullOrEmpty(inheritedSource)))
 					{
@@ -1749,16 +1749,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (encoded == null)
 				{
-					//	L'utilisateur a décidé de supprimer le réglage local au module
-					//	de patch pour reprendre les réglages du module de référence. Il
+					//	L'utilisateur a dÃ©cidÃ© de supprimer le rÃ©glage local au module
+					//	de patch pour reprendre les rÃ©glages du module de rÃ©fÃ©rence. Il
 					//	suffit pour cela de reprendre les valeurs originales.
 					dataField.ResetToOriginalValue (Support.Res.Fields.Field.IsInterfaceDefinition);
 					dataField.ResetToOriginalValue (Support.Res.Fields.Field.Expression);
 					dataField.ResetToOriginalValue (Support.Res.Fields.Field.Source);
 
-					//	Il ne faut pas oublier de réinitialiser la source du champ de
-					//	manière à ce que l'accesseur considère que le champ provient
-					//	du module de référence et n'est plus le résultat d'une fusion:
+					//	Il ne faut pas oublier de rÃ©initialiser la source du champ de
+					//	maniÃ¨re Ã  ce que l'accesseur considÃ¨re que le champ provient
+					//	du module de rÃ©fÃ©rence et n'est plus le rÃ©sultat d'une fusion:
 					dataField.SetValue (Support.Res.Fields.Field.CultureMapSource, CultureMapSource.ReferenceModule);
 
 					goto end;
@@ -1770,27 +1770,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Le champ provient d'une interface locale...
 				if (encoded == null)
 				{
-					//	La définition doit être reprise dans l'interface; il n'y a plus de définition
+					//	La dÃ©finition doit Ãªtre reprise dans l'interface; il n'y a plus de dÃ©finition
 					//	locale.
 					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
 				}
 				else
 				{
-					//	La définition ne doit plus être reprise dans l'interface, mais bien dans les
-					//	réglages locaux.
+					//	La dÃ©finition ne doit plus Ãªtre reprise dans l'interface, mais bien dans les
+					//	rÃ©glages locaux.
 					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
 
 					if (localSource.Length == 0)
 					{
-						//	L'utilisateur n'a pas spécifié de source, ce qui implique que ce n'est
+						//	L'utilisateur n'a pas spÃ©cifiÃ© de source, ce qui implique que ce n'est
 						//	pas une expression, mais un valeur qu'il faut utiliser ici.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 					}
 					else
 					{
-						//	L'utilisateur a spécifié une expression qui remplace celle qui était
-						//	définie au niveau de l'interface.
+						//	L'utilisateur a spÃ©cifiÃ© une expression qui remplace celle qui Ã©tait
+						//	dÃ©finie au niveau de l'interface.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
 					}
@@ -1802,8 +1802,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (membership == FieldMembership.LocalOverride)
 					{
-						//	Ce champ redéfinissait une expression locale; supprime cette
-						//	définition locale et reprend la valeur héritée.
+						//	Ce champ redÃ©finissait une expression locale; supprime cette
+						//	dÃ©finition locale et reprend la valeur hÃ©ritÃ©e.
 						dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, UndefinedValue.Value);
 						dataField.SetValue(Support.Res.Fields.Field.Membership, FieldMembership.Inherited);
 					}
@@ -1812,23 +1812,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (membership != FieldMembership.Local)
 					{
-						//	Ce champ n'est pas un champ local, mais un champ hérité ou qui
-						//	redéfinissait déjà l'expression héritée; dans tous les cas, note
-						//	que maintenant, le champ redéfinit localement l'expression héritée.
+						//	Ce champ n'est pas un champ local, mais un champ hÃ©ritÃ© ou qui
+						//	redÃ©finissait dÃ©jÃ  l'expression hÃ©ritÃ©e; dans tous les cas, note
+						//	que maintenant, le champ redÃ©finit localement l'expression hÃ©ritÃ©e.
 						dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
 						dataField.SetValue(Support.Res.Fields.Field.Membership, FieldMembership.LocalOverride);
 					}
 
 					if (string.IsNullOrEmpty(localSource))
 					{
-						//	Aucune expression n'a été spécifiée; force l'utilisation d'une
+						//	Aucune expression n'a Ã©tÃ© spÃ©cifiÃ©e; force l'utilisation d'une
 						//	valeur.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 					}
 					else
 					{
-						//	Une expression a été spécifiée; force l'utilisation de celle-ci
+						//	Une expression a Ã©tÃ© spÃ©cifiÃ©e; force l'utilisation de celle-ci
 						//	localement.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
@@ -1836,7 +1836,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Termine en mettant à jour les champs hérités...
+			//	Termine en mettant Ã  jour les champs hÃ©ritÃ©s...
 
 		end:
 
@@ -1892,7 +1892,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				ObjectBox dst = this.fields[rank].DstBox;
 				this.fields[rank].IsExplored = false;
 				this.fields[rank].DstBox = null;
-				this.editor.CloseBox(dst);  // ferme les boîtes pointées
+				this.editor.CloseBox(dst);  // ferme les boÃ®tes pointÃ©es
 			}
 
 			if (this.ApplyOptions (dataField, druid, dialogOptions) == false)
@@ -1943,19 +1943,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateFieldsContent()
 		{
-			//	Crée tous les champs de titrage.
+			//	CrÃ©e tous les champs de titrage.
 			this.skippedField = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				if (this.fields[i].IsReadOnly)
 				{
-					this.skippedField++;  // nombre de champs hérités ou provenant d'une interface, au début de la liste
+					this.skippedField++;  // nombre de champs hÃ©ritÃ©s ou provenant d'une interface, au dÃ©but de la liste
 				}
 			}
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
-			//	Ajoute le titre de l'entité dont on hérite, s'il existe.
+			//	Ajoute le titre de l'entitÃ© dont on hÃ©rite, s'il existe.
 			Druid title = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
 			if (this.skippedField > 0 && title.IsValid)
 			{
@@ -1975,7 +1975,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				this.fields.Insert(0, field);
-				this.skippedField++;  // compte le titre lui-même
+				this.skippedField++;  // compte le titre lui-mÃªme
 			}
 
 			//	Ajoute les titres des interfaces, si elles existent.
@@ -1990,7 +1990,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.fields[i].DefiningRootEntityId.IsValid)  // champ d'une interface ?
 				{
-					//	Génère le titre d'une interface d'interface(s).
+					//	GÃ©nÃ¨re le titre d'une interface d'interface(s).
 					if (this.fields[i].DefiningEntityId != title &&
 						this.fields[i].DefiningEntityId != this.fields[i].DefiningRootEntityId)
 					{
@@ -2009,13 +2009,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 								if (entityTypeClass == StructuredTypeClass.Interface)
 								{
 									Field field = new Field (this.editor);
-									field.IsTitle = true;  // interface ajoutée à cette entitié
+									field.IsTitle = true;  // interface ajoutÃ©e Ã  cette entitiÃ©
 									field.IsInterfaceOrInterfaceTitle = true;
 									field.CaptionId = last;
 									field.FieldName = Misc.Bold (entity.Name);
 
 									this.fields.Insert (i, field);
-									this.skippedField++;  // compte le titre lui-même
+									this.skippedField++;  // compte le titre lui-mÃªme
 									i++;
 								}
 							}
@@ -2026,7 +2026,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						last = Druid.Empty;
 					}
 
-					//	Génère le titre d'une interface.
+					//	GÃ©nÃ¨re le titre d'une interface.
 					if (lastRoot != this.fields[i].DefiningRootEntityId && this.fields[i].DefiningRootEntityId != title)
 					{
 						lastRoot = this.fields[i].DefiningRootEntityId;
@@ -2044,18 +2044,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 								Field field = new Field (this.editor);
 								if (this.fields[i].Membership == FieldMembership.Local && !last.IsValid)
 								{
-									field.IsTitle = true;  // interface ajoutée à cette entitié
+									field.IsTitle = true;  // interface ajoutÃ©e Ã  cette entitiÃ©
 								}
 								else
 								{
-									field.IsSubtitle = true;  // interface héritée ou interface dans une interface
+									field.IsSubtitle = true;  // interface hÃ©ritÃ©e ou interface dans une interface
 								}
 								field.IsInterfaceOrInterfaceTitle = true;
 								field.CaptionId = lastRoot;
 								field.FieldName = Misc.Bold (entity.Name);
 
 								this.fields.Insert (i, field);
-								this.skippedField++;  // compte le titre lui-même
+								this.skippedField++;  // compte le titre lui-mÃªme
 								i++;
 							}
 						}
@@ -2063,7 +2063,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Pour chaque case, initialise les propriétés Level, IsGroupTop et IsGroupBottom.
+			//	Pour chaque case, initialise les propriÃ©tÃ©s Level, IsGroupTop et IsGroupBottom.
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				if (this.fields[i].IsTitle)
@@ -2105,8 +2105,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateInformations()
 		{
-			//	Met à jour les informations de l'éventuel ObjectInfo lié.
-			if (this.info != null)  // existe un ObjectInfo lié ?
+			//	Met Ã  jour les informations de l'Ã©ventuel ObjectInfo liÃ©.
+			if (this.info != null)  // existe un ObjectInfo liÃ© ?
 			{
 				this.info.Text = this.GetInformations(false);
 				this.editor.UpdateAfterCommentChanged();
@@ -2115,11 +2115,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private string GetInformations(bool resume)
 		{
-			//	Retourne les informations pour l'ObjectInfo lié.
+			//	Retourne les informations pour l'ObjectInfo liÃ©.
 			List<string> listInherited = new List<string>();
 			List<string> listInterface = new List<string>();
 
-			//	Cherche récursivement toutes les entités parentes, pour l'héritage.
+			//	Cherche rÃ©cursivement toutes les entitÃ©s parentes, pour l'hÃ©ritage.
 			CultureMap cultureMap = this.cultureMap;
 			while (cultureMap != null)
 			{
@@ -2136,7 +2136,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							string name;
 
-							if (module == this.editor.Module)  // dans le même module ?
+							if (module == this.editor.Module)  // dans le mÃªme module ?
 							{
 								name = cultureMap.Name;
 							}
@@ -2154,7 +2154,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Cherche toutes les interfaces utilisées par les champs.
+			//	Cherche toutes les interfaces utilisÃ©es par les champs.
 			for (int i=0; i<this.fields.Count; i++)
 			{
 #if false
@@ -2253,7 +2253,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateFieldsLink()
 		{
-			//	Met à jour toutes les liaisons des champs.
+			//	Met Ã  jour toutes les liaisons des champs.
 			int rank = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
@@ -2269,7 +2269,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private string GetNewName()
 		{
-			//	Cherche un nouveau nom jamais utilisé.
+			//	Cherche un nouveau nom jamais utilisÃ©.
 			for (int i=1; i<10000; i++)
 			{
 				string name = string.Format(Res.Strings.Viewers.Types.Structured.NewName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -2298,7 +2298,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void AddComment()
 		{
-			//	Ajoute un commentaire à la boîte.
+			//	Ajoute un commentaire Ã  la boÃ®te.
 			var comment = new ObjectComment(this.editor);
 			comment.AttachObject = this;
 
@@ -2322,7 +2322,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.AddComment(comment);
 			this.editor.UpdateAfterCommentChanged();
 
-			comment.EditComment();  // édite tout de suite le texte du commentaire
+			comment.EditComment();  // Ã©dite tout de suite le texte du commentaire
 
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
@@ -2345,7 +2345,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void AddInfo()
 		{
-			//	Ajoute une information à la boîte.
+			//	Ajoute une information Ã  la boÃ®te.
 			if (this.info == null)
 			{
 				this.info = new ObjectInfo(this.editor);
@@ -2374,7 +2374,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void ChangeParameters()
 		{
-			//	Ouvre le dialogue pour modifier les paramètres de l'entité.
+			//	Ouvre le dialogue pour modifier les paramÃ¨tres de l'entitÃ©.
 			var lifetime = this.dataLifetimeExpectancy;
 			var flags    = this.structuredTypeFlags;
 
@@ -2442,7 +2442,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		/// <summary>
-		/// Informations sur une entité source, ouverte ou fermée.
+		/// Informations sur une entitÃ© source, ouverte ou fermÃ©e.
 		/// </summary>
 		private class SourceInfo
 		{
@@ -2454,7 +2454,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateAfterOpenOrCloseBox()
 		{
-			//	Appelé après avoir ajouté ou supprimé une boîte.
+			//	AppelÃ© aprÃ¨s avoir ajoutÃ© ou supprimÃ© une boÃ®te.
 			this.sourcesClosedCount = 0;
 			for (int i=0; i<this.sourcesList.Count; i++)
 			{
@@ -2472,14 +2472,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (!info.Opened)
 				{
-					this.sourcesClosedCount++;  // màj le nombre de sources fermées
+					this.sourcesClosedCount++;  // mÃ j le nombre de sources fermÃ©es
 				}
 			}
 		}
 
 		private void UpdateSources()
 		{
-			//	Met à jour la liste de toutes les sources potentielles de l'entité courante.
+			//	Met Ã  jour la liste de toutes les sources potentielles de l'entitÃ© courante.
 			this.sourcesList = new List<SourceInfo> ();
 
 			List<Module> modules = this.Application.Modules;
@@ -2520,8 +2520,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			while (true)
 			{
-				//	Il faut peut-être faire plusieurs passes, parce que le fait de rafraîchir
-				//	un CultureMap peut éventuellement -- indirectement -- modifier la liste
+				//	Il faut peut-Ãªtre faire plusieurs passes, parce que le fait de rafraÃ®chir
+				//	un CultureMap peut Ã©ventuellement -- indirectement -- modifier la liste
 				//	des data fields...
 
 				var copy = dataFields.ToArray ();
@@ -2563,16 +2563,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void OpenBox(CultureMap cultureMap)
 		{
-			//	Ouvre une entité quelconque.
+			//	Ouvre une entitÃ© quelconque.
 			ObjectBox box = this.editor.SearchBox(cultureMap.Name);
 			if (box == null)
 			{
-				//	Ouvre la connection sur une nouvelle boîte.
+				//	Ouvre la connection sur une nouvelle boÃ®te.
 				box = new ObjectBox(this.editor);
 				box.BackgroundMainColor = this.boxColor;
 				box.SetContent(cultureMap);
 
-				//	Cherche quel champ permet de faire une connexion avec l'entité courante.
+				//	Cherche quel champ permet de faire une connexion avec l'entitÃ© courante.
 				int rank = -1;
 				var currentDruid = this.editor.Entities.CurrentDruid;
 
@@ -2596,7 +2596,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.AddBox(box);
 				this.editor.UpdateGeometry();
 
-				//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+				//	Essaie de trouver une place libre, pour dÃ©placer le moins possible d'Ã©lÃ©ments.
 				double oy = box.bounds.Top - box.GetConnectionSrcVerticalPosition(rank) - AbstractObject.headerHeight/2;
 
 				Rectangle bounds = new Rectangle(this.bounds.Left-50-box.Bounds.Width, this.bounds.Top+oy-box.bounds.Height, box.Bounds.Width, box.Bounds.Height);
@@ -2638,7 +2638,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
-			//	Héritage	->	Traitillé
+			//	HÃ©ritage	->	TraitillÃ©
 			//	Interface	->	Trait plein avec o---
 
 			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
@@ -2657,7 +2657,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Rectangle rect;
 
-			//	Dessine le bouton compact/étendu.
+			//	Dessine le bouton compact/Ã©tendu.
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			if (this.hilitedElement == ActiveElement.BoxExtend)
 			{
@@ -2678,7 +2678,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
 			}
 
-			//	Dessine le moignon pour les sources à gauche.
+			//	Dessine le moignon pour les sources Ã  gauche.
 			if (this.sourcesClosedCount > 0 && this.hilitedElement != ActiveElement.None)
 			{
 				Point p1 = this.PositionSourcesButton;
@@ -2835,7 +2835,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 							if (this.fields[i].IsAscending || this.fields[i].IsDescending)
 							{
-								rw -= 10;  // laisse la place pour la flèche à droite
+								rw -= 10;  // laisse la place pour la flÃ¨che Ã  droite
 							}
 
 							this.fields[i].TextLayoutType.LayoutSize = new Size(rw, rh);
@@ -2854,9 +2854,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else if (this.fields[i].LocalExpression != "" && !string.IsNullOrEmpty(this.fields[i].InheritedExpression))
 						{
-							//	L'expression n'est héritée que si elle n'est pas remplacée par
-							//	une valeur au niveau du champ, ce qui est encodé ici avec une
-							//	expression locale égale à "".
+							//	L'expression n'est hÃ©ritÃ©e que si elle n'est pas remplacÃ©e par
+							//	une valeur au niveau du champ, ce qui est encodÃ© ici avec une
+							//	expression locale Ã©gale Ã  "".
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
 							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.DeepExpression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
@@ -2869,7 +2869,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				//	Dessine tous les cadres liés aux titres.
+				//	Dessine tous les cadres liÃ©s aux titres.
 				for (int i=0; i<this.fields.Count; i++)
 				{
 					if (this.fields[i].IsTitle)
@@ -2972,7 +2972,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				//	Met en évidence le groupe survolé.
+				//	Met en Ã©vidence le groupe survolÃ©.
 				if (this.hilitedElement == ActiveElement.BoxFieldGroup)
 				{
 					rect = this.GetFieldGroupBounds(this.hilitedFieldRank);
@@ -3001,13 +3001,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
 					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator1)
 				{
-					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
+					//	Dessine la glissiÃ¨re Ã  gauche pour suggÃ©rer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(this.skippedField-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					bool hilited = this.hilitedElement == ActiveElement.BoxFieldAdd || this.hilitedElement == ActiveElement.BoxFieldRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
-					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
+					//	Dessine la glissiÃ¨re Ã  droite pour suggÃ©rer les boutons Movable des champs.
 					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
 					hilited = this.hilitedElement == ActiveElement.BoxFieldMovable;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
@@ -3017,7 +3017,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le cadre en noir.
 			ObjectBox.DrawFrame2 (graphics, this.bounds, this.boxColor, this.isRoot, this.isExtended, this.isDimmed, dragging, this.dataLifetimeExpectancy, this.structuredTypeFlags);
 
-			//	Dessine les boutons sur les glissières.
+			//	Dessine les boutons sur les glissiÃ¨res.
 			if (this.isExtended)
 			{
 				if (this.hilitedElement == ActiveElement.BoxFieldRemove)
@@ -3161,7 +3161,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExtended)
 			{
-				//	Dessine le bouton des paramètres.
+				//	Dessine le bouton des paramÃ¨tres.
 				if (!this.IsInterface)
 				{
 					if (this.hilitedElement == ActiveElement.BoxParameters)
@@ -3174,7 +3174,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				//	Dessine le bouton pour déplacer le séparateur des colonnes.
+				//	Dessine le bouton pour dÃ©placer le sÃ©parateur des colonnes.
 				if (this.hilitedElement == ActiveElement.BoxMoveColumnsSeparator1)
 				{
 					double sep = this.ColumnsSeparatorAbsolute(0);
@@ -3273,11 +3273,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Deflate (1);
 			var path = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundFrameRadius);
 
-			//	Dessine l'intérieur en blanc.
+			//	Dessine l'intÃ©rieur en blanc.
 			graphics.Rasterizer.AddSurface (path);
 			graphics.RenderSolid (whiteColor);
 
-			//	Dessine l'intérieur en dégradé.
+			//	Dessine l'intÃ©rieur en dÃ©gradÃ©.
 			graphics.Rasterizer.AddSurface (path);
 			var c1 = AbstractObject.GetColorMain (mainColor, dragging ? 0.8 : 0.4, isDimmed);
 			var c2 = AbstractObject.GetColorMain (mainColor, dragging ? 0.4 : 0.1, isDimmed);
@@ -3307,7 +3307,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Color ci2 = AbstractObject.GetColorMain (mainColor, 0.0, isDimmed);
 				AbstractObject.RenderHorizontalGradient (graphics, inside, ci1, ci2);
 
-				//	Trait vertical de séparation.
+				//	Trait vertical de sÃ©paration.
 				if (columnsSeparatorRelative1 < 1.0)
 				{
 					double posx = columnsSeparatorAbsolute0+0.5;
@@ -3321,7 +3321,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid (lineColor);
 				}
 
-				//	Ombre supérieure.
+				//	Ombre supÃ©rieure.
 				Rectangle shadow = new Rectangle (bounds.Left+1, bounds.Top-AbstractObject.headerHeight-8, bounds.Width-2, 8);
 				graphics.AddFilledRectangle (shadow);
 				AbstractObject.RenderVerticalGradient (graphics, shadow, Color.FromAlphaRgb (0.0, 0, 0, 0), Color.FromAlphaRgb (0.3, 0, 0, 0));
@@ -3379,7 +3379,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.RenderSolid (frameColor);
 			}
 
-			//	Dessine les paramètres en bas à droite.
+			//	Dessine les paramÃ¨tres en bas Ã  droite.
 			var center = new Point (bounds.Right-AbstractObject.buttonRadius*2-1, bounds.Bottom+AbstractObject.footerHeight/2+1);
 			ObjectBox.DrawParameters (graphics, center, frameColor, isExtended, isDimmed, lifetime, flags);
 		}
@@ -3413,7 +3413,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static void DrawParameters(Graphics graphics, Point center, Color frameColor, bool isExtended, bool isDimmed, DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
 		{
-			//	Dessine les paramètres (espérance de vie de l'entité et fanions).
+			//	Dessine les paramÃ¨tres (espÃ©rance de vie de l'entitÃ© et fanions).
 			var whiteColor = AbstractObject.GetColor (1, isDimmed, false);
 
 			if (isExtended && lifetime != Types.DataLifetimeExpectancy.Unknown)
@@ -3476,7 +3476,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private bool IsHeaderHilite
 		{
-			//	Indique si la souris est dans l'en-tête.
+			//	Indique si la souris est dans l'en-tÃªte.
 			get
 			{
 				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
@@ -3513,12 +3513,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void DrawSourcesMenu(Graphics graphics, Point pos)
 		{
-			//	Dessine le menu pour choisir une entité source.
+			//	Dessine le menu pour choisir une entitÃ© source.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			double h = ObjectBox.sourcesMenuHeight;
 			Rectangle box = this.RectangleSourcesMenu;
 
-			//	Dessine la boîte vide ombrée.
+			//	Dessine la boÃ®te vide ombrÃ©e.
 			Rectangle big = box;
 			big.Inflate(7);
 
@@ -3539,7 +3539,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddFilledRectangle(box);
 			graphics.RenderSolid(this.GetColor(1));
 
-			//	Dessine l'en-tête.
+			//	Dessine l'en-tÃªte.
 			Rectangle rect = box;
 			rect.Bottom = rect.Top-h-1;
 
@@ -3607,7 +3607,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
 		{
-			//	Dessine un large traitillé.
+			//	Dessine un large traitillÃ©.
 			Path path = new Path();
 			path.MoveTo(p1);
 			path.LineTo(p2);
@@ -3616,7 +3616,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void DrawEmptySlider(Graphics graphics, Point p1, Point p2, bool hilited)
 		{
-			//	Dessine une glissère vide, pour suggérer les boutons qui peuvent y prendre place.
+			//	Dessine une glissÃ¨re vide, pour suggÃ©rer les boutons qui peuvent y prendre place.
 			Rectangle rect = new Rectangle(p1, p2);
 			rect.Inflate(2.5+6);
 			AbstractObject.DrawShadow (graphics, rect, rect.Width/2, 6, 0.2);
@@ -3639,7 +3639,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
 		{
-			//	Dessine une flèche pendant le déplacement d'un champ.
+			//	Dessine une flÃ¨che pendant le dÃ©placement d'un champ.
 			if (System.Math.Abs(p1.Y-p2.Y) < ObjectBox.fieldHeight)
 			{
 				return;
@@ -3675,7 +3675,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Point PositionExtendButton
 		{
-			//	Retourne la position du bouton pour étendre.
+			//	Retourne la position du bouton pour Ã©tendre.
 			get
 			{
 				return new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-AbstractObject.headerHeight/2);
@@ -3693,7 +3693,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Point PositionMoveColumnsButton(int rank)
 		{
-			//	Retourne la position du bouton pour déplacer le séparateur des colonnes.
+			//	Retourne la position du bouton pour dÃ©placer le sÃ©parateur des colonnes.
 			return new Point(this.ColumnsSeparatorAbsolute(rank), this.bounds.Bottom+AbstractObject.footerHeight/2+1);
 		}
 
@@ -3726,7 +3726,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Point PositionParametersButton
 		{
-			//	Retourne la position du bouton des paramètres.
+			//	Retourne la position du bouton des paramÃ¨tres.
 			get
 			{
 				return new Point (this.bounds.Right-AbstractObject.buttonRadius*2-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
@@ -3773,7 +3773,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private int GroupLineCount(int titleRank)
 		{
-			//	Retourne le nombre de ligne d'un groupe (héritage ou interface) d'après le rang de son titre.
+			//	Retourne le nombre de ligne d'un groupe (hÃ©ritage ou interface) d'aprÃ¨s le rang de son titre.
 			for (int i=titleRank+1; i<this.fields.Count; i++)
 			{
 				if (this.fields[i].IsSubtitle)
@@ -3792,7 +3792,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private int SubgroupLineCount(int subtitleRank)
 		{
-			//	Retourne le nombre de ligne d'un sous-groupe (héritage ou interface) d'après le rang de son sous-titre.
+			//	Retourne le nombre de ligne d'un sous-groupe (hÃ©ritage ou interface) d'aprÃ¨s le rang de son sous-titre.
 			Druid druid = this.fields[subtitleRank+1].DefiningRootEntityId;
 
 			for (int i=subtitleRank+1; i<this.fields.Count; i++)
@@ -3808,7 +3808,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private string GetGroupTooltip(int rank)
 		{
-			//	Retourne le tooltip à afficher pour un groupe.
+			//	Retourne le tooltip Ã  afficher pour un groupe.
 			if (this.fields[rank].DefiningEntityClass == StructuredTypeClass.Interface)
 			{
 				return string.Format(Res.Strings.Entities.Action.BoxGroup.Interface, this.fields[rank].DefiningEntityName);
@@ -3824,7 +3824,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private double ColumnsSeparatorAbsolute(int rank)
 		{
-			//	Retourne la position absolue du séparateur des colonnes.
+			//	Retourne la position absolue du sÃ©parateur des colonnes.
 			Rectangle rect = this.bounds;
 			rect.Deflate(ObjectBox.textMargin, 0);
 
@@ -3844,7 +3844,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateSubtitle()
 		{
-			//	Met à jour le sous-titre de l'entité (nom du module).
+			//	Met Ã  jour le sous-titre de l'entitÃ© (nom du module).
 			Module module = this.SearchModule(this.cultureMap.Id);
 
 			if (module == null || module == this.Application.CurrentModule)
@@ -3863,7 +3863,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise toutes les informations de la boîte et de ses champs.
+			//	SÃ©rialise toutes les informations de la boÃ®te et de ses champs.
 			writer.WriteStartElement(Xml.Box);
 			
 			writer.WriteElementString(Xml.Druid, this.cultureMap.Id.ToString());
@@ -3887,7 +3887,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				comment.WriteXml (writer);
 			}
 
-			if (this.info != null && this.info.IsVisible)  // informations associées ?
+			if (this.info != null && this.info.IsVisible)  // informations associÃ©es ?
 			{
 				this.info.WriteXml(writer);
 			}
@@ -3986,18 +3986,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void AdjustAfterRead()
 		{
-			//	Ajuste le contenu de la boîte après sa désérialisation.
+			//	Ajuste le contenu de la boÃ®te aprÃ¨s sa dÃ©sÃ©rialisation.
 			this.Title = this.cultureMap.Name;
 			this.UpdateSubtitle();
-			this.isRoot = (this == this.editor.Boxes[0]);  // la première boîte est toujours la boîte racine
+			this.isRoot = (this == this.editor.Boxes[0]);  // la premiÃ¨re boÃ®te est toujours la boÃ®te racine
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			//	La liste des champs (this.fields) désérialisée n'est pas utilisable telle quelle.
-			//	En effet, des champs peuvent avoir été ajoutés, supprimés ou permutés. Il faut donc
-			//	générer une liste propre, comme SetContent, puis repiquer les informations utiles
-			//	dans la liste désérialisée.
+			//	La liste des champs (this.fields) dÃ©sÃ©rialisÃ©e n'est pas utilisable telle quelle.
+			//	En effet, des champs peuvent avoir Ã©tÃ© ajoutÃ©s, supprimÃ©s ou permutÃ©s. Il faut donc
+			//	gÃ©nÃ©rer une liste propre, comme SetContent, puis repiquer les informations utiles
+			//	dans la liste dÃ©sÃ©rialisÃ©e.
 			List<Field> newFields = new List<Field>();  // nouvelle liste propre
 			if (dataFields != null)
 			{
@@ -4007,16 +4007,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					field.Initialize(this, dataFields[i]);
 
 					Druid fieldCaptionId = (Druid) dataFields[i].GetValue(Support.Res.Fields.Field.CaptionId);
-					Field rField = this.AdjustAfterReadSearchField(fieldCaptionId);  // cherche le champ correspondant désérialisé
+					Field rField = this.AdjustAfterReadSearchField(fieldCaptionId);  // cherche le champ correspondant dÃ©sÃ©rialisÃ©
 					if (rField != null)
 					{
 						rField.DeserializeCopyTo(field);  // repique les informations utiles
 
-						if (rField.IsExplored)  // champ avec connection explorée ?
+						if (rField.IsExplored)  // champ avec connection explorÃ©e ?
 						{
 							if (field.Destination == rField.Destination)  // (*)
 							{
-								field.IsExplored = true;  // ObjectConnection sera créé par Editor.CreateConnections
+								field.IsExplored = true;  // ObjectConnection sera crÃ©Ã© par Editor.CreateConnections
 								field.DstBox = this.AdjustAfterReadSearchBox(rField.Destination);
 							}
 						}
@@ -4025,7 +4025,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					newFields.Add(field);  // ajoute le champ dans la nouvelle liste propre
 				}
 			}
-			this.fields = newFields;  // la nouvelle liste propre remplace la liste désérialisée
+			this.fields = newFields;  // la nouvelle liste propre remplace la liste dÃ©sÃ©rialisÃ©e
 
 			this.dataLifetimeExpectancy = data.GetValueOrDefault<DataLifetimeExpectancy> (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
 			this.structuredTypeFlags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
@@ -4034,9 +4034,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateSources();
 		}
 
-		// (*)	Si ce test n'est pas vrai, il s'agit d'un champ relation dont on a modifié l'entité
-		//		destination entre la sérialisation et la présente désérialisation. Le Editor.CloseBox()
-		//		fermera les entités que plus personne ne pointe (field.IsExplored = false dans ce cas).
+		// (*)	Si ce test n'est pas vrai, il s'agit d'un champ relation dont on a modifiÃ© l'entitÃ©
+		//		destination entre la sÃ©rialisation et la prÃ©sente dÃ©sÃ©rialisation. Le Editor.CloseBox()
+		//		fermera les entitÃ©s que plus personne ne pointe (field.IsExplored = false dans ce cas).
 
 		private Field AdjustAfterReadSearchField(Druid druid)
 		{

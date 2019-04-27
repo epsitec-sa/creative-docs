@@ -41,17 +41,17 @@ namespace Epsitec.Common.Document.Objects
 
 		public override string IconUri
 		{
-			//	Nom de l'icône.
+			//	Nom de l'icÃ´ne.
 			get { return Misc.Icon("ObjectCircle"); }
 		}
 
 
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Début du déplacement une poignée.
+			//	DÃ©but du dÃ©placement une poignÃ©e.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
-			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			if ( rank < this.handles.Count )  // poignÃ©e de l'objet ?
 			{
 				drawingContext.ConstrainClear();
 
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						drawingContext.ConstrainAddHV(this.Handle(0).Position, false, -1);
 					}
-					if ( rank == 1 )  // extrémité ?
+					if ( rank == 1 )  // extrÃ©mitÃ© ?
 					{
 						drawingContext.ConstrainAddCenter(this.Handle(0).Position, false, -1);
 						drawingContext.ConstrainAddCircle(this.Handle(0).Position, this.Handle(1).Position, false, -1);
@@ -80,8 +80,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Déplace une poignée.
-			if ( rank >= 2 )  // poignée d'une propriété ?
+			//	DÃ©place une poignÃ©e.
+			if ( rank >= 2 )  // poignÃ©e d'une propriÃ©tÃ© ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(0).Position = pos;
 				this.Handle(1).Position += move;
 			}
-			if ( rank == 1 )  // extrémité ?
+			if ( rank == 1 )  // extrÃ©mitÃ© ?
 			{
 				this.Handle(1).Position = pos;
 			}
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			//	Début de la création d'un objet.
+			//	DÃ©but de la crÃ©ation d'un objet.
 			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHV(pos, false, -1);
 			this.HandleAdd(pos, HandleType.Primary);
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
-			//	Déplacement pendant la création d'un objet.
+			//	DÃ©placement pendant la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
-			//	Fin de la création d'un objet.
+			//	Fin de la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
-			//	pas exister et doit être détruit.
+			//	pas exister et doit Ãªtre dÃ©truit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void ComputeGeometry(out Point center, out double radius, out double angle)
 		{
-			//	Calcule la géométrie de l'ellipse.
+			//	Calcule la gÃ©omÃ©trie de l'ellipse.
 			center = this.Handle(0).Position;
 			Point p = this.Handle(1).Position;
 			radius = Point.Distance(center, p);
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Point ComputeArcHandle(double angle)
 		{
-			//	Calcule la position d'une poignée pour l'arc.
+			//	Calcule la position d'une poignÃ©e pour l'arc.
 			Point center, p;
 			double radius, rot;
 			this.ComputeGeometry(out center, out radius, out rot);
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public double ComputeArcHandle(Point pos)
 		{
-			//	Calcule l'angle d'après la position de la souris.
+			//	Calcule l'angle d'aprÃ¨s la position de la souris.
 			Point center, p;
 			double radius, rot;
 			this.ComputeGeometry(out center, out radius, out rot);
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathCircle(DrawingContext drawingContext, Point c, double rx, double ry)
 		{
-			//	Crée le chemin d'un cercle.
+			//	CrÃ©e le chemin d'un cercle.
 			Point center;
 			double radius, rot;
 			this.ComputeGeometry(out center, out radius, out rot);
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathBuild(DrawingContext drawingContext)
 		{
-			//	Crée le chemin de l'objet.
+			//	CrÃ©e le chemin de l'objet.
 			Point center = this.Handle(0).Position;
 			double radius = Point.Distance(center, this.Handle(1).Position);
 			return this.PathCircle(drawingContext, center, radius, radius);
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected override Path GetPath()
 		{
-			//	Retourne le chemin géométrique de l'objet.
+			//	Retourne le chemin gÃ©omÃ©trique de l'objet.
 			return this.PathBuild(null);
 		}
 
@@ -302,13 +302,13 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
 		protected Circle(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 		}
 		#endregion
 	}

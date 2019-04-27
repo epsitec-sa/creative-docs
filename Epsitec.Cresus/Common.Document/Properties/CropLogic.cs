@@ -125,8 +125,8 @@ namespace Epsitec.Common.Document.Properties
 		{
 			zoom = 1+(zoom*3);  // [0..1] -> [1..4]
 
-			Size size = this.imageSize;  // taille de l'image sélectionnée
-			Margins crop = this.CropMargins;  // crop avant de commencer à zoomer
+			Size size = this.imageSize;  // taille de l'image sÃ©lectionnÃ©e
+			Margins crop = this.CropMargins;  // crop avant de commencer Ã  zoomer
 
 			Rectangle rect = new Rectangle (Point.Zero, size);
 			rect.Deflate (crop);  // rectangle effectif actuel
@@ -139,12 +139,12 @@ namespace Epsitec.Common.Document.Properties
 			if (zoomx < zoomy)
 			{
 				w = size.Width/zoom;  // nouvelle largeur
-				h = w*rect.Height/rect.Width;  // garde les mêmes proportions
+				h = w*rect.Height/rect.Width;  // garde les mÃªmes proportions
 			}
 			else
 			{
 				h = size.Height/zoom;  // nouvelle hauteur
-				w = h*rect.Width/rect.Height;  // garde les mêmes proportions
+				w = h*rect.Width/rect.Height;  // garde les mÃªmes proportions
 			}
 
 			Margins newCrop = Margins.Zero;
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private static Margins CropAdjust(Margins crop)
 		{
-			//	Ajuste le recadrage pour n'avoir jamais de marges négatives.
+			//	Ajuste le recadrage pour n'avoir jamais de marges nÃ©gatives.
 			if (crop.Left < 0)
 			{
 				crop.Right += crop.Left;

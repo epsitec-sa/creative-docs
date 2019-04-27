@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe Cropper permet de définir le recadrage d'une image.
+	/// La classe Cropper permet de dÃ©finir le recadrage d'une image.
 	/// </summary>
 	public class Cropper : AbstractGroup
 	{
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public Document Document
 		{
-			//	Document contenant l'image sélectionnée dont on modifie le cadrage.
+			//	Document contenant l'image sÃ©lectionnÃ©e dont on modifie le cadrage.
 			get
 			{
 				return this.document;
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected bool IsSingleSelection
 		{
-			//	Indique si un seul objet est sélectionné.
+			//	Indique si un seul objet est sÃ©lectionnÃ©.
 			get
 			{
 				return (this.document.Modifier.TotalSelected == 1);
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Objects.Image SelectedObjectImage
 		{
-			//	Retourne l'objet Image sélectionné dans le document.
+			//	Retourne l'objet Image sÃ©lectionnÃ© dans le document.
 			get
 			{
 				Objects.Abstract objectSelected = this.document.Modifier.RetFirstSelectedObject();
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Properties.Image SelectedPropertyImage
 		{
-			//	Retourne la propriété Image de l'objet sélectionné dans le document.
+			//	Retourne la propriÃ©tÃ© Image de l'objet sÃ©lectionnÃ© dans le document.
 			get
 			{
 				Objects.Image objectImage = this.SelectedObjectImage;
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Taille de l'image.
 			//	Si la taille de l'image est inconnue, retourne une taille
-			//	par défaut arbitraire de 1000 x 1000.
+			//	par dÃ©faut arbitraire de 1000 x 1000.
 			get
 			{
 				Properties.Image pi = this.SelectedPropertyImage;
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Taille de l'objet Image dans le document.
 			//	Si la taille de l'objet est inconnue, retourne une taille
-			//	par défaut arbitraire de 1000 x 1000.
+			//	par dÃ©faut arbitraire de 1000 x 1000.
 			get
 			{
 				Objects.Image objectImage = this.SelectedObjectImage;
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected bool IsFillEnabled
 		{
-			//	Indique si le bouton 'fill' est activé.
+			//	Indique si le bouton 'fill' est activÃ©.
 			get
 			{
 				Properties.Image pi = this.SelectedPropertyImage;
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void UpdateField()
 		{
-			//	Met à jour tous les widgets, suite à une modification.
+			//	Met Ã  jour tous les widgets, suite Ã  une modification.
 			this.ignoreChanged = true;
 
 			this.Enable = this.IsSingleSelection;
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				Rectangle rect = this.Client.Bounds;
 				rect.Deflate(0, 0, 30, 5);
-				rect.Left = rect.Right-rect.Height;  // doit être carré
+				rect.Left = rect.Right-rect.Height;  // doit Ãªtre carrÃ©
 
 				if (rect.Width < 0)
 				{
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Rectangle CropRectangle
 		{
-			//	Retourne la zone pour la partie recadrée dans la partie interactive.
+			//	Retourne la zone pour la partie recadrÃ©e dans la partie interactive.
 			get
 			{
 				Rectangle bounds = this.BoundsRectangle;
@@ -366,9 +366,9 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Part DetectPart(Point pos)
 		{
-			//	Détecte la partie survolée par la souris.
+			//	DÃ©tecte la partie survolÃ©e par la souris.
 			Rectangle crop = this.CropRectangle;
-			double m = 2;  // marge de détection
+			double m = 2;  // marge de dÃ©tection
 
 			bool left   = (pos.X >= crop.Left-m   && pos.X <= crop.Left+m);
 			bool right  = (pos.X >= crop.Right-m  && pos.X <= crop.Right+m);
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void MovePart(Point pos, bool isConstrain)
 		{
-			//	Déplace un élément selon la souris.
+			//	DÃ©place un Ã©lÃ©ment selon la souris.
 			Point m = pos-this.initialPos;
 			bool isHorizontal = System.Math.Abs(m.X) > System.Math.Abs(m.Y);
 
@@ -454,7 +454,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		static Margins CropAdjust(Margins crop)
 		{
-			//	Ajuste le recadrage pour n'avoir jamais de marges négatives.
+			//	Ajuste le recadrage pour n'avoir jamais de marges nÃ©gatives.
 			if (crop.Left < 0)
 			{
 				crop.Right += crop.Left;
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected int AngleRotate(int direction)
 		{
-			//	Retourne l'angle de la rotation du recadrage, selon les propriétés de l'image.
+			//	Retourne l'angle de la rotation du recadrage, selon les propriÃ©tÃ©s de l'image.
 			//	direction =  1  ->  rotation CCW (normale)
 			//	direction = -1  ->  rotation CW
 			int angle = 0;
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Document.Widgets
 				if (pi.RotationMode == Properties.Image.Rotation.Angle180)  angle = 180;
 				if (pi.RotationMode == Properties.Image.Rotation.Angle270)  angle = 270;
 
-				angle *= direction;  // inverse éventuellement le sens
+				angle *= direction;  // inverse Ã©ventuellement le sens
 				if (angle < 0)
 				{
 					angle = 360+angle;  // 0..270
@@ -551,11 +551,11 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Margins CropRotate(Margins crop, int direction)
 		{
-			//	Effectue une rotation du recadrage, selon les propriétés de l'image.
+			//	Effectue une rotation du recadrage, selon les propriÃ©tÃ©s de l'image.
 			int angle = this.AngleRotate(direction);
 			Margins icrop = crop;
 
-			if (angle == 90)  // quart de tour à gauche ?
+			if (angle == 90)  // quart de tour Ã  gauche ?
 			{
 				crop.Left   = icrop.Top;
 				crop.Right  = icrop.Bottom;
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Document.Widgets
 				crop.Top    = icrop.Bottom;
 			}
 
-			if (angle == 270)  // quart de tour à droite ?
+			if (angle == 270)  // quart de tour Ã  droite ?
 			{
 				crop.Left   = icrop.Bottom;
 				crop.Right  = icrop.Top;
@@ -584,7 +584,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Part Hilited
 		{
-			//	Partie mise en évidence.
+			//	Partie mise en Ã©vidence.
 			get
 			{
 				return this.hilited;
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void UpdateCursorPart()
 		{
-			//	Utilise le curseur de souris adéquat en fonction de la partie hilited.
+			//	Utilise le curseur de souris adÃ©quat en fonction de la partie hilited.
 			switch (this.hilited)
 			{
 				case Part.Left:
@@ -638,13 +638,13 @@ namespace Epsitec.Common.Document.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			//	Marges supplémentaires utiles lorsqu'il y a des hilited.
+			//	Marges supplÃ©mentaires utiles lorsqu'il y a des hilited.
 			return new Drawing.Margins(0, 1, 1, 1);
 		}
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//	Gestion des événements.
+			//	Gestion des Ã©vÃ©nements.
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
@@ -686,7 +686,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.title == null )  return;
@@ -772,7 +772,7 @@ namespace Epsitec.Common.Document.Widgets
 				bounds.Deflate(0.5);
 
 				Rectangle crop = this.CropRectangle;
-				if (crop.IsEmpty)  // aucune partie recadrée ?
+				if (crop.IsEmpty)  // aucune partie recadrÃ©e ?
 				{
 					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bounds, 4, bounds.BottomLeft));
 					graphics.AddRectangle(bounds);
@@ -783,7 +783,7 @@ namespace Epsitec.Common.Document.Widgets
 					crop = graphics.Align(crop);
 					crop.Deflate(0.5);
 
-					if (bounds == crop)  // partie recadrée = toute l'image ?
+					if (bounds == crop)  // partie recadrÃ©e = toute l'image ?
 					{
 						graphics.AddRectangle(bounds);
 						graphics.RenderSolid(adorner.ColorBorder);
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Une valeur numérique éditable a été changée.
+			//	Une valeur numÃ©rique Ã©ditable a Ã©tÃ© changÃ©e.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -903,33 +903,33 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void HandleButtonReset(object sender, MessageEventArgs e)
 		{
-			//	Le bouton "Tout" a été actionné.
+			//	Le bouton "Tout" a Ã©tÃ© actionnÃ©.
 			this.Crop = Margins.Zero;
 		}
 
 		private void HandleButtonFill(object sender, MessageEventArgs e)
 		{
-			//	Le bouton "Remplir" a été actionné.
+			//	Le bouton "Remplir" a Ã©tÃ© actionnÃ©.
 			this.Crop = this.CropFillObject(this.crop);
 		}
 
 		private void HandleSliderZoomChanged(object sender)
 		{
-			//	Le slider pour le zoom a été déplacé.
+			//	Le slider pour le zoom a Ã©tÃ© dÃ©placÃ©.
 			if (this.ignoreChanged)
 			{
 				return;
 			}
 
-			double zoom = (double) this.sliderZoom.Value;  // zoom souhaité
+			double zoom = (double) this.sliderZoom.Value;  // zoom souhaitÃ©
 
 			this.CropZoom (zoom);
 		}
 
 		protected void CropZoom(double zoom)
 		{
-			Size size = this.ImageSize;  // taille de l'image sélectionnée
-			Margins crop = this.cropBeforeZoom;  // crop avant de commencer à zoomer
+			Size size = this.ImageSize;  // taille de l'image sÃ©lectionnÃ©e
+			Margins crop = this.cropBeforeZoom;  // crop avant de commencer Ã  zoomer
 
 			Rectangle rect = new Rectangle(Point.Zero, size);
 			rect.Deflate(crop);  // rectangle effectif actuel
@@ -942,12 +942,12 @@ namespace Epsitec.Common.Document.Widgets
 			if (zoomx < zoomy)
 			{
 				w = size.Width/zoom;  // nouvelle largeur
-				h = w*rect.Height/rect.Width;  // garde les mêmes proportions
+				h = w*rect.Height/rect.Width;  // garde les mÃªmes proportions
 			}
 			else
 			{
 				h = size.Height/zoom;  // nouvelle hauteur
-				w = h*rect.Width/rect.Height;  // garde les mêmes proportions
+				w = h*rect.Width/rect.Height;  // garde les mÃªmes proportions
 			}
 
 			Margins newCrop = Margins.Zero;
@@ -959,12 +959,12 @@ namespace Epsitec.Common.Document.Widgets
 
 			Margins cbz = this.cropBeforeZoom;
 			this.Crop = newCrop;
-			this.cropBeforeZoom = cbz;  // conserve le crop avant de commencer à zoomer
+			this.cropBeforeZoom = cbz;  // conserve le crop avant de commencer Ã  zoomer
 		}
 
 		protected virtual void OnCropChanged()
 		{
-			//	Génère un événement pour dire que l'offset a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que l'offset a changÃ©.
 			var handler = this.GetUserEventHandler("CropChanged");
 			if (handler != null)
 			{

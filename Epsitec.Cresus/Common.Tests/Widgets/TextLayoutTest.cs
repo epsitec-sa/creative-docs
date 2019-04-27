@@ -142,16 +142,16 @@ namespace Epsitec.Common.Tests.Widgets
 			layout.Text = "Normal, <b>gras</b>, <i><i>italique</i></i>, <b><i>italique+gras</b></i>, <font face=\"Arial\">arial <font size=\"20\">grand</font></font>, fin";
 			layout.DebugDumpJustif(System.Console.Out);
 
-			layout.Text = "<font size=\"12\">Premier deuxième troisième quatrième cinquième sixième septième huitième neuvième et dixième.</font>";
+			layout.Text = "<font size=\"12\">Premier deuxiÃ¨me troisiÃ¨me quatriÃ¨me cinquiÃ¨me sixiÃ¨me septiÃ¨me huitiÃ¨me neuviÃ¨me et dixiÃ¨me.</font>";
 			layout.DebugDumpJustif(System.Console.Out);
 
-			layout.Text = "Ceciestuntrèslongtextesansespacesjustepourvoir.";
+			layout.Text = "CeciestuntrÃ¨slongtextesansespacesjustepourvoir.";
 			layout.DebugDumpJustif(System.Console.Out);
 
 			layout.Text = "1.<br/><br/><b><i>3.</b></i><br/><br/>5.<br/><br/>";
 			layout.DebugDumpJustif(System.Console.Out);
 
-			layout.Text = "Juste quelques lignes terminées par un br.<br/>";
+			layout.Text = "Juste quelques lignes terminÃ©es par un br.<br/>";
 			layout.DebugDumpJustif(System.Console.Out);
 		}
 
@@ -353,16 +353,16 @@ namespace Epsitec.Common.Tests.Widgets
 			//	Textes tordus mais corrects.
 			Assert.IsTrue(TextLayout.CheckSyntax("<a href=\"x\">Link</a>", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("<b><i></b></i>", out offsetError));
-			Assert.IsTrue(TextLayout.CheckSyntax("Première<br/>Deuxième", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("PremiÃ¨re<br/>DeuxiÃ¨me", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("<img src=\"x\"/>", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("A&lt;&amp;&gt;.&quot;&#160;", out offsetError));
 
-			//	Textes faux qui doivent être rejetés.
+			//	Textes faux qui doivent Ãªtre rejetÃ©s.
 			Assert.IsTrue(!TextLayout.CheckSyntax("<bold", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("&quot", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("<b>bold", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("bold</b>", out offsetError));
-			Assert.IsTrue(!TextLayout.CheckSyntax("Première<br>Deuxième", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("PremiÃ¨re<br>DeuxiÃ¨me", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("<img src=\"x\">", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("ab&quott;cd", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("<x>", out offsetError));
@@ -470,8 +470,8 @@ namespace Epsitec.Common.Tests.Widgets
 
 			//?			layout.Text = "Ceci est un petit texte ridicule, juste pour essayer !";
 			//?			layout.Text = "Normal <b>bold <i>bold-italic </b>italic </i>normal.";
-			//?			layout.Text = "<b>Première ligne</b> assez longue pour nécessiter une coupure.<br/><b>Deuxième ligne</b> assez longue pour nécessiter une coupure.";
-			layout.Text = @"Ceci est un <a href=""x"">petit texte <b>ridicule</b></a>, juste pour <font color=""#ff0000"">tester</font> le comportement de la <font size=""20"">classe</font> <font face=""Courier New"">TextLayout</font>, mes premiers pas en &quot;C#&quot;&#160;!<br/>Et voilà une image <img src=""file:images/icon.png""/> simple.";
+			//?			layout.Text = "<b>PremiÃ¨re ligne</b> assez longue pour nÃ©cessiter une coupure.<br/><b>DeuxiÃ¨me ligne</b> assez longue pour nÃ©cessiter une coupure.";
+			layout.Text = @"Ceci est un <a href=""x"">petit texte <b>ridicule</b></a>, juste pour <font color=""#ff0000"">tester</font> le comportement de la <font size=""20"">classe</font> <font face=""Courier New"">TextLayout</font>, mes premiers pas en &quot;C#&quot;&#160;!<br/>Et voilÃ  une image <img src=""file:images/icon.png""/> simple.";
 			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
 			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Tests.Widgets
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = @"Voilà une image <img src=""file:images/icon.png""/> <w>simple</w>, suivie d'une deuxième <img src=""file:images/icon.png""/> et une troisième <img src=""file:images/icon.png""/>.<br/><br/>On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête.";
+			layout.Text = @"VoilÃ  une image <img src=""file:images/icon.png""/> <w>simple</w>, suivie d'une deuxiÃ¨me <img src=""file:images/icon.png""/> et une troisiÃ¨me <img src=""file:images/icon.png""/>.<br/><br/>On donnait ce jour-lÃ  un grand dÃ®ner, oÃ¹, pour la premiÃ¨re fois, je vis avec beaucoup d'Ã©tonnement le maÃ®tre d'hÃ´tel servir l'Ã©pÃ©e au cÃ´tÃ© et le chapeau sur la tÃªte.";
 			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
 			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
@@ -526,7 +526,7 @@ namespace Epsitec.Common.Tests.Widgets
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = @"On <u>donnait</u> ce jour-là <u>un grand dîner</u>, où, pour la <u>première <b>fois</b></u>, je vis avec beaucoup <u>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</u>.";
+			layout.Text = @"On <u>donnait</u> ce jour-lÃ  <u>un grand dÃ®ner</u>, oÃ¹, pour la <u>premiÃ¨re <b>fois</b></u>, je vis avec beaucoup <u>d'Ã©tonnement le maÃ®tre d'hÃ´tel servir l'Ã©pÃ©e au cÃ´tÃ© et le chapeau sur la tÃªte</u>.";
 			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
 			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
@@ -552,7 +552,7 @@ namespace Epsitec.Common.Tests.Widgets
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = @"<font face=""Courier New"">On <u>donnait</u> ce jour-là <u>un grand dîner</u>, où, pour la <u>première <b>fois</b></u>, je vis avec beaucoup <u>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</u>.</font>";
+			layout.Text = @"<font face=""Courier New"">On <u>donnait</u> ce jour-lÃ  <u>un grand dÃ®ner</u>, oÃ¹, pour la <u>premiÃ¨re <b>fois</b></u>, je vis avec beaucoup <u>d'Ã©tonnement le maÃ®tre d'hÃ´tel servir l'Ã©pÃ©e au cÃ´tÃ© et le chapeau sur la tÃªte</u>.</font>";
 			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
 			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Tests.Widgets
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = @"On <w>donnait</w> ce jour-là <w color=""#0000FF"">un grand dîner</w>, où, pour la <w>première <b>fois</b></w>, je vis avec beaucoup <w>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</w>.";
+			layout.Text = @"On <w>donnait</w> ce jour-lÃ  <w color=""#0000FF"">un grand dÃ®ner</w>, oÃ¹, pour la <w>premiÃ¨re <b>fois</b></w>, je vis avec beaucoup <w>d'Ã©tonnement le maÃ®tre d'hÃ´tel servir l'Ã©pÃ©e au cÃ´tÃ© et le chapeau sur la tÃªte</w>.";
 			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
 			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
@@ -606,7 +606,7 @@ namespace Epsitec.Common.Tests.Widgets
 		{
 			TextLayout layout = new TextLayout ();
 
-			layout.Text = @"Dimensions: <param code=""H"" value=""200""/> x <param code=""L"" value=""80""/> sous forme de paramètres.";
+			layout.Text = @"Dimensions: <param code=""H"" value=""200""/> x <param code=""L"" value=""80""/> sous forme de paramÃ¨tres.";
 			layout.DefaultFont = Font.GetFont ("Tahoma", "Regular");
 			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;

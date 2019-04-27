@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de créer un nouveau module.
+	/// Dialogue permettant de crÃ©er un nouveau module.
 	/// </summary>
 	public class NewDialog : AbstractDialog
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if (this.window == null)
 			{
 				this.window = new Window();
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateButtons()
 		{
-			//	Met à jour tous les boutons.
+			//	Met Ã  jour tous les boutons.
 			if (string.IsNullOrEmpty(this.actualModuleName))
 			{
 				this.radioTypePatch.Text = Res.Strings.Dialog.New.Type.Patch0;

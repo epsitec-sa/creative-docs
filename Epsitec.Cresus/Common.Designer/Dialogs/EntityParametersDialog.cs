@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant d'éditer les paramètres d'une entité.
+	/// Dialogue permettant d'Ã©diter les paramÃ¨tres d'une entitÃ©.
 	/// </summary>
 	public class EntityParametersDialog : AbstractDialog
 	{
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if (this.window == null)
 			{
 				this.window = new Window();
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateWidgets ();
 			};
 
-			//	Crée l'exemple.
+			//	CrÃ©e l'exemple.
 			this.entitySample = new MyWidgets.EntitySample
 			{
 				Parent = container,
@@ -190,10 +190,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			button.Clicked += delegate
 			{
-				//	Met ou enlève le flag correspondant au bouton.
+				//	Met ou enlÃ¨ve le flag correspondant au bouton.
 				this.StructuredTypeFlags ^= flag;
 
-				//	Gère les contraintes.
+				//	GÃ¨re les contraintes.
 				if (flag == Types.StructuredTypeFlags.StandaloneDisplay)
 				{
 					if ((this.StructuredTypeFlags & Types.StructuredTypeFlags.StandaloneDisplay) == 0)

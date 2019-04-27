@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe UnitsTools offre quelques méthodes de conversion pour des
-	/// valeurs numériques associées à des unités de mesure.
+	/// La classe UnitsTools offre quelques mÃ©thodes de conversion pour des
+	/// valeurs numÃ©riques associÃ©es Ã  des unitÃ©s de mesure.
 	/// </summary>
 	public sealed class UnitsTools
 	{
@@ -23,14 +23,14 @@ namespace Epsitec.Common.Text.Properties
 					cValue = aValue * bValue;
 					break;
 				
-				case SizeUnits.PercentNotCombining:	//	[%] --> [%] (écrase)
+				case SizeUnits.PercentNotCombining:	//	[%] --> [%] (Ã©crase)
 					cUnits = bUnits;
 					cValue = bValue;
 					break;
 				
-				case SizeUnits.Points:				//	[pt] --> [pt] (écrase)
-				case SizeUnits.Millimeters:			//	[mm] --> [mm] (écrase)
-				case SizeUnits.Inches:				//	[in] --> [in] (écrase)
+				case SizeUnits.Points:				//	[pt] --> [pt] (Ã©crase)
+				case SizeUnits.Millimeters:			//	[mm] --> [mm] (Ã©crase)
+				case SizeUnits.Inches:				//	[in] --> [in] (Ã©crase)
 					cUnits = bUnits;
 					cValue = bValue;
 					break;
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Properties
 					cValue = aValue;
 					break;
 				
-				case SizeUnits.DeltaPoints:			//	ajoute des deltas, conserve l'unité de départ
+				case SizeUnits.DeltaPoints:			//	ajoute des deltas, conserve l'unitÃ© de dÃ©part
 				case SizeUnits.DeltaMillimeters:
 				case SizeUnits.DeltaInches:
 					if (aUnits == SizeUnits.None)

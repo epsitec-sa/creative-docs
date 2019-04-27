@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 					if (this.host is TextFieldMultiEx)
 					{
-						//	Si le widget est un TextFieldMultiEx, les boutons Accept/Reject seront en bas à droite.
+						//	Si le widget est un TextFieldMultiEx, les boutons Accept/Reject seront en bas Ã  droite.
 						//	Il ne faut donc pas tenir compte de la hauteur totale du widget !
 						height = System.Math.Min (height, TextFieldMultiEx.SingleLineDefaultHeight);
 					}

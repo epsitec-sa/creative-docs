@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter un expéditeur");
+			return Resources.Text ("Ajouter un expÃ©diteur");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -38,9 +38,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
 		{
 			form
-				.Title ("Expéditeur")
+				.Title ("ExpÃ©diteur")
 				.Field<AiderContactEntity> ()
-					.Title ("Contact de l'expéditeur")
+					.Title ("Contact de l'expÃ©diteur")
 				.End ()
 			.End ();
 		}

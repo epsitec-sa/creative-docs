@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -107,7 +107,7 @@ namespace Epsitec.Aider.Override
 			
 			var message = new NotificationMessage ()
 			{
-				Title = Resources.Text ("Avertissement – Règle métier non respectée"),
+				Title = Resources.Text ("Avertissement â€“ RÃ¨gle mÃ©tier non respectÃ©e"),
 				Body = messageText
 			};
 
@@ -138,7 +138,7 @@ namespace Epsitec.Aider.Override
 					var message = new NotificationMessage ()
 					{
 						Title     = office.OfficeShortName,
-						Body      = "Il y a " + nbTasks + " tâches en suspens",
+						Body      = "Il y a " + nbTasks + " tÃ¢ches en suspens",
 						Dataset   = Res.CommandIds.Base.ShowAiderOfficeManagement,
 						EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (office).Value
 					};
@@ -174,11 +174,11 @@ namespace Epsitec.Aider.Override
 			var message = new NotificationMessage ()
 			{
 				Title     = "Attention AIDER",
-				Body      = "Merci de changer votre mot de passe! Cliquez sur ce message pour accéder à votre profil...",
+				Body      = "Merci de changer votre mot de passe! Cliquez sur ce message pour accÃ©der Ã  votre profil...",
 				Dataset   = Res.CommandIds.Base.ShowAiderUser,
 				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 				
-				HeaderErrorMessage = "Réinitialisez votre mot de passe à l'aide du bouton d'action"
+				HeaderErrorMessage = "RÃ©initialisez votre mot de passe Ã  l'aide du bouton d'action"
 			};
 
 			notif.WarnUser (user.LoginName, message, When.OnConnect);
@@ -191,7 +191,7 @@ namespace Epsitec.Aider.Override
 				var message = new NotificationMessage ()
 				{
 					Title     = "Attention AIDER",
-					Body      = "Merci de saisir votre adresse e-mail. Cliquez sur ce message pour accéder à votre profil...",
+					Body      = "Merci de saisir votre adresse e-mail. Cliquez sur ce message pour accÃ©der Ã  votre profil...",
 					Dataset   = Res.CommandIds.Base.ShowAiderUser,
 					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 					
@@ -212,11 +212,11 @@ namespace Epsitec.Aider.Override
 				var message = new NotificationMessage ()
 				{
 					Title     = "Attention AIDER",
-					Body      = "Merci d'associer votre contact à votre profil. Cliquez sur ce message pour accéder à votre profil...",
+					Body      = "Merci d'associer votre contact Ã  votre profil. Cliquez sur ce message pour accÃ©der Ã  votre profil...",
 					Dataset   = Res.CommandIds.Base.ShowAiderUser,
 					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 
-					HeaderErrorMessage = "Contact non défini",
+					HeaderErrorMessage = "Contact non dÃ©fini",
 
 					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Contact),
 					ErrorFieldMessage = "votre contact"
@@ -231,11 +231,11 @@ namespace Epsitec.Aider.Override
 				var message = new NotificationMessage ()
 				{
 					Title     = "Attention AIDER",
-					Body      = "Votre contact doit être associé à votre personne physique. Cliquez sur ce message pour accéder à votre profil...",
+					Body      = "Votre contact doit Ãªtre associÃ© Ã  votre personne physique. Cliquez sur ce message pour accÃ©der Ã  votre profil...",
 					Dataset   = Res.CommandIds.Base.ShowAiderUser,
 					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 
-					HeaderErrorMessage = "Contact associé de manière incorrecte",
+					HeaderErrorMessage = "Contact associÃ© de maniÃ¨re incorrecte",
 
 					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Contact),
 					ErrorFieldMessage = "votre contact"
@@ -255,7 +255,7 @@ namespace Epsitec.Aider.Override
 				var message = new NotificationMessage ()
 				{
 					Title     = "Attention AIDER",
-					Body      = "Merci de rejoindre votre paroisse. Cliquez sur <b>Gestion</b>, sélectionnez votre paroisse, puis choisissez <b>Rejoindre</b>.",
+					Body      = "Merci de rejoindre votre paroisse. Cliquez sur <b>Gestion</b>, sÃ©lectionnez votre paroisse, puis choisissez <b>Rejoindre</b>.",
 					Dataset   = Res.CommandIds.Base.ShowAiderOfficeManagement,
 				};
 

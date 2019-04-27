@@ -53,7 +53,7 @@ namespace Epsitec.Data.Platform.Directories.Entity
 		public List<DirectoriesEntryAddService> Services;
 
 		/*
-		 <EntryAdd SortNo="0" LastName="à Porta" FemaleName="Fisler" FirstName="Roger" Profession="chef de cuisine" StreetName="Brestenbühlstrasse" HouseNo="31" Zip="8182" LocaPostId="818200" LocaPostName="Hochfelden" StateId="27" StateCode="ZH" CountryCode="CHE" ValidFrom="1986-09-25" ValidTo="2099-01-01">
+		 <EntryAdd SortNo="0" LastName="Ã  Porta" FemaleName="Fisler" FirstName="Roger" Profession="chef de cuisine" StreetName="BrestenbÃ¼hlstrasse" HouseNo="31" Zip="8182" LocaPostId="818200" LocaPostName="Hochfelden" StateId="27" StateCode="ZH" CountryCode="CHE" ValidFrom="1986-09-25" ValidTo="2099-01-01">
 			  <Services>
 				<Service SortNo="0" TypeGrpCode="TEL" Value="044 860 00 82" IsNoAdvert="1" ValidFrom="1986-09-25" ValidTo="2099-01-01" />
 			  </Services>

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Compta.Graph
 {
 	/// <summary>
-	/// Cette classe permet de stocker des données numériques à n dimensions, en vue de les représenter graphiquement.
+	/// Cette classe permet de stocker des donnÃ©es numÃ©riques Ã  n dimensions, en vue de les reprÃ©senter graphiquement.
 	/// </summary>
 	public class Cube
 	{
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		static Cube()
 		{
-			//	Auto-test intégré.
+			//	Auto-test intÃ©grÃ©.
 			var cube = new Cube ();
 			cube.Dimensions = 2;
 
@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void FilteredCopy(Cube src, int dimension1, int dimension2, List<FormattedText> filter1, List<FormattedText> filter2, int[] constants)
 		{
-			//	Copie un cube de dimensions quelconques dans un cube à 2 dimensions, en filtrant les valeurs.
-			//	Le cube ainsi obtenu est "prêt à l'emploi" pour le dessin.
+			//	Copie un cube de dimensions quelconques dans un cube Ã  2 dimensions, en filtrant les valeurs.
+			//	Le cube ainsi obtenu est "prÃªt Ã  l'emploi" pour le dessin.
 			this.Clear ();
 
 			var indexes1 = Cube.GetFilterIndexes (src.GetCount (dimension1), src.shortTitles[dimension1], filter1);
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void ThresholdCopy0(Cube src, decimal threshold)
 		{
-			//	Filtre toutes les valeurs inférieures à un seuil (en %), selon l'axe principal.
+			//	Filtre toutes les valeurs infÃ©rieures Ã  un seuil (en %), selon l'axe principal.
 			System.Diagnostics.Debug.Assert (src.Dimensions == 2);
 			this.Clear ();
 			this.Dimensions = 2;
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void ThresholdCopy1(Cube src, decimal threshold)
 		{
-			//	Filtre toutes les valeurs inférieures à un seuil (en %), selon l'axe secondaire.
+			//	Filtre toutes les valeurs infÃ©rieures Ã  un seuil (en %), selon l'axe secondaire.
 			System.Diagnostics.Debug.Assert (src.Dimensions == 2);
 			this.Clear ();
 			this.Dimensions = 2;

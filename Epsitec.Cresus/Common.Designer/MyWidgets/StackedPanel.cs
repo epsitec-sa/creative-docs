@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// La classe StackedPanel est la classe de base pour tous les panels empilés.
+	/// La classe StackedPanel est la classe de base pour tous les panels empilÃ©s.
 	/// </summary>
 	public class StackedPanel : Widget
 	{
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsNewSection
 		{
-			//	Indique si le panneau débute une nouvelle section.
+			//	Indique si le panneau dÃ©bute une nouvelle section.
 			get
 			{
 				return this.isNewSection;
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public GlyphButton ExtendButton
 		{
-			//	Retourne l'éventuel bouton permettant d'étendre le panneau.
+			//	Retourne l'Ã©ventuel bouton permettant d'Ã©tendre le panneau.
 			get
 			{
 				return this.extendButton;
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public GlyphShape ExtendShape
 		{
-			//	Aspect du bouton permettant d'étendre le panneau.
-			//	GlyphShape.None correspond à un bouton inexistant.
+			//	Aspect du bouton permettant d'Ã©tendre le panneau.
+			//	GlyphShape.None correspond Ã  un bouton inexistant.
 			get
 			{
 				if (this.extendButton == null)
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateExtendButton()
 		{
-			//	Met à jour la position du bouton permettant d'étendre le panneau.
+			//	Met Ã  jour la position du bouton permettant d'Ã©tendre le panneau.
 			if (this.extendButton != null)
 			{
 				double left = this.Padding.Left;
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public string Title
 		{
-			//	Texte du titre affiché en haut à gauche du panneau.
+			//	Texte du titre affichÃ© en haut Ã  gauche du panneau.
 			get
 			{
 				return this.title;
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public Widget Container
 		{
-			//	Donne le container à utiliser comme parent pour tous les enfants.
+			//	Donne le container Ã  utiliser comme parent pour tous les enfants.
 			get
 			{
 				return this.container;
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		
 		private void HandleMouseEntered(object sender, MessageEventArgs e)
 		{
-			//	La souris est entrée dans le panneau.
+			//	La souris est entrÃ©e dans le panneau.
 		}
 
 		private void HandleMouseExited(object sender, MessageEventArgs e)
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			if (!this.backgroundColor.IsEmpty)  // pas un séparateur ?
+			if (!this.backgroundColor.IsEmpty)  // pas un sÃ©parateur ?
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.backgroundColor);
@@ -231,20 +231,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle r = rect;
 				r.Width = StackedPanel.leftMargin;
 				graphics.AddFilledRectangle(r);
-				graphics.RenderSolid(color);  // marge gauche plus foncée
+				graphics.RenderSolid(color);  // marge gauche plus foncÃ©e
 			}
 
 			rect.Deflate(0.5, 0.5);
 			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);  // - en bas
 
-			if (!this.backgroundColor.IsEmpty)  // pas un séparateur ?
+			if (!this.backgroundColor.IsEmpty)  // pas un sÃ©parateur ?
 			{
-				graphics.AddLine(rect.Left+StackedPanel.leftMargin, rect.Bottom-0.5, rect.Left+StackedPanel.leftMargin, rect.Top+0.5);  // | +marge à gauche
+				graphics.AddLine(rect.Left+StackedPanel.leftMargin, rect.Bottom-0.5, rect.Left+StackedPanel.leftMargin, rect.Top+0.5);  // | +marge Ã  gauche
 			}
 
 			if (this.isLeftPart)
 			{
-				graphics.AddLine(rect.Right, rect.Bottom-0.5, rect.Right, rect.Top+0.5);  // | à droite
+				graphics.AddLine(rect.Right, rect.Bottom-0.5, rect.Right, rect.Top+0.5);  // | Ã  droite
 			}
 
 			graphics.RenderSolid(adorner.ColorBorder);
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				double w = rect.Height-2;  // hauteur disponible = largeur pour le texte, car vertical
 				if (this.extendButton != null)  // bouton extend existe ?
 				{
-					w -= this.extendButton.PreferredHeight;  // enlève la hauteur du bouton
+					w -= this.extendButton.PreferredHeight;  // enlÃ¨ve la hauteur du bouton
 				}
 
 				if (w > 20)  // largeur assez grande ?

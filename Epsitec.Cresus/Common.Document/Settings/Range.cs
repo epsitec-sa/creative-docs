@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe Range contient une plage "de à".
+	/// La classe Range contient une plage "de Ã ".
 	/// </summary>
 	[System.Serializable()]
 	public class Range : Abstract
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le réglage.
+			//	SÃ©rialise le rÃ©glage.
 			base.GetObjectData(info, context);
 			info.AddValue("PrintRange", this.PrintRange);
 			info.AddValue("PrintFrom", this.From);
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected Range(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise le réglage.
+			//	Constructeur qui dÃ©sÃ©rialise le rÃ©glage.
 			this.PrintRange = (PrintRange) info.GetValue("PrintRange", typeof(PrintRange));
 			this.From = info.GetInt32("PrintFrom");
 			this.To = info.GetInt32("PrintTo");

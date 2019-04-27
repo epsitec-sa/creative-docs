@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Cell implémente un conteneur pour peupler des tableaux et
+	/// La classe Cell implÃ©mente un conteneur pour peupler des tableaux et
 	/// des grilles.
 	/// </summary>
 	public class Cell : AbstractGroup
@@ -117,8 +117,8 @@ namespace Epsitec.Common.Widgets
 		
 		public bool						HasBottomSeparator
 		{
-			//	Il suffit qu'une seule cellule dise ne pas avoir de séparateur pour que toute la ligne
-			//	horizontale de séparation soit omise.
+			//	Il suffit qu'une seule cellule dise ne pas avoir de sÃ©parateur pour que toute la ligne
+			//	horizontale de sÃ©paration soit omise.
 			get
 			{
 				return this.hasBottomSeparator;
@@ -136,8 +136,8 @@ namespace Epsitec.Common.Widgets
 		
 		public bool						HasRightSeparator
 		{
-			//	Il suffit qu'une seule cellule dise ne pas avoir de séparateur pour que toute la ligne
-			//	verticale de séparation soit omise.
+			//	Il suffit qu'une seule cellule dise ne pas avoir de sÃ©parateur pour que toute la ligne
+			//	verticale de sÃ©paration soit omise.
 			get
 			{
 				return this.hasRightSeparator;

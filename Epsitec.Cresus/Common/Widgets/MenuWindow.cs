@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe MenuWindow représente une fenêtre utilisée spécifiquement
+	/// La classe MenuWindow reprÃ©sente une fenÃªtre utilisÃ©e spÃ©cifiquement
 	/// pour contenir des menus (ou des palettes de type pop-up).
 	/// </summary>
 	public class MenuWindow : Window
@@ -91,9 +91,9 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Hide()
 		{
-			//	Quand on cache un menu, on libère en fait de manière "transparente"
-			//	la fenêtre associée; grâce à la méthode OnWindowDisposing, nous
-			//	empêchons que ceci n'entraîne notre propre destruction.
+			//	Quand on cache un menu, on libÃ¨re en fait de maniÃ¨re "transparente"
+			//	la fenÃªtre associÃ©e; grÃ¢ce Ã  la mÃ©thode OnWindowDisposing, nous
+			//	empÃªchons que ceci n'entraÃ®ne notre propre destruction.
 			
 			base.Hide ();
 			base.Close ();
@@ -104,8 +104,8 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnWindowDisposing ();
 			
-			//	Supprime le lien entre les widgets de cette fenêtre et la fenêtre
-			//	elle-même, ce qui évite un Dispose automatique du widget menu, par
+			//	Supprime le lien entre les widgets de cette fenÃªtre et la fenÃªtre
+			//	elle-mÃªme, ce qui Ã©vite un Dispose automatique du widget menu, par
 			//	exemple.
 			
 			this.Root.Children.Clear ();

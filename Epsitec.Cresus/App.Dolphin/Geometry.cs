@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -6,21 +6,21 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin
 {
 	/// <summary>
-	/// La classe Geometry contient quelques routines générales.
+	/// La classe Geometry contient quelques routines gÃ©nÃ©rales.
 	/// </summary>
 	public class Geometry
 	{
 		public static bool DetectOutline(Path path, double width, Point pos)
 		{
-			//	Détecte si la souris est sur le trait d'un chemin.
+			//	DÃ©tecte si la souris est sur le trait d'un chemin.
 			return (Geometry.DetectOutlineRank(path, width, pos) != -1);
 		}
 
 		public static int DetectOutlineRank(Path path, double width, Point pos)
 		{
-			//	Détecte sur quel trait d'un chemin est la souris.
+			//	DÃ©tecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			Point p1,s1,s2,p2;
 			return Geometry.DetectOutlineRank(path, width, pos, out p1, out s1, out s2, out p2);
 		}
@@ -28,9 +28,9 @@ namespace Epsitec.App.Dolphin
 		public static int DetectOutlineRank(Path path, double width, Point pos,
 											out Point bp1, out Point bs1, out Point bs2, out Point bp2)
 		{
-			//	Détecte sur quel trait d'un chemin est la souris.
+			//	DÃ©tecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			bp1 = Point.Zero;
 			bs1 = Point.Zero;
 			bs2 = Point.Zero;
@@ -133,8 +133,8 @@ namespace Epsitec.App.Dolphin
 
 		public static void BezierS1ToS2(Point p1, ref Point s1, ref Point s2, Point p2)
 		{
-			//	Convertit une courbe de Bézier définie par un seul point secondaire en
-			//	une courbe "traditionnelle" définie par deux points secondaires.
+			//	Convertit une courbe de BÃ©zier dÃ©finie par un seul point secondaire en
+			//	une courbe "traditionnelle" dÃ©finie par deux points secondaires.
 			//	Il s'agit ici d'une approximation empyrique !
 			s1 = Point.Scale(p1, s1, 2.0/3.0);
 			s2 = Point.Scale(p2, s2, 2.0/3.0);
@@ -143,7 +143,7 @@ namespace Epsitec.App.Dolphin
 		
 		public static void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
 		{
-			//	Peint la surface avec un dégradé horizontal.
+			//	Peint la surface avec un dÃ©gradÃ© horizontal.
 			graphics.FillMode = FillMode.NonZero;
 			graphics.GradientRenderer.Fill = GradientFill.X;
 			graphics.GradientRenderer.SetColors(leftColor, rightColor);
@@ -161,7 +161,7 @@ namespace Epsitec.App.Dolphin
 
 		public static void RenderVerticalGradient(Graphics graphics, Rectangle rect, Color bottomColor, Color topColor)
 		{
-			//	Peint la surface avec un dégradé vertical.
+			//	Peint la surface avec un dÃ©gradÃ© vertical.
 			graphics.FillMode = FillMode.NonZero;
 			graphics.GradientRenderer.Fill = GradientFill.Y;
 			graphics.GradientRenderer.SetColors(bottomColor, topColor);
@@ -179,7 +179,7 @@ namespace Epsitec.App.Dolphin
 
 		public static void RenderVerticalGradient(Graphics graphics, Rectangle rect, Color bottomColor, Color topColor, int repeat, double middle)
 		{
-			//	Peint la surface avec un dégradé vertical.
+			//	Peint la surface avec un dÃ©gradÃ© vertical.
 			Color c1 = topColor;
 			Color c2 = bottomColor;
 
@@ -241,7 +241,7 @@ namespace Epsitec.App.Dolphin
 
 		public static void RenderCircularGradient(Graphics graphics, Point center, double radius, Color extColor, Color intColor)
 		{
-			//	Peint la surface avec un dégradé circulaire.
+			//	Peint la surface avec un dÃ©gradÃ© circulaire.
 			Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
 
 			graphics.FillMode = FillMode.NonZero;

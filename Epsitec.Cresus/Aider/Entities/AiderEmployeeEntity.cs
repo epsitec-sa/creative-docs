@@ -1,4 +1,4 @@
-//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -130,7 +130,7 @@ namespace Epsitec.Aider.Entities
             }
 
             return this.jobs.Any (j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER
-                                    || j.EmployeeJobFunction == EmployeeJobFunction.SuppléantAIDER
+                                    || j.EmployeeJobFunction == EmployeeJobFunction.SupplÃ©antAIDER
                                     || j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER);
         }
 

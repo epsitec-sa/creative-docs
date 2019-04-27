@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Tableau de plusieurs colonnes, où chaque colonne est un StringList.
+	/// Tableau de plusieurs colonnes, oÃ¹ chaque colonne est un StringList.
 	/// </summary>
 	public class StringArray : Widget
 	{
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void SetColumnsAbsoluteWidth(int column, double width)
 		{
 			//	Modifie la largeur absolue d'une colonne.
-			//	Il faut au préalable spécifier les largeurs relatives de toutes
+			//	Il faut au prÃ©alable spÃ©cifier les largeurs relatives de toutes
 			//	les colonnes, avec SetColumnsRelativeWidth !
 			this.absoluteColumn = column;  // ce sera fait au prochain UpdateClientGeometry
 			this.absoluteWidth = width;
@@ -149,13 +149,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetColumnBreakMode(int column, TextBreakMode breakMode)
 		{
-			//	Modifie la césure d'une colonne.
+			//	Modifie la cÃ©sure d'une colonne.
 			this.columns[column].BreakMode = breakMode;
 		}
 
 		public TextBreakMode GetColumnBreakMode(int column)
 		{
-			//	Retourne la césure d'une colonne.
+			//	Retourne la cÃ©sure d'une colonne.
 			return this.columns[column].BreakMode;
 		}
 
@@ -205,7 +205,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineString(int column, int row, string text)
 		{
-			//	Spécifie le texte contenu dans une ligne.
+			//	SpÃ©cifie le texte contenu dans une ligne.
 			if (this.columns == null || column < 0 || column >= this.columns.Length)
 			{
 				return;
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineTooltip(int column, int row, string text)
 		{
-			//	Spécifie le tooltip d'une ligne.
+			//	SpÃ©cifie le tooltip d'une ligne.
 			if (this.columns == null || column < 0 || column >= this.columns.Length)
 			{
 				return;
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineState(int column, int row, StringList.CellState state)
 		{
-			//	Spécifie l'état d'une ligne.
+			//	SpÃ©cifie l'Ã©tat d'une ligne.
 			if (this.columns == null)
 			{
 				return;
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public StringList.CellState GetLineState(int column, int row)
 		{
-			//	Retourne l'état d'une ligne.
+			//	Retourne l'Ã©tat d'une ligne.
 			if (this.columns == null)
 			{
 				return StringList.CellState.Normal;
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineColor(int column, int row, Color color)
 		{
-			//	Spécifie la couleur de fond d'une ligne.
+			//	SpÃ©cifie la couleur de fond d'une ligne.
 			if (this.columns == null)
 			{
 				return;
@@ -293,13 +293,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetDynamicToolTips(int column, bool state)
 		{
-			//	Spécifie si une colonne génère des tooltips dynamiques.
+			//	SpÃ©cifie si une colonne gÃ©nÃ¨re des tooltips dynamiques.
 			this.columns[column].IsDynamicToolTips = state;
 		}
 
 		public bool GetDynamicToolTips(int column)
 		{
-			//	Retourne si une colonne génère des tooltips dynamiques.
+			//	Retourne si une colonne gÃ©nÃ¨re des tooltips dynamiques.
 			return this.columns[column].IsDynamicToolTips;
 		}
 
@@ -324,9 +324,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool AllowMultipleSelection
 		{
-			//	Indique si les sélections multiples de lignes sont possibles.
-			//	En mode 'true' la sélection multiple est forcée, c'est-à-dire qu'il
-			//	n'est pas nécessaire d'utiliser la touche Ctrl.
+			//	Indique si les sÃ©lections multiples de lignes sont possibles.
+			//	En mode 'true' la sÃ©lection multiple est forcÃ©e, c'est-Ã -dire qu'il
+			//	n'est pas nÃ©cessaire d'utiliser la touche Ctrl.
 			get
 			{
 				return this.allowMultipleSelection;
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public int SelectedRow
 		{
-			//	Ligne sélectionnée.
+			//	Ligne sÃ©lectionnÃ©e.
 			get
 			{
 				return this.selectedRow;
@@ -373,8 +373,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public List<int> SelectedRows
 		{
-			//	Lignes sélectionnées. L'ordre obtenu dépend de l'ordre dans lequel
-			//	l'utilisateur a cliqué sur les lignes.
+			//	Lignes sÃ©lectionnÃ©es. L'ordre obtenu dÃ©pend de l'ordre dans lequel
+			//	l'utilisateur a cliquÃ© sur les lignes.
 			get
 			{
 				return this.selectedRows;
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetSelectedRow(int row, int column)
 		{
-			//	Sélectionne une ligne, en indiquant également la colonne cliquée, pour SelectedColumn.
+			//	SÃ©lectionne une ligne, en indiquant Ã©galement la colonne cliquÃ©e, pour SelectedColumn.
 			this.selectedColumn = column;
 
 			row = System.Math.Max(row, -1);
@@ -404,13 +404,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.Invalidate();
 			}
 
-			//	Il faut envoyer l'événement même si la ligne n'a pas changé !
+			//	Il faut envoyer l'Ã©vÃ©nement mÃªme si la ligne n'a pas changÃ© !
 			this.OnSelectedRowChanged();
 		}
 
 		public int SelectedColumn
 		{
-			//	Colonne dans laquelle on a cliqué pour sélectionner la ligne.
+			//	Colonne dans laquelle on a cliquÃ© pour sÃ©lectionner la ligne.
 			get
 			{
 				return this.selectedColumn;
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public int FirstVisibleRow
 		{
-			//	Première ligne visible.
+			//	PremiÃ¨re ligne visible.
 			get
 			{
 				return this.firstVisibleRow;
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void ShowSelectedRow()
 		{
-			//	Montre la ligne sélectionnée.
+			//	Montre la ligne sÃ©lectionnÃ©e.
 			int first = 0;
 
 			if (this.SelectedRow != -1)
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateSelectedRow()
 		{
-			//	Met à jour la ligne sélectionnée, si nécessaire.
+			//	Met Ã  jour la ligne sÃ©lectionnÃ©e, si nÃ©cessaire.
 			if (this.isDirtySelected)
 			{
 				this.isDirtySelected = false;
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateScroller()
 		{
-			//	Met à jour l'ascenseur, si nécessaire.
+			//	Met Ã  jour l'ascenseur, si nÃ©cessaire.
 			int count = this.LineCount;
 			if (this.lastLineCount != count)
 			{
@@ -529,8 +529,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		internal bool ProcessListMessage(StringList list, Message message, Drawing.Point pos)
 		{
 			//	Avant que StringList ne traite ses messages, il nous appelle afin
-			//	que nous ayons une chance de détecter le drag sur les colonnes de
-			//	séparation... avant que StringList ne nous mange l'événement sous
+			//	que nous ayons une chance de dÃ©tecter le drag sur les colonnes de
+			//	sÃ©paration... avant que StringList ne nous mange l'Ã©vÃ©nement sous
 			//	notre nez.
 			this.ProcessMessage(message, list.MapClientToParent(pos));
 			
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected int WidthDraggingDetect(Point pos)
 		{
-			//	Détecte dans quel séparateur de colonne est la souris.
+			//	DÃ©tecte dans quel sÃ©parateur de colonne est la souris.
 			double x = this.Client.Bounds.Left;
 			for (int i=0; i<this.columns.Length-1; i++)
 			{
@@ -758,7 +758,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if (this.columns == null)
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			if (this.absoluteColumn != -1 && this.columns.Length > 1)  // une position absolue à imposer ?
+			if (this.absoluteColumn != -1 && this.columns.Length > 1)  // une position absolue Ã  imposer ?
 			{
 				//	Cherche toutes les largeurs absolues actuelles.
 				double[] aw = new double[this.columns.Length];
@@ -782,7 +782,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					if (c == this.absoluteColumn)
 					{
-						aw[c] = this.absoluteWidth;  // met la largeur imposée
+						aw[c] = this.absoluteWidth;  // met la largeur imposÃ©e
 					}
 					else
 					{
@@ -792,7 +792,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					total += aw[c];
 				}
 
-				//	Modifie toute les largeurs relatives, en fonction des largeurs absolues souhaitées.
+				//	Modifie toute les largeurs relatives, en fonction des largeurs absolues souhaitÃ©es.
 				for (int c=0; c<this.columns.Length; c++)
 				{
 					this.SetColumnsRelativeWidth(c, aw[c]/total);
@@ -932,7 +932,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Events handler
 		protected virtual void OnColumnsWidthChanged()
 		{
-			//	Génère un événement pour dire que la largeur de colonnes a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la largeur de colonnes a changÃ©.
 			var handler = this.GetUserEventHandler("ColumnsWidthChanged");
 			if (handler != null)
 			{
@@ -955,7 +955,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnCellCountChanged()
 		{
-			//	Génère un événement pour dire que le nombre de cellules a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le nombre de cellules a changÃ©.
 			var handler = this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
@@ -978,7 +978,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnCellsContentChanged()
 		{
-			//	Génère un événement pour dire que le contenu des cellules a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le contenu des cellules a changÃ©.
 			var handler = this.GetUserEventHandler("CellsContentChanged");
 			if (handler != null)
 			{
@@ -1001,7 +1001,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnSelectedRowChanged()
 		{
-			//	Génère un événement pour dire que la ligne sélectionnée a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la ligne sÃ©lectionnÃ©e a changÃ©.
 			var handler = this.GetUserEventHandler("SelectedRowChanged");
 			if (handler != null)
 			{
@@ -1024,7 +1024,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnSelectedRowDoubleClicked()
 		{
-			//	Génère un événement pour dire que la ligne sélectionnée a été double cliquée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la ligne sÃ©lectionnÃ©e a Ã©tÃ© double cliquÃ©e.
 			var handler = this.GetUserEventHandler("SelectedRowDoubleClicked");
 			if (handler != null)
 			{

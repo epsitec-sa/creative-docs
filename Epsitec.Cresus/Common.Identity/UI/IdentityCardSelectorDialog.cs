@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Identity.UI
 
 			dialogWindow.Root.Children.Add (this.CreateContents ());
 
-			dialogWindow.Text = "Sélection de l'identité";
+			dialogWindow.Text = "SÃ©lection de l'identitÃ©";
 			dialogWindow.Name = "Dialog";
 			dialogWindow.PreventAutoClose = true;
 			dialogWindow.ClientSize = new Size (395, 300);
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Identity.UI
 			ResizeKnob resize = new ResizeKnob (dialogWindow.Root);
 			resize.Anchor = AnchorStyles.BottomRight;
 			resize.Margins = new Margins (0, -8, 0, -8);
-			ToolTip.Default.SetToolTip (resize, "Redimensionner la fenêtre");
+			ToolTip.Default.SetToolTip (resize, "Redimensionner la fenÃªtre");
 
 			CommandDispatcher.SetDispatcher (dialogWindow, new CommandDispatcher ());
 

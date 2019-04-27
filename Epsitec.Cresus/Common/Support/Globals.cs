@@ -1,4 +1,4 @@
-//	Copyright © 2004-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Epsitec.Common.Support
 	using ManualResetEvent = System.Threading.ManualResetEvent;
 	
 	/// <summary>
-	/// La classe Globals permet de stocker des variables globales à une application.
+	/// La classe Globals permet de stocker des variables globales Ã  une application.
 	/// </summary>
 	public sealed class Globals
 	{
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Support
 		
 		public object							this[string key]
 		{
-			//	On peut accéder aux propriétés globales très simplement au moyen de l'opérateur [],
-			//	mais contrairement à GetProperty, une exception est levée si la propriété demandée
+			//	On peut accÃ©der aux propriÃ©tÃ©s globales trÃ¨s simplement au moyen de l'opÃ©rateur [],
+			//	mais contrairement Ã  GetProperty, une exception est levÃ©e si la propriÃ©tÃ© demandÃ©e
 			//	n'existe pas.
 			
 			get
@@ -82,10 +82,10 @@ namespace Epsitec.Common.Support
 		
 		public static WaitHandle				AbortEvent
 		{
-			//	Cet événement peut être utilisé par toutes les classes qui désirent réaliser
-			//	une attente qui soit interruptible par l'arrêt de l'application; pour cela,
-			//	on réalise un appel à WaitHandle.WaitAny en spécifiant AbortEvent comme l'un
-			//	des "événements" sur lesquels attendre.
+			//	Cet Ã©vÃ©nement peut Ãªtre utilisÃ© par toutes les classes qui dÃ©sirent rÃ©aliser
+			//	une attente qui soit interruptible par l'arrÃªt de l'application; pour cela,
+			//	on rÃ©alise un appel Ã  WaitHandle.WaitAny en spÃ©cifiant AbortEvent comme l'un
+			//	des "Ã©vÃ©nements" sur lesquels attendre.
 			
 			get
 			{

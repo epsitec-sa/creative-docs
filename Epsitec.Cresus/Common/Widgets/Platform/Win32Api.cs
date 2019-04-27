@@ -1,4 +1,4 @@
-//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 namespace Epsitec.Common.Widgets.Platform
 {
 	/// <summary>
-	/// La classe Win32Api exporte quelques fonctions de l'API Win32 utilisées
-	/// par des couches très bas niveau.
+	/// La classe Win32Api exporte quelques fonctions de l'API Win32 utilisÃ©es
+	/// par des couches trÃ¨s bas niveau.
 	/// </summary>
 	public class Win32Api
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter un contact au ménage");
+			return Resources.FormattedText ("Ajouter un contact au mÃ©nage");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -49,18 +49,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			if (person.IsNull ())
 			{
-				Logic.BusinessRuleException (household, Resources.Text ("Aucune personne n'a été sélectionnée, ou le contact choisi ne correspond pas à une personne physique."));
+				Logic.BusinessRuleException (household, Resources.Text ("Aucune personne n'a Ã©tÃ© sÃ©lectionnÃ©e, ou le contact choisi ne correspond pas Ã  une personne physique."));
 			}
 			if (person.IsDeceased)
 			{
-				Logic.BusinessRuleException (household, Resources.Text ("Il n'est pas possible d'associer une personne décédée à un ménage."));
+				Logic.BusinessRuleException (household, Resources.Text ("Il n'est pas possible d'associer une personne dÃ©cÃ©dÃ©e Ã  un mÃ©nage."));
 			}
 			var sex = person.eCH_Person.PersonSex;
 
 			if ((sex != Enumerations.PersonSex.Female) &&
 				(sex != Enumerations.PersonSex.Male))
 			{
-				Logic.BusinessRuleException (household, Resources.Text ("Il n'est pas possible d'associer une personne sans sexe connu à un ménage."));
+				Logic.BusinessRuleException (household, Resources.Text ("Il n'est pas possible d'associer une personne sans sexe connu Ã  un mÃ©nage."));
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			if (household.Members.Contains (person))
 			{
-				Logic.BusinessRuleException (household, "La personne sélectionnée appartient déjà au ménage.");
+				Logic.BusinessRuleException (household, "La personne sÃ©lectionnÃ©e appartient dÃ©jÃ  au mÃ©nage.");
 			}
 		}
 
@@ -84,16 +84,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if ((age.HasValue) &&
 				(age.Value < 18))
 			{
-				Logic.BusinessRuleException (household, string.Format (Resources.Text ("Un enfant de {0} ans ne peut pas être un chef de ménage."), age.Value));
+				Logic.BusinessRuleException (household, string.Format (Resources.Text ("Un enfant de {0} ans ne peut pas Ãªtre un chef de mÃ©nage."), age.Value));
 			}
 		}
 
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
 			form
-				.Title (TextFormatter.FormatText ("Ajouter", this.AdditionalEntity.DisplayName, "au ménage ?"))
+				.Title (TextFormatter.FormatText ("Ajouter", this.AdditionalEntity.DisplayName, "au mÃ©nage ?"))
 				.Field<bool> ()
-					.Title ("chef du ménage")
+					.Title ("chef du mÃ©nage")
 					.InitialValue (false)
 				.End ()
 			.End ();

@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// StyleCombo est un widget "combo" pour les styles graphique, de paragraphe ou de caractËre.
+	/// StyleCombo est un widget "combo" pour les styles graphique, de paragraphe ou de caract√®re.
 	/// </summary>
 	public class StyleCombo : TextFieldCombo
 	{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public int ExcludeRank
 		{
-			//	Ligne Èventuelle ‡ exclure.
+			//	Ligne √©ventuelle √† exclure.
 			get
 			{
 				return this.excludeRank;
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsDeep
 		{
-			//	Attributs cherchÈs en profondeur, dans les parents.
+			//	Attributs cherch√©s en profondeur, dans les parents.
 			get
 			{
 				return this.isDeep;
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsNoneLine
 		{
-			//	PremiËre ligne avec <aucun>.
+			//	Premi√®re ligne avec <aucun>.
 			get
 			{
 				return this.isNoneLine;
@@ -184,9 +184,9 @@ namespace Epsitec.Common.Document.Widgets
 			menu.Contents = this.list;
 			menu.AdjustSize();
 			
-			//	On n'a pas le droit de dÈfinir le "SelectedFontFace" avant d'avoir fait
-			//	cette mise ‡ jour du contenu avec la nouvelle taille ajustÈe, sinon on
-			//	risque d'avoir un offset incorrect pour le dÈbut...
+			//	On n'a pas le droit de d√©finir le "SelectedFontFace" avant d'avoir fait
+			//	cette mise √† jour du contenu avec la nouvelle taille ajust√©e, sinon on
+			//	risque d'avoir un offset incorrect pour le d√©but...
 			this.list.UpdateContents();
 			this.list.FinalSelectionChanged += this.HandleListSelectionActivated;
 			
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void HandleListSelectionActivated(object sender)
 		{
-			//	L'utilisateur a cliquÈ dans la liste pour terminer son choix.
+			//	L'utilisateur a cliqu√© dans la liste pour terminer son choix.
 			int sel = this.MapComboListToIndex(this.list.SelectedRow);
 			if ( sel == -1 )  return;
 			this.list.SelectRow(sel, true);
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected int GetSelectedStyle(UndoableList aggregates, string currentStyle)
 		{
-			//	Cherche le rang du style graphique actuellement en Èdition.
+			//	Cherche le rang du style graphique actuellement en √©dition.
 			for ( int i=0 ; i<aggregates.Count ; i++ )
 			{
 				Properties.Aggregate aggregate = aggregates[i] as Properties.Aggregate;
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected int GetSelectedTextStyle(Text.TextStyle[] styles, string currentStyle)
 		{
-			//	Cherche le rang du style de texte actuellement en Èdition.
+			//	Cherche le rang du style de texte actuellement en √©dition.
 			for ( int i=0 ; i<styles.Length ; i++ )
 			{
 				Text.TextStyle style = styles[i];
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Document.Widgets
 			
 			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
 			{
-				//	DÈtermine la hauteur maximale disponible par rapport ‡ la position
+				//	D√©termine la hauteur maximale disponible par rapport √† la position
 				//	actuelle :
 				
 				Drawing.Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, 1));
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Document.Widgets
 				double h = size.Height;
 
 				animation = Animation.RollDown;
-				if ( h > maxHeight )  // dÈpasse en bas ?
+				if ( h > maxHeight )  // d√©passe en bas ?
 				{
 					if ( maxHeight > 100 )  // place minimale ?
 					{
@@ -293,11 +293,11 @@ namespace Epsitec.Common.Document.Widgets
 						this.list.VScroller = true;
 						w += 16;
 					}
-					else	// dÈroule contre le haut ?
+					else	// d√©roule contre le haut ?
 					{
 						pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, item.ActualHeight-1));
 						maxHeight = workingArea.Top-pos.Y;
-						if ( h > maxHeight )  // dÈpasse en haut ?
+						if ( h > maxHeight )  // d√©passe en haut ?
 						{
 							h = maxHeight;
 							this.list.VScroller = true;
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				pos.Y -= h;
 
-				if ( pos.X+w > workingArea.Right )  // dÈpasse ‡ droite ?
+				if ( pos.X+w > workingArea.Right )  // d√©passe √† droite ?
 				{
 					pos.X = workingArea.Right-w;
 				}

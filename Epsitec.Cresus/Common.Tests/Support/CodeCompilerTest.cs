@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Tests.Support
 					"{\r\n" +
 					"	public static class Demo\r\n" +
 					"  {\r\n" +
-					"    public static void DoSomething() { élémentaire (); }\r\n" + 
+					"    public static void DoSomething() { Ã©lÃ©mentaire (); }\r\n" + 
 					"  }\r\n" +
 					"}\r\n");
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Tests.Support
 				messages = Collection.ToList (driver.GetBuildMessages ());
 
 				Assert.AreEqual (1, messages.Count);
-				Assert.AreEqual ("x.cs(5,40): error CS0103: The name 'élémentaire' does not exist in the current context", messages[0]);
+				Assert.AreEqual ("x.cs(5,40): error CS0103: The name 'Ã©lÃ©mentaire' does not exist in the current context", messages[0]);
 				Assert.IsNull (driver.GetCompiledAssemblyPath ());
 				Assert.IsNull (driver.GetCompiledAssemblyDebugInfoPath ());
 

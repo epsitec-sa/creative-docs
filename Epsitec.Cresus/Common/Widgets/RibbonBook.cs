@@ -17,12 +17,12 @@ namespace Epsitec.Common.Widgets
 
 			this.TabNavigationMode = TabNavigationMode.ForwardTabActive;
 
-			//	Partie inférieure, qui contiendra les pages.
+			//	Partie infÃ©rieure, qui contiendra les pages.
 			this.pages = new Widget (this);
 			this.pages.Dock = DockStyle.Fill;
 
-			//	Partie supérieure, qui contiendra les boutons et les commandes rapides.
-			//	Créé en deuxième, pour dessiner les boutons par-dessus les pages !
+			//	Partie supÃ©rieure, qui contiendra les boutons et les commandes rapides.
+			//	CrÃ©Ã© en deuxiÃ¨me, pour dessiner les boutons par-dessus les pages !
 			this.buttons = new Widget (this);
 			this.buttons.Margins = new Margins (0, 0, 0, -1);  // -1 -> un pixel de chevauchement avec this.pages
 			this.buttons.Padding = new Margins (12, 0, RibbonBook.TopMargin, 0);
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleRibbonButton(object sender, MessageEventArgs e)
 		{
-			//	Gestion d'un événement lorsqu'un bouton d'onglet est pressé.
+			//	Gestion d'un Ã©vÃ©nement lorsqu'un bouton d'onglet est pressÃ©.
 			if ( !(sender is RibbonButton) )  return;
 			RibbonButton button = sender as RibbonButton;
 
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateVisiblePages()
 		{
-			//	Met à jour la page visible. Toutes les autres sont cachées.
+			//	Met Ã  jour la page visible. Toutes les autres sont cachÃ©es.
 			foreach (Widget widget in this.pageItems)
 			{
 				RibbonPage page = widget as RibbonPage;
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Widgets
 						if (! this.IsFocused)
 						{
 							//	On n'a pas le focus clavier, il faut donc activer le focus de la
-							//	nouvelle page activée.
+							//	nouvelle page activÃ©e.
 							
 							this.ActivePage.SetFocusOnTabWidget();
 						}
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Widgets
 
 		void Collections.IWidgetCollectionHost<RibbonPage>.NotifyInsertion(RibbonPage item)
 		{
-			//	Si la page à insérer est dans un autre book, on l'y enlève.
+			//	Si la page Ã  insÃ©rer est dans un autre book, on l'y enlÃ¨ve.
 			RibbonBook oldBook = item.Book;
 			if (oldBook != null && oldBook != this)
 			{

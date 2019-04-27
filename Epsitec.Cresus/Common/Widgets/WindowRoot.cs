@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -8,8 +8,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
-	/// en général une instance de WindowRoot en appelant Window.Root.
+	/// La classe WindowRoot implÃ©mente le fond de chaque fenÃªtre. L'utilisateur obtient
+	/// en gÃ©nÃ©ral une instance de WindowRoot en appelant Window.Root.
 	/// </summary>
 	public sealed class WindowRoot : AbstractGroup
 	{
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool DoesVisualContainKeyboardFocus(Visual visual)
 		{
-			//	Retourne true si le visual passé en entrée contient le focus,
+			//	Retourne true si le visual passÃ© en entrÃ©e contient le focus,
 			//	ou qu'un de ses enfants contient le focus.
 
 			this.RefreshFocusChain ();
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Widgets
 
 		internal void RefreshFocusChain()
 		{
-			//	Si la chaîne des widgets décrivant les widgets contenant le
+			//	Si la chaÃ®ne des widgets dÃ©crivant les widgets contenant le
 			//	focus n'existe pas, on la construit
 
 			if ((this.focusChain.Count == 0) &&
@@ -236,8 +236,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.window != null)
 			{
-				//	Le raccourci clavier n'a pas été consommé. Il faut voir si le raccourci clavier
-				//	est attaché à une commande globale.
+				//	Le raccourci clavier n'a pas Ã©tÃ© consommÃ©. Il faut voir si le raccourci clavier
+				//	est attachÃ© Ã  une commande globale.
 				
 				System.Diagnostics.Debug.WriteLine (shortcut.ToString ());
 				
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Widgets
 				if ((mode != TabNavigationMode.None) &&
 					(dir != TabNavigationDir.None))
 				{
-					//	Navigue dans la hiérarchie...
+					//	Navigue dans la hiÃ©rarchie...
 					
 					Widget find = focused.FindTabWidget (dir, mode);
 					this.Window.FocusWidget (find, dir, mode);
@@ -448,9 +448,9 @@ namespace Epsitec.Common.Widgets
 
 		internal void NotifyWindowIsVisibleChanged()
 		{
-			//	Copie l'état de visibilité de la fenêtre de manière à ce que
-			//	notre propriété IsVisible soit toujours synchronisée avec la
-			//	fenêtre :
+			//	Copie l'Ã©tat de visibilitÃ© de la fenÃªtre de maniÃ¨re Ã  ce que
+			//	notre propriÃ©tÃ© IsVisible soit toujours synchronisÃ©e avec la
+			//	fenÃªtre :
 			
 			this.SetValue (Visual.IsVisibleProperty, this.window.IsVisible);
 		}

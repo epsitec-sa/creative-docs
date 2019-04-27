@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Panels
 {
 	/// <summary>
-	/// La classe Regular permet de choisir un type de polygone rÈgulier.
+	/// La classe Regular permet de choisir un type de polygone r√©gulier.
 	/// </summary>
 	public class Regular : Abstract
 	{
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Regular p = this.property as Properties.Regular;
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Regular p = this.property as Properties.Regular;
 			if ( p == null )  return;
 
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			bool star = (this.grid.SelectedValue == 1);
 			bool flower1 = (this.grid.SelectedValue == 2);
 			bool flower2 = (this.grid.SelectedValue == 3);
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 
 			Properties.Regular p = this.property as Properties.Regular;
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleTypeChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.EnableWidgets();
 			this.OnChanged();
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Document.Panels
 
 		#region Sample
 		/// <summary>
-		/// La structure Sample permet de dÈcrire un exemple de forme.
+		/// La structure Sample permet de d√©crire un exemple de forme.
 		/// </summary>
 		private struct Sample
 		{
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Document.Panels
 
 			public bool Compare(Properties.Regular reg)
 			{
-				//	Compare un exemple avec une propriÈtÈ.
+				//	Compare un exemple avec une propri√©t√©.
 				return (reg.RegularType == this.RegularType &&
 						reg.NbFaces     == this.NbFaces     &&
 						reg.Deep        == this.Deep        &&
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Document.Panels
 			public Polar					E2;
 		}
 
-		//	Liste des exemples accessibles avec la liste dÈroulante.
+		//	Liste des exemples accessibles avec la liste d√©roulante.
 		static private Sample[] Samples =
 		{
 			new Sample(Res.Strings.Panel.Regular.Sample01, Properties.RegularType.Norm,     3, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),

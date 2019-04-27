@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -11,21 +11,21 @@ using System.Xml.Linq;
 namespace Epsitec.Common.Printing
 {
 	/// <summary>
-	/// Ce port graphique exporte au format xml tout ce qui est dessiné.
-	/// Il s'occupe également de la désérialisation.
+	/// Ce port graphique exporte au format xml tout ce qui est dessinÃ©.
+	/// Il s'occupe Ã©galement de la dÃ©sÃ©rialisation.
 	/// </summary>
 	public sealed class XmlPort : IPaintPort
 	{
 		public XmlPort(XElement xRoot)
 		{
-			//	Si on dessine, le XElement donné est complété par tous les éléments dessinés.
-			//	Si on désérialise, le XElement donné contient les données sérialisées.
+			//	Si on dessine, le XElement donnÃ© est complÃ©tÃ© par tous les Ã©lÃ©ments dessinÃ©s.
+			//	Si on dÃ©sÃ©rialise, le XElement donnÃ© contient les donnÃ©es sÃ©rialisÃ©es.
 			this.xRoot = xRoot;
 
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 
-			this.pathSerializer      = new PathSerializer (2);       // 2 décimales pour les chemins
-			this.transformSerializer = new TransformSerializer (4);  // 4 décimales pour les matrices de transformation
+			this.pathSerializer      = new PathSerializer (2);       // 2 dÃ©cimales pour les chemins
+			this.transformSerializer = new TransformSerializer (4);  // 4 dÃ©cimales pour les matrices de transformation
 
 			this.currentState = new GraphicState ();
 			this.lastState    = new GraphicState ();
@@ -35,8 +35,8 @@ namespace Epsitec.Common.Printing
 		#region Deserialisation
 		public Bitmap Deserialize(System.Func<string, Image> getImage, Size size, double zoom=1)
 		{
-			//	Le résultat de la désérialisation est dessiné dans un bitmap.
-			//	coreData et getImage permettent de retrouver les images à partir d'identificateurs sérialisés.
+			//	Le rÃ©sultat de la dÃ©sÃ©rialisation est dessinÃ© dans un bitmap.
+			//	coreData et getImage permettent de retrouver les images Ã  partir d'identificateurs sÃ©rialisÃ©s.
 			System.Diagnostics.Debug.Assert (zoom > 0);
 
 			int width =  (int) (size.Width  * zoom);
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Printing
 
 		public void Deserialize(System.Func<string, Image> getImage, IPaintPort dstPort)
 		{
-			//	Le résultat de la désérialisation est dessiné dans un port graphique.
+			//	Le rÃ©sultat de la dÃ©sÃ©rialisation est dessinÃ© dans un port graphique.
 			System.Diagnostics.Debug.Assert (getImage != null);
 
 			this.baseTransform = dstPort.Transform;
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Printing
 
 					if (getImage != null)
 					{
-						//	Retrouve l'image à partir de l'identificateur sérialisé.
+						//	Retrouve l'image Ã  partir de l'identificateur sÃ©rialisÃ©.
 						Image bitmap = getImage (id);
 
 						if (bitmap != null)
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Printing
 
 			var xml = new XElement ("image");
 
-			//	L'image doit avoir un identificateur, pour permettre la désérialisation !
+			//	L'image doit avoir un identificateur, pour permettre la dÃ©sÃ©rialisation !
 			xml.Add (new XAttribute ("id",           bitmap.Id));
 			xml.Add (new XAttribute ("fillX",        this.Truncate (fillX)));
 			xml.Add (new XAttribute ("fillY",        this.Truncate (fillY)));

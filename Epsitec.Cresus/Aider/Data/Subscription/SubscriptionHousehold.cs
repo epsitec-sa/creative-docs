@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 

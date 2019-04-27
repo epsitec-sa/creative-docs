@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.ComptaNG.Common.RequestData
 	public enum TravellingRecordStatus
 	{
 		None,
-		Created,	// Record fraichement créé
-		Updated,	// Record modifié
-		Deleted,	// Record supprimé
+		Created,	// Record fraichement crÃ©Ã©
+		Updated,	// Record modifiÃ©
+		Deleted,	// Record supprimÃ©
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -23,13 +23,13 @@ namespace Epsitec.Aider.Rules
 
 			if (extraction.SearchGroup.IsNull () && extraction.Match != Enumerations.GroupExtractionMatch.Path)
 			{
-				Logic.BusinessRuleException (extraction, "Le groupe de référence est obligatoire.");
+				Logic.BusinessRuleException (extraction, "Le groupe de rÃ©fÃ©rence est obligatoire.");
 			}
 
 			if ((extraction.Match == Enumerations.GroupExtractionMatch.SameFunction) &&
 				(extraction.SearchGroup.GroupDef.Classification != Enumerations.GroupClassification.Function))
 			{
-				Logic.BusinessRuleException (extraction, "Le groupe sélectionné ne correspond pas à une fonction.");
+				Logic.BusinessRuleException (extraction, "Le groupe sÃ©lectionnÃ© ne correspond pas Ã  une fonction.");
 			}
 		}
 

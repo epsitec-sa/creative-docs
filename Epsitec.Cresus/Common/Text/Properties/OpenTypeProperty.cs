@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe OpenTypeProperty donne accès aux glyphes supplémentaires d'une
+	/// La classe OpenTypeProperty donne accÃ¨s aux glyphes supplÃ©mentaires d'une
 	/// fonte OpenType (variantes, etc.)
 	/// </summary>
 	public class OpenTypeProperty : Property

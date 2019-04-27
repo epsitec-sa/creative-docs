@@ -1,10 +1,10 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// L'énumération ImageFormat décrit un format d'image bitmap.
+	/// L'Ã©numÃ©ration ImageFormat dÃ©crit un format d'image bitmap.
 	/// </summary>
 	public enum ImageFormat
 	{

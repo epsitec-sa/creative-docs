@@ -1,4 +1,4 @@
-//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 
 		public double SeparatorAlpha
 		{
-			//	Composante A de la couleur des traits de séparations horizontaux et verticaux.
+			//	Composante A de la couleur des traits de sÃ©parations horizontaux et verticaux.
 			get
 			{
 				return this.separatorAlpha;
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Widgets
 
 		public int ColumnsToSkipFromLeftForSeparator
 		{
-			//	Nombre de colonnes à sauter depuis la gauche pour afficher les lignes de séparation horizontales.
+			//	Nombre de colonnes Ã  sauter depuis la gauche pour afficher les lignes de sÃ©paration horizontales.
 			get
 			{
 				return this.columnsToSkipFromLeftForSeparator;
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Widgets
 
 		public CellArrayStyles StyleH
 		{
-			//	Sytle pour l'en-tête supérieur et l'ascenseur horizontal.
+			//	Sytle pour l'en-tÃªte supÃ©rieur et l'ascenseur horizontal.
 			get
 			{
 				return this.styleH;
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Widgets
 
 		public CellArrayStyles StyleV
 		{
-			//	Sytle pour l'en-tête gauche et l'ascenseur vertical.
+			//	Sytle pour l'en-tÃªte gauche et l'ascenseur vertical.
 			get
 			{
 				return this.styleV;
@@ -177,8 +177,8 @@ namespace Epsitec.Common.Widgets
 
 		public bool IsCompactStyle
 		{
-			//	Le style 'compact' permet d'avoir des cellules  bord à bord, sans espaces intermédiaires.
-			//	Cela est nécessaire lorsque certains traits de séparation sont omis.
+			//	Le style 'compact' permet d'avoir des cellules  bord Ã  bord, sans espaces intermÃ©diaires.
+			//	Cela est nÃ©cessaire lorsque certains traits de sÃ©paration sont omis.
 			get
 			{
 				return this.isCompactStyle;
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Widgets
 
 		public double OffsetH
 		{
-			//	Offset horizontal dû au scrolling.
+			//	Offset horizontal dÃ» au scrolling.
 			get
 			{
 				return this.offsetH;
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Widgets
 
 		public double OffsetV
 		{
-			//	Offset vertical dû au scrolling.
+			//	Offset vertical dÃ» au scrolling.
 			get
 			{
 				return this.offsetV;
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Widgets
 
 		public double DefHeight
 		{
-			//	Choix de la hauteur par défaut d'une ligne.
+			//	Choix de la hauteur par dÃ©faut d'une ligne.
 			get
 			{
 				return this.defHeight;
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Widgets
 
 		public double HeaderWidth
 		{
-			//	Choix de la largeur de l'en-tête.
+			//	Choix de la largeur de l'en-tÃªte.
 			get
 			{
 				return this.headerWidth;
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Widgets
 
 		public double HeaderHeight
 		{
-			//	Choix de la hauteur de l'en-tête.
+			//	Choix de la hauteur de l'en-tÃªte.
 			get
 			{
 				return this.headerHeight;
@@ -353,7 +353,7 @@ namespace Epsitec.Common.Widgets
 
 		public virtual void SetHeaderTextV(int rank, string text)
 		{
-			//	Choix du nom d'une ligne de l'en-tête vertical.
+			//	Choix du nom d'une ligne de l'en-tÃªte vertical.
 			if (rank < 0 || rank >= this.maxRows)
 			{
 				throw new System.ArgumentOutOfRangeException ();
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Widgets
 
 		public virtual void SetHeaderTextH(int rank, string text)
 		{
-			//	Choix du nom d'une colonne de l'en-tête horizontal.
+			//	Choix du nom d'une colonne de l'en-tÃªte horizontal.
 			if (rank < 0 || rank >= this.maxColumns)
 			{
 				throw new System.ArgumentOutOfRangeException ();
@@ -444,11 +444,11 @@ namespace Epsitec.Common.Widgets
 
 		public virtual double RetWidthColumn(int rank)
 		{
-			//	Les colonnes et les lignes contenues dans le tableau peuvent être escamotées
-			//	pour permettre de réaliser des tables avec des éléments miniaturisables, par
+			//	Les colonnes et les lignes contenues dans le tableau peuvent Ãªtre escamotÃ©es
+			//	pour permettre de rÃ©aliser des tables avec des Ã©lÃ©ments miniaturisables, par
 			//	exemple.
 			//	Les appels MapToVisible et MapFromVisible permettent de convertir entre des
-			//	positions affichées (colonne/ligne) et des positions dans la table interne.
+			//	positions affichÃ©es (colonne/ligne) et des positions dans la table interne.
 
 			if (rank < 0 || rank >= this.maxColumns)
 			{
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void StretchColumns(double actualWidth, double actualHeight)
 		{
-			//	Adapte les largeurs des colonnes à la largeur du widget.
+			//	Adapte les largeurs des colonnes Ã  la largeur du widget.
 			double areaWidth = actualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
 			double totalWidth = 0;
 			for (int i=0; i<this.maxColumns; i++)
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void StretchRows(double actualWidth, double actualHeight)
 		{
-			//	Adapte les hauteurs des lignes à la hauteur du widget.
+			//	Adapte les hauteurs des lignes Ã  la hauteur du widget.
 			double areaHeight = actualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
 			double totalHeight = 0;
 			for (int i=0; i<this.maxRows; i++)
@@ -723,19 +723,19 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleScrollerV(object sender)
 		{
-			//	Appelé lorsque l'ascenseur vertical a bougé.
+			//	AppelÃ© lorsque l'ascenseur vertical a bougÃ©.
 			this.OffsetV = System.Math.Floor (this.scrollerV.DoubleValue+0.5);
 		}
 
 		private void HandleScrollerH(object sender)
 		{
-			//	Appelé lorsque l'ascenseur horizontal a bougé.
+			//	AppelÃ© lorsque l'ascenseur horizontal a bougÃ©.
 			this.OffsetH = System.Math.Floor (this.scrollerH.DoubleValue+0.5);
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton d'en-tête vertical a été cliqué.
+			//	AppelÃ© lorsque le bouton d'en-tÃªte vertical a Ã©tÃ© cliquÃ©.
 			HeaderButton button = sender as HeaderButton;
 
 			if (button.Style == HeaderButtonStyle.Left)
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le slider va être déplacé.
+			//	AppelÃ© lorsque le slider va Ãªtre dÃ©placÃ©.
 			HeaderSlider slider = sender as HeaderSlider;
 
 			this.isDraggingSlider = true;
@@ -813,7 +813,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le slider est déplacé.
+			//	AppelÃ© lorsque le slider est dÃ©placÃ©.
 			HeaderSlider slider = sender as HeaderSlider;
 
 			if (slider.Style == HeaderSliderStyle.Left)
@@ -829,7 +829,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le slider est fini de déplacer.
+			//	AppelÃ© lorsque le slider est fini de dÃ©placer.
 			HeaderSlider slider = sender as HeaderSlider;
 
 			this.isDraggingSlider = false;
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void DragStartedRow(int row, double pos)
 		{
-			//	La hauteur d'une ligne va être modifiée.
+			//	La hauteur d'une ligne va Ãªtre modifiÃ©e.
 			this.dragRank = row;
 			this.dragPos  = pos;
 			this.dragDim  = this.RetHeightRow (row);
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void DragStartedColumn(int column, double pos)
 		{
-			//	La largeur d'une colonne va être modifiée.
+			//	La largeur d'une colonne va Ãªtre modifiÃ©e.
 			this.dragRank = column;
 			this.dragPos  = pos;
 			this.dragDim  = this.RetWidthColumn (column);
@@ -877,20 +877,20 @@ namespace Epsitec.Common.Widgets
 
 		protected void DragEndedRow(int row, double pos)
 		{
-			//	La hauteur d'une ligne a été modifiée.
+			//	La hauteur d'une ligne a Ã©tÃ© modifiÃ©e.
 			this.MarkAsDirty ();
 		}
 
 		protected void DragEndedColumn(int column, double pos)
 		{
-			//	La largeur d'une colonne a été modifiée.
+			//	La largeur d'une colonne a Ã©tÃ© modifiÃ©e.
 			this.MarkAsDirty ();
 		}
 
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	Gestion d'un événement.
+			//	Gestion d'un Ã©vÃ©nement.
 			switch (message.MessageType)
 			{
 				case MessageType.MouseEnter:
@@ -947,7 +947,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool ProcessKeyDown(ModifierKeys modifier, KeyCode key)
 		{
-			//	Gestion d'une touche pressée avec KeyDown.
+			//	Gestion d'une touche pressÃ©e avec KeyDown.
 			CellArrayStyles style = this.styleV | this.styleH;
 
 			if (modifier == ModifierKeys.None || (modifier == ModifierKeys.Shift && (style & CellArrayStyles.SelectMulti) != 0))
@@ -1015,7 +1015,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void ProcessMouse(Drawing.Point pos, MessageType messageType, bool isShiftPressed, bool isControlPressed, bool isFinal)
 		{
-			//	Sélectionne une cellule.
+			//	SÃ©lectionne une cellule.
 			CellArrayStyles style = this.styleV | this.styleH;
 
 			if ((style.HasFlag (CellArrayStyles.SelectCell) == false) &&
@@ -1042,7 +1042,7 @@ namespace Epsitec.Common.Widgets
 
 			int row, column;
 
-			if (this.Detect (pos, out row, out column))  // détecte la cellule visée par la souris
+			if (this.Detect (pos, out row, out column))  // dÃ©tecte la cellule visÃ©e par la souris
 			{
 				if (messageType == MessageType.MouseDown)
 				{
@@ -1135,21 +1135,21 @@ namespace Epsitec.Common.Widgets
 
 		protected void ProcessMouseLeave()
 		{
-			//	Appelé lorsque la souris ne survole plus rien.
+			//	AppelÃ© lorsque la souris ne survole plus rien.
 			this.ProcessMouseFlyOver (-1, -1);
 		}
 
 		protected void ProcessMouseMove(Drawing.Point pos)
 		{
-			//	Appelé lorsque la souris a bougé.
+			//	AppelÃ© lorsque la souris a bougÃ©.
 			int row, column;
-			this.Detect (pos, out row, out column);  // détecte la cellule visée par la souris
+			this.Detect (pos, out row, out column);  // dÃ©tecte la cellule visÃ©e par la souris
 			this.ProcessMouseFlyOver (row, column);
 		}
 
 		protected void ProcessMouseFlyOver(int row, int column)
 		{
-			//	Indique la cellule survolée.
+			//	Indique la cellule survolÃ©e.
 			if (row != this.flyOverRow || column != this.flyOverColumn)
 			{
 				this.flyOverRow = row;
@@ -1187,7 +1187,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool Detect(Drawing.Point pos, out int row, out int column)
 		{
-			//	Détecte dans quelle cellule est un point.
+			//	DÃ©tecte dans quelle cellule est un point.
 			Drawing.Rectangle rect = this.container.ActualBounds;
 
 			row = column = -1;
@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool SelectCellDir(int dirColumn, int dirRow, bool add)
 		{
-			//	Sélectionne une cellule proche.
+			//	SÃ©lectionne une cellule proche.
 			int column = this.selectedColumn+dirColumn;
 			if (column < 0 || column >= this.maxColumns)
 			{
@@ -1267,7 +1267,7 @@ namespace Epsitec.Common.Widgets
 
 		public void DeselectAll()
 		{
-			//	Desélectionne toutes les cellules.
+			//	DesÃ©lectionne toutes les cellules.
 			for (int row=0; row<this.maxRows; row++)
 			{
 				for (int column=0; column<this.maxColumns; column++)
@@ -1279,7 +1279,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectAll()
 		{
-			//	Sélectionne toutes les cellules.
+			//	SÃ©lectionne toutes les cellules.
 			for (int row=0; row<this.maxRows; row++)
 			{
 				for (int column=0; column<this.maxColumns; column++)
@@ -1291,7 +1291,7 @@ namespace Epsitec.Common.Widgets
 
 		private void SelectZone(bool[,] marks, int column1, int row1, int column2, int row2, bool state)
 		{
-			//	Sélectionne une zone rectangulaire.
+			//	SÃ©lectionne une zone rectangulaire.
 			int sc = System.Math.Min (column1, column2);
 			int ec = System.Math.Max (column1, column2);
 			int sr = System.Math.Min (row1, row2);
@@ -1348,7 +1348,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectRow(int row, bool state)
 		{
-			//	Sélectionne toute une ligne.
+			//	SÃ©lectionne toute une ligne.
 			if (row >= 0 && row < this.maxRows)
 			{
 				for (int column=0; column<this.maxColumns; column++)
@@ -1365,7 +1365,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectColumn(int column, bool state)
 		{
-			//	Sélectionne toute une colonne.
+			//	SÃ©lectionne toute une colonne.
 			if (column < 0 || column >= this.maxColumns)
 				return;
 			for (int row=0; row<this.maxRows; row++)
@@ -1380,7 +1380,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectCell(int column, int row, bool state)
 		{
-			//	Sélectionne une cellule.
+			//	SÃ©lectionne une cellule.
 			if ((row < 0) || (row >= this.maxRows) ||
 				(column < 0) || (column >= this.maxColumns))
 			{
@@ -1392,7 +1392,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool IsCellSelected(int row, int column)
 		{
-			//	Indique si une cellule est sélectionnée.
+			//	Indique si une cellule est sÃ©lectionnÃ©e.
 			if (row < 0 || row >= this.maxRows)
 				return false;
 			if (column < 0 || column >= this.maxColumns)
@@ -1402,7 +1402,7 @@ namespace Epsitec.Common.Widgets
 
 		public int SelectedRow
 		{
-			//	Retourne la ligne sélectionnée.
+			//	Retourne la ligne sÃ©lectionnÃ©e.
 			get
 			{
 				int sel = this.selectedRow;
@@ -1414,7 +1414,7 @@ namespace Epsitec.Common.Widgets
 
 		public int SelectedColumn
 		{
-			//	Retourne la colonne sélectionnée.
+			//	Retourne la colonne sÃ©lectionnÃ©e.
 			get
 			{
 				int sel = this.selectedColumn;
@@ -1427,7 +1427,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectionChanged()
 		{
 			this.selectionChangedRaised = true;
-			//	Génère un événement pour dire que la sélection a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la sÃ©lection a changÃ©.
 			var handler = this.GetUserEventHandler ("SelectionChanged");
 
 			if (handler != null)
@@ -1440,7 +1440,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.selectionChangedRaised)
 			{
-				//	Génère un événement pour dire que la sélection a changé.
+				//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la sÃ©lection a changÃ©.
 				var handler = this.GetUserEventHandler ("FinalSelectionChanged");
 
 				if (handler != null)
@@ -1454,7 +1454,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSortChanged()
 		{
-			//	Génère un événement pour dire que le tri a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le tri a changÃ©.
 			var handler = this.GetUserEventHandler ("SortChanged");
 
 			if (handler != null)
@@ -1465,7 +1465,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnFlyOverChanged()
 		{
-			//	Génère un événement pour dire que la cellule survolée à changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la cellule survolÃ©e Ã  changÃ©.
 			var handler = this.GetUserEventHandler ("FlyOverChanged");
 
 			if (handler != null)
@@ -1477,7 +1477,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void FlyOver(int flyOverRow, int flyOverColumn)
 		{
-			//	Met en évidence la cellule survolée par la souris.
+			//	Met en Ã©vidence la cellule survolÃ©e par la souris.
 			for (int row=0; row<this.maxRows; row++)
 			{
 				for (int column=0; column<this.maxColumns; column++)
@@ -1509,7 +1509,7 @@ namespace Epsitec.Common.Widgets
 
 		public void ShowSelect()
 		{
-			//	Rend la cellule sélectionnée visible.
+			//	Rend la cellule sÃ©lectionnÃ©e visible.
 
 			this.ShowCell (this.SelectedRow, this.SelectedColumn);
 		}
@@ -1531,11 +1531,11 @@ namespace Epsitec.Common.Widgets
 					end = start+this.heightRows[row];
 				}
 
-				if (end > this.offsetV+rect.Height)  // sélection trop basse ?
+				if (end > this.offsetV+rect.Height)  // sÃ©lection trop basse ?
 				{
 					this.OffsetV = end-rect.Height;
 				}
-				if (start < this.offsetV)  // sélection trop haute ?
+				if (start < this.offsetV)  // sÃ©lection trop haute ?
 				{
 					this.OffsetV = start;
 				}
@@ -1553,11 +1553,11 @@ namespace Epsitec.Common.Widgets
 					end = start+this.widthColumns[column];
 				}
 
-				if (end > this.offsetH+rect.Width)  // sélection trop à droite ?
+				if (end > this.offsetH+rect.Width)  // sÃ©lection trop Ã  droite ?
 				{
 					this.OffsetH = end-rect.Width;
 				}
-				if (start < this.offsetH)  // sélection trop à gauche ?
+				if (start < this.offsetH)  // sÃ©lection trop Ã  gauche ?
 				{
 					this.OffsetH = start;
 				}
@@ -1567,7 +1567,7 @@ namespace Epsitec.Common.Widgets
 
 		public void Update()
 		{
-			//	Met à jour la géométrie du tableau.
+			//	Met Ã  jour la gÃ©omÃ©trie du tableau.
 			if (!this.isDirty)
 				return;
 			this.UpdateGeometry ();
@@ -1587,7 +1587,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateGeometry()
 		{
-			//	Met à jour la géométrie du conteneur.
+			//	Met Ã  jour la gÃ©omÃ©trie du conteneur.
 
 			if (this.scrollerV == null || this.scrollerH == null)
 				return;
@@ -1666,7 +1666,7 @@ namespace Epsitec.Common.Widgets
 				this.UpdateArrayGeometry (iRect);
 			}
 
-			//	Positionne les boutons de l'en-tête vertical.
+			//	Positionne les boutons de l'en-tÃªte vertical.
 			if ((this.styleV & CellArrayStyles.Header) == 0)
 			{
 				this.containerV.Hide ();
@@ -1726,7 +1726,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			//	Positionne les boutons de l'en-tête horizontal.
+			//	Positionne les boutons de l'en-tÃªte horizontal.
 			if ((this.styleH & CellArrayStyles.Header) == 0)
 			{
 				this.containerH.Hide ();
@@ -1803,7 +1803,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateScrollers(double actualWidth, double actualHeight)
 		{
-			//	Met à jour les ascenseurs en fonction du tableau.
+			//	Met Ã  jour les ascenseurs en fonction du tableau.
 			if (this.scrollerV == null || this.scrollerH == null)
 				return;
 
@@ -1880,7 +1880,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateArrayGeometry(Drawing.Rectangle rect)
 		{
-			//	Met à jour la géométrie de toutes les cellules du tableau.
+			//	Met Ã  jour la gÃ©omÃ©trie de toutes les cellules du tableau.
 			Cell focusedCell = null;
 
 			double py = rect.Height+this.offsetV;
@@ -1997,7 +1997,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			//	Supprime les colonnes excédentaires.
+			//	Supprime les colonnes excÃ©dentaires.
 
 			for (int col = maxColumns; col < this.maxColumns; col++)
 			{
@@ -2011,8 +2011,8 @@ namespace Epsitec.Common.Widgets
 			int minMaxCol = System.Math.Min (maxColumns, this.maxColumns);
 			int minMaxRow = System.Math.Min (maxRows, this.maxRows);
 
-			//	Supprime les lignes excédentaires, sans parcourir une seconde
-			//	fois les colonnes déjà supprimées.
+			//	Supprime les lignes excÃ©dentaires, sans parcourir une seconde
+			//	fois les colonnes dÃ©jÃ  supprimÃ©es.
 
 			for (int row = maxRows; row < this.maxRows; row++)
 			{
@@ -2049,7 +2049,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			//	Remplit les lignes nouvelles du tableau avec des cellules vides,
-			//	sans parcourir une seconde fois les colonnes déjà initialisées.
+			//	sans parcourir une seconde fois les colonnes dÃ©jÃ  initialisÃ©es.
 			for (int row=this.maxRows; row<maxRows; row++)
 			{
 				for (int col=0; col<minMaxCol; col++)
@@ -2085,7 +2085,7 @@ namespace Epsitec.Common.Widgets
 				this.visibleRows = this.maxRows;
 			}
 
-			//	Alloue les boutons pour les noms de l'en-tête.
+			//	Alloue les boutons pour les noms de l'en-tÃªte.
 			while (this.headerButtonV.Count > 0)
 			{
 				int i = this.headerButtonV.Count-1;
@@ -2118,7 +2118,7 @@ namespace Epsitec.Common.Widgets
 				this.headerButtonH.Add (button);
 			}
 
-			//	Alloue les boutons pour les sliders de l'en-tête.
+			//	Alloue les boutons pour les sliders de l'en-tÃªte.
 			while (this.headerSliderV.Count > 0)
 			{
 				int i = this.headerSliderV.Count-1;
@@ -2171,7 +2171,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.isDirty == false);
 			System.Diagnostics.Debug.Assert (this.isGrimy == false);
 
-			//-			this.Update();  // mis à jour si nécessaire
+			//-			this.Update();  // mis Ã  jour si nÃ©cessaire
 
 			//	Dessine le cadre et le fond du tableau.
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -2181,7 +2181,7 @@ namespace Epsitec.Common.Widgets
 #if false
 			if ( this.showScrollerV && this.showScrollerH )
 			{
-				//	Grise le carré à l'intersection des 2 ascenseurs.
+				//	Grise le carrÃ© Ã  l'intersection des 2 ascenseurs.
 				rect.Left   = rect.Right-this.margin-this.rightMargin;
 				rect.Width  = this.rightMargin;
 				rect.Bottom = rect.Bottom+this.margin;
@@ -2209,7 +2209,7 @@ namespace Epsitec.Common.Widgets
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (color);
 
-			//	Dessine les lignes de séparation horizontales.
+			//	Dessine les lignes de sÃ©paration horizontales.
 			if ((this.styleV & CellArrayStyles.Separator) != 0)
 			{
 				double limit = 0;
@@ -2227,7 +2227,7 @@ namespace Epsitec.Common.Widgets
 				double y  = rect.Top+this.offsetV;
 				for (int i=0; i<this.maxRows; i++)
 				{
-					if (i == this.maxRows-1)  // dernière ligne ?
+					if (i == this.maxRows-1)  // derniÃ¨re ligne ?
 					{
 						x1 = rect.Left;
 					}
@@ -2240,7 +2240,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			//	Dessine les lignes de séparation verticales.
+			//	Dessine les lignes de sÃ©paration verticales.
 			if ((this.styleH & CellArrayStyles.Separator) != 0)
 			{
 				double limit = 0;
@@ -2273,7 +2273,7 @@ namespace Epsitec.Common.Widgets
 
 		private bool HasBottomSeparator(int row)
 		{
-			if (row != this.maxRows-1)  // pas la dernière ligne ?
+			if (row != this.maxRows-1)  // pas la derniÃ¨re ligne ?
 			{
 				for (int column = 0; column < this.maxColumns; column++)
 				{
@@ -2289,7 +2289,7 @@ namespace Epsitec.Common.Widgets
 
 		private bool HasRightSeparator(int column)
 		{
-			if (column != this.maxColumns-1)  // pas la dernière colonne ?
+			if (column != this.maxColumns-1)  // pas la derniÃ¨re colonne ?
 			{
 				for (int row = 0; row < this.maxRows; row++)
 				{
@@ -2365,9 +2365,9 @@ namespace Epsitec.Common.Widgets
 		private readonly List<HeaderSlider>		headerSliderV;
 		private readonly List<HeaderSlider>		headerSliderH;
 
-		private readonly Widget					container;		// père de toutes les cellules
-		private readonly Widget					containerV;		// père de l'en-tête vertical
-		private readonly Widget					containerH;		// père de l'en-tête horizontal
+		private readonly Widget					container;		// pÃ¨re de toutes les cellules
+		private readonly Widget					containerV;		// pÃ¨re de l'en-tÃªte vertical
+		private readonly Widget					containerH;		// pÃ¨re de l'en-tÃªte horizontal
 		private readonly VScroller				scrollerV;
 		private readonly HScroller				scrollerH;
 
@@ -2386,10 +2386,10 @@ namespace Epsitec.Common.Widgets
 		protected double[]						widthColumns;	// largeurs des colonnes
 		protected double[]						heightRows;		// hauteurs des lignes
 		protected Drawing.Margins				margins;
-		protected double						leftMargin;		// marge pour en-tête
+		protected double						leftMargin;		// marge pour en-tÃªte
 		protected double						rightMargin;	// marge pour ascenseur
 		protected double						bottomMargin;	// marge pour ascenseur
-		protected double						topMargin;		// marge pour en-tête
+		protected double						topMargin;		// marge pour en-tÃªte
 		protected bool							showScrollerV = true;
 		protected bool							showScrollerH = true;
 		protected double						offsetV;

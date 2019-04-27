@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections;
@@ -81,8 +81,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private UndoItem UAdd(T item)
 		{
-			//	Ajoute un item à la fin de la liste et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	Ajoute un item Ã  la fin de la liste et retourne l'information permettant
+			//	de faire l'opÃ©ration inverse.
 			this.dict[item.Guid] = item;
 			this.generationNumber++;
 
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private UndoItem URemove(T item)
 		{
 			//	Supprime un item de la liste et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	de faire l'opÃ©ration inverse.
 			var undoData = new UndoData
 			{
 				Item  = item,

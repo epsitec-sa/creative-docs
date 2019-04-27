@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -120,10 +120,10 @@ namespace Epsitec.Common.Drawing
 			}
 #else
 			//	[DR]
-			//	J'ai ajouté ceci pour trouver correctement la bonne police "Segoe UI" parmi
-			//	les nombreuses variantes et éviter le bug des polices italiques qui
+			//	J'ai ajoutÃ© ceci pour trouver correctement la bonne police "Segoe UI" parmi
+			//	les nombreuses variantes et Ã©viter le bug des polices italiques qui
 			//	s'affichaient en bold-italique (en fait, l'ancien code trouvait du "Black Italic").
-			//	Note: Ces quelques lignes auraient pu s'écrire plus élégamment avec link, mais
+			//	Note: Ces quelques lignes auraient pu s'Ã©crire plus Ã©lÃ©gamment avec link, mais
 			//	il ne semble pas disponible ici !
 
 			foreach (var font in this.fonts)

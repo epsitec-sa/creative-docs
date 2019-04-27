@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant d'éditer une expression régulière dans l'éditeur d'entités.
+	/// Dialogue permettant d'Ã©diter une expression rÃ©guliÃ¨re dans l'Ã©diteur d'entitÃ©s.
 	/// </summary>
 	public class EntityExpressionDialog : AbstractDialog
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.splitter.Dock = DockStyle.Bottom;
 				this.splitter.Margins = new Margins(0, 0, 0, 0);
 
-				//	Crée l'en-tête et son contenu.
+				//	CrÃ©e l'en-tÃªte et son contenu.
 				this.header = new FrameBox(top);
 				this.header.PreferredHeight = 0;
 				this.header.MinHeight = 0;
@@ -58,13 +58,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.header.Dock = DockStyle.Top;
 
 				this.buttonRedefine = new CheckButton(this.header);
-				this.buttonRedefine.Text = "Redéfinir localement";
+				this.buttonRedefine.Text = "RedÃ©finir localement";
 				this.buttonRedefine.PreferredWidth = 200;
 				this.buttonRedefine.AutoToggle = false;
 				this.buttonRedefine.Dock = DockStyle.Top;
 				this.buttonRedefine.Clicked += this.HandleButtonClicked;
 
-				//	Crée le grand pavé de texte éditable.
+				//	CrÃ©e le grand pavÃ© de texte Ã©ditable.
 				this.fieldExpression = new TextFieldMulti(top);
 				this.fieldExpression.Dock = DockStyle.Fill;
 				this.fieldExpression.TabIndex = 1;
@@ -113,16 +113,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		public void Initialise(bool isReadOnly, bool isOverridable, bool isPatchModule, string inheritedExpression, string localExpression)
 		{
 			//	Expression locale:    isOverridable = false, inheritedExpression = null,        localExpression = null (valeur) ou calcul
-			//	Selon héritage:       isOverridable = true,  inheritedExpression = null/calcul, localExpression = null
-			//	Surchargé localement: isOverridable = true,  inheritedExpression = null/calcul, localExpression = "" (valeur) ou calcul
+			//	Selon hÃ©ritage:       isOverridable = true,  inheritedExpression = null/calcul, localExpression = null
+			//	SurchargÃ© localement: isOverridable = true,  inheritedExpression = null/calcul, localExpression = "" (valeur) ou calcul
 			//
 			//	Donc, si isOverridable = true, localExpression peut prendre trois valeurs:
-			//	localExpression = null:   pas de redéfinition locale, on utilise le calcul hérité
-			//	localExpression = "":     redéfinition d'une valeur, qui aura la priorité sur le calcul hérité
-			//	localExpression = calcul: redéfinition d'un calcul, qui aura la priorité sur le calcul hérité
+			//	localExpression = null:   pas de redÃ©finition locale, on utilise le calcul hÃ©ritÃ©
+			//	localExpression = "":     redÃ©finition d'une valeur, qui aura la prioritÃ© sur le calcul hÃ©ritÃ©
+			//	localExpression = calcul: redÃ©finition d'un calcul, qui aura la prioritÃ© sur le calcul hÃ©ritÃ©
 			//
-			//	Si isPatchModle = true, cela implique que l'expression héritée provient en fait d'un
-			//	module de référence.
+			//	Si isPatchModle = true, cela implique que l'expression hÃ©ritÃ©e provient en fait d'un
+			//	module de rÃ©fÃ©rence.
 			this.isEditOk = false;
 			this.isEditLocked = isReadOnly;
 			this.isInterface = isOverridable;

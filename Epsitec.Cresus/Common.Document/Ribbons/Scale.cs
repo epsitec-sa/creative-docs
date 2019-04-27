@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Scale permet de mettre à l'échelle la sélection.
+	/// La classe Scale permet de mettre Ã  l'Ã©chelle la sÃ©lection.
 	/// </summary>
 	public class Scale : Abstract
 	{
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonScaleDiv2 == null )  return;
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void CreateFieldScale(ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour une échelle.
+			//	CrÃ©e un champ Ã©ditable pour une Ã©chelle.
 			field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void AdaptFieldScale(TextFieldReal field)
 		{
-			//	Adapte un champ éditable pour une échelle.
+			//	Adapte un champ Ã©ditable pour une Ã©chelle.
 			if ( this.document == null )
 			{
 				field.Enable = false;

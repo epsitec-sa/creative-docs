@@ -1,10 +1,10 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Driver
 {
 	/// <summary>
-	/// La classe CheckPerformance permet de vérifier la performance de
+	/// La classe CheckPerformance permet de vÃ©rifier la performance de
 	/// certaines constructions de code avec .NET.
 	/// </summary>
 	public sealed class CheckPerformance
@@ -16,9 +16,9 @@ namespace Epsitec.Common.Text.Driver
 			CheckPerformance.PerfLongArray (size, runs);		//	5.5ns/mot -  9ns/mot -  9ns/mot
 			CheckPerformance.PerfLongBuffer (size, runs);		//	          -  8ns/mot -  8ns/mot
 			
-			//	(*) Résultats obtenus avec un bi-Xeon 1.7GHz, size=100'000 et runs=1000.
+			//	(*) RÃ©sultats obtenus avec un bi-Xeon 1.7GHz, size=100'000 et runs=1000.
 			//
-			//	Avec size=1000, on divise grosso modo par 2 les temps d'exécution grâce
+			//	Avec size=1000, on divise grosso modo par 2 les temps d'exÃ©cution grÃ¢ce
 			//	au cache du processeur.
 		}
 		

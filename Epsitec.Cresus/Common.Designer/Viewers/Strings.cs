@@ -7,14 +7,14 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public class Strings : Abstract
 	{
 		public Strings(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 			: base (module, context, access, designerApplication)
 		{
-			//	Résumé des captions.
+			//	RÃ©sumÃ© des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void UpdateEdit()
 		{
-			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			//	Met Ã  jour les lignes Ã©ditables en fonction de la sÃ©lection dans le tableau.
 			base.UpdateEdit();
 
 			bool iic = this.ignoreChange;
@@ -235,12 +235,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override string GetSummary(string twoLettersCulture)
 		{
-			//	Retourne le texte résumé de la ressource sélectionnée.
+			//	Retourne le texte rÃ©sumÃ© de la ressource sÃ©lectionnÃ©e.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
 			if (twoLettersCulture == null)
 			{
-				buffer.Append(Misc.Italic("(indéfini)"));
+				buffer.Append(Misc.Italic("(indÃ©fini)"));
 			}
 			else
 			{
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (item == null)
 				{
-					buffer.Append (Misc.Italic ("(indéfini)"));
+					buffer.Append (Misc.Italic ("(indÃ©fini)"));
 				}
 				else
 				{
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Designer.Viewers
 					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 					if (text == null)
 					{
-						buffer.Append(Misc.Italic("(indéfini)"));
+						buffer.Append(Misc.Italic("(indÃ©fini)"));
 					}
 					else if (text.Length == 0)
 					{
@@ -347,12 +347,12 @@ namespace Epsitec.Common.Designer.Viewers
 			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 
-			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !
+			// (*)	Ce numÃ©ro correspond Ã  field dans ResourceAccess.SearcherIndexToAccess !
 		}
 
 		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
-			//	Cherche les index correspondant à un texte éditable.
+			//	Cherche les index correspondant Ã  un texte Ã©ditable.
 			subfield = 0;
 
 			if (textField == this.labelEdit)
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override AbstractTextField IndexToTextField(int field, int subfield)
 		{
-			//	Cherche le TextField permettant d'éditer des index.
+			//	Cherche le TextField permettant d'Ã©diter des index.
 			if (subfield == 0)
 			{
 				switch (field)
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Designer.Viewers
 		
 		private void HandleTextChanged(object sender)
 		{
-			//	Un texte éditable a changé.
+			//	Un texte Ã©ditable a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;

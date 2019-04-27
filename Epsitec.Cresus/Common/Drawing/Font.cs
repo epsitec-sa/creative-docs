@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -38,9 +38,9 @@ namespace Epsitec.Common.Drawing
 		
 		static Font()
 		{
-			//	Pour une raison étrange, la DLL Win32 doit être chargée très, très tôt, sinon
-			//	elle pourrait ne pas être trouvée (c'est probablement lié à la copie locale des
-			//	assemblies .NET qui est faite lors de l'exécution avec NUnit).
+			//	Pour une raison Ã©trange, la DLL Win32 doit Ãªtre chargÃ©e trÃ¨s, trÃ¨s tÃ´t, sinon
+			//	elle pourrait ne pas Ãªtre trouvÃ©e (c'est probablement liÃ© Ã  la copie locale des
+			//	assemblies .NET qui est faite lors de l'exÃ©cution avec NUnit).
 
 			try
 			{
@@ -388,19 +388,19 @@ namespace Epsitec.Common.Drawing
 
 		public bool MatchForStyle(bool bold, bool italic)
 		{
-			//	Vérifie si une police match pour les 4 cas possibles (normal, bold
+			//	VÃ©rifie si une police match pour les 4 cas possibles (normal, bold
 			//	italique ou bold-italique).
 			//	Par exemple, avec Windows 8 et la police "Segoe UI", on rencontre les
 			//	styles suivants:
 			//	- Black Italic
 			//	- Black Regular
-			//	- Bold				<- à utiliser pour bold
-			//	- Bold Italic		<- à utiliser pour bold-italique
-			//	- Italic			<- à utiliser pour italique
+			//	- Bold				<- Ã  utiliser pour bold
+			//	- Bold Italic		<- Ã  utiliser pour bold-italique
+			//	- Italic			<- Ã  utiliser pour italique
 			//	- Light Italic
 			//	- Light Regular
 			//	- Mono Regular
-			//	- Regular			<- à utiliser pour normal
+			//	- Regular			<- Ã  utiliser pour normal
 			//	- Semibold Italic
 			//	- Semibold Regular
 			//	- Semilight Regular
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Drawing
 						case "Normal":
 						case "Regular":
 							//	Si on trouve l'un de ces 3 styles et qu'on cherche du bold
-							//	ou de l'italique, ça ne match pas.
+							//	ou de l'italique, Ã§a ne match pas.
 							if (bold || italic)
 							{
 								return false;
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Drawing
 
 						case "Bold":
 							//	Si on trouve ce style et qu'on cherche du non-bold,
-							//	ça ne match pas.
+							//	Ã§a ne match pas.
 							if (!bold)
 							{
 								return false;
@@ -441,7 +441,7 @@ namespace Epsitec.Common.Drawing
 						case "Oblique":
 						case "Slanted":
 							//	Si on trouve l'un de ces 3 styles et qu'on cherche du non-italic,
-							//	ça ne match pas.
+							//	Ã§a ne match pas.
 							if (!italic)
 							{
 								return false;
@@ -450,12 +450,12 @@ namespace Epsitec.Common.Drawing
 
 						default:
 							//	Si on trouve un autre style (par exemple Black, Light ou Semibold)
-							//	ça ne match jamais.
+							//	Ã§a ne match jamais.
 							return false;
 					}
 				}
 
-				//	Si on a rien trouvé qui ne matchait pas, alors ça match !
+				//	Si on a rien trouvÃ© qui ne matchait pas, alors Ã§a match !
 				return true;
 			}
 		}
@@ -1045,8 +1045,8 @@ namespace Epsitec.Common.Drawing
 				
 				if (pos >= 0)
 				{
-					//	Le style oblique n'existe pas pour cette fonte. Tentons de le synthétiser
-					//	à partir de la version droite la plus approchante.
+					//	Le style oblique n'existe pas pour cette fonte. Tentons de le synthÃ©tiser
+					//	Ã  partir de la version droite la plus approchante.
 					
 					string cleanStyle;
 					
@@ -1062,8 +1062,8 @@ namespace Epsitec.Common.Drawing
 					
 					if (font != null)
 					{
-						//	La fonte de base (droite) existe. C'est une bonne nouvelle. On va créer
-						//	une fonte synthétique oblique...
+						//	La fonte de base (droite) existe. C'est une bonne nouvelle. On va crÃ©er
+						//	une fonte synthÃ©tique oblique...
 						
 						Font   synFont = new Font (font, style, SyntheticFontMode.Oblique);
 						string synName = synFont.FullName;

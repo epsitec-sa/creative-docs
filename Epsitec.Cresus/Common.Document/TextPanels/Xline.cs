@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		public override void UpdateAfterAttach()
 		{
-			//	Mise à jour après avoir attaché le wrappers.
+			//	Mise Ã  jour aprÃ¨s avoir attachÃ© le wrappers.
 			this.buttonClear.Visibility = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
 		}
 
@@ -68,28 +68,28 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau étendu ?
+				if ( this.isExtendedSize )  // panneau Ã©tendu ?
 				{
 					int total = 0;
 					if ( this.TextWrapper.Defined.IsUnderlineDefined )  total ++;
 					if ( this.TextWrapper.Defined.IsOverlineDefined  )  total ++;
 					if ( this.TextWrapper.Defined.IsStrikeoutDefined )  total ++;
 
-					if ( this.IsLabelProperties )  // étendu/détails ?
+					if ( this.IsLabelProperties )  // Ã©tendu/dÃ©tails ?
 					{
 						h += 30 + 25*total*3;
 					}
-					else	// étendu/compact ?
+					else	// Ã©tendu/compact ?
 					{
 						h += 30 + 25*total;
 					}
 
 					if ( total == 0 )
 					{
-						h += 20;  // feedback visuel lorsque le panneau est étendu mais vide (à part les IconButtons)
+						h += 20;  // feedback visuel lorsque le panneau est Ã©tendu mais vide (Ã  part les IconButtons)
 					}
 				}
-				else	// panneau réduit ?
+				else	// panneau rÃ©duit ?
 				{
 					h += 30;
 				}
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public override void OriginColorDeselect()
 		{
-			//	Désélectionne toutes les origines de couleurs possibles.
+			//	DÃ©sÃ©lectionne toutes les origines de couleurs possibles.
 			this.underlineColor.ActiveState = ActiveState.No;
 			this.overlineColor.ActiveState  = ActiveState.No;
 			this.strikeoutColor.ActiveState = ActiveState.No;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public override void OriginColorSelect(int rank)
 		{
-			//	Sélectionne l'origine de couleur.
+			//	SÃ©lectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -185,14 +185,14 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		protected void HandleWrapperChanged(object sender)
 		{
-			//	Le wrapper associé a changé.
+			//	Le wrapper associÃ© a changÃ©.
 			this.UpdateAfterChanging();
 		}
 
 		
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonUnderline == null )  return;
@@ -402,7 +402,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected override void UpdateAfterChanging()
 		{
-			//	Met à jour après un changement du wrapper.
+			//	Met Ã  jour aprÃ¨s un changement du wrapper.
 			base.UpdateAfterChanging();
 			
 			if ( this.TextWrapper.IsAttached == false )  return;
@@ -492,16 +492,16 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.SuspendSynchronizations();
 			
-			//	Cycle entre divers états:
+			//	Cycle entre divers Ã©tats:
 			//
-			//	(A1) Soulignement hérité du style actif
-			//	(A2) Pas de soulignement (forcé par un disable local)
-			//	(A3) Soulignement défini localement
+			//	(A1) Soulignement hÃ©ritÃ© du style actif
+			//	(A2) Pas de soulignement (forcÃ© par un disable local)
+			//	(A3) Soulignement dÃ©fini localement
 			//
-			//	ou si aucun soulignement n'est défini dans le style actif:
+			//	ou si aucun soulignement n'est dÃ©fini dans le style actif:
 			//
 			//	(B1) Pas de soulignement
-			//	(B2) Soulignement défini localement
+			//	(B2) Soulignement dÃ©fini localement
 			
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.TextWrapper.Defined.Underline;
 			
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Document.TextPanels
 					
 					if ( xline.EqualsIgnoringIsDisabled(this.TextWrapper.Active.Underline) )
 					{
-						//	L'état défini par notre souligné local est identique à celui hérité
+						//	L'Ã©tat dÃ©fini par notre soulignÃ© local est identique Ã  celui hÃ©ritÃ©
 						//	par le style actif; utilise celui du style dans ce cas.
 						this.TextWrapper.Defined.ClearUnderline();  // --> (A1)
 					}
@@ -550,16 +550,16 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.SuspendSynchronizations();
 			
-			//	Cycle entre divers états:
+			//	Cycle entre divers Ã©tats:
 			//
-			//	(A1) Soulignement hérité du style actif
-			//	(A2) Pas de soulignement (forcé par un disable local)
-			//	(A3) Soulignement défini localement
+			//	(A1) Soulignement hÃ©ritÃ© du style actif
+			//	(A2) Pas de soulignement (forcÃ© par un disable local)
+			//	(A3) Soulignement dÃ©fini localement
 			//
-			//	ou si aucun soulignement n'est défini dans le style actif:
+			//	ou si aucun soulignement n'est dÃ©fini dans le style actif:
 			//
 			//	(B1) Pas de soulignement
-			//	(B2) Soulignement défini localement
+			//	(B2) Soulignement dÃ©fini localement
 			
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.TextWrapper.Defined.Overline;
 			
@@ -573,7 +573,7 @@ namespace Epsitec.Common.Document.TextPanels
 					
 					if ( xline.EqualsIgnoringIsDisabled(this.TextWrapper.Active.Overline) )
 					{
-						//	L'état défini par notre souligné local est identique à celui hérité
+						//	L'Ã©tat dÃ©fini par notre soulignÃ© local est identique Ã  celui hÃ©ritÃ©
 						//	par le style actif; utilise celui du style dans ce cas.
 						this.TextWrapper.Defined.ClearOverline();  // --> (A1)
 					}
@@ -608,16 +608,16 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.SuspendSynchronizations();
 			
-			//	Cycle entre divers états:
+			//	Cycle entre divers Ã©tats:
 			//
-			//	(A1) Soulignement hérité du style actif
-			//	(A2) Pas de soulignement (forcé par un disable local)
-			//	(A3) Soulignement défini localement
+			//	(A1) Soulignement hÃ©ritÃ© du style actif
+			//	(A2) Pas de soulignement (forcÃ© par un disable local)
+			//	(A3) Soulignement dÃ©fini localement
 			//
-			//	ou si aucun soulignement n'est défini dans le style actif:
+			//	ou si aucun soulignement n'est dÃ©fini dans le style actif:
 			//
 			//	(B1) Pas de soulignement
-			//	(B2) Soulignement défini localement
+			//	(B2) Soulignement dÃ©fini localement
 			
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.TextWrapper.Defined.Strikeout;
 			
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Document.TextPanels
 					
 					if ( xline.EqualsIgnoringIsDisabled(this.TextWrapper.Active.Strikeout) )
 					{
-						//	L'état défini par notre souligné local est identique à celui hérité
+						//	L'Ã©tat dÃ©fini par notre soulignÃ© local est identique Ã  celui hÃ©ritÃ©
 						//	par le style actif; utilise celui du style dans ce cas.
 						this.TextWrapper.Defined.ClearStrikeout();  // --> (A1)
 					}

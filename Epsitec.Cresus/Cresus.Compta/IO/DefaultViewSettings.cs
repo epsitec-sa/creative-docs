@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -20,7 +20,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.IO
 {
 	/// <summary>
-	/// Cette classe s'occupe de crÈer les rÈglages de prÈsentation par dÈfaut.
+	/// Cette classe s'occupe de cr√©er les r√©glages de pr√©sentation par d√©faut.
 	/// </summary>
 	public class DefaultViewSettings
 	{
@@ -33,17 +33,17 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public void CreateDefaultViewSettings()
 		{
-			this.CreateDefaultViewSettingsJournal          (Res.Commands.PrÈsentation.Journal);
-			this.CreateDefaultViewSettingsBalance          (Res.Commands.PrÈsentation.Balance);
-			this.CreateDefaultViewSettingsExtraitDeCompte  (Res.Commands.PrÈsentation.ExtraitDeCompte);
-			this.CreateDefaultViewSettingsBilan            (Res.Commands.PrÈsentation.Bilan);
-			this.CreateDefaultViewSettingsPP               (Res.Commands.PrÈsentation.PP);
-			this.CreateDefaultViewSettingsBudgets          (Res.Commands.PrÈsentation.Budgets);
-			this.CreateDefaultViewSettingsRÈsumÈPÈriodique (Res.Commands.PrÈsentation.RÈsumÈPÈriodique);
-			this.CreateDefaultViewSettingsTVA              (Res.Commands.PrÈsentation.TVA);
-			this.CreateDefaultViewSettingsOpen             (Res.Commands.PrÈsentation.Open);
-			this.CreateDefaultViewSettingsSoldes           (Res.Commands.PrÈsentation.Soldes);
-			this.CreateDefaultViewSettingsRÈglages         (Res.Commands.PrÈsentation.RÈglages);
+			this.CreateDefaultViewSettingsJournal          (Res.Commands.Pr√©sentation.Journal);
+			this.CreateDefaultViewSettingsBalance          (Res.Commands.Pr√©sentation.Balance);
+			this.CreateDefaultViewSettingsExtraitDeCompte  (Res.Commands.Pr√©sentation.ExtraitDeCompte);
+			this.CreateDefaultViewSettingsBilan            (Res.Commands.Pr√©sentation.Bilan);
+			this.CreateDefaultViewSettingsPP               (Res.Commands.Pr√©sentation.PP);
+			this.CreateDefaultViewSettingsBudgets          (Res.Commands.Pr√©sentation.Budgets);
+			this.CreateDefaultViewSettingsR√©sum√©P√©riodique (Res.Commands.Pr√©sentation.R√©sum√©P√©riodique);
+			this.CreateDefaultViewSettingsTVA              (Res.Commands.Pr√©sentation.TVA);
+			this.CreateDefaultViewSettingsOpen             (Res.Commands.Pr√©sentation.Open);
+			this.CreateDefaultViewSettingsSoldes           (Res.Commands.Pr√©sentation.Soldes);
+			this.CreateDefaultViewSettingsR√©glages         (Res.Commands.Pr√©sentation.R√©glages);
 		}
 
 
@@ -51,26 +51,26 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var list = this.GetList (cmd);
 
-			this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Journal des Ècritures", true, true,  true);
+			this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Journal des √©critures", true, true,  true);
 
-			this.CreateViewSettingsData (list, ControllerType.LibellÈs, "LibellÈs usuels",       true, false, false);
-			this.CreateViewSettingsData (list, ControllerType.ModËles,  "Ecritures modËles",     true, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Libell√©s, "Libell√©s usuels",       true, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Mod√®les,  "Ecritures mod√®les",     true, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Journaux, "Journaux",              true, false, false);
 
 			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsRÈglages(Command cmd)
+		private void CreateDefaultViewSettingsR√©glages(Command cmd)
 		{
 			var list = this.GetList (cmd);
 
 			this.CreateViewSettingsData<PlanComptableOptions> (list, ControllerType.PlanComptable, "Plan comptable", true, true, false);
 
 			this.CreateViewSettingsData (list, ControllerType.Monnaies,        "Monnaies",              false, false, false);
-			this.CreateViewSettingsData (list, ControllerType.PÈriodes,        "Exercices comptables",  true,  false, false);
-			this.CreateViewSettingsData (list, ControllerType.PiËcesGenerator, "GÈnÈrateurs n∞ piËces", false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.P√©riodes,        "Exercices comptables",  true,  false, false);
+			this.CreateViewSettingsData (list, ControllerType.Pi√®cesGenerator, "G√©n√©rateurs n¬∞ pi√®ces", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Utilisateurs,    "Utilisateurs",          false, false, false);
-			this.CreateViewSettingsData (list, ControllerType.RÈglages,        "RÈglages avancÈs",      false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.R√©glages,        "R√©glages avanc√©s",      false, false, false);
 
 			this.Select (list);
 		}
@@ -135,17 +135,17 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Ecritures d'un compte ‡ choix", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Ecritures d'un compte √† choix", searchExist, filterExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Graphique d'un compte ‡ choix", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Graphique d'un compte √† choix", searchExist, filterExist, optionsExist);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Lines;
 			}
 
-			//	A titre d'exemple, on met un accËs direct aux 3 premiers comptes.
+			//	A titre d'exemple, on met un acc√®s direct aux 3 premiers comptes.
 			int count = 0;
 			foreach (var compte in this.compta.PlanComptable)
 			{
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Compta.IO
 					var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, compte.Titre, searchExist, filterExist, optionsExist);
 
 					var o = viewSettings.BaseOptions as ExtraitDeCompteOptions;
-					o.NumÈroCompte = compte.NumÈro;
+					o.Num√©roCompte = compte.Num√©ro;
 
 					count++;
 					if (count >= 3)
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Compta.IO
 			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsRÈsumÈPÈriodique(Command cmd)
+		private void CreateDefaultViewSettingsR√©sum√©P√©riodique(Command cmd)
 		{
 			var list = this.GetList (cmd);
 
@@ -240,18 +240,18 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RÈsumÈPÈriodiqueOptions> (list, ControllerType.RÈsumÈPÈriodique, "Charges et produits", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatÈgorie (viewSettings.BaseOptions, CatÈgorieDeCompte.Charge | CatÈgorieDeCompte.Produit);
+				var viewSettings = this.CreateViewSettingsData<R√©sum√©P√©riodiqueOptions> (list, ControllerType.R√©sum√©P√©riodique, "Charges et produits", searchExist, filterExist, optionsExist);
+				this.SearchAdaptCat√©gorie (viewSettings.BaseOptions, Cat√©gorieDeCompte.Charge | Cat√©gorieDeCompte.Produit);
 				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RÈsumÈPÈriodiqueOptions> (list, ControllerType.RÈsumÈPÈriodique, "Tout", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<R√©sum√©P√©riodiqueOptions> (list, ControllerType.R√©sum√©P√©riodique, "Tout", searchExist, filterExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RÈsumÈPÈriodiqueOptions> (list, ControllerType.RÈsumÈPÈriodique, "Histogramme des soldes", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatÈgorie (viewSettings.BaseOptions, CatÈgorieDeCompte.Charge | CatÈgorieDeCompte.Produit);
+				var viewSettings = this.CreateViewSettingsData<R√©sum√©P√©riodiqueOptions> (list, ControllerType.R√©sum√©P√©riodique, "Histogramme des soldes", searchExist, filterExist, optionsExist);
+				this.SearchAdaptCat√©gorie (viewSettings.BaseOptions, Cat√©gorieDeCompte.Charge | Cat√©gorieDeCompte.Produit);
 				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
@@ -263,10 +263,10 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RÈsumÈPÈriodiqueOptions> (list, ControllerType.RÈsumÈPÈriodique, "Secteurs des soldes", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatÈgorie (viewSettings.BaseOptions, CatÈgorieDeCompte.Charge | CatÈgorieDeCompte.Produit);
+				var viewSettings = this.CreateViewSettingsData<R√©sum√©P√©riodiqueOptions> (list, ControllerType.R√©sum√©P√©riodique, "Secteurs des soldes", searchExist, filterExist, optionsExist);
+				this.SearchAdaptCat√©gorie (viewSettings.BaseOptions, Cat√©gorieDeCompte.Charge | Cat√©gorieDeCompte.Produit);
 				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
-				this.OptionsAdaptRÈsumÈPÈriodique (viewSettings.BaseOptions, 1);
+				this.OptionsAdaptR√©sum√©P√©riodique (viewSettings.BaseOptions, 1);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Pie;
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var list = this.GetList (cmd);
 
-			this.CreateViewSettingsData<RÈsumÈTVAOptions> (list, ControllerType.RÈsumÈTVA, "RÈsumÈ TVA", false, false, false);
+			this.CreateViewSettingsData<R√©sum√©TVAOptions> (list, ControllerType.R√©sum√©TVA, "R√©sum√© TVA", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.CodesTVA, "Codes TVA", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.ListeTVA, "Listes de taux de TVA", false, false, false);
 
@@ -347,9 +347,9 @@ namespace Epsitec.Cresus.Compta.IO
 			options.DeepTo   = maxProfondeur;
 		}
 
-		private void SearchAdaptCatÈgorie(AbstractOptions options, CatÈgorieDeCompte catÈgorie)
+		private void SearchAdaptCat√©gorie(AbstractOptions options, Cat√©gorieDeCompte cat√©gorie)
 		{
-			options.CatÈgories = catÈgorie;
+			options.Cat√©gories = cat√©gorie;
 		}
 
 
@@ -364,9 +364,9 @@ namespace Epsitec.Cresus.Compta.IO
 			o.ComparisonDisplayMode = mode;
 		}
 
-		private void OptionsAdaptRÈsumÈPÈriodique(AbstractOptions options, int numberOfMonths)
+		private void OptionsAdaptR√©sum√©P√©riodique(AbstractOptions options, int numberOfMonths)
 		{
-			var o = options as RÈsumÈPÈriodiqueOptions;
+			var o = options as R√©sum√©P√©riodiqueOptions;
 
 			o.NumberOfMonths = numberOfMonths;
 		}
@@ -379,12 +379,12 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private ViewSettingsList GetList(Command cmd)
 		{
-			return this.mainWindowController.GetViewSettingsList (PrÈsentations.GetViewSettingsKey (cmd));
+			return this.mainWindowController.GetViewSettingsList (Pr√©sentations.GetViewSettingsKey (cmd));
 		}
 
 		private void Select(ViewSettingsList list)
 		{
-			list.SelectedIndex = 0;  // sÈlectionne "RÈglages standards"
+			list.SelectedIndex = 0;  // s√©lectionne "R√©glages standards"
 		}
 
 

@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -85,9 +85,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public Timestamp GetNewTimestamp(System.DateTime date)
 		{
-			//	Retourne le Timestamp à utiliser pour créer un nouvel événement à une
-			//	date donnée, en partant du principe que l'événement viendra toujours
-			//	après les événements existants.
+			//	Retourne le Timestamp Ã  utiliser pour crÃ©er un nouvel Ã©vÃ©nement Ã  une
+			//	date donnÃ©e, en partant du principe que l'Ã©vÃ©nement viendra toujours
+			//	aprÃ¨s les Ã©vÃ©nements existants.
 			this.UpdateSortedList ();
 
 			var e = this.sortedEvents.Where (x => x.Timestamp.Date == date).LastOrDefault ();
@@ -121,8 +121,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public List<DataEvent> Events
 		{
-			//	Retourne tous les événements triés chronologiquement.
-			//	La liste ne doit être utilisée qu'en lecture.
+			//	Retourne tous les Ã©vÃ©nements triÃ©s chronologiquement.
+			//	La liste ne doit Ãªtre utilisÃ©e qu'en lecture.
 			get
 			{
 				this.UpdateSortedList ();
@@ -139,9 +139,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void ChangeEventTimestamp(DataEvent e, Timestamp timestamp)
 		{
-			//	Change le timestamp d'un événement. Ici, rien n'empêche les bêtises, telles
-			//	que déplacer un événement d'entrée après celui de sortie.
-			//	La modification du timestamp nécessite de créer une copie de l'événement, dont
+			//	Change le timestamp d'un Ã©vÃ©nement. Ici, rien n'empÃªche les bÃªtises, telles
+			//	que dÃ©placer un Ã©vÃ©nement d'entrÃ©e aprÃ¨s celui de sortie.
+			//	La modification du timestamp nÃ©cessite de crÃ©er une copie de l'Ã©vÃ©nement, dont
 			//	on ne changera que le timestamp.
 			var newEvent = new DataEvent (this.undoManager, e.Guid, timestamp, e.Type);
 			newEvent.SetProperties (e);
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DataEvent GetInputEvent()
 		{
-			//	Retourne le premier événement d'entrée d'un objet.
+			//	Retourne le premier Ã©vÃ©nement d'entrÃ©e d'un objet.
 			this.UpdateSortedList ();
 
 			if (this.sortedEvents.Any ())
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AbstractDataProperty GetSingleProperty(Timestamp timestamp, ObjectField field)
 		{
-			//	Retourne la propriété définie à la date exacte.
+			//	Retourne la propriÃ©tÃ© dÃ©finie Ã  la date exacte.
 			var e = this.GetEvent (timestamp);
 
 			if (e != null)
@@ -241,10 +241,10 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AbstractDataProperty GetInputProperty(ObjectField field)
 		{
-			//	Retourne la propriété définie lors de l'événement d'entrée.
+			//	Retourne la propriÃ©tÃ© dÃ©finie lors de l'Ã©vÃ©nement d'entrÃ©e.
 			this.UpdateSortedList ();
 
-			var e = this.sortedEvents.FirstOrDefault ();  // événement d'entrée
+			var e = this.sortedEvents.FirstOrDefault ();  // Ã©vÃ©nement d'entrÃ©e
 			if (e != null)
 			{
 				var p = e.GetProperty (field);
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AbstractDataProperty GetSyntheticProperty(Timestamp timestamp, ObjectField field)
 		{
-			//	Retourne la propriété définie à la date exacte ou antérieurement.
+			//	Retourne la propriÃ©tÃ© dÃ©finie Ã  la date exacte ou antÃ©rieurement.
 			var p = this.GetSingleProperty (timestamp, field);
 
 			if (p != null)
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Assets.Data
 				return p;
 			}
 
-			// On cherche depuis la date donnée en remontant dans le passé.
+			// On cherche depuis la date donnÃ©e en remontant dans le passÃ©.
 			if (!DataObject.IsOneShotField (field))
 			{
 				this.UpdateSortedList ();
@@ -312,8 +312,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void UpdateSortedList()
 		{
-			//	Met à jour la liste des événements triée chronologiquement, mais
-			//	seulement si c'est nécessaire.
+			//	Met Ã  jour la liste des Ã©vÃ©nements triÃ©e chronologiquement, mais
+			//	seulement si c'est nÃ©cessaire.
 			if (this.lastGenerationNumber != this.events.GenerationNumber)
 			{
 				this.sortedEvents.Clear ();

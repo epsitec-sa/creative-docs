@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Dialogs;
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		protected override Window CreateWindow()
 		{
-			this.CreateUserInterface ("SelectPublicNode", new Size (600, 400), "Choix d'un nœud public", this.parent.Window);
+			this.CreateUserInterface ("SelectPublicNode", new Size (600, 400), "Choix d'un nÅ“ud public", this.parent.Window);
 			this.UpdateLists ();
 			this.UpdateButtons ();
 
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		protected Rectangle GetOwnerBounds()
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		private void CreateUserInterface(string name, Size windowSize, string title, Window owner)
 		{
-			//	Crée la fenêtre et tous les widgets pour peupler le dialogue.
+			//	CrÃ©e la fenÃªtre et tous les widgets pour peupler le dialogue.
 			this.window = new Window ();
 			this.window.MakeSecondaryWindow ();
 			this.window.PreventAutoClose = true;
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 				Margins = new Margins (10, 0, 0, 0),
 			};
 
-			//	Crée la partie de gauche.
+			//	CrÃ©e la partie de gauche.
 			var leftLabel = new StaticText
 			{
 				Parent = leftBox,
@@ -135,11 +135,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 			this.listEntities.SelectedItemChanged += new EventHandler (this.HandlelistEnttiesSelectedItemChanged);
 
-			//	Crée la partie de droite.
+			//	CrÃ©e la partie de droite.
 			var rightLabel = new StaticText
 			{
 				Parent = rightBox,
-				Text = "Nœuds publics :",
+				Text = "NÅ“uds publics :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 			};
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		private void HandleWindowCloseClicked(object sender)
 		{
-			//	Fenêtre fermée.
+			//	FenÃªtre fermÃ©e.
 			this.OnDialogClosed ();
 			this.CloseDialog ();
 		}

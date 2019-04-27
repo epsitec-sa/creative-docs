@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -60,10 +60,10 @@ namespace Epsitec.Common.Widgets
 
 		public int MaxAdditionnalWidth
 		{
-			//	Largeur maximale autorisée, si le texte est trop grand.
-			//	C'est un peu du bricolage, dans la mesure où cette propriété doit être appelée
-			//	après avoir donné la commande (CommandObject, qui détermine le texte à afficher)
-			//	et après avoir donné la taille préférencielle (PreferredSize).
+			//	Largeur maximale autorisÃ©e, si le texte est trop grand.
+			//	C'est un peu du bricolage, dans la mesure oÃ¹ cette propriÃ©tÃ© doit Ãªtre appelÃ©e
+			//	aprÃ¨s avoir donnÃ© la commande (CommandObject, qui dÃ©termine le texte Ã  afficher)
+			//	et aprÃ¨s avoir donnÃ© la taille prÃ©fÃ©rencielle (PreferredSize).
 			get
 			{
 				return this.maxAdditionnalWidth;
@@ -97,8 +97,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override double GetBaseLineVerticalOffset()
 		{
-			//	Remonte l'icône pour faire de la place au texte dessous.
-			return 8.0;  // TODO: Généraliser le calcul de la géométrie !
+			//	Remonte l'icÃ´ne pour faire de la place au texte dessous.
+			return 8.0;  // TODO: GÃ©nÃ©raliser le calcul de la gÃ©omÃ©trie !
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -112,12 +112,12 @@ namespace Epsitec.Common.Widgets
 
 			if (this.BackColor.IsTransparent)
 			{
-				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement défini
+				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement dÃ©fini
 				//	comme "transparent".
 			}
 			else
 			{
-				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
+				//	Ne reproduit pas l'Ã©tat sÃ©lectionnÃ© si on peint nous-mÃªme le fond du bouton.
 
 				state &= ~WidgetPaintState.Selected;
 				adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
@@ -137,9 +137,9 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintButtonTextLayout (graphics, pos, this.TextLayout, state, this.ButtonStyle);
 			}
 
-			//	Dessine le texte sous l'icône.
-			// TODO: Il est ridicule de réinitialiser le TextLayout à chaque fois, mais je ne sais pas comment faire autrement.
-			var textRect = new Drawing.Rectangle (rect.Left, rect.Bottom, rect.Width, 20);  // TODO: Généraliser le calcul de la géométrie !
+			//	Dessine le texte sous l'icÃ´ne.
+			// TODO: Il est ridicule de rÃ©initialiser le TextLayout Ã  chaque fois, mais je ne sais pas comment faire autrement.
+			var textRect = new Drawing.Rectangle (rect.Left, rect.Bottom, rect.Width, 20);  // TODO: GÃ©nÃ©raliser le calcul de la gÃ©omÃ©trie !
 			this.textLayout.LayoutSize = textRect.Size;
 			this.textLayout.Text = this.CommandObject.Caption.DefaultLabel;
 			adorner.PaintGeneralTextLayout (graphics, textRect, textRect.BottomLeft, this.textLayout, state, PaintTextStyle.StaticText, TextFieldDisplayMode.Default, Drawing.Color.Empty);

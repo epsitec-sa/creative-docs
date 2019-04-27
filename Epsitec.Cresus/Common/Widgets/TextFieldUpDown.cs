@@ -1,4 +1,4 @@
-//	Copyright © 2004-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextFieldUpDown implémente la ligne éditable numérique.
+	/// La classe TextFieldUpDown implÃ©mente la ligne Ã©ditable numÃ©rique.
 	/// </summary>
 	public class TextFieldUpDown : AbstractTextField, Support.Data.INumValue
 	{
@@ -458,13 +458,13 @@ namespace Epsitec.Common.Widgets
 
 			if (orgValue == roundValue)
 			{
-				//	La valeur d'origine était déjà parfaitement alignée sur une frontière (step),
+				//	La valeur d'origine Ã©tait dÃ©jÃ  parfaitement alignÃ©e sur une frontiÃ¨re (step),
 				//	on peut donc simplement passer au pas suivant :
 				roundValue += delta * this.Step;
 			}
 			else
 			{
-				//	L'arrondi vers zéro suffit dans les cas suivants :
+				//	L'arrondi vers zÃ©ro suffit dans les cas suivants :
 				//	o  13 =>  10,  13 - 10 =>  10   orgValue > 0, delta < 0
 				//	o -13 => -10, -13 + 10 => -10   orgValue < 0, delta > 0
 				//	en supposant un pas de 10.
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					//	Il faut encore ajouter l'incrément.
+					//	Il faut encore ajouter l'incrÃ©ment.
 					roundValue += delta * this.Step;
 				}
 			}
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void SetValue(decimal value)
 		{
-			//	Modifie une valeur en envoyant l'événement AcceptEdition si nécessaire.
+			//	Modifie une valeur en envoyant l'Ã©vÃ©nement AcceptEdition si nÃ©cessaire.
 			if (this.Value != value)
 			{
 				this.StartEdition ();

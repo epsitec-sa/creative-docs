@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.graphPoints        = GraphPoint.Circle;
 			this.hasLines           = true;
 			this.hasLegend          = true;
-			this.legendPositionRel  = new Point (0.99, 0.98);  // en haut à droite
+			this.legendPositionRel  = new Point (0.99, 0.98);  // en haut Ã  droite
 			this.legendColumns      = 1;
 			this.hasThreshold0      = false;
 			this.hasThreshold1      = false;
@@ -524,10 +524,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			switch (mode)
 			{
 				case GraphMode.Stacked:
-					return "Histogramme empilé";
+					return "Histogramme empilÃ©";
 
 				case GraphMode.SideBySide:
-					return "Histogramme côte à côte";
+					return "Histogramme cÃ´te Ã  cÃ´te";
 
 				case GraphMode.Lines:
 					return "Courbes";
@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					return "Secteurs";
 
 				case GraphMode.Array:
-					return "Données brutes";
+					return "DonnÃ©es brutes";
 
 				default:
 					return "?";

@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Containers
 {
 	/// <summary>
-	/// La classe Containers.Fonts contient tous les panneaux des repères.
+	/// La classe Containers.Fonts contient tous les panneaux des repÃ¨res.
 	/// </summary>
 	public class Fonts : Abstract
 	{
@@ -68,15 +68,15 @@ namespace Epsitec.Common.Document.Containers
 
 		public void UpdateListAdded()
 		{
-			//	Met à jour la liste des polices lorsque de nouvelles polices sont apparues.
-			//	Ceci peut arriver après l'ouverture d'un document qui contenait des polices
-			//	non installées.
+			//	Met Ã  jour la liste des polices lorsque de nouvelles polices sont apparues.
+			//	Ceci peut arriver aprÃ¨s l'ouverture d'un document qui contenait des polices
+			//	non installÃ©es.
 			this.fontSelector.FontList = Misc.GetFontList(false);
 		}
 
 		public void UpdateList()
 		{
-			//	Met à jour la liste des polices rapides.
+			//	Met Ã  jour la liste des polices rapides.
 			this.ignoreChange = true;
 			this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
 			this.fontSelector.SampleHeight = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdateFontsButtons()
 		{
-			//	Met à jour les boutons des polices rapides.
+			//	Met Ã  jour les boutons des polices rapides.
 			bool def = false;
 			bool clr = false;
 

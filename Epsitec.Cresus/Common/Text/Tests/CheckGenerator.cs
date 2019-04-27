@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// La batterie de tests CheckGenerator vérifie le bon fonctionnement des
-	/// générateurs.
+	/// La batterie de tests CheckGenerator vÃ©rifie le bon fonctionnement des
+	/// gÃ©nÃ©rateurs.
 	/// </summary>
 	public sealed class CheckGenerator
 	{

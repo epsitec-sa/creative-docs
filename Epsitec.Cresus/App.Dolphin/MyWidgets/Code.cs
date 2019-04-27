@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Permet d'éditer une instruction codée.
+	/// Permet d'Ã©diter une instruction codÃ©e.
 	/// </summary>
 	public class Code : AbstractGroup
 	{
@@ -91,7 +91,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public bool IsBackHilite
 		{
-			//	Détermine si le widget à un fond mis en évidence.
+			//	DÃ©termine si le widget Ã  un fond mis en Ã©vidence.
 			get
 			{
 				return this.isBackHilite;
@@ -108,15 +108,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void SetTabIndex(int index)
 		{
-			//	Spécifie l'ordre pour la navigation avec Tab.
-			//	Attention, il ne doit pas y avoir 2x les mêmes numéros, même dans des widgets de parents différents !
+			//	SpÃ©cifie l'ordre pour la navigation avec Tab.
+			//	Attention, il ne doit pas y avoir 2x les mÃªmes numÃ©ros, mÃªme dans des widgets de parents diffÃ©rents !
 			this.widgetInstruction.TabIndex = index;
 			this.widgetInstruction.TabNavigationMode = TabNavigationMode.None;  // gestion maison, dans MainPanel
 		}
 
 		public Components.AbstractProcessor Processor
 		{
-			//	Processeur émulé affichée/modifée par ce widget.
+			//	Processeur Ã©mulÃ© affichÃ©e/modifÃ©e par ce widget.
 			get
 			{
 				return this.processor;
@@ -129,7 +129,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public CodeAccessor CodeAccessor
 		{
-			//	CodeAccessor associé au widget, facultatif.
+			//	CodeAccessor associÃ© au widget, facultatif.
 			get
 			{
 				return this.codeAccessor;
@@ -142,7 +142,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public CodeAddress CodeAddress
 		{
-			//	CodeAddress associé au widget.
+			//	CodeAddress associÃ© au widget.
 			get
 			{
 				return this.widgetCodeAddress;
@@ -151,7 +151,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void SetCode(int address, List<int> codes, bool isTable, bool isRom)
 		{
-			//	Spécifie les codes de l'instruction représenté par ce widget.
+			//	SpÃ©cifie les codes de l'instruction reprÃ©sentÃ© par ce widget.
 			this.isTable = isTable;
 
 			if (this.valueAddress != address)
@@ -187,7 +187,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.widgetInstruction.Text = this.processor.DessassemblyInstruction(this.valueCodes, address, out this.arrowAddress);
 			}
 
-			if (this.widgetInstruction.IsReadOnly != isRom)  // TODO: devrait être inutile (bug à corriger pour Pierre)
+			if (this.widgetInstruction.IsReadOnly != isRom)  // TODO: devrait Ãªtre inutile (bug Ã  corriger pour Pierre)
 			{
 				this.widgetInstruction.IsReadOnly = isRom;
 				this.widgetInstruction.Invalidate();
@@ -196,7 +196,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void GetCode(out int address, List<int> codes)
 		{
-			//	Retourne les codes de l'instruction représenté par ce widget.
+			//	Retourne les codes de l'instruction reprÃ©sentÃ© par ce widget.
 			address = this.valueAddress;
 
 			codes.Clear();
@@ -208,7 +208,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int Address
 		{
-			//	Adresse source, là où part la flèche.
+			//	Adresse source, lÃ  oÃ¹ part la flÃ¨che.
 			get
 			{
 				return this.valueAddress;
@@ -217,7 +217,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int ArrowAddress
 		{
-			//	Adresse de destination, là où arrive la flèche.
+			//	Adresse de destination, lÃ  oÃ¹ arrive la flÃ¨che.
 			get
 			{
 				return this.arrowAddress;
@@ -226,7 +226,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public bool IsErrorMet
 		{
-			// Indique si une erreur a été rencontrée lors du dernier EditionAccepted.
+			// Indique si une erreur a Ã©tÃ© rencontrÃ©e lors du dernier EditionAccepted.
 			get
 			{
 				return this.isErrorMet;
@@ -267,8 +267,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleInstructionAcceptingEdition(object sender, CancelEventArgs e)
 		{
-			//	Avant de valider la saisie, la ligne éditable nous donne la
-			//	possibilité de tout annuler en cas d'erreur de syntaxe.
+			//	Avant de valider la saisie, la ligne Ã©ditable nous donne la
+			//	possibilitÃ© de tout annuler en cas d'erreur de syntaxe.
 			List<int> codes = new List<int>();
 			string instruction = this.processor.AssemblyPreprocess(this.widgetInstruction.Text);
 			string err = this.processor.AssemblyInstruction(instruction, codes);
@@ -281,19 +281,19 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				this.isErrorMet = true;
 
-				//	On ne peut pas ouvrir un dialogue depuis une méthode qui est appelée
-				//	depuis l'intérieur d'une boucle d'événements, sinon on risque de se
-				//	mélanger gaiement les pinceaux avec le dispatch des événements.
+				//	On ne peut pas ouvrir un dialogue depuis une mÃ©thode qui est appelÃ©e
+				//	depuis l'intÃ©rieur d'une boucle d'Ã©vÃ©nements, sinon on risque de se
+				//	mÃ©langer gaiement les pinceaux avec le dispatch des Ã©vÃ©nements.
 				//	C'est malheureusement fait dans un tas de code de "Epsitec.Cresus",
-				//	où ça ne pose par chance aucun problème visible; par contre, ici, ce
+				//	oÃ¹ Ã§a ne pose par chance aucun problÃ¨me visible; par contre, ici, ce
 				//	n'est vraiment pas possible.
-				//	On va donc simplement demander à l'application d'afficher le dialogue
-				//	plus tard, avant la prochaine entrée dans la boucle des événements :
+				//	On va donc simplement demander Ã  l'application d'afficher le dialogue
+				//	plus tard, avant la prochaine entrÃ©e dans la boucle des Ã©vÃ©nements :
 
 				if (!this.isErrorDialogPending)
 				{
 					//	Evite que le dialogue ne s'affiche deux fois; dans certains cas,
-					//	il se peut en effet que notre méthode soit appelée plusieurs fois
+					//	il se peut en effet que notre mÃ©thode soit appelÃ©e plusieurs fois
 					//	de suite :
 
 					this.isErrorDialogPending = true;
@@ -316,7 +316,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleInstructionEditionAccepted(object sender)
 		{
-			//	L'édition de l'instruction a été acceptée.
+			//	L'Ã©dition de l'instruction a Ã©tÃ© acceptÃ©e.
 			TextFieldEx field = sender as TextFieldEx;
 
 			List<int> codes = new List<int>();
@@ -325,8 +325,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			if (!string.IsNullOrEmpty(err))
 			{
-				//	Cela ne devrait jamais se produire, puisque l'on a déjà tout vérifié
-				//	dans la méthode HandleInstructionAcceptingEdition :
+				//	Cela ne devrait jamais se produire, puisque l'on a dÃ©jÃ  tout vÃ©rifiÃ©
+				//	dans la mÃ©thode HandleInstructionAcceptingEdition :
 				this.isErrorMet = true;
 			}
 			else
@@ -340,7 +340,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleFieldIsFocusedChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	La ligne éditable a pris ou perdu le focus.
+			//	La ligne Ã©ditable a pris ou perdu le focus.
 			Widget widget = sender as Widget;
 			bool focused = (bool) e.NewValue;
 
@@ -381,7 +381,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		#region EventHandler
 		protected virtual void OnInstructionSelected()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("InstructionSelected");
 			if (handler != null)
 			{
@@ -403,7 +403,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected virtual void OnInstructionDeselected()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("InstructionDeselected");
 			if (handler != null)
 			{
@@ -425,7 +425,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected virtual void OnInstructionChanged()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("InstructionChanged");
 			if (handler != null)
 			{
@@ -447,7 +447,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected virtual void OnCodeAddressEntered()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("CodeAddressEntered");
 			if (handler != null)
 			{
@@ -469,7 +469,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected virtual void OnCodeAddressExited()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("CodeAddressExited");
 			if (handler != null)
 			{
@@ -491,7 +491,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected virtual void OnCodeAddressClicked()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("CodeAddressClicked");
 			if (handler != null)
 			{

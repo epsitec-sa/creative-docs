@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -23,7 +23,7 @@ using Epsitec.Cresus.DataLayer.ImportExport;
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
-	/// Widget permettant d'éditer graphiquement des entités.
+	/// Widget permettant d'Ã©diter graphiquement des entitÃ©s.
 	/// </summary>
 	public class Editor : Widget, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
@@ -62,8 +62,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			this.areaOffset = Point.Zero;
 			this.nextUniqueId = 1;
 
-			//	Le Widgets.Timer s'exécute dans la bouche d'événement, à l'inverse de System.Timer qui
-			//	s'exécute dans un autre Thread. Il n'y a donc aucun souci d'exécution simultanée du code.
+			//	Le Widgets.Timer s'exÃ©cute dans la bouche d'Ã©vÃ©nement, Ã  l'inverse de System.Timer qui
+			//	s'exÃ©cute dans un autre Thread. Il n'y a donc aucun souci d'exÃ©cution simultanÃ©e du code.
 			double delay = 1.0/Editor.dimmedFrequency;
 
 			this.timer = new Timer ();
@@ -140,11 +140,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void CreateInitialWorkflow()
 		{
-			//	Crée le workflow initial en désérialisant le diagramme.
+			//	CrÃ©e le workflow initial en dÃ©sÃ©rialisant le diagramme.
 			if (!this.RestoreDesign ())
 			{
-				//	Désérialisation échouée. On suppose être en présence d'un nouveau
-				//	workflow fraichement créé, dont il faut juste reprendre le noeud initial.
+				//	DÃ©sÃ©rialisation Ã©chouÃ©e. On suppose Ãªtre en prÃ©sence d'un nouveau
+				//	workflow fraichement crÃ©Ã©, dont il faut juste reprendre le noeud initial.
 
 				if (this.workflowDefinitionEntity.Name.IsNullOrWhiteSpace ())
 				{
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void UpdateWorkflowNodes()
 		{
-			//	Reconstruit complètement la liste WorkflowDefinitionEntity.WorkflowNodes en fonction des
+			//	Reconstruit complÃ¨tement la liste WorkflowDefinitionEntity.WorkflowNodes en fonction des
 			//	objets graphiques.
 
 			var oldList = this.workflowDefinitionEntity.WorkflowNodes;
@@ -174,14 +174,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 			if (Comparer.EqualObjects (oldList, newList))
 			{
-				//	La liste est actuellement déjà à jour; il n'y a donc pas besoin de la
-				//	mettre à jour. Cela évite qu'on ne rende 'dirty' le workflow et qu'on
-				//	réactive l'état "document prêt à être sauvé".
+				//	La liste est actuellement dÃ©jÃ  Ã  jour; il n'y a donc pas besoin de la
+				//	mettre Ã  jour. Cela Ã©vite qu'on ne rende 'dirty' le workflow et qu'on
+				//	rÃ©active l'Ã©tat "document prÃªt Ã  Ãªtre sauvÃ©".
 				return;
 			}
 
-			//	Copie la liste des noeuds, sans générer d'événement à chaque insertion et en
-			//	prenant garde au préalable de vérifier que la collection est déjà "writable".
+			//	Copie la liste des noeuds, sans gÃ©nÃ©rer d'Ã©vÃ©nement Ã  chaque insertion et en
+			//	prenant garde au prÃ©alable de vÃ©rifier que la collection est dÃ©jÃ  "writable".
 
 			var collection = this.workflowDefinitionEntity.WorkflowNodes as ISuspendCollectionChanged;
 
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		#region Serialization
 		private bool RestoreDesign()
 		{
-			//	Recrée tout le diagramme à partir des données sérialisées.
+			//	RecrÃ©e tout le diagramme Ã  partir des donnÃ©es sÃ©rialisÃ©es.
 			string xmlSource = Editor.RestoreData (this.workflowDefinitionEntity);
 
 			if (string.IsNullOrEmpty (xmlSource))
@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public AbstractObject Search(int uniqueId)
 		{
-			//	Retourne un objet quelconque d'après son identificateur unique.
+			//	Retourne un objet quelconque d'aprÃ¨s son identificateur unique.
 			if (uniqueId == 0)
 			{
 				return null;
@@ -480,7 +480,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void UpdateUniqueId()
 		{
-			//	Réinitialise le générateur d'identificateurs uniques.
+			//	RÃ©initialise le gÃ©nÃ©rateur d'identificateurs uniques.
 			int max = 0;
 
 			foreach (var obj in this.AllObjects)
@@ -499,9 +499,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public LinkableObject SearchInitialObject(AbstractEntity entity)
 		{
-			//	Cherche un objet d'après l'entité qu'il représente.
-			//	On ne peut chercher ainsi que les objets initiaux, qui ont été sauvés dans la base.
-			//	Les entités créées par après n'ont pas de clés !
+			//	Cherche un objet d'aprÃ¨s l'entitÃ© qu'il reprÃ©sente.
+			//	On ne peut chercher ainsi que les objets initiaux, qui ont Ã©tÃ© sauvÃ©s dans la base.
+			//	Les entitÃ©s crÃ©Ã©es par aprÃ¨s n'ont pas de clÃ©s !
 			if (entity.IsNotNull ())
 			{
 				var searchedKey = this.businessContext.DataContext.GetNormalizedEntityKey (entity);
@@ -541,22 +541,22 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void AddNode(ObjectNode node)
 		{
-			//	Ajoute une nouvelle boîte dans l'éditeur.
-			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
-			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
-			//	fonction de la boîte parent.
+			//	Ajoute une nouvelle boÃ®te dans l'Ã©diteur.
+			//	La position initiale n'a pas d'importance. La premiÃ¨re boÃ®te ajoutÃ©e (la boÃ®te racine)
+			//	est positionnÃ©e par RedimArea(). La position des autres est de toute faÃ§on recalculÃ©e en
+			//	fonction de la boÃ®te parent.
 			this.nodes.Add (node);
 		}
 
 		public void AddEdge(ObjectEdge edge)
 		{
-			//	Ajoute une nouvelle liaison dans l'éditeur.
+			//	Ajoute une nouvelle liaison dans l'Ã©diteur.
 			this.edges.Add (edge);
 		}
 
 		public void AddBalloon(BalloonObject balloon)
 		{
-			//	Ajoute un nouveau commentaire dans l'éditeur.
+			//	Ajoute un nouveau commentaire dans l'Ã©diteur.
 			this.balloons.Add (balloon);
 		}
 
@@ -615,7 +615,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public Size AreaSize
 		{
-			//	Dimensions de la surface pour représenter les boîtes et les liaisons.
+			//	Dimensions de la surface pour reprÃ©senter les boÃ®tes et les liaisons.
 			get
 			{
 				return this.areaSize;
@@ -632,7 +632,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public double Zoom
 		{
-			//	Zoom pour représenter les boîtes et les liaisons.
+			//	Zoom pour reprÃ©senter les boÃ®tes et les liaisons.
 			get
 			{
 				return this.zoom;
@@ -649,7 +649,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public Point AreaOffset
 		{
-			//	Offset de la zone visible, déterminée par les ascenseurs.
+			//	Offset de la zone visible, dÃ©terminÃ©e par les ascenseurs.
 			get
 			{
 				return this.areaOffset;
@@ -680,7 +680,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void UpdateGeometry()
 		{
-			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
+			//	Met Ã  jour la gÃ©omÃ©trie de toutes les boÃ®tes et de toutes les liaisons.
 			this.UpdateObjects ();
 			this.UpdateLinks ();
 			this.RedimArea ();
@@ -689,7 +689,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void UpdateAfterCommentChanged()
 		{
-			//	Appelé lorsqu'un commentaire ou une information a changé.
+			//	AppelÃ© lorsqu'un commentaire ou une information a changÃ©.
 			this.UpdateObjects ();
 			this.RedimArea ();
 			this.UpdateLinks ();
@@ -699,7 +699,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void UpdateAfterGeometryChanged(AbstractObject node)
 		{
-			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
+			//	AppelÃ© lorsque la gÃ©omÃ©trie d'une boÃ®te a changÃ© (changement compact/Ã©tendu).
 			this.UpdateObjects ();
 			this.PushLayout (node, PushDirection.Automatic, Editor.pushMargin);
 			this.RedimArea ();
@@ -718,7 +718,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void UpdateLinks()
 		{
-			//	Met à jour la géométrie de toutes les liaisons.
+			//	Met Ã  jour la gÃ©omÃ©trie de toutes les liaisons.
 			foreach (var obj in this.LinkObjects)
 			{
 				obj.UpdateLink ();
@@ -730,7 +730,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public bool IsEmptyArea(Rectangle area, AbstractObject filteredObject)
 		{
-			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connexions).
+			//	Retourne true si une zone est entiÃ¨rement vide (aucune boÃ®te, on ignore les connexions).
 			foreach (var obj in this.LinkableObjects)
 			{
 				if (obj != filteredObject &&  obj.Bounds.IntersectsWith (area))
@@ -745,7 +745,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void CloseObject(LinkableObject obj)
 		{
-			//	Ferme une boîte et supprime l'entité associée.
+			//	Ferme une boÃ®te et supprime l'entitÃ© associÃ©e.
 			foreach (var link in this.LinkObjects.ToArray ())
 			{
 				if (link.DstObject == obj)
@@ -766,7 +766,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 				this.edges.Remove (obj as ObjectEdge);
 			}
 
-			//	Supprime l'entité dans la base.
+			//	Supprime l'entitÃ© dans la base.
 			this.DeleteEntity (obj.AbstractEntity);
 
 			this.SetLocalDirty ();
@@ -774,7 +774,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public bool IsUnusedPublicNode(WorkflowNodeEntity nodeEntity)
 		{
-			//	Indique si un noeud public n'a aucun "jumeau" (même Code) de type IsForeign.
+			//	Indique si un noeud public n'a aucun "jumeau" (mÃªme Code) de type IsForeign.
 			if (!nodeEntity.IsPublic)
 			{
 				return true;
@@ -789,7 +789,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private List<WorkflowEdgeEntity> FindEdges(WorkflowNodeEntity nodeEntity)
 		{
-			//	Cherche toutes les entités 'edge' qui pointent un 'node' donné.
+			//	Cherche toutes les entitÃ©s 'edge' qui pointent un 'node' donnÃ©.
 			var example = new WorkflowEdgeEntity ()
 			{
 				NextNode = nodeEntity,
@@ -857,8 +857,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void PushLayout(AbstractObject exclude, PushDirection direction, double margin)
 		{
-			//	Pousse les boîtes pour éviter tout chevauchement.
-			//	Une boîte peut être poussée hors de la surface de dessin.
+			//	Pousse les boÃ®tes pour Ã©viter tout chevauchement.
+			//	Une boÃ®te peut Ãªtre poussÃ©e hors de la surface de dessin.
 			for (int max=0; max<100; max++)
 			{
 				bool push = false;
@@ -883,7 +883,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private AbstractObject PushSearch(AbstractObject node, AbstractObject exclude, double margin)
 		{
-			//	Cherche une boîte qui chevauche 'node'.
+			//	Cherche une boÃ®te qui chevauche 'node'.
 			Rectangle rect = node.Bounds;
 			rect.Inflate (margin);
 
@@ -903,7 +903,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void PushAction(AbstractObject node, AbstractObject inter, PushDirection direction, double margin)
 		{
-			//	Pousse 'inter' pour venir après 'node' selon la direction choisie.
+			//	Pousse 'inter' pour venir aprÃ¨s 'node' selon la direction choisie.
 			Rectangle rect = inter.Bounds;
 
 			double dr = node.Bounds.Right - rect.Left + margin;
@@ -987,7 +987,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void MoveObjects(double dx, double dy)
 		{
-			//	Déplace tous les objets.
+			//	DÃ©place tous les objets.
 			if (dx == 0 && dy == 0)  // immobile ?
 			{
 				return;
@@ -1024,14 +1024,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			{
 				case MessageType.KeyDown:
 				case MessageType.KeyUp:
-					//	Ne consomme l'événement que si on l'a bel et bien reconnu ! Evite
-					//	qu'on ne mange les raccourcis clavier généraux (Alt-F4, CTRL-S, ...)
+					//	Ne consomme l'Ã©vÃ©nement que si on l'a bel et bien reconnu ! Evite
+					//	qu'on ne mange les raccourcis clavier gÃ©nÃ©raux (Alt-F4, CTRL-S, ...)
 					if (message.MessageType == MessageType.KeyDown && message.KeyCodeOnly != KeyCode.None && !message.IsAltPressed && !message.IsControlPressed && !this.IsEditing && this.editableObject != null)
 					{
 						this.editableObject.StartEdition ();
 					}
 
-					if (this.IsEditing)  // édition en cours ?
+					if (this.IsEditing)  // Ã©dition en cours ?
 					{
 						if (Epsitec.Common.Widgets.Feel.Factory.Active.TestAcceptKey (message))
 						{
@@ -1103,7 +1103,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private Point ConvWidgetToEditor(Point pos)
 		{
-			//	Conversion d'une coordonnée dans l'espace normal des widgets vers l'espace de l'éditeur,
+			//	Conversion d'une coordonnÃ©e dans l'espace normal des widgets vers l'espace de l'Ã©diteur,
 			//	qui varie selon les ascenseurs (AreaOffset) et le zoom.
 			pos.Y = this.Client.Size.Height-pos.Y;
 			pos /= this.zoom;
@@ -1115,7 +1115,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public Point ConvEditorToWidget(Point pos)
 		{
-			//	Conversion d'une coordonnée dans l'espace de l'éditeur vers l'espace normal des widgets.
+			//	Conversion d'une coordonnÃ©e dans l'espace de l'Ã©diteur vers l'espace normal des widgets.
 			pos.Y = this.areaSize.Height-pos.Y;
 			pos -= this.areaOffset;
 			pos *= this.zoom;
@@ -1126,9 +1126,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void EditorMouseMove(Message message, Point pos)
 		{
-			//	Met en évidence tous les widgets selon la position visée par la souris.
-			//	L'objet à l'avant-plan a la priorité.
-			if (this.IsEditing)  // édition en cours ?
+			//	Met en Ã©vidence tous les widgets selon la position visÃ©e par la souris.
+			//	L'objet Ã  l'avant-plan a la prioritÃ©.
+			if (this.IsEditing)  // Ã©dition en cours ?
 			{
 				this.ChangeMouseCursor (MouseCursorType.Arrow);
 				return;
@@ -1193,9 +1193,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void MouseMoveUpdateObjects(Point pos)
 		{
-			//	Met à jour tous les objets suite à un déplacement de la souris.
-			//	On parcourt les objets dans le même ordre que le dessin.
-			//	Il faut parcourir tous les objets, pour les mettre à jour.
+			//	Met Ã  jour tous les objets suite Ã  un dÃ©placement de la souris.
+			//	On parcourt les objets dans le mÃªme ordre que le dessin.
+			//	Il faut parcourir tous les objets, pour les mettre Ã  jour.
 			if (pos.IsZero)
 			{
 				return;
@@ -1224,8 +1224,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 				}
 			}
 
-			//	Lorsque la souris survole un objet, tous les autres deviennent estompés.
-			//	Seuls restent normalement affichés l'objet survolé et ses 'amis'.
+			//	Lorsque la souris survole un objet, tous les autres deviennent estompÃ©s.
+			//	Seuls restent normalement affichÃ©s l'objet survolÃ© et ses 'amis'.
 			bool hasDimmned = (hilitedElement != ActiveElement.None);
 
 			List<AbstractObject> friendObjects = null;
@@ -1253,7 +1253,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void EditorMouseDown(Message message, Point pos)
 		{
-			//	Début du déplacement d'une boîte.
+			//	DÃ©but du dÃ©placement d'une boÃ®te.
 			if (this.lastCursor == MouseCursorType.Hand)
 			{
 				this.isAreaMoving = true;
@@ -1262,7 +1262,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			}
 			else
 			{
-				if (this.IsEditing)  // édition en cours ?
+				if (this.IsEditing)  // Ã©dition en cours ?
 				{
 					this.editingObject.AcceptEdition ();
 					this.editingObject = null;
@@ -1280,7 +1280,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void EditorMouseUp(Message message, Point pos)
 		{
-			//	Fin du déplacement d'une boîte.
+			//	Fin du dÃ©placement d'une boÃ®te.
 			if (this.isAreaMoving)
 			{
 				this.isAreaMoving = false;
@@ -1313,8 +1313,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 			if (this.contextMenu.Items.Count == 0)
 			{
-				this.CreateMenuItem (null, "Crée un nœud solitaire privé",  "Editor.CreatePrivateNode");
-				this.CreateMenuItem (null, "Crée un nœud solitaire public", "Editor.CreatePublicNode");
+				this.CreateMenuItem (null, "CrÃ©e un nÅ“ud solitaire privÃ©",  "Editor.CreatePrivateNode");
+				this.CreateMenuItem (null, "CrÃ©e un nÅ“ud solitaire public", "Editor.CreatePublicNode");
 
 				this.menuObject = null;
 			}
@@ -1433,7 +1433,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		
 		public void DetectMagnetConstrains(Point pos, AbstractObject obj)
 		{
-			//	Active toutes les contraintes qui doivent l'être, selon la position de la souris.
+			//	Active toutes les contraintes qui doivent l'Ãªtre, selon la position de la souris.
 			Point center = obj.GetCenter (pos);
 
 			double vMax = double.MaxValue;
@@ -1487,7 +1487,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private IEnumerable<MagnetConstrain> MagnetConstrains(AbstractObject filteredObject)
 		{
-			//	Retourne toutes les contraintes de tous les objets, sauf celui qui est filtré.
+			//	Retourne toutes les contraintes de tous les objets, sauf celui qui est filtrÃ©.
 			foreach (var obj in this.AllObjects)
 			{
 				if (obj != filteredObject)
@@ -1553,7 +1553,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			rect = new Rectangle(this.areaSize.Width, bl.Y, tr.X-this.areaSize.Width, tr.Y-bl.Y);
 			if (!rect.IsSurfaceZero)
 			{
-				graphics.AddFilledRectangle(rect);  // à droite
+				graphics.AddFilledRectangle(rect);  // Ã  droite
 			}
 			
 			rect = new Rectangle(0, bl.Y, this.areaSize.Width, -bl.Y);
@@ -1578,7 +1578,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public void PaintObjects(Graphics graphics)
 		{
-			//	Dessine l'arrière-plan de tous les objets.
+			//	Dessine l'arriÃ¨re-plan de tous les objets.
 			foreach (var obj in this.AllObjects)
 			{
 				obj.DrawBackground (graphics);
@@ -1674,15 +1674,15 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private void TryProcessDimmed()
 		{
-			//	Comme le timer passe par la boucle d'événements, celui-ci est quasiment stoppé lorsque
-			//	la boucle d'événements est surchargée, par exemple lorsque la souris bouge rapidement.
-			//	Cette exécution, faite lors de la réception de chaque événement, essaie de palier à ce
-			//	problème.
+			//	Comme le timer passe par la boucle d'Ã©vÃ©nements, celui-ci est quasiment stoppÃ© lorsque
+			//	la boucle d'Ã©vÃ©nements est surchargÃ©e, par exemple lorsque la souris bouge rapidement.
+			//	Cette exÃ©cution, faite lors de la rÃ©ception de chaque Ã©vÃ©nement, essaie de palier Ã  ce
+			//	problÃ¨me.
 			long deltaTicks = System.DateTime.Now.Ticks - this.lastTick;
-			double delta = deltaTicks / 10000000.0;  // temps écoulé en secondes
+			double delta = deltaTicks / 10000000.0;  // temps Ã©coulÃ© en secondes
 			double period = 1.0/Editor.dimmedFrequency;
 
-			if (delta >= period)  // est-ce que le timer aurait dû s'exécuter ?
+			if (delta >= period)  // est-ce que le timer aurait dÃ» s'exÃ©cuter ?
 			{
 				this.ProcessDimmed ();
 			}
@@ -1693,10 +1693,10 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			//	Fait avancer d'un 'step' tous les objets.
 			long ticks = System.DateTime.Now.Ticks;
 			long deltaTicks = ticks - this.lastTick;
-			double delta = deltaTicks / 10000000.0;  // temps écoulé en secondes
+			double delta = deltaTicks / 10000000.0;  // temps Ã©coulÃ© en secondes
 			double period = 1.0/Editor.dimmedFrequency;
 
-			double step = period*2.0;  // durée de l'effet = 1/2 s
+			double step = period*2.0;  // durÃ©e de l'effet = 1/2 s
 			step *= delta/period;
 			
 			bool changing = false;
@@ -1744,7 +1744,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private IEnumerable<AbstractObject> AllObjects
 		{
-			//	Cet énumérateur détermine, entre autres, l'ordre dans lequel sont dessinés les objets.
+			//	Cet Ã©numÃ©rateur dÃ©termine, entre autres, l'ordre dans lequel sont dessinÃ©s les objets.
 			get
 			{
 				if (this.cartridge != null)
@@ -1951,7 +1951,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		#region Events handler
 		protected virtual void OnAreaSizeChanged()
 		{
-			//	Génère un événement pour dire que les dimensions ont changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que les dimensions ont changÃ©.
 			var handler = this.GetUserEventHandler("AreaSizeChanged");
 			if (handler != null)
 			{
@@ -1973,7 +1973,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		protected virtual void OnAreaOffsetChanged()
 		{
-			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que l'offset de la surface de travail a changÃ©.
 			var handler = this.GetUserEventHandler("AreaOffsetChanged");
 			if (handler != null)
 			{
@@ -1995,7 +1995,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		protected virtual void OnZoomChanged()
 		{
-			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que l'offset de la surface de travail a changÃ©.
 			var handler = this.GetUserEventHandler("ZoomChanged");
 			if (handler != null)
 			{
@@ -2017,7 +2017,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		protected virtual void OnEditingStateChanged()
 		{
-			//	Génère un événement pour dire que l'état d'édition a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que l'Ã©tat d'Ã©dition a changÃ©.
 			var handler = this.GetUserEventHandler ("EditingStateChanged");
 			if (handler != null)
 			{

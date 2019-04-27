@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.App.Dolphin.Components
 {
 	/// <summary>
-	/// Processeur générique pas très réussi.
+	/// Processeur gÃ©nÃ©rique pas trÃ¨s rÃ©ussi.
 	/// </summary>
 	public class ProcessorGeneric : AbstractProcessor
 	{
@@ -170,7 +170,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public override void Reset()
 		{
-			//	Reset du processeur pour démarrer à l'adresse 0.
+			//	Reset du processeur pour dÃ©marrer Ã  l'adresse 0.
 			base.Reset();
 			this.registerPC = Memory.RamBase;
 			this.registerSP = Memory.StackBase;
@@ -183,7 +183,7 @@ namespace Epsitec.App.Dolphin.Components
 		public override bool IsCall(out int retAddress)
 		{
 			//	Indique si le processeur est sur une instruction CALL.
-			//	Si oui, retourne l'adresse après le CALL.
+			//	Si oui, retourne l'adresse aprÃ¨s le CALL.
 			Instructions op = (Instructions) this.memory.Read(this.registerPC);
 
 			if (op >= Instructions.CallAbs && op <= Instructions.CallAbsNS)
@@ -205,7 +205,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public override void Clock()
 		{
-			//	Exécute une instruction du processeur.
+			//	ExÃ©cute une instruction du processeur.
 			if (this.isHalted)
 			{
 				return;
@@ -767,13 +767,13 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected int ReadByte(int address)
 		{
-			//	Lit un byte signé.
+			//	Lit un byte signÃ©.
 			return this.BypeSignExtend(this.memory.Read(address));
 		}
 
 		protected int BypeSignExtend(int value)
 		{
-			if ((value & 0x80) != 0)  // valeur négative ?
+			if ((value & 0x80) != 0)  // valeur nÃ©gative ?
 			{
 				value = (int) ((uint) value | 0xffffff00);
 			}
@@ -806,7 +806,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int offset = this.memory.Read(this.registerPC++);
 				
-				if ((offset & 0x80) != 0)  // offset négatif ?
+				if ((offset & 0x80) != 0)  // offset nÃ©gatif ?
 				{
 					offset = offset-0x100;
 				}
@@ -831,7 +831,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				this.SetFlag(ProcessorGeneric.FlagOverflow, (value & 0xffffff00) != 0);
 			}
-			else  // valeur négative ?
+			else  // valeur nÃ©gative ?
 			{
 				this.SetFlag(ProcessorGeneric.FlagOverflow, (value & 0xffffff00) == 0);
 			}
@@ -848,7 +848,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				this.SetFlag(ProcessorGeneric.FlagOverflow, (value & 0xffff0000) != 0);
 			}
-			else  // valeur négative ?
+			else  // valeur nÃ©gative ?
 			{
 				this.SetFlag(ProcessorGeneric.FlagOverflow, (value & 0xffff0000) == 0);
 			}
@@ -915,7 +915,7 @@ namespace Epsitec.App.Dolphin.Components
 		#region Register
 		public override IEnumerable<string> RegisterNames
 		{
-			//	Enumère tous les noms de registres.
+			//	EnumÃ¨re tous les noms de registres.
 			get
 			{
 				yield return "PC";
@@ -1044,9 +1044,9 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
-		//	Attend la pression d'une touche du clavier simulé.
+		//	Attend la pression d'une touche du clavier simulÃ©.
 		//	in	-
-		//	out	A touche pressée
+		//	out	A touche pressÃ©e
 		//	mod	A
 		protected static byte[] WaitKey =
 		{
@@ -1059,8 +1059,8 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.Ret,				// RET
 		};
 
-		//	Affiche des segments à choix.
-		//	in	A segments à allumer
+		//	Affiche des segments Ã  choix.
+		//	in	A segments Ã  allumer
 		//		B digit 0..3
 		//	out	-
 		//	mod	-
@@ -1082,7 +1082,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.Ret,				// RET
 		};
 
-		//	Affiche un digit hexadécimal.
+		//	Affiche un digit hexadÃ©cimal.
 		//	in	A valeur 0..15
 		//		B digit 0..3
 		//	out	-
@@ -1114,7 +1114,7 @@ namespace Epsitec.App.Dolphin.Components
 			0x3F, 0x03, 0x6D, 0x67, 0x53, 0x76, 0x7E, 0x23, 0x7F, 0x77, 0x7B, 0x5E, 0x3C, 0x4F, 0x7C, 0x78,
 		};
 
-		//	Affiche un byte hexadécimal sur deux digits.
+		//	Affiche un byte hexadÃ©cimal sur deux digits.
 		//	in	A valeur 0..255
 		//		B premier digit 0..2
 		//	out	-
@@ -1139,7 +1139,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.Ret,				// RET
 		};
 
-		//	Affiche une valeur décimale.
+		//	Affiche une valeur dÃ©cimale.
 		//	in	HL valeur
 		//	out	-
 		//	mod	-
@@ -1180,9 +1180,9 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.Ret,				// RET
 		};
 
-		//	Allume un pixel dans l'écran bitmap.
-		//	in	A coordonnée X 0..31
-		//		B coordonnée Y 0..23
+		//	Allume un pixel dans l'Ã©cran bitmap.
+		//	in	A coordonnÃ©e X 0..31
+		//		B coordonnÃ©e Y 0..23
 		//	out	-
 		//	mod	-
 		protected static byte[] SetPixel =
@@ -1224,9 +1224,9 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.Ret,				// RET
 		};
 
-		//	Eteint un pixel dans l'écran bitmap.
-		//	in	A coordonnée X 0..31
-		//		B coordonnée Y 0..23
+		//	Eteint un pixel dans l'Ã©cran bitmap.
+		//	in	A coordonnÃ©e X 0..31
+		//		B coordonnÃ©e Y 0..23
 		//	out	-
 		//	mod	-
 		protected static byte[] ClrPixel =
@@ -1296,8 +1296,8 @@ namespace Epsitec.App.Dolphin.Components
 			switch (chapter)
 			{
 				case "Intro":
-					AbstractProcessor.HelpPutTitle(builder, "Binaire et hexadécimal");
-					AbstractProcessor.HelpPutLine(builder, "(<i>décimal: binaire = hexa</i>)");
+					AbstractProcessor.HelpPutTitle(builder, "Binaire et hexadÃ©cimal");
+					AbstractProcessor.HelpPutLine(builder, "(<i>dÃ©cimal: binaire = hexa</i>)");
 					AbstractProcessor.HelpPutLine(builder, "  0: 0000 = 0");
 					AbstractProcessor.HelpPutLine(builder, "  1: 0001 = 1");
 					AbstractProcessor.HelpPutLine(builder, "  2: 0010 = 2");
@@ -1318,51 +1318,51 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutTitle(builder, "Espace d'adressage");
 					AbstractProcessor.HelpPutLine(builder, "[000]..[7FF] :<tab/>RAM");
 					AbstractProcessor.HelpPutLine(builder, "[800]..[BFF] :<tab/>ROM");
-					AbstractProcessor.HelpPutLine(builder, "[C00]..[C10] :<tab/>Périphériques");
+					AbstractProcessor.HelpPutLine(builder, "[C00]..[C10] :<tab/>PÃ©riphÃ©riques");
 					AbstractProcessor.HelpPutLine(builder, "[C80]..[CDF] :<tab/>Ecran bitmap");
 
 					AbstractProcessor.HelpPutTitle(builder, "Affichage");
-					AbstractProcessor.HelpPutLine(builder, "L'affichage est constitué de 4 afficheurs à 7 segments (plus un point décimal), numérotés de droite à gauche. On peut écrire une valeur pour mémoriser les digits à allumer, ou relire cette valeur.");
+					AbstractProcessor.HelpPutLine(builder, "L'affichage est constituÃ© de 4 afficheurs Ã  7 segments (plus un point dÃ©cimal), numÃ©rotÃ©s de droite Ã  gauche. On peut Ã©crire une valeur pour mÃ©moriser les digits Ã  allumer, ou relire cette valeur.");
 					AbstractProcessor.HelpPutLine(builder, "[C00] :<tab/>Premier digit (celui de gauche).");
-					AbstractProcessor.HelpPutLine(builder, "[C01] :<tab/>Deuxième digit.");
-					AbstractProcessor.HelpPutLine(builder, "[C02] :<tab/>Troisième digit.");
-					AbstractProcessor.HelpPutLine(builder, "[C03] :<tab/>Quatrième digit (celui de droite).");
+					AbstractProcessor.HelpPutLine(builder, "[C01] :<tab/>DeuxiÃ¨me digit.");
+					AbstractProcessor.HelpPutLine(builder, "[C02] :<tab/>TroisiÃ¨me digit.");
+					AbstractProcessor.HelpPutLine(builder, "[C03] :<tab/>QuatriÃ¨me digit (celui de droite).");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "bit 0<tab/>Segment vertical supérieur droite.");
-					AbstractProcessor.HelpPutLine(builder, "bit 1<tab/>Segment vertical inférieur droite.");
-					AbstractProcessor.HelpPutLine(builder, "bit 2<tab/>Segment horizontal inférieur.");
-					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Segment vertical inférieur gauche.");
-					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Segment vertical supérieur gauche.");
-					AbstractProcessor.HelpPutLine(builder, "bit 5<tab/>Segment horizontal supérieur.");
+					AbstractProcessor.HelpPutLine(builder, "bit 0<tab/>Segment vertical supÃ©rieur droite.");
+					AbstractProcessor.HelpPutLine(builder, "bit 1<tab/>Segment vertical infÃ©rieur droite.");
+					AbstractProcessor.HelpPutLine(builder, "bit 2<tab/>Segment horizontal infÃ©rieur.");
+					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Segment vertical infÃ©rieur gauche.");
+					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Segment vertical supÃ©rieur gauche.");
+					AbstractProcessor.HelpPutLine(builder, "bit 5<tab/>Segment horizontal supÃ©rieur.");
 					AbstractProcessor.HelpPutLine(builder, "bit 6<tab/>Segment horizontal du milieu.");
-					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Point décimal.");
+					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Point dÃ©cimal.");
 
 					AbstractProcessor.HelpPutTitle(builder, "Clavier");
-					AbstractProcessor.HelpPutLine(builder, "Le clavier est constitué de 8 touches nommées 0..7, plus 2 touches super-shift.");
+					AbstractProcessor.HelpPutLine(builder, "Le clavier est constituÃ© de 8 touches nommÃ©es 0..7, plus 2 touches super-shift.");
 					AbstractProcessor.HelpPutLine(builder, "[C07] :<tab/>Clavier.");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "bits 0..2<tab/>Touches 0..7.");
 					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Touche Shift.");
 					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Touche Ctrl.");
-					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressée. Est automatiquement remis à zéro lorsque l'adresse [C07] est lue.");
+					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressÃ©e. Est automatiquement remis Ã  zÃ©ro lorsque l'adresse [C07] est lue.");
 
 					AbstractProcessor.HelpPutTitle(builder, "Ecran bitmap");
-					AbstractProcessor.HelpPutLine(builder, "L'écran bitmap est un écran vidéo monochrome de 32 x 24 pixels. Chaque byte représente 8 pixels horizontaux, avec le bit 7 à gauche.");
+					AbstractProcessor.HelpPutLine(builder, "L'Ã©cran bitmap est un Ã©cran vidÃ©o monochrome de 32 x 24 pixels. Chaque byte reprÃ©sente 8 pixels horizontaux, avec le bit 7 Ã  gauche.");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[C80]..[C83] :<tab/>1ère ligne de 32 pixels.");
-					AbstractProcessor.HelpPutLine(builder, "[C84]..[C87] :<tab/>2ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[C80]..[C83] :<tab/>1Ã¨re ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[C84]..[C87] :<tab/>2Ã¨me ligne de 32 pixels.");
 					AbstractProcessor.HelpPutLine(builder, "...");
-					AbstractProcessor.HelpPutLine(builder, "[CDC]..[CDF] :<tab/>24ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[CDC]..[CDF] :<tab/>24Ã¨me ligne de 32 pixels.");
 					break;
 
 				case "Data":
-					AbstractProcessor.HelpPutTitle(builder, "Valeur immédiate");
+					AbstractProcessor.HelpPutTitle(builder, "Valeur immÃ©diate");
 					AbstractProcessor.HelpPutLine(builder, "[40] [xx] :<tab/>MOVE #xx,A");
 					AbstractProcessor.HelpPutLine(builder, "[41] [xx] :<tab/>MOVE #xx,B");
 					AbstractProcessor.HelpPutLine(builder, "[42] [xx] [yy] :<tab/>MOVE #xxyy,HL");
 					AbstractProcessor.HelpPutLine(builder, "[43] [dd] :<tab/>MOVE #R^dd,HL");
 
-					AbstractProcessor.HelpPutTitle(builder, "Registre à registre");
+					AbstractProcessor.HelpPutTitle(builder, "Registre Ã  registre");
 					AbstractProcessor.HelpPutLine(builder, "[44] :<tab/><tab/>MOVE B,A");
 					AbstractProcessor.HelpPutLine(builder, "[45] :<tab/><tab/>MOVE A,B");
 					AbstractProcessor.HelpPutLine(builder, "[4A] :<tab/><tab/>MOVE H,A");
@@ -1371,11 +1371,11 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[4D] :<tab/><tab/>MOVE A,L");
 					AbstractProcessor.HelpPutLine(builder, "[4E] :<tab/><tab/>SWAP A,B");
 
-					AbstractProcessor.HelpPutTitle(builder, "Registre à mémoire");
+					AbstractProcessor.HelpPutTitle(builder, "Registre Ã  mÃ©moire");
 					AbstractProcessor.HelpPutLine(builder, "[46] [hh] [ll] :<tab/>MOVE hhll,A");
 					AbstractProcessor.HelpPutLine(builder, "[47] [hh] [ll] :<tab/>MOVE A,hhll");
 
-					AbstractProcessor.HelpPutTitle(builder, "Indexé indirect");
+					AbstractProcessor.HelpPutTitle(builder, "IndexÃ© indirect");
 					AbstractProcessor.HelpPutLine(builder, "[48] :<tab/><tab/>MOVE {HL},A");
 					AbstractProcessor.HelpPutLine(builder, "[49] :<tab/><tab/>MOVE A,{HL}");
 
@@ -1392,7 +1392,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "Op":
-					AbstractProcessor.HelpPutTitle(builder, "Opérations arithmétiques");
+					AbstractProcessor.HelpPutTitle(builder, "OpÃ©rations arithmÃ©tiques");
 					AbstractProcessor.HelpPutLine(builder, "[50] [xx] :<tab/>ADD #xx,A  <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "[51] :<tab/><tab/>ADD B,A   <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "[52] [xx] :<tab/>SUB #xx,A  <tab/>(Z, N, V)");
@@ -1420,7 +1420,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[9D] :<tab/><tab/>MOD A,HL   <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "[9E] :<tab/><tab/>MOD B,HL   <tab/>(Z, N, V)");
 
-					AbstractProcessor.HelpPutTitle(builder, "Opérations logiques");
+					AbstractProcessor.HelpPutTitle(builder, "OpÃ©rations logiques");
 					AbstractProcessor.HelpPutLine(builder, "[54] [xx] :<tab/>AND #xx,A   <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "[56] [xx] :<tab/>OR #xx,A    <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "[58] [xx] :<tab/>XOR #xx,A   <tab/>(Z, N, V)");
@@ -1449,7 +1449,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[65] :<tab/><tab/>DEC B      <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "[66] :<tab/><tab/>DEC HL     <tab/>(Z, N, V)");
 
-					AbstractProcessor.HelpPutTitle(builder, "Opérations sur des bits");
+					AbstractProcessor.HelpPutTitle(builder, "OpÃ©rations sur des bits");
 					AbstractProcessor.HelpPutLine(builder, "[74] [0b] :<tab/>TEST A:#b   <tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[76] [0b] :<tab/>TCLR A:#b   <tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[78] [0b] :<tab/>TSET A:#b   <tab/>(Z)");
@@ -1465,7 +1465,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[7C] :<tab/><tab/>SETV       <tab/>(V=1)");
 					AbstractProcessor.HelpPutLine(builder, "[7D] :<tab/><tab/>CLRV       <tab/>(V=0)");
 
-					AbstractProcessor.HelpPutTitle(builder, "Spécial");
+					AbstractProcessor.HelpPutTitle(builder, "SpÃ©cial");
 					AbstractProcessor.HelpPutLine(builder, "[00] :<tab/><tab/>NOP");
 					AbstractProcessor.HelpPutLine(builder, "[1F] :<tab/><tab/>HALT");
 					break;
@@ -1533,53 +1533,53 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "Attend la pression d'une touche du clavier.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [00] :<tab/>CALL WaitKey");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>-");
-					AbstractProcessor.HelpPutLine(builder, "out :<tab/>A touche pressée");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>A touche pressÃ©e");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>A");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayBinaryDigit");
-					AbstractProcessor.HelpPutLine(builder, "Affiche des segments à choix.");
+					AbstractProcessor.HelpPutLine(builder, "Affiche des segments Ã  choix.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03] :<tab/>CALL DisplayBinaryDigit");
-					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A bits des segments à allumer");
-					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de gauche à droite)");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A bits des segments Ã  allumer");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de gauche Ã  droite)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaDigit");
-					AbstractProcessor.HelpPutLine(builder, "Affiche un digit hexadécimal.");
+					AbstractProcessor.HelpPutLine(builder, "Affiche un digit hexadÃ©cimal.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [06] :<tab/>CALL DisplayHexaDigit");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..15");
-					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de droite à gauche)");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de droite Ã  gauche)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaByte");
-					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadécimal sur deux digits.");
+					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadÃ©cimal sur deux digits.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [09] :<tab/>CALL DisplayHexaByte");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..255");
-					AbstractProcessor.HelpPutLine(builder, "<tab/>B premier digit 0..2 (de gauche à droite)");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B premier digit 0..2 (de gauche Ã  droite)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayDecimal");
-					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale sur quatre digits.");
+					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur dÃ©cimale sur quatre digits.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [0C] :<tab/>CALL DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>HL valeur");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "SetPixel");
-					AbstractProcessor.HelpPutLine(builder, "Allume un pixel dans l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "Allume un pixel dans l'Ã©cran bitmap.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [0F] :<tab/>CALL SetPixel");
-					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A coordonnée X 0..31");
-					AbstractProcessor.HelpPutLine(builder, "<tab/>B coordonnée Y 0..23");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A coordonnÃ©e X 0..31");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B coordonnÃ©e Y 0..23");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "ClrPixel");
-					AbstractProcessor.HelpPutLine(builder, "Eteint un pixel dans l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "Eteint un pixel dans l'Ã©cran bitmap.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [12] :<tab/>CALL ClrPixel");
-					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A coordonnée X 0..31");
-					AbstractProcessor.HelpPutLine(builder, "<tab/>B coordonnée Y 0..23");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A coordonnÃ©e X 0..31");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B coordonnÃ©e Y 0..23");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 					break;

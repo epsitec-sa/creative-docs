@@ -1,8 +1,8 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'interface IFeel donne accès aux fonctions propres au "feel" de l'interface
-	/// graphique (IAdorner gère le "look" du "look & feel", IFeel the "feel").
+	/// L'interface IFeel donne accÃ¨s aux fonctions propres au "feel" de l'interface
+	/// graphique (IAdorner gÃ¨re le "look" du "look & feel", IFeel the "feel").
 	/// </summary>
 	public interface IFeel
 	{

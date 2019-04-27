@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -70,7 +70,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 
 				case ContactType.PersonHousehold:
 					return bricks
-						.Title (Resources.Text ("Adresse du ménage"))
+						.Title (Resources.Text ("Adresse du mÃ©nage"))
 						.Icon ("Data.AiderAddress");
 
 				default:

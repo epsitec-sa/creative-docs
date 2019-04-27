@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			form
 				.Field<Date> ()
-					.Title ("Date de la célébration")
+					.Title ("Date de la cÃ©lÃ©bration")
 					.InitialValue (Date.Today)
 				.End ()
 			.End ();
@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
             if (this.AdditionalEntity.Place.Town.IsNull ())
             {
-                throw new BusinessRuleException ("Impossible de dupliquer l'acte, le lieu de célébration n'a pas de localité renseignée");
+                throw new BusinessRuleException ("Impossible de dupliquer l'acte, le lieu de cÃ©lÃ©bration n'a pas de localitÃ© renseignÃ©e");
             }
 
 			var duplicat = AiderEventEntity.Create (

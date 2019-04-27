@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -63,7 +63,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				if (household.Members.Count > 1)
 				{
 					wall.AddBrick (x => x.Person.MainContact.Household.Members)
-						.Title (Resources.Text ("Membres du ménage"))
+						.Title (Resources.Text ("Membres du mÃ©nage"))
 						.Icon ("Data.AiderPersons")
 						.EnableActionMenu <ActionAiderPersonWarningViewController50AddHouseholdMembersToBag> ()
 						.Attribute (BrickMode.HideAddButton)

@@ -1,10 +1,10 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// La classe FrameLineFenceDictionary permet d'associer des lignes "barrières"
+	/// La classe FrameLineFenceDictionary permet d'associer des lignes "barriÃ¨res"
 	/// pour les divers frames d'un texte.
 	/// </summary>
 	public class FrameLineFenceDictionary

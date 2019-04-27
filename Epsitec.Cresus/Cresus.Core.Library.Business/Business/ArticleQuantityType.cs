@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -10,12 +10,12 @@ namespace Epsitec.Cresus.Core.Business
 	{
 		None				= 0,
 
-		Ordered				= 10,	// commandé
-		Billed				= 20,	// facturé
-		Delayed				= 30,	// retardé, confirmée et/ou en suspens
-		Expected			= 32,	// attendu, en suspens avec date non confirmée
-		Shipped				= 40,	// livré
-		ShippedPreviously	= 42,	// livré précédemment
+		Ordered				= 10,	// commandÃ©
+		Billed				= 20,	// facturÃ©
+		Delayed				= 30,	// retardÃ©, confirmÃ©e et/ou en suspens
+		Expected			= 32,	// attendu, en suspens avec date non confirmÃ©e
+		Shipped				= 40,	// livrÃ©
+		ShippedPreviously	= 42,	// livrÃ© prÃ©cÃ©demment
 
 		Information			= 100,	// information
 	}

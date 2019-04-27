@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 /*
  *	Note: on ne doit pas faire de image.Dispose (cf. //!), car il se peut
  *	qu'un appelant soit encore en train de travailler avec l'instance en
- *	question. Un Dispose serait dès lors fatal (accès hors de la mémoire,
+ *	question. Un Dispose serait dÃ¨s lors fatal (accÃ¨s hors de la mÃ©moire,
  *	par exemple)
  */
 
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document
 		internal static void Register(ImageCache imageCache)
 		{
 			//	Enregistre un cache local; si c'est le premier, il y a un certain
-			//	nombre d'initialisations à faire.
+			//	nombre d'initialisations Ã  faire.
 			if (GlobalImageCache.localCache.Count == 0)
 			{
 				GlobalImageCache.Initialize();
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document
 		internal static void Unregister(ImageCache imageCache)
 		{
 			//	Supprime un cache local de notre liste; si c'est le dernier, il y
-			//	a un certain nombre de nettoyages à faire.
+			//	a un certain nombre de nettoyages Ã  faire.
 			GlobalImageCache.localCache.Remove(imageCache);
 
 			if (GlobalImageCache.localCache.Count == 0)
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document
 		
 		public static Item Find(string key, string zipFileName)
 		{
-			//	Retourne les données d'une image.
+			//	Retourne les donnÃ©es d'une image.
 			Item item;
 			key = GlobalImageCache.GetGlobalKeyName(key, zipFileName);
 			GlobalImageCache.items.TryGetValue(key, out item);
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document
 
 		private static byte[] ReadZippedDocument(string zipPath)
 		{
-			//	Lit les données depuis un document ZIP.
+			//	Lit les donnÃ©es depuis un document ZIP.
 			string zipFileName;
 			string zipEntryName;
 
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document
 
 						if (ok)
 						{
-							return zip[zipEntryName].Data;  // lit les données dans le fichier zip
+							return zip[zipEntryName].Data;  // lit les donnÃ©es dans le fichier zip
 						}
 					}
 				}
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document
 
 		public static void UnlockAll()
 		{
-			//	Débloque toutes les images utilisées.
+			//	DÃ©bloque toutes les images utilisÃ©es.
 			foreach (Item item in GlobalImageCache.items.Values)
 			{
 				item.Locked = false;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document
 
 		public static void Lock(string key, string zipFileName)
 		{
-			//	Bloque l'image car elle est utilisée dans la page.
+			//	Bloque l'image car elle est utilisÃ©e dans la page.
 			Item item;
 			key = GlobalImageCache.GetGlobalKeyName(key, zipFileName);
 			
@@ -263,12 +263,12 @@ namespace Epsitec.Common.Document
 
 		public static void FreeOldest()
 		{
-			//	Libère les images les plus vieilles, pour que le total du cache
-			//	ne dépasse pas 0.5 GB.
+			//	LibÃ¨re les images les plus vieilles, pour que le total du cache
+			//	ne dÃ©passe pas 0.5 GB.
 			long total = 0;
 			foreach (Item item in GlobalImageCache.items.Values)
 			{
-				total += item.KBUsed();  // total <- taille totale utilisée par le cache
+				total += item.KBUsed();  // total <- taille totale utilisÃ©e par le cache
 			}
 
 			GlobalImageCache.FreeOldest(ref total, ImagePart.LargeOriginal);
@@ -304,15 +304,15 @@ namespace Epsitec.Common.Document
 
 		private static void FreeOldest(ref long total, ImagePart part)
 		{
-			//	Libère une partie des images les plus vieilles, pour que le total
-			//	du cache ne dépasse pas 0.5 GB.
-			while (total > GlobalImageCache.GlobalLimit)  // dépasse la limite globale ?
+			//	LibÃ¨re une partie des images les plus vieilles, pour que le total
+			//	du cache ne dÃ©passe pas 0.5 GB.
+			while (total > GlobalImageCache.GlobalLimit)  // dÃ©passe la limite globale ?
 			{
 				Item older = GlobalImageCache.SearchOlder(part);
 
-				if (older == null)  // rien trouvé ?
+				if (older == null)  // rien trouvÃ© ?
 				{
-					break;  // on arrête de libérer, même si la limite est dépassée
+					break;  // on arrÃªte de libÃ©rer, mÃªme si la limite est dÃ©passÃ©e
 				}
 
 				total -= older.Free(part);
@@ -324,13 +324,13 @@ namespace Epsitec.Common.Document
 		{
 			LargeOriginal,	// image originale, seulement si elle est grande
 			SmallOriginal,	// image originale, dans tous les cas
-			Lowres,			// image en basse résolution
-			Data,			// données de base
+			Lowres,			// image en basse rÃ©solution
+			Data,			// donnÃ©es de base
 		}
 
 		private static Item SearchOlder(ImagePart part)
 		{
-			//	Cherche la partie d'image libérable la plus vieille du cache.
+			//	Cherche la partie d'image libÃ©rable la plus vieille du cache.
 			long min = long.MaxValue;
 			long max = 0;
 			Item older = null;
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document
 
 			if (min == max)
 			{
-				//	Evite de retourner le dernier élément ajouté dans le cache.
+				//	Evite de retourner le dernier Ã©lÃ©ment ajoutÃ© dans le cache.
 				return null;
 			}
 
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Document
 
 		internal static System.DateTime GetFileDate(string path)
 		{
-			//	Retourne la date de dernière modification d'un fichier.
+			//	Retourne la date de derniÃ¨re modification d'un fichier.
 			try
 			{
 				if (!string.IsNullOrEmpty (path) && System.IO.File.Exists (path))
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Document
 
 		private static Drawing.Image ResizeImage(Drawing.Image image, int dx, int dy)
 		{
-			//	Retourne une image redimensionnée.
+			//	Retourne une image redimensionnÃ©e.
 			Graphics gfx = new Graphics();
 			gfx.SetPixmapSize(dx, dy);
 			gfx.TranslateTransform(0, dy);

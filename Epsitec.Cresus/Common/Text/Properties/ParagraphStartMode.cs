@@ -1,21 +1,21 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération ParagraphStartMode définit où placer un début de paragraphe.
+	/// L'Ã©numÃ©ration ParagraphStartMode dÃ©finit oÃ¹ placer un dÃ©but de paragraphe.
 	/// </summary>
 	public enum ParagraphStartMode
 	{
-		Undefined			= 0,		//	non défini
+		Undefined			= 0,		//	non dÃ©fini
 		
-		Anywhere			= 1,		//	n'importe où
+		Anywhere			= 1,		//	n'importe oÃ¹
 		
-		NewFrame			= 2,		//	au début d'un frame
+		NewFrame			= 2,		//	au dÃ©but d'un frame
 		
-		NewPage				= 3,		//	au début d'une page
-		NewOddPage			= 4,		//	au début d'une page impaire
-		NewEvenPage			= 5,		//	au début d'une page paire
+		NewPage				= 3,		//	au dÃ©but d'une page
+		NewOddPage			= 4,		//	au dÃ©but d'une page impaire
+		NewEvenPage			= 5,		//	au dÃ©but d'une page paire
 	}
 }

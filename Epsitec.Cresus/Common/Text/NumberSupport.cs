@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe NumberSupport implémente des méthodes utiles pour la manipulation
+	/// La classe NumberSupport implÃ©mente des mÃ©thodes utiles pour la manipulation
 	/// de nombres.
 	/// </summary>
 	public sealed class NumberSupport

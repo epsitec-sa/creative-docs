@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -72,9 +72,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static int GetWeekNumber(Date date)
 		{
-			//	Retourne le numéro de la semaine, selon la définition suivante:
-			//	La semaine qui porte le numéro 01 est celle qui contient le premier jeudi de janvier (c.f. wikipedia).
-			//	Le numéro retourné est compris entre 0 et 53.
+			//	Retourne le numÃ©ro de la semaine, selon la dÃ©finition suivante:
+			//	La semaine qui porte le numÃ©ro 01 est celle qui contient le premier jeudi de janvier (c.f. wikipedia).
+			//	Le numÃ©ro retournÃ© est compris entre 0 et 53.
 			var nouvelAn = new Date (date.Year, 1, 1);
 			int n = 1 - (int) nouvelAn.DayOfWeek;
 
@@ -98,22 +98,22 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				if (date1.Value.Day == 1)
 				{
-					return Dates.GetMonthShortDescription (date1.Value) + date1.Value.Year.ToString () + " — ...";
+					return Dates.GetMonthShortDescription (date1.Value) + date1.Value.Year.ToString () + " â€” ...";
 				}
 				else
 				{
-					return Converters.DateToString (date1) + " — ...";
+					return Converters.DateToString (date1) + " â€” ...";
 				}
 			}
 			else if (date2.HasValue)
 			{
 				if (date2.Value.Day == 1)
 				{
-					return "... —" + Dates.GetMonthShortDescription (date2.Value) + date2.Value.Year.ToString ();
+					return "... â€”" + Dates.GetMonthShortDescription (date2.Value) + date2.Value.Year.ToString ();
 				}
 				else
 				{
-					return "... —" + Converters.DateToString (date2);
+					return "... â€”" + Converters.DateToString (date2);
 				}
 			}
 			else
@@ -124,14 +124,14 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static FormattedText GetDescription(Date date1, Date date2)
 		{
-			//	Retourne un résumé court d'une période.
+			//	Retourne un rÃ©sumÃ© court d'une pÃ©riode.
 			//	Par exemple:
-			//	2012							-> une année entière
-			//	2012 — 2013						-> deux années entières
+			//	2012							-> une annÃ©e entiÃ¨re
+			//	2012 â€” 2013						-> deux annÃ©es entiÃ¨res
 			//	Mars 2012						-> un mois entier
-			//	Janv. — Mars 2012				-> quelques mois entiers
-			//	10.01.2012 — 25.04.2012			-> une période quelconque
-			//	25.07.2011 — 31.07.2011 (30)	-> une semaine entière
+			//	Janv. â€” Mars 2012				-> quelques mois entiers
+			//	10.01.2012 â€” 25.04.2012			-> une pÃ©riode quelconque
+			//	25.07.2011 â€” 31.07.2011 (30)	-> une semaine entiÃ¨re
 			//	09.05.2012 (me)					-> un jour entier
 			FormattedText title;
 
@@ -141,24 +141,24 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 			else if (Dates.NumberOfDays (date2, date1) == 7-1   &&
 					 date1.DayOfWeek == System.DayOfWeek.Monday &&
-					 date2.DayOfWeek == System.DayOfWeek.Sunday)  // pile une semaine entière ?
+					 date2.DayOfWeek == System.DayOfWeek.Sunday)  // pile une semaine entiÃ¨re ?
 			{
-				title = Converters.DateToString (date1) + " — " + Converters.DateToString (date2) + " (" + Dates.GetWeekNumber (date1).ToString ("00") + ")";
+				title = Converters.DateToString (date1) + " â€” " + Converters.DateToString (date2) + " (" + Dates.GetWeekNumber (date1).ToString ("00") + ")";
 			}
 			else if (date1.Year  == date2.Year &&
 					 date1.Day   == 1  &&
 					 date1.Month == 1  &&
 					 date2.Day   == 31 &&
-					 date2.Month == 12)  // pile une année entière ?
+					 date2.Month == 12)  // pile une annÃ©e entiÃ¨re ?
 			{
 				title = date1.Year.ToString ();
 			}
 			else if (date1.Day   == 1  &&
 					 date1.Month == 1  &&
 					 date2.Day   == 31 &&
-					 date2.Month == 12)  // pile plusieurs années entières ?
+					 date2.Month == 12)  // pile plusieurs annÃ©es entiÃ¨res ?
 			{
-				title = date1.Year.ToString () + " — " + date2.Year.ToString ();
+				title = date1.Year.ToString () + " â€” " + date2.Year.ToString ();
 			}
 			else if (date1.Year  == date2.Year &&
 					 date1.Month == date2.Month &&
@@ -171,11 +171,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 					 date1.Day   == 1  &&
 					 Dates.IsLastDayOfMonth (date2))  // pile quelques mois entiers ?
 			{
-				title = Dates.GetMonthShortDescription (date1) + " — " + Dates.GetMonthShortDescription (date2) + " " + date1.Year.ToString ();
+				title = Dates.GetMonthShortDescription (date1) + " â€” " + Dates.GetMonthShortDescription (date2) + " " + date1.Year.ToString ();
 			}
 			else
 			{
-				title = Converters.DateToString (date1) + " — " + Converters.DateToString (date2);
+				title = Converters.DateToString (date1) + " â€” " + Converters.DateToString (date2);
 			}
 
 			return title;
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				var m1 = Dates.GetMonthShortDescription (date1);
 				var m2 = Dates.GetMonthShortDescription (date2);
-				return string.Concat (m1, "—", m2);
+				return string.Concat (m1, "â€”", m2);
 			}
 		}
 
@@ -234,17 +234,17 @@ namespace Epsitec.Cresus.Compta.Helpers
 			string[] months =
 			{
 				"Janv.",
-				"Fév.",
+				"FÃ©v.",
 				"Mars",
 				"Avril",
 				"Mai",
 				"Juin",
 				"Juil.",
-				"Août",
+				"AoÃ»t",
 				"Sept.",
 				"Oct.",
 				"Nov.",
-				"Déc."
+				"DÃ©c."
 			};
 
 			return months[date.Month-1];
@@ -255,17 +255,17 @@ namespace Epsitec.Cresus.Compta.Helpers
 			string[] months =
 			{
 				"Janvier",
-				"Février",
+				"FÃ©vrier",
 				"Mars",
 				"Avril",
 				"Mai",
 				"Juin",
 				"Juillet",
-				"Août",
+				"AoÃ»t",
 				"Septembre",
 				"Octobre",
 				"Novembre",
-				"Décembre"
+				"DÃ©cembre"
 			};
 
 			return months[date.Month-1];

@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public virtual Rectangle Bounds
 		{
-			//	Retourne la boîte de l'objet.
+			//	Retourne la boÃ®te de l'objet.
 			get
 			{
 				return Rectangle.Empty;
@@ -126,12 +126,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public virtual void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 		}
 
 		public virtual MainColor BackgroundMainColor
 		{
-			//	Couleur de fond de la boîte.
+			//	Couleur de fond de la boÃ®te.
 			get
 			{
 				return this.boxColor;
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsDimmed
 		{
-			//	Détermine si l'objet apparaît en estompé (couleurs plus claires).
+			//	DÃ©termine si l'objet apparaÃ®t en estompÃ© (couleurs plus claires).
 			get
 			{
 				return this.isDimmed;
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsReadyForAction
 		{
-			//	Est-ce que l'objet est prêt pour une action.
+			//	Est-ce que l'objet est prÃªt pour une action.
 			get
 			{
 				return (this.hilitedElement != ActiveElement.None);
@@ -404,8 +404,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public virtual bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			ActiveElement element;
 			int fieldRank;
 			this.MouseDetect(pos, out element, out fieldRank);
@@ -422,17 +422,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public virtual void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 		}
 
 		public virtual void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 		}
 
 		protected virtual bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			element = ActiveElement.None;
 			fieldRank = -1;
 			return false;
@@ -440,14 +440,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public virtual bool IsMousePossible(ActiveElement element, int fieldRank)
 		{
-			//	Indique si l'opération est possible.
+			//	Indique si l'opÃ©ration est possible.
 			return true;
 		}
 
 
 		protected bool DetectSquareButton(Point center, Point pos)
 		{
-			//	Détecte si la souris est dans un bouton carré.
+			//	DÃ©tecte si la souris est dans un bouton carrÃ©.
 			if (center.IsZero)
 			{
 				return false;
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void DrawSquareButton(Graphics graphics, Point center, MainColor color, bool selected, bool hilited)
 		{
-			//	Dessine un bouton carré avec une couleur.
+			//	Dessine un bouton carrÃ© avec une couleur.
 			if (center.IsZero)
 			{
 				return;
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected bool DetectRoundButton(Point center, Point pos)
 		{
-			//	Détecte si la souris est dans un bouton circulaire.
+			//	DÃ©tecte si la souris est dans un bouton circulaire.
 			if (center.IsZero)
 			{
 				return false;
@@ -545,13 +545,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, string text, bool hilited, bool shadow)
 		{
-			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
+			//	Dessine un bouton circulaire avec un texte (gÃ©nÃ©ralement une seule lettre).
 			this.DrawRoundButton(graphics, center, radius, text, hilited, shadow, true);
 		}
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, string text, bool hilited, bool shadow, bool enable)
 		{
-			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
+			//	Dessine un bouton circulaire avec un texte (gÃ©nÃ©ralement une seule lettre).
 			if (center.IsZero)
 			{
 				return;
@@ -574,10 +574,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
 				double size = 14;
 
-				if (text == "*")  // texte étoile pour une relation privée ?
+				if (text == "*")  // texte Ã©toile pour une relation privÃ©e ?
 				{
 					size = 30;  // beaucoup plus grand
-					rect.Offset(0, -4);  // légèrement plus bas
+					rect.Offset(0, -4);  // lÃ©gÃ¨rement plus bas
 				}
 
 				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, text, Font.GetFont(Font.DefaultFontFamily, "Bold"), size, ContentAlignment.MiddleCenter);
@@ -644,7 +644,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public static void DrawStartingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)
 		{
-			//	Dessine une flèche selon le type de la relation.
+			//	Dessine une flÃ¨che selon le type de la relation.
 //-			if (relation == FieldRelation.Inclusion)
 //-			{
 //-				AbstractObject.DrawArrowBase(graphics, end, start);
@@ -653,7 +653,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public static void DrawEndingArrow(Graphics graphics, Point start, Point end, FieldRelation relation, bool isPrivateRelation)
 		{
-			//	Dessine une flèche selon le type de la relation.
+			//	Dessine une flÃ¨che selon le type de la relation.
 			AbstractObject.DrawArrowBase(graphics, start, end);
 
 			if (relation == FieldRelation.Collection)
@@ -671,7 +671,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static void DrawArrowBase(Graphics graphics, Point start, Point end)
 		{
-			//	Dessine une flèche à l'extrémité 'end'.
+			//	Dessine une flÃ¨che Ã  l'extrÃ©mitÃ© 'end'.
 			Point p = Point.Move(end, start, AbstractObject.arrowLength);
 
 			Point e1 = Transform.RotatePointDeg(end, AbstractObject.arrowAngle, p);
@@ -683,7 +683,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static void DrawArrowStar(Graphics graphics, Point start, Point end)
 		{
-			//	Dessine une étoile à l'extrémité 'end'.
+			//	Dessine une Ã©toile Ã  l'extrÃ©mitÃ© 'end'.
 			Point p = Point.Move(end, start, AbstractObject.arrowLength*0.85);
 			Point e = Transform.RotatePointDeg(end, AbstractObject.arrowAngle*2.5, p);
 			Point q = Point.Move(e, new Point(e.X, e.Y+1), AbstractObject.arrowLength*0.25);
@@ -697,7 +697,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected bool IsDarkColorMain
 		{
-			//	Indique si la couleur pour les mises en évidence est foncée.
+			//	Indique si la couleur pour les mises en Ã©vidence est foncÃ©e.
 			get
 			{
 				return this.boxColor == MainColor.DarkGrey;
@@ -706,31 +706,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Color GetColorMain()
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			return this.GetColorMain(1.0);
 		}
 
 		protected Color GetColorMain(double alpha)
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			return this.GetColorMain(this.boxColor, alpha);
 		}
 
 		protected Color GetColorMain(MainColor boxColor)
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			return this.GetColorMain(boxColor, 1.0);
 		}
 
 		protected Color GetColorMain(MainColor boxColor, double alpha)
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			return AbstractObject.GetColorMain (boxColor, alpha, this.isDimmed);
 		}
 
 		protected static Color GetColorMain(MainColor boxColor, double alpha, bool isDimmed)
 		{
-			//	Retourne la couleur pour les mises en évidence.
+			//	Retourne la couleur pour les mises en Ã©vidence.
 			Color color = Color.FromAlphaRgb(alpha, 128.0/255.0, 128.0/255.0, 128.0/255.0);
 
 			switch (boxColor)
@@ -800,7 +800,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Color GetColorAdjusted(Color color, double factor)
 		{
-			//	Retourne une couleur ajustée, sans changer la transparence.
+			//	Retourne une couleur ajustÃ©e, sans changer la transparence.
 			if (this.IsDarkColorMain)
 			{
 				return AbstractObject.GetColorDarker(color, factor);
@@ -813,7 +813,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static Color GetColorLighter(Color color, double factor)
 		{
-			//	Retourne une couleur éclaircie, sans changer la transparence.
+			//	Retourne une couleur Ã©claircie, sans changer la transparence.
 			return Color.FromAlphaRgb(color.A, 1-(1-color.R)*factor, 1-(1-color.G)*factor, 1-(1-color.B)*factor);
 		}
 
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
 		{
-			//	Peint la surface avec un dégradé horizontal.
+			//	Peint la surface avec un dÃ©gradÃ© horizontal.
 			graphics.FillMode = FillMode.NonZero;
 			graphics.GradientRenderer.Fill = GradientFill.X;
 			graphics.GradientRenderer.SetColors(leftColor, rightColor);
@@ -845,7 +845,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static void RenderVerticalGradient(Graphics graphics, Rectangle rect, Color bottomColor, Color topColor)
 		{
-			//	Peint la surface avec un dégradé vertical.
+			//	Peint la surface avec un dÃ©gradÃ© vertical.
 			graphics.FillMode = FillMode.NonZero;
 			graphics.GradientRenderer.Fill = GradientFill.Y;
 			graphics.GradientRenderer.SetColors(bottomColor, topColor);
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static Path PathRoundRectangle(Rectangle rect, double radius)
 		{
-			//	Retourne le chemin d'un rectangle à coins arrondis.
+			//	Retourne le chemin d'un rectangle Ã  coins arrondis.
 			return AbstractObject.PathRoundRectangle(rect, radius, true, true);  // coins arrondis partout
 		}
 

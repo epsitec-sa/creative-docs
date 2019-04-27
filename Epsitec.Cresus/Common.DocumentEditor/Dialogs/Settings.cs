@@ -19,7 +19,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -42,7 +42,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				topPart.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				topPart.Margins = new Margins(6, 6, 6, 0);
 
-				//	Crée les boutons radio.
+				//	CrÃ©e les boutons radio.
 				RadioButton radio1 = new RadioButton(topPart);
 				radio1.Name = "RadioGlobal";
 				radio1.Text = Res.Strings.Dialog.Settings.RadioGlobal;
@@ -60,7 +60,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				radio2.ActiveStateChanged += this.HandleRadioSettingsChanged;
 				radio2.Index = 2;
 
-				//	Crée les onglets "global".
+				//	CrÃ©e les onglets "global".
 				TabBook bookGlobal = new TabBook(this.window.Root);
 				bookGlobal.Name = "BookGlobal";
 				bookGlobal.Arrows = TabBookArrows.Stretch;
@@ -95,7 +95,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				HToolBar toolBar;
 				this.tabIndex = 0;
 
-				//	Crée l'onglet "general".
+				//	CrÃ©e l'onglet "general".
 				Common.Document.DocumentDialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.Startup);
 
 				combo = this.CreateCombo(bookGeneral, "FirstAction", Res.Strings.Dialog.Settings.StartupAction);
@@ -121,7 +121,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 				Common.Document.DocumentDialogs.CreateSeparator(bookGeneral);
 
-				//	Crée l'onglet "periph".
+				//	CrÃ©e l'onglet "periph".
 				Common.Document.DocumentDialogs.CreateTitle(bookPeriph, Res.Strings.Dialog.Settings.Mouse);
 
 				combo = this.CreateCombo(bookPeriph, "MouseWheelAction", Res.Strings.Dialog.Settings.MouseWheel);
@@ -171,7 +171,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				
 				Common.Document.DocumentDialogs.CreateSeparator(bookPeriph);
 
-				//	Crée l'onglet "quick".
+				//	CrÃ©e l'onglet "quick".
 				Common.Document.DocumentDialogs.CreateTitle(bookQuick, Res.Strings.Dialog.Settings.TabPage.QuickHelp);
 
 				toolBar = new HToolBar(bookQuick);
@@ -239,7 +239,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.UpdateQuickList(-1);
 				this.UpdateQuickButtons();
 
-				//	Crée l'onglet "export".
+				//	CrÃ©e l'onglet "export".
 				Common.Document.DocumentDialogs.CreateTitle (bookExport, Res.Strings.Dialog.Settings.QuickExport);
 
 				combo = this.CreateCombo (bookExport, "QuickExportFormat", Res.Strings.Dialog.Settings.QuickExportType);
@@ -259,7 +259,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 				Common.Document.DocumentDialogs.CreateSeparator (bookExport);
 
-				//	Crée les onglets "document".
+				//	CrÃ©e les onglets "document".
 				TabBook bookDoc = new TabBook(this.window.Root);
 				bookDoc.Name = "BookDocument";
 				bookDoc.Arrows = TabBookArrows.Stretch;
@@ -323,7 +323,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("Settings");
 		}
 
@@ -337,7 +337,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void ShowPage(string book, string tab)
 		{
-			//	Montre une page donnée du dialogue.
+			//	Montre une page donnÃ©e du dialogue.
 			this.ActiveBook(book);
 
 			this.ignoreChange = true;
@@ -368,7 +368,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected TextFieldCombo CreateCombo(Widget parent, string name, string label)
 		{
-			//	Crée un widget combo.
+			//	CrÃ©e un widget combo.
 			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
@@ -395,7 +395,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected TextFieldSlider CreateField(Widget parent, string name, string label)
 		{
-			//	Crée un widget textfield.
+			//	CrÃ©e un widget textfield.
 			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
@@ -421,7 +421,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected CheckButton CreateCheck(Widget parent, string name, string text)
 		{
-			//	Crée un widget checkbutton.
+			//	CrÃ©e un widget checkbutton.
 			CheckButton check = new CheckButton(parent);
 			check.Text = text;
 			check.Name = name;
@@ -552,7 +552,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		#region QuickCommands
 		protected void UpdateQuickButtons()
 		{
-			//	Met à jour les boutons des commandes rapides.
+			//	Met Ã  jour les boutons des commandes rapides.
 			int sel = this.quickList.SelectedRow;
 
 			if ( sel == -1 )
@@ -577,7 +577,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		/// <param name="sel">The sel.</param>
 		protected void UpdateQuickList(int sel)
 		{
-			//	Met à jour la liste des commandes rapides.
+			//	Met Ã  jour la liste des commandes rapides.
 			this.ignoreChange = true;
 
 			int rows = this.globalSettings.QuickCommands.Count;
@@ -597,7 +597,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				{
 					if ( this.quickList[column, row].IsEmpty )
 					{
-						if ( column == 0 )  // bouton check pour déterminer la visibilité ?
+						if ( column == 0 )  // bouton check pour dÃ©terminer la visibilitÃ© ?
 						{
 							bt = new CheckButton();
 							bt.Name = row.ToString();
@@ -606,7 +606,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 							bt.ActiveStateChanged += this.HandleQuickUsedChanged;
 							this.quickList[column, row].Insert(bt);
 						}
-						else if ( column == 1 )  // icône ?
+						else if ( column == 1 )  // icÃ´ne ?
 						{
 							ib = new IconButton();
 							ib.Name = row.ToString();
@@ -614,7 +614,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 							ib.Margins = new Margins(0, 0, 0, 0);
 							this.quickList[column, row].Insert(ib);
 						}
-						else if ( column == 2 )  // bouton pour le séparateur ?
+						else if ( column == 2 )  // bouton pour le sÃ©parateur ?
 						{
 							ib = new IconButton();
 							ib.Name = row.ToString();
@@ -641,15 +641,15 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 				Command c = Command.Find(cmd);
 
-				//	Bouton check pour déterminer la visibilité.
+				//	Bouton check pour dÃ©terminer la visibilitÃ©.
 				bt = this.quickList[0, row].Children[0] as CheckButton;
 				bt.ActiveState = used ? ActiveState.Yes : ActiveState.No;
 
-				//	Icône.
+				//	IcÃ´ne.
 				ib = this.quickList[1, row].Children[0] as IconButton;
 				ib.IconUri = c == null ? "" : c.Icon;
 
-				//	Bouton pour le séparateur.
+				//	Bouton pour le sÃ©parateur.
 				ib = this.quickList[2, row].Children[0] as IconButton;
 				ib.IconUri = Misc.Icon(sep ? "QuickSeparatorYes" : "QuickSeparatorNo");
 				ib.Enable = (used);
@@ -663,7 +663,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			if ( sel != -1 )
 			{
-				this.quickList.ShowSelect();  // montre la ligne sélectionnée
+				this.quickList.ShowSelect();  // montre la ligne sÃ©lectionnÃ©e
 			}
 
 			this.ignoreChange = false;
@@ -671,7 +671,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void MoveQuickCommand(int src, int dst)
 		{
-			//	Déplace une commande rapide.
+			//	DÃ©place une commande rapide.
 			if ( src == -1 )  return;
 
 			string xcmd = this.globalSettings.QuickCommands[src] as string;
@@ -685,14 +685,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleQuickListSelectionChanged(object sender)
 		{
-			//	Liste des commandes rapides cliquée.
+			//	Liste des commandes rapides cliquÃ©e.
 			if ( this.ignoreChange )  return;
 			this.UpdateQuickButtons();
 		}
 
 		private void HandleQuickUsedChanged(object sender)
 		{
-			//	Bouton "check" dans la liste des commandes rapides cliqué.
+			//	Bouton "check" dans la liste des commandes rapides cliquÃ©.
 			if ( this.ignoreChange )  return;
 
 			CheckButton bt = sender as CheckButton;
@@ -714,7 +714,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleQuickSeparatorClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "séparateur" dans la liste des commandes rapides cliqué.
+			//	Bouton "sÃ©parateur" dans la liste des commandes rapides cliquÃ©.
 			if ( this.ignoreChange )  return;
 
 			IconButton ib = sender as IconButton;

@@ -21,7 +21,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -156,14 +156,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("Replace");
 		}
 
 
 		public string FindText
 		{
-			//	Texte cherché.
+			//	Texte cherchÃ©.
 			get
 			{
 				return this.findText;
@@ -217,7 +217,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void MemorizeTexts()
 		{
-			//	Mémorise les textes de recherche et de remplacement.
+			//	MÃ©morise les textes de recherche et de remplacement.
 			if ( this.fieldFind == null )  return;
 
 			this.ComboMemorize(this.fieldFind);
@@ -227,7 +227,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void UpdateWidgets()
 		{
-			//	Met à jour les widgets en fonction des variables.
+			//	Met Ã  jour les widgets en fonction des variables.
 			if ( this.fieldFind == null )  return;
 
 			this.ignoreChange = true;
@@ -253,7 +253,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void ReadWidgets()
 		{
-			//	Met à jour les variables en fonction des widgets.
+			//	Met Ã  jour les variables en fonction des widgets.
 			this.findText    = this.fieldFind.Text;
 			this.replaceText = this.fieldReplace.Text;
 
@@ -278,16 +278,16 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void ComboMemorize(TextFieldCombo combo)
 		{
-			//	Gère la liste d'un combo pour conserver les derniers textes tapés.
+			//	GÃ¨re la liste d'un combo pour conserver les derniers textes tapÃ©s.
 			string text = combo.Text;
 			if ( text == "" )  return;
 
-			if ( combo.Items.Contains(text) )  // déjà dans la liste ?
+			if ( combo.Items.Contains(text) )  // dÃ©jÃ  dans la liste ?
 			{
 				combo.Items.Remove(text);
 			}
 
-			combo.Items.Insert(0, text);  // insère au début de la liste
+			combo.Items.Insert(0, text);  // insÃ¨re au dÃ©but de la liste
 
 			if ( combo.Items.Count > 15 )  // liste trop longue ?
 			{

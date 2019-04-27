@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document
 
 		public Text.Wrappers.TextWrapper StyleTextWrapper
 		{
-			//	Wrapper pour les styles de caractère.
+			//	Wrapper pour les styles de caractÃ¨re.
 			get { return this.styleTextWrapper; }
 		}
 
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsWrappersAttached
 		{
-			//	Indique si les wrappers sont attachés.
+			//	Indique si les wrappers sont attachÃ©s.
 			get
 			{
 				return this.textWrapper.IsAttached;
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document
 
 		public void WrappersAttach(TextFlow textFlow)
 		{
-			//	Attache tous les wrappers à un texte.
+			//	Attache tous les wrappers Ã  un texte.
 			this.textFlow = textFlow;
 			this.textWrapper.Attach(textFlow.TextNavigator);
 			this.paragraphWrapper.Attach(textFlow.TextNavigator);
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document
 
 		public void WrappersDetach()
 		{
-			//	Détache tous les wrappers.
+			//	DÃ©tache tous les wrappers.
 			this.textFlow = null;
 			this.textWrapper.Detach();
 			this.paragraphWrapper.Detach();
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document
 
 		public TextFlow TextFlow
 		{
-			//	Donne le TextFlow en cours d'édition.
+			//	Donne le TextFlow en cours d'Ã©dition.
 			get
 			{
 				return this.textFlow;
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Document
 
 		public void UpdateCommands()
 		{
-			//	Met à jour toutes les commandes.
+			//	Met Ã  jour toutes les commandes.
 			this.HandleTextWrapperChanged(null);
 			this.HandleParagraphWrapperChanged(null);
 		}
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document
 
 		protected void HandleTextWrapperChanged(object sender)
 		{
-			//	Le wrapper du texte a changé.
+			//	Le wrapper du texte a changÃ©.
 			bool enabled = this.IsWrappersAttached;
 			bool bold        = false;
 			bool italic      = false;
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Document
 
 		protected void HandleParagraphWrapperChanged(object sender)
 		{
-			//	Le wrapper des paragraphes a changé.
+			//	Le wrapper des paragraphes a changÃ©.
 			bool enabled = this.IsWrappersAttached;
 			double leading = 0.0;
 			Common.Text.Wrappers.JustificationMode justif = Text.Wrappers.JustificationMode.Unknown;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document
 
 		protected void HandleStyleWrapperChanged(object sender)
 		{
-			//	Un style de paragraphe ou de caractère a changé.
+			//	Un style de paragraphe ou de caractÃ¨re a changÃ©.
 			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
 			foreach ( Text.TextStyle style in styles )
 			{
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Document
 		#region Style Check
 		public bool IsFreeName(Text.TextStyle style, string name)
 		{
-			//	Vérifie si un nom est possible pour un style donné.
+			//	VÃ©rifie si un nom est possible pour un style donnÃ©.
 			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
 			foreach ( Text.TextStyle existing in styles )
 			{
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Document
 
 		public void StyleArrangeAll()
 		{
-			//	Passe en revue tous les styles pour réarranger l'ordre des parents.
+			//	Passe en revue tous les styles pour rÃ©arranger l'ordre des parents.
 			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
 			foreach ( Text.TextStyle style in styles )
 			{
@@ -311,8 +311,8 @@ namespace Epsitec.Common.Document
 
 		public void StyleCheckAllDefaultParent()
 		{
-			//	Passe en revue tous les styles de paragraphe pour vérifier s'ils font
-			//	référence au style de base.
+			//	Passe en revue tous les styles de paragraphe pour vÃ©rifier s'ils font
+			//	rÃ©fÃ©rence au style de base.
 			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
 			foreach ( Text.TextStyle style in styles )
 			{
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Document
 
 		public System.Collections.ArrayList ArrangeParentStyles(System.Collections.ArrayList parents)
 		{
-			//	Réarrange la liste des parents d'un style pour utiliser le même ordre
+			//	RÃ©arrange la liste des parents d'un style pour utiliser le mÃªme ordre
 			//	que la liste (selon StyleMap.GetRank donc).
 			System.Collections.ArrayList arrangedParents = new System.Collections.ArrayList();
 
@@ -360,14 +360,14 @@ namespace Epsitec.Common.Document
 
 		public bool IsStyleAsDefaultParent(Text.TextStyle style)
 		{
-			//	Vérifie si un style de paragraphe fait référence au style de base dans sa
-			//	parenté directe ou indirecte. Il faut savoir qu'un style de paragraphe doit
-			//	obligatoirement avoir une référence au style de base quelque part dans sa
-			//	parenté complexe !
+			//	VÃ©rifie si un style de paragraphe fait rÃ©fÃ©rence au style de base dans sa
+			//	parentÃ© directe ou indirecte. Il faut savoir qu'un style de paragraphe doit
+			//	obligatoirement avoir une rÃ©fÃ©rence au style de base quelque part dans sa
+			//	parentÃ© complexe !
 			//	Par exemple, ceci est correct:
 			//		b -> a -> base
 			//	Le style 'b' n'a pas le style de base comme parent direct. Il a seulement le
-			//	style 'a' comme parent. Mais comme 'a' à le style de base comme parent direct,
+			//	style 'a' comme parent. Mais comme 'a' Ã  le style de base comme parent direct,
 			//	tout est juste.
 			if ( style.TextStyleClass != Text.TextStyleClass.Paragraph )  return true;
 
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsStyleAsCircularRef(Text.TextStyle reference, Text.TextStyle style)
 		{
-			//	Vérifie s'il existe une référence circulaire dans un style.
+			//	VÃ©rifie s'il existe une rÃ©fÃ©rence circulaire dans un style.
 			Text.TextStyle[] parents = style.ParentStyles;
 			foreach ( Text.TextStyle parent in parents )
 			{
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Document
 		#region GetStyleBrief
 		public void GetStyleBrief(Text.TextStyle style, out string brief, out int lines)
 		{
-			//	Donne un texte résumé sur un style quelconque.
+			//	Donne un texte rÃ©sumÃ© sur un style quelconque.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append("<font size=\"80%\">");
 			lines = 0;
@@ -853,17 +853,17 @@ namespace Epsitec.Common.Document
 
 		protected string GetBriefValue(double value, Text.Properties.SizeUnits units, double scale)
 		{
-			//	Donne la chaîne pour représenter une valeur numérique.
+			//	Donne la chaÃ®ne pour reprÃ©senter une valeur numÃ©rique.
 			if ( units == Text.Properties.SizeUnits.Percent )
 			{
 				value *= 100.0;
-				value = System.Math.Floor(value+0.5);  // zéro décimales
+				value = System.Math.Floor(value+0.5);  // zÃ©ro dÃ©cimales
 				return string.Format("{0}%", value.ToString());
 			}
 			else
 			{
 				value /= scale;
-				value *= 1000.0;  // 3 décimales
+				value *= 1000.0;  // 3 dÃ©cimales
 				value = System.Math.Floor(value+0.5);
 				value /= 1000.0;
 				return value.ToString();
@@ -874,12 +874,12 @@ namespace Epsitec.Common.Document
 
 		public void ExecuteCommand(string name, string advanceState)
 		{
-			//	Exécute une commande.
+			//	ExÃ©cute une commande.
 
 			if ( Druid.IsValidResourceId(name) )
 			{
-				//	La commande a été spécifiée au moyen d'un DRUID. On préfère travailler
-				//	avec les noms des commandes ci-après, alors on remplace le DRUID de la
+				//	La commande a Ã©tÃ© spÃ©cifiÃ©e au moyen d'un DRUID. On prÃ©fÃ¨re travailler
+				//	avec les noms des commandes ci-aprÃ¨s, alors on remplace le DRUID de la
 				//	commande par son nom :
 				
 				Command command = Command.Find(name);
@@ -913,7 +913,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeBold()
 		{
-			//	La commande 'gras' a été actionnée.
+			//	La commande 'gras' a Ã©tÃ© actionnÃ©e.
 			this.textWrapper.SuspendSynchronizations();
 			this.textWrapper.Defined.InvertBold = !this.textWrapper.Defined.InvertBold;
 			this.textWrapper.DefineOperationName("FontBold", Res.Strings.Action.FontBold);
@@ -922,7 +922,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeItalic()
 		{
-			//	La commande 'italique' a été actionnée.
+			//	La commande 'italique' a Ã©tÃ© actionnÃ©e.
 			this.textWrapper.SuspendSynchronizations();
 			this.textWrapper.Defined.InvertItalic = !this.textWrapper.Defined.InvertItalic;
 			this.textWrapper.DefineOperationName("FontItalic", Res.Strings.Action.FontItalic);
@@ -931,7 +931,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeUnderline()
 		{
-			//	La commande 'souligné' a été actionnée.
+			//	La commande 'soulignÃ©' a Ã©tÃ© actionnÃ©e.
 			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.textWrapper.Active.IsUnderlineDefined )
@@ -950,7 +950,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeOverline()
 		{
-			//	La commande 'surligné' a été actionnée.
+			//	La commande 'surlignÃ©' a Ã©tÃ© actionnÃ©e.
 			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.textWrapper.Active.IsOverlineDefined )
@@ -969,7 +969,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeStrikeout()
 		{
-			//	La commande 'biffé' a été actionnée.
+			//	La commande 'biffÃ©' a Ã©tÃ© actionnÃ©e.
 			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.textWrapper.Active.IsStrikeoutDefined )
@@ -988,7 +988,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeSubscript()
 		{
-			//	La commande 'indice' a été actionnée.
+			//	La commande 'indice' a Ã©tÃ© actionnÃ©e.
 			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.SubscriptActiveState )
@@ -1007,7 +1007,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeSuperscript()
 		{
-			//	La commande 'exposant' a été actionnée.
+			//	La commande 'exposant' a Ã©tÃ© actionnÃ©e.
 			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.SuperscriptActiveState )
@@ -1026,7 +1026,7 @@ namespace Epsitec.Common.Document
 
 		public void IncrementFontSize(double delta)
 		{
-			//	La commande pour changer de taille a été actionnée.
+			//	La commande pour changer de taille a Ã©tÃ© actionnÃ©e.
 			double size = this.textWrapper.Defined.FontSize;
 			Text.Properties.SizeUnits units = this.textWrapper.Defined.Units;
 			if ( double.IsNaN(size) )
@@ -1068,7 +1068,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeParagraphLeading(string advanceState)
 		{
-			//	La commande pour changer d'interligne a été actionnée.
+			//	La commande pour changer d'interligne a Ã©tÃ© actionnÃ©e.
 			double value = 1.0;
 			switch ( advanceState )
 			{
@@ -1089,7 +1089,7 @@ namespace Epsitec.Common.Document
 
 		public void IncrementParagraphLeading(double delta)
 		{
-			//	La commande modifier l'interligne a été actionnée.
+			//	La commande modifier l'interligne a Ã©tÃ© actionnÃ©e.
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
 			double leading = this.paragraphWrapper.Active.Leading;
@@ -1123,7 +1123,7 @@ namespace Epsitec.Common.Document
 
 		protected void IncrementParagraphIndent(int delta)
 		{
-			//	La commande pour modifier l'indentation a été actionnée.
+			//	La commande pour modifier l'indentation a Ã©tÃ© actionnÃ©e.
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
 			int level = 0;
@@ -1150,13 +1150,13 @@ namespace Epsitec.Common.Document
 					
 					if ( styleCaption.EndsWith(oldLevelSuffix) )
 					{
-						//	Le style courant se termine avec un numéro qui correspond à notre
+						//	Le style courant se termine avec un numÃ©ro qui correspond Ã  notre
 						//	niveau d'indentation; s'il existe un style avec le nom de la nou-
-						//	velle indentation, on va simplement appliquer ce style-là au texte
-						//	plutôt que de changer des réglages.
+						//	velle indentation, on va simplement appliquer ce style-lÃ  au texte
+						//	plutÃ´t que de changer des rÃ©glages.
 						
-						styleCaption = styleCaption+"¬";
-						styleCaption = styleCaption.Replace(oldLevelSuffix+"¬", newLevelSuffix);
+						styleCaption = styleCaption+"Â¬";
+						styleCaption = styleCaption.Replace(oldLevelSuffix+"Â¬", newLevelSuffix);
 						
 						Text.TextStyle newStyle = this.document.TextContext.StyleList.StyleMap.GetTextStyle(styleCaption);
 						
@@ -1219,7 +1219,7 @@ namespace Epsitec.Common.Document
 
 		protected void ChangeParagraphJustif(string advanceState)
 		{
-			//	La commande pour changer de mode de justification a été actionnée.
+			//	La commande pour changer de mode de justification a Ã©tÃ© actionnÃ©e.
 			Text.Wrappers.JustificationMode mode = Text.Wrappers.JustificationMode.AlignLeft;
 			switch ( advanceState )
 			{
@@ -1238,7 +1238,7 @@ namespace Epsitec.Common.Document
 
 		protected void FontClear()
 		{
-			//	La commande pour effacer les définitions de caractère a été actionnée.
+			//	La commande pour effacer les dÃ©finitions de caractÃ¨re a Ã©tÃ© actionnÃ©e.
 			if ( !this.textWrapper.IsAttached )  return;
 
 			this.textWrapper.SuspendSynchronizations();
@@ -1268,7 +1268,7 @@ namespace Epsitec.Common.Document
 
 		protected void ParagraphClear()
 		{
-			//	La commande pour effacer les définitions de paragraphe a été actionnée.
+			//	La commande pour effacer les dÃ©finitions de paragraphe a Ã©tÃ© actionnÃ©e.
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
 			this.paragraphWrapper.SuspendSynchronizations();
@@ -1391,7 +1391,7 @@ namespace Epsitec.Common.Document
 
 		protected bool BoldActiveState
 		{
-			//	Donne l'état de la commande 'gras'.
+			//	Donne l'Ã©tat de la commande 'gras'.
 			get
 			{
 				string face  = this.textWrapper.Defined.FontFace;
@@ -1426,7 +1426,7 @@ namespace Epsitec.Common.Document
 
 		protected bool ItalicActiveState
 		{
-			//	Donne l'état de la commande 'italique'.
+			//	Donne l'Ã©tat de la commande 'italique'.
 			get
 			{
 				string face  = this.textWrapper.Defined.FontFace;
@@ -1472,7 +1472,7 @@ namespace Epsitec.Common.Document
 
 		protected bool UnderlineActiveState
 		{
-			//	Donne l'état de la commande 'souligné'.
+			//	Donne l'Ã©tat de la commande 'soulignÃ©'.
 			get
 			{
 				return this.textWrapper.Active.IsUnderlineDefined;
@@ -1481,7 +1481,7 @@ namespace Epsitec.Common.Document
 
 		protected bool OverlineActiveState
 		{
-			//	Donne l'état de la commande 'surligné'.
+			//	Donne l'Ã©tat de la commande 'surlignÃ©'.
 			get
 			{
 				return this.textWrapper.Active.IsOverlineDefined;
@@ -1490,7 +1490,7 @@ namespace Epsitec.Common.Document
 
 		protected bool StrikeoutActiveState
 		{
-			//	Donne l'état de la commande 'biffé'.
+			//	Donne l'Ã©tat de la commande 'biffÃ©'.
 			get
 			{
 				return this.textWrapper.Active.IsStrikeoutDefined;
@@ -1499,7 +1499,7 @@ namespace Epsitec.Common.Document
 
 		protected bool SubscriptActiveState
 		{
-			//	Donne l'état de la commande 'indice'.
+			//	Donne l'Ã©tat de la commande 'indice'.
 			get
 			{
 				return this.textWrapper.Defined.IsXscriptDefined && this.textWrapper.Defined.Xscript.Offset < 0.0;
@@ -1508,7 +1508,7 @@ namespace Epsitec.Common.Document
 
 		protected bool SuperscriptActiveState
 		{
-			//	Donne l'état de la commande 'exposant'.
+			//	Donne l'Ã©tat de la commande 'exposant'.
 			get
 			{
 				return this.textWrapper.Defined.IsXscriptDefined && this.textWrapper.Defined.Xscript.Offset > 0.0;
@@ -1518,7 +1518,7 @@ namespace Epsitec.Common.Document
 
 		protected void CommandActiveState(string name, bool enabled)
 		{
-			//	Modifie l'état d'une commande.
+			//	Modifie l'Ã©tat d'une commande.
 			if ( this.document.CommandDispatcher == null )  return;
 			CommandState cs = this.document.GetCommandState (name);
 			System.Diagnostics.Debug.Assert(cs != null);
@@ -1527,7 +1527,7 @@ namespace Epsitec.Common.Document
 
 		protected void CommandActiveState(string name, bool enabled, bool state)
 		{
-			//	Modifie l'état d'une commande.
+			//	Modifie l'Ã©tat d'une commande.
 			if ( this.document.CommandDispatcher == null )  return;
 			CommandState cs = this.document.GetCommandState (name);
 			System.Diagnostics.Debug.Assert(cs != null);
@@ -1537,7 +1537,7 @@ namespace Epsitec.Common.Document
 
 		protected void CommandActiveState(string name, bool enabled, string advanceState)
 		{
-			//	Modifie l'état d'une commande avancée.
+			//	Modifie l'Ã©tat d'une commande avancÃ©e.
 			if ( this.document.CommandDispatcher == null )  return;
 			CommandState cs = this.document.GetCommandState (name);
 			System.Diagnostics.Debug.Assert(cs != null);
@@ -1548,7 +1548,7 @@ namespace Epsitec.Common.Document
 
 		protected static double SearchNextValue(double value, double[] list, double delta)
 		{
-			//	Cherche la valeur suivante ou précédente dans une liste.
+			//	Cherche la valeur suivante ou prÃ©cÃ©dente dans une liste.
 			value += delta*0.0000001;
 
 			if ( delta > 0 )
@@ -1580,7 +1580,7 @@ namespace Epsitec.Common.Document
 		#region DynamicDrawing
 		public void FontFaceComboUpdate(IconButtonsCombo combo)
 		{
-			//	Le combo pour les polices va être ouvert.
+			//	Le combo pour les polices va Ãªtre ouvert.
 			bool quickOnly = true;
 			string selectedFontFace = null;
 			int quickCount;
@@ -1602,7 +1602,7 @@ namespace Epsitec.Common.Document
 
 		protected bool DrawDynamicImageFontBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
-			//	Dessine une police pour l'icône résumée, pour une image dynamique.
+			//	Dessine une police pour l'icÃ´ne rÃ©sumÃ©e, pour une image dynamique.
 			if (style != GlyphPaintStyle.Normal)
 			{
 				return false;
@@ -1630,7 +1630,7 @@ namespace Epsitec.Common.Document
 				double ox = rect.Left;
 				double oy = rect.Bottom + rect.Height*0.25;
 
-				//	Dessine l'échantillon "Abc".
+				//	Dessine l'Ã©chantillon "Abc".
 				double fontSize = rect.Height*0.85;
 				Color c = adorner.ColorText (WidgetPaintState.Enabled);
 				Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc (id, ox, oy, fontSize);
@@ -1688,7 +1688,7 @@ namespace Epsitec.Common.Document
 				layout.LayoutSize = r.Size;
 				layout.Paint (r.BottomLeft, graphics, r, c, GlyphPaintStyle.Normal);
 
-				//	Dessine l'échantillon "Abc".
+				//	Dessine l'Ã©chantillon "Abc".
 				double fontSize = size.Height*0.85;
 				Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc (id, 140+5, oy, fontSize);
 
@@ -1699,7 +1699,7 @@ namespace Epsitec.Common.Document
 					path.Dispose ();
 				}
 
-				//	Dessine les traits verticaux de séparation.
+				//	Dessine les traits verticaux de sÃ©paration.
 				graphics.AddLine (140+0.5, 0, 140+0.5, size.Height);
 				graphics.RenderSolid (adorner.ColorTextFieldBorder (true));
 			}
@@ -1709,7 +1709,7 @@ namespace Epsitec.Common.Document
 
 		protected bool DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
-			//	Dessine un style pour l'icône résumée, pour une image dynamique.
+			//	Dessine un style pour l'icÃ´ne rÃ©sumÃ©e, pour une image dynamique.
 			if (style != GlyphPaintStyle.Normal)
 			{
 				return false;
@@ -1729,7 +1729,7 @@ namespace Epsitec.Common.Document
 
 				//	Plus la hauteur est petite, plus il faut de place pour le nom, pour qu'il reste lisible.
 				//	Avec h=45, la hauteur pour le nom est de 14, soit environ un tier.
-				//	Avec h=22, la hauteur pour le nom est de 11, soit la moitié.
+				//	Avec h=22, la hauteur pour le nom est de 11, soit la moitiÃ©.
 				double factor = System.Math.Min (0.68 - size.Height*0.36/45, 0.5);
 				double limit = System.Math.Floor (size.Height*factor);
 
@@ -1777,7 +1777,7 @@ namespace Epsitec.Common.Document
 				Rectangle rect = new Rectangle (limit, 0, size.Width-limit, size.Height);
 				this.DrawStyle (graphics, rect, textStyle);
 
-				graphics.AddLine (limit-0.5, 0, limit-0.5, size.Height);  // séparateur vertical
+				graphics.AddLine (limit-0.5, 0, limit-0.5, size.Height);  // sÃ©parateur vertical
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
 			
@@ -1786,7 +1786,7 @@ namespace Epsitec.Common.Document
 
 		protected void DrawStyle(Graphics graphics, Rectangle rect, Text.TextStyle textStyle)
 		{
-			//	Dessine un échantillon de style dans un rectangle.
+			//	Dessine un Ã©chantillon de style dans un rectangle.
 			Rectangle iClip = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(rect);
 
@@ -1865,7 +1865,7 @@ namespace Epsitec.Common.Document
 
 		
 		#region RibbonMemorize
-		//	C'est ici que sont mémorisés les états des IconButtonsCombo dans les rubans.
+		//	C'est ici que sont mÃ©morisÃ©s les Ã©tats des IconButtonsCombo dans les rubans.
 
 		public int RibbonParagraphStyleFirst
 		{

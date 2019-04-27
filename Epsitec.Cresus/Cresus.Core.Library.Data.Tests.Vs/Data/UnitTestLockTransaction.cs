@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers;

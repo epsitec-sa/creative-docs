@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ProgressIndicator implémente la barre d'avance.
+	/// La classe ProgressIndicator implÃ©mente la barre d'avance.
 	/// </summary>
 	public class ProgressIndicator : Widget
 	{

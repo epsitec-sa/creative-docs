@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -9,10 +9,10 @@ namespace Epsitec.Cresus.Core.Documents
 	{
 		public static bool IsPrinterAndPageMatching(PageType printerUnitFunction, PageType pageType)
 		{
-			//	Retourne true si la fonction d'une unité d'impression est compatible avec le type d'une page.
+			//	Retourne true si la fonction d'une unitÃ© d'impression est compatible avec le type d'une page.
 			//	Si oui, bingo, on peut imprimer !
 			if (printerUnitFunction == PageType.All  ||
-				printerUnitFunction == PageType.Copy)  // unité d'impression pour tous les types de page ?
+				printerUnitFunction == PageType.Copy)  // unitÃ© d'impression pour tous les types de page ?
 			{
 				return true;
 			}

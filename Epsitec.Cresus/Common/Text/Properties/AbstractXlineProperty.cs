@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe AbstractXlineProperty sert de base aux propriétés "souligné",
-	/// "biffé", "surligné", etc.
+	/// La classe AbstractXlineProperty sert de base aux propriÃ©tÃ©s "soulignÃ©",
+	/// "biffÃ©", "surlignÃ©", etc.
 	/// </summary>
 	public abstract class AbstractXlineProperty : Property
 	{
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			if (count < properties.Length)
 			{
-				//	Il y a des définitions de soulignements invisibles. Il faut
+				//	Il y a des dÃ©finitions de soulignements invisibles. Il faut
 				//	recopier le tableau en les supprimant :
 				
 				AbstractXlineProperty[] copy  = new AbstractXlineProperty[count];
@@ -236,9 +236,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			if (b.isDisabled)
 			{
-				//	Cas spécial: la deuxième définition indique qu'il faut désacriver
-				//	le soulignement. On construit une définition conforme à la pre-
-				//	mière, avec juste l'information qu'elle est désactivée :
+				//	Cas spÃ©cial: la deuxiÃ¨me dÃ©finition indique qu'il faut dÃ©sacriver
+				//	le soulignement. On construit une dÃ©finition conforme Ã  la pre-
+				//	miÃ¨re, avec juste l'information qu'elle est dÃ©sactivÃ©e :
 				
 				AbstractXlineProperty c = this.EmptyClone () as AbstractXlineProperty;
 				
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 			else
 			{
-				//	Cas normal: la deuxième définition le remporte sur la première.
+				//	Cas normal: la deuxiÃ¨me dÃ©finition le remporte sur la premiÃ¨re.
 				
 				return b;
 			}

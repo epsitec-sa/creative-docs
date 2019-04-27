@@ -9,7 +9,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.FormEngine
 {
 	/// <summary>
-	/// Procédures de manipulation et d'arrangement de listes et d'arbres.
+	/// ProcÃ©dures de manipulation et d'arrangement de listes et d'arbres.
 	/// </summary>
 	public class Arrange
 	{
@@ -23,9 +23,9 @@ namespace Epsitec.Common.FormEngine
 		public void Build(FormDescription baseForm, FormDescription deltaForm, out List<FieldDescription> baseFields, out List<FieldDescription> finalFields, out Druid entityId)
 		{
 			//	Construit la liste des FieldDescription finale.
-			//	S'il s'agit d'un Form delta, cherche tous les Forms qui servent à le définir, jusqu'au Form de base initial:
-			//	 - baseFields contient la liste de base (la génération précédente n-1)
-			//   - finalFields contient la liste finale (la dernière génération n)
+			//	S'il s'agit d'un Form delta, cherche tous les Forms qui servent Ã  le dÃ©finir, jusqu'au Form de base initial:
+			//	 - baseFields contient la liste de base (la gÃ©nÃ©ration prÃ©cÃ©dente n-1)
+			//   - finalFields contient la liste finale (la derniÃ¨re gÃ©nÃ©ration n)
 			//	S'il s'agit d'un Form de base:
 			//	 - baseFields est nul
 			//   - finalFields contient la liste finale
@@ -82,9 +82,9 @@ namespace Epsitec.Common.FormEngine
 		public void Build(FormDescription form, out List<FieldDescription> baseFields, out List<FieldDescription> finalFields)
 		{
 			//	Construit la liste des FieldDescription finale.
-			//	S'il s'agit d'un Form delta, cherche tous les Forms qui servent à le définir, jusqu'au Form de base initial:
-			//	 - baseFields contient la liste de base (la génération précédente n-1)
-			//   - finalFields contient la liste finale (la dernière génération n)
+			//	S'il s'agit d'un Form delta, cherche tous les Forms qui servent Ã  le dÃ©finir, jusqu'au Form de base initial:
+			//	 - baseFields contient la liste de base (la gÃ©nÃ©ration prÃ©cÃ©dente n-1)
+			//   - finalFields contient la liste finale (la derniÃ¨re gÃ©nÃ©ration n)
 			//	S'il s'agit d'un Form de base:
 			//	 - baseFields est nul
 			//   - finalFields contient la liste finale
@@ -94,12 +94,12 @@ namespace Epsitec.Common.FormEngine
 				FormDescription baseForm = form;
 				baseForms.Add(baseForm);
 
-				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas un Form delta.
+				//	Cherche tous les Forms de base, jusqu'Ã  trouver le Form initial qui n'est pas un Form delta.
 				//	Par exemple:
 				//	- Form1 est un masque de base
-				//	- Form2 est un masque delta basé sur Form1
-				//	- Form3 est un masque delta basé sur Form2
-				//	Si on cherche à construire Form3, la liste baseForms contiendra Form3, Form2 et Form1.
+				//	- Form2 est un masque delta basÃ© sur Form1
+				//	- Form3 est un masque delta basÃ© sur Form2
+				//	Si on cherche Ã  construire Form3, la liste baseForms contiendra Form3, Form2 et Form1.
 				while (baseForm != null && baseForm.IsDelta)
 				{
 					string xml = this.resourceProvider.GetFormXmlSource(baseForm.DeltaBaseFormId);
@@ -133,20 +133,20 @@ namespace Epsitec.Common.FormEngine
 
 		public List<FieldDescription> Merge(List<FieldDescription> baseList, List<FieldDescription> deltaList)
 		{
-			//	Retourne la liste finale fusionnée.
+			//	Retourne la liste finale fusionnÃ©e.
 			List<FieldDescription> finalList = new List<FieldDescription>();
 
-			//	Génère la liste fusionnée de tous les champs. Les champs cachés sont quand même dans la liste,
-			//	mais avec la propriété DeltaHidden = true.
+			//	GÃ©nÃ¨re la liste fusionnÃ©e de tous les champs. Les champs cachÃ©s sont quand mÃªme dans la liste,
+			//	mais avec la propriÃ©tÃ© DeltaHidden = true.
 			if (baseList != null)
 			{
 				foreach (FieldDescription field in baseList)
 				{
 					FieldDescription copy = new FieldDescription(field);
 
-					//	Un élément inséré dans un masque delta 'A' ne doit pas être vu comme DeltaInserted
-					//	dans les masques suivants qui héritent de 'A'. En effet, il doit être alors possible
-					//	de le montrer/cacher, mais pas de le supprimer réellement (par exemple) !
+					//	Un Ã©lÃ©ment insÃ©rÃ© dans un masque delta 'A' ne doit pas Ãªtre vu comme DeltaInserted
+					//	dans les masques suivants qui hÃ©ritent de 'A'. En effet, il doit Ãªtre alors possible
+					//	de le montrer/cacher, mais pas de le supprimer rÃ©ellement (par exemple) !
 					copy.DeltaInserted = false;
 
 					if (deltaList != null)
@@ -154,7 +154,7 @@ namespace Epsitec.Common.FormEngine
 						int index = Arrange.IndexOfGuid(deltaList, field.Guid);
 						if (index != -1 && deltaList[index].DeltaHidden)
 						{
-							copy.DeltaHidden = true;  // champ à cacher
+							copy.DeltaHidden = true;  // champ Ã  cacher
 						}
 					}
 					finalList.Add(copy);
@@ -165,13 +165,13 @@ namespace Epsitec.Common.FormEngine
 			{
 				foreach (FieldDescription field in deltaList)
 				{
-					//	On considère qu'un champ provenant de la liste delta a des liens corrects, tant que
-					//	l'on n'a pas effectivement échoué de le lier aux champs de la liste finale.
+					//	On considÃ¨re qu'un champ provenant de la liste delta a des liens corrects, tant que
+					//	l'on n'a pas effectivement Ã©chouÃ© de le lier aux champs de la liste finale.
 					field.DeltaBrokenAttach = false;
 
-					if (field.DeltaShowed)  // champ à montrer (pour inverser un DeltaHidden) ?
+					if (field.DeltaShowed)  // champ Ã  montrer (pour inverser un DeltaHidden) ?
 					{
-						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer
+						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ Ã  dÃ©placer
 						if (src != -1)
 						{
 							finalList[src].DeltaHidden = false;
@@ -179,18 +179,18 @@ namespace Epsitec.Common.FormEngine
 						}
 					}
 
-					if (field.DeltaMoved)  // champ à déplacer ?
+					if (field.DeltaMoved)  // champ Ã  dÃ©placer ?
 					{
-						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer
+						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ Ã  dÃ©placer
 						if (src != -1)
 						{
-							//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+							//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut dÃ©placer l'Ã©lÃ©ment en tÃªte
 							//	de liste.
-							int dst = -1;  // position pour mettre en-tête de liste
+							int dst = -1;  // position pour mettre en-tÃªte de liste
 							if (field.DeltaAttachGuid != System.Guid.Empty)
 							{
-								dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
-								if (dst == -1)  // l'élément d'attache n'existe plus ?
+								dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche oÃ¹ le dÃ©placer
+								if (dst == -1)  // l'Ã©lÃ©ment d'attache n'existe plus ?
 								{
 									field.DeltaBrokenAttach = true;
 									continue;  // on laisse le champ ici
@@ -200,34 +200,34 @@ namespace Epsitec.Common.FormEngine
 							FieldDescription temp = finalList[src];
 							finalList.RemoveAt(src);
 
-							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // recalcule le "où" après suppression
-							finalList.Insert(dst+1, temp);  // remet l'élément après dst
+							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // recalcule le "oÃ¹" aprÃ¨s suppression
+							finalList.Insert(dst+1, temp);  // remet l'Ã©lÃ©ment aprÃ¨s dst
 
 							temp.DeltaMoved = true;
 						}
 					}
 
-					if (field.DeltaInserted)  // champ à insérer ?
+					if (field.DeltaInserted)  // champ Ã  insÃ©rer ?
 					{
-						//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+						//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut dÃ©placer l'Ã©lÃ©ment en tÃªte
 						//	de liste.
-						int dst = -1;  // position pour mettre en-tête de liste
+						int dst = -1;  // position pour mettre en-tÃªte de liste
 						if (field.DeltaAttachGuid != System.Guid.Empty)
 						{
-							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
-							if (dst == -1)  // l'élément d'attache n'existe plus ?
+							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche oÃ¹ le dÃ©placer
+							if (dst == -1)  // l'Ã©lÃ©ment d'attache n'existe plus ?
 							{
-								dst = finalList.Count-1;  // on insère le champ à la fin
+								dst = finalList.Count-1;  // on insÃ¨re le champ Ã  la fin
 								field.DeltaBrokenAttach = true;
 							}
 						}
 
 						FieldDescription copy = new FieldDescription(field);
 						copy.DeltaInserted = true;
-						finalList.Insert(dst+1, copy);  // insère l'élément après dst
+						finalList.Insert(dst+1, copy);  // insÃ¨re l'Ã©lÃ©ment aprÃ¨s dst
 					}
 
-					if (field.DeltaModified || field.DeltaForwardTab)  // champ à modifier ?
+					if (field.DeltaModified || field.DeltaForwardTab)  // champ Ã  modifier ?
 					{
 						int index = Arrange.IndexOfGuid(finalList, field.Guid);
 						if (index != -1)
@@ -235,7 +235,7 @@ namespace Epsitec.Common.FormEngine
 							finalList.RemoveAt(index);  // supprime le champ original
 
 							FieldDescription copy = new FieldDescription(field);
-							finalList.Insert(index, copy);  // et remplace-le par le champ modifié
+							finalList.Insert(index, copy);  // et remplace-le par le champ modifiÃ©
 						}
 					}
 				}
@@ -247,8 +247,8 @@ namespace Epsitec.Common.FormEngine
 
 		public string Check(List<FieldDescription> list)
 		{
-			//	Vérifie une liste. Retourne null si tout est ok, ou un message d'erreur.
-			//	Les sous-masques (SubForm) n'ont pas encore été développés.
+			//	VÃ©rifie une liste. Retourne null si tout est ok, ou un message d'erreur.
+			//	Les sous-masques (SubForm) n'ont pas encore Ã©tÃ© dÃ©veloppÃ©s.
 			int level = 0;
 
 			foreach (FieldDescription field in list)
@@ -268,14 +268,14 @@ namespace Epsitec.Common.FormEngine
 					level--;
 					if (level < 0)
 					{
-						return "Il manque un début de boîte";
+						return "Il manque un dÃ©but de boÃ®te";
 					}
 				}
 			}
 
 			if (level > 0)
 			{
-				return "Il manque une fin de boîte";
+				return "Il manque une fin de boÃ®te";
 			}
 
 			return null;
@@ -285,11 +285,11 @@ namespace Epsitec.Common.FormEngine
 		public List<FieldDescription> Organize(List<FieldDescription> fields)
 		{
 			//	Arrange une liste.
-			//	Les sous-masques (SubForm) se comportent comme un début de groupe (BoxBegin),
-			//	car ils ont déjà été développés en SubForm-Field-Field-BoxEnd.
+			//	Les sous-masques (SubForm) se comportent comme un dÃ©but de groupe (BoxBegin),
+			//	car ils ont dÃ©jÃ  Ã©tÃ© dÃ©veloppÃ©s en SubForm-Field-Field-BoxEnd.
 			List<FieldDescription> list = new List<FieldDescription>();
 
-			//	Copie la liste en remplaçant les Glue successifs par un suel.
+			//	Copie la liste en remplaÃ§ant les Glue successifs par un suel.
 			bool isGlue = false;
 			foreach (FieldDescription field in fields)
 			{
@@ -310,14 +310,14 @@ namespace Epsitec.Common.FormEngine
 				list.Add(field);
 			}
 
-			//	Si un séparateur est dans une 'ligne', déplace-le au début de la ligne.
+			//	Si un sÃ©parateur est dans une 'ligne', dÃ©place-le au dÃ©but de la ligne.
 			//	Par exemple:
 			//	'Field-Glue-Field-Glue-Sep-Field' -> 'Sep-Field-Glue-Field-Glue-Field'
 			//	'Field-Glue-Field-Sep-Glue-Field' -> 'Sep-Field-Glue-Field-Glue-Field'
 			for (int i=0; i<list.Count; i++)
 			{
 				if (list[i].Type == FieldDescription.FieldType.Line ||
-					list[i].Type == FieldDescription.FieldType.Title)  // séparateur ?
+					list[i].Type == FieldDescription.FieldType.Title)  // sÃ©parateur ?
 				{
 					int j = i;
 					bool move;
@@ -334,7 +334,7 @@ namespace Epsitec.Common.FormEngine
 							move = true;
 						}
 
-						if (j > 0 && j < list.Count-1 && list[j+1].Type == FieldDescription.FieldType.Glue)  // glue après ?
+						if (j > 0 && j < list.Count-1 && list[j+1].Type == FieldDescription.FieldType.Glue)  // glue aprÃ¨s ?
 						{
 							FieldDescription sep = list[j];
 							list.RemoveAt(j);
@@ -343,7 +343,7 @@ namespace Epsitec.Common.FormEngine
 							move = true;
 						}
 					}
-					while (move);  // recommence tant qu'on a pu déplacer
+					while (move);  // recommence tant qu'on a pu dÃ©placer
 				}
 			}
 
@@ -353,9 +353,9 @@ namespace Epsitec.Common.FormEngine
 
 		public List<FieldDescription> DevelopSubForm(List<FieldDescription> list)
 		{
-			//	Retourne une liste développée qui ne contient plus de sous-masque.
-			//	Un sous-masque (SubForm) se comporte alors comme un début de groupe (BoxBegin).
-			//	Un BoxEnd correspond à chaque SubForm.
+			//	Retourne une liste dÃ©veloppÃ©e qui ne contient plus de sous-masque.
+			//	Un sous-masque (SubForm) se comporte alors comme un dÃ©but de groupe (BoxBegin).
+			//	Un BoxEnd correspond Ã  chaque SubForm.
 			List<FieldDescription> dst = new List<FieldDescription>();
 
 			this.DevelopSubForm(dst, list, null, null);
@@ -387,10 +387,10 @@ namespace Epsitec.Common.FormEngine
 						dst.Add(field);  // met le SubForm, qui se comportera comme un BoxBegin
 
 						string p = string.Concat(prefix, field.GetPath(null), ".");
-						this.DevelopSubForm(dst, subForm.Fields, field, p);  // met les champs du sous-masque dans la boîte
+						this.DevelopSubForm(dst, subForm.Fields, field, p);  // met les champs du sous-masque dans la boÃ®te
 
 						FieldDescription boxEnd = new FieldDescription(FieldDescription.FieldType.BoxEnd);
-						dst.Add(boxEnd);  // met le BoxEnd pour terminer la boîte SubForm
+						dst.Add(boxEnd);  // met le BoxEnd pour terminer la boÃ®te SubForm
 					}
 				}
 				else
@@ -413,7 +413,7 @@ namespace Epsitec.Common.FormEngine
 
 		public List<FieldDescription> Develop(List<FieldDescription> fields)
 		{
-			//	Retourne une liste développée qui ne contient plus de noeuds.
+			//	Retourne une liste dÃ©veloppÃ©e qui ne contient plus de noeuds.
 			List<FieldDescription> dst = new List<FieldDescription>();
 
 			this.Develop(dst, fields);
@@ -439,7 +439,7 @@ namespace Epsitec.Common.FormEngine
 
 		static public int IndexOfGuid(List<FieldDescription> list, System.Guid guid)
 		{
-			//	Retourne l'index de l'élément utilisant un Guid donné.
+			//	Retourne l'index de l'Ã©lÃ©ment utilisant un Guid donnÃ©.
 			//	Retourne -1 s'il n'en existe aucun.
 			for (int i=0; i<list.Count; i++)
 			{

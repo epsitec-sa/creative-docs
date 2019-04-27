@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -15,27 +15,27 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Dialogs
 {
-	public class DébitCréditDialog : AbstractDialog
+	public class DÃ©bitCrÃ©ditDialog : AbstractDialog
 	{
 		/// <summary>
-		/// Demande s'il faut passer la TVA sur le compte au débit ou au crédit.
+		/// Demande s'il faut passer la TVA sur le compte au dÃ©bit ou au crÃ©dit.
 		/// </summary>
 		/// <param name="controller"></param>
-		public DébitCréditDialog(AbstractController controller, ComptaCompteEntity débit, ComptaCompteEntity crédit)
+		public DÃ©bitCrÃ©ditDialog(AbstractController controller, ComptaCompteEntity dÃ©bit, ComptaCompteEntity crÃ©dit)
 			: base (controller)
 		{
-			this.débit  = débit;
-			this.crédit = crédit;
+			this.dÃ©bit  = dÃ©bit;
+			this.crÃ©dit = crÃ©dit;
 		}
 
 
-		public bool IsDébit
+		public bool IsDÃ©bit
 		{
 			get;
 			private set;
 		}
 
-		public bool IsCrédit
+		public bool IsCrÃ©dit
 		{
 			get;
 			private set;
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Dialogs
 		
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Compta.Dialogs
 				this.window.MakeFixedSizeWindow ();
 				this.window.Root.WindowStyles = WindowStyles.HasCloseButton;
 				//?this.window.PreventAutoClose = true;
-				this.WindowInit ("DébitCréditDialog", 320, 130, true);
+				this.WindowInit ("DÃ©bitCrÃ©ditDialog", 320, 130, true);
 				this.window.Text = "Question";
 				this.window.Owner = this.parentWindow;
 				this.window.Root.Padding = new Margins (10-1, 10-1, 10, 10);
@@ -76,8 +76,8 @@ namespace Epsitec.Cresus.Compta.Dialogs
 					Margins = new Margins (0, 0, 2, 0),
 				};
 
-				this.CreateInfo (info, this.débit);
-				this.CreateInfo (info, this.crédit);
+				this.CreateInfo (info, this.dÃ©bit);
+				this.CreateInfo (info, this.crÃ©dit);
 
 				//	Boutons de fermeture (sur les informations).
 				var footer = new FrameBox
@@ -88,41 +88,41 @@ namespace Epsitec.Cresus.Compta.Dialogs
 					Dock                = DockStyle.Bottom,
 				};
 
-				var débitButton = new Button
+				var dÃ©bitButton = new Button
 				{
 					Parent        = footer,
-					FormattedText = FormattedText.Concat ("Débit").ApplyFontSize (15.0),
+					FormattedText = FormattedText.Concat ("DÃ©bit").ApplyFontSize (15.0),
 					Dock          = DockStyle.Fill,
 					Margins       = new Margins (1, 1, 0, 0),
 				};
 
-				var créditButton = new Button
+				var crÃ©ditButton = new Button
 				{
 					Parent        = footer,
-					FormattedText = FormattedText.Concat ("Crédit").ApplyFontSize (15.0),
+					FormattedText = FormattedText.Concat ("CrÃ©dit").ApplyFontSize (15.0),
 					Dock          = DockStyle.Fill,
 					Margins       = new Margins (1, 1, 0, 0),
 				};
 
-				débitButton.Clicked += delegate
+				dÃ©bitButton.Clicked += delegate
 				{
-					this.IsDébit = true;
+					this.IsDÃ©bit = true;
 					this.parentWindow.MakeActive ();
 					this.window.Hide ();
 					this.OnClosed ();
 				};
 
-				créditButton.Clicked += delegate
+				crÃ©ditButton.Clicked += delegate
 				{
-					this.IsCrédit = true;
+					this.IsCrÃ©dit = true;
 					this.parentWindow.MakeActive ();
 					this.window.Hide ();
 					this.OnClosed ();
 				};
 			}
 
-			this.IsDébit  = false;
-			this.IsCrédit = false;
+			this.IsDÃ©bit  = false;
+			this.IsCrÃ©dit = false;
 
 			this.window.ShowDialog();
 		}
@@ -133,10 +133,10 @@ namespace Epsitec.Cresus.Compta.Dialogs
 
 			if (compte != null)
 			{
-				//	On met la couleur verte aux comptes de charge/produit pour inciter à les utiliser.
-				//	A l'inverse, les comptes actif/passif ont la couleur rouge, pour décourager de les choisir.
-				if (compte.Catégorie == CatégorieDeCompte.Charge ||
-					compte.Catégorie == CatégorieDeCompte.Produit)
+				//	On met la couleur verte aux comptes de charge/produit pour inciter Ã  les utiliser.
+				//	A l'inverse, les comptes actif/passif ont la couleur rouge, pour dÃ©courager de les choisir.
+				if (compte.CatÃ©gorie == CatÃ©gorieDeCompte.Charge ||
+					compte.CatÃ©gorie == CatÃ©gorieDeCompte.Produit)
 				{
 					color = UIBuilder.CompteYesColor;
 				}
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Compta.Dialogs
 			new StaticText
 			{
 				Parent           = frame,
-				FormattedText    = (compte == null) ? FormattedText.Empty : compte.Numéro.ApplyBold (),
+				FormattedText    = (compte == null) ? FormattedText.Empty : compte.NumÃ©ro.ApplyBold (),
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				PreferredHeight  = 20,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Dialogs
 		}
 
 
-		private ComptaCompteEntity		débit;
-		private ComptaCompteEntity		crédit;
+		private ComptaCompteEntity		dÃ©bit;
+		private ComptaCompteEntity		crÃ©dit;
 	}
 }

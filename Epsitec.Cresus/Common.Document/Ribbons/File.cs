@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonNew == null )  return;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleLastModelsPressed(object sender, MessageEventArgs e)
 		{
-			//	Bouton pour ouvrir le menu des derniers modèles cliqué.
+			//	Bouton pour ouvrir le menu des derniers modÃ¨les cliquÃ©.
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;
 			VMenu menu = this.BuildLastModelsMenu();
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleLastFilesPressed(object sender, MessageEventArgs e)
 		{
-			//	Bouton pour ouvrir le menu des derniers fichiers cliqué.
+			//	Bouton pour ouvrir le menu des derniers fichiers cliquÃ©.
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;
 			VMenu menu = this.BuildLastFilenamesMenu();
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected VMenu BuildLastModelsMenu()
 		{
-			//	Construit le sous-menu des derniers modèles ouverts.
+			//	Construit le sous-menu des derniers modÃ¨les ouverts.
 			int total = this.globalSettings.LastModelCount;
 			if ( total == 0 )  return null;
 

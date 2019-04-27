@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.ComptaNG.Common.Records
 {
-	public enum CatégorieDeCompte
+	public enum CatÃ©gorieDeCompte
 	{
 		Inconnu,
 		Actif,

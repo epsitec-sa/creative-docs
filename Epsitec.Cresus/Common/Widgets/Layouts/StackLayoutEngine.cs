@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -33,8 +33,8 @@ namespace Epsitec.Common.Widgets.Layouts
 					  (child.Dock != DockStyle.StackEnd) ) ||
 					(child.Visibility == false))
 				{
-					//	Saute les widgets qui ne sont pas "stacked", car ils doivent être
-					//	positionnés par d'autres moyens.
+					//	Saute les widgets qui ne sont pas "stacked", car ils doivent Ãªtre
+					//	positionnÃ©s par d'autres moyens.
 					
 					continue;
 				}
@@ -53,11 +53,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (dx.IsSafeNaN ())
 				{
-					dx = child.GetCurrentBounds ().Width;		//	TODO: améliorer
+					dx = child.GetCurrentBounds ().Width;		//	TODO: amÃ©liorer
 				}
 				if (dy.IsSafeNaN ())
 				{
-					dy = child.GetCurrentBounds ().Height;		//	TODO: améliorer
+					dy = child.GetCurrentBounds ().Height;		//	TODO: amÃ©liorer
 				}
 
 				dx += margins.Width;

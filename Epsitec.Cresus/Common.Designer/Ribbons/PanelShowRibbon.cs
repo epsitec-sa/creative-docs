@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe PanelShow permet de gérer la sélection.
+	/// La classe PanelShow permet de gÃ©rer la sÃ©lection.
 	/// </summary>
 	public class PanelShowRibbon : AbstractRibbon
 	{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonShowConstrain == null )  return;

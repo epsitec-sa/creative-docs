@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets.Adorners
 {
 	/// <summary>
-	/// La classe Adorner.Default implémente le décorateur par défaut.
+	/// La classe Adorner.Default implÃ©mente le dÃ©corateur par dÃ©faut.
 	/// </summary>
 	public class Default : AbstractAdorner
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		protected override void RefreshColors()
 		{
-			//	Initialise les couleurs en fonction des réglages de Windows.
+			//	Initialise les couleurs en fonction des rÃ©glages de Windows.
 			double r,g,b;
 
 			this.colorBlack             = Drawing.Color.FromBrightness(0);
@@ -31,8 +31,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaptionNF         = Drawing.Color.FromName("ControlDark");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 			this.colorInfo              = Drawing.Color.FromName("Info");
-			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
-			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pÃ¢le
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pÃ¢le
 
 			r = 1-(1-this.colorControlLight.R)/2;
 			g = 1-(1-this.colorControlLight.G)/2;
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets.Adorners
 										  Drawing.Rectangle paintRect,
 										  WidgetPaintState state)
 		{
-			//	Dessine le fond d'une fenêtre.
+			//	Dessine le fond d'une fenÃªtre.
 			graphics.AddFilledRectangle(paintRect);
 			graphics.RenderSolid(this.colorWindow);
 		}
@@ -62,13 +62,13 @@ namespace Epsitec.Common.Widgets.Adorners
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
-			//	Dessine une icône simple (dans un bouton d'ascenseur par exemple).
+			//	Dessine une icÃ´ne simple (dans un bouton d'ascenseur par exemple).
 			Drawing.Color color = this.colorBlack;
 
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
-				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
-				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.5, 0.0);  // vert foncé
+				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncÃ©
+				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.5, 0.0);  // vert foncÃ©
 			}
 			else
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets.Adorners
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
-			//	Dessine une icône simple (dans un bouton d'ascenseur par exemple).
+			//	Dessine une icÃ´ne simple (dans un bouton d'ascenseur par exemple).
 			if ( type == GlyphShape.ResizeKnob )
 			{
 				Drawing.Point p = rect.BottomRight;
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				rect.Height = rect.Width;
 			}
 
-			if (state.HasFlag (WidgetPaintState.Engaged))  // bouton pressé ?
+			if (state.HasFlag (WidgetPaintState.Engaged))  // bouton pressÃ© ?
 			{
 				rect.Offset (1, -1);
 			}
@@ -323,10 +323,10 @@ namespace Epsitec.Common.Widgets.Adorners
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetPaintState state)
 		{
-			//	Dessine un bouton à cocher sans texte.
+			//	Dessine un bouton Ã  cocher sans texte.
 			rect = graphics.Align (rect);
 			graphics.AddFilledRectangle(rect);
-			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 			{
 				graphics.RenderSolid(this.colorControl);
 			}
@@ -341,16 +341,16 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Rectangle rInside = rect;
 			rInside.Deflate(1);
 
-			//	Ombre claire en bas à droite.
+			//	Ombre claire en bas Ã  droite.
 			Direction shadow = Direction.Up;
 			this.PaintL(graphics, rect, this.colorControlLightLight, shadow);
 			this.PaintL(graphics, rInside, this.colorControlLight, shadow);
 
-			//	Ombre foncée en haut à droite.
+			//	Ombre foncÃ©e en haut Ã  droite.
 			this.PaintL(graphics, rect, this.colorControlDarkDark, this.Opposite(shadow));
 			this.PaintL(graphics, rInside, this.colorControlDark, this.Opposite(shadow));
 
-			if ( (state&WidgetPaintState.ActiveYes) != 0 )  // coché ?
+			if ( (state&WidgetPaintState.ActiveYes) != 0 )  // cochÃ© ?
 			{
 				Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 				using (Drawing.Path path = new Drawing.Path())
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 			}
 
-			if ( (state&WidgetPaintState.ActiveMaybe) != 0 )  // 3ème état ?
+			if ( (state&WidgetPaintState.ActiveMaybe) != 0 )  // 3Ã¨me Ã©tat ?
 			{
 				rect.Deflate(3);
 				graphics.AddFilledRectangle(rect);
@@ -398,18 +398,18 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Rectangle rInside = rect;
 			rInside.Deflate(1);
 
-			//	Ombre claire en bas à droite.
+			//	Ombre claire en bas Ã  droite.
 			Direction shadow = Direction.Up;
 			this.PaintHalfCircle(graphics, rect, this.colorControlLightLight, shadow);
 			this.PaintHalfCircle(graphics, rInside, this.colorControlLight, shadow);
 
-			//	Ombre foncée en haut à droite.
+			//	Ombre foncÃ©e en haut Ã  droite.
 			this.PaintHalfCircle(graphics, rect, this.colorControlDarkDark, this.Opposite(shadow));
 			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, this.Opposite(shadow));
 
 			rInside = rect;
 			rInside.Deflate(2);
-			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 			{
 				this.PaintCircle(graphics, rInside, this.colorControl);
 			}
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				this.PaintCircle(graphics, rInside, this.colorControlLightLight);
 			}
 
-			if ( (state&WidgetPaintState.ActiveYes) != 0 )  // coché ?
+			if ( (state&WidgetPaintState.ActiveYes) != 0 )  // cochÃ© ?
 			{
 				rInside = rect;
 				rInside.Deflate(rect.Height*0.3);
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
 
-				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 				{
 					//	Rectangle noir autour.
 					Drawing.Rectangle rOut = rect;
@@ -488,11 +488,11 @@ namespace Epsitec.Common.Widgets.Adorners
 						rInside.Deflate(1);
 					}
 
-					//	Ombre claire en haut à gauche.
+					//	Ombre claire en haut Ã  gauche.
 					this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 					this.PaintL(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
-					//	Ombre foncée en bas à droite.
+					//	Ombre foncÃ©e en bas Ã  droite.
 					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 					this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 				}
@@ -515,16 +515,16 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
 
-				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 				{
 					shadow = this.Opposite(shadow);
 				}
 
-				//	Ombre claire en haut à gauche.
+				//	Ombre claire en haut Ã  gauche.
 				this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
 				this.PaintL(graphics, rInside, this.colorControlLightLight, this.Opposite(shadow));
 
-				//	Ombre foncée en bas à droite.
+				//	Ombre foncÃ©e en bas Ã  droite.
 				this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
@@ -539,16 +539,16 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
 
-				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 				{
 					shadow = this.Opposite(shadow);
 				}
 
-				//	Ombre claire en haut à gauche.
+				//	Ombre claire en haut Ã  gauche.
 				this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
 				this.PaintL(graphics, rInside, this.colorControlLightLight, this.Opposite(shadow));
 
-				//	Ombre foncée en bas à droite.
+				//	Ombre foncÃ©e en bas Ã  droite.
 				this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
@@ -556,7 +556,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					  style == ButtonStyle.ComboItem )
 			{
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activÃ© ?
 				{
 					graphics.RenderSolid(this.colorControlLight);
 				}
@@ -568,19 +568,19 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.LineWidth = 1;
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
-				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 				{
 					shadow = this.Opposite(shadow);
 				}
-				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activÃ© ?
 				{
 					shadow = this.Opposite(shadow);
 				}
 
-				//	Ombre claire en haut à gauche.
+				//	Ombre claire en haut Ã  gauche.
 				this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 
-				//	Ombre foncée en bas à droite.
+				//	Ombre foncÃ©e en bas Ã  droite.
 				this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 			}
 			else if ( style == ButtonStyle.ActivableIcon )
@@ -591,7 +591,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetPaintState.ActiveYes)   != 0 ||   // bouton activé ?
+				if ( (state&WidgetPaintState.ActiveYes)   != 0 ||   // bouton activÃ© ?
 					 (state&WidgetPaintState.ActiveMaybe) != 0 )
 				{
 					graphics.RenderSolid(this.colorControlLight);
@@ -604,48 +604,48 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.LineWidth = 1;
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
-				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 				{
 					shadow = this.Opposite(shadow);
 				}
-				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activÃ© ?
 				{
 					shadow = this.Opposite(shadow);
 				}
 
 				if ( AbstractAdorner.IsThreeState2(state) )
 				{
-					//	Ombre claire en haut à gauche.
+					//	Ombre claire en haut Ã  gauche.
 					this.PaintL2(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 
-					//	Ombre foncée en bas à droite.
+					//	Ombre foncÃ©e en bas Ã  droite.
 					this.PaintL2(graphics, rect, this.colorControlDarkDark, shadow);
 				}
 				else
 				{
-					//	Ombre claire en haut à gauche.
+					//	Ombre claire en haut Ã  gauche.
 					this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 
-					//	Ombre foncée en bas à droite.
+					//	Ombre foncÃ©e en bas Ã  droite.
 					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				}
 			}
 			else if ( style == ButtonStyle.Confirmation )
 			{
-				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolÃ© ?
 				{
-					//	Ombre claire en haut à gauche.
+					//	Ombre claire en haut Ã  gauche.
 					this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
 
-					//	Ombre foncée en bas à droite.
+					//	Ombre foncÃ©e en bas Ã  droite.
 					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				}
-				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressÃ© ?
 				{
-					//	Ombre claire en haut à gauche.
+					//	Ombre claire en haut Ã  gauche.
 					this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
 
-					//	Ombre foncée en bas à droite.
+					//	Ombre foncÃ©e en bas Ã  droite.
 					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				}
 			}
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le texte d'un bouton.
 			if ( text == null )  return;
 
-			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 			{
 				pos.X ++;
 				pos.Y --;
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 TextFieldDisplayMode mode,
 											 bool readOnly, bool isMultilingual)
 		{
-			//	Dessine le fond d'une ligne éditable.
+			//	Dessine le fond d'une ligne Ã©ditable.
 			if ( style == TextFieldStyle.Normal ||
 				 style == TextFieldStyle.Multiline  ||
 				 style == TextFieldStyle.Combo  ||
@@ -758,12 +758,12 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
 
-				//	Ombre foncée en haut à gauche.
+				//	Ombre foncÃ©e en haut Ã  gauche.
 				Direction shadow = Direction.Up;
 				this.PaintL(graphics, rect, this.colorControlDark, this.Opposite(shadow));
 				this.PaintL(graphics, rInside, this.colorControlDarkDark, this.Opposite(shadow));
 
-				//	Ombre claire en bas à droite.
+				//	Ombre claire en bas Ã  droite.
 				this.PaintL(graphics, rect, this.colorControlLightLight, shadow);
 				this.PaintL(graphics, rInside, this.colorControlLight, shadow);
 			}
@@ -850,7 +850,7 @@ namespace Epsitec.Common.Widgets.Adorners
 										  Widgets.WidgetPaintState state,
 										  Widgets.Direction dir)
 		{
-			//	Dessine le fond d'un potentiomètre linéaire.
+			//	Dessine le fond d'un potentiomÃ¨tre linÃ©aire.
 			if ( dir == Widgets.Direction.Left )
 			{
 				Drawing.Point p1 = graphics.Align(new Drawing.Point (sliderRect.Left +frameRect.Height*0.2, frameRect.Center.Y));
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Widgets.Adorners
 									  Widgets.WidgetPaintState state,
 									  Widgets.Direction dir)
 		{
-			//	Dessine la cabine d'un potentiomètre linéaire.
+			//	Dessine la cabine d'un potentiomÃ¨tre linÃ©aire.
 			graphics.AddFilledRectangle(thumbRect);
 			graphics.RenderSolid(this.colorControl);
 
@@ -904,16 +904,16 @@ namespace Epsitec.Common.Widgets.Adorners
 			rInside.Deflate(1);
 
 			Direction shadow = Direction.Up;
-			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressÃ© ?
 			{
 				shadow = this.Opposite(shadow);
 			}
 
-			//	Ombre claire en haut à gauche.
+			//	Ombre claire en haut Ã  gauche.
 			this.PaintL(graphics, thumbRect, this.colorControlLight, this.Opposite(shadow));
 			this.PaintL(graphics, rInside, this.colorControlLightLight, this.Opposite(shadow));
 
-			//	Ombre foncée en bas à droite.
+			//	Ombre foncÃ©e en bas Ã  droite.
 			this.PaintL(graphics, thumbRect, this.colorControlDarkDark, shadow);
 			this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 		}
@@ -1050,12 +1050,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Rectangle rInside = rect;
 			rInside.Deflate(1);
 
-			//	Ombre claire en haut à gauche.
+			//	Ombre claire en haut Ã  gauche.
 			Direction shadow = Direction.Up;
 			this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 			this.PaintL(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
-			//	Ombre foncée en bas à droite.
+			//	Ombre foncÃ©e en bas Ã  droite.
 			this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 			this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 		}
@@ -1092,7 +1092,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Widgets.WidgetPaintState state,
 											 Widgets.Direction dir)
 		{
-			//	Dessine un onglet derrière (non sélectionné).
+			//	Dessine un onglet derriÃ¨re (non sÃ©lectionnÃ©).
 			titleRect.Right += 1;
 			this.PaintTabBackground(graphics, frameRect, titleRect, state, dir);
 		}
@@ -1183,12 +1183,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Rectangle rInside = rect;
 			rInside.Deflate(1);
 
-			//	Ombre foncée en haut à gauche.
+			//	Ombre foncÃ©e en haut Ã  gauche.
 			Direction shadow = Direction.Up;
 			this.PaintL(graphics, rect, this.colorControlDark, this.Opposite(shadow));
 			this.PaintL(graphics, rInside, this.colorControlDarkDark, this.Opposite(shadow));
 
-			//	Ombre claire en bas à droite.
+			//	Ombre claire en bas Ã  droite.
 			this.PaintL(graphics, rect, this.colorControlLightLight, shadow);
 			this.PaintL(graphics, rInside, this.colorControlLight, shadow);
 
@@ -1235,7 +1235,7 @@ namespace Epsitec.Common.Widgets.Adorners
 										  WidgetPaintState state,
 										  Direction dir)
 		{
-			//	Dessine le fond d'un bouton d'en-tête de tableau.
+			//	Dessine le fond d'un bouton d'en-tÃªte de tableau.
 			this.PaintButtonBackground(graphics, rect, state, dir, ButtonStyle.Scroller);
 		}
 
@@ -1292,11 +1292,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Rectangle rInside = rect;
 			rInside.Deflate(1);
 
-			//	Ombre claire en haut à gauche.
+			//	Ombre claire en haut Ã  gauche.
 			this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 			this.PaintL(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
-			//	Ombre foncée en bas à droite.
+			//	Ombre foncÃ©e en bas Ã  droite.
 			this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 			this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 #endif
@@ -1374,7 +1374,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Direction dir,
 											 bool optional)
 		{
-			//	Dessine un séparateur horizontal ou vertical.
+			//	Dessine un sÃ©parateur horizontal ou vertical.
 			if ( optional )  return;
 
 			if ( dir == Direction.Right )
@@ -1421,7 +1421,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											  WidgetPaintState state,
 											  Direction dir)
 		{
-			//	Dessine un bouton séparateur de panneaux.
+			//	Dessine un bouton sÃ©parateur de panneaux.
 			double x, y;
 			if ( dir == Direction.Down || dir == Direction.Up )
 			{
@@ -1545,9 +1545,9 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			if ( (state&WidgetPaintState.ActiveYes) == 0 )  return;  // bouton activé ?
+			if ( (state&WidgetPaintState.ActiveYes) == 0 )  return;  // bouton activÃ© ?
 
-			rect.Bottom -= 4;  // pour cacher la partie inférieure !
+			rect.Bottom -= 4;  // pour cacher la partie infÃ©rieure !
 			state &= ~WidgetPaintState.ActiveYes;
 			this.PaintButtonBackground(graphics, rect, state, Widgets.Direction.None, ButtonStyle.ToolItem);
 		}
@@ -1619,12 +1619,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Rectangle rInside = rect;
 			rInside.Deflate(1);
 
-			//	Ombre foncée en bas à droite.
+			//	Ombre foncÃ©e en bas Ã  droite.
 			Direction shadow = Direction.Up;
 			this.PaintHalfCircle(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 			this.PaintHalfCircle(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
-			//	Ombre claire en haut à droite.
+			//	Ombre claire en haut Ã  droite.
 			this.PaintHalfCircle(graphics, rect, this.colorControlDarkDark, shadow);
 			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, shadow);
 
@@ -1701,7 +1701,7 @@ namespace Epsitec.Common.Widgets.Adorners
 												 TextLayout.SelectedArea[] areas,
 												 WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode)
 		{
-			//	Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
+			//	Dessine les zones rectanglaires correspondant aux caractÃ¨res sÃ©lectionnÃ©s.
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				graphics.AddFilledRectangle(areas[i].Rect);
@@ -1804,7 +1804,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			switch ( dir )
 			{
-				case Direction.Up:	// en bas à droite
+				case Direction.Up:	// en bas Ã  droite
 					p1.X = rect.Left;
 					p1.Y = rect.Bottom+0.5;
 					p2.X = rect.Right;
@@ -1817,7 +1817,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.AddLine(p1, p2);
 					break;
 
-				case Direction.Down:	// en haut à gauche
+				case Direction.Down:	// en haut Ã  gauche
 					p1.X = rect.Left+0.5;
 					p1.Y = rect.Bottom;
 					p2.X = p1.X;
@@ -1830,7 +1830,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.AddLine(p1, p2);
 					break;
 
-				case Direction.Left:	// en bas à gauche
+				case Direction.Left:	// en bas Ã  gauche
 					p1.X = rect.Left+0.5;
 					p1.Y = rect.Top;
 					p2.X = p1.X;
@@ -1843,7 +1843,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.AddLine(p1, p2);
 					break;
 
-				case Direction.Right:	// en haut à droite
+				case Direction.Right:	// en haut Ã  droite
 					p1.X = rect.Left;
 					p1.Y = rect.Top-0.5;
 					p2.X = rect.Right;
@@ -1870,7 +1870,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			switch ( dir )
 			{
-				case Direction.Up:	// en bas à droite
+				case Direction.Up:	// en bas Ã  droite
 					p1.X = rect.Left;
 					p1.Y = rect.Bottom+0.5;
 					p2.X = rect.Right-0.5;
@@ -1886,7 +1886,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.AddLine(p1, p2);
 					break;
 
-				case Direction.Down:	// en haut à gauche
+				case Direction.Down:	// en haut Ã  gauche
 					p1.X = rect.Left+0.5;
 					p1.Y = rect.Bottom;
 					p2.X = rect.Left+0.5;
@@ -1910,14 +1910,14 @@ namespace Epsitec.Common.Widgets.Adorners
 									   Drawing.Color color,
 									   Widgets.Direction dir)
 		{
-			//	Dessine un demi-cercle en bas à droite si dir=Up.
+			//	Dessine un demi-cercle en bas Ã  droite si dir=Up.
 			double angle = 0;
 			switch ( dir )
 			{
-				case Direction.Up:		angle = 180+45;	break;  // en bas à droite
-				case Direction.Down:	angle =     45;	break;  // en haut à gauche
-				case Direction.Left:	angle =  90+45;	break;  // en bas à gauche
-				case Direction.Right:	angle = 270+45;	break;  // en haut à droite
+				case Direction.Up:		angle = 180+45;	break;  // en bas Ã  droite
+				case Direction.Down:	angle =     45;	break;  // en haut Ã  gauche
+				case Direction.Left:	angle =  90+45;	break;  // en bas Ã  gauche
+				case Direction.Right:	angle = 270+45;	break;  // en haut Ã  droite
 			}
 			PaintHalfCircle(graphics, rect, color, angle);
 		}
@@ -1928,7 +1928,7 @@ namespace Epsitec.Common.Widgets.Adorners
 									   double angle)
 		{
 			//	Dessine un demi-cercle. Si angle=0, le demi-cercle est en haut.
-			//	L'angle est donné en degrés.
+			//	L'angle est donnÃ© en degrÃ©s.
 			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			
 			double rx = rect.Width/2;
@@ -1962,7 +1962,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected void RotatePoint(double angle, ref double x, ref double y)
 		{
 			//	Fait tourner un point autour de l'origine.
-			//	L'angle est exprimé en radians.
+			//	L'angle est exprimÃ© en radians.
 			//	Un angle positif est anti-horaire (CCW).
 			double xx = x*System.Math.Cos(angle) - y*System.Math.Sin(angle);
 			double yy = x*System.Math.Sin(angle) + y*System.Math.Cos(angle);
@@ -1984,7 +1984,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		protected Direction Opposite(Direction dir)
 		{
-			//	Retourne la direction opposée.
+			//	Retourne la direction opposÃ©e.
 			switch ( dir )
 			{
 				case Direction.Up:     return Direction.Down;

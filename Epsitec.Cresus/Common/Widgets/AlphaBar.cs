@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La class AlphaBar représente une barre translucide pendant un drag.
+	/// La class AlphaBar reprÃ©sente une barre translucide pendant un drag.
 	/// </summary>
 	public class AlphaBar : Widget
 	{

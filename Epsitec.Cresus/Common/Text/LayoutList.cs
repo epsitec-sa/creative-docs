@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe LayoutList gère la liste des moteurs de layout.
+	/// La classe LayoutList gÃ¨re la liste des moteurs de layout.
 	/// </summary>
 	public sealed class LayoutList
 	{

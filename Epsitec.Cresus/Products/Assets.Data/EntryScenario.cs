@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		None,
 
-		PreInput,			// financement préalable
+		PreInput,			// financement prÃ©alable
 		Purchase,			// achat
 		Sale,				// vente
 		AmortizationAuto,

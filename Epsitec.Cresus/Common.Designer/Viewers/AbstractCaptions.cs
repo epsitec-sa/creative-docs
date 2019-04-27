@@ -8,14 +8,14 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public abstract class AbstractCaptions : Abstract
 	{
 		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 			: base (module, context, access, designerApplication)
 		{
-			//	Résumé des captions.
+			//	RÃ©sumÃ© des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabIndex = this.tabIndex++;
 			this.secondaryDescription.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			//	Icône.
+			//	IcÃ´ne.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
 			this.groupPrimaryIcon = new MyWidgets.ResetBox(leftContainer.Container);
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			StaticText label = new StaticText(this.groupPrimaryIcon.GroupBox);
 			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
-			label.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
+			label.MinHeight = AbstractCaptions.iconSize;  // attention, trÃ¨s important !
 			label.PreferredHeight = AbstractCaptions.iconSize;
 			label.PreferredWidth = 40;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon = new MyWidgets.IconViewer (this.groupPrimaryIcon.GroupBox);
 			this.primaryIcon.ShowAllIcons = true;
 			this.primaryIcon.IsClickable = true;
-			this.primaryIcon.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
+			this.primaryIcon.MinHeight = AbstractCaptions.iconSize;  // attention, trÃ¨s important !
 			this.primaryIcon.PreferredHeight = AbstractCaptions.iconSize;
 			this.primaryIcon.PreferredWidth = AbstractCaptions.iconSize*2;
 			this.primaryIcon.Dock = DockStyle.Left;
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void UpdateEdit()
 		{
-			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			//	Met Ã  jour les lignes Ã©ditables en fonction de la sÃ©lection dans le tableau.
 			base.UpdateEdit();
 
 			bool iic = this.ignoreChange;
@@ -324,7 +324,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override string GetSummary(string twoLettersCulture)
 		{
-			//	Retourne le texte résumé de la ressource sélectionnée.
+			//	Retourne le texte rÃ©sumÃ© de la ressource sÃ©lectionnÃ©e.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
 			if (twoLettersCulture == null)
@@ -474,12 +474,12 @@ namespace Epsitec.Common.Designer.Viewers
 			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 
-			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !
+			// (*)	Ce numÃ©ro correspond Ã  field dans ResourceAccess.SearcherIndexToAccess !
 		}
 
 		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
-			//	Cherche les index correspondant à un texte éditable.
+			//	Cherche les index correspondant Ã  un texte Ã©ditable.
 			if (textField == this.labelEdit)
 			{
 				field = 0;
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override AbstractTextField IndexToTextField(int field, int subfield)
 		{
-			//	Cherche le TextField permettant d'éditer des index.
+			//	Cherche le TextField permettant d'Ã©diter des index.
 			if (subfield == 0)
 			{
 				switch (field)
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTextChanged(object sender)
 		{
-			//	Un texte éditable a changé.
+			//	Un texte Ã©ditable a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -661,7 +661,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleStringTextCollectionChanged(object sender)
 		{
-			//	Une collection de textes a changé.
+			//	Une collection de textes a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleStringFocusCollectionChanged(object sender)
 		{
-			//	Le focus a changé dans une collection.
+			//	Le focus a changÃ© dans une collection.
 			if (this.ignoreChange)
 			{
 				return;
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
 		{
-			//	Le boutons pour choisir l'icône a été cliqué.
+			//	Le boutons pour choisir l'icÃ´ne a Ã©tÃ© cliquÃ©.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item == null)
 			{
@@ -780,7 +780,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private static readonly int				iconSize = 64+2;  // pour afficher confortablement les icônes 64x64
+		private static readonly int				iconSize = 64+2;  // pour afficher confortablement les icÃ´nes 64x64
 
 		private MyWidgets.IconViewer			primarySummaryIcon;
 		private MyWidgets.IconViewer			secondarySummaryIcon;

@@ -1,4 +1,4 @@
-﻿using Epsitec.Aider.Tools;
+using Epsitec.Aider.Tools;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

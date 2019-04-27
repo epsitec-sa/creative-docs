@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La structure Cursor décrit une marque qui suit le texte et
-	/// qui peut être utilisée pour naviguer à travers des instances
+	/// La structure Cursor dÃ©crit une marque qui suit le texte et
+	/// qui peut Ãªtre utilisÃ©e pour naviguer Ã  travers des instances
 	/// de la class TextChunk.
 	/// </summary>
 	internal struct Cursor
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Text.Internal
 		//	ATTENTION:
 		//
 		//	CursorTable manipule ces champs manuellement; si des nouveaux champs
-		//	sont rajoutés ici, il faut mettre à jour la méthode dans les méthodes
+		//	sont rajoutÃ©s ici, il faut mettre Ã  jour la mÃ©thode dans les mÃ©thodes
 		//	suivantes :
 		//
 		//	- CursorTable.WriteCursor

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing.Platform;
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Drawing
 						(this.bitmapDx > 0) &&
 						(this.bitmapDy > 0))
 					{
-						//	Des pixels sont définis, mais pas d'objet bitmap natif. On peut donc créer ici le bitmap
+						//	Des pixels sont dÃ©finis, mais pas d'objet bitmap natif. On peut donc crÃ©er ici le bitmap
 						//	en se basant sur ces pixels :
 						
 						return new System.Drawing.Bitmap (this.bitmapDx, this.bitmapDy, this.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, this.Scan0);
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override void DefineZoom(double zoom)
 		{
-			//	Le zoom de l'appelant ne joue aucun rôle... La définition de
+			//	Le zoom de l'appelant ne joue aucun rÃ´le... La dÃ©finition de
 			//	l'image est fixe.
 		}
 		
@@ -179,12 +179,12 @@ namespace Epsitec.Common.Drawing
 
         public static void Merge(Bitmap bitmapBlack, Bitmap bitmapWhite, bool alphaCorrect, bool alphaPremultiplied)
         {
-            //	A partir de la même image, une fois sur fond noir et une fois sur
+            //	A partir de la mÃªme image, une fois sur fond noir et une fois sur
             //	fond blanc, on calcule les composantes rgb ainsi que la transparence,
-            //	directement dans l'image blanche (pour éviter l'emploi d'un 3ème
+            //	directement dans l'image blanche (pour Ã©viter l'emploi d'un 3Ã¨me
             //	buffer).
-            //	Ceci corrige un bug dans AntiGrain qui génère des images transparentes
-            //	toutes fauses (les dégradés transparents ont une teinte blanche incorrecte).
+            //	Ceci corrige un bug dans AntiGrain qui gÃ©nÃ¨re des images transparentes
+            //	toutes fauses (les dÃ©gradÃ©s transparents ont une teinte blanche incorrecte).
             bitmapBlack.LockBits();
             bitmapWhite.LockBits();
 
@@ -588,7 +588,7 @@ namespace Epsitec.Common.Drawing
 			bitmap.size     = new Size (bitmap.bitmapDx, bitmap.bitmapDy);
 			bitmap.origin   = new Point (0, 0);
 			
-			//	Prétend que le bitmap est verrouillé, puisqu'on a de toute façons déjà accès aux
+			//	PrÃ©tend que le bitmap est verrouillÃ©, puisqu'on a de toute faÃ§ons dÃ©jÃ  accÃ¨s aux
 			//	pixels (c'est d'ailleurs bien la seule chose qu'on a) :
 			
 			bitmap.bitmapLockCount = 1;
@@ -806,7 +806,7 @@ namespace Epsitec.Common.Drawing
 		
 		public static Image FromData(byte[] data, Point origin, Size size)
 		{
-			//	Avant de passer les données brutes à .NET pour en extraire l'image de
+			//	Avant de passer les donnÃ©es brutes Ã  .NET pour en extraire l'image de
 			//	format PNG/TIFF/JPEG, on regarde s'il ne s'agit pas d'un format "maison".
 			
 			if (data.Length > 40)
@@ -814,8 +814,8 @@ namespace Epsitec.Common.Drawing
 				if ((data[0] == (byte) '<') &&
 					(data[1] == (byte) '?'))
 				{
-					//	Il y a de très fortes chances que ce soit une image vectorielle définie
-					//	au moyen du format interne propre à EPSITEC.
+					//	Il y a de trÃ¨s fortes chances que ce soit une image vectorielle dÃ©finie
+					//	au moyen du format interne propre Ã  EPSITEC.
 					
 					if (Bitmap.canvasFactory != null)
 					{

@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Support
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Text.Support
 		
 		private void AppendHorizontalTab()
 		{
-			//	TODO: ajouter la définition du tabulateur en question
+			//	TODO: ajouter la dÃ©finition du tabulateur en question
 			
 			this.tabCount++;
 		}

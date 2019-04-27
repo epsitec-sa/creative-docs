@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				this.fieldAssetValue1 = this.AddSettings (BaseType.AssetsUserFields, "Valeur remplacement", FieldType.ComputedAmount, false, 120, null, null, null, 10);
 				this.fieldAssetValue2 = this.AddSettings (BaseType.AssetsUserFields, "Valeur fiscale",      FieldType.ComputedAmount, false, 120, null, null, null,  0);
 				this.fieldAssetOwner1 = this.AddSettings (BaseType.AssetsUserFields, "Responsable",         FieldType.GuidPerson,     false, 150, null, null, null, 10);
-				this.fieldAssetOwner2 = this.AddSettings (BaseType.AssetsUserFields, "Remplaçant",          FieldType.GuidPerson,     false, 150, null, null, null,  0);
+				this.fieldAssetOwner2 = this.AddSettings (BaseType.AssetsUserFields, "RemplaÃ§ant",          FieldType.GuidPerson,     false, 150, null, null, null,  0);
 				this.fieldAssetDesc   = this.AddSettings (BaseType.AssetsUserFields, "Description",         FieldType.String,         false, 120,  380,    5, null, 10);
 			}
 		}
@@ -85,9 +85,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var range1 = new DateRange (year1, year2);
 			var range2 = new DateRange (year2, year3);
 
-			//	Bâtiment communal
+			//	BÃ¢timent communal
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Bâtiment communal", "100", 1000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Patrimoine administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "BÃ¢timent communal", "100", 1000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "BÃ¢timents", "Immobilisations corporelles", "Patrimoine administratif");
 
 				{
 					var e = this.AddAssetEvent (obj, year0.AddDays (400), EventType.Decrease);
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Ecole
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Ecole", "101", 500000.0m, 600000.0m, 450000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Patrimoine administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "Ecole", "101", 500000.0m, 600000.0m, 450000.0m, "Dupond", "Nicolet", "Immobilier", "BÃ¢timents", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 				this.Amortize (range1, obj.Guid);
 				this.Amortize (range2, obj.Guid);
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Camion
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Camion", "200", 100000.0m, 80000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Camions", "Immobilisations corporelles", "Patrimoine administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "Camion", "200", 100000.0m, 80000.0m, 10000.0m, "Nicolet", null, "VÃ©hicules", "Camions", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 				this.Amortize (range1, obj.Guid);
 				this.Amortize (range2, obj.Guid);
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Voiture grise
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Voiture grise", "201", 40000.0m, 35000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "Voiture grise", "201", 40000.0m, 35000.0m, 10000.0m, "Nicolet", null, "VÃ©hicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
 
 				{
 					var e = this.AddAssetEvent (obj, year0.AddDays (188), EventType.Output);
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Voiture blanche
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (35), "Voiture blanche", "202", 35000.0m, 25000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (35), "Voiture blanche", "202", 35000.0m, 25000.0m, 10000.0m, "Nicolet", null, "VÃ©hicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 
 				{
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Voiture noire
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (200), "Voiture noire", "203", 25000.0m, 24000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (200), "Voiture noire", "203", 25000.0m, 24000.0m, 10000.0m, "Nicolet", null, "VÃ©hicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 				this.Amortize (range1, obj.Guid);
 				this.Amortize (range2, obj.Guid);
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Immeuble locatif
 			{
-				var obj = this.AddAssetsSamples (year2.AddDays (100), "Immeuble locatif", "150", 2000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Patrimoine financier");
+				var obj = this.AddAssetsSamples (year2.AddDays (100), "Immeuble locatif", "150", 2000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "BÃ¢timents", "Immobilisations corporelles", "Patrimoine financier");
 				this.Amortize (range2, obj.Guid);
 			}
 		}
@@ -161,11 +161,11 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected override void AddPersonsSamples()
 		{
 			this.AddPersonSample ("Monsieur", "Jean",      "Dupond",   null,                 "av. des Planches 12 bis",                     "1023", "Crissier",             "Suisse", null,            null,            null,            "jeandupond@bluewin.ch");
-			this.AddPersonSample ("Madame",   "Renata",    "Zumstein", null,                 "Crésentine 21",                               "1023", "Crissier",             "Suisse", "021 512 44 55", null,            null,            "zumstein@crissier.ch");
+			this.AddPersonSample ("Madame",   "Renata",    "Zumstein", null,                 "CrÃ©sentine 21",                               "1023", "Crissier",             "Suisse", "021 512 44 55", null,            null,            "zumstein@crissier.ch");
 			this.AddPersonSample ("Monsieur", "Alfred",    "Dubosson", null,                 "ch. des Tilleuls 4",                          "1020", "Renens",               "Suisse", "021 512 44 55", "021 600 22 33", null,            "dubosson@crissier.ch");
-			this.AddPersonSample ("Madame",   "Sandra",    "Nicolet",  null,                 "Place du Marché",                             "2000", "Neuchâtel",            "Suisse", null,            null,            "079 810 20 30", "sandranicolet5@gmail.com");
+			this.AddPersonSample ("Madame",   "Sandra",    "Nicolet",  null,                 "Place du MarchÃ©",                             "2000", "NeuchÃ¢tel",            "Suisse", null,            null,            "079 810 20 30", "sandranicolet5@gmail.com");
 			this.AddPersonSample ("Madame",   "Sylvianne", "Galbato",  "Les Bons Tuyaux SA", "Z.I. Budron 12A",                             "1052", "Le Mont-sur-Lausanne", "Suisse", "021 312 28 29", null,            null,            "sylvianne@lesbonstuyaux.ch");
-			this.AddPersonSample ("Monsieur", "André",     "Mercier",  "Mecatronic SA",      "Y-Parc - Swiss Technopole<br/>Rue Galilée 7", "1400", "Yverdon-les-Bains",    "Suisse", "024 444 11 22", "022 871 98 76", null,            "mercier@mecatronic.ch");
+			this.AddPersonSample ("Monsieur", "AndrÃ©",     "Mercier",  "Mecatronic SA",      "Y-Parc - Swiss Technopole<br/>Rue GalilÃ©e 7", "1400", "Yverdon-les-Bains",    "Suisse", "024 444 11 22", "022 871 98 76", null,            "mercier@mecatronic.ch");
 		}
 
 
@@ -180,23 +180,23 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		private void CreateGroupsCatsMCH2Samples(DataObject parent)
 		{
-			var root = this.AddGroup (parent, "Catégories MCH2", "100", true);
+			var root = this.AddGroup (parent, "CatÃ©gories MCH2", "100", true);
 
 			          this.AddGroup (root, "Terrains",                "10");
 			          this.AddGroup (root, "Routes",                  "15");
 			          this.AddGroup (root, "Traitement des eaux",     "20");
-			          this.AddGroup (root, "Traveaux de génie civil", "30");
+			          this.AddGroup (root, "Traveaux de gÃ©nie civil", "30");
 			var imm = this.AddGroup (root, "Immeubles",               "40");
 			          this.AddGroup (root, "Mobilier",                "45");
-			var veh = this.AddGroup (root, "Véhicules",               "50");
+			var veh = this.AddGroup (root, "VÃ©hicules",               "50");
 			          this.AddGroup (root, "Machines",                "55");
 			          this.AddGroup (root, "En construction",         "60");
 			          this.AddGroup (root, "Autres immobilisations",  "90");
 
-			this.AddGroup (imm, "Bâtiments",   "10");
+			this.AddGroup (imm, "BÃ¢timents",   "10");
 			this.AddGroup (imm, "Ecoles",      "20");
-			this.AddGroup (imm, "Dépôts",      "30");
-			this.AddGroup (imm, "Décheteries", "40");
+			this.AddGroup (imm, "DÃ©pÃ´ts",      "30");
+			this.AddGroup (imm, "DÃ©cheteries", "40");
 
 			this.AddGroup (veh, "Camions",      "10");
 			this.AddGroup (veh, "Camionnettes", "20");
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddGroup (root, "Immobilisations corporelles",   "10");
 			this.AddGroup (root, "Immobilisations incorporelles", "20");
-			this.AddGroup (root, "Immobilisations financières",   "30");
+			this.AddGroup (root, "Immobilisations financiÃ¨res",   "30");
 		}
 
 		private void CreateGroupsPatsMCH2Samples(DataObject parent)
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected override void CreateCatsSamples()
 		{
-			this.AddCat ("Immobilier", null, "10", "Durée linéaire", Periodicity.Annual,
+			this.AddCat ("Immobilier", null, "10", "DurÃ©e linÃ©aire", Periodicity.Annual,
 				".14040.01", ".10020.01",
 				".14040.01", ".10020.01",
 				".10010.01", ".14040.01",
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				"9610.3499.00", ".14040.01",
 				null, 20.0m, 1.0m, 1.0m);
 
-			this.AddCat ("Véhicules", null, "20", "Durée linéaire", Periodicity.Annual,
+			this.AddCat ("VÃ©hicules", null, "20", "DurÃ©e linÃ©aire", Periodicity.Annual,
 				".14040.01", ".10020.01",
 				".14040.01", ".10020.01",
 				".10010.01", ".14060.01",
@@ -257,13 +257,13 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty, summaryType: MCH2SummaryType.IndirectShort, skipHiddenRows: true));
 
 			{
-				var group  = this.GetGroup ("Catégories MCH2");
+				var group  = this.GetGroup ("CatÃ©gories MCH2");
 				var filter = this.GetGroup ("Patrimoine administratif");
 				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine administratif MCH2 &lt;DATE&gt; &lt;SUMMARYTYPE&gt;", dateRange, group.Guid, 1, filter.Guid, summaryType: MCH2SummaryType.IndirectShort, skipHiddenRows: true));
 			}
 
 			{
-				var group  = this.GetGroup ("Catégories MCH2");
+				var group  = this.GetGroup ("CatÃ©gories MCH2");
 				var filter = this.GetGroup ("Patrimoine financier");
 				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine financier MCH2 &lt;DATE&gt; &lt;SUMMARYTYPE&gt;", dateRange, group.Guid, 1, filter.Guid, summaryType: MCH2SummaryType.IndirectShort, skipHiddenRows: true));
 			}

@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -76,8 +76,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public static bool IsSameGlyphs(TimelineCellGlyph c1, TimelineCellGlyph c2)
 		{
-			//	Deux glyhps successifs sont toujours considérés comme différents.
-			//	Il faut juste considérer comme identiques les glyphs hors bornes.
+			//	Deux glyhps successifs sont toujours considÃ©rÃ©s comme diffÃ©rents.
+			//	Il faut juste considÃ©rer comme identiques les glyphs hors bornes.
 			int g1 = (c1.IsValid) ? 0 : -1;
 			int g2 = (c2.IsValid) ? 1 : -1;
 

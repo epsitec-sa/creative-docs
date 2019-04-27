@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe HSlider implémente le potentiomètre linéaire horizontal.
+	/// La classe HSlider implÃ©mente le potentiomÃ¨tre linÃ©aire horizontal.
 	/// </summary>
 	public class HSlider : AbstractSlider
 	{

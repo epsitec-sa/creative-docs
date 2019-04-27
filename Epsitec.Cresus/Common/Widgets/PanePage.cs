@@ -3,7 +3,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe PanePage représente une page du PaneBook.
+	/// La classe PanePage reprÃ©sente une page du PaneBook.
 	/// </summary>
 	public class PanePage : AbstractGroup
 	{
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							PaneHideSize
 		{
-			//	Largeur ou hauteur maximale en dessous de laquelle le contenu est caché.
+			//	Largeur ou hauteur maximale en dessous de laquelle le contenu est cachÃ©.
 			get
 			{
 				return this.paneHideSize;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							PaneElasticity
 		{
-			//	Elasticité du panneau (0=fixe, 1=élastique).
+			//	ElasticitÃ© du panneau (0=fixe, 1=Ã©lastique).
 			get
 			{
 				return this.paneElasticity;
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Widgets
 
 		public PaneButton						PaneButton
 		{
-			//	Retourne le bouton associé.
+			//	Retourne le bouton associÃ©.
 			get
 			{
 				return this.paneButton;
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Widgets
 		
 		public GlyphButton						GlyphButton
 		{
-			//	Retourne le bouton associé.
+			//	Retourne le bouton associÃ©.
 			get
 			{
 				return this.glyphButton;
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								IsDirty
 		{
-			//	Indique si le PanePage doit être recalculé.
+			//	Indique si le PanePage doit Ãªtre recalculÃ©.
 			get
 			{
 				return this.isDirty;

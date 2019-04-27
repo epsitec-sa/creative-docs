@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe Integer contient un réglage numérique.
+	/// La classe Integer contient un rÃ©glage numÃ©rique.
 	/// </summary>
 	[System.Serializable()]
 	public class Integer : Abstract
@@ -534,14 +534,14 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le réglage.
+			//	SÃ©rialise le rÃ©glage.
 			base.GetObjectData(info, context);
 			info.AddValue("Value", this.Value);
 		}
 
 		protected Integer(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise le réglage.
+			//	Constructeur qui dÃ©sÃ©rialise le rÃ©glage.
 			if ( this.name == "DefaultUnit" )
 			{
 				RealUnitType unit = (RealUnitType) info.GetInt32("Value");

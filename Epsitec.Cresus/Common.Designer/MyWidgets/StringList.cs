@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public double RelativeWidth
 		{
-			//	Largeur relative (dans n'importe quelle unité) de la colonne.
+			//	Largeur relative (dans n'importe quelle unitÃ©) de la colonne.
 			get
 			{
 				return this.relativeWidth;
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public TextBreakMode BreakMode
 		{
-			//	Césure des textes pour la colonne.
+			//	CÃ©sure des textes pour la colonne.
 			get
 			{
 				return this.breakMode;
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineString(int index, string text)
 		{
-			//	Spécifie le texte contenu dans une ligne.
+			//	SpÃ©cifie le texte contenu dans une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineTooltip(int index, string text)
 		{
-			//	Spécifie le tooltip d'une ligne.
+			//	SpÃ©cifie le tooltip d'une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineState(int index, CellState state)
 		{
-			//	Spécifie l'état d'une ligne.
+			//	SpÃ©cifie l'Ã©tat d'une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public CellState GetLineState(int index)
 		{
-			//	Retourne l'état d'une ligne.
+			//	Retourne l'Ã©tat d'une ligne.
 			if ( this.cells == null )  return CellState.Normal;
 			if ( index < 0 || index >= this.cells.Length )  return CellState.Normal;
 			return this.cells[index].State;
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetLineColor(int index, Color color)
 		{
-			//	Spécifie la couleur de fond d'une ligne.
+			//	SpÃ©cifie la couleur de fond d'une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
@@ -204,9 +204,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool AllowMultipleSelection
 		{
-			//	Indique si les sélections multiples sont possibles.
-			//	En mode 'true' la sélection multiple est forcée, c'est-à-dire qu'il
-			//	n'est pas nécessaire d'utiliser la touche Ctrl.
+			//	Indique si les sÃ©lections multiples sont possibles.
+			//	En mode 'true' la sÃ©lection multiple est forcÃ©e, c'est-Ã -dire qu'il
+			//	n'est pas nÃ©cessaire d'utiliser la touche Ctrl.
 			get
 			{
 				return this.allowMultipleSelection;
@@ -220,9 +220,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public int SelectedCell
 		{
-			//	Cellule sélectionnée.
-			//	Attention, les cellules sont comptés ici à partir de zéro, contraitement à
-			//	StringArray qui compte des lignes en tenant compte de la première ligne
+			//	Cellule sÃ©lectionnÃ©e.
+			//	Attention, les cellules sont comptÃ©s ici Ã  partir de zÃ©ro, contraitement Ã 
+			//	StringArray qui compte des lignes en tenant compte de la premiÃ¨re ligne
 			//	visible.
 			get
 			{
@@ -238,9 +238,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public List<int> SelectedCells
 		{
-			//	Cellules sélectionnées.
-			//	Attention, les cellules sont comptés ici à partir de zéro, contraitement à
-			//	StringArray qui compte des lignes en tenant compte de la première ligne
+			//	Cellules sÃ©lectionnÃ©es.
+			//	Attention, les cellules sont comptÃ©s ici Ã  partir de zÃ©ro, contraitement Ã 
+			//	StringArray qui compte des lignes en tenant compte de la premiÃ¨re ligne
 			//	visible.
 			get
 			{
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsDynamicToolTips
 		{
-			//	Faut-il générer les tooltips dynamiques ?
+			//	Faut-il gÃ©nÃ©rer les tooltips dynamiques ?
 			get
 			{
 				return this.isDynamicToolTips;
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected int Detect(Point pos, bool margins)
 		{
-			//	Détecte la cellule visée par la souris.
+			//	DÃ©tecte la cellule visÃ©e par la souris.
 			Rectangle box = this.Client.Bounds;
 			
 			if (margins)
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			int length = (int) (this.Client.Bounds.Height/this.lineHeight);
@@ -468,7 +468,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected bool IsSelectedCell(int cell)
 		{
-			//	Indique si une cellule doit être sélectionnée.
+			//	Indique si une cellule doit Ãªtre sÃ©lectionnÃ©e.
 			if (this.allowMultipleSelection)
 			{
 				return this.selectedCells != null && this.selectedCells.Contains(cell);
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if ((state & WidgetPaintState.Enabled) != 0 && this.cells[i].Selected)
 				{
 					state |= WidgetPaintState.Selected;
-					state |= WidgetPaintState.InheritedFocus;  // pour peindre toutes les colonnes avec la même couleur !
+					state |= WidgetPaintState.InheritedFocus;  // pour peindre toutes les colonnes avec la mÃªme couleur !
 				}
 				else
 				{
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.cells[i].State == CellState.Unused)
 				{
 					graphics.AddFilledRectangle(cell);
-					graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0, 0, 0));  // gris très clair
+					graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0, 0, 0));  // gris trÃ¨s clair
 				}
 
 				if (this.cells[i].TextLayout.Text != null)
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Events handler
 		protected virtual void OnCellCountChanged()
 		{
-			//	Génère un événement pour dire que le nombre de cellules a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le nombre de cellules a changÃ©.
 			var handler = this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
@@ -636,7 +636,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnDraggingCellSelectionChanged()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			var handler = this.GetUserEventHandler("DraggingCellSelectionChanged");
 			if (handler != null)
 			{
@@ -659,7 +659,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnFinalCellSelectionChanged()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'une cellule a Ã©tÃ© sÃ©lectionnÃ©e.
 			var handler = this.GetUserEventHandler("FinalCellSelectionChanged");
 			if (handler != null)
 			{

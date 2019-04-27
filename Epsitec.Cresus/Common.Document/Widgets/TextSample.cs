@@ -5,7 +5,7 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe TextSample est un widget affichant un échantillon d'une propriété de texte.
+	/// La classe TextSample est un widget affichant un Ã©chantillon d'une propriÃ©tÃ© de texte.
 	/// </summary>
 	public class TextSample : AbstractSample
 	{
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public Text.TextStyle TextStyle
 		{
-			//	Style représenté.
+			//	Style reprÃ©sentÃ©.
 			get
 			{
 				return this.textStyle;
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//	Dessine l'échantillon.
+			//	Dessine l'Ã©chantillon.
 			if ( this.document == null )  return;
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;

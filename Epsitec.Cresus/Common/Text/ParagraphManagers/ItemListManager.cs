@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.ParagraphManagers
 {
 	/// <summary>
-	/// La classe ItemListManager offre les services nécessaires à la réalisation
-	/// de listes à puces ou numérotées.
+	/// La classe ItemListManager offre les services nÃ©cessaires Ã  la rÃ©alisation
+	/// de listes Ã  puces ou numÃ©rotÃ©es.
 	/// 
 	/// Le nom de ce IParagraphManager est "ItemList".
 	/// </summary>
@@ -22,8 +22,8 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			
 			Parameters p = new Parameters (context, property.ManagerParameters);
 			
-			//	Le curseur est positionné au début (brut) du paragraphe, juste
-			//	après la fin du paragraphe précédent.
+			//	Le curseur est positionnÃ© au dÃ©but (brut) du paragraphe, juste
+			//	aprÃ¨s la fin du paragraphe prÃ©cÃ©dent.
 			
 			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));
@@ -80,9 +80,9 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			
 			Parameters p = new Parameters (context, property.ManagerParameters);
 			
-			//	Le curseur est positionné au début (brut) du paragraphe, juste
-			//	après la fin du paragraphe précédent; il est donc placé avant le
-			//	morceau de texte automatique que nous gérons.
+			//	Le curseur est positionnÃ© au dÃ©but (brut) du paragraphe, juste
+			//	aprÃ¨s la fin du paragraphe prÃ©cÃ©dent; il est donc placÃ© avant le
+			//	morceau de texte automatique que nous gÃ©rons.
 			
 			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property) == false);
@@ -108,8 +108,8 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			
 			Parameters p = new Parameters (context, property.ManagerParameters);
 			
-			//	Le curseur est positionné au début (brut) du paragraphe, juste
-			//	après la fin du paragraphe précédent.
+			//	Le curseur est positionnÃ© au dÃ©but (brut) du paragraphe, juste
+			//	aprÃ¨s la fin du paragraphe prÃ©cÃ©dent.
 			
 			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));

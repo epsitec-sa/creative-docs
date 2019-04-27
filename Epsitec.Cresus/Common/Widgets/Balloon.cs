@@ -91,7 +91,7 @@ namespace Epsitec.Common.Widgets
 
 		public double AwayMargin
 		{
-			//	Distance d'extinction lorsque la souris s'éloigne.
+			//	Distance d'extinction lorsque la souris s'Ã©loigne.
 			get
 			{
 				return this.awayMargin;
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Widgets
 
 		private void MessageFilter(object sender, Message message)
 		{
-			//	Appelé même lorsque la souris n'est plus sur le widget.
+			//	AppelÃ© mÃªme lorsque la souris n'est plus sur le widget.
 			if ( message.MessageType == MessageType.MouseMove )
 			{
 				Window window = sender as Window;
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnCloseNeeded()
 		{
-			//	Génère un événement pour dire que la fermeture est nécessaire.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la fermeture est nÃ©cessaire.
 			var handler = this.GetUserEventHandler("CloseNeeded");
 			if (handler != null)
 			{

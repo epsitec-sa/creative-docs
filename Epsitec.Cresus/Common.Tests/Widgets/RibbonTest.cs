@@ -39,7 +39,7 @@ namespace Epsitec.Common.Tests.Widgets
 			ToolTip tip = ToolTip.Default;
 			tip.Behaviour = ToolTipBehaviour.Normal;
 
-			//	Crée le widget pour permettre de changer d'adorner.
+			//	CrÃ©e le widget pour permettre de changer d'adorner.
 			AdornerTest.CreateListLook(window.Root, 10, 200, tip, 1);
 
 			RibbonBook book = new RibbonBook();
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Tests.Widgets
 			book.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(book);
 
-			//	Crée l'onglet 1.
+			//	CrÃ©e l'onglet 1.
 			RibbonPage page1 = new RibbonPage();
 			page1.RibbonTitle = "Principal";
 			page1.TabIndex = 1;
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Tests.Widgets
 			p1s3.PreferredWidth = 100;
 			page1.Items.Add(p1s3);
 
-			//	Crée l'onglet 2.
+			//	CrÃ©e l'onglet 2.
 			RibbonPage page2 = new RibbonPage();
 			page2.RibbonTitle = "Edition";
 			page2.TabIndex = 2;
@@ -95,11 +95,11 @@ namespace Epsitec.Common.Tests.Widgets
 			page2.Items.Add(p2s1);
 
 			RibbonSection p2s2 = new RibbonSection();
-			p2s2.Title = "Genève";
+			p2s2.Title = "GenÃ¨ve";
 			p2s2.PreferredWidth = 100;
 			page2.Items.Add(p2s2);
 
-			//	Crée l'onglet 3.
+			//	CrÃ©e l'onglet 3.
 			RibbonPage page3 = new RibbonPage();
 			page3.RibbonTitle = "Edition";
 			page3.TabIndex = 2;

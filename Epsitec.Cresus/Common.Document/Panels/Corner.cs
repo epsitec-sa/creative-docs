@@ -106,9 +106,9 @@ namespace Epsitec.Common.Document.Panels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau Ètendu ?
+				if ( this.isExtendedSize )  // panneau √©tendu ?
 				{
-					if ( this.IsLabelProperties )  // Ètendu/dÈtails ?
+					if ( this.IsLabelProperties )  // √©tendu/d√©tails ?
 					{
 						Properties.CornerType type = (Properties.CornerType) this.grid.SelectedValue;
 						if ( type == Properties.CornerType.Right )
@@ -125,12 +125,12 @@ namespace Epsitec.Common.Document.Panels
 							h += 127;
 						}
 					}
-					else	// Ètendu/compact ?
+					else	// √©tendu/compact ?
 					{
 						h += 74;
 					}
 				}
-				else	// panneau rÈduit ?
+				else	// panneau r√©duit ?
 				{
 					h += 30;
 				}
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Corner p = this.property as Properties.Corner;
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Corner p = this.property as Properties.Corner;
 			if ( p == null )  return;
 
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			//	Initialise les min/max en fonction du type choisi.
 			Properties.CornerType type = (Properties.CornerType) this.grid.SelectedValue;
 			bool enableRadius, enable1, enable2;
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTypeChanged(object sender)
 		{
-			//	Le type a ÈtÈ changÈ.
+			//	Le type a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 
 			if ( this.IsLabelProperties )
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Document.Panels
 				this.HeightChanged();
 			}
 
-			//	Met les valeurs par dÈfaut correspondant au type choisi.
+			//	Met les valeurs par d√©faut correspondant au type choisi.
 			this.EnableWidgets();
 
 			Properties.CornerType type = (Properties.CornerType) this.grid.SelectedValue;
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

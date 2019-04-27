@@ -1,4 +1,4 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Wrappers
 	using EventHandler = Epsitec.Common.Support.EventHandler;
 	
 	/// <summary>
-	/// La classe AbstractState sert de base à chaque état utilisé dans un
+	/// La classe AbstractState sert de base Ã  chaque Ã©tat utilisÃ© dans un
 	/// AbstractWrapper.
 	/// </summary>
 	public abstract class AbstractState

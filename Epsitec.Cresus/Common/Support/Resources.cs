@@ -1,4 +1,4 @@
-//	Copyright © 2003-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -384,8 +384,8 @@ namespace Epsitec.Common.Support
 
 		private static CultureInfo InternalFindSpecificCultureInfo(string twoLetterCode)
 		{
-			//	FindSpecificCultureInfo retourne une culture propre à un pays, avec
-			//	une préférence pour la Suisse ou les USA.
+			//	FindSpecificCultureInfo retourne une culture propre Ã  un pays, avec
+			//	une prÃ©fÃ©rence pour la Suisse ou les USA.
 			
 			if (string.IsNullOrEmpty (twoLetterCode))
 			{

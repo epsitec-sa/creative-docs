@@ -3,7 +3,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe IconButtonMark est un IconButton avec une marque triangulaire sur un côté.
+	/// La classe IconButtonMark est un IconButton avec une marque triangulaire sur un cÃ´tÃ©.
 	/// </summary>
 	public class IconButtonMark : IconButton
 	{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 
 		public Color							BulletColor
 		{
-			//	Couleur de la puce éventuelle (si différent de Color.Empty).
+			//	Couleur de la puce Ã©ventuelle (si diffÃ©rent de Color.Empty).
 			get
 			{
 				return this.bulletColor;

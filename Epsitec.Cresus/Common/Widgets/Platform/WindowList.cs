@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace Epsitec.Common.Widgets.Platform
 {
 	/// <summary>
-	/// La classe WindowList permet de construire la liste (ordrée) des fenêtres
+	/// La classe WindowList permet de construire la liste (ordrÃ©e) des fenÃªtres
 	/// visibles.
 	/// </summary>
 	public class WindowList

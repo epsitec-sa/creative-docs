@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe CursorTable stocke tous les curseurs liés à un texte.
+	/// La classe CursorTable stocke tous les curseurs liÃ©s Ã  un texte.
 	/// Ces curseurs sont accessibles indirectement au moyen d'un CursorId;
 	/// il n'est pas possible de les modifier directement.
 	/// </summary>
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsTrue (cursor.FreeListLink == 0);
 			
 			//	Copie les champs individuellement; on n'utilise pas l'assignation car cela
-			//	écraserait notre indicateur interne d'état du curseur :
+			//	Ã©craserait notre indicateur interne d'Ã©tat du curseur :
 			
 			this.cursors[id].TextChunkId    = cursor.TextChunkId;
 			this.cursors[id].CursorInstance = cursor.CursorInstance;
@@ -192,15 +192,15 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void InvalidatePositionCache()
 		{
-			//	Efface tous les bits de validité attachés à tous les curseurs.
-			//	Le plus rapide est de mettre à zéro le contenu du tableau :
+			//	Efface tous les bits de validitÃ© attachÃ©s Ã  tous les curseurs.
+			//	Le plus rapide est de mettre Ã  zÃ©ro le contenu du tableau :
 			
 			System.Array.Clear (this.cacheFlags, 0, this.cacheFlags.Length);
 		}
 		
 		public bool IsPositionCacheValid(Internal.CursorId id)
 		{
-			//	Vérifie que le cache de position du curseur spécifié est bien
+			//	VÃ©rifie que le cache de position du curseur spÃ©cifiÃ© est bien
 			//	valide :
 			
 			int index  = id;
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.cursors = newData;
 			
-			//	Agrandit, au besoin, la table des bits de validité du cache
+			//	Agrandit, au besoin, la table des bits de validitÃ© du cache
 			//	de position :
 			
 			int cacheWords = (this.cursors.Length+31) / 32;
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private void ValidateCache(Internal.CursorId id)
 		{
-			//	Prend note que le curseur indiqué contient une position valide
+			//	Prend note que le curseur indiquÃ© contient une position valide
 			//	dans son champ CachedPosition :
 			
 			int index  = id;
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private void InvalidateCache(Internal.CursorId id)
 		{
-			//	Prend note que le curseur indiqué contient une position non valide
+			//	Prend note que le curseur indiquÃ© contient une position non valide
 			//	dans son champ CachedPosition :
 			
 			int index  = id;
@@ -365,8 +365,8 @@ namespace Epsitec.Common.Text.Internal
 		}
 		#endregion
 		
-		private Internal.Cursor[]				cursors;			//	1..n; prendre index tel quel (zéro = invalide)
-		private uint[]							cacheFlags;		//	validité du cache: 1 bit par curseur
+		private Internal.Cursor[]				cursors;			//	1..n; prendre index tel quel (zÃ©ro = invalide)
+		private uint[]							cacheFlags;		//	validitÃ© du cache: 1 bit par curseur
 		private Internal.CursorId				freeCursorId;
 		private int								freeCursorCount;
 		private int								version;

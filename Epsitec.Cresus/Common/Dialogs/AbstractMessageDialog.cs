@@ -1,10 +1,10 @@
-//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// La classe AbstractMessageDialog sert de base aux dialogues présentant
+	/// La classe AbstractMessageDialog sert de base aux dialogues prÃ©sentant
 	/// un message avec des boutons de style oui/non.
 	/// </summary>
 	public abstract class AbstractMessageDialog : AbstractDialog

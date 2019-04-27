@@ -1,4 +1,4 @@
-//	Copyright © 2002-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2002-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Daniel ROUX
 
 using System.Collections.Generic;
@@ -6,31 +6,31 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Text.BreakEngines
 {
 	/// <summary>
-	/// Algorithme de césure pour les mots français.
-	/// Ce système a été inventé en 1985 pour le logiciel Text sur Smaky.
-	/// Il était initialement programmé en assembleur Calm 2 pour le processeur
-	/// Mototola 68000. Ceci explique son approche très compacte et efficace,
-	/// avec 4 dictionnaires extrèmement courts.
-	/// Ce système permet de gérer tous les mots, même s'ils n'existent pas ou
-	/// s'ils sont mal orthographiés, selon la logique utilisée dans la langue
-	/// française :
+	/// Algorithme de cÃ©sure pour les mots franÃ§ais.
+	/// Ce systÃ¨me a Ã©tÃ© inventÃ© en 1985 pour le logiciel Text sur Smaky.
+	/// Il Ã©tait initialement programmÃ© en assembleur Calm 2 pour le processeur
+	/// Mototola 68000. Ceci explique son approche trÃ¨s compacte et efficace,
+	/// avec 4 dictionnaires extrÃ¨mement courts.
+	/// Ce systÃ¨me permet de gÃ©rer tous les mots, mÃªme s'ils n'existent pas ou
+	/// s'ils sont mal orthographiÃ©s, selon la logique utilisÃ©e dans la langue
+	/// franÃ§aise :
 	///   antichenit    -> an/ti/che/nit
 	///   bisouillage   -> bi/souil/la/ge
-	///   fradornère    -> fra/dor/nè/re
+	///   fradornÃ¨re    -> fra/dor/nÃ¨/re
 	///   franssaize    -> frans/sai/ze
-	///   fummée        -> fum/mée
+	///   fummÃ©e        -> fum/mÃ©e
 	///   ortografe     -> or/to/gra/fe
 	///   ponturer      -> pon/tu/rer
-	///   tralalèrement -> tra/la/lè/re/ment
+	///   tralalÃ¨rement -> tra/la/lÃ¨/re/ment
 	/// </summary>
 	public class FrenchWordBreakEngine
 	{
 		static public IEnumerable<int> Break(string word)
 		{
-			// Coupe un mot selon un certain nombre de règles basées sur
-			// les voyelles et les consonnes. Le mot donné peut contenir des
-			// lettres accentuées. En revanche, il ne doit pas contenir de
-			// tiret. Rend une liste des césures possibles.
+			// Coupe un mot selon un certain nombre de rÃ¨gles basÃ©es sur
+			// les voyelles et les consonnes. Le mot donnÃ© peut contenir des
+			// lettres accentuÃ©es. En revanche, il ne doit pas contenir de
+			// tiret. Rend une liste des cÃ©sures possibles.
 			List<int> list = new List<int>();
 
 			TextPointer tp = new TextPointer(word);
@@ -50,16 +50,16 @@ namespace Epsitec.Common.Text.BreakEngines
 						continue;
 					}
 
-					// Teste si la césure est une césure interdite à cause d'une
+					// Teste si la cÃ©sure est une cÃ©sure interdite Ã  cause d'une
 					// exception dans dicoNc.
 					if (tp.Position == tp.Banned)
 					{
 						continue;
 					}
 
-					// Teste si la césure est trop proche du début du mot (par
-					// exemple: é-cole) ou trop proche de la fin du mot (par
-					// exemple: école-s).
+					// Teste si la cÃ©sure est trop proche du dÃ©but du mot (par
+					// exemple: Ã©-cole) ou trop proche de la fin du mot (par
+					// exemple: Ã©cole-s).
 					if (tp.Position < tp.Root+2)
 					{
 						continue;
@@ -72,15 +72,15 @@ namespace Epsitec.Common.Text.BreakEngines
 
 					firstSyllable = false;
 
-					// Teste s'il ne reste que des consonnes depuis cette éventuelle
-					// césure (par exemple: rangeme-nts)
+					// Teste s'il ne reste que des consonnes depuis cette Ã©ventuelle
+					// cÃ©sure (par exemple: rangeme-nts)
 					if (tp.IsRestConsonant())
 					{
 						break;
 					}
 
-					// Si on est juste après un apostrophe, il faut ignorer
-					// la césure. Par exemple dans:  aujourd'hui
+					// Si on est juste aprÃ¨s un apostrophe, il faut ignorer
+					// la cÃ©sure. Par exemple dans:  aujourd'hui
 					if (tp.GetChar(-1) == '\'')
 					{
 						continue;
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Text.BreakEngines
 		}
 
 
-		// Dictionnaire de tous les débuts possibles de syllabes (cette
+		// Dictionnaire de tous les dÃ©buts possibles de syllabes (cette
 		// liste ne doit contenir que des consonnes) :
 		static protected string[] syllableStartTable =
 		{
@@ -109,32 +109,32 @@ namespace Epsitec.Common.Text.BreakEngines
 			"CR",		// convain-cre
 			"DR",		// suspen-dre
 			"FL",		// in-fluence
-			"FR",		// bé-froid
+			"FR",		// bÃ©-froid
 			"GL",		// jon-gleur
-			"GN",		// ma-gnétique
+			"GN",		// ma-gnÃ©tique
 			"GR",		// bi-gre
 			"PH",		// phos-phore
 			"PL",		// exem-plaire
-			"PR",		// com-préhension
+			"PR",		// com-prÃ©hension
 			"PS",		// rha-psodie
 			"SCH",		// (pour l'allemand)
 			"TH",		// or-thographe
 			"TR",		// cons-truction
-			"VR",		// fiè-vre
+			"VR",		// fiÃ¨-vre
 		};
 
-		// Dictionnaire de tous les mots (ou débuts de mots) à couper
+		// Dictionnaire de tous les mots (ou dÃ©buts de mots) Ã  couper
 		// normalement (cette liste est parcourue AVANT la liste des
-		// divisions étymologiques tableExceptions) :
+		// divisions Ã©tymologiques tableExceptions) :
 		static protected string[] tableNoExceptions =
 		{
-			"DESERT",	// dé-sert
-			"DESID",	// dé-sidératif
-			"DESIGN",	// dé-signer
-			"DESIR",	// dé-sirer
-			"DESIS",	// dé-sister
-			"DESOL",	// dé-solé
-			"DESORM",	// dé-sormais
+			"DESERT",	// dÃ©-sert
+			"DESID",	// dÃ©-sidÃ©ratif
+			"DESIGN",	// dÃ©-signer
+			"DESIR",	// dÃ©-sirer
+			"DESIS",	// dÃ©-sister
+			"DESOL",	// dÃ©-solÃ©
+			"DESORM",	// dÃ©-sormais
 
 			"INIQ",		// ini-que
 			"INIT",		// ini-tiative
@@ -152,45 +152,45 @@ namespace Epsitec.Common.Text.BreakEngines
 			"REINE",	// rei-ne
 			"RETROU",	// retrou-ver
 
-			"SURAN",	// su-ranné
+			"SURAN",	// su-rannÃ©
 			"SUREA",	// su-reau
 			"SUREMEN",	// su-rement
-			"SURET",	// su-reté
+			"SURET",	// su-retÃ©
 			"SURICA",	// su-ricate
-			"SUROI",	// su-roît
+			"SUROI",	// su-roÃ®t
 			"SUROS",	// su-ros
 			"SURIR",	// su-rir
-			"SUPERI",	// su-pé-rio-ri-té
+			"SUPERI",	// su-pÃ©-rio-ri-tÃ©
 
 			"TRANSI",	// tran-sistor
 		};
 
-		// Dictionnaire de tous les mots (ou débuts de mots) à couper
-		// spécialement (divisions étymologiques) :
+		// Dictionnaire de tous les mots (ou dÃ©buts de mots) Ã  couper
+		// spÃ©cialement (divisions Ã©tymologiques) :
 		static protected string[] tableExceptions =
 		{
-			"AERO 4",		// aéro-spatial
+			"AERO 4",		// aÃ©ro-spatial
 			"ANTIA 24",		// anti-alcoolique
 			"ANTISP 24",	// anti-spasmodique
-			"ATMO 24",		// atmo-sphère
+			"ATMO 24",		// atmo-sphÃ¨re
 
 			"BAY 2",		// ba-yer
 
 			"CAOU 4",		// caou-tchouc
-			"COO 2",		// co-opération
+			"COO 2",		// co-opÃ©ration
 			"CONSCI 3",		// con-science
 			"CIS 3",		// cis-alpin
 
-			"DESTA 2",		// dé-stabiliser
-			"DES 3",		// dés-aveu
+			"DESTA 2",		// dÃ©-stabiliser
+			"DES 3",		// dÃ©s-aveu
 			"DIAGN 4",		// diag-nostique
 
 			"EXTRAO 25",	// extra-ordinaire
 
-			"HEMI 24",		// hemi-sphère
+			"HEMI 24",		// hemi-sphÃ¨re
 
 			"INA 2",		// in-actif
-			"INE 2",		// in-égal
+			"INE 2",		// in-Ã©gal
 			"INI 2",		// in-imaginable
 			"INO 2",		// in-oubliable
 			"INSTAB 2",		// in-stable
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Text.BreakEngines
 			"MALADR 3",		// mal-adroit
 			"MALAP 3",		// mal-appris
 			"MALENT 3",		// mal-entendu
-			"MALINT 3",		// mal-intensionné
+			"MALINT 3",		// mal-intensionnÃ©
 			"MALODO 3",		// mal-odorant
 			"MESAL 3",		// mes-alliance
 			"MESAV 3",		// mes-aventure
@@ -213,38 +213,38 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			"OTORH 3",		// oto-rhinolaryngologiste
 
-			"POE 2",		// po-ète
-			"PRE 3",		// pré-occuper
-			"PROE 3",		// pro-éminent
+			"POE 2",		// po-Ã¨te
+			"PRE 3",		// prÃ©-occuper
+			"PROE 3",		// pro-Ã©minent
 
-			"REAB 2",		// ré-abonner
-			"REAC 2",		// ré-action
-			"REAF 2",		// ré-affirmer
-			"REAG 2",		// ré-agir
-			"REAR 2",		// ré-armer
-			"REAS 2",		// ré-assigner
-			"REAT 2",		// ré-atteler
-			"REE 2",		// ré-élection
-			"REI 2",		// ré-intégrer
-			"REO 2",		// ré-organiser
+			"REAB 2",		// rÃ©-abonner
+			"REAC 2",		// rÃ©-action
+			"REAF 2",		// rÃ©-affirmer
+			"REAG 2",		// rÃ©-agir
+			"REAR 2",		// rÃ©-armer
+			"REAS 2",		// rÃ©-assigner
+			"REAT 2",		// rÃ©-atteler
+			"REE 2",		// rÃ©-Ã©lection
+			"REI 2",		// rÃ©-intÃ©grer
+			"REO 2",		// rÃ©-organiser
 			"RESTR 2",		// re-structurer
-			"RETRO 25",		// rétro-spectif
+			"RETRO 25",		// rÃ©tro-spectif
 
 			"STAG 4",		// stag-nant
 			"SUBLU 3",		// sub-lunaire
 			"SUBO 3",		// sub-ordonner
 			"SUBRO 3",		// sub-rogateur
 			"SUBUR 3",		// sub-urbain
-			"SUR 3",		// sur-élever
+			"SUR 3",		// sur-Ã©lever
 			"SUPER 25",		// su-per-struc-tu-re
 
 			"TRANS 5",		// trans-atlantique
 			"TECH 4",		// tech-nique
-			"TELE 24",		// télé-scope
+			"TELE 24",		// tÃ©lÃ©-scope
 		};
 
-		// Dictionnaire de tous les débuts de mots à ne pas couper
-		// (exceptions très spéciales) :
+		// Dictionnaire de tous les dÃ©buts de mots Ã  ne pas couper
+		// (exceptions trÃ¨s spÃ©ciales) :
 		static protected string[] tableSpecialBreak =
 		{
 			"HYMNE 3",		// hym-ne
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 		static protected string RemoveAccent(string s)
 		{
-			//	Retourne la même chaîne sans accent (é -> e).
+			//	Retourne la mÃªme chaÃ®ne sans accent (Ã© -> e).
 			System.Text.StringBuilder builder;
 
 			builder = new System.Text.StringBuilder(s.Length);
@@ -266,60 +266,60 @@ namespace Epsitec.Common.Text.BreakEngines
 
 		static protected char RemoveAccent(char c)
 		{
-			//	Retourne le même caractère sans accent (é -> e).
+			//	Retourne le mÃªme caractÃ¨re sans accent (Ã© -> e).
 			//	TODO: traiter tous les accents unicode ?
 			char lower = System.Char.ToLowerInvariant(c);
 			char cc = lower;
 
 			switch (cc)
 			{
-				case 'á':
-				case 'à':
-				case 'â':
-				case 'ä':
-				case 'ã':
+				case 'Ã¡':
+				case 'Ã ':
+				case 'Ã¢':
+				case 'Ã¤':
+				case 'Ã£':
 					cc = 'a';
 					break;
 
-				case 'ç':
+				case 'Ã§':
 					cc = 'c';
 					break;
 
-				case 'é':
-				case 'è':
-				case 'ê':
-				case 'ë':
+				case 'Ã©':
+				case 'Ã¨':
+				case 'Ãª':
+				case 'Ã«':
 					cc = 'e';
 					break;
 
-				case 'í':
-				case 'ì':
-				case 'î':
-				case 'ï':
+				case 'Ã­':
+				case 'Ã¬':
+				case 'Ã®':
+				case 'Ã¯':
 					cc = 'i';
 					break;
 
-				case 'ñ':
+				case 'Ã±':
 					cc = 'n';
 					break;
 
-				case 'ó':
-				case 'ò':
-				case 'ô':
-				case 'ö':
-				case 'õ':
+				case 'Ã³':
+				case 'Ã²':
+				case 'Ã´':
+				case 'Ã¶':
+				case 'Ãµ':
 					cc = 'o';
 					break;
 
-				case 'ú':
-				case 'ù':
-				case 'û':
-				case 'ü':
+				case 'Ãº':
+				case 'Ã¹':
+				case 'Ã»':
+				case 'Ã¼':
 					cc = 'u';
 					break;
 			}
 
-			if (lower != c)  // a-t-on utilisé une majuscule transformée en minuscule ?
+			if (lower != c)  // a-t-on utilisÃ© une majuscule transformÃ©e en minuscule ?
 			{
 				cc = System.Char.ToUpperInvariant(cc);  // remet en majuscule
 			}
@@ -329,11 +329,11 @@ namespace Epsitec.Common.Text.BreakEngines
 
 		static protected bool IsVowel(char letter)
 		{
-			// Test si le caractère est une voyelle, c'est-à-dire :
+			// Test si le caractÃ¨re est une voyelle, c'est-Ã -dire :
 			//  "A" , "E" , "I" , "O" , "U"  ou  "Y"
-			// La lettre "X" suit les mêmes règles que la lettre "Y".
-			// De plus, une voyelle peut être un apostrophe pour résoudre
-			// les cas du genre  "l'écran"  "qu'il"  "d'apprendre"  etc.
+			// La lettre "X" suit les mÃªmes rÃ¨gles que la lettre "Y".
+			// De plus, une voyelle peut Ãªtre un apostrophe pour rÃ©soudre
+			// les cas du genre  "l'Ã©cran"  "qu'il"  "d'apprendre"  etc.
 			// (on suppose qu'un apostrophe est toujours suivit d'une
 			// voyelle).
 			switch (letter)
@@ -365,8 +365,8 @@ namespace Epsitec.Common.Text.BreakEngines
 				this.banned = 0;
 				this.root = 0;
 
-				// Ignore les caractères à la fin qui ne sont pas des lettres,
-				// pour résoudre les cas du type:  (commencé-e)
+				// Ignore les caractÃ¨res Ã  la fin qui ne sont pas des lettres,
+				// pour rÃ©soudre les cas du type:  (commencÃ©-e)
 				for (int i=this.length-1; i>=0; i--)
 				{
 					char letter = this.GetChar(i);
@@ -376,10 +376,10 @@ namespace Epsitec.Common.Text.BreakEngines
 						break;
 					}
 
-					this.length--;  // ignore un caractère à la fin
+					this.length--;  // ignore un caractÃ¨re Ã  la fin
 				}
 
-				// Avance dans le mot jusqu'à ce qu'une lettre soit rencontrée.
+				// Avance dans le mot jusqu'Ã  ce qu'une lettre soit rencontrÃ©e.
 				int len = 0;
 				for (int i=0; i<this.length; i++)
 				{
@@ -395,8 +395,8 @@ namespace Epsitec.Common.Text.BreakEngines
 				this.length -= len;
 				this.start  += len;
 
-				// Test si la 2ème ou 3ème lettre du mot est un apostrophe,
-				// pour résoudre les cas du genre:  l'extra-ordinaire  qu'elles
+				// Test si la 2Ã¨me ou 3Ã¨me lettre du mot est un apostrophe,
+				// pour rÃ©soudre les cas du genre:  l'extra-ordinaire  qu'elles
 				if (this.GetChar(2) == '\'')
 				{
 					this.length -= 3;
@@ -428,7 +428,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			public int Start
 			{
-				//	Offset du début du mot (par exemple 2 avec "l'aérospatial").
+				//	Offset du dÃ©but du mot (par exemple 2 avec "l'aÃ©rospatial").
 				get
 				{
 					return this.start;
@@ -437,7 +437,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			public int Length
 			{
-				//	Longueur du mot, après Start (par exemple 11 avec "l'aérospatial").
+				//	Longueur du mot, aprÃ¨s Start (par exemple 11 avec "l'aÃ©rospatial").
 				get
 				{
 					return this.length;
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			public int Position
 			{
-				//	Position dans le mot, après Start (par exemple 1 avec "l'a|érospatial).
+				//	Position dans le mot, aprÃ¨s Start (par exemple 1 avec "l'a|Ã©rospatial).
 				get
 				{
 					return this.position;
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			public int Root
 			{
-				//	Longueur de la racine, après Start (par exemple 4 avec "l'aérospatial").
+				//	Longueur de la racine, aprÃ¨s Start (par exemple 4 avec "l'aÃ©rospatial").
 				get
 				{
 					return this.root;
@@ -472,9 +472,9 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			public char GetChar(int index)
 			{
-				// Donne un caractère. Si index=0, c'est le caractère sous
-				// le pointeur qui est rendu. La valeur d'index peut être
-				// positive ou négative.
+				// Donne un caractÃ¨re. Si index=0, c'est le caractÃ¨re sous
+				// le pointeur qui est rendu. La valeur d'index peut Ãªtre
+				// positive ou nÃ©gative.
 				if (this.position+index < 0 || this.position+index >= this.length)
 				{
 					return (char) 0;
@@ -497,21 +497,21 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			protected bool IsDouble()
 			{
-				// Test s'il y a deux mêmes lettres qui se suivent.
+				// Test s'il y a deux mÃªmes lettres qui se suivent.
 				// Reste moins de 2 lettres ?
 				if (this.length-this.position < 2)
 				{
 					return false;
 				}
 
-				// Deux lettres différentes ?
+				// Deux lettres diffÃ©rentes ?
 				if (this.GetChar(0) != this.GetChar(1))
 				{
 					return false;
 				}
 
-				// Vérifie si la césure est dans une terminaison "féminin pluriel",
-				// c'est-à-dire "ées", pour éviter de couper "commencé-es" !
+				// VÃ©rifie si la cÃ©sure est dans une terminaison "fÃ©minin pluriel",
+				// c'est-Ã -dire "Ã©es", pour Ã©viter de couper "commencÃ©-es" !
 
 				if (this.length-this.position == 3 &&
 					this.GetChar(0) == 'E' &&
@@ -658,13 +658,13 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			public bool IsSyllable(bool firstSyllable)
 			{
-				// Cherche s'il s'agit d'une syllabe normale, c'est-à-dire:
+				// Cherche s'il s'agit d'une syllabe normale, c'est-Ã -dire:
 				//  - une ou plusieurs consonnes quelconques (voir *)
 				//  - une ou plusieurs voyelles quelconques (voir *)
-				//  - éventuellement quelques consonnes (jusqu'au début de la
+				//  - Ã©ventuellement quelques consonnes (jusqu'au dÃ©but de la
 				//    syllabe suivante)
-				// (*) Considère qu'il s'agit d'une syllabe lorsque deux mêmes
-				// lettres sont trouvées.
+				// (*) ConsidÃ¨re qu'il s'agit d'une syllabe lorsque deux mÃªmes
+				// lettres sont trouvÃ©es.
 
 				// Reste moins de 2 lettres ?
 				if (this.length-this.position < 2)
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 				while (true)
 				{
-					// Début de syllabe ?
+					// DÃ©but de syllabe ?
 					if (tp.SearchDictionary(FrenchWordBreakEngine.syllableStartTable, null))
 					{
 						tp.CopyCursor(this);
@@ -736,18 +736,18 @@ namespace Epsitec.Common.Text.BreakEngines
 				if (this.SearchDictionary(FrenchWordBreakEngine.tableExceptions, list))
 				{
 					System.Diagnostics.Debug.Assert(list.Count != 0);
-					this.root = list[list.Count-1]-this.start;  // offset préposition
+					this.root = list[list.Count-1]-this.start;  // offset prÃ©position
 					this.position = this.root;
 					return;
 				}
 			}
 
 			protected string				text;
-			protected int					start;  // début effectif du mot
+			protected int					start;  // dÃ©but effectif du mot
 			protected int					length;  // longueur du texte
 			protected int					position;  // position du pointeur
-			protected int					banned;  // position césure interdite
-			protected int					root;  // longueur préposition
+			protected int					banned;  // position cÃ©sure interdite
+			protected int					root;  // longueur prÃ©position
 		}
 
 	}

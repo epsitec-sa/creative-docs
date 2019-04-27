@@ -1,4 +1,4 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText
 				(
 					"Nom: ", this.Name, "(", this.ShortName, ")", "\n",
-					"Catégorie: ", UnitOfMeasureEntity.GetCategory (this), "\n",
+					"CatÃ©gorie: ", UnitOfMeasureEntity.GetCategory (this), "\n",
 					"Valeurs: ", UnitOfMeasureEntity.GetFactors (this)
 				);
 		}
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private static string GetFactors(Entities.UnitOfMeasureEntity unit)
 		{
-			return string.Format ("÷{0}, ×{1}, ±{2}", unit.DivideRatio.ToString (), unit.MultiplyRatio.ToString (), unit.SmallestIncrement.ToString ());
+			return string.Format ("Ã·{0}, Ã—{1}, Â±{2}", unit.DivideRatio.ToString (), unit.MultiplyRatio.ToString (), unit.SmallestIncrement.ToString ());
 		}
 	}
 }

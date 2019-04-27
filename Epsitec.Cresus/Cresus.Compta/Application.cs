@@ -1,4 +1,4 @@
-#if false//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+#if false//	Copyright Â© 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -13,7 +13,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta
 {
 	/// <summary>
-	/// La classe Application démarre l'éditeur de documents.
+	/// La classe Application dÃ©marre l'Ã©diteur de documents.
 	/// </summary>
 	public class Application : Epsitec.Common.Widgets.Application
 	{
@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta
 
 			Epsitec.Cresus.Core.Library.UI.Services.Initialize ();
 
-			//	Evite de créer la liste des fontes complète maintenant si elle n'existe
-			//	pas, puisque l'on veut tout d'abord être capable d'afficher le splash:
+			//	Evite de crÃ©er la liste des fontes complÃ¨te maintenant si elle n'existe
+			//	pas, puisque l'on veut tout d'abord Ãªtre capable d'afficher le splash:
 			Epsitec.Common.Text.TextContext.PostponeFullFontCollectionInitialization ();
 
 			Widget.Initialize ();
@@ -33,8 +33,8 @@ namespace Epsitec.Cresus.Compta
 			
 			Res.Initialize();
 			
-			//	Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
-			//	être mise à jour chaque fois que l'on génère un nouveau CD :
+			//	Il faut indiquer ci-aprÃ¨s la date de diffusion du logiciel, qui doit
+			//	Ãªtre mise Ã  jour chaque fois que l'on gÃ©nÃ¨re un nouveau CD :
 			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2010, 01, 04));
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(74, 6);	// Accepte CDID = 74
 			
@@ -65,11 +65,11 @@ namespace Epsitec.Cresus.Compta
 #if false
 			window.WindowBounds = new Rectangle (100, 50, 880, 600);
 #else
-			window.WindowBounds = new Rectangle (2560+100, 1600-600-100, 880, 600);  // coin sup/gauche de mon 2ème écran 2560x1600 !!!
+			window.WindowBounds = new Rectangle (2560+100, 1600-600-100, 880, 600);  // coin sup/gauche de mon 2Ã¨me Ã©cran 2560x1600 !!!
 #endif
 			//?window.WindowBounds = this.editor.GlobalSettings.MainWindowBounds;
 			//?window.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
-			window.Text = "Crésus MCH-2";
+			window.Text = "CrÃ©sus MCH-2";
 			window.WindowCloseClicked += new EventHandler (this.HandleWindowCloseClicked);
 			
 			//?this.editor.PreferredSize = window.ClientSize;
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Compta
 		{
 			get
 			{
-				return "Crésus MCH-2";
+				return "CrÃ©sus MCH-2";
 			}
 		}
 

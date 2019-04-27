@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -7,9 +7,9 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v"
-	/// qui fait apparaître un menu dit "combo" pour permettre de choisir une
-	/// option prédéfinie.
+	/// La classe TextFieldCombo implÃ©mente la ligne Ã©ditable avec bouton "v"
+	/// qui fait apparaÃ®tre un menu dit "combo" pour permettre de choisir une
+	/// option prÃ©dÃ©finie.
 	/// </summary>
 	public class TextFieldCombo : AbstractTextField, Collections.IStringCollectionHost, Support.Data.IKeyedStringSelection
 	{
@@ -141,9 +141,9 @@ namespace Epsitec.Common.Widgets
 		
 		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
-			//	Trouve l'index de l'élément recherché. Indique s'il s'agit d'un
-			//	match exact ('find' est égal au contenu de la cellule) ou non
-			//	('find' correspond au début de la cellule).
+			//	Trouve l'index de l'Ã©lÃ©ment recherchÃ©. Indique s'il s'agit d'un
+			//	match exact ('find' est Ã©gal au contenu de la cellule) ou non
+			//	('find' correspond au dÃ©but de la cellule).
 			
 			index = this.items.FindIndexByValueExactMatch (find);
 			
@@ -208,8 +208,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateButtonGeometry()
 		{
-			//	Met à jour la position du bouton; la marge droite de la ligne
-			//	éditable est ajustée pour tenir compte de la présence (ou non)
+			//	Met Ã  jour la position du bouton; la marge droite de la ligne
+			//	Ã©ditable est ajustÃ©e pour tenir compte de la prÃ©sence (ou non)
 			//	du bouton.
 			
 			base.UpdateButtonGeometry();
@@ -251,8 +251,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSelectedItemChanged()
 		{
-			//	Ne notifie les changements d'index que lorsque le menu déroulant
-			//	est fermé.
+			//	Ne notifie les changements d'index que lorsque le menu dÃ©roulant
+			//	est fermÃ©.
 			
 			if (this.IsComboOpen == false)
 			{
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool ProcessKeyDown(Message message, Point pos)
 		{
-			//	Gère les pressions de touches (en particulier les flèches haut
+			//	GÃ¨re les pressions de touches (en particulier les flÃ¨ches haut
 			//	et bas qui permettent soit d'ouvrir un combo, soit de cycler le
 			//	contenu).
 			
@@ -369,9 +369,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ProcessComboActivatedIndex(int sel)
 		{
-			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
-			//	qui est appelée à chaque changement "visuel".
+			//	Cette mÃ©thode n'est appelÃ©e que lorsque le contenu de la liste dÃ©roulÃ©e
+			//	est validÃ©e par un clic de souris, au contraire de ProcessComboSelectedIndex
+			//	qui est appelÃ©e Ã  chaque changement "visuel".
 			
 			int index = this.MapComboListToIndex (sel);
 			
@@ -384,9 +384,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ProcessComboSelectedIndex(int sel)
 		{
-			//	Met à jour le contenu de la combo en cas de changement de sélection
-			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
-			//	activée.
+			//	Met Ã  jour le contenu de la combo en cas de changement de sÃ©lection
+			//	dans la liste, pour autant qu'une telle mise Ã  jour "live" ait Ã©tÃ©
+			//	activÃ©e.
 			
 			if (this.isLiveUpdateEnabled)
 			{
@@ -424,8 +424,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void Navigate(int dir)
 		{
-			//	Cherche le nom suivant ou précédent dans la comboList, même si elle
-			//	n'est pas "déroulée".
+			//	Cherche le nom suivant ou prÃ©cÃ©dent dans la comboList, mÃªme si elle
+			//	n'est pas "dÃ©roulÃ©e".
 			
 			if (this.items.Count == 0)
 			{
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OpenCombo()
 		{
-			//	Rend la liste visible et démarre l'interaction.
+			//	Rend la liste visible et dÃ©marre l'interaction.
 			
 			if (this.IsComboOpen)
 			{
@@ -499,8 +499,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CloseCombo(CloseMode mode)
 		{
-			//	Ferme la liste (si nécessaire) et valide/rejette la modification
-			//	en fonction du mode spécifié.
+			//	Ferme la liste (si nÃ©cessaire) et valide/rejette la modification
+			//	en fonction du mode spÃ©cifiÃ©.
 			
 			if (this.menu.IsMenuOpen)
 			{
@@ -636,21 +636,21 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
 		{
-			//	L'utilisateur a cliqué dans le bouton d'ouverture de la liste.
+			//	L'utilisateur a cliquÃ© dans le bouton d'ouverture de la liste.
 			
 			this.OpenCombo ();
 		}
 		
 		private void HandleScrollListSelectionActivated(object sender)
 		{
-			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
+			//	L'utilisateur a cliquÃ© dans la liste pour terminer son choix.
 			
 			this.ProcessComboActivatedIndex (this.scrollList.SelectedItemIndex);
 		}
 		
 		private void HandleScrollerSelectedItemChanged(object sender)
 		{
-			//	L'utilisateur a simplement déplacé la souris dans la liste.
+			//	L'utilisateur a simplement dÃ©placÃ© la souris dans la liste.
 			
 			this.ProcessComboSelectedIndex (this.scrollList.SelectedItemIndex);
 		}
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Widgets
 
 		public string							SelectedKey
 		{
-			//	Nom de la ligne sélectionnée, "" si aucune.
+			//	Nom de la ligne sÃ©lectionnÃ©e, "" si aucune.
 			get
 			{
 				int index = this.SelectedItemIndex;
@@ -865,7 +865,7 @@ namespace Epsitec.Common.Widgets
 			#region IMenuHost Members
 			public void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
 			{
-				//	Détermine la hauteur maximale disponible par rapport à la position
+				//	DÃ©termine la hauteur maximale disponible par rapport Ã  la position
 				//	actuelle :
 				Point pos = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
 				Point hot = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
@@ -876,8 +876,8 @@ namespace Epsitec.Common.Widgets
 
 				if (maxHeight > size.Height || maxHeight > 100)
 				{
-					//	Il y a assez de place pour dérouler le menu vers le bas,
-					//	mais il faudra peut-être le raccourcir un bout :
+					//	Il y a assez de place pour dÃ©rouler le menu vers le bas,
+					//	mais il faudra peut-Ãªtre le raccourcir un bout :
 					this.menu.MaxSize = new Size(this.menu.MaxWidth, maxHeight);
 					this.menu.AdjustSize();
 					
@@ -887,7 +887,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					//	Il faut dérouler le menu vers le haut.
+					//	Il faut dÃ©rouler le menu vers le haut.
 					pos.Y += item.ActualHeight-2;
 
 					maxHeight = workingArea.Top - pos.Y;
@@ -928,7 +928,7 @@ namespace Epsitec.Common.Widgets
 			#region IMenuHost Members
 			public void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
 			{
-				//	Détermine la hauteur maximale disponible par rapport à la position
+				//	DÃ©termine la hauteur maximale disponible par rapport Ã  la position
 				//	actuelle :
 				Point pos = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
 				Point hot = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
@@ -940,14 +940,14 @@ namespace Epsitec.Common.Widgets
 
 				if (this.menu.PreferredHeight < pos.Y-workingArea.Bottom)
 				{
-					//	Il y a assez de place pour dérouler le menu vers le bas.
+					//	Il y a assez de place pour dÃ©rouler le menu vers le bas.
 					size      = this.menu.PreferredSize;
 					location  = pos;
 					animation = Animation.RollDown;
 				}
 				else if (this.menu.PreferredHeight < workingArea.Top-(pos.Y+item.ActualHeight))
 				{
-					//	Il y a assez de place pour dérouler le menu vers le haut.
+					//	Il y a assez de place pour dÃ©rouler le menu vers le haut.
 					pos.Y += item.ActualHeight;
 					pos.Y += this.menu.PreferredHeight;
 
@@ -957,7 +957,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					//	Il faut dérouler le menu vers le bas, mais depuis en dessus du bouton.
+					//	Il faut dÃ©rouler le menu vers le bas, mais depuis en dessus du bouton.
 					pos.Y = workingArea.Bottom+this.menu.PreferredHeight;
 
 					size      = this.menu.PreferredSize;

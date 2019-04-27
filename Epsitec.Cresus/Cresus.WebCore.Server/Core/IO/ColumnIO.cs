@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.Databases;
 
 using System.Collections.Generic;
 

@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'interface ITextRenderer permet d'abstraire le code nécessaire au rendu
-	/// du texte (que ce soit à l'écran ou sous une autre représentation).
+	/// L'interface ITextRenderer permet d'abstraire le code nÃ©cessaire au rendu
+	/// du texte (que ce soit Ã  l'Ã©cran ou sous une autre reprÃ©sentation).
 	/// </summary>
 	public interface ITextRenderer
 	{

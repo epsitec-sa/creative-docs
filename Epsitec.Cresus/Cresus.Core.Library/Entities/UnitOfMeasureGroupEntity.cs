@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Entities
 				(
 					"Nom: ", this.Name, "\n",
 					"Description: ", this.Description, "\n",
-					"Catégorie: ", UnitOfMeasureGroupEntity.GetCategory (this)
+					"CatÃ©gorie: ", UnitOfMeasureGroupEntity.GetCategory (this)
 				);
 		}
 

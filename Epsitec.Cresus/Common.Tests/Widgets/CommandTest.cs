@@ -48,7 +48,7 @@ namespace Epsitec.Common.Tests.Widgets
 			Assert.AreEqual ("Copier", ApplicationCommands.Copy.Description);
 			Assert.AreEqual ("Coller", ApplicationCommands.Paste.Description);
 			Assert.AreEqual ("Supprimer", ApplicationCommands.Delete.Description);
-			Assert.AreEqual ("Sélectionner tout", ApplicationCommands.SelectAll.Description);
+			Assert.AreEqual ("SÃ©lectionner tout", ApplicationCommands.SelectAll.Description);
 		}
 
 		[Test]
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Tests.Widgets
 			Assert.IsNotNull (command);
 			Assert.AreEqual ("[0005]", command.CommandId);
 
-			Assert.AreEqual ("Sélectionner tout", command.Description);
+			Assert.AreEqual ("SÃ©lectionner tout", command.Description);
 			Assert.AreEqual (ApplicationCommands.SelectAll, command);
 		}
 

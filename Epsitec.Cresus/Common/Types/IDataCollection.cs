@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface IDataCollection donne accès à une collection de IDataItem.
+	/// L'interface IDataCollection donne accÃ¨s Ã  une collection de IDataItem.
 	/// </summary>
 	public interface IDataCollection : IEnumerable<IDataItem>, ICollection<IDataItem>
 	{

@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Select permet de gérer la sélection.
+	/// La classe Select permet de gÃ©rer la sÃ©lection.
 	/// </summary>
 	public class EditRibbon : AbstractRibbon
 	{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonDelete == null )  return;

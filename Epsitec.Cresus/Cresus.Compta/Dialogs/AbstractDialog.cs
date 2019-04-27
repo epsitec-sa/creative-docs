@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -25,12 +25,12 @@ namespace Epsitec.Cresus.Compta.Dialogs
 
 		public virtual void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 		}
 
 		public virtual void Hide()
 		{
-			//	Cache la fenêtre du dialogue.
+			//	Cache la fenÃªtre du dialogue.
 			if ( this.window != null )
 			{
 				this.window.Hide();
@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.Compta.Dialogs
 
 		protected void WindowInit(string name, double dx, double dy)
 		{
-			//	Initialise la fenêtre, à partir de la taille intérieure,
-			//	c'est-à-dire sans le cadre.
+			//	Initialise la fenÃªtre, Ã  partir de la taille intÃ©rieure,
+			//	c'est-Ã -dire sans le cadre.
 			this.WindowInit(name, dx, dy, false);
 		}
 
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Compta.Dialogs
 
 		protected Rectangle CurrentBounds
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			get
 			{
 				return new Rectangle(this.parentWindow.WindowLocation, this.parentWindow.WindowSize);

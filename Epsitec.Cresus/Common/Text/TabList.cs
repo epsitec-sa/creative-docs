@@ -1,10 +1,10 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe TabList gère la liste globale des tabulateurs.
+	/// La classe TabList gÃ¨re la liste globale des tabulateurs.
 	/// </summary>
 	public sealed class TabList
 	{
@@ -207,11 +207,11 @@ namespace Epsitec.Common.Text
 		
 		public void SortTabs(string[] tags)
 		{
-			//	Trie la table passée en entrée selon des positions de tabulateurs
+			//	Trie la table passÃ©e en entrÃ©e selon des positions de tabulateurs
 			//	croissantes.
 			
 			//	NB: ceci ne tient en compte que la position "simple" du tabulateur
-			//	et ignore les attributs qui permettent de régler de manière plus
+			//	et ignore les attributs qui permettent de rÃ©gler de maniÃ¨re plus
 			//	subtile la position.
 			
 			double[] pos = new double[tags.Length];
@@ -372,8 +372,8 @@ namespace Epsitec.Common.Text
 		
 		public string GenerateAutoTagName()
 		{
-			//	Il y a deux classes de tabulateurs : ceux qui sont définis localement
-			//	dans le texte (TabClass.Auto) et ceux qui sont définis au sein d'un
+			//	Il y a deux classes de tabulateurs : ceux qui sont dÃ©finis localement
+			//	dans le texte (TabClass.Auto) et ceux qui sont dÃ©finis au sein d'un
 			//	style (TabClass.Shared).
 			
 			return this.GenerateUniqueName (TabList.AutoTagPrefix);
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Text
 				this.Attach (record);
 			}
 			
-			//	TODO: mettre à jour les compteurs d'utilisation des tabulateurs
+			//	TODO: mettre Ã  jour les compteurs d'utilisation des tabulateurs
 		}
 		
 		
@@ -585,8 +585,8 @@ namespace Epsitec.Common.Text
 		
 		public static string CreateLevelTable(double[] offsets)
 		{
-			//	Convertit une table de positions exprimées en points en un
-			//	attribut utilisable pour créer un tabulateur.
+			//	Convertit une table de positions exprimÃ©es en points en un
+			//	attribut utilisable pour crÃ©er un tabulateur.
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -607,7 +607,7 @@ namespace Epsitec.Common.Text
 		
 		public static double[] ParseLevelTable(string attribute)
 		{
-			//	Analyse et décortique un argument créé avec CreateLevelTable
+			//	Analyse et dÃ©cortique un argument crÃ©Ã© avec CreateLevelTable
 			//	et retourne un tableau des offsets en points.
 			
 			string[] args = TabList.UnpackFromAttribute (attribute);
@@ -994,8 +994,8 @@ namespace Epsitec.Common.Text
 			private string						tag;
 			private double						position;
 			private Properties.SizeUnits		units;
-			private double						disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
-			private string						dockingMark;				//	"." = aligne sur le point décimal
+			private double						disposition;				//	0.0 = alignÃ© Ã  gauche, 0.5 = centrÃ©, 1.0 = alignÃ© Ã  droite
+			private string						dockingMark;				//	"." = aligne sur le point dÃ©cimal
 			private TabPositionMode				positionMode;
 			private string						attribute;
 			private long						version;

@@ -1,4 +1,4 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -51,11 +51,11 @@ namespace Epsitec.Cresus.Core.Entities
 			FormattedText addresses;
 			if (billToMailContact == shipToMailContact || (!billToMailContact.IsNotNull () && !shipToMailContact.IsNotNull ()))
 			{
-				addresses = FormattedText.Concat ("\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
+				addresses = FormattedText.Concat ("\n<b>â€¢ Adresse de facturation et de livraison:</b>\n", billing);
 			}
 			else
 			{
-				addresses = FormattedText.Concat ("\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
+				addresses = FormattedText.Concat ("\n<b>â€¢ Adresse de facturation:</b>\n", billing, "\n\n<b>â€¢ Adresse de livraison:</b>\n", shipping);
 			}
 
 			return TextFormatter.FormatText
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText ("???");//"Facture n°", this.IdA);
+			return TextFormatter.FormatText ("???");//"Facture nÂ°", this.IdA);
 		}
 
 
@@ -86,14 +86,14 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return TextFormatter.FormatText ("Pas encore défini").ApplyItalic ();
+				return TextFormatter.FormatText ("Pas encore dÃ©fini").ApplyItalic ();
 			}
 		}
 
 
 		public AffairEntity GetAffair(BusinessContext businessContext)
 		{
-			//	Retourne l'affaire à laquelle appartient l'entité.
+			//	Retourne l'affaire Ã  laquelle appartient l'entitÃ©.
 			var metadata = this.GetDocumentMetadata (businessContext);
 
 			if (metadata == null)
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private DocumentMetadataEntity GetDocumentMetadata(BusinessContext businessContext)
 		{
-			//	Retourne le DocumentMetadataEntity auquel appartient l'entité.
+			//	Retourne le DocumentMetadataEntity auquel appartient l'entitÃ©.
 			var example = new DocumentMetadataEntity ();
 			example.BusinessDocument = this;
 
@@ -157,14 +157,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public IList<AbstractDocumentItemEntity> GetConciseLines()
 		{
-			//	Retourne la liste des lignes d'un document commercial expurgée de toutes les
+			//	Retourne la liste des lignes d'un document commercial expurgÃ©e de toutes les
 			//	lignes redondantes, telles que les sous-totaux inutiles.
-			//	Le résultat n'est à utiliser que pour la production de documents !
+			//	Le rÃ©sultat n'est Ã  utiliser que pour la production de documents !
 			//	En effet, il n'est pas compatible avec la calculateur de prix, qui rajouterait
-			//	certains sous-totaux enlevés !
+			//	certains sous-totaux enlevÃ©s !
 			var conciseLines = new List<AbstractDocumentItemEntity> (this.Lines);
 
-			//	Supprime tous les sous-totaux à double.
+			//	Supprime tous les sous-totaux Ã  double.
 			int i = 0;
 			while (i < conciseLines.Count)
 			{
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			//	Supprime tous les sous-totaux inutiles. Par exemple, un sous-total sans rabais
-			//	précédé d'un article unique est superflu.
+			//	prÃ©cÃ©dÃ© d'un article unique est superflu.
 			i = 0;
 			while (i < conciseLines.Count)
 			{
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private static AbstractDocumentItemEntity GetNextActiveLine(IList<AbstractDocumentItemEntity> lines, int index, int direction)
 		{
-			//	Cherche une ligne en avant ou en arrière, en ignorant les lignes de texte.
+			//	Cherche une ligne en avant ou en arriÃ¨re, en ignorant les lignes de texte.
 			while (true)
 			{
 				index += direction;
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private static bool Similar(SubTotalDocumentItemEntity line1, SubTotalDocumentItemEntity line2)
 		{
-			//	Retourne true si les 2 lignes de sous-totaux sont redondantes et équivalentes.
+			//	Retourne true si les 2 lignes de sous-totaux sont redondantes et Ã©quivalentes.
 			if ((line1.IsNull ()) ||
 				(line2.IsNull ()))
 			{
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private static bool HasEmptyDiscount(SubTotalDocumentItemEntity line)
 		{
-			//	Retourne true si la ligne de sous-total est redondante, c'est-à-dire si elle n'a pas de rabais.
+			//	Retourne true si la ligne de sous-total est redondante, c'est-Ã -dire si elle n'a pas de rabais.
 
 			if (line.Discount.IsNull ())
 			{

@@ -20,7 +20,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -32,7 +32,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += this.HandleWindowPrintCloseClicked;
 
-				//	Crée les onglets.
+				//	CrÃ©e les onglets.
 				TabBook bookDoc = new TabBook(this.window.Root);
 				bookDoc.Name = "Book";
 				bookDoc.Arrows = TabBookArrows.Stretch;
@@ -49,8 +49,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				bookParam.TabTitle = Res.Strings.Dialog.Print.TabPage.Param;
 				bookDoc.Items.Add(bookParam);
 
-				//	L'onglet 'Image' est provisoirement caché, puisque les choix pour les filtres
-				//	des groupes A et B ne sont pas supportés par le port d'impression.
+				//	L'onglet 'Image' est provisoirement cachÃ©, puisque les choix pour les filtres
+				//	des groupes A et B ne sont pas supportÃ©s par le port d'impression.
 				TabPage bookImage = new TabPage();
 				bookImage.Name = "Image";
 				bookImage.TabTitle = Res.Strings.Dialog.Print.TabPage.Image;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("Print");
 		}
 
@@ -114,7 +114,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void UpdatePages()
 		{
-			//	Met à jour le dialogue lorsque les pages ont changé.
+			//	Met Ã  jour le dialogue lorsque les pages ont changÃ©.
 			this.editor.CurrentDocument.Dialogs.UpdatePrintPages();
 		}
 

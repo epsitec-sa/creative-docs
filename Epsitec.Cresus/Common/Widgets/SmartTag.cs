@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Statut : OK/PA, 12/03/2004
 
 using Epsitec.Common.Support;
@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe SmartTag représente un Tag avec un menu associé.
+	/// La classe SmartTag reprÃ©sente un Tag avec un menu associÃ©.
 	/// </summary>
 	public class SmartTag : Tag
 	{

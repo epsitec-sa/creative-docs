@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Data
 {
 	/// <summary>
-	/// Structure contenant une valeur quelconque pouvant être comparée en vue du tri.
+	/// Structure contenant une valeur quelconque pouvant Ãªtre comparÃ©e en vue du tri.
 	/// </summary>
 	public struct ComparableData : System.IComparable<ComparableData>
 	{

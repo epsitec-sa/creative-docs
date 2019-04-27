@@ -9,7 +9,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
-	/// Widget venant par-dessus le conteneur UI.Panel pour Èditer ce dernier.
+	/// Widget venant par-dessus le conteneur UI.Panel pour √©diter ce dernier.
 	/// </summary>
 	public class Editor : AbstractGroup, IPaintFilter
 	{
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public Module Module
 		{
-			//	Module associÈ.
+			//	Module associ√©.
 			get
 			{
 				return this.module;
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public PanelsContext Context
 		{
-			//	Contexte asociÈ.
+			//	Contexte asoci√©.
 			get
 			{
 				return this.context;
@@ -98,8 +98,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public UI.Panel Panel
 		{
-			//	Panneau associÈ qui est le conteneur de tous les widgets.
-			//	Editor est frËre de Panel et vient par-dessus.
+			//	Panneau associ√© qui est le conteneur de tous les widgets.
+			//	Editor est fr√®re de Panel et vient par-dessus.
 			get
 			{
 				return this.panel;
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public List<Widget> SelectedObjects
 		{
-			//	Retourne la liste des objets sÈlectionnÈs.
+			//	Retourne la liste des objets s√©lectionn√©s.
 			get
 			{
 				return this.selectedObjects;
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool IsEditEnabled
 		{
-			//	Est-ce que l'Èdition est possible ? Pour cela, il faut avoir sÈlectionnÈ un bundle
+			//	Est-ce que l'√©dition est possible ? Pour cela, il faut avoir s√©lectionn√© un bundle
 			//	dans la liste de gauche.
 			get
 			{
@@ -173,14 +173,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void UpdateGeometry()
 		{
-			//	Mise ‡ jour aprËs avoir changÈ la gÈomÈtrie d'un ou plusieurs objets.
+			//	Mise √† jour apr√®s avoir chang√© la g√©om√©trie d'un ou plusieurs objets.
 			this.handlesList.UpdateGeometry();
 		}
 
 
 		public void DoCommand(string name)
 		{
-			//	ExÈcute une commande.
+			//	Ex√©cute une commande.
 			switch (name)
 			{
 				case "PanelDelete":
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void GetSelectionInfo(out int selected, out int count, out bool isRoot)
 		{
-			//	Donne des informations sur la sÈlection en cours.
+			//	Donne des informations sur la s√©lection en cours.
 			selected = this.selectedObjects.Count;
 			count = this.panel.Children.Count;
 			isRoot = false;
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			pos = this.ConvEditorToPanel(pos);
 
-			//	Informe l'ensemble des cotes de l'Ètat de la touche Shift.
+			//	Informe l'ensemble des cotes de l'√©tat de la touche Shift.
 			this.dimensionsList.IsShiftPressed = message.IsShiftPressed;
 
 			switch (message.MessageType)
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				case MessageType.MouseWheel:
 					if (this.dimensionsList.Wheel(message.Wheel))
 					{
-						this.OnChildrenGeometryChanged();  // met ‡ jour les proxies
+						this.OnChildrenGeometryChanged();  // met √† jour les proxies
 						this.module.DesignerApplication.UpdateInfoViewer();
 					}
 					message.Consumer = this;
@@ -489,7 +489,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region ProcessMouse
 		void ProcessMouseDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a ÈtÈ pressÈe.
+			//	La souris a √©t√© press√©e.
 			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectDown(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		void ProcessMouseMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a ÈtÈ dÈplacÈe.
+			//	La souris a √©t√© d√©plac√©e.
 			this.handlesList.Hilite(pos);
 
 			if (this.context.Tool == "ToolSelect")
@@ -569,7 +569,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		void ProcessMouseUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a ÈtÈ rel‚chÈe.
+			//	La souris a √©t√© rel√¢ch√©e.
 			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectUp(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		void ProcessKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	La souris a ÈtÈ rel‚chÈe.
+			//	La souris a √©t√© rel√¢ch√©e.
 			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectKeyChanged(isControlPressed, isShiftPressed);
@@ -649,7 +649,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region ProcessMouse select
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection ponctuelle, souris pressÈe.
+			//	S√©lection ponctuelle, souris press√©e.
 			this.lastCreatedObject = null;
 
 			this.startingPos = pos;
@@ -687,9 +687,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 				return;
 			}
 
-			obj = this.Detect(pos, isShiftPressed, false);  // objet visÈ par la souris
+			obj = this.Detect(pos, isShiftPressed, false);  // objet vis√© par la souris
 
-			if (!isShiftPressed)  // touche Shift rel‚chÈe ?
+			if (!isShiftPressed)  // touche Shift rel√¢ch√©e ?
 			{
 				if (obj != null && this.selectedObjects.Contains(obj) && obj != this.panel)
 				{
@@ -732,7 +732,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection ponctuelle, souris dÈplacÈe.
+			//	S√©lection ponctuelle, souris d√©plac√©e.
 			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.isHilitedDimension || this.isDraggingDimension)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
@@ -767,7 +767,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 			else
 			{
-				//	Met en Èvidence la cote survolÈe par la souris.
+				//	Met en √©vidence la cote survol√©e par la souris.
 				if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 				{
 					this.isHilitedDimension = this.dimensionsList.Hilite(pos);
@@ -780,7 +780,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 
 				Widget obj = this.Detect(pos, isShiftPressed, false);
-				this.SetHilitedObject(obj, null);  // met en Èvidence l'objet survolÈ par la souris
+				this.SetHilitedObject(obj, null);  // met en √©vidence l'objet survol√© par la souris
 
 				Rectangle rect = Rectangle.Empty;
 				Attachment attachment;
@@ -790,13 +790,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 					rect.Offset(0.5, 0.5);
 					rect.Inflate(3);
 				}
-				this.SetHilitedAttachmentRectangle(rect);  // met en Èvidence l'attachement survolÈ par la souris
+				this.SetHilitedAttachmentRectangle(rect);  // met en √©vidence l'attachement survol√© par la souris
 			}
 		}
 
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection ponctuelle, souris rel‚chÈe.
+			//	S√©lection ponctuelle, souris rel√¢ch√©e.
 			if (this.isDragging)
 			{
 				this.DraggingEnd(pos);
@@ -818,7 +818,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				this.dimensionsList.DraggingEnd(pos);
 				this.isDraggingDimension = false;
-				this.OnChildrenGeometryChanged();  // met ‡ jour les proxies
+				this.OnChildrenGeometryChanged();  // met √† jour les proxies
 				this.module.DesignerApplication.UpdateInfoViewer();
 			}
 
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection ponctuelle, touche pressÈe ou rel‚chÈe.
+			//	S√©lection ponctuelle, touche press√©e ou rel√¢ch√©e.
 			if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
@@ -842,7 +842,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region ProcessMouse global
 		protected void GlobalDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection rectangulaire, souris pressÈe.
+			//	S√©lection rectangulaire, souris press√©e.
 			this.lastCreatedObject = null;
 
 			this.startingPos = pos;
@@ -859,9 +859,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 				return;
 			}
 
-			Widget obj = this.Detect(pos, isShiftPressed, false);  // objet visÈ par la souris
+			Widget obj = this.Detect(pos, isShiftPressed, false);  // objet vis√© par la souris
 
-			if (!isShiftPressed)  // touche Shift rel‚chÈe ?
+			if (!isShiftPressed)  // touche Shift rel√¢ch√©e ?
 			{
 				if (obj != null && this.selectedObjects.Contains(obj) && obj != this.panel)
 				{
@@ -882,7 +882,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection rectangulaire, souris dÈplacÈe.
+			//	S√©lection rectangulaire, souris d√©plac√©e.
 			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
@@ -915,7 +915,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection rectangulaire, souris rel‚chÈe.
+			//	S√©lection rectangulaire, souris rel√¢ch√©e.
 			if (this.isDragging)
 			{
 				this.DraggingEnd(pos);
@@ -938,7 +938,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection rectangulaire, touche pressÈe ou rel‚chÈe.
+			//	S√©lection rectangulaire, touche press√©e ou rel√¢ch√©e.
 			if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
@@ -953,7 +953,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region ProcessMouse grid
 		protected void GridDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection de tableaux, souris pressÈe.
+			//	S√©lection de tableaux, souris press√©e.
 			this.lastCreatedObject = null;
 
 			this.startingPos = pos;
@@ -964,7 +964,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				return;
 			}
 
-			Widget obj = this.Detect(pos, false, true);  // objet tableau visÈ par la souris
+			Widget obj = this.Detect(pos, false, true);  // objet tableau vis√© par la souris
 			int column, row;
 			this.GridDetect(pos, obj, out column, out row);
 			if (column == GridSelection.Invalid && row == GridSelection.Invalid)
@@ -1009,7 +1009,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection de tableaux, souris dÈplacÈe.
+			//	S√©lection de tableaux, souris d√©plac√©e.
 			if (this.handlesList.IsFinger)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
@@ -1023,7 +1023,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.ChangeMouseCursor(MouseCursorType.Grid);
 			}
 
-			Widget obj = this.Detect(pos, false, true);  // objet tableau visÈ par la souris
+			Widget obj = this.Detect(pos, false, true);  // objet tableau vis√© par la souris
 			int column, row;
 			this.GridDetect(pos, obj, out column, out row);
 
@@ -1084,7 +1084,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection de tableaux, souris rel‚chÈe.
+			//	S√©lection de tableaux, souris rel√¢ch√©e.
 			if (this.isGridding)
 			{
 				this.OnChildrenSelected();
@@ -1100,7 +1100,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridAdaptSelection(Widget obj, int column, int row, bool isShiftPressed)
 		{
-			//	Adapte la sÈlection selon le mouvement de la souris.
+			//	Adapte la s√©lection selon le mouvement de la souris.
 			if (obj == null)
 			{
 				return;
@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	SÈlection de tableaux, touche pressÈe ou rel‚chÈe.
+			//	S√©lection de tableaux, touche press√©e ou rel√¢ch√©e.
 			if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.GridPlus);
@@ -1240,20 +1240,20 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region ProcessMouse edit
 		protected void EditDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Edition, souris pressÈe.
+			//	Edition, souris press√©e.
 		}
 
 		protected void EditMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Edition, souris dÈplacÈe.
+			//	Edition, souris d√©plac√©e.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
 
-			this.SetHilitedObject(this.Detect(pos, false, false), null);  // met en Èvidence l'objet survolÈ par la souris
+			this.SetHilitedObject(this.Detect(pos, false, false), null);  // met en √©vidence l'objet survol√© par la souris
 		}
 
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Edition, souris rel‚chÈe.
+			//	Edition, souris rel√¢ch√©e.
 			Widget obj = this.Detect(pos, false, false);
 			if (obj != null)
 			{
@@ -1263,60 +1263,60 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void EditKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	Edition, touche pressÈe ou rel‚chÈe.
+			//	Edition, touche press√©e ou rel√¢ch√©e.
 		}
 		#endregion
 
 		#region ProcessMouse zoom
 		protected void ZoomDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Loupe, souris pressÈe.
+			//	Loupe, souris press√©e.
 		}
 
 		protected void ZoomMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Loupe, souris dÈplacÈe.
+			//	Loupe, souris d√©plac√©e.
 			this.ChangeMouseCursor(MouseCursorType.Zoom);
 		}
 
 		protected void ZoomUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Loupe, souris rel‚chÈe.
+			//	Loupe, souris rel√¢ch√©e.
 		}
 
 		protected void ZoomKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	Loupe, touche pressÈe ou rel‚chÈe.
+			//	Loupe, touche press√©e ou rel√¢ch√©e.
 		}
 		#endregion
 
 		#region ProcessMouse hand
 		protected void HandDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Main, souris pressÈe.
+			//	Main, souris press√©e.
 		}
 
 		protected void HandMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Main, souris dÈplacÈe.
+			//	Main, souris d√©plac√©e.
 			this.ChangeMouseCursor(MouseCursorType.Hand);
 		}
 
 		protected void HandUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Main, souris rel‚chÈe.
+			//	Main, souris rel√¢ch√©e.
 		}
 
 		protected void HandKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	Main, touche pressÈe ou rel‚chÈe.
+			//	Main, touche press√©e ou rel√¢ch√©e.
 		}
 		#endregion
 
 		#region ProcessMouse create object
 		protected void CreateObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Dessin d'un objet, souris pressÈe.
+			//	Dessin d'un objet, souris press√©e.
 			this.DeselectAll();
 
 			Point initialPos = pos;
@@ -1338,7 +1338,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			sep.Anchor = AnchorStyles.All;
 			sep.Color = PanelsContext.ColorOutsideForeground;
 			sep.Alpha = 0;
-			sep.SetParent(this.creatingWindow.Root);  // parent en dernier pour Èviter les flashs !
+			sep.SetParent(this.creatingWindow.Root);  // parent en dernier pour √©viter les flashs !
 
 			this.constrainsList.Starting(Rectangle.Empty, false);
 
@@ -1349,14 +1349,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			int column, row;
 			this.GridDetect(initialPos, parent, out column, out row);
-			this.SetHilitedParent(parent, column, row, 1, 1);  // met en Èvidence le futur parent survolÈ par la souris
+			this.SetHilitedParent(parent, column, row, 1, 1);  // met en √©vidence le futur parent survol√© par la souris
 
 			this.module.DesignerApplication.UpdateInfoViewer();
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Dessin d'un objet, souris dÈplacÈe.
+			//	Dessin d'un objet, souris d√©plac√©e.
 			this.ChangeMouseCursor(MouseCursorType.Pen);
 
 			if (this.creatingObject != null)
@@ -1411,7 +1411,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 				if (this.isInside)
 				{
-					this.SetHilitedParent(parent, column, row, 1, 1);  // met en Èvidence le futur parent survolÈ par la souris
+					this.SetHilitedParent(parent, column, row, 1, 1);  // met en √©vidence le futur parent survol√© par la souris
 				}
 				else
 				{
@@ -1424,7 +1424,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void CreateObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Dessin d'un objet, souris rel‚chÈe.
+			//	Dessin d'un objet, souris rel√¢ch√©e.
 			if (this.creatingObject != null)
 			{
 				this.isInside = this.IsInside(pos);
@@ -1486,7 +1486,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					this.creatingWindow.Dispose();
 					this.creatingWindow = null;
 				}
-				else  // rel‚chÈ hors de la fenÍtre ?
+				else  // rel√¢ch√© hors de la fen√™tre ?
 				{
 					this.creatingWindow.DissolveAndDisposeWindow();
 					this.creatingWindow = null;
@@ -1522,7 +1522,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Widget CreateObjectItem()
 		{
-			//	CrÈe un objet selon la palette d'outils.
+			//	Cr√©e un objet selon la palette d'outils.
 			Widget item = null;
 
 			if (this.context.Tool == "ObjectHLine")
@@ -1556,7 +1556,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
 				this.objectModifier.SetButtonClass(button, ButtonClass.RichDialogButton);
-				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carrÈ
+				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carr√©
 				button.MinHeight = button.PreferredHeight;
 				button.PreferredWidth = button.PreferredHeight;
 
@@ -1568,7 +1568,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
 				this.objectModifier.SetButtonClass(button, ButtonClass.FlatButton);
-				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carrÈ
+				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carr√©
 				button.MinHeight = button.PreferredHeight;
 
 				item = button;
@@ -1578,14 +1578,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				item = new UI.Placeholder();
 				item.Text = Misc.Italic("TextField");
-				item.DrawDesignerFrame = true;  // nÈcessaire pour voir le cadre pendant la crÈation
+				item.DrawDesignerFrame = true;  // n√©cessaire pour voir le cadre pendant la cr√©ation
 			}
 
 			if (this.context.Tool == "ObjectTable")
 			{
 				item = new UI.TablePlaceholder();
 				item.Text = Misc.Italic("Table");
-				item.DrawDesignerFrame = true;  // nÈcessaire pour voir le cadre pendant la crÈation
+				item.DrawDesignerFrame = true;  // n√©cessaire pour voir le cadre pendant la cr√©ation
 			}
 
 			if (this.context.Tool == "ObjectGroup")
@@ -1596,7 +1596,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				group.PreferredSize = new Size(200, 100);
 				group.Padding = new Margins(10, 10, 10, 10);
 				group.DrawFullFrame = false;
-				group.DrawDesignerFrame = true;  // nÈcessaire pour voir le cadre pendant la crÈation
+				group.DrawDesignerFrame = true;  // n√©cessaire pour voir le cadre pendant la cr√©ation
 
 				item = group;
 			}
@@ -1631,7 +1631,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				panel.Text = Misc.Italic("Panel");
 				panel.PreferredSize = new Size(200, 100);
-				panel.DrawDesignerFrame = true;  // nÈcessaire pour voir le cadre pendant la crÈation
+				panel.DrawDesignerFrame = true;  // n√©cessaire pour voir le cadre pendant la cr√©ation
 				panel.ResourceManager = this.module.ResourceManager;
 
 				item = panel;
@@ -1642,7 +1642,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void CreateObjectAdjust(ref Point pos, Widget parent, out Rectangle bounds)
 		{
-			//	Ajuste la position de l'objet ‡ crÈer selon les contraintes.
+			//	Ajuste la position de l'objet √† cr√©er selon les contraintes.
 			pos.X -= System.Math.Floor(this.creatingObject.PreferredWidth/2);
 			pos.Y -= System.Math.Floor(this.creatingObject.PreferredHeight/2);
 
@@ -1659,7 +1659,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	Dessin d'un objet, touche pressÈe ou rel‚chÈe.
+			//	Dessin d'un objet, touche press√©e ou rel√¢ch√©e.
 		}
 		#endregion
 
@@ -1743,7 +1743,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Handling
 		protected bool HandlingStart(Point pos)
 		{
-			//	DÈbut du drag pour dÈplacer une poignÈe.
+			//	D√©but du drag pour d√©placer une poign√©e.
 			this.handlingType = this.handlesList.HandleDetect(pos);
 
 			if (this.handlingType == Handle.Type.None)
@@ -1826,7 +1826,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void HandlingMove(Point pos)
 		{
-			//	Mouvement du drag pour dÈplacer une poignÈe.
+			//	Mouvement du drag pour d√©placer une poign√©e.
 			if (this.isHandling)
 			{
 				this.handlingRectangle = this.handlesList.DraggingMove(pos);
@@ -1837,7 +1837,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void HandlingEnd(Point pos)
 		{
-			//	Fin du drag pour dÈplacer une poignÈe.
+			//	Fin du drag pour d√©placer une poign√©e.
 			if (this.isHandling)
 			{
 				this.handlingWindow.Hide();
@@ -1846,7 +1846,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 				this.handlesList.DraggingStop(pos);
 				this.isHandling = false;
-				this.OnChildrenGeometryChanged();  // met ‡ jour les proxies
+				this.OnChildrenGeometryChanged();  // met √† jour les proxies
 				this.module.DesignerApplication.UpdateInfoViewer();
 			}
 		}
@@ -1856,7 +1856,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Dragging
 		protected void DraggingStart(Point pos)
 		{
-			//	DÈbut du drag pour dÈplacer les objets sÈlectionnÈs.
+			//	D√©but du drag pour d√©placer les objets s√©lectionn√©s.
 			this.draggingArraySelected = this.selectedObjects.ToArray();
 
 			this.draggingRectangle = this.SelectBounds;
@@ -1899,7 +1899,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.constrainsList.Starting(Rectangle.Empty, false);
 			}
 
-			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en Èvidence le futur parent survolÈ par la souris
+			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en √©vidence le futur parent survol√© par la souris
 
 			FrameBox container = new FrameBox();
 			container.PreferredSize = this.draggingRectangle.Size;
@@ -1922,7 +1922,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 
 			this.draggingOrigin = this.MapClientToScreen(this.ConvPanelToEditor(this.draggingOffset));
-			//?this.draggingOrigin.Y -= 1;  // TODO: cette correction devrait Ítre inutile !
+			//?this.draggingOrigin.Y -= 1;  // TODO: cette correction devrait √™tre inutile !
 			this.draggingWindow = new DragWindow();
 			this.draggingWindow.DefineWidget(container, container.PreferredSize, Margins.Zero);
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
@@ -1939,7 +1939,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DraggingMove(Point pos)
 		{
-			//	Mouvement du drag pour dÈplacer les objets sÈlectionnÈs.
+			//	Mouvement du drag pour d√©placer les objets s√©lectionn√©s.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
 			int column = GridSelection.Invalid;
@@ -1993,13 +1993,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			this.ChangeSeparatorAlpha(this.draggingWindow);
 
-			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en Èvidence le futur parent survolÈ par la souris
+			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en √©vidence le futur parent survol√© par la souris
 			this.module.DesignerApplication.UpdateInfoViewer();
 		}
 
 		protected void DraggingEnd(Point pos)
 		{
-			//	Fin du drag pour dÈplacer les objets sÈlectionnÈs.
+			//	Fin du drag pour d√©placer les objets s√©lectionn√©s.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
 			Undo.Shapshot action = this.viewersPanels.UndoCurrentSnapshot(null);
@@ -2014,7 +2014,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					if (this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent))
 					{
 						this.viewersPanels.UndoMemorize(action, Res.Strings.Action.PanelMove);
-						this.OnChildrenGeometryChanged();  // met ‡ jour les proxies
+						this.OnChildrenGeometryChanged();  // met √† jour les proxies
 					}
 				}
 
@@ -2029,7 +2029,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					if (this.ZOrderChangeSelection(group, order, ha, va))
 					{
 						this.viewersPanels.UndoMemorize(action, Res.Strings.Action.PanelMove);
-						this.OnChildrenGeometryChanged();  // met ‡ jour les proxies
+						this.OnChildrenGeometryChanged();  // met √† jour les proxies
 					}
 				}
 
@@ -2066,13 +2066,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 						if (isChanging)
 						{
 							this.viewersPanels.UndoMemorize(action, Res.Strings.Action.PanelMove);
-							this.OnChildrenGeometryChanged();  // met ‡ jour les proxies
+							this.OnChildrenGeometryChanged();  // met √† jour les proxies
 						}
 					}
 					else
 					{
-						//	Si on rel‚che l'objet dans une cellule occupÈe, on ne fait rien.
-						//	L'objet reste ainsi ‡ sa position initiale.
+						//	Si on rel√¢che l'objet dans une cellule occup√©e, on ne fait rien.
+						//	L'objet reste ainsi √† sa position initiale.
 					}
 				}
 
@@ -2088,7 +2088,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.draggingWindow.Dispose();
 				this.draggingWindow = null;
 			}
-			else  // rel‚chÈ hors de la fenÍtre ?
+			else  // rel√¢ch√© hors de la fen√™tre ?
 			{
 				this.draggingWindow.DissolveAndDisposeWindow();
 				this.draggingWindow = null;
@@ -2108,10 +2108,10 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected bool IsDraggingGridPossible(Widget parent, ref int column, ref int row)
 		{
-			//	VÈrifie si la sÈlection peut Ítre dÈplacÈe dans le tableau de destination
-			//	donnÈ (parent, column, row). Si la cellule destination est occupÈe, mais que
-			//	l'objet dÈplacÈ provient du mÍme tableau, l'opÈration est autorisÈe. Les deux
-			//	widgets seront alors permutÈs.
+			//	V√©rifie si la s√©lection peut √™tre d√©plac√©e dans le tableau de destination
+			//	donn√© (parent, column, row). Si la cellule destination est occup√©e, mais que
+			//	l'objet d√©plac√© provient du m√™me tableau, l'op√©ration est autoris√©e. Les deux
+			//	widgets seront alors permut√©s.
 			if (this.selectedObjects.Count != 1)
 			{
 				return false;
@@ -2157,7 +2157,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Selection
 		public List<int> SelectionToList()
 		{
-			//	Retourne une liste reprÈsentant tous les objets sÈlectionnÈs.
+			//	Retourne une liste repr√©sentant tous les objets s√©lectionn√©s.
 			List<int> list = new List<int>();
 			int rank = 0;
 
@@ -2192,7 +2192,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SelectFromList(List<int> list)
 		{
-			//	SÈlectionne les objets d'aprËs une liste.
+			//	S√©lectionne les objets d'apr√®s une liste.
 			this.selectedObjects.Clear();
 			int rank = 0;
 
@@ -2230,10 +2230,10 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Widget Detect(Point pos, bool sameParent, bool onlyGrid)
 		{
-			//	DÈtecte l'objet visÈ par la souris, avec prioritÈ au dernier objet
-			//	dessinÈ (donc placÈ dessus).
-			//	Si sameParent = true, l'objet dÈtectÈ doit avoir le mÍme parent que
-			//	l'objet Èventuellement dÈj‡ sÈlectionnÈ.
+			//	D√©tecte l'objet vis√© par la souris, avec priorit√© au dernier objet
+			//	dessin√© (donc plac√© dessus).
+			//	Si sameParent = true, l'objet d√©tect√© doit avoir le m√™me parent que
+			//	l'objet √©ventuellement d√©j√† s√©lectionn√©.
 			Widget detected = this.Detect(pos, sameParent, onlyGrid, this.panel);
 			if (detected == null && (!sameParent || this.selectedObjects.Count == 0) && (!onlyGrid || this.objectModifier.AreChildrenGrid(this.panel)))
 			{
@@ -2302,10 +2302,10 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Margins GetDetectPadding(Widget obj, bool insideGrid)
 		{
-			//	Retourne les marges intÈrieures pour la dÈtection du padding.
+			//	Retourne les marges int√©rieures pour la d√©tection du padding.
 			if (insideGrid && this.objectModifier.AreChildrenGrid(obj))
 			{
-				//	On rend des marges maximales pour accepter la dÈtection dans toute
+				//	On rend des marges maximales pour accepter la d√©tection dans toute
 				//	la surface de l'objet.
 				return new Margins(double.MaxValue, double.MaxValue, double.MaxValue, double.MaxValue);
 			}
@@ -2323,7 +2323,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Widget DetectGroup(Point pos)
 		{
-			//	DÈtecte le groupe visÈ par la souris.
+			//	D√©tecte le groupe vis√© par la souris.
 			if (this.IsInside(pos))
 			{
 				Widget container = this.panel.FindChild(pos, this.selectedObjects, WidgetChildFindMode.Deep | WidgetChildFindMode.SkipHidden | WidgetChildFindMode.SkipNonContainer | WidgetChildFindMode.SkipEmbedded);
@@ -2337,7 +2337,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void PrepareForDelete()
 		{
-			//	PrÈparation en vue de la suppression de l'interface.
+			//	Pr√©paration en vue de la suppression de l'interface.
 			this.creatingObject = null;
 			this.lastCreatedObject = null;
 			this.hilitedObject = null;
@@ -2347,7 +2347,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void DeselectAll()
 		{
-			//	DÈsÈlectionne tous les objets.
+			//	D√©s√©lectionne tous les objets.
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
@@ -2360,7 +2360,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectAll()
 		{
-			//	SÈlectionne tous les objets.
+			//	S√©lectionne tous les objets.
 			this.selectedObjects.Clear();
 
 			foreach (Widget obj in this.panel.Children)
@@ -2376,7 +2376,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectInvert()
 		{
-			//	Inverse la sÈlection.
+			//	Inverse la s√©lection.
 			List<Widget> list = new List<Widget>();
 
 			foreach (Widget obj in this.panel.Children)
@@ -2397,7 +2397,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectRoot()
 		{
-			//	SÈlectionne le panneau de base.
+			//	S√©lectionne le panneau de base.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(this.panel);
 
@@ -2409,7 +2409,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectParent()
 		{
-			//	SÈlectionne l'objet parent de l'actuelle sÈlection.
+			//	S√©lectionne l'objet parent de l'actuelle s√©lection.
 			System.Diagnostics.Debug.Assert(this.selectedObjects.Count != 0);
 			Widget parent = this.selectedObjects[0].Parent;
 			this.selectedObjects.Clear();
@@ -2423,7 +2423,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SelectOneObject(Widget obj)
 		{
-			//	SÈlectionne un objet.
+			//	S√©lectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
 			this.GridClearSelection();
@@ -2434,7 +2434,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SelectListObject(List<Widget> list)
 		{
-			//	SÈlectionne une liste d'objets.
+			//	S√©lectionne une liste d'objets.
 			this.selectedObjects = list;
 			this.GridClearSelection();
 			this.UpdateAfterChanging(Viewers.Changing.Selection);
@@ -2444,8 +2444,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectObjectsInRectangle(Rectangle sel)
 		{
-			//	SÈlectionne tous les objets entiËrement inclus dans un rectangle.
-			//	Tous les objets sÈlectionnÈs doivent avoir le mÍme parent.
+			//	S√©lectionne tous les objets enti√®rement inclus dans un rectangle.
+			//	Tous les objets s√©lectionn√©s doivent avoir le m√™me parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
 			this.GridClearSelection();
 			this.UpdateAfterChanging(Viewers.Changing.Selection);
@@ -2484,21 +2484,21 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void RegenerateDimensions()
 		{
-			//	RÈgÈnËre les cotes s'il y a eu un changement.
+			//	R√©g√©n√®re les cotes s'il y a eu un changement.
 			this.dimensionsList.UpdateSelection();
 		}
 
 		public void UpdateAfterSelectionGridChanged()
 		{
-			//	Mise ‡ jour aprËs un changement de sÈlection dans un tableau.
+			//	Mise √† jour apr√®s un changement de s√©lection dans un tableau.
 			this.dimensionsList.UpdateSelection();
-			this.OnChildrenSelected();  // met ‡ jour les panneaux des proxies ‡ droite
+			this.OnChildrenSelected();  // met √† jour les panneaux des proxies √† droite
 		}
 
 		protected void UpdateAfterChanging(Viewers.Changing oper)
 		{
-			//	Mise ‡ jour aprËs un changement de sÈlection, ou aprËs un changement dans
-			//	l'arbre des objets (crÈation, changement de parentÈ, etc.).
+			//	Mise √† jour apr√®s un changement de s√©lection, ou apr√®s un changement dans
+			//	l'arbre des objets (cr√©ation, changement de parent√©, etc.).
 			this.module.DesignerApplication.UpdateViewer(oper);
 			this.handlesList.UpdateSelection();
 			this.dimensionsList.UpdateSelection();
@@ -2507,14 +2507,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SetEnteredObjects(List<Widget> list)
 		{
-			//	DÈtermine l'objet survolÈ depuis la barre de statut.
+			//	D√©termine l'objet survol√© depuis la barre de statut.
 			this.enteredObjects = list;
 			this.Invalidate();
 		}
 
 		protected void SetHilitedObject(Widget obj, GridSelection grid)
 		{
-			//	DÈtermine l'objet ‡ mettre en Èvidence lors d'un survol.
+			//	D√©termine l'objet √† mettre en √©vidence lors d'un survol.
 			if (this.hilitedObject != obj || !GridSelection.EqualValues(this.hilitedGrid, grid))
 			{
 				this.hilitedObject = obj;
@@ -2525,7 +2525,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SetHilitedParent(Widget obj, int column, int row, int columnCount, int rowCount)
 		{
-			//	DÈtermine l'objet parent ‡ mettre en Èvidence lors d'un survol.
+			//	D√©termine l'objet parent √† mettre en √©vidence lors d'un survol.
 			if (this.hilitedParent != obj || this.hilitedParentColumn != column || this.hilitedParentRow != row || this.hilitedParentColumnCount != columnCount || this.hilitedParentRowCount != rowCount)
 			{
 				this.hilitedParent = obj;
@@ -2539,7 +2539,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SetSelectRectangle(Rectangle rect)
 		{
-			//	DÈtermine la zone du rectangle de sÈlection.
+			//	D√©termine la zone du rectangle de s√©lection.
 			if (this.selectedRectangle != rect)
 			{
 				this.Invalidate(this.ConvPanelToEditor(this.selectedRectangle));  // invalide l'ancienne zone
@@ -2550,7 +2550,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SetHilitedAttachmentRectangle(Rectangle rect)
 		{
-			//	DÈtermine la zone du rectangle d'attachement.
+			//	D√©termine la zone du rectangle d'attachement.
 			if (this.hilitedAttachmentRectangle != rect)
 			{
 				this.Invalidate(this.ConvPanelToEditor(this.hilitedAttachmentRectangle));  // invalide l'ancienne zone
@@ -2564,7 +2564,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Operations
 		protected void DeleteSelection()
 		{
-			//	Supprime tous les objets sÈlectionnÈs.
+			//	Supprime tous les objets s√©lectionn√©s.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				obj.Parent.Children.Remove(obj);
@@ -2581,13 +2581,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DuplicateSelection()
 		{
-			//	Duplique tous les objets sÈlectionnÈs.
+			//	Duplique tous les objets s√©lectionn√©s.
 			//	TODO:
 		}
 
 		protected void MoveRibbonSelection(Point direction)
 		{
-			//	DÈplace tous les objets sÈlectionnÈs selon le ruban 'Move'.
+			//	D√©place tous les objets s√©lectionn√©s selon le ruban 'Move'.
 			this.viewersPanels.UndoMemorize(Res.Strings.Action.PanelMove, false);
 
 			direction.X *= this.module.DesignerApplication.MoveHorizontal;
@@ -2599,7 +2599,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected bool MoveSelection(Point move, Widget parent)
 		{
-			//	DÈplace et change de parent pour tous les objets sÈlectionnÈs.
+			//	D√©place et change de parent pour tous les objets s√©lectionn√©s.
 			bool isMoving = false;
 
 			foreach (Widget obj in this.selectedObjects)
@@ -2638,7 +2638,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectAlign(int direction, bool isVertical)
 		{
-			//	Aligne tous les objets sÈlectionnÈs.
+			//	Aligne tous les objets s√©lectionn√©s.
 			Rectangle bounds = this.SelectBounds;
 
 			if (isVertical)
@@ -2657,7 +2657,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 						this.SetObjectPositionY(obj, bounds.Top-this.GetObjectPreferredBounds(obj).Height);
 					}
 				}
-				else  // centrÈ verticalement ?
+				else  // centr√© verticalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
@@ -2667,21 +2667,21 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 			else
 			{
-				if (direction < 0)  // ‡ gauche ?
+				if (direction < 0)  // √† gauche ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
 						this.SetObjectPositionX(obj, bounds.Left);
 					}
 				}
-				else if (direction > 0)  // ‡ droite ?
+				else if (direction > 0)  // √† droite ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
 						this.SetObjectPositionX(obj, bounds.Right-this.GetObjectPreferredBounds(obj).Width);
 					}
 				}
-				else  // centrÈ horizontalement ?
+				else  // centr√© horizontalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
@@ -2696,7 +2696,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectAlignBaseLine()
 		{
-			//	Aligne sur la ligne de base tous les objets sÈlectionnÈs.
+			//	Aligne sur la ligne de base tous les objets s√©lectionn√©s.
 #if false
 			Widget model = null;
 			foreach (Widget obj in this.selectedObjects)
@@ -2737,7 +2737,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectAdjust(bool isVertical)
 		{
-			//	Ajuste les dimensions de tous les objets sÈlectionnÈs.
+			//	Ajuste les dimensions de tous les objets s√©lectionn√©s.
 			Rectangle bounds = this.SelectBounds;
 
 			if (isVertical)
@@ -2767,13 +2767,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectAlignGrid()
 		{
-			//	Aligne sur la grille tous les objets sÈlectionnÈs.
+			//	Aligne sur la grille tous les objets s√©lectionn√©s.
 			//	TODO:
 		}
 
 		protected void SelectOrder(int direction)
 		{
-			//	Modifie l'ordre de tous les objets sÈlectionnÈs.
+			//	Modifie l'ordre de tous les objets s√©lectionn√©s.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				obj.ZOrder += direction;
@@ -2788,7 +2788,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectTabIndexRenum()
 		{
-			//	RenumÈrote toutes les touches Tab.
+			//	Renum√©rote toutes les touches Tab.
 			this.SelectTabIndexRenum(this.panel);
 
 			this.Invalidate();
@@ -2821,7 +2821,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SelectTabIndex(int direction)
 		{
-			//	Modifie l'ordre pour la touche Tab de tous les objets sÈlectionnÈs.
+			//	Modifie l'ordre pour la touche Tab de tous les objets s√©lectionn√©s.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				if (direction == 0)
@@ -2861,7 +2861,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Rectangle SelectBounds
 		{
-			//	Retourne le rectangle englobant tous les objets sÈlectionnÈs.
+			//	Retourne le rectangle englobant tous les objets s√©lectionn√©s.
 			get
 			{
 				Rectangle bounds = Rectangle.Empty;
@@ -2877,7 +2877,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected double SelectBaseLine
 		{
-			//	Retourne la position de la ligne de base des objets sÈlectionnÈs.
+			//	Retourne la position de la ligne de base des objets s√©lectionn√©s.
 			get
 			{
 				if (this.selectedObjects.Count == 1)
@@ -2894,7 +2894,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void ChangeObjectAttachment(Widget obj, Attachment attachment)
 		{
-			//	Modifie le systËme d'attachement d'un objet.
+			//	Modifie le syst√®me d'attachement d'un objet.
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(obj);
@@ -2955,7 +2955,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.objectModifier.SetBounds(obj, bounds);
 
 				this.handlesList.UpdateGeometry();
-				this.OnChildrenGeometryChanged();  // met ‡ jour les proxies
+				this.OnChildrenGeometryChanged();  // met √† jour les proxies
 			}
 		}
 
@@ -3023,14 +3023,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
-			//	UtilisÈ par HandlesList pour dÈterminer quelles poignÈes sont visibles.
+			//	Utilis√© par HandlesList pour d√©terminer quelles poign√©es sont visibles.
 			return this.objectModifier.HasBounds(obj) || this.objectModifier.HasWidth(obj);
 		}
 
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
-			//	UtilisÈ par HandlesList pour dÈterminer quelles poignÈes sont visibles.
+			//	Utilis√© par HandlesList pour d√©terminer quelles poign√©es sont visibles.
 			return this.objectModifier.HasBounds(obj) || this.objectModifier.HasHeight(obj);
 		}
 
@@ -3042,13 +3042,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected static bool IsObjectTabActive(Widget obj)
 		{
-			//	Indique si l'objet ‡ un ordre pour la touche Tab.
+			//	Indique si l'objet √† un ordre pour la touche Tab.
 			return (obj.TabNavigationMode & TabNavigationMode.ActivateOnTab) != 0;
 		}
 
 		protected string GetObjectZOrder(Widget obj)
 		{
-			//	Retourne la chaÓne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
+			//	Retourne la cha√Æne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
 			if (obj.Parent == this.panel)
 			{
 				return (obj.ZOrder+1).ToString();
@@ -3076,7 +3076,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected string GetObjectTabIndex(Widget obj)
 		{
-			//	Retourne la chaÓne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
+			//	Retourne la cha√Æne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
 			if (obj.Parent == this.panel)
 			{
 				if (Editor.IsObjectTabActive(obj))
@@ -3122,7 +3122,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Attachment
 		protected bool AttachmentDetect(Point mouse, out Widget obj, out Attachment attachment)
 		{
-			//	DÈtecte dans quel attachement d'un objet est la souris.
+			//	D√©tecte dans quel attachement d'un objet est la souris.
 			if (!this.context.ShowAttachment || this.selectedObjects.Count != 1)
 			{
 				obj = null;
@@ -3213,8 +3213,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region ZOrder
 		protected void ZOrderDetect(Point mouse, Widget parent, out Widget group, out int order, out ObjectModifier.StackedHorizontalAttachment ha, out ObjectModifier.StackedVerticalAttachment va, out Rectangle hilite)
 		{
-			//	DÈtecte le ZOrder ‡ utiliser pour une position donnÈe, ainsi que le rectangle
-			//	‡ utiliser pour la mise ne Èvidence.
+			//	D√©tecte le ZOrder √† utiliser pour une position donn√©e, ainsi que le rectangle
+			//	√† utiliser pour la mise ne √©vidence.
 			if (parent == null)
 			{
 				group = null;
@@ -3339,7 +3339,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			if (this.selectedObjects.Contains(obj))
 			{
-				//	Un objet sÈlectionnÈ n'est jamais pris en compte.
+				//	Un objet s√©lectionn√© n'est jamais pris en compte.
 				group = null;
 				order = -1;  // aucun changement
 				ha = ObjectModifier.StackedHorizontalAttachment.None;
@@ -3350,8 +3350,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			if (this.selectedObjects.Count != 0)
 			{
-				//	Un ZOrder Èquivalent au ZOrder de l'objet actuellement sÈlectionnÈ n'est
-				//	pas retournÈ, pour Èviter ‡ l'utilisateur de croire qu'il va changer
+				//	Un ZOrder √©quivalent au ZOrder de l'objet actuellement s√©lectionn√© n'est
+				//	pas retourn√©, pour √©viter √† l'utilisateur de croire qu'il va changer
 				//	quelque chose.
 				foreach (Widget selectedObj in this.selectedObjects)
 				{
@@ -3388,13 +3388,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Widget ZOrderDetectNearest(Point pos, Widget parent)
 		{
-			//	DÈtecte l'objet le plus proche de la souris.
+			//	D√©tecte l'objet le plus proche de la souris.
 			bool horizontal = (this.objectModifier.GetChildrenPlacement(parent) == ObjectModifier.ChildrenPlacement.HorizontalStacked);
 			Widget minWidget = null;
 			Widget maxWidget = null;
 
-			//	Cherche les objets aux 'extrÈmitÈs'. Par exemple, en mode VerticalDocked, minWidget
-			//	sera l'objet dockÈ en bas le plus haut, et maxWidget l'objet dockÈ en haut le plus bas.
+			//	Cherche les objets aux 'extr√©mit√©s'. Par exemple, en mode VerticalDocked, minWidget
+			//	sera l'objet dock√© en bas le plus haut, et maxWidget l'objet dock√© en haut le plus bas.
 			for (int i=parent.Children.Count-1; i>=0; i--)
 			{
 				Widget obj = parent.Children[i] as Widget;
@@ -3425,8 +3425,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 			}
 
-			//	S'il n'existe aucun objet ‡ une 'extrÈmitÈ', dÈtecte si la position est
-			//	dans cette zone pour retourner null. Cela permettra ‡ ZOrderDetect d'y
+			//	S'il n'existe aucun objet √† une 'extr√©mit√©', d√©tecte si la position est
+			//	dans cette zone pour retourner null. Cela permettra √† ZOrderDetect d'y
 			//	placer un objet.
 			if (minWidget != null && maxWidget == null)
 			{
@@ -3468,7 +3468,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 			}
 
-			//	DÈtecte l'objet le plus proche, qu'il soit sÈlectionnÈ ou non.
+			//	D√©tecte l'objet le plus proche, qu'il soit s√©lectionn√© ou non.
 			Widget best = null;
 			double min = 1000000;
 
@@ -3500,7 +3500,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SetHilitedZOrderRectangle(Rectangle rect)
 		{
-			//	DÈtermine la zone du rectangle d'insertion ZOrder.
+			//	D√©termine la zone du rectangle d'insertion ZOrder.
 			if (this.hilitedZOrderRectangle != rect)
 			{
 				this.Invalidate(this.ConvPanelToEditor(this.hilitedZOrderRectangle));  // invalide l'ancienne zone
@@ -3511,7 +3511,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected bool ZOrderChangeSelection(Widget parent, int order, ObjectModifier.StackedHorizontalAttachment ha, ObjectModifier.StackedVerticalAttachment va)
 		{
-			//	Change le ZOrder de tous les objets sÈlectionnÈs.
+			//	Change le ZOrder de tous les objets s√©lectionn√©s.
 			bool isChanging = false;
 
 			if (order == -1 || this.selectedObjects.Contains(parent))
@@ -3551,13 +3551,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Grid
 		public void GridClearSelection()
 		{
-			//	Supprime toutes les sÈlections de cellules/colonnes/lignes dans les tableaux.
+			//	Supprime toutes les s√©lections de cellules/colonnes/lignes dans les tableaux.
 			this.GridClearSelection(null);
 		}
 
 		protected void GridClearSelection(Widget exclude)
 		{
-			//	Supprime toutes les sÈlections de cellules/colonnes/lignes dans les tableaux, sauf une.
+			//	Supprime toutes les s√©lections de cellules/colonnes/lignes dans les tableaux, sauf une.
 			if (this.panel != exclude && GridSelection.Get(this.panel) != null)
 			{
 				GridSelection.Detach(this.panel);
@@ -3591,7 +3591,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void GridDetect(Point mouse, Widget parent, out int column, out int row)
 		{
-			//	DÈtecte la colonne et la ligne visÈe dans un tableau.
+			//	D√©tecte la colonne et la ligne vis√©e dans un tableau.
 			column = GridSelection.Invalid;
 			row = GridSelection.Invalid;
 
@@ -3634,8 +3634,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region SizeMark
 		protected bool SizeMarkDraggingStart(Point pos)
 		{
-			//	DÈbut du dÈplacement d'un marqueur de taille prÈfÈrentielle.
-			//	Retourne true en cas de dÈbut effectif.
+			//	D√©but du d√©placement d'un marqueur de taille pr√©f√©rentielle.
+			//	Retourne true en cas de d√©but effectif.
 			this.isSizeMarkDragging = false;
 
 			if (this.isSizeMarkHorizontal)
@@ -3655,8 +3655,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected bool SizeMarkDraggingMove(Point pos)
 		{
-			//	DÈplacement d'un marqueur de taille prÈfÈrentielle.
-			//	Retourne true en cas de dÈplacement effectif.
+			//	D√©placement d'un marqueur de taille pr√©f√©rentielle.
+			//	Retourne true en cas de d√©placement effectif.
 			if (this.isSizeMarkDragging)
 			{
 				if (this.isSizeMarkHorizontal)
@@ -3701,17 +3701,17 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void SizeMarkDraggingStop(Point pos)
 		{
-			//	Fin du dÈplacement d'un marqueur de taille prÈfÈrentielle.
+			//	Fin du d√©placement d'un marqueur de taille pr√©f√©rentielle.
 			if (this.isSizeMarkDragging)
 			{
-				//	TODO: mettre ‡ jour les proxies...
+				//	TODO: mettre √† jour les proxies...
 				this.isSizeMarkDragging = false;
 			}
 		}
 
 		public void SizeMarkDeselect()
 		{
-			//	DÈsÈlectionne les marqueurs de taille prÈfÈrentielle.
+			//	D√©s√©lectionne les marqueurs de taille pr√©f√©rentielle.
 			if (this.isSizeMarkHorizontal)
 			{
 				this.isSizeMarkHorizontal = false;
@@ -3727,7 +3727,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Rectangle SizeMarkHorizontalRect
 		{
-			//	Retourne le rectangle du marqueur de taille prÈfÈrentielle horizontal.
+			//	Retourne le rectangle du marqueur de taille pr√©f√©rentielle horizontal.
 			get
 			{
 				Rectangle bounds = this.RealBounds;
@@ -3739,7 +3739,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Rectangle SizeMarkVerticalRect
 		{
-			//	Retourne le rectangle du marqueur de taille prÈfÈrentielle vertical.
+			//	Retourne le rectangle du marqueur de taille pr√©f√©rentielle vertical.
 			get
 			{
 				Rectangle bounds = this.RealBounds;
@@ -3762,18 +3762,18 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			//	Dessine les surfaces inutilisÈes.
+			//	Dessine les surfaces inutilis√©es.
 			Rectangle box = this.Client.Bounds;
 			Rectangle bounds = this.ConvPanelToEditor(this.RealBounds);
 
-			if (bounds.Top < box.Top)  // bande supÈrieure ?
+			if (bounds.Top < box.Top)  // bande sup√©rieure ?
 			{
 				Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
 				graphics.AddFilledRectangle(part);
 				graphics.RenderSolid(PanelsContext.ColorOutsurface);
 			}
 
-			if (box.Bottom < bounds.Bottom)  // bande infÈrieure ?
+			if (box.Bottom < bounds.Bottom)  // bande inf√©rieure ?
 			{
 				Rectangle part = new Rectangle(box.Left, box.Bottom, box.Width, bounds.Bottom-box.Bottom);
 				graphics.AddFilledRectangle(part);
@@ -3799,7 +3799,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			bounds = this.RealBounds;
 
-			//	Dessine la grille magnÈtique
+			//	Dessine la grille magn√©tique
 			if (this.context.ShowGrid)
 			{
 				double step = this.context.GridStep;
@@ -3817,19 +3817,19 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 			}
 
-			//	Dessine les marques pour la taille prÈfÈrentielle.
+			//	Dessine les marques pour la taille pr√©f√©rentielle.
 			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
 			{
 				//?this.DrawSizeMark(graphics);
 			}
 
-			//	Dessine les objets sÈlectionnÈs.
+			//	Dessine les objets s√©lectionn√©s.
 			if (this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				this.DrawSelectedObjects(graphics);
 			}
 
-			//	Dessine les attachements des objets sÈlectionnÈs.
+			//	Dessine les attachements des objets s√©lectionn√©s.
 			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
@@ -3841,37 +3841,37 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Dessine les contraintes.
 			this.constrainsList.Draw(graphics, bounds);
 
-			//	Dessine les numÈros d'ordre.
+			//	Dessine les num√©ros d'ordre.
 			if (this.context.ShowZOrder && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				this.DrawZOrder(graphics, this.panel);
 			}
 
-			//	Dessine les numÈros d'index pour la touche Tab.
+			//	Dessine les num√©ros d'index pour la touche Tab.
 			if (this.context.ShowTabIndex && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				this.DrawTabIndex(graphics, this.panel);
 			}
 
-			//	Dessine l'objet survolÈ.
+			//	Dessine l'objet survol√©.
 			if (this.hilitedObject != null)
 			{
 				this.DrawHilitedObject(graphics, this.hilitedObject, this.hilitedGrid);
 			}
 
-			//	Dessine l'objet parent survolÈ.
+			//	Dessine l'objet parent survol√©.
 			if (this.hilitedParent != null)
 			{
 				this.DrawHilitedParent(graphics, this.hilitedParent, this.hilitedParentColumn, this.hilitedParentRow, this.hilitedParentColumnCount, this.hilitedParentRowCount);
 			}
 
-			//	Dessine l'objet survolÈ depuis la barre de statut.
+			//	Dessine l'objet survol√© depuis la barre de statut.
 			if (this.enteredObjects != null)
 			{
 				this.DrawEnteredObjects(graphics, this.enteredObjects);
 			}
 
-			//	Dessine le rectangle de sÈlection.
+			//	Dessine le rectangle de s√©lection.
 			if (!this.selectedRectangle.IsEmpty)
 			{
 				Rectangle sel = this.selectedRectangle;
@@ -3880,7 +3880,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
 
-			//	Dessine le rectangle d'attachement survolÈ.
+			//	Dessine le rectangle d'attachement survol√©.
 			if (!this.hilitedAttachmentRectangle.IsEmpty)
 			{
 				Rectangle rect = this.hilitedAttachmentRectangle;
@@ -3888,7 +3888,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 			}
 
-			//	Dessine le rectangle d'insertion ZOrder survolÈ.
+			//	Dessine le rectangle d'insertion ZOrder survol√©.
 			if (!this.hilitedZOrderRectangle.IsEmpty)
 			{
 				Rectangle rect = this.hilitedZOrderRectangle;
@@ -3907,13 +3907,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 			}
 
-			//	Dessine les cotes de l'objet sÈlectionnÈ.
+			//	Dessine les cotes de l'objet s√©lectionn√©.
 			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				this.dimensionsList.Draw(graphics);
 			}
 
-			//	Dessine les poignÈes.
+			//	Dessine les poign√©es.
 			if (this.selectedObjects.Count == 1 && !this.isDragging)
 			{
 				//?this.handlesList.Draw(graphics);
@@ -3924,7 +3924,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawSizeMark(Graphics graphics)
 		{
-			//	Dessine les marqueurs pour la taille prÈfÈrentielle.
+			//	Dessine les marqueurs pour la taille pr√©f√©rentielle.
 			Rectangle rect;
 			Point p1, p2;
 
@@ -4052,7 +4052,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawEnteredObjects(Graphics graphics, List<Widget> list)
 		{
-			//	Dessine l'objet survolÈ depuis la barre de statut.
+			//	Dessine l'objet survol√© depuis la barre de statut.
 			Color red = Color.FromAlphaRgb(0.7, 255.0/255.0, 80.0/255.0, 60.0/255.0);
 
 			foreach (Widget obj in list)
@@ -4069,7 +4069,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj, GridSelection gs)
 		{
-			//	Met en Èvidence l'objet survolÈ par la souris.
+			//	Met en √©vidence l'objet survol√© par la souris.
 			if (this.context.ShowAttachment)
 			{
 				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteOutline);
@@ -4091,7 +4091,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				color = Misc.FactorColor(color, 0.25);
 			}
 
-			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissÈ.
+			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraiss√©.
 			Rectangle rect = this.objectModifier.GetActualBounds(obj);
 
 			double ix = 0;
@@ -4124,7 +4124,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row, int columnCount, int rowCount)
 		{
-			//	Met en Èvidence l'objet parent survolÈ par la souris.
+			//	Met en √©vidence l'objet parent survol√© par la souris.
 			if (this.context.ShowAttachment && obj != this.panel)
 			{
 				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteParent);
@@ -4194,13 +4194,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 				graphics.AddLine(p1, p2);
 			}
 
-			if (x < rect.Right)  // zone inutilisÈe ‡ droite ?
+			if (x < rect.Right)  // zone inutilis√©e √† droite ?
 			{
 				Rectangle part = new Rectangle(x, rect.Bottom, rect.Right-x, rect.Height);
 				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
 			}
 
-			if (y > rect.Bottom)  // zone inutilisÈe en bas ?
+			if (y > rect.Bottom)  // zone inutilis√©e en bas ?
 			{
 				Rectangle part = new Rectangle(rect.Left, rect.Bottom, x-rect.Left, y-rect.Bottom);
 				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
@@ -4213,9 +4213,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawGridSelected(Graphics graphics, Widget obj, GridSelection gs, Color color, bool selection)
 		{
-			//	Dessine une ou plusieurs cellules sÈlectionnÈes. Le dessin est optimisÈ
-			//	visuellement lorsqu'une ligne sÈlectionnÈe suit une colonne sÈlectionnÈe
-			//	pour former une croix, ou lorsque plusieurs lignes/colonnes sont sÈlectionnÈes
+			//	Dessine une ou plusieurs cellules s√©lectionn√©es. Le dessin est optimis√©
+			//	visuellement lorsqu'une ligne s√©lectionn√©e suit une colonne s√©lectionn√©e
+			//	pour former une croix, ou lorsque plusieurs lignes/colonnes sont s√©lectionn√©es
 			//	pour former un seul 'bloc'.
 			int i=0;
 			while (i < gs.Count)
@@ -4313,12 +4313,12 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawGridSelected(Graphics graphics, Rectangle area1, Rectangle area2, Color color, bool selection)
 		{
-			//	Dessine une ligne et une colonne sÈlectionnÈes.
+			//	Dessine une ligne et une colonne s√©lectionn√©es.
 			area1.Deflate(0.5);
 			area2.Deflate(0.5);
 			Path path;
 
-			if (selection)  // sÈlection ?
+			if (selection)  // s√©lection ?
 			{
 				graphics.AddFilledRectangle(area1);
 				graphics.AddFilledRectangle(area2);
@@ -4343,10 +4343,10 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawGridSelected(Graphics graphics, Rectangle area, Color color, bool selection)
 		{
-			//	Dessine une ligne ou une colonne sÈlectionnÈe.
+			//	Dessine une ligne ou une colonne s√©lectionn√©e.
 			area.Deflate(0.5);
 
-			if (selection)  // sÈlection ?
+			if (selection)  // s√©lection ?
 			{
 				graphics.AddFilledRectangle(area);
 				graphics.RenderSolid(PanelsContext.ColorGridCellSurface);
@@ -4366,7 +4366,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawGridHilited(Graphics graphics, Rectangle area, Color color)
 		{
-			//	Dessine une cellule survolÈe.
+			//	Dessine une cellule survol√©e.
 			graphics.Rasterizer.AddSurface(Misc.GetCornerPath(area));
 			graphics.RenderSolid(color);
 		}
@@ -4456,7 +4456,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 				graphics.AddRectangle(box);
 			}
-			else  // Èlastique (ressort) ?
+			else  // √©lastique (ressort) ?
 			{
 				graphics.AddLine(p1, p1a);
 				graphics.AddLine(p2, p2a);
@@ -4470,7 +4470,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			graphics.RenderSolid(color);
 
-			//	Dessine les extrÈmitÈs.
+			//	Dessine les extr√©mit√©s.
 			graphics.AddFilledCircle(p1, 3.0);
 			graphics.AddFilledCircle(p2, 3.0);
 			graphics.RenderSolid(color);
@@ -4478,8 +4478,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected Rectangle GetDrawBox(Graphics graphics, Point p1, Point p2, double thickness)
 		{
-			//	Donne le rectangle d'une boÓte horizontale ou verticale.
-			if (p1.Y == p2.Y)  // boÓte horizontale ?
+			//	Donne le rectangle d'une bo√Æte horizontale ou verticale.
+			if (p1.Y == p2.Y)  // bo√Æte horizontale ?
 			{
 				p1.Y -= thickness+1;
 				p2.Y += thickness-1;
@@ -4488,7 +4488,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				Misc.AlignForLine(graphics, ref p2);
 				return new Rectangle(p1, p2);
 			}
-			else if (p1.X == p2.X)  // boÓte verticale ?
+			else if (p1.X == p2.X)  // bo√Æte verticale ?
 			{
 				p1.X -= thickness+1;
 				p2.X += thickness-1;
@@ -4553,7 +4553,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawZOrder(Graphics graphics, Widget parent)
 		{
-			//	Dessine les numÈros d'ordre d'un groupe.
+			//	Dessine les num√©ros d'ordre d'un groupe.
 			if (parent.HasChildren)
 			{
 				foreach (Widget obj in parent.Children)
@@ -4578,7 +4578,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected void DrawTabIndex(Graphics graphics, Widget parent)
 		{
-			//	Dessine les numÈros pour la touche Tab d'un groupe.
+			//	Dessine les num√©ros pour la touche Tab d'un groupe.
 			if (parent.HasChildren)
 			{
 				foreach (Widget obj in parent.Children)
@@ -4606,7 +4606,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Misc
 		public void AdaptAfterToolChanged()
 		{
-			//	Adaptation aprËs un changement d'outil ou d'objet.
+			//	Adaptation apr√®s un changement d'outil ou d'objet.
 			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
 			{
 
@@ -4749,13 +4749,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected bool IsInside(Point pos)
 		{
-			//	Indique si une position est dans la fenÍtre.
+			//	Indique si une position est dans la fen√™tre.
 			return this.Client.Bounds.Contains(pos);
 		}
 
 		protected void ChangeSeparatorAlpha(DragWindow window)
 		{
-			//	Modifie la transparence des tous les Separators d'une fenÍtre.
+			//	Modifie la transparence des tous les Separators d'une fen√™tre.
 			double alpha = this.isInside ? 0 : PanelsContext.ColorOutsideForeground.A;
 			this.ChangeSeparatorAlpha(window.Root, alpha);
 		}
@@ -4819,8 +4819,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 		bool IPaintFilter.IsWidgetFullyDiscarded(Widget widget)
 		{
 			//	Retourne true pour indiquer que le widget en question ne doit
-			//	pas Ítre peint, ni ses enfants d'ailleurs. Ceci Èvite que les
-			//	widgets sÈlectionnÈs ne soient peints.
+			//	pas √™tre peint, ni ses enfants d'ailleurs. Ceci √©vite que les
+			//	widgets s√©lectionn√©s ne soient peints.
 			return (this.isDragging || this.isHandling) && this.selectedObjects.Contains(widget);
 		}
 

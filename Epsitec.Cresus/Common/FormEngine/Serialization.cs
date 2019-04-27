@@ -8,19 +8,19 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.FormEngine
 {
 	/// <summary>
-	/// Procédures de sérialisation et désérialisation de masques de saisie.
+	/// ProcÃ©dures de sÃ©rialisation et dÃ©sÃ©rialisation de masques de saisie.
 	/// </summary>
 	public static class Serialization
 	{
 		static public string SerializeForm(FormDescription form)
 		{
-			//	Retourne la chaîne qui contient la sérialisation d'un masque de saisie.
+			//	Retourne la chaÃ®ne qui contient la sÃ©rialisation d'un masque de saisie.
 			return form.Serialize();
 		}
 
 		static public FormDescription DeserializeForm(string xml)
 		{
-			//	Retourne le masque de saisie désérialisé à partir d'une chaîne.
+			//	Retourne le masque de saisie dÃ©sÃ©rialisÃ© Ã  partir d'une chaÃ®ne.
 			FormDescription form = new FormDescription();
 			form.Deserialize(xml);
 			return form;

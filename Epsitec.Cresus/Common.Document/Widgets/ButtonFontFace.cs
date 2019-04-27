@@ -5,7 +5,7 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe ButtonFontFace est un IconButton contenant un échantillon de police FontSample.
+	/// La classe ButtonFontFace est un IconButton contenant un Ã©chantillon de police FontSample.
 	/// </summary>
 	public class ButtonFontFace : IconButton
 	{

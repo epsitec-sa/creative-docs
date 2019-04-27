@@ -186,7 +186,7 @@ namespace Epsitec.Common.Tests.Drawing
 			Assert.IsFalse (scan0 == System.IntPtr.Zero);
 			Assert.IsFalse (pixmap.GetMemoryBitmapHandle () == System.IntPtr.Zero);
 			
-			//	Bitmap sélectionné dans le DC : on peut peindre ici...
+			//	Bitmap sÃ©lectionnÃ© dans le DC : on peut peindre ici...
 			
 			OpenType.FontCollection font_collection = new OpenType.FontCollection ();
 			font_collection.Initialize ();

@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Common.Support.EntityEngine
+namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
 	/// The <c>IFieldProxy</c> interface is used as a placeholder for a value in the database which

@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// Vérifie le bon fonctionnement de la classe CheckTextFitter.
+	/// VÃ©rifie le bon fonctionnement de la classe CheckTextFitter.
 	/// </summary>
 	public sealed class CheckTextFitter
 	{
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontColorProperty ("Black"));
 			properties.Add (new Properties.MarginsProperty (200, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			string[] words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n".Split (' ');
+			string[] words = "Bonjour, ceci est un texte d'exemple permettant de vÃ©rifier le bon fonctionnement des divers algorithmes de dÃ©coupe. Le nombre de mots moyen s'Ã©lÃ¨ve Ã  environ 40 mots par paragraphe, ce qui correspond Ã  des paragraphes de taille rÃ©duite.\n".Split (' ');
 			System.Random random = new System.Random (0);
 			
 			int count = 0;
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("T", properties2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2, texte centré\n", properties1, out text);
+			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2, texte centrÃ©\n", properties1, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -342,7 +342,7 @@ namespace Epsitec.Common.Text.Tests
 			 * 
 			 *	Xyz blablabla blablabla 
 			 *	blablah blah.-------------
-			 *	--->T2, texte centré<---
+			 *	--->T2, texte centrÃ©<---
 			 * 
 			 *	[vide]
 			 */
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("Text:\t", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties2, out text);
+			story.ConvertToStyledText ("Tout un paragraphe indentÃ© (comme si le tabulateur se comportait comme un indentateur).\n", properties2, out text);
 			story.InsertText (cursor, text);
 			
 			story.ConvertToStyledText ("Xyz\n", properties1, out text);
@@ -499,7 +499,7 @@ namespace Epsitec.Common.Text.Tests
 			/*
 			 *	Text:---->Tout un 
 			 *			  paragraphe 
-			 *			  indenté 
+			 *			  indentÃ© 
 			 *			  (comme si le 
 			 *			  tabulateur se 
 			 *			  comportait 
@@ -623,7 +623,7 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("\t", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties2, out text);
+			story.ConvertToStyledText ("Tout un paragraphe indentÃ© (comme si le tabulateur se comportait comme un indentateur).\n", properties2, out text);
 			story.InsertText (cursor, text);
 			
 			Text.TextStyle defaultStyle = story.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties3);
@@ -636,7 +636,7 @@ namespace Epsitec.Common.Text.Tests
 			/*
 			 *	Text:---->Tout un		|
 			 *			  paragraphe	|
-			 *			  indenté		|
+			 *			  indentÃ©		|
 			 *			  (comme si le	|
 			 *			  tabulateur se |
 			 *			  comportait	|

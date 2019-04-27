@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
 	/// Dialogue permettant de choisir une rubrique (string) d'une ressource de type
-	/// 'structure de données' (StructuredType).
+	/// 'structure de donnÃ©es' (StructuredType).
 	/// </summary>
 	public class BindingSelectorDialog : AbstractDialog
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.title.Dock = DockStyle.Top;
 				this.title.Margins = new Margins(0, 0, 0, 5);
 
-				//	Crée l'en-tête du tableau.
+				//	CrÃ©e l'en-tÃªte du tableau.
 				this.header = new Widget(this.window.Root);
 				this.header.Dock = DockStyle.Top;
 				this.header.Margins = new Margins(0, 0, 4, 0);
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.headerType.Style = HeaderButtonStyle.Top;
 				this.headerType.Dock = DockStyle.Left;
 
-				//	Crée le tableau principal.
+				//	CrÃ©e le tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
 				this.array.Columns = 6;
 				this.array.SetColumnsRelativeWidth(0, 0.28);
@@ -133,14 +133,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.ValueChanged += this.HandleSliderChanged;
 				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 
-				//	Crée le bouton pour le mode.
+				//	CrÃ©e le bouton pour le mode.
 				this.checkReadonly = new CheckButton(this.window.Root);
 				this.checkReadonly.Text = Res.Strings.Dialog.BindingSelector.Button.Readonly;
 				this.checkReadonly.Dock = DockStyle.Bottom;
 				this.checkReadonly.Margins = new Margins(0, 0, 2, 4);
 				this.checkReadonly.ActiveStateChanged += this.HandleCheckReadonlyActiveStateChanged;
 
-				//	Crée le bouton pour l'héritage.
+				//	CrÃ©e le bouton pour l'hÃ©ritage.
 				this.checkInherit = new CheckButton(this.window.Root);
 				this.checkInherit.Text = Res.Strings.Dialog.BindingSelector.Button.Inherit;
 				this.checkInherit.Dock = DockStyle.Bottom;
@@ -173,8 +173,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public Binding SelectedBinding
 		{
-			//	Retourne le binding sélectionné par l'utilisateur, ou null si le bouton
-			//	'hérité' a été coché.
+			//	Retourne le binding sÃ©lectionnÃ© par l'utilisateur, ou null si le bouton
+			//	'hÃ©ritÃ©' a Ã©tÃ© cochÃ©.
 			get
 			{
 				return this.selectedBinding;
@@ -191,8 +191,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected string Field
 		{
-			//	Rubrique sélectionnée.
-			//	TODO: il faudra améliorer la gestion du préfixe "*." !
+			//	Rubrique sÃ©lectionnÃ©e.
+			//	TODO: il faudra amÃ©liorer la gestion du prÃ©fixe "*." !
 			get
 			{
 				if (this.initialBinding == null)
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					string field = this.initialBinding.Path;
 					if (field.StartsWith("*."))
 					{
-						field = field.Substring(2);  // enlève "*."
+						field = field.Substring(2);  // enlÃ¨ve "*."
 					}
 
 					return field;
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected BindingMode Mode
 		{
-			//	Mode sélectionné.
+			//	Mode sÃ©lectionnÃ©.
 			get
 			{
 				if (this.initialBinding == null)
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void SelectArray()
 		{
-			//	Sélectionne la bonne ligne dans le tableau.
+			//	SÃ©lectionne la bonne ligne dans le tableau.
 			string field = this.Field;
 
 			for (int i=0; i<this.fields.Count; i++)
@@ -305,14 +305,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateTitle()
 		{
-			//	Met à jour le titre qui donne le nom de la ressource StructuredType.
+			//	Met Ã  jour le titre qui donne le nom de la ressource StructuredType.
 			string text = string.Concat("<font size=\"200%\"><b>", this.structuredType.Caption.Name, "</b></font>");
 			this.title.Text = text;
 		}
 
 		protected void UpdateButtons()
 		{
-			//	Met à jour tous les boutons en fonction de la ligne sélectionnée dans le tableau.
+			//	Met Ã  jour tous les boutons en fonction de la ligne sÃ©lectionnÃ©e dans le tableau.
 			int sel = this.array.SelectedRow;
 
 			this.buttonUse.Enable = (sel != -1 || this.initialBinding == null);
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateArray()
 		{
-			//	Met à jour tout le contenu du tableau.
+			//	Met Ã  jour tout le contenu du tableau.
 			this.array.TotalRows = this.fields.Count;
 
 			int first = this.array.FirstVisibleRow;
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateMode()
 		{
-			//	Met à jour le bouton pour le mode.
+			//	Met Ã  jour le bouton pour le mode.
 			this.ignoreChanged = true;
 
 			this.checkInherit.Visibility = (this.objectType == PanelEditor.ObjectModifier.ObjectType.SubPanel);
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleSliderChanged(object sender)
 		{
-			//	Appelé lorsque le slider a été déplacé.
+			//	AppelÃ© lorsque le slider a Ã©tÃ© dÃ©placÃ©.
 			if (this.array == null)
 			{
 				return;
@@ -479,19 +479,19 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleArrayColumnsWidthChanged(object sender)
 		{
-			//	La largeur des colonnes a changé.
+			//	La largeur des colonnes a changÃ©.
 			this.UpdateColumnsWidth();
 		}
 
 		private void HandleArrayCellCountChanged(object sender)
 		{
-			//	Le nombre de lignes a changé.
+			//	Le nombre de lignes a changÃ©.
 			this.UpdateArray();
 		}
 
 		private void HandleArraySelectedRowChanged(object sender)
 		{
-			//	La ligne sélectionnée a changé.
+			//	La ligne sÃ©lectionnÃ©e a changÃ©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleArraySelectedRowDoubleClicked(object sender)
 		{
-			//	La ligne sélectionnée a été double cliquée.
+			//	La ligne sÃ©lectionnÃ©e a Ã©tÃ© double cliquÃ©e.
 			this.UpdateButtons();
 			this.UpdateMode();
 
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleCheckReadonlyActiveStateChanged(object sender)
 		{
-			//	Bouton "Lecture seule" actionné.
+			//	Bouton "Lecture seule" actionnÃ©.
 			if (this.ignoreChanged)
 			{
 				return;

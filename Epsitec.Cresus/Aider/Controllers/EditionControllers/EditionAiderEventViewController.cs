@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -27,7 +27,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Place)
 						.WithFavorites (favoritesPlaces)
 					.Field (x => x.Town)
-						.Title ("Localité")
+						.Title ("LocalitÃ©")
 						.WithFavorites (favorites)
 					.Field (x => x.Date)
 					.Field (x => x.Office).ReadOnly ()

@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -431,7 +431,7 @@ namespace Epsitec.Aider.Data.Common
 
 		private static readonly List<LongToShort> longToShort = new List<LongToShort>
 		{
-			new LongToShort ("Région ", "R"),
+			new LongToShort ("RÃ©gion ", "R"),
 			new LongToShort ("Paroisse de ", ""),
 			new LongToShort ("Paroisse de la ", ""),
 			new LongToShort ("Paroisse du ", ""),
@@ -439,7 +439,7 @@ namespace Epsitec.Aider.Data.Common
 			new LongToShort ("Paroisse des ", "Les "),
 			new LongToShort ("Conseil paroissial", "CP"),
 			new LongToShort ("Conseil synodal", "CS"),
-			new LongToShort ("Conseil régional", "CR"),
+			new LongToShort ("Conseil rÃ©gional", "CR"),
 			new LongToShort ("Conseil SC", "CSC "),
 		};
 

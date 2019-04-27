@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe AbstractDataCollection décrit une collection de données IDataItem
-	/// et sert de base à UI.Data.Record et à bien d'autres classes.
+	/// La classe AbstractDataCollection dÃ©crit une collection de donnÃ©es IDataItem
+	/// et sert de base Ã  UI.Data.Record et Ã  bien d'autres classes.
 	/// </summary>
 	public abstract class AbstractDataCollection : IDataCollection, System.ICloneable
 	{
@@ -30,8 +30,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				//	TODO: on pourrait utiliser une table de hachage pour accélérer la recherche
-				//	par les noms; à partir de combien d'éléments ceci deviendrait-il utile ?
+				//	TODO: on pourrait utiliser une table de hachage pour accÃ©lÃ©rer la recherche
+				//	par les noms; Ã  partir de combien d'Ã©lÃ©ments ceci deviendrait-il utile ?
 				
 				IDataItem[] items = this.CachedItemArray;
 				
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Types
 		
 		protected virtual void ClearCachedItemArray()
 		{
-			//	TODO: le jour où un accès aux noms est implémenté via une table de hachage, il
+			//	TODO: le jour oÃ¹ un accÃ¨s aux noms est implÃ©mentÃ© via une table de hachage, il
 			//	faudra purger la table ici...
 			
 			this.isDirty = true;
@@ -182,8 +182,8 @@ namespace Epsitec.Common.Types
 		protected abstract object CloneNewObject();
 		protected virtual object CloneCopyToNewObject(object o)
 		{
-			//	Les classes qui dérivent de celle-ci devraient surcharger cette méthode
-			//	pour copier d'éventuels autres champs importants.
+			//	Les classes qui dÃ©rivent de celle-ci devraient surcharger cette mÃ©thode
+			//	pour copier d'Ã©ventuels autres champs importants.
 			
 			AbstractDataCollection that = o as AbstractDataCollection;
 			

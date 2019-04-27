@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Widgets
 					if (this.host.IsFormattedText == false)
 					{
 						//	TODO: supprime le formatage pour ne garder que tu texte pur (oublie les <b>/<i>/<font> ... mais
-						//	conserve <br/> et éléments &xx;)
+						//	conserve <br/> et Ã©lÃ©ments &xx;)
 					}
 
 					this.host.Selection = html;

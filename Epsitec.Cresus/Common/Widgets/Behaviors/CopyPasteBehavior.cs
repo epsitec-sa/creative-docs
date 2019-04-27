@@ -1,4 +1,4 @@
-//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets.Behaviors
 {
 	/// <summary>
-	/// La classe CopyPasteBehavior gère le copier & coller.
+	/// La classe CopyPasteBehavior gÃ¨re le copier & coller.
 	/// </summary>
 	public sealed class CopyPasteBehavior : DependencyObject
 	{

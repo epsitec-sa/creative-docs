@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'interface ISerializableAsText permet de sérialiser et désérialiser
-	/// très simplement dans un format lisible le contenu d'objets.
+	/// L'interface ISerializableAsText permet de sÃ©rialiser et dÃ©sÃ©rialiser
+	/// trÃ¨s simplement dans un format lisible le contenu d'objets.
 	/// </summary>
 	public interface ISerializableAsText
 	{

@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Bricks;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers
 {

@@ -1,17 +1,17 @@
-//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// La classe Sync permet de simplifier les attentes sur de multiples
-	/// événements, tout en traitant aussi l'événement global AbortEvent.
+	/// Ã©vÃ©nements, tout en traitant aussi l'Ã©vÃ©nement global AbortEvent.
 	/// </summary>
 	public sealed class Sync
 	{
 		public static int Wait(params System.Threading.WaitHandle[] wait)
 		{
-			//	Retourne l'index de l'événement qui a reçu le signal. En cas de timeout,
+			//	Retourne l'index de l'Ã©vÃ©nement qui a reÃ§u le signal. En cas de timeout,
 			//	retourne -1; en cas d'avortement, retourne 'n'.
 			
 			int n = wait.Length;
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Support
 			
 			int handleIndex = System.Threading.WaitHandle.WaitAny (handles);
 			
-			//	Gère le cas particulier décrit dans la documentation où l'index peut être
+			//	GÃ¨re le cas particulier dÃ©crit dans la documentation oÃ¹ l'index peut Ãªtre
 			//	incorrect dans certains cas :
 			
 			if (handleIndex >= 128)

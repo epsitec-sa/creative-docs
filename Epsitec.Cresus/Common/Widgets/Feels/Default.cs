@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets.Feel
 {
 	/// <summary>
-	/// Implémentation du "feel" par défaut.
+	/// ImplÃ©mentation du "feel" par dÃ©faut.
 	/// </summary>
 	public class Default : IFeel
 	{

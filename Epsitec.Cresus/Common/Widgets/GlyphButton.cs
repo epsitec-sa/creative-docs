@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe GlyphButton dessine un bouton avec une icône simple.
+	/// La classe GlyphButton dessine un bouton avec une icÃ´ne simple.
 	/// </summary>
 	public class GlyphButton : Button
 	{
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 
 		public GlyphShape GlyphShape
 		{
-			//	Forme représentée dans le bouton.
+			//	Forme reprÃ©sentÃ©e dans le bouton.
 			get
 			{
 				return this.shape;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Widgets
 		public Size GlyphSize
 		{
 			//	Taille de la forme dans le bouton. Utile lorsque la forme est plus petite que le bouton,
-			//	et qu'elle est éventuellement décentrée avec ContentAlignment.
+			//	et qu'elle est Ã©ventuellement dÃ©centrÃ©e avec ContentAlignment.
 			get
 			{
 				return this.glyphSize;
@@ -117,9 +117,9 @@ namespace Epsitec.Common.Widgets
 				{
 					WidgetPaintState state = paintState;
 
-					if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
+					if ((state&WidgetPaintState.Entered) != 0)  // bouton survolÃ© ?
 					{
-						state |=  WidgetPaintState.InheritedEnter;  // mode spécial pour le groupe d'un combo
+						state |=  WidgetPaintState.InheritedEnter;  // mode spÃ©cial pour le groupe d'un combo
 					}
 
 					adorner.PaintButtonBackground (graphics, this.Client.Bounds, state, dir, this.ButtonStyle);
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 
 		protected Rectangle GetGlyphBounds()
 		{
-			//	Retourne le rectangle à utiliser pour le glyph, en tenant compte de GlyphSize et ContentAlignment.
+			//	Retourne le rectangle Ã  utiliser pour le glyph, en tenant compte de GlyphSize et ContentAlignment.
 			Rectangle rect = this.Client.Bounds;
 
 			if (!this.glyphSize.IsEmpty)

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La class Button représente un bouton standard.
+	/// La class Button reprÃ©sente un bouton standard.
 	/// </summary>
 	public class Button : AbstractButton
 	{
@@ -134,8 +134,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override double GetBaseLineVerticalOffset()
 		{
-			//	Le texte dans les boutons standards doit être remonté d'un pixel
-			//	pour paraître centré, mais surtout pas dans les IconButtons !
+			//	Le texte dans les boutons standards doit Ãªtre remontÃ© d'un pixel
+			//	pour paraÃ®tre centrÃ©, mais surtout pas dans les IconButtons !
 			
 			switch (this.ButtonStyle)
 			{
@@ -197,12 +197,12 @@ namespace Epsitec.Common.Widgets
 
 			if (this.BackColor.IsTransparent)
 			{
-				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement défini
+				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement dÃ©fini
 				//	comme "transparent".
 			}
 			else
 			{
-				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
+				//	Ne reproduit pas l'Ã©tat sÃ©lectionnÃ© si on peint nous-mÃªme le fond du bouton.
 				
 				state &= ~WidgetPaintState.Selected;
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.ButtonStyle);

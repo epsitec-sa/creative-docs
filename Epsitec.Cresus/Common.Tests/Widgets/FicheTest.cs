@@ -24,7 +24,7 @@ namespace Epsitec.Common.Tests.Widgets
 //@			this.window.Root.LayoutChanged += this.Root_LayoutChanged;
 			
 			this.window.ClientSize = new Size(1024, 768);
-			this.window.Text = "Crésus-fiche";
+			this.window.Text = "CrÃ©sus-fiche";
 			this.window.WindowClosed += this.HandleWindowClosed;
 
 			this.db = new TinyDataBase();
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 			this.window.Show();
 			Window.RunInTestEnvironment (this.window);
-//			System.Threading.Thread.Sleep (10000); // modOK001 pour pouvoir regarder tranquillement le produit du test, annulé
+//			System.Threading.Thread.Sleep (10000); // modOK001 pour pouvoir regarder tranquillement le produit du test, annulÃ©
 
 		}
 
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected void CreateFields()
 		{
-			//	Crée les rubriques dans la base.
+			//	CrÃ©e les rubriques dans la base.
 			TinyDataBase.FieldDesc fd;
 
 			this.db.CreateEmptyFieldDesc(out fd);
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected void CreateRecords()
 		{
-			//	Crée quelques fiches dans la base.
+			//	CrÃ©e quelques fiches dans la base.
 			TinyDataBase.Record record;
 
 			this.db.CreateEmptyRecord(out record);
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected void CreateLayout()
 		{
-			//	Crée tous les widgets du layout.
+			//	CrÃ©e tous les widgets du layout.
 			Rectangle rect = this.window.Root.Client.Bounds;
 
 			this.tip = ToolTip.Default;
@@ -544,7 +544,7 @@ namespace Epsitec.Common.Tests.Widgets
 			this.editCrit.Text = "";
 			this.editCrit.TextInserted += this.editCrit_TextInserted;
 			this.topPane.Children.Add(this.editCrit);
-			this.tip.SetToolTip(this.editCrit, "Elément cherché n'importe où");
+			this.tip.SetToolTip(this.editCrit, "ElÃ©ment cherchÃ© n'importe oÃ¹");
 
 			this.buttonSearch = new Button();
 			this.buttonSearch.Text = "Chercher";
@@ -582,7 +582,7 @@ namespace Epsitec.Common.Tests.Widgets
 			this.buttonCreate.Text = "Creer";
 			this.buttonCreate.Clicked += this.buttonCreate_Clicked;
 			this.rightPane.Children.Add(this.buttonCreate);
-			this.tip.SetToolTip(this.buttonCreate, "Crée une nouvelle fiche");
+			this.tip.SetToolTip(this.buttonCreate, "CrÃ©e une nouvelle fiche");
 
 			this.buttonDuplicate = new Button();
 			this.buttonDuplicate.Text = "Dupliquer";
@@ -634,7 +634,7 @@ namespace Epsitec.Common.Tests.Widgets
 			this.buttonValidate.Text = "Valider";
 			this.buttonValidate.Clicked += this.buttonValidate_Clicked;
 			this.rightPane.Children.Add(this.buttonValidate);
-			this.tip.SetToolTip(this.buttonValidate, "Valide la fiche en édition");
+			this.tip.SetToolTip(this.buttonValidate, "Valide la fiche en Ã©dition");
 
 			this.buttonCancel = new Button();
 			this.buttonCancel.Text = "Annuler";
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected string FillText(int row, int column)
 		{
-			//	Appelé par ScrollArray pour remplir une cellule.
+			//	AppelÃ© par ScrollArray pour remplir une cellule.
 			if ( row >= this.db.TotalRecord )  return "";
 			TinyDataBase.Record record = this.db.RetRecord(row);
 			int fieldID = this.db.RetFieldID(column);
@@ -760,7 +760,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected void UpdateTable()
 		{
-			//	Met à jour le contenu de la table.
+			//	Met Ã  jour le contenu de la table.
 			this.table.Clear();
 			this.table.RowCount = this.db.TotalRecord;
 
@@ -776,7 +776,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected void InitCombo(AbstractTextField tf, string combo)
 		{
-			//	Initialise la liste d'une ligne éditable "combo".
+			//	Initialise la liste d'une ligne Ã©ditable "combo".
 			TextFieldCombo cb = tf as TextFieldCombo;
 			
 			while ( true )
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void table_SelectedIndexChanged(object sender)
 		{
-			//	Changement de sélection dans la liste.
+			//	Changement de sÃ©lection dans la liste.
 			if (this.textFields != null)
 			{
 				this.recordRank = this.table.SelectedItemIndex;
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void editCrit_TextInserted(object sender)
 		{
-			//	Critère de recherche complété.
+			//	CritÃ¨re de recherche complÃ©tÃ©.
 			this.UpdateButton();
 			string crit = this.editCrit.Text;
 			if ( crit.Length == 0 )  return;
@@ -861,7 +861,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void buttonSearch_Clicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "Chercher" cliqué.
+			//	Bouton "Chercher" cliquÃ©.
 			string crit = this.editCrit.Text;
 			string complete;
 			int rank = this.recordRank;
@@ -879,7 +879,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void buttonCreate_Clicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "Créer" cliqué.
+			//	Bouton "CrÃ©er" cliquÃ©.
 			this.recordRank = -1;
 			this.recordCreated = true;
 			this.UpdateLayout();
@@ -889,7 +889,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void buttonDuplicate_Clicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "Dupliquer" cliqué.
+			//	Bouton "Dupliquer" cliquÃ©.
 			TinyDataBase.Record newRecord;
 			this.db.CreateCopyRecord(out newRecord, this.record);
 			this.record = newRecord;
@@ -901,7 +901,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void buttonDelete_Clicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "Supprimer" cliqué.
+			//	Bouton "Supprimer" cliquÃ©.
 			if ( this.recordRank == -1 )  return;
 			this.db.DeleteRecord(this.recordRank);
 			if ( this.recordRank >= this.db.TotalRecord )
@@ -917,7 +917,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void buttonValidate_Clicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "Valider" cliqué.
+			//	Bouton "Valider" cliquÃ©.
 			UpdateRecord();
 			if ( this.recordRank == -1 )
 			{
@@ -936,7 +936,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void buttonCancel_Clicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "Annuler" cliqué.
+			//	Bouton "Annuler" cliquÃ©.
 			this.recordCreated = false;
 			this.recordRank = this.table.SelectedItemIndex;
 			this.UpdateLayout();
@@ -946,7 +946,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		private void tf_TextChanged(object sender)
 		{
-			//	Texte d'une rubrique changé.
+			//	Texte d'une rubrique changÃ©.
 			this.recordModified = true;
 			this.UpdateButton();
 		}
@@ -987,7 +987,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected void UpdateButton()
 		{
-			//	Met à jour tous les boutons.
+			//	Met Ã  jour tous les boutons.
 			bool enable;
 
 			enable = !this.recordModified && !this.recordCreated;
@@ -1012,7 +1012,7 @@ namespace Epsitec.Common.Tests.Widgets
 
 		protected void SetFocus(int rank)
 		{
-			//	Met le focus dans une rubrique éditable.
+			//	Met le focus dans une rubrique Ã©ditable.
 			AbstractTextField tf = this.textFields[rank] as AbstractTextField;
 			tf.SelectAll();
 			tf.Focus();
@@ -1033,7 +1033,7 @@ namespace Epsitec.Common.Tests.Widgets
 			mydb.CreateFieldDesc(fd);
 
 			mydb.CreateEmptyFieldDesc(out fd);
-			fd.name = "Prénom";
+			fd.name = "PrÃ©nom";
 			mydb.CreateFieldDesc(fd);
 
 			Assert.IsTrue(mydb.TotalField == 2);
@@ -1068,7 +1068,7 @@ namespace Epsitec.Common.Tests.Widgets
 			Assert.IsTrue(mydb.TotalRecord == 3);
 
 			mydb.SetSortField(0, 0, SortMode.Down);  // tri par noms
-			mydb.SetSortField(1, 1, SortMode.Down);  // puis par prénoms
+			mydb.SetSortField(1, 1, SortMode.Down);  // puis par prÃ©noms
 
 			//	Dumoulin, Roux, Walz
 			TinyDataBase.Record r1;
@@ -1101,7 +1101,7 @@ namespace Epsitec.Common.Tests.Widgets
 			mydb.SetFieldInRecord(record, 1, "Pierre");
 			rank = mydb.CreateRecord(record);
 
-			mydb.SetSortField(0, 1, SortMode.Down);  // tri par prénoms
+			mydb.SetSortField(0, 1, SortMode.Down);  // tri par prÃ©noms
 			mydb.SetSortField(1, 0, SortMode.Down);  // puis par noms
 
 			//	Roux, Arnaud, Raboud
@@ -1156,7 +1156,7 @@ namespace Epsitec.Common.Tests.Widgets
 	{
 		SingleLine,						// ligne simple, scrollable horizontalement
 		MultiLine,						// ligne multiple, scrollable verticalement
-		UpDown,							// valeur numérique avec boutons +/-
+		UpDown,							// valeur numÃ©rique avec boutons +/-
 		Combo,							// combo box
 	}
 	

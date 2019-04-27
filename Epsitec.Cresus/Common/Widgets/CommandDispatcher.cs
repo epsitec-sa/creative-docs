@@ -1,4 +1,4 @@
-//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	using BindingFlags=System.Reflection.BindingFlags;
 
 	/// <summary>
-	/// La classe CommandDispatcher permet de gérer la distribution des
+	/// La classe CommandDispatcher permet de gÃ©rer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
 	/// </summary>
 	public class CommandDispatcher : DependencyObject
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Widgets
 
 		private bool DispatchCommand(CommandContextChain contextChain, Command commandObject, object source, Shortcut commandShortcut, Message commandMessage)
 		{
-			//	Transmet la commande à ceux qui sont intéressés
+			//	Transmet la commande Ã  ceux qui sont intÃ©ressÃ©s
 
 			if (commandObject == null)
 			{

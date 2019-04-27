@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Settings
 	}
 
 	/// <summary>
-	/// La classe GlobalSettings mémorise les paramètres de l'application.
+	/// La classe GlobalSettings mÃ©morise les paramÃ¨tres de l'application.
 	/// </summary>
 	[System.Serializable()]
 	public class GlobalSettings : ISerializable, Epsitec.Common.Dialogs.IFavoritesSettings
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document.Settings
 			this.quickExportFormat = ImageFormat.Tiff;
 			this.quickExportDpi = 254.0;
 
-			//	Suppose que le dossier des exemples est dans le même dossier
+			//	Suppose que le dossier des exemples est dans le mÃªme dossier
 			//	que l'application.
 			this.initialDirectory = Document.OriginalSamplesPath;
 			this.newDocument      = Document.OriginalSamplesPath;
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Document.Settings
 		public void Initialize(DocumentType type)
 		{
 			//	Met tous les fichiers d'exemples dans la liste des 10 premiers
-			//	fichiers récents.
+			//	fichiers rÃ©cents.
 #if false
 			string ext = "";
 			if ( type == DocumentType.Pictogram )
@@ -126,14 +126,14 @@ namespace Epsitec.Common.Document.Settings
 
 		public Drawing.Rectangle MainWindowBounds
 		{
-			//	Fenêtre principale de l'application.
+			//	FenÃªtre principale de l'application.
 			get
 			{
 				Drawing.Rectangle rect = new Rectangle(this.windowLocation, this.windowSize);
 				if ( this.windowLocation.IsZero )
 				{
-					//	Lors de la première exécution, met l'application au centre
-					//	de la fenêtre.
+					//	Lors de la premiÃ¨re exÃ©cution, met l'application au centre
+					//	de la fenÃªtre.
 					ScreenInfo si = ScreenInfo.Find(Message.CurrentState.LastScreenPosition);
 					Rectangle area = si.WorkingArea;
 					rect = new Rectangle(area.Center-rect.Size/2, area.Center+rect.Size/2);
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public void SetWindowBounds(string name, Drawing.Point location, Drawing.Size size)
 		{
-			//	Ajoute une définition de fenêtre.
+			//	Ajoute une dÃ©finition de fenÃªtre.
 			WindowBounds wb = this.windowBounds[name] as WindowBounds;
 			if ( wb == null )
 			{
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public bool GetWindowBounds(string name, out Drawing.Point location, out Drawing.Size size)
 		{
-			//	Cherche une définition de fenêtre.
+			//	Cherche une dÃ©finition de fenÃªtre.
 			WindowBounds wb = this.windowBounds[name] as WindowBounds;
 			if (wb == null)
 			{
@@ -317,7 +317,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public string NewDocument
 		{
-			//	Dossier à utiliser pour les fichiers modèles (*.crmod).
+			//	Dossier Ã  utiliser pour les fichiers modÃ¨les (*.crmod).
 			get
 			{
 				return this.newDocument;
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public string InitialDirectory
 		{
-			//	Dossier à utiliser pour les fichiers documents (*.crdoc).
+			//	Dossier Ã  utiliser pour les fichiers documents (*.crdoc).
 			get
 			{
 				return this.initialDirectory;
@@ -700,8 +700,8 @@ namespace Epsitec.Common.Document.Settings
 		public System.Collections.ArrayList QuickCommands
 		{
 			//	Donne la liste des commandes rapides sous la forme "US:Name".
-			//	U -> '1' si utilisé
-			//	S -> '1' si séparateur après
+			//	U -> '1' si utilisÃ©
+			//	S -> '1' si sÃ©parateur aprÃ¨s
 			//	Name -> nom de la commande
 			get
 			{
@@ -716,7 +716,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public static System.Collections.ArrayList DefaultQuickCommands()
 		{
-			//	Donne la liste des commandes rapides par défaut.
+			//	Donne la liste des commandes rapides par dÃ©faut.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			list.Add("10:New");
@@ -851,7 +851,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void UpdateQuickCommands()
 		{
-			//	Met à jour la liste des commandes rapides en fonction d'éventuelles commandes qui n'y
+			//	Met Ã  jour la liste des commandes rapides en fonction d'Ã©ventuelles commandes qui n'y
 			//	seraient pas encore.
 			System.Collections.ArrayList all = GlobalSettings.DefaultQuickCommands();
 
@@ -910,19 +910,19 @@ namespace Epsitec.Common.Document.Settings
 
 		public static string QuickXcmd(bool used, bool sep, string cmd)
 		{
-			//	Donne la commande étendue à partir de ses composantes.
+			//	Donne la commande Ã©tendue Ã  partir de ses composantes.
 			return string.Format("{0}{1}:{2}", used?"1":"0", sep?"1":"0", cmd);
 		}
 
 		public static bool QuickUsed(string xcmd)
 		{
-			//	Indique si une commande est utilisée (visible dans la barre d'icônes).
+			//	Indique si une commande est utilisÃ©e (visible dans la barre d'icÃ´nes).
 			return xcmd[0] == '1';
 		}
 
 		public static bool QuickSep(string xcmd)
 		{
-			//	Indique si une commande est suivie d'un séparateur.
+			//	Indique si une commande est suivie d'un sÃ©parateur.
 			return xcmd[1] == '1';
 		}
 
@@ -939,7 +939,7 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise les réglages.
+			//	SÃ©rialise les rÃ©glages.
 			info.AddValue("Version", 9);
 
 			info.AddValue("WindowLocation", this.windowLocation);
@@ -979,7 +979,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected GlobalSettings(SerializationInfo info, StreamingContext context) : this()
 		{
-			//	Constructeur qui désérialise les réglages.
+			//	Constructeur qui dÃ©sÃ©rialise les rÃ©glages.
 			int version = info.GetInt32("Version");
 
 			this.windowLocation = (Drawing.Point) info.GetValue("WindowLocation", typeof(Drawing.Point));
@@ -1151,14 +1151,14 @@ namespace Epsitec.Common.Document.Settings
 
 			public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 			{
-				//	Sérialise les réglages.
+				//	SÃ©rialise les rÃ©glages.
 				info.AddValue("Location", this.location);
 				info.AddValue("Size", this.size);
 			}
 
 			protected WindowBounds(SerializationInfo info, StreamingContext context)
 			{
-				//	Constructeur qui désérialise les réglages.
+				//	Constructeur qui dÃ©sÃ©rialise les rÃ©glages.
 				this.location = (Drawing.Point) info.GetValue("Location", typeof(Drawing.Point));
 				this.size = (Drawing.Size) info.GetValue("Size", typeof(Drawing.Size));
 			}

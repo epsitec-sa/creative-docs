@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
@@ -56,8 +56,8 @@ namespace Epsitec.Common.Text.Layout
 		
 		public int GetRunLength(ulong[] text, int start, int length)
 		{
-			//	Détermine combien de caractères utilisent exactement les mêmes
-			//	propriétés de style & réglages dans le texte passé en entrée.
+			//	DÃ©termine combien de caractÃ¨res utilisent exactement les mÃªmes
+			//	propriÃ©tÃ©s de style & rÃ©glages dans le texte passÃ© en entrÃ©e.
 			
 			ulong code = Internal.CharMarker.ExtractCoreAndSettings (text[start]);
 			
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Text.Layout
 		
 		public int GetNextFragmentLength(ulong[] text, int start, int length, int fragmentLength, out double breakPenalty)
 		{
-			//	Détermine la taille d'un fragment de texte (prochaine césure) à
-			//	partir d'une longueur de départ.
+			//	DÃ©termine la taille d'un fragment de texte (prochaine cÃ©sure) Ã 
+			//	partir d'une longueur de dÃ©part.
 			
 			for (int i = fragmentLength; i < length; i++)
 			{
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Text.Layout
 			switch ((Unicode.Code)code)
 			{
 				case Unicode.Code.ParagraphSeparator:
-					code = 0x00B6;						//	¶ -- pilcrow sign
+					code = 0x00B6;						//	Â¶ -- pilcrow sign
 					break;
 				
 				case Unicode.Code.LineSeparator:
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Text.Layout
 					break;
 				
 				case Unicode.Code.EndOfText:
-					code = 0x00A4;						//	¤ -- currency sign
+					code = 0x00A4;						//	Â¤ -- currency sign
 					break;
 				
 				default:

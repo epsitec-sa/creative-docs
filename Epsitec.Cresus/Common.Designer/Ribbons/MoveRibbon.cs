@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Move permet de déplacer des objets sélectionnés.
+	/// La classe Move permet de dÃ©placer des objets sÃ©lectionnÃ©s.
 	/// </summary>
 	public class MoveRibbon : AbstractRibbon
 	{
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected void CreateFieldMove(ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour un déplacement.
+			//	CrÃ©e un champ Ã©ditable pour un dÃ©placement.
 			field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
 			field.InternalMinValue     =   1.0M;

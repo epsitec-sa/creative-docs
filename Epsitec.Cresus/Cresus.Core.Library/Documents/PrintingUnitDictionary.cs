@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Documents
 {
 	/// <summary>
-	/// Ce dictionnaire contient toutes les unités d'impression à utiliser pour l'impression d'un document.
-	/// La clé du dictionnaire est un type de page (PageType).
-	/// La valeur du dictionnaire est le code de l'entité DocumentPrintingUnits.
+	/// Ce dictionnaire contient toutes les unitÃ©s d'impression Ã  utiliser pour l'impression d'un document.
+	/// La clÃ© du dictionnaire est un type de page (PageType).
+	/// La valeur du dictionnaire est le code de l'entitÃ© DocumentPrintingUnits.
 	/// </summary>
 	public class PrintingUnitDictionary
 	{

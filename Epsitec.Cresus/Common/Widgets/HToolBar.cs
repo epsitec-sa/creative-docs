@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe HToolBar permet de réaliser des tool bars horizontales.
+	/// La classe HToolBar permet de rÃ©aliser des tool bars horizontales.
 	/// </summary>
 	public class HToolBar : AbstractToolBar
 	{

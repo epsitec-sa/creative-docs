@@ -168,9 +168,9 @@ namespace Epsitec.Common.Document.Panels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau Ètendu ?
+				if ( this.isExtendedSize )  // panneau √©tendu ?
 				{
-					if ( this.IsLabelProperties )  // Ètendu/dÈtails ?
+					if ( this.IsLabelProperties )  // √©tendu/d√©tails ?
 					{
 						h += 83;
 
@@ -184,12 +184,12 @@ namespace Epsitec.Common.Document.Panels
 							h += 25;
 						}
 					}
-					else	// Ètendu/compact ?
+					else	// √©tendu/compact ?
 					{
 						h += 106;
 					}
 				}
-				else	// panneau rÈduit ?
+				else	// panneau r√©duit ?
 				{
 					h += 30;
 				}
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Line p = this.property as Properties.Line;
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Line p = this.property as Properties.Line;
 			if ( p == null )  return;
 
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			bool showStandardLength = false;
 			bool enableStandardLength = false;
 			bool showDash = false;
@@ -308,9 +308,9 @@ namespace Epsitec.Common.Document.Panels
 
 			Properties.StandardDashType type = (Properties.StandardDashType) this.grid.SelectedValue;
 
-			if ( this.isExtendedSize )  // panneau Ètendu ?
+			if ( this.isExtendedSize )  // panneau √©tendu ?
 			{
-				if ( this.IsLabelProperties )  // dÈtails ?
+				if ( this.IsLabelProperties )  // d√©tails ?
 				{
 					if ( type != Properties.StandardDashType.Full   &&
 						 type != Properties.StandardDashType.Custom )
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -394,9 +394,9 @@ namespace Epsitec.Common.Document.Panels
 			Rectangle r = rect;
 			double pTop = rect.Top;
 
-			if ( this.isExtendedSize )  // panneau Ètendu ?
+			if ( this.isExtendedSize )  // panneau √©tendu ?
 			{
-				if ( this.IsLabelProperties )  // Ètendu/dÈtails ?
+				if ( this.IsLabelProperties )  // √©tendu/d√©tails ?
 				{
 					r.Top = pTop;
 					r.Bottom = r.Top-22;
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Document.Panels
 						pTop -= 25;
 					}
 				}
-				else	// Ètendu/compact ?
+				else	// √©tendu/compact ?
 				{
 					r.Top = pTop;
 					r.Bottom = r.Top-22*2;
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Document.Panels
 				r.Right = rect.Right;
 				this.gridJoin.SetManualBounds(r);
 			}
-			else	// panneau rÈduit ?
+			else	// panneau r√©duit ?
 			{
 				r.Top = pTop;
 				r.Bottom = r.Top-20;
@@ -530,28 +530,28 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleTextChanged(object sender)
 		{
-			//	Une valeur a ÈtÈ changÈe.
+			//	Une valeur a √©t√© chang√©e.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
 		private void HandleNothingClicked(object sender, MessageEventArgs e)
 		{
-			//	Le bouton "aucun trait" a ÈtÈ cliquÈ.
+			//	Le bouton "aucun trait" a √©t√© cliqu√©.
 			this.field.TextFieldReal.Value = 0.0M;
 			this.OnChanged();
 		}
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
 		private void HandleTypeChanged(object sender)
 		{
-			//	Le type a ÈtÈ changÈ.
+			//	Le type a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 
 			if ( sender == this.grid && this.IsLabelProperties )
@@ -565,7 +565,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleDashRankChanged(object sender)
 		{
-			//	Le rang a ÈtÈ changÈ.
+			//	Le rang a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.ignoreChanged = true;
 			this.DashToWidget();
@@ -574,7 +574,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleDashChanged(object sender)
 		{
-			//	Un champ a ÈtÈ changÈ.
+			//	Un champ a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

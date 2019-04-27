@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Access permet de choisir comment accéder aux ressources.
+	/// La classe Access permet de choisir comment accÃ©der aux ressources.
 	/// </summary>
 	public class AccessRibbon : AbstractRibbon
 	{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonSearch == null )  return;

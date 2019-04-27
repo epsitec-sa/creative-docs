@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			
 			businessContext.AssignIds (customer, generatorPool, settings.Generators);
 
-			//	TODO: @DR@ ... assigner un CustomerCategory par défaut
+			//	TODO: @DR@ ... assigner un CustomerCategory par dÃ©faut
 
 			customer.Workflow = WorkflowFactory.CreateDefaultWorkflow<CustomerEntity> (businessContext);
 			customer.Code = (string) ItemCodeGenerator.NewCode ();

@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Helpers
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		AffectsChildrenLayout	= 0x0008,
 		AffectsTextLayout		= 0x0010,
 		
-		InheritsValue			= 0x1000,		//	la valeur de la propriété peut être héritée par des enfants
-		ChangesSilently			= 0x2000,		//	les changements de la propriété ne génèrent pas d'événement
+		InheritsValue			= 0x1000,		//	la valeur de la propriÃ©tÃ© peut Ãªtre hÃ©ritÃ©e par des enfants
+		ChangesSilently			= 0x2000,		//	les changements de la propriÃ©tÃ© ne gÃ©nÃ¨rent pas d'Ã©vÃ©nement
 	}
 }

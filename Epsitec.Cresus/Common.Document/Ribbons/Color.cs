@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Color permet de modifier les couleurs de la sélection.
+	/// La classe Color permet de modifier les couleurs de la sÃ©lection.
 	/// </summary>
 	public class Color : Abstract
 	{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonColorToRgb == null )  return;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void CreateFieldColor(ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour une couleur.
+			//	CrÃ©e un champ Ã©ditable pour une couleur.
 			field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
 			field.TabIndex = tabIndex++;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void AdaptFieldColor(TextFieldReal field)
 		{
-			//	Adapte un champ éditable pour une couleur.
+			//	Adapte un champ Ã©ditable pour une couleur.
 			if ( this.document == null )
 			{
 				field.Enable = false;

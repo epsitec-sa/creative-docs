@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Compta.Graph
 {
 	/// <summary>
-	/// Cette structure identifie une surface, mais sans en connaître les détails géométriques.
+	/// Cette structure identifie une surface, mais sans en connaÃ®tre les dÃ©tails gÃ©omÃ©triques.
 	/// </summary>
 	public struct GraphSurfaceId
 	{

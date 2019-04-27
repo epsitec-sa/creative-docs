@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Undo gère les commandes undo/redo.
+	/// La classe Undo gÃ¨re les commandes undo/redo.
 	/// </summary>
 	public class Undo : Abstract
 	{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonUndo == null )  return;
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleListPressed(object sender, MessageEventArgs e)
 		{
-			//	Bouton pour ouvrir la liste cliqué.
+			//	Bouton pour ouvrir la liste cliquÃ©.
 			if ( this.document.Modifier.ActiveViewer.IsCreating )
 			{
 				return;

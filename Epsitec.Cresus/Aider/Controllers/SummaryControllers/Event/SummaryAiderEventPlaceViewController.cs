@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.Icon ("Base.AiderPlace")
-					.Title ("Lieu de célébration")
+					.Title ("Lieu de cÃ©lÃ©bration")
 					.Text (x => x.GetSummary ())
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 			}
@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.Icon ("Base.AiderPlace")
-					.Title ("Lieu de célébration")
+					.Title ("Lieu de cÃ©lÃ©bration")
 					.Text (x => x.GetSummary ())
 					.Attribute (BrickMode.DefaultToNoSubView);
 			}

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Objects
 {
 	/// <summary>
-	/// La classe Regular est la classe de l'objet graphique "polygone régulier".
+	/// La classe Regular est la classe de l'objet graphique "polygone rÃ©gulier".
 	/// </summary>
 	[System.Serializable()]
 	public class Regular : Objects.Abstract
@@ -42,14 +42,14 @@ namespace Epsitec.Common.Document.Objects
 
 		public override string IconUri
 		{
-			//	Nom de l'icône.
+			//	Nom de l'icÃ´ne.
 			get { return Misc.Icon("ObjectRegular"); }
 		}
 
 
 		public override Polygon PropertyHandleSupport
 		{
-			//	Retourne le polygone de support pour les poignées des propriétés.
+			//	Retourne le polygone de support pour les poignÃ©es des propriÃ©tÃ©s.
 			get
 			{
 				var polygons = this.GetPolygons ();
@@ -60,10 +60,10 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Début du déplacement une poignée.
+			//	DÃ©but du dÃ©placement une poignÃ©e.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
-			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			if ( rank < this.handles.Count )  // poignÃ©e de l'objet ?
 			{
 				drawingContext.ConstrainClear();
 
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						drawingContext.ConstrainAddHV(this.Handle(0).Position, false, -1);
 					}
-					if ( rank == 1 )  // extrémité ?
+					if ( rank == 1 )  // extrÃ©mitÃ© ?
 					{
 						drawingContext.ConstrainAddCenter(this.Handle(0).Position, false, -1);
 						drawingContext.ConstrainAddCircle(this.Handle(0).Position, this.Handle(1).Position, false, -1);
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Déplace une poignée.
-			if ( rank >= 2 )  // poignée d'une propriété ?
+			//	DÃ©place une poignÃ©e.
+			if ( rank >= 2 )  // poignÃ©e d'une propriÃ©tÃ© ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(0).Position = pos;
 				this.Handle(1).Position += move;
 			}
-			if ( rank == 1 )  // extrémité ?
+			if ( rank == 1 )  // extrÃ©mitÃ© ?
 			{
 				this.Handle(1).Position = pos;
 			}
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			//	Début de la création d'un objet.
+			//	DÃ©but de la crÃ©ation d'un objet.
 			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHV(pos, false, -1);
 			this.HandleAdd(pos, HandleType.Primary);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
-			//	Déplacement pendant la création d'un objet.
+			//	DÃ©placement pendant la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
-			//	Fin de la création d'un objet.
+			//	Fin de la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
-			//	pas exister et doit être détruit.
+			//	pas exister et doit Ãªtre dÃ©truit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Document.Objects
 				shapes.Add(shape);
 			}
 
-			//	Pour bbox et détection
+			//	Pour bbox et dÃ©tection
 			Path pathBbox = new Path ();
 
 			pathBbox.AppendRectangle (center.X-radius, center.Y-radius, radius*2, radius*2);
@@ -265,7 +265,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public void ComputeCorners(out Point a, out Point b)
 		{
-			//	Calcule les points pour les poignées de la propriété PropertyCorner.
+			//	Calcule les points pour les poignÃ©es de la propriÃ©tÃ© PropertyCorner.
 			Point t, s1, s2;
 
 			Properties.Regular pr = this.PropertyRegular;
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.Objects
 				this.ComputeCurve(0, out t, out s1, out s2, out a);
 				this.ComputeCurve(pr.NbFaces-1, out b, out s1, out s2, out t);
 			}
-			else	// étoile ?
+			else	// Ã©toile ?
 			{
 				this.ComputeCurve(0, out t, out s1, out s2, out a);
 				this.ComputeCurve(pr.NbFaces*2-1, out b, out s1, out s2, out t);
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Document.Objects
 					p2 = this.PolarToPoint(1, a2);
 				}
 			}
-			else if (reg.RegularType == Properties.RegularType.Star)  // étoile ?
+			else if (reg.RegularType == Properties.RegularType.Star)  // Ã©toile ?
 			{
 				Point star = Point.Scale(corner, center, reg.Deep.R);
 				double a = reg.Deep.A;
@@ -356,13 +356,13 @@ namespace Epsitec.Common.Document.Objects
 
 		public Point PolarToPoint(double r, double a)
 		{
-			//	Conversion d'une coordonnée polaire (scale;angle) en coordonnée (x;y), dans l'espace de l'objet.
+			//	Conversion d'une coordonnÃ©e polaire (scale;angle) en coordonnÃ©e (x;y), dans l'espace de l'objet.
 			return this.PolarToPoint(new Polar(r, a));
 		}
 
 		public Point PolarToPoint(Polar p)
 		{
-			//	Conversion d'une coordonnée polaire (scale;angle) en coordonnée (x;y), dans l'espace de l'objet.
+			//	Conversion d'une coordonnÃ©e polaire (scale;angle) en coordonnÃ©e (x;y), dans l'espace de l'objet.
 			Point center = this.Handle(0).Position;
 
 			Point pos = Point.Scale(center, this.Handle(1).Position, p.R);
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Polar PointToPolar(Point pos)
 		{
-			//	Conversion d'une coordonnée (x;y) en coordonnée polaire (scale;angle), dans l'espace de l'objet.
+			//	Conversion d'une coordonnÃ©e (x;y) en coordonnÃ©e polaire (scale;angle), dans l'espace de l'objet.
 			double scale, angle;
 
 			Point center = this.Handle(0).Position;
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Document.Objects
 			polygons.Add (polygon);
 
 			int total = reg.NbFaces;
-			if (reg.RegularType != Properties.RegularType.Norm)  // étoile ?
+			if (reg.RegularType != Properties.RegularType.Norm)  // Ã©toile ?
 			{
 				total *= 2;
 			}
@@ -423,14 +423,14 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
-			//	Crée le chemin d'un polygone régulier.
+			//	CrÃ©e le chemin d'un polygone rÃ©gulier.
 			Properties.Regular reg = this.PropertyRegular;
 
 			Path path = new Path();
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);;
 
 			int total = reg.NbFaces;
-			if (reg.RegularType != Properties.RegularType.Norm)  // étoile ?
+			if (reg.RegularType != Properties.RegularType.Norm)  // Ã©toile ?
 			{
 				total *= 2;
 			}
@@ -530,7 +530,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void PathCorner(Path path, Point p1, Point s, Point p2, Properties.Corner corner, out Point c1, out Point c2, out double radius)
 		{
-			//	Crée le chemin d'un coin.
+			//	CrÃ©e le chemin d'un coin.
 			double l1 = Point.Distance(p1, s);
 			double l2 = Point.Distance(p2, s);
 			radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
@@ -541,14 +541,14 @@ namespace Epsitec.Common.Document.Objects
 
 		public override Path GetMagnetPath()
 		{
-			//	Retourne le chemin géométrique de l'objet pour les constructions
-			//	magnétiques.
+			//	Retourne le chemin gÃ©omÃ©trique de l'objet pour les constructions
+			//	magnÃ©tiques.
 			return this.PathBuild(null, true);
 		}
 
 		protected override Path GetPath()
 		{
-			//	Retourne le chemin géométrique de l'objet.
+			//	Retourne le chemin gÃ©omÃ©trique de l'objet.
 			return this.PathBuild(null, false);
 		}
 
@@ -556,13 +556,13 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
 		protected Regular(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 		}
 		#endregion
 	}

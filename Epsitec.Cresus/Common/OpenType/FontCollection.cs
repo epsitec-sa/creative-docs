@@ -1,4 +1,4 @@
-//	Copyright © 2005-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -279,7 +279,7 @@ namespace Epsitec.Common.OpenType
 
 				if (font == null)
 				{
-					//	Zut. On n'a toujours rien trouvé de tel... Il faut absolument
+					//	Zut. On n'a toujours rien trouvÃ© de tel... Il faut absolument
 					//	trouver quelque chose :
 
 					foreach (FontIdentity identity in this.fullList)
@@ -366,12 +366,12 @@ namespace Epsitec.Common.OpenType
 		/// <returns>The hashed style name.</returns>
 		public static string GetStyleHash(string style)
 		{
-			//	Le "hash" d'un style de fonte correspond à une forme simplifiée
-			//	et triée des éléments constituant un nom de style. On évite des
-			//	problèmes de comparaison liés à des permutations, etc.
+			//	Le "hash" d'un style de fonte correspond Ã  une forme simplifiÃ©e
+			//	et triÃ©e des Ã©lÃ©ments constituant un nom de style. On Ã©vite des
+			//	problÃ¨mes de comparaison liÃ©s Ã  des permutations, etc.
 
-			//	En plus, le nom de style peut contenir des éléments "*Xyz" où "x"
-			//	peut être "+", "-" ou "!" pour ajouter, supprimer ou inverser un
+			//	En plus, le nom de style peut contenir des Ã©lÃ©ments "*Xyz" oÃ¹ "x"
+			//	peut Ãªtre "+", "-" ou "!" pour ajouter, supprimer ou inverser un
 			//	style tel que "Bold" ou "Italic".
 
 			if (string.IsNullOrEmpty (style))
@@ -741,8 +741,8 @@ namespace Epsitec.Common.OpenType
 		private Font LockedCreateFont(string face, string style)
 		{
 			//	Pour trouver la fonte correspondante, on se base sur le "hash"
-			//	du nom de style, ce qui permet d'être plus souple dans le cas
-			//	des fontes à variantes.
+			//	du nom de style, ce qui permet d'Ãªtre plus souple dans le cas
+			//	des fontes Ã  variantes.
 
 			string fullName = FontName.GetFullName (face, FontCollection.GetStyleHash (style));
 			string fullHash = FontName.GetFullHash (fullName);

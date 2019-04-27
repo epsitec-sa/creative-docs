@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.IntegerType))]
@@ -6,7 +6,7 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe IntegerType décrit une valeur de type System.Int32.
+	/// La classe IntegerType dÃ©crit une valeur de type System.Int32.
 	/// </summary>
 	public class IntegerType : AbstractNumericType
 	{

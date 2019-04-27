@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe RibbonButton représente un bouton pour sélectionner un ruban.
+	/// La classe RibbonButton reprÃ©sente un bouton pour sÃ©lectionner un ruban.
 	/// </summary>
 	public class RibbonButton : AbstractButton
 	{
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnTextChanged()
 		{
-			//	Appelé lorsque le texte du bouton change.
+			//	AppelÃ© lorsque le texte du bouton change.
 			base.OnTextChanged();
 
 			this.mainTextSize = this.TextLayout.GetSingleLineSize ();
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie de la case du menu.
+			//	Met Ã  jour la gÃ©omÃ©trie de la case du menu.
 			base.UpdateClientGeometry();
 
 			if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;

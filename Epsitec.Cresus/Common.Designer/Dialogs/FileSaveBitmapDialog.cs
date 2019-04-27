@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Dialogs;
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected override Rectangle GetOwnerBounds()
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			var w = this.designerApplication.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected override void CreateOptionsUserInterface()
 		{
-			//	Crée le panneau facultatif pour les options d'enregistrement.
+			//	CrÃ©e le panneau facultatif pour les options d'enregistrement.
 			this.optionsContainer = new Widget (this.window.Root);
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			//	Options pour le zoom (groupe de droite).
 			var groupZoom = new GroupBox (this.optionsContainer);
-			groupZoom.Text = "Zoom de l'image à générer";
+			groupZoom.Text = "Zoom de l'image Ã  gÃ©nÃ©rer";
 			groupZoom.PreferredWidth = 200;
 			groupZoom.Padding = new Margins (10, 0, 0, 3);
 			groupZoom.Dock = DockStyle.StackEnd;
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			//	Options pour le cartouche (groupe de gauche).
 			var groupCartridge = new GroupBox (this.optionsContainer);
-			groupCartridge.Text = "Options pour le cartouche en bas à gauche";
+			groupCartridge.Text = "Options pour le cartouche en bas Ã  gauche";
 			groupCartridge.PreferredWidth = 240;
 			groupCartridge.Padding = new Margins (10, 0, 0, 3);
 			groupCartridge.Dock = DockStyle.StackEnd;
@@ -151,12 +151,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			string x = System.Math.Floor (this.BitmapSize.Width*zoom).ToString ();
 			string y = System.Math.Floor (this.BitmapSize.Height*zoom).ToString ();
 
-			return string.Format ("{0}% ({1} × {2} pixels)", z, x, y);
+			return string.Format ("{0}% ({1} Ã— {2} pixels)", z, x, y);
 		}
 
 		protected void UpdateZoom()
 		{
-			//	Met à jour le mode d'inclusion des polices.
+			//	Met Ã  jour le mode d'inclusion des polices.
 			if (this.optionsZoom1 != null)
 			{
 				this.optionsZoom1.ActiveState = (this.BitmapParameters.Zoom == 1) ? ActiveState.Yes : ActiveState.No;
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleOptionsZoomClicked(object sender, MessageEventArgs e)
 		{
-			//	Un bouton radio pour le mode d'inclusion des polices a été cliqué.
+			//	Un bouton radio pour le mode d'inclusion des polices a Ã©tÃ© cliquÃ©.
 			if (sender == this.optionsZoom1)
 			{
 				this.BitmapParameters.Zoom = 1;
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		//	Tous les réglages sont conservés dans des variables statiques,
+		//	Tous les rÃ©glages sont conservÃ©s dans des variables statiques,
 		//	ce qui est une solution rapide et provisoire !
 		private static Settings settings = new Settings ();
 		private static string initialDirectory = null;

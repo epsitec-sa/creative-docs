@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe SettingsTable permet d'accéder aux réglages d'après le code d'un
-	/// caractère. De manière interne, SettingsTable gère une liste avec les réglages
+	/// La classe SettingsTable permet d'accÃ©der aux rÃ©glages d'aprÃ¨s le code d'un
+	/// caractÃ¨re. De maniÃ¨re interne, SettingsTable gÃ¨re une liste avec les rÃ©glages
 	/// fondamentaux (core settings).
 	/// </summary>
 	internal sealed class SettingsTable
@@ -18,11 +18,11 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Attach(ref ulong code, Styles.CoreSettings coreSettings)
 		{
-			//	Attache un coreSettings au caractère passé en entrée.
+			//	Attache un coreSettings au caractÃ¨re passÃ© en entrÃ©e.
 
 			//	Prend note que le coreSettings a une utilisation de plus (si un
-			//	coreSettings identique existe déjà, c'est ce coreSettings là qui
-			//	sera réutilisé; on évite ainsi les doublons).
+			//	coreSettings identique existe dÃ©jÃ , c'est ce coreSettings lÃ  qui
+			//	sera rÃ©utilisÃ©; on Ã©vite ainsi les doublons).
 			
 			Styles.CoreSettings find = this.FindCore (coreSettings, null);
 			
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Attach(ref ulong code, Styles.CoreSettings coreSettings, Styles.LocalSettings localSettings, Styles.ExtraSettings extraSettings)
 		{
-			//	Variante de Attach avec réglages spécifiques (voir méthode simple
+			//	Variante de Attach avec rÃ©glages spÃ©cifiques (voir mÃ©thode simple
 			//	ci-dessus).
 			
 			if ((localSettings != null) &&
@@ -66,8 +66,8 @@ namespace Epsitec.Common.Text.Internal
 			}
 			else
 			{
-				//	Trouve un coreSettings qui abrite à la fois les réglages locaux et
-				//	les réglages supplémentaires :
+				//	Trouve un coreSettings qui abrite Ã  la fois les rÃ©glages locaux et
+				//	les rÃ©glages supplÃ©mentaires :
 				
 				SettingsCoreMatcher matcher = new SettingsCoreMatcher (localSettings, extraSettings);
 				Styles.CoreSettings find    = this.FindCore (coreSettings, new CoreMatcher (matcher.FindExactSettings));
@@ -75,10 +75,10 @@ namespace Epsitec.Common.Text.Internal
 				if ((find == null) &&
 					(matcher.WasCalled))
 				{
-					//	On avait trouvé un coreSettings, mais il ne faisait pas l'affaire,
-					//	car il n'avait pas les réglages demandés. Il faut donc voir
+					//	On avait trouvÃ© un coreSettings, mais il ne faisait pas l'affaire,
+					//	car il n'avait pas les rÃ©glages demandÃ©s. Il faut donc voir
 					//	si parmi les candidats il y a un coreSettings avec de la place
-					//	pour y placer les réglages demandés :
+					//	pour y placer les rÃ©glages demandÃ©s :
 					
 					find = this.FindCore (coreSettings, new CoreMatcher (matcher.FindFreeSettings));
 				}
@@ -86,8 +86,8 @@ namespace Epsitec.Common.Text.Internal
 				if (find == null)
 				{
 					//	Aucun coreSettings ne fait l'affaire (soit parce qu'il n'y en a
-					//	pas, soit parce que ceux qui existent sont déjà complets
-					//	en ce qui concerne les réglages).
+					//	pas, soit parce que ceux qui existent sont dÃ©jÃ  complets
+					//	en ce qui concerne les rÃ©glages).
 					
 					//	On en ajoute un neuf :
 					
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Text.Internal
 				Debug.Assert.IsTrue (find.CoreIndex > 0);
 				Debug.Assert.IsFalse (Internal.CharMarker.HasCoreOrSettings (code));
 
-				//	Ajoute les réglages au coreSettings s'ils n'en font pas encore partie :
+				//	Ajoute les rÃ©glages au coreSettings s'ils n'en font pas encore partie :
 				
 				if (localSettings != null)
 				{
@@ -124,8 +124,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Detach(ref ulong code)
 		{
-			//	Détache le coreSettings et les réglages associés au caractère 'code'.
-			//	Ceci décrémente les divers compteurs d'utilisation.
+			//	DÃ©tache le coreSettings et les rÃ©glages associÃ©s au caractÃ¨re 'code'.
+			//	Ceci dÃ©crÃ©mente les divers compteurs d'utilisation.
 			
 			int coreIndex  = Internal.CharMarker.GetCoreIndex (code);
 			int extraIndex = Internal.CharMarker.GetExtraIndex (code);
@@ -273,8 +273,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Styles.CoreSettings FindCore(Styles.CoreSettings coreSettings, CoreMatcher matcher)
 		{
-			//	Cherche si un coreSettings identique existe déjà. Si oui, retourne la
-			//	référence au coreSettings en question; si non, retourne null.
+			//	Cherche si un coreSettings identique existe dÃ©jÃ . Si oui, retourne la
+			//	rÃ©fÃ©rence au coreSettings en question; si non, retourne null.
 			
 			if ((this.cores == null) ||
 				(this.cores.Count == 0))
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private void Add(Styles.CoreSettings coreSettings)
 		{
-			//	Ajoute le coreSettings (qui ne doit pas encore être contenu dans la
+			//	Ajoute le coreSettings (qui ne doit pas encore Ãªtre contenu dans la
 			//	liste). Ceci n'affecte nullement le compteur d'utilisations.
 			
 			Debug.Assert.IsTrue (coreSettings.CoreIndex == 0);
@@ -332,8 +332,8 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsTrue (coreSettings.CoreIndex > 0);
 			Debug.Assert.IsTrue (this.cores[coreSettings.CoreIndex-1] == coreSettings);
 			
-			//	Retire de la liste, sans pour autant réorganiser la liste
-			//	elle-même :
+			//	Retire de la liste, sans pour autant rÃ©organiser la liste
+			//	elle-mÃªme :
 			
 			this.cores[coreSettings.CoreIndex-1] = null;
 			

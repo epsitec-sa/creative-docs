@@ -7,7 +7,7 @@ using Epsitec.Common.Widgets.Layouts;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// La classe PropertyPanel est la classe de base pour tous les panels des propriétés.
+	/// La classe PropertyPanel est la classe de base pour tous les panels des propriÃ©tÃ©s.
 	/// </summary>
 	public class PropertyPanel : Widget
 	{
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		
 		private void HandleMouseEntered(object sender, MessageEventArgs e)
 		{
-			//	La souris est entrée dans le panneau.
+			//	La souris est entrÃ©e dans le panneau.
 		}
 
 		private void HandleMouseExited(object sender, MessageEventArgs e)
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	La souris est sortie du panneau.
 		}
 
-		//	Le bouton pour étendre/réduire le panneau a été cliqué.
+		//	Le bouton pour Ã©tendre/rÃ©duire le panneau a Ã©tÃ© cliquÃ©.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.IsExtendedSize = !this.isExtendedSize;

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -11,13 +11,13 @@ using Epsitec.Common.IO;
 
 namespace Epsitec.Common.Dialogs
 {
-	//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
+	//	Cette classe reprÃ©sente une 'ligne' dans la liste, qui peut reprÃ©senter
 	//	un fichier, un dossier ou la commande 'nouveau document vide'.
 	public class FileListItem : System.IComparable<FileListItem>, System.IEquatable<FileListItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
 	{
 		public FileListItem(string iconUri, string fileName, string shortFileName, string description)
 		{
-			//	Crée un item pour 'Nouveau document vide'.
+			//	CrÃ©e un item pour 'Nouveau document vide'.
 			this.isSynthetic = true;
 			this.smallIconUri= iconUri;
 			this.largeIconUri = iconUri;
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Dialogs
 
 		public FileListItem(FolderItem folderItem)
 		{
-			//	Crée un item pour un fichier ou un dossier.
+			//	CrÃ©e un item pour un fichier ou un dossier.
 			this.FolderItem = folderItem;
 		}
 
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Dialogs
 
 		public string GetResolvedFileName()
 		{
-			//	Nom du fichier avec le chemin d'accès complet. Dans le cas d'un raccourci,
+			//	Nom du fichier avec le chemin d'accÃ¨s complet. Dans le cas d'un raccourci,
 			//	retourne le chemin complet de la cible.
 			if (this.cachedFileName == null)
 			{
@@ -165,14 +165,14 @@ namespace Epsitec.Common.Dialogs
 
 		public FolderItem GetResolvedTarget()
 		{
-			this.GetResolvedFileName ();  //  pour mettre à jour cachedTarget
+			this.GetResolvedFileName ();  //  pour mettre Ã  jour cachedTarget
 			return this.cachedTarget;
 		}
 
 		public string ShortFileName
 		{
-			//	Nom du fichier court, sans le chemin d'accès (et ni l'extension, si c'est
-			//	défini comme tel par l'utilisateur)
+			//	Nom du fichier court, sans le chemin d'accÃ¨s (et ni l'extension, si c'est
+			//	dÃ©fini comme tel par l'utilisateur)
 			get
 			{
 				if (this.cachedShortFileName == null)
@@ -348,7 +348,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.isSynthetic)
 				{
-					//	rien à faire
+					//	rien Ã  faire
 				}
 				else if (!string.IsNullOrEmpty (this.folderItem.FullPath))
 				{
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Dialogs
 
 		public string Description
 		{
-			//	Retourne la description du fichier, basée sur les statistiques si elles existent.
+			//	Retourne la description du fichier, basÃ©e sur les statistiques si elles existent.
 			get
 			{
 				if (this.cachedDescription == null)
@@ -586,7 +586,7 @@ namespace Epsitec.Common.Dialogs
 
 		public void GetImage(out Image image, out bool icon)
 		{
-			//	Donne l'image miniature associée au fichier.
+			//	Donne l'image miniature associÃ©e au fichier.
 			if (this.isSynthetic)  // nouveau document vide ?
 			{
 				image = null;
@@ -618,7 +618,7 @@ namespace Epsitec.Common.Dialogs
 
 		protected IDocumentInfo Statistics
 		{
-			//	Retourne les statistiques associées au fichier.
+			//	Retourne les statistiques associÃ©es au fichier.
 			get
 			{
 				if (this.isSynthetic)  // nouveau document vide ?
@@ -668,7 +668,7 @@ namespace Epsitec.Common.Dialogs
 
 		private List<FileListItem> GetAncestorList()
 		{
-			//	Retourne la liste des ancêtres dans l'ordre feuille->racine
+			//	Retourne la liste des ancÃªtres dans l'ordre feuille->racine
 			//	(en dernier dans la liste, on trouve toujours le bureau).
 			List<FileListItem> list = new List<FileListItem> ();
 			FileListItem current = this;
@@ -705,10 +705,10 @@ namespace Epsitec.Common.Dialogs
 
 		public static Epsitec.Common.Types.StructuredType GetStructuredType()
 		{
-			//	Retourne un descripteur de type structuré pour permettre d'accéder
-			//	à FileItem comme si c'était une structure de type StructuredData.
-			//	Chaque champ qui doit être accessible doit être nommé et décrit
-			//	ici; voir aussi l'implémentation de IStructuredData plus loin.
+			//	Retourne un descripteur de type structurÃ© pour permettre d'accÃ©der
+			//	Ã  FileItem comme si c'Ã©tait une structure de type StructuredData.
+			//	Chaque champ qui doit Ãªtre accessible doit Ãªtre nommÃ© et dÃ©crit
+			//	ici; voir aussi l'implÃ©mentation de IStructuredData plus loin.
 			if (FileListItem.type == null)
 			{
 				FileListItem.type = new Epsitec.Common.Types.StructuredType ();
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			//	Comparaison simple ou complexe, selon SortAccordingToLevel.
 			//	En mode complexe (SortAccordingToLevel = true), on cherche
-			//	à obtenir cet ordre:
+			//	Ã  obtenir cet ordre:
 			//		A		(deep = 0)
 			//		B		(deep = 0)
 			//		B/1		(deep = 1)
@@ -808,7 +808,7 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					return this.isSynthetic ? -1 : 1;  // 'nouveau document vide' au début
+					return this.isSynthetic ? -1 : 1;  // 'nouveau document vide' au dÃ©but
 				}
 			}
 			if (this.isDefaultItem || other.isDefaultItem)
@@ -819,18 +819,18 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					return this.isDefaultItem ? -1 : 1;  // 'document par défaut' au début
+					return this.isDefaultItem ? -1 : 1;  // 'document par dÃ©faut' au dÃ©but
 				}
 			}
 
 			if (this.IsDrive != other.IsDrive)
 			{
-				return this.IsDrive ? -1 : 1;  // unités avant les fichiers
+				return this.IsDrive ? -1 : 1;  // unitÃ©s avant les fichiers
 			}
 
 			if (this.IsVirtual != other.IsVirtual)
 			{
-				return this.IsVirtual ? -1 : 1;  // unités virtuelles avant les dossiers
+				return this.IsVirtual ? -1 : 1;  // unitÃ©s virtuelles avant les dossiers
 			}
 
 			if (this.IsDirectoryOrShortcut != other.IsDirectoryOrShortcut)
@@ -946,8 +946,8 @@ namespace Epsitec.Common.Dialogs
 
 		IEnumerable<string> Epsitec.Common.Types.IStructuredData.GetValueIds()
 		{
-			//	Retourne la liste des champs définis pour cette structure; voir
-			//	aussi la méthode GetStructuredType.
+			//	Retourne la liste des champs dÃ©finis pour cette structure; voir
+			//	aussi la mÃ©thode GetStructuredType.
 
 			yield return "icon";
 			yield return "name";
@@ -958,7 +958,7 @@ namespace Epsitec.Common.Dialogs
 
 		object Epsitec.Common.Types.IValueStore.GetValue(string id)
 		{
-			//	Retourne la valeur du champ spécifié.
+			//	Retourne la valeur du champ spÃ©cifiÃ©.
 			switch (id)
 			{
 				case "icon":

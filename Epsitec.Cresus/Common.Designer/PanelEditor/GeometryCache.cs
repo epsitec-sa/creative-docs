@@ -8,13 +8,13 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
-	/// Cache pour la géométrie d'un objet (widget).
+	/// Cache pour la gÃ©omÃ©trie d'un objet (widget).
 	/// </summary>
 	public class GeometryCache : DependencyObject
 	{
 		public GeometryCache(Widget obj, ObjectModifier objectModifier)
 		{
-			//	Constructeur unique qui mémorise la géométrie de l'objet.
+			//	Constructeur unique qui mÃ©morise la gÃ©omÃ©trie de l'objet.
 			this.obj = obj;
 			this.objectModifier = objectModifier;
 
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static void FixBounds(Widget parent, ObjectModifier objectModifier)
 		{
-			//	Mémorise la position actuelle de tous les fils d'un objet sélectionné.
+			//	MÃ©morise la position actuelle de tous les fils d'un objet sÃ©lectionnÃ©.
 			if (parent.HasChildren)
 			{
 				foreach (Widget children in parent.Children)
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static void AdaptBounds(Widget parent, ObjectModifier objectModifier, ObjectModifier.ChildrenPlacement cp)
 		{
-			//	Adapte les fils d'un objet sélectionné après un changement de ChildrenPlacement.
+			//	Adapte les fils d'un objet sÃ©lectionnÃ© aprÃ¨s un changement de ChildrenPlacement.
 			if (cp == ObjectModifier.ChildrenPlacement.Grid)
 			{
 				double n;
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static void Clear(Widget parent)
 		{
-			//	Oublie toutes les informations de géométrie mémorisées.
+			//	Oublie toutes les informations de gÃ©omÃ©trie mÃ©morisÃ©es.
 			if (parent.HasChildren)
 			{
 				foreach (Widget obj in parent.Children)

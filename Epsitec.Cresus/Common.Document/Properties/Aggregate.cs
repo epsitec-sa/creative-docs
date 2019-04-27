@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe Aggregate représente une collection de styles.
+	/// La classe Aggregate reprÃ©sente une collection de styles.
 	/// </summary>
 	[System.Serializable()]
 	public class Aggregate : ISerializable
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public string AggregateName
 		{
-			//	Nom de l'agrégat.
+			//	Nom de l'agrÃ©gat.
 			get
 			{
 				return this.aggregateName;
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public UndoableList Styles
 		{
-			//	Liste des styles de l'agrégat.
+			//	Liste des styles de l'agrÃ©gat.
 			get
 			{
 				return this.styles;
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public UndoableList Children
 		{
-			//	Liste des fils de l'agrégat.
+			//	Liste des fils de l'agrÃ©gat.
 			get
 			{
 				return this.children;
@@ -57,14 +57,14 @@ namespace Epsitec.Common.Document.Properties
 
 		public Properties.Abstract Property(Properties.Type type, bool deep)
 		{
-			//	Donne une propriété de l'agrégat.
+			//	Donne une propriÃ©tÃ© de l'agrÃ©gat.
 			if ( deep )  return this.PropertyDeep(type);
 			else         return this.Property(type);
 		}
 
 		public Properties.Abstract Property(Properties.Type type)
 		{
-			//	Donne une propriété de l'agrégat.
+			//	Donne une propriÃ©tÃ© de l'agrÃ©gat.
 			foreach ( Properties.Abstract property in this.styles )
 			{
 				if ( property.Type == type )  return property;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Properties.Abstract PropertyDeep(Properties.Type type)
 		{
-			//	Donne une propriété de l'agrégat ou de l'un des agrégats enfants.
+			//	Donne une propriÃ©tÃ© de l'agrÃ©gat ou de l'un des agrÃ©gats enfants.
 			return this.PropertyDeep(type, 0);
 		}
 		
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Properties
 
 			if ( this.children.Count != 0 )
 			{
-				//	Cherche depuis la fin, pour obtenir le même ordre que les styles de texte.
+				//	Cherche depuis la fin, pour obtenir le mÃªme ordre que les styles de texte.
 				for ( int i=this.children.Count-1 ; i>=0 ; i-- )
 				{
 					Properties.Aggregate children = this.children[i] as Properties.Aggregate;
@@ -100,13 +100,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool Contains(Properties.Abstract property)
 		{
-			//	Indique si l'agrégat contient une propriété.
+			//	Indique si l'agrÃ©gat contient une propriÃ©tÃ©.
 			return this.styles.Contains(property);
 		}
 
 		public bool IsUsedByObject(Objects.Abstract obj)
 		{
-			//	Vérifie si un objet utilise cet agrégat.
+			//	VÃ©rifie si un objet utilise cet agrÃ©gat.
 			return this.IsUsedByObject(obj, 0);
 		}
 		
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public string GetStyleBrief()
 		{
-			//	Donne un texte résumé sur un style graphique.
+			//	Donne un texte rÃ©sumÃ© sur un style graphique.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append("<font size=\"80%\">");
 
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public void CopyTo(Aggregate dst)
 		{
-			//	Copie tout l'agrégat.
+			//	Copie tout l'agrÃ©gat.
 			dst.aggregateName = this.aggregateName;
 			this.styles.CopyTo(dst.styles);
 			this.children.CopyTo(dst.children);
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public void DuplicateTo(Aggregate dst)
 		{
-			//	Duplique tout l'agrégat.
+			//	Duplique tout l'agrÃ©gat.
 			dst.aggregateName = this.aggregateName;
 			this.children.CopyTo(dst.children);
 
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static int UniqueId(UndoableList aggregates, Properties.Abstract property)
 		{
-			//	Donne un identificateur unique pour une propriété.
+			//	Donne un identificateur unique pour une propriÃ©tÃ©.
 			int id = (int) property.Type;
 
 			if ( property.IsStyle )
@@ -202,13 +202,13 @@ namespace Epsitec.Common.Document.Properties
 		#region OpletAggregate
 		protected void InsertOpletAggregate()
 		{
-			//	Ajoute un oplet pour mémoriser l'agrégat.
+			//	Ajoute un oplet pour mÃ©moriser l'agrÃ©gat.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletAggregate oplet = new OpletAggregate(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		//	Mémorise l'agrégat.
+		//	MÃ©morise l'agrÃ©gat.
 		protected class OpletAggregate : AbstractOplet
 		{
 			public OpletAggregate(Aggregate host)
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'agrégat.
+			//	SÃ©rialise l'agrÃ©gat.
 			info.AddValue("AggregateName", this.aggregateName);
 			info.AddValue("Styles", this.styles);
 			info.AddValue("Children", this.children);
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Aggregate(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise l'agrégat.
+			//	Constructeur qui dÃ©sÃ©rialise l'agrÃ©gat.
 			this.document = Document.ReadDocument;
 			this.aggregateName = info.GetString("AggregateName");
 			this.styles = (UndoableList) info.GetValue("Styles", typeof(UndoableList));

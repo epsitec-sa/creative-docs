@@ -1,18 +1,18 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération ApplyMode définit comment des propriétés doivent être
-	/// appliquées à un texte.
+	/// L'Ã©numÃ©ration ApplyMode dÃ©finit comment des propriÃ©tÃ©s doivent Ãªtre
+	/// appliquÃ©es Ã  un texte.
 	/// </summary>
 	public enum ApplyMode
 	{
 		None,									//	ne change rien
 		
-		Set,									//	écrase les réglages courants
-		Clear,									//	efface les réglages courants
-		Combine,								//	combine avec les réglages courants
+		Set,									//	Ã©crase les rÃ©glages courants
+		Clear,									//	efface les rÃ©glages courants
+		Combine,								//	combine avec les rÃ©glages courants
 	}
 }

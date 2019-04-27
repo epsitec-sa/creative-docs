@@ -330,7 +330,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			if (this.paragraphStarted)
 			{
-				// on est au début d'un paragraphe, il faut ajouter un NBSP, sinon le paragraphe vide est ignéroi
+				// on est au dÃ©but d'un paragraphe, il faut ajouter un NBSP, sinon le paragraphe vide est ignÃ©roi
 				this.output.Append (new string ((char) 0xA0, 1));
 				//this.output.Append ("xxxx");
 			}
@@ -636,7 +636,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void CloseOpenTagsOnStack(bool closeAlsoParagraphs)
 		{
-			// ferme les tags restés ouverts
+			// ferme les tags restÃ©s ouverts
 			while (this.openTagsStack.Count > 0)
 			{
 				HtmlTagWithParam tag;
@@ -733,7 +733,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			public bool IsSameTag(HtmlTagWithParam tag)
 			{
-				// si les deux tags sont de même type
+				// si les deux tags sont de mÃªme type
 				return this.htmltag == tag.htmltag;
 			}
 

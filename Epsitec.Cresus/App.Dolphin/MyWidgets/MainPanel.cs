@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Panneau principal, qui gère les touches Tab et Return.
+	/// Panneau principal, qui gÃ¨re les touches Tab et Return.
 	/// </summary>
 	public class MainPanel : Panel
 	{
@@ -43,10 +43,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//	Gestion des touches Tab et Return. On cherche le widget suivant (ou précédent si Shift)
-			//	dans la parenté, d'après les propriétés TabIndex (les trous ne sont pas admis).
-			//	Si le widget est un TextFieldHexa utilisé dans un MemoryAccessor, on fait défiler
-			//	la mémoire lorsqu'on bute au début ou à la fin.
+			//	Gestion des touches Tab et Return. On cherche le widget suivant (ou prÃ©cÃ©dent si Shift)
+			//	dans la parentÃ©, d'aprÃ¨s les propriÃ©tÃ©s TabIndex (les trous ne sont pas admis).
+			//	Si le widget est un TextFieldHexa utilisÃ© dans un MemoryAccessor, on fait dÃ©filer
+			//	la mÃ©moire lorsqu'on bute au dÃ©but ou Ã  la fin.
 			if (this.application.IsRunning)
 			{
 				this.application.ProcessRunningMessage(message);
@@ -83,7 +83,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					if (field != null)
 					{
 						Widget newWidget = this.SearchTabIndex(widget, widget.TabIndex+offset);
-						if (newWidget == null)  // on bute sur une extrémité ?
+						if (newWidget == null)  // on bute sur une extrÃ©mitÃ© ?
 						{
 							TextFieldHexa hexa = field.Parent as TextFieldHexa;
 							if (hexa != null)
@@ -117,7 +117,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 								}
 							}
 						}
-						else  // widget suivant/précédent trouvé ?
+						else  // widget suivant/prÃ©cÃ©dent trouvÃ© ?
 						{
 							this.SetDolphinFocus(newWidget);
 						}

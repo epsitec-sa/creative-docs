@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe BreakProperty décrit un saut vertical (de page, section, etc.)
+	/// La classe BreakProperty dÃ©crit un saut vertical (de page, section, etc.)
 	/// </summary>
 	public class BreakProperty : Property
 	{

@@ -5,7 +5,7 @@ using Epsitec.Common.OpenType;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe FontSample est un widget affichant un échantillon d'une police.
+	/// La classe FontSample est un widget affichant un Ã©chantillon d'une police.
 	/// </summary>
 	public class FontSample : Widget
 	{
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public OpenType.FontIdentity FontIdentity
 		{
-			//	Police représentée.
+			//	Police reprÃ©sentÃ©e.
 			get
 			{
 				return this.fontIdentity;
@@ -39,8 +39,8 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void SetFontFace(string prefix, string face, string suffix)
 		{
-			//	Nom de la police, séparé en trois parties, car il faut enlever les tags de la
-			//	partie 'fontFace' uniquement, à cause des polices qui peuvent avoir des '&'
+			//	Nom de la police, sÃ©parÃ© en trois parties, car il faut enlever les tags de la
+			//	partie 'fontFace' uniquement, Ã  cause des polices qui peuvent avoir des '&'
 			//	dans le nom.
 			if ( this.fontPrefix != prefix || this.fontName != face || this.fontSuffix != suffix )
 			{
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsSampleAbc
 		{
-			//	Type d'un échantillon.
+			//	Type d'un Ã©chantillon.
 			get
 			{
 				return this.isSampleAbc;
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsCenter
 		{
-			//	Echantillon centré horizontalement.
+			//	Echantillon centrÃ© horizontalement.
 			get
 			{
 				return this.isCenter;
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsSeparator
 		{
-			//	Indique si l'échantillon est suivi d'un séparateur.
+			//	Indique si l'Ã©chantillon est suivi d'un sÃ©parateur.
 			get
 			{
 				return this.isSeparator;
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsLast
 		{
-			//	Indique si l'échantillon est le dernier d'une liste (donc entouré d'un rectangle complet).
+			//	Indique si l'Ã©chantillon est le dernier d'une liste (donc entourÃ© d'un rectangle complet).
 			get
 			{
 				return this.isLast;
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.textLayout == null )
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//	Dessine l'échantillon.
+			//	Dessine l'Ã©chantillon.
 			this.UpdateClientGeometry();
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				backColor = adorner.ColorCaption;
 			}
-			else if ( this.IsEntered )  // survolé ?
+			else if ( this.IsEntered )  // survolÃ© ?
 			{
 				Color c1 = adorner.ColorTextBackground;
 				Color c2 = adorner.ColorCaption;
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Document.Widgets
 					ox = this.frontier+5;
 				}
 
-				//	Dessine l'échantillon de la police.
+				//	Dessine l'Ã©chantillon de la police.
 				double size = (this.fontHeight == 0) ? rect.Height*0.85 : this.fontHeight*0.85;
 				Path path;
 				if ( this.isSampleAbc )
@@ -288,7 +288,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				left = graphics.Align(left);
 				left.Deflate(0.5);
-				graphics.AddLine(left.BottomRight, left.TopRight);  // trait vertical de séparation
+				graphics.AddLine(left.BottomRight, left.TopRight);  // trait vertical de sÃ©paration
 				left.Width -= 16;
 				graphics.AddLine(left.BottomRight, left.TopRight);
 
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					graphics.AddLine(rect.BottomLeft, rect.TopLeft    );
 					graphics.AddLine(rect.TopLeft,    rect.TopRight   );
-					graphics.AddLine(rect.TopRight,   rect.BottomRight);  // U inversé
+					graphics.AddLine(rect.TopRight,   rect.BottomRight);  // U inversÃ©
 				}
 
 				if ( this.isSeparator )

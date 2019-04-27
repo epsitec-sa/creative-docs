@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe Double contient un réglage numérique.
+	/// La classe Double contient un rÃ©glage numÃ©rique.
 	/// </summary>
 	[System.Serializable()]
 	public class Double : Abstract
@@ -284,8 +284,8 @@ namespace Epsitec.Common.Document.Settings
 					case "PrintCopies":
 						//	Retourne toujours 1, afin que le dialogue d'impresion propose '1 copie'
 						//	chaque fois qu'il est ouvert. Ainsi, si l'utilisateur imprime 50 copies
-						//	une première fois, une deuxième impression remet le compteur à 1, afin
-						//	d'éviter un éventuel gaspillage de papier (idée de CN).
+						//	une premiÃ¨re fois, une deuxiÃ¨me impression remet le compteur Ã  1, afin
+						//	d'Ã©viter un Ã©ventuel gaspillage de papier (idÃ©e de CN).
 						//return this.document.Settings.PrintInfo.Copies;
 						return 1;
 
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFBleed":
 						this.document.Settings.ExportPDFInfo.BleedMargin = value;
-						this.document.Settings.ExportPDFInfo.CropMarksOffset = value + 10.0;  // rajoute 1mm entre le débord et le trait de coupe
+						this.document.Settings.ExportPDFInfo.CropMarksOffset = value + 10.0;  // rajoute 1mm entre le dÃ©bord et le trait de coupe
 						break;
 
 					case "ExportPDFBleedEvenTop":
@@ -643,14 +643,14 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le réglage.
+			//	SÃ©rialise le rÃ©glage.
 			base.GetObjectData(info, context);
 			info.AddValue("Value", this.Value);
 		}
 
 		protected Double(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise le réglage.
+			//	Constructeur qui dÃ©sÃ©rialise le rÃ©glage.
 			this.Value = info.GetDouble("Value");
 			this.Initialize();
 		}

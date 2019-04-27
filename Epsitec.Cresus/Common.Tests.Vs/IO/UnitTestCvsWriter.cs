@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.IO;
+using Epsitec.Common.IO;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

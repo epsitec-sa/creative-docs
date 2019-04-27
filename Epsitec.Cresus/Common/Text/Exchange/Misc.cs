@@ -48,7 +48,7 @@ namespace Epsitec.Common.Text.Exchange
 		/// <summary>
 		/// Convertit un string en double. Si la conversion foire, retourne 0
 		/// </summary>
-		/// <param name="str">string à convertir</param>
+		/// <param name="str">string Ã  convertir</param>
 		/// <returns>valeur convertie</returns>
 		public static double ParseDouble(string str)
 		{
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		/// <summary>
 		/// Convertiti un string en bool. Retourne false pour "0" et true pour "1".
-		/// Asserte pour toute autre chaîne que "0" ou "1"
+		/// Asserte pour toute autre chaÃ®ne que "0" ou "1"
 		/// </summary>
 		/// <param name="str"></param>
 		/// <returns>tValeur convertie true ou false</returns>
@@ -89,9 +89,9 @@ namespace Epsitec.Common.Text.Exchange
 
 		/// <summary>
 		/// Convertit un string en int. Si la conversion foire, retourne 0
-		/// En plus le nombre peut s'arrêter sur un caractère non numérique
+		/// En plus le nombre peut s'arrÃªter sur un caractÃ¨re non numÃ©rique
 		/// </summary>
-		/// <param name="str">string à convertir</param>
+		/// <param name="str">string Ã  convertir</param>
 		/// <returns>valeur convertie</returns>
 		public static int ParseInt(string str)
 		{

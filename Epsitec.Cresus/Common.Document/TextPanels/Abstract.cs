@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		public static Abstract Create(string name, Document document, bool isStyle, StyleCategory styleCategory)
 		{
-			//	Crée un nouveau panneau.
+			//	CrÃ©e un nouveau panneau.
 			if ( name == "Justif"    )  return new Justif(document, isStyle, styleCategory);
 			if ( name == "Leading"   )  return new Leading(document, isStyle, styleCategory);
 			if ( name == "Margins"   )  return new Margins(document, isStyle, styleCategory);
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		public static bool IsFilterShow(string panel, string filter)
 		{
-			//	Indique si ce panneau est visible pour un filtre donné.
+			//	Indique si ce panneau est visible pour un filtre donnÃ©.
 			if ( panel == "Box" )  return false;  // provisoire...
 			if ( filter == "All" )  return true;
 
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public virtual double TopMargin
 		{
-			//	Retourne la marge supérieure.
+			//	Retourne la marge supÃ©rieure.
 			get
 			{
 				return 0;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected double LabelHeight
 		{
-			//	Retourne la hauteur pour le label supérieur.
+			//	Retourne la hauteur pour le label supÃ©rieur.
 			get
 			{
 				return this.IsLabelProperties ? 14 : 0;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public bool IsLabelProperties
 		{
-			//	Indique le mode des propriétés.
+			//	Indique le mode des propriÃ©tÃ©s.
 			get
 			{
 				if ( this.document != null )
@@ -143,13 +143,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected virtual bool IsNormalAndExtended()
 		{
-			//	Indique si ce panneau possède 2 hauteurs différentes.
+			//	Indique si ce panneau possÃ¨de 2 hauteurs diffÃ©rentes.
 			return this.isNormalAndExtended;
 		}
 
 		public bool IsExtendedSize
 		{
-			//	Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
+			//	Indique si le panneau est rÃ©duit (petite hauteur) ou Ã©tendu (grande hauteur).
 			get
 			{
 				return this.isExtendedSize;
@@ -169,13 +169,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public void HeightChanged()
 		{
-			//	Indique que la hauteur du panneau a changé.
+			//	Indique que la hauteur du panneau a changÃ©.
 			this.PreferredHeight = this.DefaultHeight;
 		}
 
 		protected void ForceHeightChanged()
 		{
-			//	Force la mise à jour de la hauteur du panneau.
+			//	Force la mise Ã  jour de la hauteur du panneau.
 			//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
 			//	qui contient ce panneau en mode DockStyle.Fill !
 			this.Parent.PreferredHeight = this.DefaultHeight;
@@ -184,14 +184,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected virtual void UpdateAfterChanging()
 		{
-			//	Met à jour après un changement du wrapper.
+			//	Met Ã  jour aprÃ¨s un changement du wrapper.
 			this.UpdateButtons();
 		}
 
 
 		public virtual bool DefaultFocus()
 		{
-			//	Met le focus par défaut dans ce panneau.
+			//	Met le focus par dÃ©faut dans ce panneau.
 			return false;
 		}
 
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.extendedButton == null )  return;
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void UpdateButtons()
 		{
-			//	Met à jour les boutons.
+			//	Met Ã  jour les boutons.
 			this.extendedButton.Visibility = (this.isNormalAndExtended && !this.isStyle);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
@@ -247,12 +247,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public virtual void OriginColorDeselect()
 		{
-			//	Désélectionne toutes les origines de couleurs possibles.
+			//	DÃ©sÃ©lectionne toutes les origines de couleurs possibles.
 		}
 
 		public virtual void OriginColorSelect(int rank)
 		{
-			//	Sélectionne l'origine de couleur.
+			//	SÃ©lectionne l'origine de couleur.
 		}
 
 		public virtual int OriginColorRank()
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public void ActionMade()
 		{
-			//	Indique qu'une action a été effectuée.
+			//	Indique qu'une action a Ã©tÃ© effectuÃ©e.
 			this.document.Notifier.NotifyUndoRedoChanged();
 			this.document.SetDirtySerialize(this.isStyle ? CacheBitmapChanging.All : CacheBitmapChanging.Local);
 		}
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Le bouton pour étendre/réduire le panneau a été cliqué.
+			//	Le bouton pour Ã©tendre/rÃ©duire le panneau a Ã©tÃ© cliquÃ©.
 			this.IsExtendedSize = !this.isExtendedSize;
 		}
 
@@ -330,13 +330,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected IconButton CreateIconButton(string command)
 		{
-			//	Crée un bouton pour une commande.
+			//	CrÃ©e un bouton pour une commande.
 			return this.CreateIconButton(command, "Normal");
 		}
 
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
-			//	Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
+			//	CrÃ©e un bouton pour une commande, en prÃ©cisant la taille prÃ©fÃ©rÃ©e pour l'icÃ´ne.
 			Command c = Common.Widgets.Command.Get (command);
 			IconButton button = new IconButton(this);
 
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected IconButton CreateIconButton(string icon, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
-			//	Crée un bouton.
+			//	CrÃ©e un bouton.
 			return this.CreateIconButton(icon, tooltip, handler, true);
 		}
 
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void ActiveIconButton(IconButton button, bool active, bool defined)
 		{
-			//	Modifie l'état d'un bouton à 3 états.
+			//	Modifie l'Ã©tat d'un bouton Ã  3 Ã©tats.
 			if ( active && defined )
 			{
 				button.ActiveState = ActiveState.Yes;
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected IconButton CreateClearButton(Support.EventHandler<MessageEventArgs> handler)
 		{
-			//	Crée un bouton "x" pour effacer une propriété.
+			//	CrÃ©e un bouton "x" pour effacer une propriÃ©tÃ©.
 			IconButton button = new IconButton(this);
 
 			button.AutoFocus = false;
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected GlyphButton CreateComboButton(string command, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
-			//	Crée un bouton "v" pour un menu.
+			//	CrÃ©e un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
 
 			button.CommandObject = Epsitec.Common.Widgets.Command.Get(command);
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected Widgets.TextFieldLabel CreateTextFieldLabel(string tooltip, string shortText, string longText, double minRange, double maxRange, double defRange, double step, Widgets.TextFieldLabel.Type type, EventHandler handler)
 		{
-			//	Crée un TextFieldLabel.
+			//	CrÃ©e un TextFieldLabel.
 			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, type);
 
 			field.LabelShortText = shortText;
@@ -472,7 +472,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected Widgets.TextFieldLabel CreateTextFieldLabelPercent(string tooltip, string shortText, string longText, double minRange, double maxRange, double defRange, double step, EventHandler handler)
 		{
-			//	Crée un TextFieldLabel en %.
+			//	CrÃ©e un TextFieldLabel en %.
 			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 
 			field.LabelShortText = shortText;
@@ -594,7 +594,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected ColorSample CreateColorSample(string tooltip, Support.EventHandler<MessageEventArgs> handlerClicked, EventHandler handlerChanged)
 		{
-			//	Crée un échantilon de couleur.
+			//	CrÃ©e un Ã©chantilon de couleur.
 			ColorSample sample = new ColorSample(this);
 
 			sample.DragSourceFrame = true;
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void SetColorSample(ColorSample sample, string color, bool isDefined, bool disabledIfUndefined)
 		{
-			//	Donne la couleur d'un échantillon.
+			//	Donne la couleur d'un Ã©chantillon.
 			RichColor rc = (color == null) ? RichColor.Empty : RichColor.Parse(color);
 			sample.Color = rc;
 
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetColorSample(ColorSample sample)
 		{
-			//	Donne la couleur d'un échantillon.
+			//	Donne la couleur d'un Ã©chantillon.
 			if ( sample.Color.IsEmpty || sample.Color.A == 0.0 )
 			{
 				return null;
@@ -646,7 +646,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public virtual void UpdateAfterAttach()
 		{
-			//	Mise à jour après avoir attaché le wrappers.
+			//	Mise Ã  jour aprÃ¨s avoir attachÃ© le wrappers.
 		}
 
 		protected Text.Wrappers.TextWrapper TextWrapper
@@ -671,7 +671,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected bool IsWrappersAttached
 		{
-			//	Indique si les wrappers sont attachés.
+			//	Indique si les wrappers sont attachÃ©s.
 			get
 			{
 				if ( this.isStyle )  return this.document.Wrappers.StyleParagraphWrapper.IsAttached;
@@ -682,8 +682,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected virtual void OnOriginColorChanged()
 		{
-			//	Génère un événement pour dire que la couleur d'origine a changé.
-			if ( this.OriginColorChanged != null )  // qq'un écoute ?
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la couleur d'origine a changÃ©.
+			if ( this.OriginColorChanged != null )  // qq'un Ã©coute ?
 			{
 				this.OriginColorChanged(this);
 			}
@@ -691,8 +691,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected virtual void OnOriginColorClosed()
 		{
-			//	Génère un événement pour dire que la couleur d'origine doit être fermée.
-			if ( this.OriginColorClosed != null )  // qq'un écoute ?
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la couleur d'origine doit Ãªtre fermÃ©e.
+			if ( this.OriginColorClosed != null )  // qq'un Ã©coute ?
 			{
 				this.OriginColorClosed(this);
 			}
@@ -704,10 +704,10 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		//	ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
 		//	Le constructeur de Common.Widget appelle DefaultHeight, qui doit
-		//	connaître le document pour déterminer la hauteur (avec LabelHeight).
-		//	Comme ce constructeur est appelé avant l'initialisation de this.document,
-		//	je n'ai pas trouvé d'autre moyen pour connaître le document que de le
-		//	mettre au préalable dans une variable statique !!!
+		//	connaÃ®tre le document pour dÃ©terminer la hauteur (avec LabelHeight).
+		//	Comme ce constructeur est appelÃ© avant l'initialisation de this.document,
+		//	je n'ai pas trouvÃ© d'autre moyen pour connaÃ®tre le document que de le
+		//	mettre au prÃ©alable dans une variable statique !!!
 		public static Document				StaticDocument;
 
 		protected Document					document;

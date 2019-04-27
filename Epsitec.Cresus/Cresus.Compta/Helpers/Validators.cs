@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -78,24 +78,24 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		public static void ValidateDate(ComptaPériodeEntity période, EditionData data, bool emptyAccepted)
+		public static void ValidateDate(ComptaPÃ©riodeEntity pÃ©riode, EditionData data, bool emptyAccepted)
 		{
-			//	Valide une date située dans une période donnée.
+			//	Valide une date situÃ©e dans une pÃ©riode donnÃ©e.
 			data.ClearError ();
 
 			if (data.HasText)
 			{
 				Date? date;
-				if (période.ParseDate (data.Text, out date) && date.HasValue)
+				if (pÃ©riode.ParseDate (data.Text, out date) && date.HasValue)
 				{
 					data.Text = Converters.DateToString (date);
 				}
 				else
 				{
-					var b = Converters.DateToString (période.DateDébut);
-					var e = Converters.DateToString (période.DateFin);
+					var b = Converters.DateToString (pÃ©riode.DateDÃ©but);
+					var e = Converters.DateToString (pÃ©riode.DateFin);
 
-					data.Error = string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
+					data.Error = string.Format ("La date est incorrecte<br/>Elle devrait Ãªtre comprise entre {0} et {1}", b, e);
 				}
 			}
 			else
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static void ValidateDate(EditionData data, bool emptyAccepted)
 		{
-			//	Valide une date située dans n'importe quelle période.
+			//	Valide une date situÃ©e dans n'importe quelle pÃ©riode.
 			data.ClearError ();
 
 			if (data.HasText)

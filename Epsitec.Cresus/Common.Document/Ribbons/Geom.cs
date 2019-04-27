@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Geom permet de modifier la géométrie de la sélection.
+	/// La classe Geom permet de modifier la gÃ©omÃ©trie de la sÃ©lection.
 	/// </summary>
 	public class Geom : Abstract
 	{
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonCombine == null )  return;

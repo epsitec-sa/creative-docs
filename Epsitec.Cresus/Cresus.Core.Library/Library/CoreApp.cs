@@ -1,4 +1,4 @@
-//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -36,10 +36,10 @@ namespace Epsitec.Cresus.Core.Library
 			//********************************************************//
 			//  Message Daniel -> Pierre:                             //
 			//  Tu as remis ce code en fonction le 12 octobre,        //
-			//  malgré un mail t'indiquant que cette ligne empêche    //
+			//  malgrÃ© un mail t'indiquant que cette ligne empÃªche    //
 			//  le fonctionnement de Assets.                          //
-			//  Merci de ne pas la remettre avant d'avoir investigué  //
-			//  et corrigé le problème !                              //
+			//  Merci de ne pas la remettre avant d'avoir investiguÃ©  //
+			//  et corrigÃ© le problÃ¨me !                              //
 			//********************************************************//
 
 			//-[DR]-this.PreConfigureBasedOnPolicy ();

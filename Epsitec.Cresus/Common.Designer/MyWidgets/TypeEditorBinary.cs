@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget permettant d'éditer un Caption.Type.
+	/// Widget permettant d'Ã©diter un Caption.Type.
 	/// </summary>
 	public class TypeEditorBinary : AbstractTypeEditor
 	{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override string GetSummary()
 		{
-			//	Retourne le texte du résumé.
+			//	Retourne le texte du rÃ©sumÃ©.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
 
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override void UpdateContent()
 		{
-			//	Met à jour le contenu de l'éditeur.
+			//	Met Ã  jour le contenu de l'Ã©diteur.
 			this.ignoreChange = true;
 			bool usesOriginalData;
 

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document
 		{
 			public Item(string filename, string zipPath, System.DateTime date)
 			{
-				//	Constructeur qui met en cache les données de l'image.
+				//	Constructeur qui met en cache les donnÃ©es de l'image.
 				System.Diagnostics.Debug.Assert (date != System.DateTime.MinValue);
 
 				this.filename = filename;
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document
 
 			public bool Reload()
 			{
-				//	Relit l'image sur disque. Utile lorsque le fichier a changé.
+				//	Relit l'image sur disque. Utile lorsque le fichier a changÃ©.
 				//	Retourne false en cas d'erreur (fichier n'existe pas).
 
 				if (this.zipFilename == null)
@@ -55,8 +55,8 @@ namespace Epsitec.Common.Document
 
 			public long Free(ImagePart part)
 			{
-				//	Libère si possible une partie de l'image.
-				//	Retourne la taille libérée en KB.
+				//	LibÃ¨re si possible une partie de l'image.
+				//	Retourne la taille libÃ©rÃ©e en KB.
 				long total = 0;
 
 				if (this.IsFreeable (part))
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document
 
 			public bool IsFreeable(ImagePart part)
 			{
-				//	Indique s'il est possible de libérer une partie de cette image.
+				//	Indique s'il est possible de libÃ©rer une partie de cette image.
 				if (part == ImagePart.LargeOriginal)
 				{
 					return (this.originalImage != null && this.originalImage.IsAlive && this.IsLargeOriginal);
@@ -113,8 +113,8 @@ namespace Epsitec.Common.Document
 
 			public long KBUsed()
 			{
-				//	Retourne la taille totale utilisée par l'image (toutes les parties) en KB.
-				//	Prend en compte l'image originale, l'image basse résolution et les données.
+				//	Retourne la taille totale utilisÃ©e par l'image (toutes les parties) en KB.
+				//	Prend en compte l'image originale, l'image basse rÃ©solution et les donnÃ©es.
 				long total = 0;
 
 				total += this.KBUsed (ImagePart.LargeOriginal);  // ne pas compter LargeOriginal + SmallOriginal !
@@ -126,8 +126,8 @@ namespace Epsitec.Common.Document
 
 			public long KBUsed(ImagePart part)
 			{
-				//	Retourne la taille utilisée par une partie de l'image.
-				//	Si la partie n'est pas utilisée, retourne zéro.
+				//	Retourne la taille utilisÃ©e par une partie de l'image.
+				//	Si la partie n'est pas utilisÃ©e, retourne zÃ©ro.
 				long total = 0;
 
 				if (part == ImagePart.LargeOriginal || part == ImagePart.SmallOriginal)
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document
 
 			protected bool IsLargeOriginal
 			{
-				//	Retourne 'true' si l'image originale dépasse la limite.
+				//	Retourne 'true' si l'image originale dÃ©passe la limite.
 				get
 				{
 					return (this.KBOriginalWeight > GlobalImageCache.ImageLimit);
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document
 
 			public void SetRecentTimeStamp()
 			{
-				//	Met la marque de vieillesse la plus récente.
+				//	Met la marque de vieillesse la plus rÃ©cente.
 				this.timeStamp = GlobalImageCache.timeStamp++;
 			}
 
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document
 
 			public double LowResScale
 			{
-				//	Retourne l'échelle de l'image pour l'affichage (>= 1).
+				//	Retourne l'Ã©chelle de l'image pour l'affichage (>= 1).
 				get
 				{
 					return this.lowResScale;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document
 
 			public System.DateTime FileDate
 			{
-				//	Retourne la date de dernière modification.
+				//	Retourne la date de derniÃ¨re modification.
 				get
 				{
 					return this.date;
@@ -276,7 +276,7 @@ namespace Epsitec.Common.Document
 
 			public bool HasData
 			{
-				//	Indique si les données brutes de l'image existent.
+				//	Indique si les donnÃ©es brutes de l'image existent.
 				get
 				{
 					return this.data != null;
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Document
 
 			public byte[] GetImageData()
 			{
-				//	Données brutes de l'image.
+				//	DonnÃ©es brutes de l'image.
 				this.TryReadImageData (true);
 				return this.data;
 			}
@@ -308,8 +308,8 @@ namespace Epsitec.Common.Document
 
 			protected Drawing.Image ReadLowresImage(bool read)
 			{
-				//	Si l'image originale est trop grosse, crée l'image basse résolution
-				//	pour l'affichage et libère l'image originale.
+				//	Si l'image originale est trop grosse, crÃ©e l'image basse rÃ©solution
+				//	pour l'affichage et libÃ¨re l'image originale.
 				if (this.lowResImage != null || read == false)
 				{
 					return this.lowResImage;
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Document
 
 			protected Drawing.Image ReadOriginalImage(bool read)
 			{
-				//	Lit l'image originale, si nécessaire.
+				//	Lit l'image originale, si nÃ©cessaire.
 				Drawing.Image image = this.originalImage == null ? null : this.originalImage.Target;
 
 				if (image != null)
@@ -438,7 +438,7 @@ namespace Epsitec.Common.Document
 
 			protected void ReadImageData(bool read)
 			{
-				//	Relit les données de l'image, si nécessaire.
+				//	Relit les donnÃ©es de l'image, si nÃ©cessaire.
 				if (this.data != null || read == false)
 				{
 					return;
@@ -525,7 +525,7 @@ namespace Epsitec.Common.Document
 
 					if (ok)
 					{
-						data = zip[this.zipEntryName].Data;  // lit les données dans le fichier zip
+						data = zip[this.zipEntryName].Data;  // lit les donnÃ©es dans le fichier zip
 					}
 				}
 

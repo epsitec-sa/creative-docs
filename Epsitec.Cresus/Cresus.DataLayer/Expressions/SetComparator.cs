@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Cresus.DataLayer.Expressions
+namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 

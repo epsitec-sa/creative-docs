@@ -1,4 +1,4 @@
-//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Support
 			
 			System.Text.StringBuilder html = new System.Text.StringBuilder ();
 			
-			//	Le malheur, c'est que ni FrontPage 2000, ni Word 2000 ne comprennent l'entité &apos;
+			//	Le malheur, c'est que ni FrontPage 2000, ni Word 2000 ne comprennent l'entitÃ© &apos;
 			//	et du coup, on ne peut pas l'utiliser !
 			
 			string source = value.Replace ("&apos;", "&#39;");

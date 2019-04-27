@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -12,8 +12,8 @@ using Epsitec.Cresus.Assets.Data.Serialization;
 namespace Epsitec.Cresus.Assets.Data
 {
 	/// <summary>
-	/// C'est ici que sont concentrés tous les réglages globaux de l'application,
-	/// non liés au mandat mais liés à l'utilisateur.
+	/// C'est ici que sont concentrÃ©s tous les rÃ©glages globaux de l'application,
+	/// non liÃ©s au mandat mais liÃ©s Ã  l'utilisateur.
 	/// </summary>
 	public class ComputerSettings
 	{
@@ -201,11 +201,11 @@ namespace Epsitec.Cresus.Assets.Data
 		private static string					SettingsFilename
 		{
 			//	Retourne le chemin du fichier des ComputerSettings, du genre:
-			//	"C:\Users\Daniel\AppData\Roaming\Epsitec\Crésus Assets\Crésus.Assets.ApplicationSettings.settings"
+			//	"C:\Users\Daniel\AppData\Roaming\Epsitec\CrÃ©sus Assets\CrÃ©sus.Assets.ApplicationSettings.settings"
 			get
 			{
 				var dir = Epsitec.Common.Support.Globals.Directories.UserAppData;
-				return System.IO.Path.Combine (dir, "Crésus.Assets.ApplicationSettings.settings");
+				return System.IO.Path.Combine (dir, "CrÃ©sus.Assets.ApplicationSettings.settings");
 			}
 		}
 

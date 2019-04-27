@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas SCHMID, Maintainer: Pierre ARNAUD, Jonas SCHMID
 
 using Epsitec.Common.Drawing;

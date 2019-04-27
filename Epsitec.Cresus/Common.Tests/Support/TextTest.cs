@@ -181,8 +181,8 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (9, line_count);
 			Assert.AreEqual (116, navigator.TextLength);
 			
-			//	Vérifie le bon fonctionnement de la détection des débuts et des
-			//	fins de lignes, basée sur les informations du fitter :
+			//	VÃ©rifie le bon fonctionnement de la dÃ©tection des dÃ©buts et des
+			//	fins de lignes, basÃ©e sur les informations du fitter :
 			
 			cursor = new SimpleCursor ();
 			story.NewCursor (cursor);
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (-1, navigator.CursorDirection);
 			
 			
-			//	Vérifie le bon fonctionnement de la sélection du texte :
+			//	VÃ©rifie le bon fonctionnement de la sÃ©lection du texte :
 			
 			navigator.MoveTo (TextNavigator.Target.TextStart, 0);
 			navigator.MoveTo (TextNavigator.Target.WordEnd, 1);
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (0, texts.Length);
 			
 			
-			//	Vérifie le bon fonctionnement de sélection disjointes en prenant
+			//	VÃ©rifie le bon fonctionnement de sÃ©lection disjointes en prenant
 			//	deux mots distants dans le texte :
 			
 			navigator.StartSelection ();
@@ -326,13 +326,13 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual ("de", texts[1]);
 			
 			
-			//	Vérifie le bon fonctionnement de destructions de sélections
+			//	VÃ©rifie le bon fonctionnement de destructions de sÃ©lections
 			//	disjointes :
 			
 			navigator.Delete ();
 			
-			Assert.AreEqual (107, navigator.CursorPosition);		//	supprimé 6 caractères avant 2ème sélection..
-			Assert.AreEqual (0, navigator.CursorDirection);			//	..ce qui explique le passage de 113 à 107.
+			Assert.AreEqual (107, navigator.CursorPosition);		//	supprimÃ© 6 caractÃ¨res avant 2Ã¨me sÃ©lection..
+			Assert.AreEqual (0, navigator.CursorDirection);			//	..ce qui explique le passage de 113 Ã  107.
 			
 			navigator.MoveTo (TextNavigator.Target.TextStart, 0);
 			navigator.StartSelection ();

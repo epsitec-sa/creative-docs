@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Tests.Support
 			string test_string =
 				"<?xml version='1.0' encoding='utf-8'?>\r\n" +
 				"<bundle name='test' culture='fr'>\r\n" +
-				"  <data name='a'>Aà</data>\r\n" +
+				"  <data name='a'>AÃ </data>\r\n" +
 				"  <bundle name='b'>\r\n" +
 				"    <data name='a'>B:A</data>\r\n" +
 				"    <data name='b'>B:B</data>\r\n" +

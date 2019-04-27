@@ -8,7 +8,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
-	/// Contient les informations sur la sélection des lignes/colonnes d'un AbstractGroup
+	/// Contient les informations sur la sÃ©lection des lignes/colonnes d'un AbstractGroup
 	/// en mode ChildrenPlacement.Grid.
 	/// </summary>
 	public class GridSelection : DependencyObject, IEnumerable<GridSelection.OneItem>
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool AreOnlyColumns
 		{
-			//	Indique s'il n'y a que des sélections de colonnes.
+			//	Indique s'il n'y a que des sÃ©lections de colonnes.
 			get
 			{
 				if (this.Count == 0)
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public bool AreOnlyRows
 		{
-			//	Indique s'il n'y a que des sélections de lignes.
+			//	Indique s'il n'y a que des sÃ©lections de lignes.
 			get
 			{
 				if (this.Count == 0)
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void ChangeColumnSelection(int column, GridSelection initial)
 		{
-			//	Modifie une sélection de colonne.
+			//	Modifie une sÃ©lection de colonne.
 			int ii = (initial == null) ? -1 : initial.Search(Unit.Column, column);
 			int i = this.Search(Unit.Column, column);
 
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void ChangeRowSelection(int row, GridSelection initial)
 		{
-			//	Modifie une sélection de ligne.
+			//	Modifie une sÃ©lection de ligne.
 			int ii = (initial == null) ? -1 : initial.Search(Unit.Row, row);
 			int i = this.Search(Unit.Row, row);
 
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public void SelectColumnsAndRows(int column1, int column2, int row1, int row2)
 		{
-			//	Sélectionne quelques lignes et colonnes contigües.
+			//	SÃ©lectionne quelques lignes et colonnes contigÃ¼es.
 			this.Clear();
 
 			if (column1 != GridSelection.Invalid && column2 != GridSelection.Invalid)
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			public Unit Unit
 			{
-				//	Unité de la sélection.
+				//	UnitÃ© de la sÃ©lection.
 				get
 				{
 					return this.unit;
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			public int Index
 			{
 				//	Index de la cellule, ligne ou colonne.
-				//	Pour une cellule, il s'agit du rang depuis la cellule supérieure gauche.
+				//	Pour une cellule, il s'agit du rang depuis la cellule supÃ©rieure gauche.
 				get
 				{
 					return this.index;
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static void Attach(Widget obj)
 		{
-			//	Attache un GridSelection au widget, si nécessaire.
+			//	Attache un GridSelection au widget, si nÃ©cessaire.
 			GridSelection gs = obj.GetValue(GridSelection.GridSelectionProperty) as GridSelection;
 			if (gs == null)
 			{
@@ -369,13 +369,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		public static void Detach(Widget obj)
 		{
-			//	Détache l'éventuel GridSelection du widget.
+			//	DÃ©tache l'Ã©ventuel GridSelection du widget.
 			obj.ClearValue(GridSelection.GridSelectionProperty);
 		}
 
 		public static GridSelection Get(Widget obj)
 		{
-			//	Retourne le GridSelection attaché au widget.
+			//	Retourne le GridSelection attachÃ© au widget.
 			return obj.GetValue(GridSelection.GridSelectionProperty) as GridSelection;
 		}
 		#endregion

@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 namespace Epsitec.Cresus.Core.Controllers
@@ -6,10 +6,10 @@ namespace Epsitec.Cresus.Core.Controllers
 	public enum RibbonViewMode
 	{
 		Hide,		// pas de ruban
-		Minimal,	// sans titres et très compact
+		Minimal,	// sans titres et trÃ¨s compact
 		Compact,	// sans titres et compact
 		Default,	// mode standard
-		Large,		// aéré
-		Hires,		// pour grand écran
+		Large,		// aÃ©rÃ©
+		Hires,		// pour grand Ã©cran
 	}
 }

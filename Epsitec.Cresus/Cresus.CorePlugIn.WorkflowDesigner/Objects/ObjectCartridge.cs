@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			this.bounds.Offset (dx, dy);
 			this.UpdateGeometry ();
 		}
@@ -187,8 +187,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			base.MouseMove (message, pos);
 
 			if (this.isMouseDownForDrag &&
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			base.MouseDown (message, pos);
 
 			if (this.HilitedElement == ActiveElement.CartridgeWidth)
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			base.MouseUp (message, pos);
 
 			if ((this.HilitedElement == ActiveElement.CartridgeEditName ||
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (this.RectangleHeader.Contains (pos))
 			{
 				return ActiveElement.CartridgeMove;
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			Color textColor = Color.FromBrightness (0);
 			Color frameColor = (this.hilitedElement == ActiveElement.None) ? Color.FromBrightness (1) : Color.FromBrightness (0.9);
 
-			//	Dessine l'en-tête.
+			//	Dessine l'en-tÃªte.
 			if (this.hilitedElement != ActiveElement.None)
 			{
 				rect = this.RectangleHeader;
@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsHeaderHilite
 		{
-			//	Indique si la souris est dans l'en-tête.
+			//	Indique si la souris est dans l'en-tÃªte.
 			get
 			{
 				return (this.hilitedElement == ActiveElement.CartridgeMove ||

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -298,11 +298,11 @@ namespace Epsitec.Common.Drawing
 		}
 
 		//	approximationZoom :
-		//	Pour un dessin à l'échelle 1:1, utiliser 1.0 comme valeur pour approximationZoom.
-		//	Si un zoom x10 est appliqué au chemin avant de le transformer en pixels, il faut utiliser un approximationZoom de 10.
-		//	1.0 = dessin avec l'unité égale au pixel
-		//	0.1 = dessin avec l'unité égale à 0.1 pixel
-		//	0.0 = division par zéro dans le code interne !
+		//	Pour un dessin Ã  l'Ã©chelle 1:1, utiliser 1.0 comme valeur pour approximationZoom.
+		//	Si un zoom x10 est appliquÃ© au chemin avant de le transformer en pixels, il faut utiliser un approximationZoom de 10.
+		//	1.0 = dessin avec l'unitÃ© Ã©gale au pixel
+		//	0.1 = dessin avec l'unitÃ© Ã©gale Ã  0.1 pixel
+		//	0.0 = division par zÃ©ro dans le code interne !
 
 		public void Append(Path path, double approximationZoom)
 		{
@@ -955,7 +955,7 @@ namespace Epsitec.Common.Drawing
 						x3 = (float) points[i+1].X;
 						y3 = (float) points[i+1].Y;
 						
-						//	Formules de conversion trouvées ici: http://ungwe.org/blog/2004/02/22/15:50/
+						//	Formules de conversion trouvÃ©es ici: http://ungwe.org/blog/2004/02/22/15:50/
 						
 						x1 = (ox + 2 * xc) / 3;
 						y1 = (oy + 2 * yc) / 3;
@@ -1102,14 +1102,14 @@ namespace Epsitec.Common.Drawing
 		
 		protected Point ArcBezierRad(double cx, double cy, double rx, double ry, double a1, double a2, bool ccw, bool continuePath)
 		{
-			//	Génère un arc de cercle à l'aide d'un maximun de 4 courbes de Bézier.
-			//	Retourne le point d'arrivée.
+			//	GÃ©nÃ¨re un arc de cercle Ã  l'aide d'un maximun de 4 courbes de BÃ©zier.
+			//	Retourne le point d'arrivÃ©e.
 			
 			Point c = new Point (cx, cy);
 			Point r = new Point (rx, ry);
 			
-			//	Par défaut, le point d'arrivée est égal au point courant, si rien n'est
-			//	dessiné :
+			//	Par dÃ©faut, le point d'arrivÃ©e est Ã©gal au point courant, si rien n'est
+			//	dessinÃ© :
 			
 			Point p2 = this.currentPoint;
 			
@@ -1192,7 +1192,7 @@ namespace Epsitec.Common.Drawing
 
 		protected static void ArcBezierPSRad(double a, double k, bool ccw, out Point p, out Point s)
 		{
-			//	Calcule le point principal et le point secondaire d'un arc de Bézier
+			//	Calcule le point principal et le point secondaire d'un arc de BÃ©zier
 			//	de rayon 1 et de centre (0;0).
 
 			p = new Point (System.Math.Cos (a), System.Math.Sin (a));
@@ -1202,7 +1202,7 @@ namespace Epsitec.Common.Drawing
 
 		protected static double GetArcBezierKappaRad(double a)
 		{
-			//	Détermine le facteur kappa en fonction de l'angle (0..PI/2).
+			//	DÃ©termine le facteur kappa en fonction de l'angle (0..PI/2).
 			
 			double sin = System.Math.Sin (a/2.0);
 			double cos = System.Math.Cos (a/2.0);
@@ -1281,7 +1281,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		//	Le paramètre kappa permet de calculer la position des points secondaires d'une courbe de Bézier
+		//	Le paramÃ¨tre kappa permet de calculer la position des points secondaires d'une courbe de BÃ©zier
 		//	pour simuler un quart de cercle.
 		//
 		//	kappa = ((sqr(2)-1)/3)*4

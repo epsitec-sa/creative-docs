@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Panels
 {
 	/// <summary>
-	/// La classe Gradient permet de choisir un dÈgradÈ de couleurs.
+	/// La classe Gradient permet de choisir un d√©grad√© de couleurs.
 	/// </summary>
 	public class Gradient : Abstract
 	{
@@ -213,9 +213,9 @@ namespace Epsitec.Common.Document.Panels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau Ètendu ?
+				if ( this.isExtendedSize )  // panneau √©tendu ?
 				{
-					if ( this.IsLabelProperties )  // Ètendu/dÈtails ?
+					if ( this.IsLabelProperties )  // √©tendu/d√©tails ?
 					{
 						h += 55;
 
@@ -234,12 +234,12 @@ namespace Epsitec.Common.Document.Panels
 							h += 100;
 						}
 					}
-					else	// Ètendu/compact ?
+					else	// √©tendu/compact ?
 					{
 						h += 80;
 					}
 				}
-				else	// panneau rÈduit ?
+				else	// panneau r√©duit ?
 				{
 					h += 30;
 				}
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Gradient p = this.property as Properties.Gradient;
@@ -280,7 +280,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Gradient p = this.property as Properties.Gradient;
 			if ( p == null )  return;
 
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Gradient p = this.property as Properties.Gradient;
 			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
-			if ( type == Properties.GradientFillType.Linear )  // linÈaire ?
+			if ( type == Properties.GradientFillType.Linear )  // lin√©aire ?
 			{
 				return Point.ComputeAngleDeg(p.Sx, p.Sy)-90;
 			}
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Gradient p = this.property as Properties.Gradient;
 			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
-			if ( type == Properties.GradientFillType.Linear )  // linÈaire ?
+			if ( type == Properties.GradientFillType.Linear )  // lin√©aire ?
 			{
 				double d = System.Math.Sqrt(this.sx*this.sx + this.sy*this.sy);
 				Point s = Transform.RotatePointDeg(angle, new Point(0,d));
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void EnableWidgets()
 		{
-			//	Grise les widgets nÈcessaires.
+			//	Grise les widgets n√©cessaires.
 			bool color2 = false;
 			bool showReset = false;
 			bool enableReset = false;
@@ -401,9 +401,9 @@ namespace Epsitec.Common.Document.Panels
 				color2 = true;
 			}
 
-			if ( this.isExtendedSize )  // panneau Ètendu ?
+			if ( this.isExtendedSize )  // panneau √©tendu ?
 			{
-				if ( this.IsLabelProperties )  // Ètendu/dÈtails ?
+				if ( this.IsLabelProperties )  // √©tendu/d√©tails ?
 				{
 					if ( type == Properties.GradientFillType.None )
 					{
@@ -439,7 +439,7 @@ namespace Epsitec.Common.Document.Panels
 						showHatch = true;
 					}
 				}
-				else	// Ètendu/compact ?
+				else	// √©tendu/compact ?
 				{
 					if ( type == Properties.GradientFillType.None )
 					{
@@ -512,14 +512,14 @@ namespace Epsitec.Common.Document.Panels
 
 		public override void OriginColorDeselect()
 		{
-			//	DÈsÈlectionne toutes les origines de couleurs possibles.
+			//	D√©s√©lectionne toutes les origines de couleurs possibles.
 			this.fieldColor1.ActiveState = ActiveState.No;
 			this.fieldColor2.ActiveState = ActiveState.No;
 		}
 
 		public override void OriginColorSelect(int rank)
 		{
-			//	SÈlectionne l'origine de couleur.
+			//	S√©lectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -575,7 +575,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldColor1 == null )  return;
@@ -614,7 +614,7 @@ namespace Epsitec.Common.Document.Panels
 				this.swapColor.SetManualBounds(r);
 			}
 
-			if ( this.isExtendedSize )  // panneau Ètendu ?
+			if ( this.isExtendedSize )  // panneau √©tendu ?
 			{
 				r.Top = pTop;
 				r.Bottom = r.Top-22*2;
@@ -624,7 +624,7 @@ namespace Epsitec.Common.Document.Panels
 				this.grid.SetManualBounds(r);
 				pTop -= 25;
 
-				if ( this.IsLabelProperties )  // Ètendu/dÈtails ?
+				if ( this.IsLabelProperties )  // √©tendu/d√©tails ?
 				{
 					r.Top = pTop;
 					r.Bottom = r.Top-20;
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Document.Panels
 						pTop -= 25;
 					}
 				}
-				else	// Ètendu/compact ?
+				else	// √©tendu/compact ?
 				{
 					r.Top = pTop;
 					r.Bottom = r.Top-20;
@@ -756,7 +756,7 @@ namespace Epsitec.Common.Document.Panels
 					this.fieldHatchDistance.SetManualBounds(r);
 				}
 			}
-			else	// panneau rÈduit ?
+			else	// panneau r√©duit ?
 			{
 				r.Top = pTop;
 				r.Bottom = r.Top-20;
@@ -772,7 +772,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
-			if ( type == Properties.GradientFillType.Linear )  // linÈaire ?
+			if ( type == Properties.GradientFillType.Linear )  // lin√©aire ?
 			{
 				this.fieldAngle.TextFieldReal.Value = 0.0M;
 				this.cx = 0.5;
@@ -840,7 +840,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleNothingClicked(object sender, MessageEventArgs e)
 		{
-			//	Le bouton "aucune couleur" a ÈtÈ cliquÈ.
+			//	Le bouton "aucune couleur" a √©t√© cliqu√©.
 			this.grid.SelectedValue = (int) Properties.GradientFillType.None;
 			this.fieldColor1.Color = Drawing.RichColor.FromAlphaRgb(0, 1,1,1);
 			this.OnChanged();
@@ -848,7 +848,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleTypeChanged(object sender)
 		{
-			//	Le type a ÈtÈ changÈ.
+			//	Le type a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 
 			this.HandleReset(null, null);
@@ -871,7 +871,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleHatchRankChanged(object sender)
 		{
-			//	Le rang a ÈtÈ changÈ.
+			//	Le rang a √©t√© chang√©.
 			if ( this.ignoreChanged )  return;
 			this.ignoreChanged = true;
 			this.HatchToWidget();

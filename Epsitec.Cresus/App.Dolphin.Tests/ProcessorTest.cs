@@ -25,7 +25,7 @@ namespace Epsitec.App.Dolphin
 
 				if (codes1.Count == 0)
 				{
-					System.Console.Out.WriteLine(string.Format("Instruction {0} impossible à assembler", instruction));
+					System.Console.Out.WriteLine(string.Format("Instruction {0} impossible Ã  assembler", instruction));
 					error++;
 				}
 				else
@@ -48,7 +48,7 @@ namespace Epsitec.App.Dolphin
 
 					if (length != pc)
 					{
-						System.Console.Out.WriteLine(string.Format("Erreur lors de l'exécution de l'instruction {0}", instruction));
+						System.Console.Out.WriteLine(string.Format("Erreur lors de l'exÃ©cution de l'instruction {0}", instruction));
 						error++;
 					}
 #endif
@@ -62,7 +62,7 @@ namespace Epsitec.App.Dolphin
 
 					if (!ProcessorTest.Compare(codes1, codes3))
 					{
-						System.Console.Out.WriteLine(string.Format("Instruction {0} mal désassemblée", instruction));
+						System.Console.Out.WriteLine(string.Format("Instruction {0} mal dÃ©sassemblÃ©e", instruction));
 						error++;
 					}
 				}
@@ -70,8 +70,8 @@ namespace Epsitec.App.Dolphin
 				count++;
 			}
 
-			System.Console.Out.WriteLine(string.Format("{0} instructions testées", count.ToString()));
-			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} instructions testÃ©es", count.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrÃ©e(s)", error.ToString()));
 			System.Console.Out.WriteLine("");
 
 			if (error > 0)
@@ -98,15 +98,15 @@ namespace Epsitec.App.Dolphin
 
 				if (codes1.Count != 0)
 				{
-					System.Console.Out.WriteLine(string.Format("Instruction {0} possible à assembler", instruction));
+					System.Console.Out.WriteLine(string.Format("Instruction {0} possible Ã  assembler", instruction));
 					error++;
 				}
 
 				count++;
 			}
 
-			System.Console.Out.WriteLine(string.Format("{0} instructions testées", count.ToString()));
-			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} instructions testÃ©es", count.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrÃ©e(s)", error.ToString()));
 			System.Console.Out.WriteLine("");
 
 			if (error > 0)
@@ -538,8 +538,8 @@ namespace Epsitec.App.Dolphin
 				count++;
 			}
 
-			System.Console.Out.WriteLine(string.Format("{0} expressions testées", count.ToString()));
-			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} expressions testÃ©es", count.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrÃ©e(s)", error.ToString()));
 			System.Console.Out.WriteLine("");
 
 			if (error > 0)
@@ -619,8 +619,8 @@ namespace Epsitec.App.Dolphin
 				count++;
 			}
 
-			System.Console.Out.WriteLine(string.Format("{0} expressions testées", count.ToString()));
-			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} expressions testÃ©es", count.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrÃ©e(s)", error.ToString()));
 			System.Console.Out.WriteLine("");
 
 			if (error > 0)

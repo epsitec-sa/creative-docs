@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Security.Cryptography;
@@ -9,8 +9,8 @@ namespace Epsitec.Common.IO
 	public delegate void ChecksumCallback(IChecksum checksum);
 
 	/// <summary>
-	/// La classe Checksum permet d'accéder aux divers algorithmes de calcul
-	/// de ... checksums sur des données binaires. Voir IChecksum.
+	/// La classe Checksum permet d'accÃ©der aux divers algorithmes de calcul
+	/// de ... checksums sur des donnÃ©es binaires. Voir IChecksum.
 	/// </summary>
 	public static class Checksum
 	{

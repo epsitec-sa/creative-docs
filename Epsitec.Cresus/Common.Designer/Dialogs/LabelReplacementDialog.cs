@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de crÈer ou de choisir un Caption de remplacement pour l'Èditeur de Forms.
+	/// Dialogue permettant de cr√©er ou de choisir un Caption de remplacement pour l'√©diteur de Forms.
 	/// </summary>
 	public class LabelReplacementDialog : AbstractDialog
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	CrÈe et montre la fenÍtre du dialogue.
+			//	Cr√©e et montre la fen√™tre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("LabelReplacement", 500, 300, true);
-				this.window.Text = "LÈgende de remplacement"; //Res.Strings.Dialog.LabelReplacement.Title;
+				this.window.Text = "L√©gende de remplacement"; //Res.Strings.Dialog.LabelReplacement.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -40,18 +40,18 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.tabBook.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 
 				this.tabCreate = new TabPage();
-				this.tabCreate.TabTitle = "CrÈation d'une nouvelle lÈgende";
+				this.tabCreate.TabTitle = "Cr√©ation d'une nouvelle l√©gende";
 				this.tabCreate.Padding = new Margins(8, 8, 8, 8);
 				this.tabBook.Items.Add(this.tabCreate);
 
 				this.tabUse = new TabPage();
-				this.tabUse.TabTitle = "Utilisation d'une lÈgende existante";
+				this.tabUse.TabTitle = "Utilisation d'une l√©gende existante";
 				this.tabUse.Padding = new Margins(0, 0, 0, 0);
 				this.tabBook.Items.Add(this.tabUse);
 
 				this.tabBook.ActivePage = this.tabCreate;
 
-				//	Onglet "crÈer".
+				//	Onglet "cr√©er".
 				FrameBox createBox;
 				StaticText label;
 
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Partie droite.
 				this.header2 = new StaticText(right);
-				this.header2.Text = "LÈgendes";
+				this.header2.Text = "L√©gendes";
 				this.header2.Dock = DockStyle.Top;
 				this.header2.Margins = new Margins(0, 0, 0, 5);
 
@@ -197,12 +197,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void AccessOpen(string nameToCreate, Druid resource)
 		{
-			//	DÈbut de l'accËs aux ressources pour le dialogue.
+			//	D√©but de l'acc√®s aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
-			//	Initialise this.existingCaption s'il existe dÈj‡ un Caption ayant le nom de celui ‡ crÈer.
-			//	C'est probablement un Caption qui avait dÈj‡ ÈtÈ crÈÈ pour cette ressource, puis que
-			//	l'utilisateur avait abandonnÈ, pour revenir au label par dÈfaut.
+			//	Initialise this.existingCaption s'il existe d√©j√† un Caption ayant le nom de celui √† cr√©er.
+			//	C'est probablement un Caption qui avait d√©j√† √©t√© cr√©√© pour cette ressource, puis que
+			//	l'utilisateur avait abandonn√©, pour revenir au label par d√©faut.
 			this.existingCaption = this.SearchCaption(nameToCreate);
 
 			Module module = this.designerApplication.CurrentModule;
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Druid SearchCaption(string nameToCreate)
 		{
-			//	Cherche s'il existe dÈj‡ un Caption d'aprËs le nom de la ressource.
+			//	Cherche s'il existe d√©j√† un Caption d'apr√®s le nom de la ressource.
 			Module module = this.designerApplication.CurrentModule;
 			for (int i=0; i<module.AccessCaptions.CollectionView.Items.Count; i++)
 			{
@@ -255,14 +255,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected bool CollectionViewFilter(object obj)
 		{
-			//	MÈthode passÈ comme paramËtre System.Predicate<object> ‡ CollectionView.Filter.
-			//	Retourne false si la ressource doit Ítre exclue.
+			//	M√©thode pass√© comme param√®tre System.Predicate<object> √† CollectionView.Filter.
+			//	Retourne false si la ressource doit √™tre exclue.
 			return true;
 		}
 			
 		public Common.Dialogs.DialogResult AccessClose(out Druid resource)
 		{
-			//	Fin de l'accËs aux ressources pour le dialogue.
+			//	Fin de l'acc√®s aux ressources pour le dialogue.
 			resource = this.resource;
 			return this.result;
 		}
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateTitle()
 		{
-			//	Met ‡ jour le titre qui dÈpend du type des ressources ÈditÈes.
+			//	Met √† jour le titre qui d√©pend du type des ressources √©dit√©es.
 			this.listModules.Items.Clear();
 
 			List<Module> list = this.designerApplication.OpeningListModule;
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateArray()
 		{
-			//	Met ‡ jour tout le contenu du tableau et sÈlectionne la ressource actuelle.
+			//	Met √† jour tout le contenu du tableau et s√©lectionne la ressource actuelle.
 			this.listResources.Items.Clear();
 
 			int sel = -1;
@@ -297,14 +297,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.listResources.Items.Add(cultureMap.Name);
 
-				//	Essaie de sÈlectionner la ressource actuelle, ou celle qui avait ÈtÈ crÈÈe puis abandonnÈe pour ce champ.
+				//	Essaie de s√©lectionner la ressource actuelle, ou celle qui avait √©t√© cr√©√©e puis abandonn√©e pour ce champ.
 				if (cultureMap.Id == this.resource || cultureMap.Id == this.existingCaption)
 				{
 					sel = i;
 				}
 			}
 
-			//	On ne cherche la ressource crÈÈe puis abandonnÈe pour ce champ qu'une seule fois.
+			//	On ne cherche la ressource cr√©√©e puis abandonn√©e pour ce champ qu'une seule fois.
 			this.existingCaption = Druid.Empty;
 
 			this.ignoreChanged = true;
@@ -315,13 +315,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateName()
 		{
-			//	Met ‡ jour le nom de la ressource ‡ crÈer.
+			//	Met √† jour le nom de la ressource √† cr√©er.
 			this.fieldNameToCreate.Text = this.nameToCreate;
 		}
 
 		protected void UpdateText()
 		{
-			//	Met ‡ jour le texte de la ressource sÈlectionnÈe.
+			//	Met √† jour le texte de la ressource s√©lectionn√©e.
 			string text = null;
 
 			if (this.listResources.SelectedItemIndex != -1)
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateButtons()
 		{
-			//	Met ‡ jour le bouton "Utiliser".
+			//	Met √† jour le bouton "Utiliser".
 			if (this.buttonUse == null)
 			{
 				return;
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Druid SelectedResource
 		{
-			//	Retourne le Druid de la ressource actuellement sÈlectionnÈe.
+			//	Retourne le Druid de la ressource actuellement s√©lectionn√©e.
 			get
 			{
 				if (this.listResources.SelectedItemIndex == -1)
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Druid CreateCaption()
 		{
-			//	CrÈe une ressource Caption qui sera utilisÈe comme lÈgende de remplacement.
+			//	Cr√©e une ressource Caption qui sera utilis√©e comme l√©gende de remplacement.
 			//	Retourne son Druid.
 			CultureMap newItem = this.module.AccessCaptions.Accessor.CreateItem();
 			newItem.Name = this.nameToCreate;
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Ferme proprement le dialogue.
 			if (this.collectionView != null)
 			{
-				this.collectionView.Filter = null;  // pour Èviter un appel ultÈrieur de CollectionViewFilter !
+				this.collectionView.Filter = null;  // pour √©viter un appel ult√©rieur de CollectionViewFilter !
 				this.collectionView = null;
 			}
 
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleTabBookActivePageChanged(object sender, CancelEventArgs e)
 		{
-			//	AppelÈ aprËs un changement d'onglet.
+			//	Appel√© apr√®s un changement d'onglet.
 			this.UpdateButtons();
 
 			if (this.fieldTextToCreate != null && this.tabBook.ActivePage == this.tabCreate)
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleTextToCreateChanged(object sender)
 		{
-			//	AppelÈ lorsque le texte du Caption ‡ crÈer a changÈ.
+			//	Appel√© lorsque le texte du Caption √† cr√©er a chang√©.
 			this.UpdateButtons();
 		}
 
@@ -455,7 +455,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleListResourcesSelected(object sender)
 		{
-			//	La ressource sÈlectionnÈe a changÈ.
+			//	La ressource s√©lectionn√©e a chang√©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -467,7 +467,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleListResourcesDoubleClicked(object sender, MessageEventArgs e)
 		{
-			//	La liste des ressources a ÈtÈ double-cliquÈe.
+			//	La liste des ressources a √©t√© double-cliqu√©e.
 			this.resource = this.SelectedResource;
 			this.result = Common.Dialogs.DialogResult.Yes;
 
@@ -489,10 +489,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton "CrÈer" ou "Utiliser" cliquÈ.
+			//	Bouton "Cr√©er" ou "Utiliser" cliqu√©.
 			if (this.tabBook.ActivePage == this.tabCreate)
 			{
-				this.resource = this.CreateCaption();  // crÈe la ressource Caption
+				this.resource = this.CreateCaption();  // cr√©e la ressource Caption
 			}
 
 			if (this.tabBook.ActivePage == this.tabUse)

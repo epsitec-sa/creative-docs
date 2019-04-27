@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Containers
 {
 	/// <summary>
-	/// La classe Containers.Abstract est la classe de base pour tous les agrÈgats de panneaux.
+	/// La classe Containers.Abstract est la classe de base pour tous les agr√©gats de panneaux.
 	/// </summary>
 	public abstract class Abstract : Common.Widgets.Widget
 	{
@@ -35,96 +35,96 @@ namespace Epsitec.Common.Document.Containers
 
 		public virtual void Hilite(Objects.Abstract hiliteObject)
 		{
-			//	Met en Èvidence l'objet survolÈ par la souris.
+			//	Met en √©vidence l'objet survol√© par la souris.
 		}
 
 
 		private void HandleIsVisibleChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	AppelÈ par Widget lorsque la visibilitÈ change.
+			//	Appel√© par Widget lorsque la visibilit√© change.
 			
 			bool visible = (bool) e.NewValue;
 			
 			if ( visible )
 			{
-				this.Update();  // m‡j si visible et sale
+				this.Update();  // m√†j si visible et sale
 				this.document.Modifier.ActiveContainer = this;
 			}
 		}
 
 		public void SetDirtyContent()
 		{
-			//	Indique qu'il faudra mettre ‡ jour tout le contenu.
+			//	Indique qu'il faudra mettre √† jour tout le contenu.
 			this.isDirtyContent = true;
-			this.Update();  // m‡j immÈdiate si l'agrÈgat est visible
+			this.Update();  // m√†j imm√©diate si l'agr√©gat est visible
 		}
 
 		public void SetDirtyGeometry()
 		{
-			//	Indique qu'il faudra mettre ‡ jour selon les gÈomÈtries.
+			//	Indique qu'il faudra mettre √† jour selon les g√©om√©tries.
 			this.isDirtyGeometry = true;
-			this.Update();  // m‡j immÈdiate si l'agrÈgat est visible
+			this.Update();  // m√†j imm√©diate si l'agr√©gat est visible
 		}
 
 		public void SetDirtyProperties(System.Collections.ArrayList propertyList)
 		{
-			//	Indique qu'il faudra mettre ‡ jour les valeurs contenues.
+			//	Indique qu'il faudra mettre √† jour les valeurs contenues.
 			this.dirtyProperties.Clear();
 			foreach ( Properties.Abstract property in propertyList )
 			{
 				this.dirtyProperties.Add(property);
 			}
-			this.Update();  // m‡j immÈdiate si l'agrÈgat est visible
+			this.Update();  // m√†j imm√©diate si l'agr√©gat est visible
 		}
 
 		public void SetDirtyAggregates(System.Collections.ArrayList aggregateList)
 		{
-			//	Indique qu'il faudra mettre ‡ jour les valeurs contenues.
+			//	Indique qu'il faudra mettre √† jour les valeurs contenues.
 			this.dirtyAggregates.Clear();
 			foreach ( Properties.Aggregate agg in aggregateList )
 			{
 				this.dirtyAggregates.Add(agg);
 			}
-			this.Update();  // m‡j immÈdiate si l'agrÈgat est visible
+			this.Update();  // m√†j imm√©diate si l'agr√©gat est visible
 		}
 
 		public void SetDirtyTextStyles(System.Collections.ArrayList textStyleList)
 		{
-			//	Indique qu'il faudra mettre ‡ jour les valeurs contenues.
+			//	Indique qu'il faudra mettre √† jour les valeurs contenues.
 			this.dirtyTextStyles.Clear();
 			foreach ( Text.TextStyle textStyle in textStyleList )
 			{
 				this.dirtyTextStyles.Add(textStyle);
 			}
-			this.Update();  // m‡j immÈdiate si le style est visible
+			this.Update();  // m√†j imm√©diate si le style est visible
 		}
 
 		public void SetDirtyObject(Objects.Abstract obj)
 		{
-			//	Indique qu'il faudra mettre ‡ jour un objet.
+			//	Indique qu'il faudra mettre √† jour un objet.
 			this.dirtyObject = obj;
-			this.Update();  // m‡j immÈdiate si l'agrÈgat est visible
+			this.Update();  // m√†j imm√©diate si l'agr√©gat est visible
 		}
 
 		public void SetDirtySelNames()
 		{
-			//	Indique qu'il faudra mettre ‡ jour la sÈlection par noms.
+			//	Indique qu'il faudra mettre √† jour la s√©lection par noms.
 			this.isDirtySelNames = true;
-			this.Update();  // m‡j immÈdiate si l'agrÈgat est visible
+			this.Update();  // m√†j imm√©diate si l'agr√©gat est visible
 		}
 
 		protected void Update()
 		{
-			//	Met ‡ jour le contenu, si nÈcessaire.
+			//	Met √† jour le contenu, si n√©cessaire.
 			if ( !this.IsVisible )  return;
 
 			if ( this.isDirtyContent )
 			{
 				this.DoUpdateContent();
 				this.isDirtyContent = false;  // propre
-				this.dirtyProperties.Clear();  // les propriÈtÈs sont forcÈment aussi ‡ jour
-				this.dirtyAggregates.Clear();  // les propriÈtÈs sont forcÈment aussi ‡ jour
-				this.dirtyTextStyles.Clear();  // les propriÈtÈs sont forcÈment aussi ‡ jour
+				this.dirtyProperties.Clear();  // les propri√©t√©s sont forc√©ment aussi √† jour
+				this.dirtyAggregates.Clear();  // les propri√©t√©s sont forc√©ment aussi √† jour
+				this.dirtyTextStyles.Clear();  // les propri√©t√©s sont forc√©ment aussi √† jour
 				this.dirtyObject = null;
 				this.isDirtySelNames = false;
 			}
@@ -168,43 +168,43 @@ namespace Epsitec.Common.Document.Containers
 
 		protected virtual void DoUpdateContent()
 		{
-			//	Effectue la mise ‡ jour du contenu.
+			//	Effectue la mise √† jour du contenu.
 		}
 
 		protected virtual void DoUpdateGeometry()
 		{
-			//	Effectue la mise ‡ jour selon la gÈomÈtrie.
+			//	Effectue la mise √† jour selon la g√©om√©trie.
 		}
 
 		protected virtual void DoUpdateProperties(System.Collections.ArrayList propertyList)
 		{
-			//	Effectue la mise ‡ jour des propriÈtÈs.
+			//	Effectue la mise √† jour des propri√©t√©s.
 		}
 
 		protected virtual void DoUpdateAggregates(System.Collections.ArrayList propertyList)
 		{
-			//	Effectue la mise ‡ jour des agrÈgats.
+			//	Effectue la mise √† jour des agr√©gats.
 		}
 
 		protected virtual void DoUpdateTextStyles(System.Collections.ArrayList textStyleList)
 		{
-			//	Effectue la mise ‡ jour des styles de texte.
+			//	Effectue la mise √† jour des styles de texte.
 		}
 
 		protected virtual void DoUpdateObject(Objects.Abstract obj)
 		{
-			//	Effectue la mise ‡ jour d'un objet.
+			//	Effectue la mise √† jour d'un objet.
 		}
 
 		protected virtual void DoUpdateSelNames()
 		{
-			//	Effectue la mise ‡ jour de la sÈlection par noms.
+			//	Effectue la mise √† jour de la s√©lection par noms.
 		}
 
 
 		protected static bool IsObjectUseByProperty(Properties.Abstract property, Objects.Abstract hiliteObject)
 		{
-			//	VÈrifie si une propriÈtÈ fait rÈfÈrence ‡ un objet.
+			//	V√©rifie si une propri√©t√© fait r√©f√©rence √† un objet.
 			int total = property.Owners.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{

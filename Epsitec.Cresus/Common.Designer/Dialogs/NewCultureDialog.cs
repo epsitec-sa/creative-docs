@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir la culture à créer.
+	/// Dialogue permettant de choisir la culture Ã  crÃ©er.
 	/// </summary>
 	public class NewCultureDialog : AbstractDialog
 	{
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -91,12 +91,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateList()
 		{
-			//	Met à jour la ScrollList des cultures, en enlevant celles qui font déjà
+			//	Met Ã  jour la ScrollList des cultures, en enlevant celles qui font dÃ©jÃ 
 			//	partie du bundle.
 			string baseCulture = this.access.GetPrimaryCultureName();
 			List<string> secondaryCultures = this.access.GetSecondaryCultureNames();
 
-			//	Construit la liste des cultures inexistantes dans l'accès.
+			//	Construit la liste des cultures inexistantes dans l'accÃ¨s.
 			this.cultureList = new List<string>();
 			foreach (string name in Misc.Cultures)
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(name);
 				this.cultureWidget.Items.Add(Misc.CultureLongName(culture));
 			}
-			this.cultureWidget.SelectedItemIndex = 0;  // sélectionne en priorité la première culture de la liste
+			this.cultureWidget.SelectedItemIndex = 0;  // sÃ©lectionne en prioritÃ© la premiÃ¨re culture de la liste
 		}
 
 

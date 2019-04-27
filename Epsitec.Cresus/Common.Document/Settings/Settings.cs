@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe Settings contient tous les réglages.
+	/// La classe Settings contient tous les rÃ©glages.
 	/// </summary>
 	[System.Serializable()]
 	public class Settings : ISerializable
@@ -34,9 +34,9 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void CreateDefault()
 		{
-			//	Crée tous les réglages par défaut, si nécessaire.
+			//	CrÃ©e tous les rÃ©glages par dÃ©faut, si nÃ©cessaire.
 			//	Il est possible d'en ajouter de nouveaux tout en restant compatible
-			//	avec les anciens fichiers sérialisés.
+			//	avec les anciens fichiers sÃ©rialisÃ©s.
 			this.owners = new System.Collections.Hashtable();
 
 			this.CreateDefaultPoint("Settings", "PageSize");
@@ -205,14 +205,14 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void SetOwnerDialog(string dialog, string name)
 		{
-			//	Spécifie quel est le dialogue propriétaire d'un réglage.
+			//	SpÃ©cifie quel est le dialogue propriÃ©taire d'un rÃ©glage.
 			if ( dialog == "" )  return;
 			this.owners.Add(name, dialog);
 		}
 
 		public string GetOwnerDialog(string name)
 		{
-			//	Indique à quel dialogue appartient un réglage.
+			//	Indique Ã  quel dialogue appartient un rÃ©glage.
 			string dialog = this.owners[name] as string;
 			if ( dialog == null )  return "";
 			return dialog;
@@ -221,31 +221,31 @@ namespace Epsitec.Common.Document.Settings
 
 		public PrintInfo PrintInfo
 		{
-			//	Donne les réglages de l'impression.
+			//	Donne les rÃ©glages de l'impression.
 			get { return this.printInfo; }
 		}
 
         public ExportPDFInfo ExportPDFInfo
         {
-            //	Donne les réglages de la publication PDF.
+            //	Donne les rÃ©glages de la publication PDF.
             get { return this.exportPDFInfo; }
         }
 
         public ExportICOInfo ExportICOInfo
         {
-            //	Donne les réglages de la publication ICO.
+            //	Donne les rÃ©glages de la publication ICO.
             get { return this.exportICOInfo; }
         }
 
         public void Reset()
 		{
-			//	Remets tous les réglages par défaut.
+			//	Remets tous les rÃ©glages par dÃ©faut.
 			this.GuidesReset();
 		}
 
 		public int Count
 		{
-			//	Nombre total de réglages.
+			//	Nombre total de rÃ©glages.
 			get
 			{
 				return this.settings.Count;
@@ -254,13 +254,13 @@ namespace Epsitec.Common.Document.Settings
 
 		public Abstract Get(int index)
 		{
-			//	Donne un réglage d'après son index.
+			//	Donne un rÃ©glage d'aprÃ¨s son index.
 			return this.settings[index] as Abstract;
 		}
 
 		public Abstract Get(string name)
 		{
-			//	Donne un réglage d'après son nom.
+			//	Donne un rÃ©glage d'aprÃ¨s son nom.
 			foreach ( Abstract settings in this.settings )
 			{
 				if ( settings.Name == name )  return settings;
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Document.Settings
 		#region Guides
 		public bool GlobalGuides
 		{
-			//	Utilise le guides globaux ou locaux à la page courante.
+			//	Utilise le guides globaux ou locaux Ã  la page courante.
 			get
 			{
 				return this.globalGuides;
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public int GuidesSelected
 		{
-			//	Guide sélectionné.
+			//	Guide sÃ©lectionnÃ©.
 			get
 			{
 				return this.GuidesList.Selected;
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected UndoableList GuidesList
 		{
-			//	Retourne la liste des repères.
+			//	Retourne la liste des repÃ¨res.
 			get
 			{
 				if ( this.globalGuides )
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected UndoableList GuidesListOther
 		{
-			//	Retourne l'autre (global/local) liste des repères.
+			//	Retourne l'autre (global/local) liste des repÃ¨res.
 			get
 			{
 				if ( !this.globalGuides )
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public UndoableList GuidesListGlobal
 		{
-			//	Retourne la liste des repères globaux.
+			//	Retourne la liste des repÃ¨res globaux.
 			get
 			{
 				return this.guides;
@@ -433,7 +433,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public static void DefaultQuickFonts(System.Collections.ArrayList list)
 		{
-			//	Donne la liste des polices rapides par défaut.
+			//	Donne la liste des polices rapides par dÃ©faut.
 			list.Clear();
 
 			list.Add("Arial");
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise les réglages.
+			//	SÃ©rialise les rÃ©glages.
 			info.AddValue("Settings", this.settings);
 			info.AddValue("GlobalGuides", this.globalGuides);
 			info.AddValue("GuidesList", this.guides);
@@ -459,7 +459,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected Settings(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise les réglages.
+			//	Constructeur qui dÃ©sÃ©rialise les rÃ©glages.
 			this.document = Document.ReadDocument;
 			this.settings = (System.Collections.ArrayList) info.GetValue("Settings", typeof(System.Collections.ArrayList));
 			this.guides = (UndoableList) info.GetValue("GuidesList", typeof(UndoableList));
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public void ReadFinalize()
 		{
-			//	Adapte l'objet après une désérialisation.
+			//	Adapte l'objet aprÃ¨s une dÃ©sÃ©rialisation.
 			this.CreateDefault();
 		}
 		#endregion

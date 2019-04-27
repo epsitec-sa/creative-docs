@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -13,13 +13,13 @@ using Epsitec.App.Dolphin.MyWidgets;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Simule un panneau conteneur, avec cadre visible ou non, et avec d'éventuelles vis aux quatre coins.
+	/// Simule un panneau conteneur, avec cadre visible ou non, et avec d'Ã©ventuelles vis aux quatre coins.
 	/// </summary>
 	public class Panel : FrameBox
 	{
 		public Panel() : base()
 		{
-			//	Détermine au hazard, une fois pour toutes, l'angle des quatre vis.
+			//	DÃ©termine au hazard, une fois pour toutes, l'angle des quatre vis.
 			System.Random r = new System.Random();
 			this.screwAngles = new double[4];
 			for (int i=0; i<4; i++)
@@ -111,7 +111,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			graphics.AddFilledCircle(center, radius);
 			Geometry.RenderVerticalGradient(graphics, rect, DolphinApplication.FromBrightness(0.4), DolphinApplication.FromBrightness(1.0));
 
-			Path fence = new Path();  // chemin approximatif (hexagone irrégulier) pour la fente
+			Path fence = new Path();  // chemin approximatif (hexagone irrÃ©gulier) pour la fente
 			fence.MoveTo(p1);
 			fence.LineTo(p2);
 			fence.LineTo(p6);

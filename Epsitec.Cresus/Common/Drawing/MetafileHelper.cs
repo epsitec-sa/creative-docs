@@ -1,4 +1,4 @@
-//	Copyright © 2009, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2009, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Drawing.Imaging;

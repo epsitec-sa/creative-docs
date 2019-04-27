@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -11,7 +11,7 @@ using System.Linq;
 namespace Epsitec.Common.Support.Implementation
 {
 	/// <summary>
-	/// La classe FileProvider donne accès aux ressources stockées dans des
+	/// La classe FileProvider donne accÃ¨s aux ressources stockÃ©es dans des
 	/// fichiers.
 	/// </summary>
 	public class FileProvider : AbstractResourceProvider
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Support.Implementation
 		{
 			if (this.ValidateId (id))
 			{
-				//	On valide toujours le nom avant, pour éviter des mauvaises surprises si
+				//	On valide toujours le nom avant, pour Ã©viter des mauvaises surprises si
 				//	l'appelant est malicieux.
 
 				string path = this.GetPathFromId (id, ResourceLevel.Default);
@@ -305,14 +305,14 @@ namespace Epsitec.Common.Support.Implementation
 					catch (System.Xml.XmlException)
 					{
 						//	Ce n'est pas un bundle compilable, probablement parce qu'il contient des
-						//	données binaires. Sautons-le.
+						//	donnÃ©es binaires. Sautons-le.
 
 						continue;
 					}
 
 					if (!typeRegex.IsMatch (bundle.Type))
 					{
-						//	Saute ce bundle, car il n'est pas du type adéquat :
+						//	Saute ce bundle, car il n'est pas du type adÃ©quat :
 
 						continue;
 					}
@@ -464,8 +464,8 @@ namespace Epsitec.Common.Support.Implementation
 				return true;
 			}
 
-			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
-			//	plus intéressant (celui des sources).
+			//	Pas trÃ¨s propre, mais Ã§a suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
+			//	plus intÃ©ressant (celui des sources).
 
 			if (path.ToLower ().EndsWith (@"\bin\debug\"))
 			{

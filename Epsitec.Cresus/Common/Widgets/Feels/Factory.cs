@@ -1,4 +1,4 @@
-//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -8,9 +8,9 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets.Feel
 {
 	/// <summary>
-	/// La classe Feel.Factory donne accès à l'interface IFeel actuellement active.
-	/// De plus, elle liste et crée automatiquement des instances de chaque classe
-	/// implémentant IFeel dans l'assembly actuelle...
+	/// La classe Feel.Factory donne accÃ¨s Ã  l'interface IFeel actuellement active.
+	/// De plus, elle liste et crÃ©e automatiquement des instances de chaque classe
+	/// implÃ©mentant IFeel dans l'assembly actuelle...
 	/// </summary>
 	public static class Factory
 	{
@@ -36,8 +36,8 @@ namespace Epsitec.Common.Widgets.Feel
 			
 			var allTypesInAssembly = assembly.GetTypes ();
 				
-			//	Cherche dans tous les types connus les classes qui implémentent l'interface
-			//	IFeel, et crée une instance unique de chacune de ces classes.
+			//	Cherche dans tous les types connus les classes qui implÃ©mentent l'interface
+			//	IFeel, et crÃ©e une instance unique de chacune de ces classes.
 			
 			foreach (System.Type type in allTypesInAssembly)
 			{

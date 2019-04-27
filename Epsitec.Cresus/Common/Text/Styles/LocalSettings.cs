@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Styles
@@ -19,8 +19,8 @@ namespace Epsitec.Common.Text.Styles
 		
 		public static bool CompareEqual(LocalSettings a, LocalSettings b)
 		{
-			//	Détermine si les deux réglages ont le même contenu. Utilise le
-			//	plus d'indices possibles avant de passer à la comparaison.
+			//	DÃ©termine si les deux rÃ©glages ont le mÃªme contenu. Utilise le
+			//	plus d'indices possibles avant de passer Ã  la comparaison.
 			
 			////////////////////////////////////////////////////////////////////
 			//	NB: contenu identique n'implique pas que le SettingsIndex est //
@@ -45,8 +45,8 @@ namespace Epsitec.Common.Text.Styles
 				return false;
 			}
 			
-			//	Il y a de fortes chances que les deux objets aient le même
-			//	contenu. Il faut donc opérer une comparaison des contenus.
+			//	Il y a de fortes chances que les deux objets aient le mÃªme
+			//	contenu. Il faut donc opÃ©rer une comparaison des contenus.
 			
 			return a.CompareEqualContents (b);
 		}

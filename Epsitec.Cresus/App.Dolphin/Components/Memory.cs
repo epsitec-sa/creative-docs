@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,13 +9,13 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.Components
 {
 	/// <summary>
-	/// Memoire émulée du dauphin.
+	/// Memoire Ã©mulÃ©e du dauphin.
 	/// </summary>
 	public class Memory
 	{
 		public Memory(DolphinApplication application)
 		{
-			//	Alloue et initialise la mémoire du dauphin.
+			//	Alloue et initialise la mÃ©moire du dauphin.
 			this.application = application;
 
 			int size = 1 << Memory.TotalAddress;
@@ -32,7 +32,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void RomVariables(Dictionary<string, int> variables)
 		{
-			//	Défini les variables des périphériques.
+			//	DÃ©fini les variables des pÃ©riphÃ©riques.
 			variables.Add("_DIGIT0", Memory.PeriphFirstDigit+0);
 			variables.Add("_DIGIT1", Memory.PeriphFirstDigit+1);
 			variables.Add("_DIGIT2", Memory.PeriphFirstDigit+2);
@@ -56,7 +56,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public int Length
 		{
-			//	Retourne la longueur totale de la mémoire (en fait, il serait plus juste
+			//	Retourne la longueur totale de la mÃ©moire (en fait, il serait plus juste
 			//	de parler de la longueur de l'espace d'adressage).
 			get
 			{
@@ -66,8 +66,8 @@ namespace Epsitec.App.Dolphin.Components
 
 		public bool IsEmptyRam
 		{
-			//	Retourne true si la Ram est entièrement vide.
-			//	On ignore quelques bytes à la fin de la mémoire pour le stack.
+			//	Retourne true si la Ram est entiÃ¨rement vide.
+			//	On ignore quelques bytes Ã  la fin de la mÃ©moire pour le stack.
 			get
 			{
 				for (int i=Memory.RamBase; i<Memory.RamBase+Memory.RamLength-Memory.StackMax; i++)
@@ -84,7 +84,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void ClearRam()
 		{
-			//	Vide toute le mémoire Ram.
+			//	Vide toute le mÃ©moire Ram.
 			for (int i=Memory.RamBase; i<Memory.RamBase+Memory.RamLength; i++)
 			{
 				this.memory[i] = 0;
@@ -96,7 +96,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void ClearPeriph()
 		{
-			//	Vide toute le mémoire périphérique.
+			//	Vide toute le mÃ©moire pÃ©riphÃ©rique.
 			for (int i=Memory.PeriphBase; i<Memory.PeriphBase+Memory.PeriphLength; i++)
 			{
 				this.memory[i] = 0;
@@ -117,7 +117,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void ClearDisplay()
 		{
-			//	Efface l'écran bitmap.
+			//	Efface l'Ã©cran bitmap.
 			for (int i=Memory.DisplayBase; i<Memory.DisplayBase+Memory.DisplayLength; i++)
 			{
 				this.memory[i] = 0;
@@ -128,7 +128,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void ShiftRam(int address, int offset)
 		{
-			//	Décale toute la mémoire.
+			//	DÃ©cale toute la mÃ©moire.
 			System.Diagnostics.Debug.Assert(address != -1 || offset != 0);
 
 			if (offset > 0)  // creuse un trou ?
@@ -163,10 +163,10 @@ namespace Epsitec.App.Dolphin.Components
 
 		public string GetContent()
 		{
-			//	Retourne tout le contenu de la mémoire Ram dans une chaîne (pour la sérialisation).
+			//	Retourne tout le contenu de la mÃ©moire Ram dans une chaÃ®ne (pour la sÃ©rialisation).
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-			//	Cherche la dernière adresse non nulle.
+			//	Cherche la derniÃ¨re adresse non nulle.
 			int last = 0;
 			for (int i=Memory.RamBase+Memory.RamLength-Memory.StackMax-1; i>=Memory.RamBase; i--)
 			{
@@ -187,7 +187,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void PutContent(string data)
 		{
-			//	Initialise tout le contenu de la mémoire Ram d'après une chaîne (pour la désérialisation).
+			//	Initialise tout le contenu de la mÃ©moire Ram d'aprÃ¨s une chaÃ®ne (pour la dÃ©sÃ©rialisation).
 			this.ClearRam();
 
 			int i = 0;
@@ -202,7 +202,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public static string BankSearch(int address)
 		{
-			//	Retourne la banque à utiliser pour une adresse donnée.
+			//	Retourne la banque Ã  utiliser pour une adresse donnÃ©e.
 			if (address >= Memory.RamBase && address < Memory.RamBase+Memory.RamLength)
 			{
 				return "M";
@@ -228,7 +228,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public static int BankStart(string bank)
 		{
-			//	Retourne le début d'une banque.
+			//	Retourne le dÃ©but d'une banque.
 			switch (bank)
 			{
 				case "M":
@@ -273,7 +273,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public bool IsReadOnly(int address)
 		{
-			//	Indique si l'adresse ne permet pas l'écriture.
+			//	Indique si l'adresse ne permet pas l'Ã©criture.
 			return !this.IsRam(address) && !this.IsPeriph(address) && !this.IsDisplay(address);
 		}
 
@@ -297,20 +297,20 @@ namespace Epsitec.App.Dolphin.Components
 
 		public bool IsPeriph(int address)
 		{
-			//	Indique si l'adresse est un périphérique.
+			//	Indique si l'adresse est un pÃ©riphÃ©rique.
 			return (address >= Memory.PeriphBase && address < Memory.PeriphBase+Memory.PeriphLength);
 		}
 
 		public bool IsDisplay(int address)
 		{
-			//	Indique si l'adresse est un périphérique.
+			//	Indique si l'adresse est un pÃ©riphÃ©rique.
 			return (address >= Memory.DisplayBase && address < Memory.DisplayBase+Memory.DisplayLength);
 		}
 
 
 		public int Read(int address)
 		{
-			//	Lit une valeur en mémoire et/ou dans un périphérique.
+			//	Lit une valeur en mÃ©moire et/ou dans un pÃ©riphÃ©rique.
 			if (this.IsValid(address))  // adresse valide ?
 			{
 				int value = this.memory[address];
@@ -334,8 +334,8 @@ namespace Epsitec.App.Dolphin.Components
 
 		public int ReadForDebug(int address)
 		{
-			//	Lit une valeur en mémoire et/ou dans un périphérique, pour de debug.
-			//	Le bit full du clavier (par exemple) n'est pas clearé.
+			//	Lit une valeur en mÃ©moire et/ou dans un pÃ©riphÃ©rique, pour de debug.
+			//	Le bit full du clavier (par exemple) n'est pas clearÃ©.
 			if (this.IsValid(address))  // adresse valide ?
 			{
 				return this.memory[address];
@@ -349,13 +349,13 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void WriteWithDirty(int address, int data)
 		{
-			//	Ecrit une valeur en mémoire et/ou dans un périphérique et
-			//	gère l'état dirty.
+			//	Ecrit une valeur en mÃ©moire et/ou dans un pÃ©riphÃ©rique et
+			//	gÃ¨re l'Ã©tat dirty.
 			if (!this.IsReadOnly(address) && data != this.ReadForDebug(address))
 			{
 				this.Write(address, data);
 
-				if (this.IsRam(address))  // mémoire ?
+				if (this.IsRam(address))  // mÃ©moire ?
 				{
 					this.application.Dirty = true;
 				}
@@ -364,7 +364,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void Write(int address, int data)
 		{
-			//	Ecrit une valeur en mémoire et/ou dans un périphérique.
+			//	Ecrit une valeur en mÃ©moire et/ou dans un pÃ©riphÃ©rique.
 			if (!this.IsReadOnly(address))  // adresse valide ?
 			{
 				if (this.memory[address] != (byte) data)
@@ -373,7 +373,7 @@ namespace Epsitec.App.Dolphin.Components
 
 					if (this.application != null && !this.application.IsEmptyPanel)
 					{
-						//	Les méthodes UpdateData sont différées lorsqu'on exécute plusieurs ProcessorClock
+						//	Les mÃ©thodes UpdateData sont diffÃ©rÃ©es lorsqu'on exÃ©cute plusieurs ProcessorClock
 						//	par HandleClockTimeElapsed.
 						this.application.MemoryAccessor.UpdateData();
 						this.application.CodeAccessor.UpdateData();
@@ -383,7 +383,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (this.application != null)
 			{
-				if (this.IsPeriph(address))  // périphérique ?
+				if (this.IsPeriph(address))  // pÃ©riphÃ©rique ?
 				{
 					if (address >= Memory.PeriphFirstDigit && address <= Memory.PeriphLastDigit)  // l'un des 4 digits ?
 					{
@@ -392,7 +392,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 				}
 
-				if (this.IsDisplay(address))  // écran bitmap ?
+				if (this.IsDisplay(address))  // Ã©cran bitmap ?
 				{
 					this.application.DisplayBitmap.Invalidate();
 				}
@@ -408,7 +408,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		public void WriteRom(int address, int data)
 		{
-			//	Ecrit une valeur en mémoire morte (pour l'initialisation de la Rom).
+			//	Ecrit une valeur en mÃ©moire morte (pour l'initialisation de la Rom).
 			this.memory[address] = (byte) data;
 		}
 

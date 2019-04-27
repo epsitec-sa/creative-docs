@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -120,8 +120,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ScrollVertical(double dist)
 		{
-			//	Décale le texte vers le haut (+) ou le bas (-), lorsque la
-			//	souris dépasse pendant une sélection.
+			//	DÃ©cale le texte vers le haut (+) ou le bas (-), lorsque la
+			//	souris dÃ©passe pendant une sÃ©lection.
 			this.scrollOffset.Y += dist;
 			Drawing.Point end = this.GetTextEndPosition ();
 			double min = System.Math.Min (end.Y, AbstractTextField.Infinity-this.realSize.Height);
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateScroller()
 		{
-			//	Met à jour l'asceuseur en fonction de this.scrollOffset.
+			//	Met Ã  jour l'asceuseur en fonction de this.scrollOffset.
 			if (this.scroller == null)
 			{
 				return;

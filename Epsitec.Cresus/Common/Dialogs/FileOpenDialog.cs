@@ -1,4 +1,4 @@
-//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// La classe FileOpenDialog présente le dialogue pour ouvrir un fichier.
+	/// La classe FileOpenDialog prÃ©sente le dialogue pour ouvrir un fichier.
 	/// </summary>
 	public class FileOpenDialog : Helpers.IFilterCollectionHost
 	{
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Dialogs
 		#region IFilterCollectionHost Members
 		public void FilterCollectionChanged()
 		{
-			//	Rien de spécial à faire...
+			//	Rien de spÃ©cial Ã  faire...
 		}
 		#endregion
 

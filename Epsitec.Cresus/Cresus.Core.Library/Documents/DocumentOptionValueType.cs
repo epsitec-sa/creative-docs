@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,9 +9,9 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 	public enum DocumentOptionValueType
 	{
 		Undefined,
-		Enumeration,	// énumération libre
-		Distance,		// type 'double' correspondant à une distance en mm
-		Size,			// type 'double' correspondant à une dimension en mm
+		Enumeration,	// Ã©numÃ©ration libre
+		Distance,		// type 'double' correspondant Ã  une distance en mm
+		Size,			// type 'double' correspondant Ã  une dimension en mm
 		Text,			// texte
 		TextMultiline,	// texte multilignes
 	}

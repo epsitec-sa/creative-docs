@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static decimal? ParseMontant(string text)
 		{
-			//	Parse un montant, selon les réglages.
+			//	Parse un montant, selon les rÃ©glages.
 			if (string.IsNullOrEmpty (text))
 			{
 				return null;
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 
 			if (Converters.numberFormatNullParts != SettingsEnum.NullPartsDashZero &&
-				Converters.numberFormatNullParts != SettingsEnum.NullPartsDashDash)  // ne commence pas par un tiret si zéro ?
+				Converters.numberFormatNullParts != SettingsEnum.NullPartsDashDash)  // ne commence pas par un tiret si zÃ©ro ?
 			{
 				if (text.StartsWith ("-"))
 				{
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 			
 			text = text.Replace ("-", "0");
-			text = text.Replace ("—", "0");
+			text = text.Replace ("â€”", "0");
 
 			decimal d;
 			if (decimal.TryParse (text, out d))
@@ -163,14 +163,14 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string MontantToString(decimal? montant, ComptaMonnaieEntity monnaie)
 		{
-			//	Conversion d'un montant, selon les réglages.
-			int decimalDigits = (monnaie == null) ? 2 : monnaie.Décimales;
+			//	Conversion d'un montant, selon les rÃ©glages.
+			int decimalDigits = (monnaie == null) ? 2 : monnaie.DÃ©cimales;
 			return Converters.MontantToString (montant, decimalDigits);
 		}
 
 		public static string MontantToString(decimal? montant, int decimalDigits)
 		{
-			//	Conversion d'un montant, selon les réglages.
+			//	Conversion d'un montant, selon les rÃ©glages.
 			if (montant.HasValue)
 			{
 				Converters.numberFormatMontant.CurrencyDecimalDigits = decimalDigits;
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				string s = montant.Value.ToString ("C", Converters.numberFormatMontant);
 
 				if (Converters.numberFormatNullParts == SettingsEnum.NullPartsDashZero ||
-					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // commence par un tiret si zéro ?
+					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // commence par un tiret si zÃ©ro ?
 				{
 					string pattern = "0" + Converters.numberFormatMontant.CurrencyDecimalSeparator;  // "0."
 					if (s.StartsWith (pattern))
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 					string pattern = Converters.numberFormatMontant.CurrencyDecimalSeparator + new string ('0', Converters.numberFormatMontant.CurrencyDecimalDigits);  // ".00"
 					if (s.EndsWith (pattern))
 					{
-						s = s.Substring (0, s.Length-pattern.Length+1) + "—";  // tiret long
+						s = s.Substring (0, s.Length-pattern.Length+1) + "â€”";  // tiret long
 					}
 				}
 
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static decimal? ParseDecimal(string text)
 		{
-			//	Parse un nombre réel.
+			//	Parse un nombre rÃ©el.
 			if (string.IsNullOrEmpty (text))
 			{
 				return null;
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string DecimalToString(decimal? value, int? fracCount)
 		{
-			//	Conversion d'un nombre réel en chaîne.
+			//	Conversion d'un nombre rÃ©el en chaÃ®ne.
 			if (value.HasValue)
 			{
 				if (fracCount.HasValue)
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static Date? ParseDate(string text)
 		{
-			//	Parse une date située dans n'importe quelle période.
+			//	Parse une date situÃ©e dans n'importe quelle pÃ©riode.
 			Date? date;
 			Converters.ParseDate (text, Date.Today, null, null, out date);
 			return date;
@@ -492,27 +492,27 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
-		#region CatégorieDeCompte
-		public static string CatégoriesToString(CatégorieDeCompte catégorie)
+		#region CatÃ©gorieDeCompte
+		public static string CatÃ©goriesToString(CatÃ©gorieDeCompte catÃ©gorie)
 		{
-			//	Conversion de plusieurs catégories en une chaîne où elles sont séparées par des "|".
+			//	Conversion de plusieurs catÃ©gories en une chaÃ®ne oÃ¹ elles sont sÃ©parÃ©es par des "|".
 			var list = new List<string> ();
 
-			foreach (var c in Converters.Catégories)
+			foreach (var c in Converters.CatÃ©gories)
 			{
-				if ((catégorie & c) != 0)
+				if ((catÃ©gorie & c) != 0)
 				{
-					list.Add (Converters.CatégorieToString (c));
+					list.Add (Converters.CatÃ©gorieToString (c));
 				}
 			}
 
 			return string.Join ("|", list);
 		}
 
-		public static CatégorieDeCompte StringToCatégories(string text)
+		public static CatÃ©gorieDeCompte StringToCatÃ©gories(string text)
 		{
-			//	Conversion de plusieurs catégories séparées par des "|".
-			var catégorie = CatégorieDeCompte.Inconnu;
+			//	Conversion de plusieurs catÃ©gories sÃ©parÃ©es par des "|".
+			var catÃ©gorie = CatÃ©gorieDeCompte.Inconnu;
 
 			if (!string.IsNullOrEmpty (text))
 			{
@@ -520,32 +520,32 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 				foreach (var word in words)
 				{
-					catégorie |= Converters.StringToCatégorie (word);
+					catÃ©gorie |= Converters.StringToCatÃ©gorie (word);
 				}
 			}
 
-			return catégorie;
+			return catÃ©gorie;
 		}
 
 
-		public static string CatégorieToString(CatégorieDeCompte catégorie)
+		public static string CatÃ©gorieToString(CatÃ©gorieDeCompte catÃ©gorie)
 		{
-			//	Conversion d'une catégorie en chaîne.
-			switch (catégorie)
+			//	Conversion d'une catÃ©gorie en chaÃ®ne.
+			switch (catÃ©gorie)
 			{
-				case CatégorieDeCompte.Actif:
+				case CatÃ©gorieDeCompte.Actif:
 					return "Actif";
 
-				case CatégorieDeCompte.Passif:
+				case CatÃ©gorieDeCompte.Passif:
 					return "Passif";
 
-				case CatégorieDeCompte.Charge:
+				case CatÃ©gorieDeCompte.Charge:
 					return "Charge";
 
-				case CatégorieDeCompte.Produit:
+				case CatÃ©gorieDeCompte.Produit:
 					return "Produit";
 
-				case CatégorieDeCompte.Exploitation:
+				case CatÃ©gorieDeCompte.Exploitation:
 					return "Exploitation";
 
 				default:
@@ -553,58 +553,58 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		public static CatégorieDeCompte StringToCatégorie(string text)
+		public static CatÃ©gorieDeCompte StringToCatÃ©gorie(string text)
 		{
-			//	Conversion d'une chaîne en catégorie.
+			//	Conversion d'une chaÃ®ne en catÃ©gorie.
 			switch (Strings.PreparingForSearh (text))
 			{
 				case "actif":
 				case "actifs":
-					return CatégorieDeCompte.Actif;
+					return CatÃ©gorieDeCompte.Actif;
 
 				case "passif":
 				case "passifs":
-					return CatégorieDeCompte.Passif;
+					return CatÃ©gorieDeCompte.Passif;
 
 				case "charge":
 				case "charges":
-					return CatégorieDeCompte.Charge;
+					return CatÃ©gorieDeCompte.Charge;
 
 				case "produit":
 				case "produits":
-					return CatégorieDeCompte.Produit;
+					return CatÃ©gorieDeCompte.Produit;
 
 				case "exploitation":
 				case "exploitations":
-					return CatégorieDeCompte.Exploitation;
+					return CatÃ©gorieDeCompte.Exploitation;
 
 				default:
-					return CatégorieDeCompte.Inconnu;
+					return CatÃ©gorieDeCompte.Inconnu;
 			}
 		}
 
 
-		public static IEnumerable<FormattedText> CatégorieDescriptions
+		public static IEnumerable<FormattedText> CatÃ©gorieDescriptions
 		{
-			//	Retourne une liste de tous les noms de catégories possibles.
+			//	Retourne une liste de tous les noms de catÃ©gories possibles.
 			get
 			{
-				foreach (var catégorie in Converters.Catégories)
+				foreach (var catÃ©gorie in Converters.CatÃ©gories)
 				{
-					yield return Converters.CatégorieToString (catégorie);
+					yield return Converters.CatÃ©gorieToString (catÃ©gorie);
 				}
 			}
 		}
 
-		private static IEnumerable<CatégorieDeCompte> Catégories
+		private static IEnumerable<CatÃ©gorieDeCompte> CatÃ©gories
 		{
 			get
 			{
-				yield return CatégorieDeCompte.Actif;
-				yield return CatégorieDeCompte.Passif;
-				yield return CatégorieDeCompte.Charge;
-				yield return CatégorieDeCompte.Produit;
-				yield return CatégorieDeCompte.Exploitation;
+				yield return CatÃ©gorieDeCompte.Actif;
+				yield return CatÃ©gorieDeCompte.Passif;
+				yield return CatÃ©gorieDeCompte.Charge;
+				yield return CatÃ©gorieDeCompte.Produit;
+				yield return CatÃ©gorieDeCompte.Exploitation;
 			}
 		}
 		#endregion
@@ -613,7 +613,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#region TypeDeCompte
 		public static string TypeToString(TypeDeCompte type)
 		{
-			//	Conversion d'un type de compte en chaîne.
+			//	Conversion d'un type de compte en chaÃ®ne.
 			switch (type)
 			{
 				case TypeDeCompte.Normal:
@@ -632,7 +632,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static TypeDeCompte StringToType(string text)
 		{
-			//	Conversion d'une chaîne en type de compte.
+			//	Conversion d'une chaÃ®ne en type de compte.
 			switch (Strings.PreparingForSearh (text))
 			{
 				case "normal":
@@ -674,40 +674,40 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
-		#region RaccourciModèle
-		public static string RaccourciToString(RaccourciModèle raccourci)
+		#region RaccourciModÃ¨le
+		public static string RaccourciToString(RaccourciModÃ¨le raccourci)
 		{
-			//	Conversion d'un raccourci en chaîne.
+			//	Conversion d'un raccourci en chaÃ®ne.
 			switch (raccourci)
 			{
-				case RaccourciModèle.Ctrl0:
+				case RaccourciModÃ¨le.Ctrl0:
 					return "Ctrl+0";
 
-				case RaccourciModèle.Ctrl1:
+				case RaccourciModÃ¨le.Ctrl1:
 					return "Ctrl+1";
 
-				case RaccourciModèle.Ctrl2:
+				case RaccourciModÃ¨le.Ctrl2:
 					return "Ctrl+2";
 
-				case RaccourciModèle.Ctrl3:
+				case RaccourciModÃ¨le.Ctrl3:
 					return "Ctrl+3";
 
-				case RaccourciModèle.Ctrl4:
+				case RaccourciModÃ¨le.Ctrl4:
 					return "Ctrl+4";
 
-				case RaccourciModèle.Ctrl5:
+				case RaccourciModÃ¨le.Ctrl5:
 					return "Ctrl+5";
 
-				case RaccourciModèle.Ctrl6:
+				case RaccourciModÃ¨le.Ctrl6:
 					return "Ctrl+6";
 
-				case RaccourciModèle.Ctrl7:
+				case RaccourciModÃ¨le.Ctrl7:
 					return "Ctrl+7";
 
-				case RaccourciModèle.Ctrl8:
+				case RaccourciModÃ¨le.Ctrl8:
 					return "Ctrl+8";
 
-				case RaccourciModèle.Ctrl9:
+				case RaccourciModÃ¨le.Ctrl9:
 					return "Ctrl+9";
 
 				default:
@@ -715,43 +715,43 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		public static RaccourciModèle StringToRaccourci(string text)
+		public static RaccourciModÃ¨le StringToRaccourci(string text)
 		{
-			//	Conversion d'une chaîne en raccourci.
+			//	Conversion d'une chaÃ®ne en raccourci.
 			switch (Strings.PreparingForSearh (text))
 			{
 				case "ctrl+0":
-					return RaccourciModèle.Ctrl0;
+					return RaccourciModÃ¨le.Ctrl0;
 
 				case "ctrl+1":
-					return RaccourciModèle.Ctrl1;
+					return RaccourciModÃ¨le.Ctrl1;
 
 				case "ctrl+2":
-					return RaccourciModèle.Ctrl2;
+					return RaccourciModÃ¨le.Ctrl2;
 
 				case "ctrl+3":
-					return RaccourciModèle.Ctrl3;
+					return RaccourciModÃ¨le.Ctrl3;
 
 				case "ctrl+4":
-					return RaccourciModèle.Ctrl4;
+					return RaccourciModÃ¨le.Ctrl4;
 
 				case "ctrl+5":
-					return RaccourciModèle.Ctrl5;
+					return RaccourciModÃ¨le.Ctrl5;
 
 				case "ctrl+6":
-					return RaccourciModèle.Ctrl6;
+					return RaccourciModÃ¨le.Ctrl6;
 
 				case "ctrl+7":
-					return RaccourciModèle.Ctrl7;
+					return RaccourciModÃ¨le.Ctrl7;
 
 				case "ctrl+8":
-					return RaccourciModèle.Ctrl8;
+					return RaccourciModÃ¨le.Ctrl8;
 
 				case "ctrl+9":
-					return RaccourciModèle.Ctrl9;
+					return RaccourciModÃ¨le.Ctrl9;
 
 				default:
-					return RaccourciModèle.None;
+					return RaccourciModÃ¨le.None;
 			}
 		}
 
@@ -768,21 +768,21 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		private static IEnumerable<RaccourciModèle> Raccourcis
+		private static IEnumerable<RaccourciModÃ¨le> Raccourcis
 		{
 			get
 			{
-				yield return RaccourciModèle.None;
-				yield return RaccourciModèle.Ctrl0;
-				yield return RaccourciModèle.Ctrl1;
-				yield return RaccourciModèle.Ctrl2;
-				yield return RaccourciModèle.Ctrl3;
-				yield return RaccourciModèle.Ctrl4;
-				yield return RaccourciModèle.Ctrl5;
-				yield return RaccourciModèle.Ctrl6;
-				yield return RaccourciModèle.Ctrl7;
-				yield return RaccourciModèle.Ctrl8;
-				yield return RaccourciModèle.Ctrl9;
+				yield return RaccourciModÃ¨le.None;
+				yield return RaccourciModÃ¨le.Ctrl0;
+				yield return RaccourciModÃ¨le.Ctrl1;
+				yield return RaccourciModÃ¨le.Ctrl2;
+				yield return RaccourciModÃ¨le.Ctrl3;
+				yield return RaccourciModÃ¨le.Ctrl4;
+				yield return RaccourciModÃ¨le.Ctrl5;
+				yield return RaccourciModÃ¨le.Ctrl6;
+				yield return RaccourciModÃ¨le.Ctrl7;
+				yield return RaccourciModÃ¨le.Ctrl8;
+				yield return RaccourciModÃ¨le.Ctrl9;
 			}
 		}
 		#endregion
@@ -816,7 +816,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Retourne une description de ce genre:
 			//	"Budget"
 			//	"Budget au prorata et Budget futur"
-			//	"Période précédente, Budget au prorata et Budget futur"
+			//	"PÃ©riode prÃ©cÃ©dente, Budget au prorata et Budget futur"
 			var list = new List<string> ();
 
 			foreach (var m in Converters.ComparisonsShowed)
@@ -834,11 +834,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			switch (mode)
 			{
-				case ComparisonShowed.PériodePénultième:
-					return "Période pénultième";
+				case ComparisonShowed.PÃ©riodePÃ©nultiÃ¨me:
+					return "PÃ©riode pÃ©nultiÃ¨me";
 
-				case ComparisonShowed.PériodePrécédente:
-					return "Période précédente";
+				case ComparisonShowed.PÃ©riodePrÃ©cÃ©dente:
+					return "PÃ©riode prÃ©cÃ©dente";
 
 				case ComparisonShowed.Budget:
 					return "Budget";
@@ -861,8 +861,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			get
 			{
-				yield return ComparisonShowed.PériodePénultième;
-				yield return ComparisonShowed.PériodePrécédente;
+				yield return ComparisonShowed.PÃ©riodePÃ©nultiÃ¨me;
+				yield return ComparisonShowed.PÃ©riodePrÃ©cÃ©dente;
 				yield return ComparisonShowed.Budget;
 				yield return ComparisonShowed.BudgetProrata;
 				yield return ComparisonShowed.BudgetFutur;
@@ -880,8 +880,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ComparisonDisplayMode.Montant:
 					return "Montant";
 
-				case ComparisonDisplayMode.Différence:
-					return "Différence en francs";
+				case ComparisonDisplayMode.DiffÃ©rence:
+					return "DiffÃ©rence en francs";
 
 				case ComparisonDisplayMode.Pourcentage:
 					return "Comparaison en %";

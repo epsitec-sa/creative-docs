@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// Vérifie le bon fonctionnement des classes Layout.XyzEngine.
+	/// VÃ©rifie le bon fonctionnement des classes Layout.XyzEngine.
 	/// </summary>
 	public class CheckLayout
 	{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 0.0, 0.0, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText (" comment l'algorithme de "
-				/**/				 + "découpe des lignes se débrouille "
+				/**/				 + "dÃ©coupe des lignes se dÃ©brouille "
 				/**/				 + "lorsqu'il faut couler du texte dans " /*131*/
 				/**/				 + "plusieurs cadres.\n", properties, out styledText);
 			
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("\u00A0"+"comment l'algorithme se débrouille.", properties, out styledText);
+			story.ConvertToStyledText ("\u00A0"+"comment l'algorithme se dÃ©brouille.", properties, out styledText);
 			story.InsertText (cursor, styledText);
 			
 			story.MoveCursor (cursor, - story.TextLength);
@@ -512,7 +512,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsNull (c);
 			Debug.Assert.IsNull (g);
 			
-			text   = new ulong[] { 'a', 'é', 'x' };
+			text   = new ulong[] { 'a', 'Ã©', 'x' };
 			glyphs = new ushort[] { 1, 5, 100, 20 };
 			map    = new short[] { 0, 1, 1, 2, 3 };
 			
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Text.Tests
 			mapping.GetNextMapping (out c, out g);
 			
 			Debug.Assert.IsTrue (c.Length == 1);
-			Debug.Assert.IsTrue (c[0] == 'é');
+			Debug.Assert.IsTrue (c[0] == 'Ã©');
 			Debug.Assert.IsTrue (g.Length == 2);
 			Debug.Assert.IsTrue (g[0] == 5);
 			Debug.Assert.IsTrue (g[1] == 100);

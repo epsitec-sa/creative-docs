@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface IDataValue donne accès à une donnée dans un IDataGraph.
+	/// L'interface IDataValue donne accÃ¨s Ã  une donnÃ©e dans un IDataGraph.
 	/// </summary>
 	public interface IDataValue : IDataItem
 	{

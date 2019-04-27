@@ -93,7 +93,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Shadow p = this.property as Properties.Shadow;
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Shadow p = this.property as Properties.Shadow;
 			if ( p == null )  return;
 
@@ -124,13 +124,13 @@ namespace Epsitec.Common.Document.Panels
 
 		public override void OriginColorDeselect()
 		{
-			//	DÈsÈlectionne toutes les origines de couleurs possibles.
+			//	D√©s√©lectionne toutes les origines de couleurs possibles.
 			this.fieldColor.ActiveState = ActiveState.No;
 		}
 
 		public override void OriginColorSelect(int rank)
 		{
-			//	SÈlectionne l'origine de couleur.
+			//	S√©lectionne l'origine de couleur.
 			this.fieldColor.ActiveState = ActiveState.Yes;
 		}
 
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldColor == null )  return;

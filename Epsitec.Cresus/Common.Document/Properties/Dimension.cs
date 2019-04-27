@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Properties
 	}
 
 	/// <summary>
-	/// La classe Dimension représente une propriété d'un objet graphique.
+	/// La classe Dimension reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Dimension : Abstract
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				if ( this.dimensionForm == DimensionForm.Inside  )  return "<-->";
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(TextLayout.ConvertToTaggedText(this.SampleText));
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(DimensionForm type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(DimensionForm type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case DimensionForm.Auto:     return "DimensionAuto";
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetName(DimensionJustif type)
 		{
-			//	Retourne le nom d'un type donné.
+			//	Retourne le nom d'un type donnÃ©.
 			string name = "";
 			switch ( type )
 			{
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string GetIconText(DimensionJustif type)
 		{
-			//	Retourne l'icône pour un type donné.
+			//	Retourne l'icÃ´ne pour un type donnÃ©.
 			switch ( type )
 			{
 				case DimensionJustif.CenterOrLeft:   return "DimensionCenterOrLeft";
@@ -257,13 +257,13 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Dimension p = property as Dimension;
 			p.dimensionJustif = this.dimensionJustif;
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Dimension p = property as Dimension;
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Dimension(document);
 		}
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("DimensionJustif", this.dimensionJustif);
@@ -317,7 +317,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Dimension(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.dimensionJustif = (DimensionJustif) info.GetValue("DimensionJustif", typeof(DimensionJustif));
 			this.dimensionForm = (DimensionForm) info.GetValue("DimensionForm", typeof(DimensionForm));
 			this.addLength = info.GetDouble("AddLength");

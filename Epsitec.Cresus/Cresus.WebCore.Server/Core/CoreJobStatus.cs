@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using System.Collections.Generic;
@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		public static readonly CoreJobStatus	Ordered  = new CoreJobStatus ("en attente");
 		public static readonly CoreJobStatus	Waiting  = new CoreJobStatus ("en attente");
 		public static readonly CoreJobStatus	Running  = new CoreJobStatus ("en cours");
-		public static readonly CoreJobStatus	Ended    = new CoreJobStatus ("terminé");
-		public static readonly CoreJobStatus	Cancelled = new CoreJobStatus ("annulé");
+		public static readonly CoreJobStatus	Ended    = new CoreJobStatus ("terminÃ©");
+		public static readonly CoreJobStatus	Cancelled = new CoreJobStatus ("annulÃ©");
 	}
 }
 

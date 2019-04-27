@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe FontSizeProperty décrit une taille de fonte.
+	/// La classe FontSizeProperty dÃ©crit une taille de fonte.
 	/// </summary>
 	public class FontSizeProperty : Property
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Tests.Widgets
 			Font   font = Font.GetFont ("Tahoma", "Regular");
 			double size = 12;
 			
-			graphics.AddText (5, 5, this.Text + " 0° - direction", font, size);
+			graphics.AddText (5, 5, this.Text + " 0Â° - direction", font, size);
 			graphics.RenderSolid (color_text);
 		}
 		

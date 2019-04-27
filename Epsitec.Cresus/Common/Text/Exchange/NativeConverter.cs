@@ -7,8 +7,8 @@ using System.Text;
 // Responsable: Michael Walz
 
 // TODO:
-// - gérer les propriétés suivantes : TextMarker, TextBox, UserTags, Conditions
-// - propriété link: gèrer les / et autres signes cabalistiques dans les hyperliens
+// - gÃ©rer les propriÃ©tÃ©s suivantes : TextMarker, TextBox, UserTags, Conditions
+// - propriÃ©tÃ© link: gÃ¨rer les / et autres signes cabalistiques dans les hyperliens
 //
 
 namespace Epsitec.Common.Text.Exchange
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 		/// <summary>
-		/// Obtient un array de strings contenant chacun une définition de style
+		/// Obtient un array de strings contenant chacun une dÃ©finition de style
 		/// </summary>
 		/// <returns></returns>
 		public List<string> GetStyleStrings()

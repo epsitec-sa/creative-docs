@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -64,11 +64,11 @@ namespace Epsitec.Cresus.Assets.Data
 		private UndoItem UAdd(TKey key, TValue item)
 		{
 			//	Ajoute un item dans le dictionnaire et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	de faire l'opÃ©ration inverse.
 			TValue currentItem;
 			if (this.TryGetValue (key, out currentItem))
 			{
-				//	S'il y a déjà un item correspondant à la clé, l'opération d'annulation
+				//	S'il y a dÃ©jÃ  un item correspondant Ã  la clÃ©, l'opÃ©ration d'annulation
 				//	devra remettre l'item intitial.
 				this.dict[key] = item;
 
@@ -87,8 +87,8 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 			else
 			{
-				//	Si l'item correspondant à la clé n'est pas déjà dans le dictionnaire,
-				//	l'opération d'annulation devra simplement supprimer la clé.
+				//	Si l'item correspondant Ã  la clÃ© n'est pas dÃ©jÃ  dans le dictionnaire,
+				//	l'opÃ©ration d'annulation devra simplement supprimer la clÃ©.
 				this.dict[key] = item;
 
 				var undoData = new UndoData
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private UndoItem URemove(TKey key)
 		{
 			//	Supprime un item du dictionnaire et retourne l'information permettant
-			//	de faire l'opération inverse.
+			//	de faire l'opÃ©ration inverse.
 			var undoData = new UndoData
 			{
 				Key  = key,

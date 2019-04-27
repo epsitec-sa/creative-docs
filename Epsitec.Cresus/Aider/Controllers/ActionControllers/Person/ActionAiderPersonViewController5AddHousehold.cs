@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Placer dans un nouveau ménage...");
+			return Resources.Text ("Placer dans un nouveau mÃ©nage...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,11 +34,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var householdSummary = this.GetHouseholdSummary ();
 
 			form
-				.Title ("Associer à un nouveau ménage")
+				.Title ("Associer Ã  un nouveau mÃ©nage")
 				.Text (TextFormatter.FormatText ("La personne", person.DisplayName, "(", person.Age, ")",
-					"est actuellement associée", householdSummary, "."))
+					"est actuellement associÃ©e", householdSummary, "."))
 				.Field<bool> ()
-					.Title ("Déplacer la personne dans son propre ménage")
+					.Title ("DÃ©placer la personne dans son propre mÃ©nage")
 					.InitialValue (true)
 				.End ()
 			.End ();
@@ -50,15 +50,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (households.Count == 0)
 			{
-				return Resources.FormattedText ("à aucun ménage");
+				return Resources.FormattedText ("Ã  aucun mÃ©nage");
 			}
 			if (households.Count == 1)
 			{
-				return TextFormatter.FormatText ("au ménage", households[0].GetCompactSummary ());
+				return TextFormatter.FormatText ("au mÃ©nage", households[0].GetCompactSummary ());
 			}
 			else
 			{
-				return Resources.FormattedText ("à plusieurs ménages");
+				return Resources.FormattedText ("Ã  plusieurs mÃ©nages");
 			}
 
 		}

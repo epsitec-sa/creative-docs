@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	/// <summary>
-	/// Bulle pour représenter les informations associées à une entité.
+	/// Bulle pour reprÃ©senter les informations associÃ©es Ã  une entitÃ©.
 	/// </summary>
 	public class ObjectInfo : AbstractObject
 	{
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public AbstractObject AttachObject
 		{
-			//	Object liée (boîte ou connection).
+			//	Object liÃ©e (boÃ®te ou connection).
 			get
 			{
 				return this.attachObject;
@@ -74,8 +74,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override Rectangle Bounds
 		{
-			//	Retourne la boîte de l'objet.
-			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
+			//	Retourne la boÃ®te de l'objet.
+			//	Attention: le dessin peut dÃ©border, par exemple pour l'ombre.
 			get
 			{
 				return this.isVisible ? this.bounds : Rectangle.Empty;
@@ -84,13 +84,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			this.bounds.Offset(dx, dy);
 		}
 
 		public Rectangle InternalBounds
 		{
-			//	Retourne la boîte de l'objet.
+			//	Retourne la boÃ®te de l'objet.
 			get
 			{
 				return this.bounds;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void SetBounds(Rectangle bounds)
 		{
-			//	Modifie la boîte de l'objet.
+			//	Modifie la boÃ®te de l'objet.
 			this.bounds = bounds;
 		}
 
@@ -136,8 +136,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			if (this.isDraggingMove)
 			{
 				Rectangle bounds = this.bounds;
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					Rectangle bounds = this.bounds;
 					bounds.Offset(newPos-oldPos);
-					this.SetBounds(bounds);  // déplace le commentaire
+					this.SetBounds(bounds);  // dÃ©place le commentaire
 
 					this.editor.Invalidate();
 				}
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			if (this.hilitedElement == ActiveElement.InfoMove)
 			{
 				this.isDraggingMove = true;
@@ -205,7 +205,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			if (this.isDraggingMove)
 			{
 				this.isDraggingMove = false;
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			element = ActiveElement.None;
 			fieldRank = -1;
 
@@ -267,14 +267,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return true;
 			}
 
-			//	Souris dans l'en-tête ?
+			//	Souris dans l'en-tÃªte ?
 			if (this.HeaderRectangle.Contains(pos))
 			{
 				element = ActiveElement.InfoMove;
 				return true;
 			}
 
-			//	Souris dans la boîte ?
+			//	Souris dans la boÃ®te ?
 			if (this.bounds.Contains(pos))
 			{
 				element = ActiveElement.InfoEdit;
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Offset(ObjectInfo.shadowOffset, -(ObjectInfo.shadowOffset));
 			AbstractObject.DrawShadow (graphics, rect, ObjectInfo.roundFrameRadius+ObjectInfo.shadowOffset, (int) ObjectInfo.shadowOffset, 0.2);
 
-			//	Dessine l'en-tête.
+			//	Dessine l'en-tÃªte.
 			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
 				rect = rh;
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.textLayoutTitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(1), GlyphPaintStyle.Normal);
 			}
 
-			//	Dessine la boîte vide avec la queue (bulle de bd).
+			//	Dessine la boÃ®te vide avec la queue (bulle de bd).
 			Path path = this.GetFramePath();
 
 			graphics.Rasterizer.AddSurface(path);
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private bool IsHeaderHilite
 		{
-			//	Indique si la souris est dans l'en-tête.
+			//	Indique si la souris est dans l'en-tÃªte.
 			get
 			{
 				return (this.hilitedElement == ActiveElement.InfoEdit ||
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Point GetAttachOther(AttachMode mode)
 		{
-			//	Retourne le point d'attache sur l'objet lié (boîte).
+			//	Retourne le point d'attache sur l'objet liÃ© (boÃ®te).
 			Point pos = Point.Zero;
 
 			if (mode != AttachMode.None)
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private AttachMode GetAttachMode()
 		{
-			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
+			//	Cherche d'oÃ¹ doit partir la queue du commentaire (de quel cÃ´tÃ©).
 			if (this.attachObject is ObjectBox)
 			{
 				Rectangle bounds = this.bounds;
@@ -674,12 +674,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return AttachMode.Top;
 					}
 
-					if (bounds.Left >= boxBounds.Right)  // commentaire à droite ?
+					if (bounds.Left >= boxBounds.Right)  // commentaire Ã  droite ?
 					{
 						return AttachMode.Left;
 					}
 
-					if (bounds.Right <= boxBounds.Left)  // commentaire à gauche ?
+					if (bounds.Right <= boxBounds.Left)  // commentaire Ã  gauche ?
 					{
 						return AttachMode.Right;
 					}
@@ -722,7 +722,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Point PositionAttachToConnectionButton
 		{
-			//	Retourne la position du bouton pour modifier l'attache à la connection.
+			//	Retourne la position du bouton pour modifier l'attache Ã  la connection.
 			get
 			{
 				if (this.attachObject != null && this.attachObject is ObjectConnection)
@@ -774,7 +774,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateFieldColor()
 		{
-			//	Met à jour l'information de couleur dans le champ associé.
+			//	Met Ã  jour l'information de couleur dans le champ associÃ©.
 			if (this.attachObject is ObjectConnection)
 			{
 				ObjectConnection connection = this.attachObject as ObjectConnection;
@@ -786,9 +786,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise toutes les informations du commentaire.
-			//	Utilisé seulement pour les commentaires associés à des boîtes.
-			//	Les commentaires associés à des connections sont sérialisés par Field.
+			//	SÃ©rialise toutes les informations du commentaire.
+			//	UtilisÃ© seulement pour les commentaires associÃ©s Ã  des boÃ®tes.
+			//	Les commentaires associÃ©s Ã  des connections sont sÃ©rialisÃ©s par Field.
 			writer.WriteStartElement(Xml.Info);
 			
 			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());

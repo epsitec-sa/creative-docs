@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -39,10 +39,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var p1 = this.Entity;
 			var p2 = this.AdditionalEntity.Person;
 
-			return TextFormatter.FormatText ("Cette action fusionne les données des deux personnes.\n \n",
+			return TextFormatter.FormatText ("Cette action fusionne les donnÃ©es des deux personnes.\n \n",
 				"Le contact", p2.eCH_Person.PersonFirstNames, p2.eCH_Person.PersonOfficialName, "(~", p2.Age, "~)",
 				"que vous venez de glisser sur", p1.eCH_Person.PersonFirstNames, p1.eCH_Person.PersonOfficialName, "(~", p1.Age, "~)",
-				"sera supprimé.");
+				"sera supprimÃ©.");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -69,7 +69,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
-			form.Title("Fusion de données")
+			form.Title("Fusion de donnÃ©es")
 				.Text(this.GetText())
 				.Field<bool>()
 					.Title("Oui, je souhaite fusionner ces deux personnes")

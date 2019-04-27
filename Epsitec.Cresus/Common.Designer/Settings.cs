@@ -10,7 +10,7 @@ using System.IO;
 namespace Epsitec.Common.Designer
 {
 	/// <summary>
-	/// Cette classe enregistre les réglages globaux de Designer dans un fichier.
+	/// Cette classe enregistre les rÃ©glages globaux de Designer dans un fichier.
 	/// </summary>
 	public class Settings
 	{
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Designer
 
 		public bool Write()
 		{
-			//	Ecrit le fichier des réglages globaux.
+			//	Ecrit le fichier des rÃ©glages globaux.
 			try
 			{
 				File.WriteAllBytes(Settings.GlobalSettingsFilename, this.Serialize());
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer
 
 		public bool Read()
 		{
-			//	Lit le fichier des réglages globaux.
+			//	Lit le fichier des rÃ©glages globaux.
 			try
 			{
 				this.Deserialize(File.ReadAllBytes(Settings.GlobalSettingsFilename));
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Designer
 
 		private byte[] Serialize()
 		{
-			//	Retourne les données à sérialiser (texte xml).
+			//	Retourne les donnÃ©es Ã  sÃ©rialiser (texte xml).
 			MemoryStream buffer = new MemoryStream();
 			XmlTextWriter writer = new XmlTextWriter(buffer, System.Text.Encoding.UTF8);
 			writer.Formatting = Formatting.Indented;
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Designer
 
 		private void Deserialize(byte[] data)
 		{
-			//	Désérialise le texte xml.
+			//	DÃ©sÃ©rialise le texte xml.
 			MemoryStream buffer = new MemoryStream(data);
 			XmlTextReader reader = new XmlTextReader(buffer);
 			
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer
 
 		private void WriteXml(XmlWriter writer)
 		{
-			//	Génère les données xml.
+			//	GÃ©nÃ¨re les donnÃ©es xml.
 			writer.WriteStartDocument();
 
 			writer.WriteStartElement("Settings");
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer
 
 		private void ReadXml(XmlReader reader)
 		{
-			//	Analyse les données xml.
+			//	Analyse les donnÃ©es xml.
 			this.modules.Clear();
 			this.saveAllImageParameters.Clear ();
 
@@ -455,10 +455,10 @@ namespace Epsitec.Common.Designer
 
 		private static string GlobalSettingsFilename
 		{
-			//	Retourne le nom du fichier des réglages de l'application.
+			//	Retourne le nom du fichier des rÃ©glages de l'application.
 			//	Le dossier est qq chose du genre:
-			//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus Designer
-			//	C:\Users\Daniel Roux\AppData\Roaming\Epsitec\Crésus Designer (sous Vista)
+			//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\CrÃ©sus Designer
+			//	C:\Users\Daniel Roux\AppData\Roaming\Epsitec\CrÃ©sus Designer (sous Vista)
 			get
 			{
 				return System.IO.Path.Combine (Common.Support.Globals.Directories.UserAppData, "Designer.settings");

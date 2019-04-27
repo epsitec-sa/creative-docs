@@ -5,7 +5,7 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe TextFieldUnit est un widget permettant d'éditer une valeur avec une unité.
+	/// La classe TextFieldUnit est un widget permettant d'Ã©diter une valeur avec une unitÃ©.
 	/// </summary>
 	public class TextFieldUnit : TextField
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text.Layout
 					{
 						if (scratch.Advance > scratch.FenceMinX)
 						{
-							//	Nous sommes dans la zone sensible nécessitant la césure :
+							//	Nous sommes dans la zone sensible nÃ©cessitant la cÃ©sure :
 							
 							if (scratch.BreakMode == BreakMode.Default)
 							{
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Text.Layout
 							}
 						}
 						
-						//	Détermine la prochaine tranche de caractères contigus utilisant
-						//	exactement le même style :
+						//	DÃ©termine la prochaine tranche de caractÃ¨res contigus utilisant
+						//	exactement le mÃªme style :
 						
 						scratch.RunLength = this.GetRunLength (scratch.Text, scratch.TextStart, scratch.TextLength);
 						scratch.TextWidth = 0;
@@ -73,10 +73,10 @@ namespace Epsitec.Common.Text.Layout
 						{
 							if (scratch.TextLength <= scratch.RunLength)
 							{
-								//	Si on touche à la fin de la ligne (point de découpe atteint) et que
-								//	la ligne contient du texte visible, considère le texte caché comme
-								//	étant insécable. Ceci permet d'assurer qu'une zone de texte cachée
-								//	à cheval entre deux paragraphes ne détecte pas la fin du premier
+								//	Si on touche Ã  la fin de la ligne (point de dÃ©coupe atteint) et que
+								//	la ligne contient du texte visible, considÃ¨re le texte cachÃ© comme
+								//	Ã©tant insÃ©cable. Ceci permet d'assurer qu'une zone de texte cachÃ©e
+								//	Ã  cheval entre deux paragraphes ne dÃ©tecte pas la fin du premier
 								//	paragraphe.
 								
 								if (hasVisibleText)
@@ -107,8 +107,8 @@ namespace Epsitec.Common.Text.Layout
 						if ((engine != this) ||
 							(layout != context.LayoutProperty))
 						{
-							//	Change de moteur de layout. Il faut par conséquent mémoriser où on
-							//	s'arrête pour que le suivant sache où reprendre :
+							//	Change de moteur de layout. Il faut par consÃ©quent mÃ©moriser oÃ¹ on
+							//	s'arrÃªte pour que le suivant sache oÃ¹ reprendre :
 							
 							context.RecordAscender (scratch.Ascender);
 							context.RecordDescender (scratch.Descender);
@@ -139,8 +139,8 @@ advance_next:
 					if ((scratch.WordBreakInfo == Unicode.BreakInfo.Yes) ||
 						(scratch.WordBreakInfo == Unicode.BreakInfo.HorizontalTab))
 					{
-						//	Le mot se termine par un saut forcé (ou une marque de tabulation, ce qui				:
-						//	revient au même par rapport au traitement fait par le système de layout) :				:
+						//	Le mot se termine par un saut forcÃ© (ou une marque de tabulation, ce qui				:
+						//	revient au mÃªme par rapport au traitement fait par le systÃ¨me de layout) :				:
 						
 						context.MoveTo (scratch.Advance, scratch.Offset);
 						
@@ -170,7 +170,7 @@ advance_next:
 				}
 				else
 				{
-					//	Il n'y a plus aucun résultat disponible, sans pour autant									:
+					//	Il n'y a plus aucun rÃ©sultat disponible, sans pour autant									:
 					//	que l'on ait atteint la fin du paragraphe; abandonne et										:
 					//	demande plus de texte !																		:
 					
@@ -180,8 +180,8 @@ advance_next:
 			}
 			
 			//																										|
-stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------------------------------------'
-			//	Retourne les points de découpe (s'il y en a) :
+stop:		//	Le texte ne tient pas entiÃ¨rement dans l'espace disponible. <---------------------------------------'
+			//	Retourne les points de dÃ©coupe (s'il y en a) :
 			
 			if (result.Count == 0)
 			{
@@ -215,8 +215,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				while (length > 0)
 				{
-					//	Détermine la prochaine tranche de caractères contigus utilisant
-					//	exactement le même style :
+					//	DÃ©termine la prochaine tranche de caractÃ¨res contigus utilisant
+					//	exactement le mÃªme style :
 					
 					int runLength = this.GetRunLength (text, offset, length);
 					
@@ -234,8 +234,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					if ((engine != this) ||
 						(layout != context.LayoutProperty))
 					{
-						//	Change de moteur de layout. Il faut par conséquent mémoriser où on
-						//	s'arrête pour que le suivant sache où reprendre :
+						//	Change de moteur de layout. Il faut par consÃ©quent mÃ©moriser oÃ¹ on
+						//	s'arrÃªte pour que le suivant sache oÃ¹ reprendre :
 						
 						context.MoveTo (ox, offset + context.TextOffset);
 						context.SwitchLayoutEngine (engine, layout);
@@ -253,7 +253,7 @@ advance_next:
 			}
 			else
 			{
-				//	Il n'y a plus aucun résultat disponible, sans pour autant que
+				//	Il n'y a plus aucun rÃ©sultat disponible, sans pour autant que
 				//	l'on ait atteint la fin du paragraphe; abandonne.
 				
 				//	Ceci est une erreur fatale dans ce contexte.
@@ -261,8 +261,8 @@ advance_next:
 				return Layout.Status.ErrorNeedMoreText;
 			}
 			
-			//	Nous avons atteint la fin du texte spécifiée par l'appelant. La ligne
-			//	a donc été "rendue" avec succès.
+			//	Nous avons atteint la fin du texte spÃ©cifiÃ©e par l'appelant. La ligne
+			//	a donc Ã©tÃ© "rendue" avec succÃ¨s.
 			
 			context.MoveTo (ox, context.TextOffset + length);
 			
@@ -279,8 +279,8 @@ advance_next:
 				
 				while (length > 0)
 				{
-					//	Détermine la prochaine tranche de caractères contigus utilisant
-					//	exactement le même style :
+					//	DÃ©termine la prochaine tranche de caractÃ¨res contigus utilisant
+					//	exactement le mÃªme style :
 					
 					int runLength = this.GetRunLength (text, offset, length);
 					
@@ -305,7 +305,7 @@ advance_next:
 			}
 			else
 			{
-				//	Il n'y a plus aucun résultat disponible, sans pour autant que
+				//	Il n'y a plus aucun rÃ©sultat disponible, sans pour autant que
 				//	l'on ait atteint la fin du paragraphe; abandonne.
 				
 				//	Ceci est une erreur fatale dans ce contexte.
@@ -319,13 +319,13 @@ advance_next:
 		
 		private bool FitRun(Layout.Context context, ref FitScratch scratch, ref Layout.BreakCollection result)
 		{
-			//	Analyse le fragment de texte constituté de caractères de style
-			//	géométriquement identique (même fonte, même layout).
+			//	Analyse le fragment de texte constitutÃ© de caractÃ¨res de style
+			//	gÃ©omÃ©triquement identique (mÃªme fonte, mÃªme layout).
 			
-			//	Si une césure est requise, traite tous les points de découpe qui
+			//	Si une cÃ©sure est requise, traite tous les points de dÃ©coupe qui
 			//	sont possibles, sinon traite toute la tranche d'un coup.
 			
-			//	Retourne true s'il faut stopper immédiatement l'analyse (le texte
+			//	Retourne true s'il faut stopper immÃ©diatement l'analyse (le texte
 			//	est trop long pour l'espace de justification disponible).
 			
 			StretchProfile profile = null;
@@ -386,7 +386,7 @@ advance_next:
 				}
 				else if (scratch.BreakMode == BreakMode.Break)
 				{
-					//	Break catastrophique. Evalue si le résultat est mauvais ou très
+					//	Break catastrophique. Evalue si le rÃ©sultat est mauvais ou trÃ¨s
 					//	mauvais...
 					
 					int code = Unicode.Bits.GetCode (text[offset+fragLength]);
@@ -424,9 +424,9 @@ advance_next:
 					(scratch.BreakMode == BreakMode.Hyphenate) &&
 					(specialGlyphs == false))
 				{
-					//	Produit la césure manuellement (il faudrait faire mieux pour gérer
-					//	correctement des langues comme le suédois ou l'ancien allemand
-					//	qui peuvent provoquer le dédoublement de certains caractères) :
+					//	Produit la cÃ©sure manuellement (il faudrait faire mieux pour gÃ©rer
+					//	correctement des langues comme le suÃ©dois ou l'ancien allemand
+					//	qui peuvent provoquer le dÃ©doublement de certains caractÃ¨res) :
 					
 					ulong[] temp = this.GetHyphenatedText (text, offset, fragLength, hyphen);
 					
@@ -464,23 +464,23 @@ advance_next:
 					if ((scratch.Advance+scratch.TextWidth > scratch.FenceMinX) &&
 						(scratch.BreakMode == BreakMode.Default))
 					{
-						//	Le fragment de mot déborde dans la zone nécessitant une
-						//	découpe :
+						//	Le fragment de mot dÃ©borde dans la zone nÃ©cessitant une
+						//	dÃ©coupe :
 						
 						scratch.BreakMode = BreakMode.Hyphenate;
 						
 						if (context.EnableHyphenation)
 						{
-							//	Reprend au début du fragment de mot pour traiter les
-							//	points de césure :
+							//	Reprend au dÃ©but du fragment de mot pour traiter les
+							//	points de cÃ©sure :
 							
 							fragLength = 0;
 							continue;
 						}
 					}
 					
-					//	Détermine si une coupure de ligne est possible (comme c'est
-					//	le cas à la frontière de mots) :
+					//	DÃ©termine si une coupure de ligne est possible (comme c'est
+					//	le cas Ã  la frontiÃ¨re de mots) :
 					
 					canBreak = (runLength == textLength) || (scratch.BreakMode == BreakMode.Break);
 					addBreak = (scratch.BreakMode != BreakMode.Default) && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
@@ -490,8 +490,8 @@ advance_next:
 				
 				if (scratch.Advance+scratch.TextWidth-profile.WidthEndSpace > scratch.FenceMaxX)
 				{
-					//	Dépassé la marge de droite. Arrête immédiatement sans tenir compte
-					//	du résultat :
+					//	DÃ©passÃ© la marge de droite. ArrÃªte immÃ©diatement sans tenir compte
+					//	du rÃ©sultat :
 					
 					return true;
 				}
@@ -542,8 +542,8 @@ advance_next:
 				
 				image.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
 				
-				//	Le rendu réel est fait par le renderer, ce qui lui permet d'appliquer
-				//	éventuellement des modifications :
+				//	Le rendu rÃ©el est fait par le renderer, ce qui lui permet d'appliquer
+				//	Ã©ventuellement des modifications :
 				
 				renderer.Render (context, image, color, ox, oy, isLastRun);
 				
@@ -553,7 +553,7 @@ advance_next:
 			}
 			
 			
-			//	Détermine la fonte qu'il faudra utiliser pour le fragment de texte
+			//	DÃ©termine la fonte qu'il faudra utiliser pour le fragment de texte
 			//	dont il faut faire le rendu :
 			
 			OpenType.Font font;
@@ -569,8 +569,8 @@ advance_next:
 			fontSize    *= fontScale;
 			fontAdvance += fontAdvanceOffset;
 			
-			//	Si l'appelant a désactivé le décalage vertical de la ligne de base
-			//	(par ex. pour déterminer la position du curseur), on en tient compte
+			//	Si l'appelant a dÃ©sactivÃ© le dÃ©calage vertical de la ligne de base
+			//	(par ex. pour dÃ©terminer la position du curseur), on en tient compte
 			//	ici :
 			
 			if (context.IsFontBaselineOffsetDisabled)
@@ -578,7 +578,7 @@ advance_next:
 				fontBaseline = 0;
 			}
 			
-			//	Gérer l'étirement des glyphes en fonction de la fonte sélectionnée :
+			//	GÃ©rer l'Ã©tirement des glyphes en fonction de la fonte sÃ©lectionnÃ©e :
 			
 			StretchProfile.Scales scales = context.TextStretchScales;
 			double                glue   = context.TextStretchGlue;
@@ -589,7 +589,7 @@ advance_next:
 				font.DisableActiveFeatures ("liga", "clig", "hlig", "dlig");
 			}
 			
-			//	Génère les glyphes et les informations relatives à l'extensibilité
+			//	GÃ©nÃ¨re les glyphes et les informations relatives Ã  l'extensibilitÃ©
 			//	pour le fragment de texte :
 			
 			TextToGlyphMapping mapping = null;
@@ -608,9 +608,9 @@ advance_next:
 				(context.EnableHyphenation) &&
 				(specialGlyphs == false))
 			{
-				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
-				//	correctement des langues comme le suédois ou l'ancien allemand
-				//	qui peuvent provoquer le dédoublement de certains caractères) :
+				//	Produit la cÃ©sure manuellement (il faudrait faire mieux pour gÃ©rer
+				//	correctement des langues comme le suÃ©dois ou l'ancien allemand
+				//	qui peuvent provoquer le dÃ©doublement de certains caractÃ¨res) :
 				
 				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.HyphenChar);
 				int     end  = temp.Length - 1;
@@ -633,7 +633,7 @@ advance_next:
 						map[i] = (short) i;
 					}
 					
-					map[num-1] = map[num-2];				//	considère que le tiret ne compte pas
+					map[num-1] = map[num-2];				//	considÃ¨re que le tiret ne compte pas
 					map[num-0] = (short) (map[num-2] + 1);
 					
 					BaseEngine.GenerateGlyphs (context, font, temp, 0, length+1, out glyphs, ref map);
@@ -669,15 +669,15 @@ advance_next:
 				font.PopActiveFeatures ();
 			}
 			
-			//	Détermine les mises à l'échelle des divers glyphes, selon leur
-			//	classe d'élasticité :
+			//	DÃ©termine les mises Ã  l'Ã©chelle des divers glyphes, selon leur
+			//	classe d'Ã©lasticitÃ© :
 			
 			int n = glyphs.Length;
 			
 			double[] xScale = new double[n];
 			double[] xGlue  = new double[n];
 			double[] xAdj   = new double[n];
-			double[] xPos   = new double[n+1];		//	un élément de plus pour permettre de..
+			double[] xPos   = new double[n+1];		//	un Ã©lÃ©ment de plus pour permettre de..
 			double[] yPos   = new double[n];		//	..calculer la largeur du dernier glyphe
 			
 			int skipGlueAt = n;
@@ -693,13 +693,13 @@ advance_next:
 				
 				StretchProfile profile = context.TextStretchProfile;
 				
-				//	Une ligne qui se termine par un caractère spécial (symbole de
-				//	fin de ligne, par exemple) possède une longueur 'length' qui
-				//	dépasse le nombre de caractères dénombrés par le profil.
+				//	Une ligne qui se termine par un caractÃ¨re spÃ©cial (symbole de
+				//	fin de ligne, par exemple) possÃ¨de une longueur 'length' qui
+				//	dÃ©passe le nombre de caractÃ¨res dÃ©nombrÃ©s par le profil.
 				//
-				//	On peut donc utiliser cette différence pour ajuster le point
-				//	de fin de 'glue' pour ne pas mettre d'espace supplémentaire
-				//	avant le pilcrow (¶).
+				//	On peut donc utiliser cette diffÃ©rence pour ajuster le point
+				//	de fin de 'glue' pour ne pas mettre d'espace supplÃ©mentaire
+				//	avant le pilcrow (Â¶).
 				
 				if (context.ShowControlCharacters)
 				{
@@ -730,15 +730,15 @@ advance_next:
 				xAdj[i]  = fontAdvance;
 			}
 			
-			//	Détermine la position horizontale de chaque glyphe :
+			//	DÃ©termine la position horizontale de chaque glyphe :
 			
 			double dx = font.GetPositions (glyphs, fontSize, ox, xPos, xScale, xAdj, xGlue);
 			
 			ox      += dx;
 			xPos[n] = xPos[0] + dx;
 			
-			//	Demande à ITextRenderer de faire le rendu avec les positions que
-			//	nous venons de déterminer :
+			//	Demande Ã  ITextRenderer de faire le rendu avec les positions que
+			//	nous venons de dÃ©terminer :
 			
 			renderer.Render (context, font, fontSize, color, mapping, glyphs, xPos, yPos, xScale, null, isLastRun);
 		}
@@ -778,15 +778,15 @@ advance_next:
 				font.DisableActiveFeatures ("liga", "clig", "hlig", "dlig");
 			}
 			
-			//	Génère les glyphes et les informations relatives à l'extensibilité
+			//	GÃ©nÃ¨re les glyphes et les informations relatives Ã  l'extensibilitÃ©
 			//	pour le fragment de texte :
 			
 			if ((isLastRun) &&
 				(context.EnableHyphenation))
 			{
-				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
-				//	correctement des langues comme le suédois ou l'ancien allemand
-				//	qui peuvent provoquer le dédoublement de certains caractères) :
+				//	Produit la cÃ©sure manuellement (il faudrait faire mieux pour gÃ©rer
+				//	correctement des langues comme le suÃ©dois ou l'ancien allemand
+				//	qui peuvent provoquer le dÃ©doublement de certains caractÃ¨res) :
 				
 				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.HyphenChar);
 				

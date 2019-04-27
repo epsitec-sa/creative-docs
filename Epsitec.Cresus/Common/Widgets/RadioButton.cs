@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	using ContentAlignment = Drawing.ContentAlignment;
 	
 	/// <summary>
-	/// La classe RadioButton réalise un bouton radio.
+	/// La classe RadioButton rÃ©alise un bouton radio.
 	/// </summary>
 	public class RadioButton : AbstractButton
 	{

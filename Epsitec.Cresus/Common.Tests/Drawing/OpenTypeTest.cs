@@ -8,7 +8,7 @@ namespace Epsitec.Common.Tests.Drawing
 	{
 		[Test] public void CheckFeatures()
 		{
-			//	Ce test requiert les fontes suivantes sur le système:
+			//	Ce test requiert les fontes suivantes sur le systÃ¨me:
 			//	- Zapf Dingbats BT
 			//	- Arial Unicode MS
 			

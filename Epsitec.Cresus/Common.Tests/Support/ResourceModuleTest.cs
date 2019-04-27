@@ -244,7 +244,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 1, "de"));
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 1, "en"));
 			Assert.AreEqual ("Cf. Common.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
-			Assert.AreEqual ("Author muss nicht übersetzt werden", ResourceModuleTest.GetComment (stringAccessor1, 1, "de"));
+			Assert.AreEqual ("Author muss nicht Ã¼bersetzt werden", ResourceModuleTest.GetComment (stringAccessor1, 1, "de"));
 			Assert.AreEqual (null, ResourceModuleTest.GetComment (stringAccessor1, 1, "en"));
 			
 			Assert.AreEqual ("Pierre ARNAUD", ResourceModuleTest.GetText (stringAccessor2, 1, null));

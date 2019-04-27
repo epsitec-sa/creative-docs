@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Debug
 {
 	/// <summary>
-	/// La classe AssertFailedException permet de signaler l'échec d'une
+	/// La classe AssertFailedException permet de signaler l'Ã©chec d'une
 	/// assertion.
 	/// </summary>
 	

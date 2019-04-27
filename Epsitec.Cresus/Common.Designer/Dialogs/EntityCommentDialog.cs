@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant d'éditer le texte d'un commentaire dans l'éditeur d'entités.
+	/// Dialogue permettant d'Ã©diter le texte d'un commentaire dans l'Ã©diteur d'entitÃ©s.
 	/// </summary>
 	public class EntityCommentDialog : AbstractDialog
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				//	Crée la toolbar et son contenu.
+				//	CrÃ©e la toolbar et son contenu.
 				this.toolbar = new HToolBar(this.window.Root);
 				this.toolbar.Margins = new Margins(0, 0, 0, 3);
 				this.toolbar.Dock = DockStyle.Top;
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.CreateButton("FontItalic");
 				this.CreateButton("FontUnderline");
 
-				//	Crée le grand pavé de texte éditable.
+				//	CrÃ©e le grand pavÃ© de texte Ã©ditable.
 				this.fieldText = new TextFieldMulti(this.window.Root);
 				this.fieldText.Dock = DockStyle.Fill;
 				this.fieldText.TabIndex = 1;

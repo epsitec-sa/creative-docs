@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pdf.Engine
 	/// <summary>
 	/// La classe ImageSurface enregistre les informations sur une image bitmap.
 	/// Il existe une seule instance de ImageSurface par nom de fichier, si
-	/// plusieurs Objects.Image utilisent la même image.
+	/// plusieurs Objects.Image utilisent la mÃªme image.
 	/// </summary>
 	public sealed class ImageSurface : System.IDisposable
 	{
@@ -121,16 +121,16 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public static string GetUniqueId(Image image)
 		{
-			//	Retourne un identificateur unique basé sur les données de l'image.
-			//	Deux objets Image différents ayant les mêmes contenus doivent rendre
-			//	le même identificateur.
+			//	Retourne un identificateur unique basÃ© sur les donnÃ©es de l'image.
+			//	Deux objets Image diffÃ©rents ayant les mÃªmes contenus doivent rendre
+			//	le mÃªme identificateur.
 
 			var info = new UniqueIdInfo (image);
 			var uid  = "";
 
-			//	On maintient un cache pour éviter que si on passe plusieurs fois le
-			//	même object image en entrée, on ne recalcule chaque fois son hash,
-			//	vu que c'est une opération coûteuse.
+			//	On maintient un cache pour Ã©viter que si on passe plusieurs fois le
+			//	mÃªme object image en entrÃ©e, on ne recalcule chaque fois son hash,
+			//	vu que c'est une opÃ©ration coÃ»teuse.
 			
 			lock (ImageSurface.exclusion)
 			{

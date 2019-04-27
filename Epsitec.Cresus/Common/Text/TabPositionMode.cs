@@ -1,18 +1,18 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'énumération TabPositionMode définit comment la position d'un tabulateur
-	/// est définie.
+	/// L'Ã©numÃ©ration TabPositionMode dÃ©finit comment la position d'un tabulateur
+	/// est dÃ©finie.
 	/// </summary>
 	public enum TabPositionMode
 	{
 		Absolute				= 0,			//	position absolue
 		AbsoluteIndent			= 1,			//	position absolue, indente toutes les lignes
 		
-		LeftRelative			= 2,			//	position relative à la marge de gauche
+		LeftRelative			= 2,			//	position relative Ã  la marge de gauche
 		LeftRelativeIndent		= 3,			//	position relative, indente toutes les lignes
 		
 		Force					= 4,			//	position absolue (sans changement de ligne)

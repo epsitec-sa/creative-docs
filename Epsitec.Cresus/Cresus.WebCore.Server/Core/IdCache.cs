@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Cresus.WebCore.Server.Core
+namespace Epsitec.Cresus.WebCore.Server.Core
 {
 
 

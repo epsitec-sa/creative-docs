@@ -8,7 +8,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
-	/// Permet de représenter les ressources d'un module.
+	/// Permet de reprÃ©senter les ressources d'un module.
 	/// </summary>
 	public class Types : AbstractCaptions
 	{
@@ -17,10 +17,10 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			MyWidgets.StackedPanel leftContainer;
 
-			//	Séparateur.
+			//	SÃ©parateur.
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
-			//	Choix du contrôleur.
+			//	Choix du contrÃ´leur.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompactLeft = leftContainer.ExtendButton;
 			this.buttonSuiteCompactLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			StaticText label = new StaticText(this.groupController.GroupBox);
 			label.Text = Res.Strings.Viewers.Types.Controller.Title;
-			label.MinHeight = 20;  // attention, très important !
+			label.MinHeight = 20;  // attention, trÃ¨s important !
 			label.PreferredHeight = 20;
 			label.PreferredWidth = 60;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Dock = DockStyle.Left;
 
 			this.fieldController = new TextField(this.groupController.GroupBox);
-			this.fieldController.MinHeight = 20;  // attention, très important !
+			this.fieldController.MinHeight = 20;  // attention, trÃ¨s important !
 			this.fieldController.PreferredWidth = 120;
 			this.fieldController.HorizontalAlignment = HorizontalAlignment.Left;
 			this.fieldController.Dock = DockStyle.Left;
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.fieldControllerParameter = new TextField(this.groupController.GroupBox);
-			this.fieldControllerParameter.MinHeight = 20;  // attention, très important !
+			this.fieldControllerParameter.MinHeight = 20;  // attention, trÃ¨s important !
 			this.fieldControllerParameter.PreferredWidth = 120;
 			this.fieldControllerParameter.HorizontalAlignment = HorizontalAlignment.Left;
 			this.fieldControllerParameter.Dock = DockStyle.Left;
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Editeur du type.
 			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
-			//	Résumé des paramètres.
+			//	RÃ©sumÃ© des paramÃ¨tres.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
 			this.buttonSuiteExtendLeft = leftContainer.ExtendButton;
 			this.buttonSuiteExtendLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void UpdateEdit()
 		{
-			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			//	Met Ã  jour les lignes Ã©ditables en fonction de la sÃ©lection dans le tableau.
 			base.UpdateEdit();
 
 			bool iic = this.ignoreChange;
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (this.editor != null)
 				{
-					//	Supprime l'éditeur actuel.
+					//	Supprime l'Ã©diteur actuel.
 					this.container.Container.Children.Clear();
 
 					this.editor.ContentChanged -= this.HandleEditorContentChanged;
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (this.editor != null)
 				{
-					//	Crée le nouvel éditeur.
+					//	CrÃ©e le nouvel Ã©diteur.
 					this.editor.SetParent(this.container.Container);
 					this.editor.TypeCode = this.typeCode;
 					this.editor.DesignerApplication = this.designerApplication;
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override double GetColumnWidth(int column)
 		{
-			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			//	Retourne la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				return Types.columnWidthHorizontal[column];
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void SetColumnWidth(int column, double value)
 		{
-			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			//	MÃ©morise la largeur Ã  utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				Types.columnWidthHorizontal[column] = value;
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleControllerTextChanged(object sender)
 		{
-			//	Le texte éditable pour le contrôleur a changé.
+			//	Le texte Ã©ditable pour le contrÃ´leur a changÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleNullableActiveStateChanged(object sender)
 		{
-			//	Bouton à cocher 'Nullable' pressé.
+			//	Bouton Ã  cocher 'Nullable' pressÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleEditorContentChanged(object sender)
 		{
-			//	Le contenu de l'éditeur de type a changé.
+			//	Le contenu de l'Ã©diteur de type a changÃ©.
 		}
 
 		private void HandleResetButtonClicked(object sender, MessageEventArgs e)

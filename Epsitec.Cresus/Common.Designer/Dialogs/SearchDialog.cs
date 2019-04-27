@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 1;
 
-				//	Partie supérieure.
+				//	Partie supÃ©rieure.
 				Widget header1 = new Widget(this.window.Root);
 				header1.PreferredHeight = 20;
 				header1.Margins = new Margins(0, 0, 0, 6);
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				left.PreferredWidth = 120;
 				left.Dock = DockStyle.Left;
 
-				//	Crée le groupe pour le type 'Strings2'.
+				//	CrÃ©e le groupe pour le type 'Strings2'.
 				this.groupStrings = new GroupBox(left);
 				this.groupStrings.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupStrings.PreferredWidth = 160;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings);
 
-				//	Crée le groupe pour le type 'Captions2'.
+				//	CrÃ©e le groupe pour le type 'Captions2'.
 				this.groupCaptions = new GroupBox(left);
 				this.groupCaptions.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupCaptions.PreferredWidth = 160;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions);
 
-				//	Boutons à cocher de droite.
+				//	Boutons Ã  cocher de droite.
 				Widget right = new Widget(main);
 				right.PreferredWidth = 120;
 				right.Margins = new Margins(0, 60, 21, 0);
@@ -258,7 +258,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public List<int> FilterList
 		{
-			//	Retourne la liste des index autorisés par le filtre.
+			//	Retourne la liste des index autorisÃ©s par le filtre.
 			get
 			{
 				if (this.bundleType == ResourceAccess.Type.Strings)
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				else
 				{
 					List<int> filter = new List<int>();
-					filter.Add(0);  // autorisé la recherche dans 'Name'
+					filter.Add(0);  // autorisÃ© la recherche dans 'Name'
 					return filter;
 				}
 			}
@@ -338,19 +338,19 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		void HandleFieldSearchTextChanged(object sender)
 		{
-			//	Le texte à chercher a changé.
+			//	Le texte Ã  chercher a changÃ©.
 			this.UpdateButtons();
 		}
 
 		void HandleCheckActiveStateChanged(object sender)
 		{
-			//	Un bouton 'où rechercher' a été cliqué.
+			//	Un bouton 'oÃ¹ rechercher' a Ã©tÃ© cliquÃ©.
 			this.UpdateButtons();
 		}
 
 		private void HandleButtonSearchClicked(object sender, MessageEventArgs e)
 		{
-			//	Rechercher en avant ou en arrière.
+			//	Rechercher en avant ou en arriÃ¨re.
 			Button button = sender as Button;
 
 			Module module = this.designerApplication.CurrentModule;
@@ -380,7 +380,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonReplaceClicked(object sender, MessageEventArgs e)
 		{
-			//	Remplacer en avant ou en arrière.
+			//	Remplacer en avant ou en arriÃ¨re.
 			Button button = sender as Button;
 
 			Module module = this.designerApplication.CurrentModule;

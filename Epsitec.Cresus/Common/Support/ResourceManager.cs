@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Support
 		public void DefineDefaultModuleName(string defaultModuleName)
 		{
 			//	Initialise les fournisseurs de ressources pour le nom d'application
-			//	spécifié. Ceci ne peut être fait qu'une seule fois.
+			//	spÃ©cifiÃ©. Ceci ne peut Ãªtre fait qu'une seule fois.
 			
 			if (this.defaultModuleName == defaultModuleName)
 			{
@@ -725,8 +725,8 @@ namespace Epsitec.Common.Support
 			}
 			
 			//	Passe en revue les divers providers de bundles pour voir si la ressource
-			//	demandée n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
-			//	utilisée :
+			//	demandÃ©e n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
+			//	utilisÃ©e :
 
 			if (provider != null)
 			{
@@ -738,7 +738,7 @@ namespace Epsitec.Common.Support
 
 				if (bundle != null)
 				{
-					//	OK, on a trouvé un bundle dans le cache !
+					//	OK, on a trouvÃ© un bundle dans le cache !
 
 					bundle.DefineRecursion (recursion);
 				}
@@ -819,8 +819,8 @@ namespace Epsitec.Common.Support
 
 			if (source != null)
 			{
-				//	On a trouvé un bundle dans le cache. Il faut fusionner avec
-				//	celui-ci plutôt que de charger un nouveau bundle depuis le
+				//	On a trouvÃ© un bundle dans le cache. Il faut fusionner avec
+				//	celui-ci plutÃ´t que de charger un nouveau bundle depuis le
 				//	disque !
 
 				data = source.CreateXmlAsData ();
@@ -878,8 +878,8 @@ namespace Epsitec.Common.Support
 		
 		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, string resourceId)
 		{
-			//	Attache la cible (object/propriété) avec la ressource décrite
-			//	par une ID complète (prefix + bundle + field).
+			//	Attache la cible (object/propriÃ©tÃ©) avec la ressource dÃ©crite
+			//	par une ID complÃ¨te (prefix + bundle + field).
 			
 			if ((targetObject == null) ||
 				(targetProperty == null) ||
@@ -914,8 +914,8 @@ namespace Epsitec.Common.Support
 		{
 			culture = culture ?? this.culture;
 			
-			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
-			//	chaque fois le provider, lorsqu'une ressource est demandée.
+			//	TODO: il faudrait peut-Ãªtre rajouter un cache pour Ã©viter de consulter
+			//	chaque fois le provider, lorsqu'une ressource est demandÃ©e.
 			
 			string resourceId;
 			byte[] data = null;
@@ -1609,7 +1609,7 @@ namespace Epsitec.Common.Support
 
 		internal void SyncBundleRelatedCache()
 		{
-			//	Met à jour tous les proxies en les synchronisant avec la culture
+			//	Met Ã  jour tous les proxies en les synchronisant avec la culture
 			//	active.
 
 			var update     = new ConcurrentDictionary<string, BundleRelatedCache> ();
@@ -1652,11 +1652,11 @@ namespace Epsitec.Common.Support
 		private BundleRelatedCache GetBundleRelatedCache(string bundleName, ResourceLevel level, CultureInfo culture)
 		{
 			//	Trouve le cache qui liste les bindings et les captions pour le
-			//	bundle spécifié.
+			//	bundle spÃ©cifiÃ©.
 
-			//	Ces listes sont gérées par le gestionnaire de ressources plutôt
-			//	que par le bundle lui-même, car il faut pouvoir passer d'une
-			//	culture active à une autre sans perdre les informations de
+			//	Ces listes sont gÃ©rÃ©es par le gestionnaire de ressources plutÃ´t
+			//	que par le bundle lui-mÃªme, car il faut pouvoir passer d'une
+			//	culture active Ã  une autre sans perdre les informations de
 			//	binding, ni les informations de captions.
 
 			BundleRelatedCache cache;
@@ -1672,7 +1672,7 @@ namespace Epsitec.Common.Support
 			if (this.bundleRelatedCache.TryGetValue (key, out cache) == false)
 			{
 				//	Le cache pour le bundle en question n'existe pas. Il faut
-				//	donc le créer :
+				//	donc le crÃ©er :
 
 				ResourceBundle bundle = this.GetBundle (bundleName, level, culture, 0);
 

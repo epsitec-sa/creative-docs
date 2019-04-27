@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
 using System;
@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 	class SpanStyleElements
 	{
 		/// <summary>
-		/// La classe SpanStyleElements s'occupe de décoder une chaine du type 
+		/// La classe SpanStyleElements s'occupe de dÃ©coder une chaine du type 
 		/// "FONT-SIZE: 9pt; FONT-FAMILY: 'Times Roman' ..."
 		/// </summary>
 

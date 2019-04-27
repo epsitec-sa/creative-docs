@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe TabIndex permet de choisir l'ordre de la sélection.
+	/// La classe TabIndex permet de choisir l'ordre de la sÃ©lection.
 	/// </summary>
 	public class TabIndexRibbon : AbstractRibbon
 	{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonFirst == null )  return;

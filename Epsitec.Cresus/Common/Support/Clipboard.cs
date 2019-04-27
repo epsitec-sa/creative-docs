@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Epsitec.Common.Support
 	using IDataObject=System.Windows.Forms.IDataObject;
 	
 	/// <summary>
-	/// La classe Clipboard donne accès au presse-papier.
+	/// La classe Clipboard donne accÃ¨s au presse-papier.
 	/// </summary>
 	public class Clipboard
 	{
@@ -26,13 +26,13 @@ namespace Epsitec.Common.Support
 		
 		public static string ConvertBrokenUtf8ToString(string value)
 		{
-			//	Le presse-papier peut contenir des données encodées en UTF-8 que l'environnement
-			//	.NET traite comme s'il s'agissait de texte normal, ce qui résulte en une conversion
-			//	incorrecte dans System.String (les données en entrée sont traités comme des 'char',
+			//	Le presse-papier peut contenir des donnÃ©es encodÃ©es en UTF-8 que l'environnement
+			//	.NET traite comme s'il s'agissait de texte normal, ce qui rÃ©sulte en une conversion
+			//	incorrecte dans System.String (les donnÃ©es en entrÃ©e sont traitÃ©s comme des 'char',
 			//	alors que ce sont des 'byte').
 			//	
-			//	ConvertBrokenUtf8ToString permet de corriger cela en ré-encodant la string avec le
-			//	bon encodage; le hic, c'est que .NET ne fournit pas de moyen d'accéder sous une
+			//	ConvertBrokenUtf8ToString permet de corriger cela en rÃ©-encodant la string avec le
+			//	bon encodage; le hic, c'est que .NET ne fournit pas de moyen d'accÃ©der sous une
 			//	forme binaire brute au contenu de la string...
 			
 			int len = value.Length;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Support
 				{
 					if (spaceCount > 1)
 					{
-						//	Il y a plusieurs espaces consécutifs; ceux-ci sont générelement supprimés
+						//	Il y a plusieurs espaces consÃ©cutifs; ceux-ci sont gÃ©nÃ©relement supprimÃ©s
 						//	par le consommateur HTML.
 						
 						buffer.Length = buffer.Length - spaceCount;
@@ -117,8 +117,8 @@ namespace Epsitec.Common.Support
 				
 				if (c == '>')
 				{
-					//	Si on a trouvé une fin de tag ">", il y a forcément eu un début de tag
-					//	auparavant. On peut maintenant analyser ce tag et déterminer ce qu'il
+					//	Si on a trouvÃ© une fin de tag ">", il y a forcÃ©ment eu un dÃ©but de tag
+					//	auparavant. On peut maintenant analyser ce tag et dÃ©terminer ce qu'il
 					//	faut en faire :
 					
 					System.Diagnostics.Debug.Assert (lastTag >= 0);
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Support
 					
 					if (tag == "<br/>")
 					{
-						//	FrontPage n'aime pas <br/>, alors on doit modifier le tag pour que ça
+						//	FrontPage n'aime pas <br/>, alors on doit modifier le tag pour que Ã§a
 						//	soit plus digeste :
 						
 						buffer.Length = lastTag;
@@ -169,22 +169,22 @@ namespace Epsitec.Common.Support
 				if (((c == ' ') || (c == (char)160)) &&
 					(deleteSpaces))
 				{
-					//	Si on est dans un mode spécial dicté par Office
+					//	Si on est dans un mode spÃ©cial dictÃ© par Office
 					//	(<span style="mso-tab-count:1">    </span>) on mange
 					//	tous les espaces.
 					
 					continue;
 				}
 				
-				//	Tous les caratères "blancs" sont considérés comme des espaces :
+				//	Tous les caratÃ¨res "blancs" sont considÃ©rÃ©s comme des espaces :
 				
 				if ((c == '\t') || (c == '\n') || (c == '\r'))
 				{
 					c = ' ';
 				}
 				
-				//	Traite de manière différenciée les débuts de tags "<x>", les débuts
-				//	d'entités "&amp;" et le texte normal :
+				//	Traite de maniÃ¨re diffÃ©renciÃ©e les dÃ©buts de tags "<x>", les dÃ©buts
+				//	d'entitÃ©s "&amp;" et le texte normal :
 				
 				if (c == '<')
 				{
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Support
 						if (isSpace && !preserveSpaces)
 						{
 							//	Si plusieurs espaces se suivent, on n'en conserve que le
-							//	premier, sauf si on est dans le mode spécial dicté par
+							//	premier, sauf si on est dans le mode spÃ©cial dictÃ© par
 							//	Office (<span style="mso-spacerun: yes">..</span>) :
 							
 							continue;
@@ -236,20 +236,20 @@ namespace Epsitec.Common.Support
 				
 				buffer.Append (c);
 				
-				//	Traite la fin des tags et éléments :
+				//	Traite la fin des tags et Ã©lÃ©ments :
 				
 				if (c == '>')
 				{
-					//	Si on a trouvé une fin de tag ">", il y a forcément eu un début de tag
-					//	auparavant. On peut maintenant analyser ce tag et déterminer ce qu'il
+					//	Si on a trouvÃ© une fin de tag ">", il y a forcÃ©ment eu un dÃ©but de tag
+					//	auparavant. On peut maintenant analyser ce tag et dÃ©terminer ce qu'il
 					//	faut en faire :
 					
 					System.Diagnostics.Debug.Assert (lastTag >= 0);
 					
 					string tag = buffer.ToString (lastTag, buffer.Length - lastTag);
 					
-					//	Supprime le tag du buffer; s'il est compatible avec la version simplifiée
-					//	il sera rajouté par la suite :
+					//	Supprime le tag du buffer; s'il est compatible avec la version simplifiÃ©e
+					//	il sera rajoutÃ© par la suite :
 					
 					buffer.Length = lastTag;
 					lastTag      = -1;
@@ -368,9 +368,9 @@ namespace Epsitec.Common.Support
 				}
 				else if ((c == ';') && (lastElem >= 0))
 				{
-					//	Si on a trouvé une fin d'entité, il faut vérifier si c'est l'une des
-					//	entités de base valides pour du XML, ou au contraire, s'il s'agit de
-					//	particularités liées à HTML :
+					//	Si on a trouvÃ© une fin d'entitÃ©, il faut vÃ©rifier si c'est l'une des
+					//	entitÃ©s de base valides pour du XML, ou au contraire, s'il s'agit de
+					//	particularitÃ©s liÃ©es Ã  HTML :
 					
 					string elem = buffer.ToString (lastElem, buffer.Length - lastElem);
 					
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Support
 		
 		static Clipboard()
 		{
-			//	Référence: http://www.w3.org/TR/REC-html40/sgml/entities.html#iso-88591
+			//	RÃ©fÃ©rence: http://www.w3.org/TR/REC-html40/sgml/entities.html#iso-88591
 			
 			string[] pairs = new string[]
 				{

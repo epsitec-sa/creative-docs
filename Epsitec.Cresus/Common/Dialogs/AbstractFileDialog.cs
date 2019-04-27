@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs.Helpers;
@@ -11,11 +11,11 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// Anciennement, cette classe créait un dialogue "maison" pour ouvrir ou enregistrer un
-	/// fichier. Par la suite, il a été décidé de remplacer ces dialogues peu pratiques par
-	/// de véritables dialogues Windows. Il en résulte une interface pas forcément idéale !
-	/// Les anciens dialogues "maison" avaient une partie dédiée aux options, en bas.
-	/// Ces options s'affichent désormais dans un 2ème dialogue spécifique, qui vient après
+	/// Anciennement, cette classe crÃ©ait un dialogue "maison" pour ouvrir ou enregistrer un
+	/// fichier. Par la suite, il a Ã©tÃ© dÃ©cidÃ© de remplacer ces dialogues peu pratiques par
+	/// de vÃ©ritables dialogues Windows. Il en rÃ©sulte une interface pas forcÃ©ment idÃ©ale !
+	/// Les anciens dialogues "maison" avaient une partie dÃ©diÃ©e aux options, en bas.
+	/// Ces options s'affichent dÃ©sormais dans un 2Ã¨me dialogue spÃ©cifique, qui vient aprÃ¨s
 	/// le dialogue Windows standard (pour autant qu'il existe des options).
 	/// </summary>
 	public abstract class AbstractFileDialog
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Dialogs
 
 		public DialogResult						Result
 		{
-			//	Indique si le dialogue a été fermé avec 'ouvrir' ou 'annuler'.
+			//	Indique si le dialogue a Ã©tÃ© fermÃ© avec 'ouvrir' ou 'annuler'.
 			get
 			{
 				return this.result;
@@ -103,8 +103,8 @@ namespace Epsitec.Common.Dialogs
 
 		public bool								IsDirectoryRedirected
 		{
-			//	Indique si le dossier passé avec InitialDirectory a dû être
-			//	redirigé de 'Exemples originaux' vers 'Mes exemples'.
+			//	Indique si le dossier passÃ© avec InitialDirectory a dÃ» Ãªtre
+			//	redirigÃ© de 'Exemples originaux' vers 'Mes exemples'.
 			get
 			{
 				return this.isRedirected;
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Dialogs
 
 		public string							FileName
 		{
-			//	Retourne le nom du fichier à ouvrir, ou null si l'utilisateur a choisi
+			//	Retourne le nom du fichier Ã  ouvrir, ou null si l'utilisateur a choisi
 			//	le bouton 'annuler'.
 			get
 			{
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Dialogs
 
 		public string[]							FileNames
 		{
-			//	Retourne les noms des fichiers à ouvrir, ou null si l'utilisateur a choisi
+			//	Retourne les noms des fichiers Ã  ouvrir, ou null si l'utilisateur a choisi
 			//	le bouton 'annuler'.
 			get
 			{
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Dialogs
 		#region Options dialog
 		private DialogResult ShowOptionsDialog()
 		{
-			//	Ouvre le dialogue des options, qui s'affiche après le dialogue Windows
+			//	Ouvre le dialogue des options, qui s'affiche aprÃ¨s le dialogue Windows
 			//	standard pour ouvrir/enregistrer.
 			if (this.window == null)
 			{
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void CreateOptionsDialog()
 		{
-			//	Crée la fenêtre et tous les widgets pour peupler le dialogue.
+			//	CrÃ©e la fenÃªtre et tous les widgets pour peupler le dialogue.
 			this.window = new Window ();
 			this.window.MakeFixedSizeWindow ();
 			this.window.PreventAutoClose = true;
@@ -297,7 +297,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void CreateFooter()
 		{
-			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
+			//	CrÃ©e le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
 			var footer = new Widget (this.window.Root)
 			{
 				PreferredHeight   = 22,
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Dialogs
 				TabNavigationMode = TabNavigationMode.ForwardTabPassive,
 			};
 
-			//	Dans l'ordre de droite à gauche:
+			//	Dans l'ordre de droite Ã  gauche:
 			var buttonCancel = new Button (footer)
 			{
 				PreferredWidth    = 75,
@@ -336,21 +336,21 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton 'Annuler' cliqué.
+			//	Bouton 'Annuler' cliquÃ©.
 			this.CloseWindow ();
 			this.result = DialogResult.Cancel;
 		}
 
 		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton 'Ouvrir/Enregistrer' cliqué.
+			//	Bouton 'Ouvrir/Enregistrer' cliquÃ©.
 			this.CloseWindow ();
 			this.result = DialogResult.Accept;
 		}
 
 		private void HandleWindowCloseClicked(object sender)
 		{
-			//	Fenêtre fermée.
+			//	FenÃªtre fermÃ©e.
 			this.CloseWindow ();
 		}
 

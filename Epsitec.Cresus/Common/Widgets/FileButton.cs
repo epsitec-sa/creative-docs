@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Filename permet d'afficher un nom de fichier surmonté d'une icône.
+	/// La classe Filename permet d'afficher un nom de fichier surmontÃ© d'une icÃ´ne.
 	/// </summary>
 	public class FileButton : Button
 	{
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 			this.textLayout.Text = TextLayout.ConvertToTaggedText(this.displayName);
 			this.textLayout.Paint(textRect.BottomLeft, graphics);
 
-			//	Affiche l'icône.
+			//	Affiche l'icÃ´ne.
 			if (!string.IsNullOrEmpty (this.IconUri))
 			{
 				if (this.iconLayout == null)

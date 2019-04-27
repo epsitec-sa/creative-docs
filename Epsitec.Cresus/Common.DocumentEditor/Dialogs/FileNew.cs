@@ -10,7 +10,7 @@ using Epsitec.Common.Dialogs;
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
 	/// <summary>
-	/// Dialogue pour créer un nouveau document.
+	/// Dialogue pour crÃ©er un nouveau document.
 	/// </summary>
 	public class FileNew : AbstractFile
 	{

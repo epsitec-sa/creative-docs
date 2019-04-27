@@ -1,10 +1,10 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe FontProperty décrit une fonte (famille + style).
+	/// La classe FontProperty dÃ©crit une fonte (famille + style).
 	/// </summary>
 	public class FontProperty : Property
 	{
@@ -107,8 +107,8 @@ namespace Epsitec.Common.Text.Properties
 			string faceName  = ((b.FaceName == null)  || (b.FaceName.Length == 0))  ? a.FaceName  : b.FaceName;
 			string styleName = ((b.StyleName == null) || (b.StyleName.Length == 0)) ? a.StyleName : b.StyleName;
 			
-			//	Combine les noms des styles de manière avancée dès que la propriété
-			//	contient des styles à ajouter/supprimer/inverser, avec une syntaxe
+			//	Combine les noms des styles de maniÃ¨re avancÃ©e dÃ¨s que la propriÃ©tÃ©
+			//	contient des styles Ã  ajouter/supprimer/inverser, avec une syntaxe
 			//	du type "(+Bold)", "(-Bold)" ou "(!Bold)".
 			
 			if ((a.StyleName != null) &&
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static string CombineStyles(string a, string b)
 		{
-			//	Combine deux séries de noms de styles, en simplifiant d'éventuelles
+			//	Combine deux sÃ©ries de noms de styles, en simplifiant d'Ã©ventuelles
 			//	modifications "+Bold" et "-Bold" qui s'annuleraient.
 			
 			int  countBold    = 0;
@@ -210,14 +210,14 @@ namespace Epsitec.Common.Text.Properties
 				}
 			}
 			
-			//	Résume l'état des changements de graisse :
+			//	RÃ©sume l'Ã©tat des changements de graisse :
 			
 			while (countBold-- > 0) result.Add ("+Bold");
 			while (++countBold < 0) result.Add ("-Bold");
 			
 			if (invertBold) result.Add ("!Bold");
 			
-			//	Résume l'état des changements d'italique :
+			//	RÃ©sume l'Ã©tat des changements d'italique :
 			
 			while (countItalic-- > 0) result.Add ("+Italic");
 			while (++countItalic < 0) result.Add ("-Italic");

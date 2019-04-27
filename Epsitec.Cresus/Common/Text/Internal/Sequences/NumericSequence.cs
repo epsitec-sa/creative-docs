@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal.Sequences
 {
 	/// <summary>
-	/// La classe Numeric produit des numéros 1, 2, 3 ...
+	/// La classe Numeric produit des numÃ©ros 1, 2, 3 ...
 	/// </summary>
 	public class Numeric : Generator.Sequence
 	{

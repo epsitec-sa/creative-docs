@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	/// <summary>
 	/// Etats de toutes les colonnes. On conserve ici quelles sont les colonnes visibles,
-	/// dans quel ordre, et comment elles sont triées.
+	/// dans quel ordre, et comment elles sont triÃ©es.
 	/// </summary>
 	public struct ColumnsState
 	{

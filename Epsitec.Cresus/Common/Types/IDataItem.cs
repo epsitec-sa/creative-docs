@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface IDataItem donne accès à un élément dans un IDataGraph en
-	/// regroupant IDataFolder et IDataValue sous le même toit.
+	/// L'interface IDataItem donne accÃ¨s Ã  un Ã©lÃ©ment dans un IDataGraph en
+	/// regroupant IDataFolder et IDataValue sous le mÃªme toit.
 	/// </summary>
 	public interface IDataItem : ICaption, IName, System.ICloneable
 	{

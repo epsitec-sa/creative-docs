@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text
 	using GeneratorEnumerator = Internal.GeneratorEnumerator;
 	
 	/// <summary>
-	/// La classe Generator gère les générateurs de texte automatique.
+	/// La classe Generator gÃ¨re les gÃ©nÃ©rateurs de texte automatique.
 	/// </summary>
 	public sealed class Generator
 	{
@@ -206,10 +206,10 @@ namespace Epsitec.Common.Text
 		
 		public Generator.Sequence Modify(int index, Generator.SequenceType type)
 		{
-			//	Modifie le type d'une séquence; si la séquence nécessite un argument
-			//	spécial pour son initialisation (par exemple un caractère de puce à
+			//	Modifie le type d'une sÃ©quence; si la sÃ©quence nÃ©cessite un argument
+			//	spÃ©cial pour son initialisation (par exemple un caractÃ¨re de puce Ã 
 			//	utiliser), il faudra encore appeler sequence.DefineSetupArgument sur
-			//	l'instance de séquence retournée.
+			//	l'instance de sÃ©quence retournÃ©e.
 			
 			Sequence oldSequence = this.sequences[index] as Sequence;
 			Sequence newSequence = Generator.CreateSequence (type);
@@ -281,8 +281,8 @@ namespace Epsitec.Common.Text
 				
 				string text = sequence.GenerateText (ranks[i], culture);
 				
-				//	N'accepte pas de séquences qui ne génèrent aucun texte, car cela
-				//	peut provoquer la disparition complète de la séquence. On force
+				//	N'accepte pas de sÃ©quences qui ne gÃ©nÃ¨rent aucun texte, car cela
+				//	peut provoquer la disparition complÃ¨te de la sÃ©quence. On force
 				//	donc un espace de largeur nulle dans un tel cas.
 				
 				if (text.Length == 0)
@@ -484,9 +484,9 @@ namespace Epsitec.Common.Text
 					{
 						ulong code = this.text.ReadChar (id);
 						
-						//	Retrouve la propriété associée à notre générateur, ce
-						//	qui permet ensuite de déterminer la longueur du texte
-						//	à remplacer :
+						//	Retrouve la propriÃ©tÃ© associÃ©e Ã  notre gÃ©nÃ©rateur, ce
+						//	qui permet ensuite de dÃ©terminer la longueur du texte
+						//	Ã  remplacer :
 						
 						generatorProperty = this.enumerator.GetGeneratorProperty (code);
 						
@@ -501,18 +501,18 @@ namespace Epsitec.Common.Text
 						if ((mInfoProperty != null) &&
 							(mInfoProperty.ManagerInfo != "auto"))
 						{
-							//	Mode spécifique :
+							//	Mode spÃ©cifique :
 							//
-							//	- "cont" -----> continue indépendamment du contexte
-							//	- "reset" ----> reprend au début
-							//	- "set ..." --> reprend avec le numéro spécifié
+							//	- "cont" -----> continue indÃ©pendamment du contexte
+							//	- "reset" ----> reprend au dÃ©but
+							//	- "set ..." --> reprend avec le numÃ©ro spÃ©cifiÃ©
 							
 							string mode = mInfoProperty.ManagerInfo;
 							
 							if (mode == "cont")
 							{
-								//	Continue normalement la séquence, indépendamment
-								//	des recommendations de l'énumérateur.
+								//	Continue normalement la sÃ©quence, indÃ©pendamment
+								//	des recommendations de l'Ã©numÃ©rateur.
 							}
 							else if (mode == "reset")
 							{
@@ -547,8 +547,8 @@ namespace Epsitec.Common.Text
 						}
 						else
 						{
-							//	Mode automatique : recommence la numérotation comme
-							//	recommandé par l'énumérateur...
+							//	Mode automatique : recommence la numÃ©rotation comme
+							//	recommandÃ© par l'Ã©numÃ©rateur...
 							
 							if (this.enumerator.RestartGenerator)
 							{
@@ -568,8 +568,8 @@ namespace Epsitec.Common.Text
 						System.Diagnostics.Debug.Assert (text.Length > 0);
 						System.Diagnostics.Debug.Assert (text[0].Text.Length > 0);
 						
-						//	Compte combien de textes ont été modifiés pendant cette
-						//	opération :
+						//	Compte combien de textes ont Ã©tÃ© modifiÃ©s pendant cette
+						//	opÃ©ration :
 						
 						if (this.story.ReplaceTextSequence (cursor, length, autoTextProperty, generatorProperty, text))
 						{
@@ -732,13 +732,13 @@ namespace Epsitec.Common.Text
 				
 				if (this.level == -1)
 				{
-					//	Première génération de texte. Utilise le vecteur de
-					//	départ.
+					//	PremiÃ¨re gÃ©nÃ©ration de texte. Utilise le vecteur de
+					//	dÃ©part.
 				}
 				else if (this.level < level)
 				{
-					//	On doit générer plus de niveaux que précédemment; il
-					//	faut donc mettre à zéro les nouveaux niveaux :
+					//	On doit gÃ©nÃ©rer plus de niveaux que prÃ©cÃ©demment; il
+					//	faut donc mettre Ã  zÃ©ro les nouveaux niveaux :
 					
 					for (int i = this.level + 1; i <= level; i++)
 					{
@@ -747,15 +747,15 @@ namespace Epsitec.Common.Text
 				}
 				else if (this.level > level)
 				{
-					//	On repasse au niveau supérieur. Il faut incrémenter le
-					//	dernier numéro actif :
+					//	On repasse au niveau supÃ©rieur. Il faut incrÃ©menter le
+					//	dernier numÃ©ro actif :
 					
 					this.vector[level]++;
 				}
 				else
 				{
-					//	On reste au même niveau; il faut aussi incrémenter le
-					//	dernier numéro actif :
+					//	On reste au mÃªme niveau; il faut aussi incrÃ©menter le
+					//	dernier numÃ©ro actif :
 					
 					this.vector[level]++;
 				}

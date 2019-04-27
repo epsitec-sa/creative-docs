@@ -56,7 +56,7 @@ namespace Epsitec.Common.Tests.Support
 		public void CheckConvertBrokenUtf8ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			string source = "ABC‡ÈË";
+			string source = "ABC√†√©√®";
 			byte[] bytes  = System.Text.Encoding.UTF8.GetBytes (source);
 			
 			Assert.AreEqual (9, bytes.Length);

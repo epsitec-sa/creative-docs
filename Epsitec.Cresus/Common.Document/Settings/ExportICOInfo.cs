@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.Settings
     }
 
 	/// <summary>
-	/// La classe ExportICOInfo contient tous les réglages pour l'exportation d'une icône.
+	/// La classe ExportICOInfo contient tous les rÃ©glages pour l'exportation d'une icÃ´ne.
 	/// </summary>
 	[System.Serializable()]
 	public class ExportICOInfo : ISerializable
@@ -37,14 +37,14 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise les réglages.
+			//	SÃ©rialise les rÃ©glages.
 			info.AddValue("Rev", 0);
             info.AddValue("ICOFormat", this.format);
 		}
 
 		protected ExportICOInfo(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise les réglages.
+			//	Constructeur qui dÃ©sÃ©rialise les rÃ©glages.
 			this.document = Document.ReadDocument;
 			this.Initialize();
 

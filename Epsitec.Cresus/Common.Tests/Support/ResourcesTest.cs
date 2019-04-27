@@ -292,14 +292,14 @@ namespace Epsitec.Common.Tests.Support
 			Assert.IsNull (text_miss_2);
 			
 			Assert.AreEqual ("Settings", text_default);
-			Assert.AreEqual ("Réglages", text_merged);
+			Assert.AreEqual ("RÃ©glages", text_merged);
 		}
 		
 		[Test] public void CheckRes()
 		{
 			Assert.AreEqual ("Hello <i>world</i>&nbsp;!", TestRes.Strings.Label.Hello);
 			Assert.AreEqual ("Open..", TestRes.Strings.Title.Dialog.Open);
-			Assert.AreEqual ("Réglages", TestRes.Strings.Title.SettingsWindow);
+			Assert.AreEqual ("RÃ©glages", TestRes.Strings.Title.SettingsWindow);
 		}
 		
 		[Test] public void CheckGetBundleIds()

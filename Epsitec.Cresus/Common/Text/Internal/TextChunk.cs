@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
@@ -60,9 +60,9 @@ namespace Epsitec.Common.Text.Internal
 					
 					if (mClr != 0)
 					{
-						//	On a supprimé certains bits; comme c'était peut-être
+						//	On a supprimÃ© certains bits; comme c'Ã©tait peut-Ãªtre
 						//	les derniers, marque que l'accumulation actuelle doit
-						//	être recalculée :
+						//	Ãªtre recalculÃ©e :
 						
 						this.accMarkersValid = false;
 					}
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				//	Retourne l'union de tous les marqueurs de caractères (cf.
+				//	Retourne l'union de tous les marqueurs de caractÃ¨res (cf.
 				//	la classe CharMarker) contenus dans ce morceau de texte.
 				
 				if (this.accMarkersValid == false)
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsTrue (offset2+count <= this.text.Length);
 			
 			//	Creuse un trou pour y mettre le nouveau texte, puis copie le texte
-			//	dans le trou et enfin, déplace les curseurs.
+			//	dans le trou et enfin, dÃ©place les curseurs.
 			
 			System.Buffer.BlockCopy (this.text, 8*offset1, this.text, 8*offset2, 8*count);
 			System.Buffer.BlockCopy (text, 0, this.text, 8*offset1, 8*length);
@@ -130,12 +130,12 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void DeleteText(int position, int length, int absOrigin, bool removalContinuation, out CursorInfo[] infos)
 		{
-			//	Supprime le texte commençant à la position indiquée et comprenant
-			//	'length' caractères.
+			//	Supprime le texte commenÃ§ant Ã  la position indiquÃ©e et comprenant
+			//	'length' caractÃ¨res.
 			
 			//	L'appelant doit indiquer dans 'absOrigin' l'origine absolue du
-			//	début du morceau de texte, afin que la table d'information sur
-			//	les curseurs supprimés puisse contenir des positions absolues.
+			//	dÃ©but du morceau de texte, afin que la table d'information sur
+			//	les curseurs supprimÃ©s puisse contenir des positions absolues.
 			
 			Debug.Assert.IsTrue (position >= 0);
 			Debug.Assert.IsTrue (length >= 0);
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public bool ChangeMarkers(ulong marker, int position, int length, bool set)
 		{
-			//	Change les marqueurs pour le fragment de texte considéré.
+			//	Change les marqueurs pour le fragment de texte considÃ©rÃ©.
 			//	Retourne 'true' si un changement a eu lieu.
 			
 			bool changed = false;
@@ -244,15 +244,15 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static void ShuffleEnd(TextChunk a, TextChunk b, int offset)
 		{
-			//	Réorganisation de la fin du texte de 'a' : déplace tout ce qui
-			//	dépasse l'offset spécifié de 'a' vers 'b' (texte et curseurs).
+			//	RÃ©organisation de la fin du texte de 'a' : dÃ©place tout ce qui
+			//	dÃ©passe l'offset spÃ©cifiÃ© de 'a' vers 'b' (texte et curseurs).
 			
 			if (offset >= a.length)
 			{
 				return;
 			}
 			
-			//	Copie le texte de la fin de 'a' vers le début de 'b' :
+			//	Copie le texte de la fin de 'a' vers le dÃ©but de 'b' :
 			
 			int length = a.length - offset;
 			
@@ -272,12 +272,12 @@ namespace Epsitec.Common.Text.Internal
 			a.length  = offset;
 			b.length += length;
 			
-			//	Déplace aussi les curseurs. Commence par ajuster la position du
+			//	DÃ©place aussi les curseurs. Commence par ajuster la position du
 			//	premier curseur dans 'b' (s'il y en a un) :
 			
 			b.cursors.ProcessInsertion (0, length);
 			
-			//	Ensuite, il faut déplacer les curseurs de 'a' situés après l'offset
+			//	Ensuite, il faut dÃ©placer les curseurs de 'a' situÃ©s aprÃ¨s l'offset
 			//	vers 'b' :
 			
 			a.cursors.ProcessMigration (offset, ref b.cursors);

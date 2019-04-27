@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Text.Exchange.Internal
 {
 	/// <summary>
-	/// La classe <c>FormattedText</c> ne sert qu'à pouvoir stocker le format
+	/// La classe <c>FormattedText</c> ne sert qu'Ã  pouvoir stocker le format
 	/// presse-papier interne (qui existe sous forme de string) dans le presse-
-	/// papier Windows. C'est nécessaire à cause de la gestion particulière du
+	/// papier Windows. C'est nÃ©cessaire Ã  cause de la gestion particuliÃ¨re du
 	/// presse-papier avec .NET
 	/// </summary>
 	[System.Serializable]

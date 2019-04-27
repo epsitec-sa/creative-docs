@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
@@ -141,8 +141,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// status of the file operation. 
 			public uint wFunc;					// Value that indicates which operation to perform.
 			public System.IntPtr pFrom;					// Address of a buffer to specify one or more source file names. 
-			// These names must be fully qualified paths. Standard Microsoft® 
-			// MS-DOS® wild cards, such as "*", are permitted in the file-name 
+			// These names must be fully qualified paths. Standard MicrosoftÂ® 
+			// MS-DOSÂ® wild cards, such as "*", are permitted in the file-name 
 			// position. Although this member is declared as a null-terminated 
 			// string, it is used as a buffer to hold multiple file names. Each 
 			// file name must be terminated by a single NULL character. An	
@@ -756,7 +756,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// common repository for application-specific data. A typical
 			// path is C:\Documents and Settings\username\Application Data. 
 			// This CSIDL is supported by the redistributable Shfolder.dll 
-			// for systems that do not have the Microsoft® Internet 
+			// for systems that do not have the MicrosoftÂ® Internet 
 			// Explorer 4.0 integrated Shell installed.
 			CSIDL_BITBUCKET=(0x000a),	// The virtual folder containing the objects in the user's 
 			// Recycle Bin.
@@ -768,7 +768,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// administrative tools for all users of the computer.
 			CSIDL_COMMON_ALTSTARTUP=(0x001e), // The file system directory that corresponds to the 
 			// nonlocalized Startup program group for all users. Valid only 
-			// for Microsoft Windows NT® systems.
+			// for Microsoft Windows NTÂ® systems.
 			CSIDL_COMMON_APPDATA=(0x0023), // Version 5.0. The file system directory containing application 
 			// data for all users. A typical path is C:\Documents and 
 			// Settings\All Users\Application Data.
@@ -779,7 +779,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			CSIDL_COMMON_DOCUMENTS=(0x002e), // The file system directory that contains documents that are 
 			// common to all users. A typical paths is C:\Documents and 
 			// Settings\All Users\Documents. Valid for Windows NT systems 
-			// and Microsoft Windows® 95 and Windows 98 systems with 
+			// and Microsoft WindowsÂ® 95 and Windows 98 systems with 
 			// Shfolder.dll installed.
 			CSIDL_COMMON_FAVORITES=(0x001f), // The file system directory that serves as a common repository
 			// for favorite items common to all users. Valid only for 
@@ -1014,7 +1014,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// in lpBuf1. lpBuf2 is ignored. 
 			PRINTACTION_OPENNETPRN=5,	// The network printer specified by the name in lpBuf1 will be
 			// opened. lpBuf2 is ignored. 
-			PRINTACTION_DOCUMENTDEFAULTS=6,	// Microsoft® Windows NT® only. The default document properties for
+			PRINTACTION_DOCUMENTDEFAULTS=6,	// MicrosoftÂ® Windows NTÂ® only. The default document properties for
 			// the printer specified by the name in lpBuf1 will be displayed. 
 			// lpBuf2 is ignored. 
 			PRINTACTION_SERVERPROPERTIES=7		// Windows NT only. The properties for the server of the printer 

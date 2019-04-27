@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Image Image
 		{
-			//	Image bitmap à afficher.
+			//	Image bitmap Ã  afficher.
 			get
 			{
 				return this.image;
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool PaintFrame
 		{
-			//	Cadre éventuel.
+			//	Cadre Ã©ventuel.
 			get
 			{
 				return this.paintFrame;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if (this.image == null)  // icône fixe ?
+			if (this.image == null)  // icÃ´ne fixe ?
 			{
 				if (!string.IsNullOrEmpty (this.Text))
 				{

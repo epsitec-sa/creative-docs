@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
 {
 	/// <summary>
 	/// La classe AbstractWrapper sert de base aux "wrappers" qui simplifient
-	/// l'accès aux réglages internes d'un texte ou d'un style.
+	/// l'accÃ¨s aux rÃ©glages internes d'un texte ou d'un style.
 	/// </summary>
 	public abstract class AbstractWrapper
 	{
@@ -106,8 +106,8 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void Attach(Text.TextNavigator navigator)
 		{
-			//	Attache le wrapper au navigateur. Ceci permet d'accéder aux réglages
-			//	d'une sélection de texte ou aux réglages associés à la position cou-
+			//	Attache le wrapper au navigateur. Ceci permet d'accÃ©der aux rÃ©glages
+			//	d'une sÃ©lection de texte ou aux rÃ©glages associÃ©s Ã  la position cou-
 			//	rante du curseur dans le texte.
 			
 			//	Attachment => Attachment.Text
@@ -131,12 +131,12 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void Attach(Text.TextStyle style, Text.TextContext context, Common.Support.OpletQueue oplet_queue)
 		{
-			//	Attache le wrapper à un style. Ceci permet de modifier le style en
-			//	spécifiant des réglages pour ses diverses propriétés.
+			//	Attache le wrapper Ã  un style. Ceci permet de modifier le style en
+			//	spÃ©cifiant des rÃ©glages pour ses diverses propriÃ©tÃ©s.
 			
 			//	Attachment => Attachment.Style
 			
-			//	Crée un TextStory temporaire (uniquement utilisé pour simplifier
+			//	CrÃ©e un TextStory temporaire (uniquement utilisÃ© pour simplifier
 			//	la gestion du undo/redo) dans le code de synchronisation :
 			
 			TextStory story = new TextStory (oplet_queue, context);
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void Detach()
 		{
-			//	Détache le wrapper de sa source.
+			//	DÃ©tache le wrapper de sa source.
 			
 			//	Attachment => Attachment.None
 			
@@ -184,8 +184,8 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void DefineOperationName(string name, string caption)
 		{
-			//	Définit un nom d'opération (name = nom interne, caption = nom qui
-			//	sera attaché à l'oplet dans OpletQueue, lequel sera visible par
+			//	DÃ©finit un nom d'opÃ©ration (name = nom interne, caption = nom qui
+			//	sera attachÃ© Ã  l'oplet dans OpletQueue, lequel sera visible par
 			//	l'utilisateur).
 			
 			if (this.oplet_queue != null)
@@ -696,7 +696,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if (state.AccessMode == AccessMode.ReadOnly)
 			{
-				//	Si les réglages sont définis en lecture seule, la synchronisation
+				//	Si les rÃ©glages sont dÃ©finis en lecture seule, la synchronisation
 				//	ne doit peut pas affecter le texte sous-jacent :
 				
 				state.NotifyChanged (property, id);
@@ -710,7 +710,7 @@ namespace Epsitec.Common.Text.Wrappers
 				else
 				{
 					//	La logique de synchronisation se trouve dans ResumeSynchronizations
-					//	et on ne veut pas la répliquer ici. On triche donc pour forcer une
+					//	et on ne veut pas la rÃ©pliquer ici. On triche donc pour forcer une
 					//	paire suspend/resume :
 					
 					this.SuspendSynchronizations ();

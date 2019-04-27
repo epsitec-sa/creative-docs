@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.VScroller))]
@@ -6,7 +6,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe VScroller implémente l'ascenceur vertical.
+	/// La classe VScroller implÃ©mente l'ascenceur vertical.
 	/// </summary>
 	public class VScroller : AbstractScroller
 	{

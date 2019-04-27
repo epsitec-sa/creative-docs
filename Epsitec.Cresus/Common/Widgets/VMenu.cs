@@ -1,11 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe VMenu implémente le menu vertical, utilisé pour tous les
-	/// menus et sous-menus (sauf le menu horizontal, évidemment).
+	/// La classe VMenu implÃ©mente le menu vertical, utilisÃ© pour tous les
+	/// menus et sous-menus (sauf le menu horizontal, Ã©videmment).
 	/// </summary>
 	public class VMenu : AbstractMenu
 	{

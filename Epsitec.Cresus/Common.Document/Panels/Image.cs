@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.Panels
 
 		public override void UpdateGeometry()
 		{
-			//	Met ‡ jour aprËs un changement de gÈomÈtrie.
+			//	Met √† jour apr√®s un changement de g√©om√©trie.
 			this.cropper.UpdateField();
 		}
 
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	PropriÈtÈ -> widgets.
+			//	Propri√©t√© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Image p = this.property as Properties.Image;
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriÈtÈ.
+			//	Widgets -> propri√©t√©.
 			Properties.Image p = this.property as Properties.Image;
 			if ( p == null )  return;
 
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void UpdateWidgets()
 		{
-			//	Met ‡ jour les widgets du panneau.
+			//	Met √† jour les widgets du panneau.
 			Properties.Image p = this.property as Properties.Image;
 
 			if (p != null && p.FromClipboard)  // image provenant du clipboard ?
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected override void UpdateClientGeometry()
 		{
-			//	Met ‡ jour la gÈomÈtrie.
+			//	Met √† jour la g√©om√©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldFilename == null )  return;
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTextChanged(object sender)
 		{
-			//	Le nom de l'image a ÈtÈ changÈ.
+			//	Le nom de l'image a √©t√© chang√©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
 		{
-			//	Un bouton a ÈtÈ pressÈ.
+			//	Un bouton a √©t√© press√©.
 			IconButton button = sender as IconButton;
 
 			if (button == this.buttonRotation90)
@@ -379,19 +379,19 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleFilterComboClosed(object sender)
 		{
-			//	Le filtre a ÈtÈ changÈ.
+			//	Le filtre a √©t√© chang√©.
 			this.OnChanged();
 		}
 
 		private void HandleButtonActiveStateChanged(object sender)
 		{
-			//	Une valeur a ÈtÈ changÈe.
+			//	Une valeur a √©t√© chang√©e.
 			this.OnChanged();
 		}
 
 		private void HandleOpenClicked(object sender, MessageEventArgs e)
 		{
-			//	Le bouton 'Importer' pour choisir l'image a ÈtÈ cliquÈ.
+			//	Le bouton 'Importer' pour choisir l'image a √©t√© cliqu√©.
 #if false
 			FileOpen dialog = new FileOpen();
 			dialog.Title = Res.Strings.Panel.Image.Dialog.Open.Title;
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleUpdateClicked(object sender, MessageEventArgs e)
 		{
-			//	Le bouton 'M‡j' pour relire l'image a ÈtÈ cliquÈ.
+			//	Le bouton 'M√†j' pour relire l'image a √©t√© cliqu√©.
 			Properties.Image p = this.property as Properties.Image;
 			ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
 
@@ -431,18 +431,18 @@ namespace Epsitec.Common.Document.Panels
 				if (item.ReloadImage())  // relit l'image sur disque
 				{
 					p.FileDate = this.document.ImageCache.LoadFromFile(p.FileName);
-					return;  // tout c'est bien passÈ
+					return;  // tout c'est bien pass√©
 				}
 			}
 
-			//	Indique que la mise ‡ jour n'est pas possible.
+			//	Indique que la mise √† jour n'est pas possible.
 			this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.FileDoesNoetExist);
 		}
 
 		private void HandleSaveClicked(object sender, MessageEventArgs e)
 		{
 #if false
-			//	Le bouton 'Exporter' pour choisir l'image a ÈtÈ cliquÈ.
+			//	Le bouton 'Exporter' pour choisir l'image a √©t√© cliqu√©.
 			Properties.Image p = this.property as Properties.Image;
 			ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
 			if (item == null)
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Document.Panels
 			string ext = System.IO.Path.GetExtension(this.fieldFilename.Text);
 			if (ext.StartsWith("."))
 			{
-				ext = ext.Substring(1);  // enlËve le point
+				ext = ext.Substring(1);  // enl√®ve le point
 			}
 
 			FileSave dialog = new FileSave();
@@ -467,14 +467,14 @@ namespace Epsitec.Common.Document.Panels
 				return;
 			}
 
-			item.ExportImage(dialog.FileName);  // Ècrit le fichier sur disque
+			item.ExportImage(dialog.FileName);  // √©crit le fichier sur disque
 #else
 			Button button = sender as Button;
 			Dialogs.FileSaveImage dlg = new Dialogs.FileSaveImage(this.document, button.Window);
 
 			Properties.Image p = this.property as Properties.Image;
 
-			if (p.FromClipboard)  // donnÈe d'une image collÈe directement ?
+			if (p.FromClipboard)  // donn√©e d'une image coll√©e directement ?
 			{
 				if (!string.IsNullOrEmpty(this.document.Filename))
 				{
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Document.Panels
 				dlg.InitialFileName = "";
 				dlg.Filters.Add (new FilterItem ("x", "Image", ".png"));
 			}
-			else  // image importÈe normalement ?
+			else  // image import√©e normalement ?
 			{
 				var ext = System.IO.Path.GetExtension (this.fieldFilename.Text);
 				dlg.Filters.Add (new FilterItem ("x", "Image", ext));
@@ -503,7 +503,7 @@ namespace Epsitec.Common.Document.Panels
 				ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
 				if (item != null)
 				{
-					item.ExportImage(dlg.FileName);  // Ècrit le fichier sur disque
+					item.ExportImage(dlg.FileName);  // √©crit le fichier sur disque
 				}
 			}
 #endif

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -13,8 +13,8 @@ using System.Linq;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextField implémente la ligne éditable, tout en permettant
-	/// aussi de réaliser l'équivalent de la ComboBox Windows.
+	/// La classe TextField implÃ©mente la ligne Ã©ditable, tout en permettant
+	/// aussi de rÃ©aliser l'Ã©quivalent de la ComboBox Windows.
 	/// </summary>
 	public abstract partial class AbstractTextField : Widget, Types.IReadOnly
 	{
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 					    (this.IsEntered))
 					{
 						//	Ne changeons l'aspect de la souris que si actuellement le curseur se trouve
-						//	dans la zone éditable; si la souris se trouve sur un bouton, on ne fait rien.
+						//	dans la zone Ã©ditable; si la souris se trouve sur un bouton, on ne fait rien.
 
 						this.UpdateMouseCursor (this.MapRootToClient (Message.CurrentState.LastPosition));
 					}
@@ -436,7 +436,7 @@ namespace Epsitec.Common.Widgets
 		public double							ScrollZone
 		{
 			//	Amplitude de la zone dans laquelle le curseur provoque un scroll.
-			//	Avec 0.0, le texte ne scrolle que lorsque le curseur arrive aux extrémités.
+			//	Avec 0.0, le texte ne scrolle que lorsque le curseur arrive aux extrÃ©mitÃ©s.
 			//	Avec 1.0, le texte scrolle tout le temps (curseur au milieu).
 			get
 			{
@@ -629,8 +629,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.TextLayout != null)
 			{
-				//	Détermine la zone rectangulaire dans laquelle le texte est
-				//	affiché et utilise celle-ci comme référence pour les calculs
+				//	DÃ©termine la zone rectangulaire dans laquelle le texte est
+				//	affichÃ© et utilise celle-ci comme rÃ©fÃ©rence pour les calculs
 				//	de hauteur :
 
 				Drawing.Rectangle bounds = this.GetInnerTextBounds (new Drawing.Rectangle (0, 0, width, height));
@@ -747,8 +747,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void DisposeTextLayout()
 		{
-			//	Ne fait rien, on veut s'assurer que le TextLayout associé avec le
-			//	TextField n'est jamais détruit du vivant du TextField.
+			//	Ne fait rien, on veut s'assurer que le TextLayout associÃ© avec le
+			//	TextField n'est jamais dÃ©truit du vivant du TextField.
 			this.navigator.TextLayout.Text = "";
 		}
 
@@ -764,7 +764,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectAll()
 		{
-			//	Sélectione tous les caractères.
+			//	SÃ©lectione tous les caractÃ¨res.
 			this.Cursor = 0;
 			this.SelectAll (false);
 		}
@@ -977,7 +977,7 @@ namespace Epsitec.Common.Widgets
 
 		public virtual Drawing.Rectangle GetButtonBounds()
 		{
-			//	Retourne le rectangle à utiliser pour les boutons Accept/Reject.
+			//	Retourne le rectangle Ã  utiliser pour les boutons Accept/Reject.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle ();
 
@@ -1021,7 +1021,7 @@ namespace Epsitec.Common.Widgets
 
 		private static void HandleFlashTimer(object source)
 		{
-			//	Gère le temps écoulé pour faire clignoter un curseur.
+			//	GÃ¨re le temps Ã©coulÃ© pour faire clignoter un curseur.
 			TextField.showCursor = !TextField.showCursor;
 
 			if (TextField.blinking != null)
@@ -1103,7 +1103,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	Gestion d'un événement.
+			//	Gestion d'un Ã©vÃ©nement.
 			if (!this.IsReadOnly && this.copyPasteBehavior.ProcessMessage (message, pos))
 			{
 				return;
@@ -1236,7 +1236,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsReadOnly == false)
 			{
-				//	Un clic dans la ligne éditable doit mettre le focus sur celle-ci, quel que
+				//	Un clic dans la ligne Ã©ditable doit mettre le focus sur celle-ci, quel que
 				//	soit le type de gestion de focus actif (AutoFocus, etc.).
 
 				var window = this.Window;
@@ -1282,13 +1282,13 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
-			//	Gestion d'une touche pressée avec KeyDown dans le texte.
+			//	Gestion d'une touche pressÃ©e avec KeyDown dans le texte.
 			return this.navigator.ProcessMessage (message, pos);
 		}
 
 		protected virtual bool ProcessKeyPress(Message message, Drawing.Point pos)
 		{
-			//	Gestion d'une touche pressée avec KeyPress dans le texte.
+			//	Gestion d'une touche pressÃ©e avec KeyPress dans le texte.
 			return this.navigator.ProcessMessage (message, pos);
 		}
 
@@ -1609,11 +1609,11 @@ namespace Epsitec.Common.Widgets
 			int from = this.CursorFrom;
 			int to   = this.CursorTo;
 
-			//	En réaffectant les positions de curseurs, on force implicitement une vérification sur
-			//	les positions maximales tolérées (grâce à TextNavigator).
+			//	En rÃ©affectant les positions de curseurs, on force implicitement une vÃ©rification sur
+			//	les positions maximales tolÃ©rÃ©es (grÃ¢ce Ã  TextNavigator).
 			this.navigator.SetCursors (from, to);
 
-			//	Génère un événement pour dire que le texte a changé (tout changement).
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que le texte a changÃ© (tout changement).
 			this.ResetCursor ();
 			this.CursorScroll (false);
 			this.Invalidate ();
@@ -1771,7 +1771,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnEditionAccepted()
 		{
-			//	OnEditionAccepted est appelé après que l'édition ait été validée et acceptée.
+			//	OnEditionAccepted est appelÃ© aprÃ¨s que l'Ã©dition ait Ã©tÃ© validÃ©e et acceptÃ©e.
 			this.RaiseUserEvent ("EditionAccepted");
 		}
 
@@ -1782,8 +1782,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnAcceptingEdition(CancelEventArgs e)
 		{
-			//	OnAcceptingEdition est appelé pendant la phase d'acceptation; l'événement passe une instance de CancelEventArgs
-			//	qui permet à ceux qui écoutent l'événement de faire un e.Cancel=true pour annuler l'opération en cours (donc
+			//	OnAcceptingEdition est appelÃ© pendant la phase d'acceptation; l'Ã©vÃ©nement passe une instance de CancelEventArgs
+			//	qui permet Ã  ceux qui Ã©coutent l'Ã©vÃ©nement de faire un e.Cancel=true pour annuler l'opÃ©ration en cours (donc
 			//	refuser l'acceptation).
 			this.RaiseUserEvent ("AcceptingEdition", e);
 		}
@@ -1846,13 +1846,13 @@ namespace Epsitec.Common.Widgets
 				double ratio = (cursor.Right-this.scrollOffset.X)/this.realSize.Width;  // 0..1
 				double zone = this.scrollZone*0.5;
 
-				if (ratio <= zone)  // curseur trop à gauche ?
+				if (ratio <= zone)  // curseur trop Ã  gauche ?
 				{
 					this.scrollOffset.X -= (zone-ratio)*this.realSize.Width;
 					this.scrollOffset.X = System.Math.Max (this.scrollOffset.X, 0.0);
 				}
 
-				if (ratio >= 1.0-zone)  // curseur trop à droite ?
+				if (ratio >= 1.0-zone)  // curseur trop Ã  droite ?
 				{
 					this.scrollOffset.X += (ratio-(1.0-zone))*this.realSize.Width;
 					double max = System.Math.Max (end.X-this.realSize.Width, 0.0);
@@ -1865,8 +1865,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void ScrollHorizontal(double dist)
 		{
-			//	Décale le texte vers la droite (+) ou la gauche (-), lorsque la
-			//	souris dépasse pendant une sélection.
+			//	DÃ©cale le texte vers la droite (+) ou la gauche (-), lorsque la
+			//	souris dÃ©passe pendant une sÃ©lection.
 			if (this.textFieldStyle == TextFieldStyle.Multiline)
 			{
 				return;
@@ -1889,8 +1889,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void ScrollVertical(double dist)
 		{
-			//	Décale le texte vers le haut (+) ou le bas (-), lorsque la
-			//	souris dépasse pendant une sélection.
+			//	DÃ©cale le texte vers le haut (+) ou le bas (-), lorsque la
+			//	souris dÃ©passe pendant une sÃ©lection.
 		}
 
 
@@ -1900,7 +1900,7 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Il faut enregistrer le timer; on ne peut pas le faire avant que le
 				//	premier TextField ne s'affiche, car sinon les WinForms semblent se
-				//	mélanger les pinceaux :
+				//	mÃ©langer les pinceaux :
 
 				TextField.flashTimer = new Timer ();
 				TextField.flashTimer.TimeElapsed += TextField.HandleFlashTimer;
@@ -1939,8 +1939,8 @@ namespace Epsitec.Common.Widgets
 			if (this.BackColor.IsTransparent ||
 				this.textFieldDisplayMode == TextFieldDisplayMode.Transparent)
 			{
-				//	Ne peint pas le fond de la ligne éditable si celle-ci a un fond
-				//	explicitement défini comme "transparent".
+				//	Ne peint pas le fond de la ligne Ã©ditable si celle-ci a un fond
+				//	explicitement dÃ©fini comme "transparent".
 			}
 			else if (!this.BackColor.IsTransparent &&
 					 (this.textFieldDisplayMode == TextFieldDisplayMode.UseBackColor ||
@@ -1951,8 +1951,8 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond
-				//	de la ligne éditable.
+				//	Ne reproduit pas l'Ã©tat sÃ©lectionnÃ© si on peint nous-mÃªme le fond
+				//	de la ligne Ã©ditable.
 				state &= ~WidgetPaintState.Selected;
 				adorner.PaintTextFieldBackground (graphics, fill, state, this.textFieldStyle, this.textFieldDisplayMode, this.navigator.IsReadOnly&&!this.IsCombo, this.IsMultilingualText);
 			}
@@ -1994,18 +1994,18 @@ namespace Epsitec.Common.Widgets
 				}
 				else if (this.Window.IsFocused == false)
 				{
-					//	Il y a une sélection, mais la fenêtre n'a pas le focus; on ne peint
-					//	donc pas la sélection...
+					//	Il y a une sÃ©lection, mais la fenÃªtre n'a pas le focus; on ne peint
+					//	donc pas la sÃ©lection...
 
 					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					visibleCursor = false;
 				}
 				else
 				{
-					//	Un morceau de texte a été sélectionné. Peint en plusieurs étapes :
+					//	Un morceau de texte a Ã©tÃ© sÃ©lectionnÃ©. Peint en plusieurs Ã©tapes :
 					//	- Peint tout le texte normalement
-					//	- Peint les rectangles de sélection
-					//	- Peint tout le texte en mode sélectionné, avec clipping
+					//	- Peint les rectangles de sÃ©lection
+					//	- Peint tout le texte en mode sÃ©lectionnÃ©, avec clipping
 
 					TextLayout.SelectedArea[] areas = layout.FindTextRange (pos, from, to);
 					if (areas.Length == 0)
@@ -2039,7 +2039,7 @@ namespace Epsitec.Common.Widgets
 
 				if (!this.navigator.IsReadOnly && visibleCursor && this.KeyboardFocus)
 				{
-					//	Dessine le curseur, sauf si le menu contextuel est affiché :
+					//	Dessine le curseur, sauf si le menu contextuel est affichÃ© :
 					Drawing.Point p1, p2;
 					if (this.GetCursorPosition (out p1, out p2, pos))
 					{

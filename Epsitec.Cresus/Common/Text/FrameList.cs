@@ -1,10 +1,10 @@
-//	Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe FrameList gère la liste des cadres utilisés pour couler le
+	/// La classe FrameList gÃ¨re la liste des cadres utilisÃ©s pour couler le
 	/// texte.
 	/// </summary>
 	public sealed class FrameList
@@ -63,9 +63,9 @@ namespace Epsitec.Common.Text
 
 		public Cursors.FitterCursor FindLastCursor(int index)
 		{
-			//	Recherche le dernier curseur contenu dans le texte qui décrit
+			//	Recherche le dernier curseur contenu dans le texte qui dÃ©crit
 			//	un paragraphe occupant au moins partiellement le ITextFrame
-			//	à trouver :
+			//	Ã  trouver :
 
 			TextStory          story  = this.TextFitter.TextStory;
 			Internal.TextTable text   = story.TextTable;
@@ -91,10 +91,10 @@ namespace Epsitec.Common.Text
 		public Cursors.FitterCursor FindFirstCursor(int index)
 		{
 			//	Trouve le curseur correspondant au paragraphe qui se trouve au
-			//	début du ITextFrame.
+			//	dÃ©but du ITextFrame.
 			
 			//	Note: un paragraphe peut couvrir plusieurs ITextFrame, ce qui
-			//	complique légèrement les choses.
+			//	complique lÃ©gÃ¨rement les choses.
 			
 			ITextFrame frame = this[index];
 			
@@ -103,9 +103,9 @@ namespace Epsitec.Common.Text
 				return this.cursorMap[frame] as Cursors.FitterCursor;
 			}
 			
-			//	Recherche le premier curseur contenu dans le texte qui décrit
+			//	Recherche le premier curseur contenu dans le texte qui dÃ©crit
 			//	un paragraphe occupant au moins partiellement le ITextFrame
-			//	à trouver :
+			//	Ã  trouver :
 			
 			TextStory          story  = this.TextFitter.TextStory;
 			Internal.TextTable text   = story.TextTable;

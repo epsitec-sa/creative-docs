@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -28,13 +28,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public bool Equal(double zoom)
 		{
-			//	Compare si le facteur de zoom est (presque) égal.
+			//	Compare si le facteur de zoom est (presque) Ã©gal.
 			return ( System.Math.Abs(this.zoom-zoom) < 0.0001 );
 		}
 
 		public int CompareTo(object obj)
 		{
-			//	Défini par System.IComparable.
+			//	DÃ©fini par System.IComparable.
 			ZoomMenu zm = obj as ZoomMenu;
 			return this.zoom.CompareTo(zm.zoom);
 		}
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		protected static void Add(System.Collections.ArrayList list, int zoom)
 		{
-			//	Ajoute une entrée dans une liste si elle n'existe pas encore.
+			//	Ajoute une entrÃ©e dans une liste si elle n'existe pas encore.
 			ZoomMenu.Add(list, zoom/100.0, "");
 		}
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		{
 			foreach ( ZoomMenu zm in list )
 			{
-				if ( zm.Equal(zoom) )  return;  // n'ajoute pas si existe déjà
+				if ( zm.Equal(zoom) )  return;  // n'ajoute pas si existe dÃ©jÃ 
 			}
 
 			list.Add(new ZoomMenu(zoom, comment));

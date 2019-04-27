@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Tests.Vs

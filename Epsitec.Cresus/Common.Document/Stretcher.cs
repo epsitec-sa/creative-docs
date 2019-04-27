@@ -3,7 +3,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// La classe Stretcher permet de déformer un point.
+	/// La classe Stretcher permet de dÃ©former un point.
 	/// </summary>
 	public class Stretcher
 	{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document
 
 		public Point Transform(Point pos)
 		{
-			//	Transforme un point du système "initial" vers le système "final".
+			//	Transforme un point du systÃ¨me "initial" vers le systÃ¨me "final".
 			double sx=0.5, sy=0.5;
 
 			if ( this.initialRectangle.Width != 0.0 )
@@ -63,14 +63,14 @@ namespace Epsitec.Common.Document
 
 		public Point Reverse(Point pos)
 		{
-			//	Transformation inverse d'un point du système "final" vers le système "initial".
+			//	Transformation inverse d'un point du systÃ¨me "final" vers le systÃ¨me "initial".
 			//	La forme finale ne doit pas contenir d'angle aigu.
 			Point[] inter;
 
 			//	Intersection entre les 2 horizontales.
 			Point h;
 			inter = Geometry.Intersect(this.finalBottomLeft, this.finalBottomRight, this.finalTopLeft, this.finalTopRight);
-			if ( inter == null )  // droites parallèles ?
+			if ( inter == null )  // droites parallÃ¨les ?
 			{
 				h = pos+(this.finalBottomRight-this.finalBottomLeft);
 			}
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document
 			//	Intersection entre les 2 verticales.
 			Point v;
 			inter = Geometry.Intersect(this.finalBottomLeft, this.finalTopLeft, this.finalBottomRight, this.finalTopRight);
-			if ( inter == null )  // droites parallèles ?
+			if ( inter == null )  // droites parallÃ¨les ?
 			{
 				v = pos+(this.finalTopLeft-this.finalBottomLeft);
 			}

@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir une icône.
+	/// Dialogue permettant de choisir une icÃ´ne.
 	/// </summary>
 	public class IconDialog : AbstractDialog
 	{
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window ();
@@ -67,8 +67,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Tableau principal.
 				this.arrayDetail = new MyWidgets.StringArray (this.window.Root);
 				this.arrayDetail.Columns = 2;
-				this.arrayDetail.SetColumnsRelativeWidth (0, 0.15);  // icône
-				this.arrayDetail.SetColumnsRelativeWidth (1, 0.85);  // nom du module.icône
+				this.arrayDetail.SetColumnsRelativeWidth (0, 0.15);  // icÃ´ne
+				this.arrayDetail.SetColumnsRelativeWidth (1, 0.85);  // nom du module.icÃ´ne
 				this.arrayDetail.SetColumnAlignment (0, ContentAlignment.MiddleCenter);
 				this.arrayDetail.SetColumnBreakMode (1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 				this.arrayDetail.LineHeight = 25;
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void SetResourceManager(ResourceManager manager, string moduleName)
 		{
-			//	Détermine le module pour lequel on désire choisir une icône.
+			//	DÃ©termine le module pour lequel on dÃ©sire choisir une icÃ´ne.
 			this.manager = manager;
 			this.moduleName = moduleName;
 
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public string IconValue
 		{
-			//	Nom complet de l'icône, du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
+			//	Nom complet de l'icÃ´ne, du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
 			get
 			{
 				return this.icon;
@@ -242,15 +242,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (!string.IsNullOrEmpty(this.icon) && this.SelectedIcon(this.icon) == 0)
 			{
-				//	Si l'icône n'existe pas avec le filtre actuel, on l'ajoute en
-				//	première position, juste après 'pas d'icône'.
+				//	Si l'icÃ´ne n'existe pas avec le filtre actuel, on l'ajoute en
+				//	premiÃ¨re position, juste aprÃ¨s 'pas d'icÃ´ne'.
 				this.icons.Insert(0, this.icon);
 			}
 		}
 
 		private void UpdateArray()
 		{
-			//	Met à jour le tableau des icônes.
+			//	Met Ã  jour le tableau des icÃ´nes.
 			if (this.icons == null)
 			{
 				return;
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				int row = first+i;
 
-				if (row == 0)  // première ligne 'pas d'icône' ?
+				if (row == 0)  // premiÃ¨re ligne 'pas d'icÃ´ne' ?
 				{
 					this.arrayDetail.SetLineState (0, row, MyWidgets.StringList.CellState.Normal);
 					this.arrayDetail.SetLineState (1, row, MyWidgets.StringList.CellState.Normal);
@@ -298,10 +298,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private int SelectedIcon(string icon)
 		{
-			//	Retourne le rang d'une icône dans le tableau.
+			//	Retourne le rang d'une icÃ´ne dans le tableau.
 			if (string.IsNullOrEmpty(icon))
 			{
-				return 0;  // première ligne 'pas d'icône'
+				return 0;  // premiÃ¨re ligne 'pas d'icÃ´ne'
 			}
 
 			for (int i=0; i<this.icons.Count; i++)
@@ -312,17 +312,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
-			return 0;  // première ligne 'pas d'icône'
+			return 0;  // premiÃ¨re ligne 'pas d'icÃ´ne'
 		}
 
 		private string SelectedIcon(int sel)
 		{
-			//	Retourne une icône d'après son rang dans le tableau.
+			//	Retourne une icÃ´ne d'aprÃ¨s son rang dans le tableau.
 			if (sel < 0)
 			{
 				return "";
 			}
-			else if (sel == 0)  // pas d'icône ?
+			else if (sel == 0)  // pas d'icÃ´ne ?
 			{
 				return "";
 			}
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private int Selected
 		{
-			//	Case sélectionnée dans un tableau (détaillé ou compact).
+			//	Case sÃ©lectionnÃ©e dans un tableau (dÃ©taillÃ© ou compact).
 			get
 			{
 				if (this.compactMode)
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void ShowSelection()
 		{
-			//	Montre la sélection dans un tableau (détaillé ou compact).
+			//	Montre la sÃ©lection dans un tableau (dÃ©taillÃ© ou compact).
 			this.arrayDetail.ShowSelectedRow();
 			this.arrayCompact.ShowSelectedCell();
 		}
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		void HandleFieldFilterComboClosed(object sender)
 		{
-			//	Menu pour choisir le filtre fermé.
+			//	Menu pour choisir le filtre fermÃ©.
 			string icon = null;
 			int sel = this.Selected;
 			if (sel-1 >= 0 && sel-1 < this.icons.Count)
@@ -386,20 +386,20 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		void HandleArrayCellCountChanged(object sender)
 		{
-			//	Le nombre de lignes a changé.
+			//	Le nombre de lignes a changÃ©.
 			this.UpdateArray();
 			this.ShowSelection();
 		}
 
 		void HandleArrayCellsContentChanged(object sender)
 		{
-			//	Le contenu des cellules a changé.
+			//	Le contenu des cellules a changÃ©.
 			this.UpdateArray();
 		}
 
 		void HandleArraySelectedRowChanged(object sender)
 		{
-			//	La ligne sélectionnée a changé.
+			//	La ligne sÃ©lectionnÃ©e a changÃ©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		void HandleArrayCompactChangeSelected(object sender)
 		{
-			//	La cellule sélectionnée a changé.
+			//	La cellule sÃ©lectionnÃ©e a changÃ©.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		void HandleArraySelectedRowDoubleClicked(object sender)
 		{
-			//	La ligne sélectionnée a changé.
+			//	La ligne sÃ©lectionnÃ©e a changÃ©.
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();

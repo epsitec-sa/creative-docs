@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -9,8 +9,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// La classe TextStyle définit le style d'un texte (paragraphe) qui peut dériver
-	/// d'un style par défaut ou de n'importe quel autre style.
+	/// La classe TextStyle dÃ©finit le style d'un texte (paragraphe) qui peut dÃ©river
+	/// d'un style par dÃ©faut ou de n'importe quel autre style.
 	/// </summary>
 	
 	[System.ComponentModel.TypeConverter (typeof (TextStyle.Converter))]
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Drawing
 
 		public Tab FindTabAfterPosition(double pos)
 		{
-			//	Cherche la position du prochain tabulateur après une position donnée.
+			//	Cherche la position du prochain tabulateur aprÃ¨s une position donnÃ©e.
 			double lastPos = 0.0;
 			double bestDist = 1000000;
 			Tab bestTab = Tab.Empty;
@@ -552,11 +552,11 @@ namespace Epsitec.Common.Drawing
 		
 		public TextStyle Clone()
 		{
-			//	Crée une copie parfaite du TextStyle. L'astuce des deux méthodes
-			//	ci-après permet de réalise un "Clone" qui marche aussi pour des
-			//	classes dérivées, lesquelles doivent simplement surcharger ces
-			//	méthodes pour (1) allouer le bon objet et (2) copier les champs
-			//	supplémentaires.
+			//	CrÃ©e une copie parfaite du TextStyle. L'astuce des deux mÃ©thodes
+			//	ci-aprÃ¨s permet de rÃ©alise un "Clone" qui marche aussi pour des
+			//	classes dÃ©rivÃ©es, lesquelles doivent simplement surcharger ces
+			//	mÃ©thodes pour (1) allouer le bon objet et (2) copier les champs
+			//	supplÃ©mentaires.
 			
 			return this.CloneCopyToNewObject (this.CloneNewObject ()) as TextStyle;
 		}
@@ -640,7 +640,7 @@ namespace Epsitec.Common.Drawing
 						this.FontSize = System.Double.Parse (data, culture);
 						break;
 
-						//	TODO: ajouter les autres propriétés ici...
+						//	TODO: ajouter les autres propriÃ©tÃ©s ici...
 				}
 			}
 		}
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Drawing
 		{
 			TextStyle that = o as TextStyle;
 			
-			//	Copie tous les éléments en utilisant "this" comme modèle. Il y a juste le
+			//	Copie tous les Ã©lÃ©ments en utilisant "this" comme modÃ¨le. Il y a juste le
 			//	parent pour lequel nous devons faire attention.
 			
 			that.parent         = this.isDefaultStyle ? TextStyle.defaultStyle : this.parent;
@@ -714,7 +714,7 @@ namespace Epsitec.Common.Drawing
 
 		private enum ThreeState
 		{
-			None,								//	état non défini
+			None,								//	Ã©tat non dÃ©fini
 			False,
 			True
 		}

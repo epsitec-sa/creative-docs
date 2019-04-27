@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// La classe CoreSettings permet de décrire des propriétés fondamentales telles
-	/// que défition de fonte et de paragraphe, plus quelques autres détails.
+	/// La classe CoreSettings permet de dÃ©crire des propriÃ©tÃ©s fondamentales telles
+	/// que dÃ©fition de fonte et de paragraphe, plus quelques autres dÃ©tails.
 	/// </summary>
 	public sealed class CoreSettings : BaseSettings
 	{

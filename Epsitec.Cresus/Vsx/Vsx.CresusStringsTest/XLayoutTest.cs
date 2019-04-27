@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Controls;
 using Epsitec.Windows;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

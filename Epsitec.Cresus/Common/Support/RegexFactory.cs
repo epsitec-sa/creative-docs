@@ -1,4 +1,4 @@
-//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Support
 	}
 	
 	/// <summary>
-	/// La classe RegexFactory permet de construire des objets "regex" à partir de
+	/// La classe RegexFactory permet de construire des objets "regex" Ã  partir de
 	/// textes simples avec des jokers "*"...
 	/// </summary>
 	public class RegexFactory
@@ -50,19 +50,19 @@ namespace Epsitec.Common.Support
 			RegexFactory.rBundleName  = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
 			RegexFactory.rFieldName   = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
 			
-			RegexFactory.pascalCaseSymbol = new Regex (@"^[A-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖŒÙÚÛÜİ][a-zßàáâãäåæçèéêëíîïñòóôõöœùúûüıÿA-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖŒÙÚÛÜİ0-9]*$", options);
+			RegexFactory.pascalCaseSymbol = new Regex (@"^[A-ZÃ€ÃÃ‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃÃÃ‘Ã’Ã“Ã”Ã•Ã–Å’Ã™ÃšÃ›ÃœÃ][a-zÃŸÃ Ã¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã­Ã®Ã¯Ã±Ã²Ã³Ã´ÃµÃ¶Å“Ã¹ÃºÃ»Ã¼Ã½Ã¿A-ZÃ€ÃÃ‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃÃÃ‘Ã’Ã“Ã”Ã•Ã–Å’Ã™ÃšÃ›ÃœÃ0-9]*$", options);
 			
-			//	TODO: recalculer l'expression régulière en fonction de la culture
+			//	TODO: recalculer l'expression rÃ©guliÃ¨re en fonction de la culture
 			
-			//	L'expression régulière utilisée pour déterminer si un nombre est formaté correctement
-			//	devrait être recalculée chaque fois que la culture active change, mais on ne le fait
+			//	L'expression rÃ©guliÃ¨re utilisÃ©e pour dÃ©terminer si un nombre est formatÃ© correctement
+			//	devrait Ãªtre recalculÃ©e chaque fois que la culture active change, mais on ne le fait
 			//	pas encore :
 			
 			char decimalSeparator;
 			
 			decimalSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
 			
-			//	TODO: regénérer locDecimalNum à chaque changement de culture
+			//	TODO: regÃ©nÃ©rer locDecimalNum Ã  chaque changement de culture
 			
 			RegexFactory.locDecimalNum = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimalSeparator +
 				/* */								  @"\d{0,12})?0*)|(\d{0,12}\" + decimalSeparator +
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Support
 			if ((options & Options.IgnoreCase) != 0)	regexOptions |= RegexOptions.IgnoreCase;
 			if ((options & Options.Compiled) != 0)		regexOptions |= RegexOptions.Compiled;
 			
-			regexPattern.Append (@"\A((");						//	force ancrage au début
+			regexPattern.Append (@"\A((");						//	force ancrage au dÃ©but
 
 			for (int i = 0; i < pattern.Length; i++)
 			{
@@ -119,26 +119,26 @@ namespace Epsitec.Common.Support
 				{
 					if (capture)
 					{
-						regexPattern.Append (@"(?<");			//	groupe nommé..
+						regexPattern.Append (@"(?<");			//	groupe nommÃ©..
 						regexPattern.Append (captureId++);	//	..avec comme nom le range 'captureId'..
-						regexPattern.Append (@">(.){0,}?)");	//	..et acceptant zero ou plus de caractère (minimum possible)
+						regexPattern.Append (@">(.){0,}?)");	//	..et acceptant zero ou plus de caractÃ¨re (minimum possible)
 					}
 					else
 					{
-						regexPattern.Append (@"(.){0,}?");		//	zero ou plus de caractères (minimum possible)
+						regexPattern.Append (@"(.){0,}?");		//	zero ou plus de caractÃ¨res (minimum possible)
 					}
 				}
 				else if (c == '?')
 				{
 					if (capture)
 					{
-						regexPattern.Append (@"(?<");			//	groupe nommé..
+						regexPattern.Append (@"(?<");			//	groupe nommÃ©..
 						regexPattern.Append (captureId++);	//	..avec comme nom le range 'captureId'..
-						regexPattern.Append (@">(.){1})");		//	..et acceptant exactement un caractère
+						regexPattern.Append (@">(.){1})");		//	..et acceptant exactement un caractÃ¨re
 					}
 					else
 					{
-						regexPattern.Append (@"(.){1}");		//	exactement un caractère
+						regexPattern.Append (@"(.){1}");		//	exactement un caractÃ¨re
 					}
 				}
 				else if (c == '|')
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			regexPattern.Append (@"))\z");						//	force ancrage à la fin
+			regexPattern.Append (@"))\z");						//	force ancrage Ã  la fin
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("{0} --> {1}", pattern, regexPattern.ToString ()));
 			

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -41,7 +41,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				graphics.AddFilledCircle(rect.Center, radiusExt);
 				Geometry.RenderVerticalGradient(graphics, rect, Color.FromRgb(0.4, 0.2, 0.2), Color.FromRgb(1.0, 0.8, 0.8));
 
-				//	Dessine l'intérieur allumé.
+				//	Dessine l'intÃ©rieur allumÃ©.
 				graphics.AddFilledCircle(rect.Center, radiusInt);
 				graphics.RenderSolid(DolphinApplication.ColorHilite);
 
@@ -56,7 +56,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				graphics.AddFilledCircle(rect.Center, radiusExt);
 				Geometry.RenderVerticalGradient(graphics, rect, DolphinApplication.FromBrightness(0.6), DolphinApplication.FromBrightness(1.0));
 
-				//	Dessine l'intérieur éteint.
+				//	Dessine l'intÃ©rieur Ã©teint.
 				graphics.AddFilledCircle(rect.Center, radiusInt);
 				Geometry.RenderVerticalGradient(graphics, rectInt, DolphinApplication.FromBrightness(0.4), DolphinApplication.FromBrightness(0.7));
 

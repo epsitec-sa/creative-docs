@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe AbstractRuler implÈmente la classe de base des rËgles
+	/// La classe AbstractRuler impl√©mente la classe de base des r√®gles
 	/// HRuler et VRuler.
 	/// </summary>
 	public abstract class AbstractRuler : Widget, Common.Widgets.Helpers.IToolTipHost
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public double PPM
 		{
-			//	Nombre de points/millimËtres pour la graduation.
+			//	Nombre de points/millim√®tres pour la graduation.
 			get
 			{
 				return this.ppm;
@@ -54,8 +54,8 @@ namespace Epsitec.Common.Document.Widgets
 
 		public double Starting
 		{
-			//	DÈbut de la graduation, pour permettre la conversion points Ècran en
-			//	points document et inversÈment.
+			//	D√©but de la graduation, pour permettre la conversion points √©cran en
+			//	points document et invers√©ment.
 			get
 			{
 				return this.starting;
@@ -73,8 +73,8 @@ namespace Epsitec.Common.Document.Widgets
 
 		public double Ending
 		{
-			//	Fin de la graduation, pour permettre la conversion points Ècran en
-			//	points document et inversÈment.
+			//	Fin de la graduation, pour permettre la conversion points √©cran en
+			//	points document et invers√©ment.
 			get
 			{
 				return this.ending;
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool MarkerVisible
 		{
-			//	VisibilitÈ du marqueur.
+			//	Visibilit√© du marqueur.
 			get
 			{
 				return this.markerVisible;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public Objects.AbstractText EditObject
 		{
-			//	Objet en cours d'Èdition.
+			//	Objet en cours d'√©dition.
 			get
 			{
 				return this.editObject;
@@ -170,17 +170,17 @@ namespace Epsitec.Common.Document.Widgets
 
 		public virtual void WrappersAttach()
 		{
-			//	Attache la rËgle aux wrappers.
+			//	Attache la r√®gle aux wrappers.
 		}
 
 		public virtual void WrappersDetach()
 		{
-			//	DÈtache la rËgle des wrappers.
+			//	D√©tache la r√®gle des wrappers.
 		}
 
 		public double LimitLow
 		{
-			//	Limite basse, selon la bbox de l'obet ÈditÈ.
+			//	Limite basse, selon la bbox de l'obet √©dit√©.
 			get
 			{
 				return this.limitLow;
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public double LimitHigh
 		{
-			//	Limite haute, selon la bbox de l'obet ÈditÈ.
+			//	Limite haute, selon la bbox de l'obet √©dit√©.
 			get
 			{
 				return this.limitHigh;
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected string HiliteHandle
 		{
-			//	PoignÈe mise en Èvidence.
+			//	Poign√©e mise en √©vidence.
 			get
 			{
 				return this.hiliteHandle;
@@ -313,29 +313,29 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected string DraggingDetect(Point pos)
 		{
-			//	DÈtecte la poignÈe visÈ par la souris.
+			//	D√©tecte la poign√©e vis√© par la souris.
 			return this.DraggingDetect(pos, null);
 		}
 
 		protected virtual string DraggingDetect(Point pos, string exclude)
 		{
-			//	DÈtecte la poignÈe visÈ par la souris.
+			//	D√©tecte la poign√©e vis√© par la souris.
 			return null;
 		}
 
 		protected virtual void DraggingStart(ref string handle, Point pos)
 		{
-			//	DÈbut du drag d'une poignÈe.
+			//	D√©but du drag d'une poign√©e.
 		}
 
 		protected virtual void DraggingMove(ref string handle, Point pos)
 		{
-			//	DÈplace une poignÈe.
+			//	D√©place une poign√©e.
 		}
 
 		protected virtual void DraggingEnd(ref string handle, Point pos)
 		{
-			//	Fin du drag d'une poignÈe.
+			//	Fin du drag d'une poign√©e.
 		}
 
 
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Color ColorBackground
 		{
-			//	Donne la couleur pour le fond de la rËgle.
+			//	Donne la couleur pour le fond de la r√®gle.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( this.edited )
 				{
 					double factor = 0.3+0.6*color.GetBrightness();
-					color = Drawing.Color.FromRgb(color.R*factor, color.G*factor, color.B*factor);  // couleur plus foncÈe
+					color = Drawing.Color.FromRgb(color.R*factor, color.G*factor, color.B*factor);  // couleur plus fonc√©e
 				}
 				return color;
 			}
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Color ColorBackgroundEdited
 		{
-			//	Donne la couleur pour le fond de la zone ÈditÈe de la rËgle.
+			//	Donne la couleur pour le fond de la zone √©dit√©e de la r√®gle.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -382,13 +382,13 @@ namespace Epsitec.Common.Document.Widgets
 			else
 			{
 				Color color = adorner.ColorWindow;
-				if ( color.GetBrightness() >= 0.9 )  // trËs clair ?
+				if ( color.GetBrightness() >= 0.9 )  // tr√®s clair ?
 				{
 					return Color.FromBrightness(1);  // blanc
 				}
 				else
 				{
-					return Color.FromBrightness(0.9);  // gris trËs clair
+					return Color.FromBrightness(0.9);  // gris tr√®s clair
 				}
 			}
 		}
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Document.Widgets
 		public object GetToolTipCaption(Point pos)
 		{
 			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
-			if ( this.edited )  // Èdition en cours ?
+			if ( this.edited )  // √©dition en cours ?
 			{
 				return this.GetTooltipEditedText(pos);
 			}
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected virtual string GetTooltipEditedText(Point pos)
 		{
-			//	Donne le texte du tooltip d'Èdition en fonction de la position.
+			//	Donne le texte du tooltip d'√©dition en fonction de la position.
 			return null;  // pas de tooltip
 		}
 		#endregion

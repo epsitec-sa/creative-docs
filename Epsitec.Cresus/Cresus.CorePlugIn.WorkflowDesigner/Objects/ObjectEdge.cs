@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -18,7 +18,7 @@ using Epsitec.Cresus.Core.Workflows;
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 {
 	/// <summary>
-	/// Objet ayant la forme d'un rectangle allongé avec les extrémités gauche et droite arrondies.
+	/// Objet ayant la forme d'un rectangle allongÃ© avec les extrÃ©mitÃ©s gauche et droite arrondies.
 	/// </summary>
 	public class ObjectEdge : LinkableObject
 	{
@@ -50,14 +50,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			this.Bounds = new Rectangle (Point.Zero, new Size (ObjectEdge.frameSize.Width, this.RequiredHeight));
 
-			//	Crée la liaison unique.
+			//	CrÃ©e la liaison unique.
 			this.CreateInitialLinks ();
 		}
 
 
 		private string Title
 		{
-			//	Titre au sommet de la boîte (nom du noeud).
+			//	Titre au sommet de la boÃ®te (nom du noeud).
 			get
 			{
 				return this.titleString;
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private string Subtitle
 		{
-			//	Sous-titre au sommet de la boîte (nom de l'action).
+			//	Sous-titre au sommet de la boÃ®te (nom de l'action).
 			get
 			{
 				return this.subtitleString;
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private string Description
 		{
-			//	Titre au sommet de la boîte (nom du noeud).
+			//	Titre au sommet de la boÃ®te (nom du noeud).
 			get
 			{
 				return this.descriptionString;
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override Rectangle ExtendedBounds
 		{
-			//	Retourne la boîte de l'objet, éventuellement agrandie si l'objet est étendu.
+			//	Retourne la boÃ®te de l'objet, Ã©ventuellement agrandie si l'objet est Ã©tendu.
 			get
 			{
 				var box = this.bounds;
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			this.bounds.Offset(dx, dy);
 			this.UpdateGeometry ();
 		}
@@ -709,7 +709,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 					int index = text.IndexOf (ObjectEdge.subtitlePostfix);
 					if (index != -1)
 					{
-						text = text.Substring (index+ObjectEdge.subtitlePostfix.Length);  // supprime le "n) " au début
+						text = text.Substring (index+ObjectEdge.subtitlePostfix.Length);  // supprime le "n) " au dÃ©but
 					}
 				}
 
@@ -753,16 +753,16 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			switch (element)
 			{
 				case ActiveElement.EdgeChangeWidth:
-					return "Change la largeur de la boîte";
+					return "Change la largeur de la boÃ®te";
 
 				case ActiveElement.EdgeClose:
 					return "<b>Supprime</b> la transition";
 
 				case ActiveElement.EdgeComment:
-					return (this.comment == null) ? "Ajoute un commentaire à la transition" : "Ferme le commentaire";
+					return (this.comment == null) ? "Ajoute un commentaire Ã  la transition" : "Ferme le commentaire";
 
 				case ActiveElement.EdgeExtend:
-					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
+					return this.isExtended ? "RÃ©duit la boÃ®te" : "Etend la boÃ®te";
 
 				case ActiveElement.EdgeColor1:
 					return "Jaune";
@@ -794,8 +794,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			base.MouseMove (message, pos);
 
 			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.HilitedElement == ActiveElement.EdgeHeader)
@@ -824,7 +824,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			base.MouseDown (message, pos);
 
 			if (this.HilitedElement == ActiveElement.EdgeChangeWidth)
@@ -836,7 +836,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			base.MouseUp (message, pos);
 
 			if ((this.HilitedElement == ActiveElement.EdgeHeader ||
@@ -932,7 +932,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (AbstractObject.DetectRoundRectangle (this.bounds, this.bounds.Height/2, pos))
 			{
 				return ActiveElement.EdgeHeader;
@@ -953,7 +953,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			var result = ActiveElement.None;
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
@@ -1021,7 +1021,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 	
 		private void SwapComment()
 		{
-			//	Ajoute un commentaire à la boîte.
+			//	Ajoute un commentaire Ã  la boÃ®te.
 			if (this.comment == null)
 			{
 				this.comment = new ObjectComment (this.editor, this.Entity);
@@ -1065,7 +1065,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
-			//	Héritage	->	Traitillé
+			//	HÃ©ritage	->	TraitillÃ©
 			//	Interface	->	Trait plein avec o---
 			base.DrawBackground (graphics);
 
@@ -1078,7 +1078,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			var extendedRect = new Rectangle (this.bounds.Left, this.bounds.Bottom-ObjectEdge.extendedHeight, this.bounds.Width, this.bounds.Height+ObjectEdge.extendedHeight);
 			extendedRect.Deflate (2, 0);
 
-			//	Dessine le boîte étendue.
+			//	Dessine le boÃ®te Ã©tendue.
 			if (this.isExtended)
 			{
 				//	Dessine l'ombre.
@@ -1090,11 +1090,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				rect.Deflate (0.5);
 				Path extendedPath = this.PathRoundRectangle (rect, this.bounds.Height/2);
 
-				//	Dessine l'intérieur en blanc.
+				//	Dessine l'intÃ©rieur en blanc.
 				graphics.Rasterizer.AddSurface (extendedPath);
 				graphics.RenderSolid (this.colorFactory.GetColor (1));
 
-				//	Dessine l'intérieur en dégradé.
+				//	Dessine l'intÃ©rieur en dÃ©gradÃ©.
 				graphics.Rasterizer.AddSurface (extendedPath);
 				c1 = this.colorFactory.GetColorMain (dragging ? 0.3 : 0.2);
 				c2 = this.colorFactory.GetColorMain (dragging ? 0.1 : 0.0);
@@ -1114,11 +1114,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			rect.Deflate(1);
 			Path path = this.PathEdgeRectangle (rect);
 
-			//	Dessine l'intérieur en blanc.
+			//	Dessine l'intÃ©rieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid (this.colorFactory.GetColor (1));
 
-			//	Dessine l'intérieur en dégradé.
+			//	Dessine l'intÃ©rieur en dÃ©gradÃ©.
 			graphics.Rasterizer.AddSurface(path);
 			c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
 			c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
@@ -1198,7 +1198,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected override void DrawAsOriginForMagnetConstrain(Graphics graphics)
 		{
-			//	Dessine l'objet comme étant l'origine d'une contrainte.
+			//	Dessine l'objet comme Ã©tant l'origine d'une contrainte.
 			var rect = this.bounds;
 			rect.Deflate (1);
 			Path path = this.PathEdgeRectangle (rect);
@@ -1210,7 +1210,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsHeaderHilite
 		{
-			//	Indique si la souris est dans l'en-tête.
+			//	Indique si la souris est dans l'en-tÃªte.
 			get
 			{
 				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
@@ -1257,7 +1257,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private Point PositionExtendButton
 		{
-			//	Retourne la position du bouton pour étendre.
+			//	Retourne la position du bouton pour Ã©tendre.
 			get
 			{
 				return new Point (this.bounds.Left+ActiveButton.buttonRadius+6, this.bounds.Center.Y);
@@ -1299,26 +1299,26 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private string GetGroupTooltip(int rank)
 		{
-			//	Retourne le tooltip à afficher pour un groupe.
+			//	Retourne le tooltip Ã  afficher pour un groupe.
 			return null;  // pas de tooltip
 		}
 
 
 		private void UpdateTitle()
 		{
-			//	Met à jour le titre du noeud.
+			//	Met Ã  jour le titre du noeud.
 			this.Title = this.Entity.Name.ToString ();
 		}
 
 		private void UpdateSubtitle()
 		{
-			//	Met à jour le sous-titre du noeud.
+			//	Met Ã  jour le sous-titre du noeud.
 			this.Subtitle = this.Entity.TransitionActions;
 		}
 
 		private void UpdateDescription()
 		{
-			//	Met à jour le sous-titre du noeud.
+			//	Met Ã  jour le sous-titre du noeud.
 			this.Description = this.Entity.Description.ToString ();
 		}
 

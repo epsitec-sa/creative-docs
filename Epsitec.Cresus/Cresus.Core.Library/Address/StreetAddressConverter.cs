@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			}
 			if (value.Contains (","))
 			{
-				return ValidationResult.CreateError ("Le caractère virgule (,) n'est pas admis dans une adresse<br/>" +
+				return ValidationResult.CreateError ("Le caractÃ¨re virgule (,) n'est pas admis dans une adresse<br/>" +
 					/**/							 "de rue telle que <i>rue de la Gare 23</i>");
 			}
 			else
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				if (value.CountOccurences (",") > 1)
 				{
-					return ValidationResult.CreateError ("Le caractère virgule (,) ne peut apparaître qu'une seule fois<br/>" +
+					return ValidationResult.CreateError ("Le caractÃ¨re virgule (,) ne peut apparaÃ®tre qu'une seule fois<br/>" +
 						/**/							 "dans une adresse de rue telle que <i>23, rue de la Gare</i>");
 				}
 
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 				if ((house.Length > 8) ||
 					(num == 0))
 				{
-					return ValidationResult.CreateWarning ("L'élément <b>{0}</b> ne semble pas être un numéro de maison<br/>" +
+					return ValidationResult.CreateWarning ("L'Ã©lÃ©ment <b>{0}</b> ne semble pas Ãªtre un numÃ©ro de maison<br/>" +
 						/**/							   "valide dans une adresse de rue telle que <i>23, rue de la Gare</i>", house.TruncateAndAddEllipsis (5));
 				}
 			}

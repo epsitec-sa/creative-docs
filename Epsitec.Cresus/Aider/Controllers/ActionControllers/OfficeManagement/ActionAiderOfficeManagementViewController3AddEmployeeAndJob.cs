@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -61,18 +61,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Fonction")
 				.End ()
 				.Field<EmployeeActivity> ()
-					.Title ("Degré d'activité")
+					.Title ("DegrÃ© d'activitÃ©")
 					.InitialValue (EmployeeActivity.Active)
 				.End ()
 				.Field<string> ()
-					.Title ("Numéro AVS")
+					.Title ("NumÃ©ro AVS")
 					.InitialValue ("756.")
 				.End ()
 				.Field<AiderUserEntity> ()
-					.Title ("Utilisateur associé")
+					.Title ("Utilisateur associÃ©")
 				.End ()
-				.Text("<b>Détails du poste</b>")
-				.Text("Lieu d'église: " + this.Entity.OfficeShortName)
+				.Text("<b>DÃ©tails du poste</b>")
+				.Text("Lieu d'Ã©glise: " + this.Entity.OfficeShortName)
 				.Field<string> ()
 					.Title ("Site ou secteur")
 				.End ()
@@ -100,7 +100,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if(person.Employee.IsNotNull ())
 			{
-				throw new BusinessRuleException ("Cette personne est déjà définie comme collaborateur, ajouter un poste depuis le contact");
+				throw new BusinessRuleException ("Cette personne est dÃ©jÃ  dÃ©finie comme collaborateur, ajouter un poste depuis le contact");
 			}
 	
 			var employee = AiderEmployeeEntity.Create (this.BusinessContext, person, user, employeeType, function, employeeActivity, navs13);

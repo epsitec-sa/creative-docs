@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -21,7 +21,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Retirer le membre sélectionné de ce ménage");
+			return Resources.FormattedText ("Retirer le membre sÃ©lectionnÃ© de ce mÃ©nage");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -41,21 +41,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (count == 0)
 			{
 				message = TextFormatter.FormatText (
-					"Souhaitez-vous vraiment retirer", person.GetFullName (), "de ce ménage ?",
+					"Souhaitez-vous vraiment retirer", person.GetFullName (), "de ce mÃ©nage ?",
 					"\n \n",
-					"La personne sera déplacée dans un nouveau ménage vide.");
+					"La personne sera dÃ©placÃ©e dans un nouveau mÃ©nage vide.");
 			}
 			else
 			{
-				var variable = count > 1 ? "de plusieurs ménages." : "d'un ménage.";
+				var variable = count > 1 ? "de plusieurs mÃ©nages." : "d'un mÃ©nage.";
 				message = TextFormatter.FormatText (
-					"Souhaitez-vous vraiment retirer", person.GetFullName (), "de ce ménage ?",
+					"Souhaitez-vous vraiment retirer", person.GetFullName (), "de ce mÃ©nage ?",
 					"\n \n",
 					"La personne fera encore partie", variable);
 			}
 			
 			form
-				.Title ("Retirer le membre du ménage ?")
+				.Title ("Retirer le membre du mÃ©nage ?")
 				.Text (message)
 				.End ();
 		}

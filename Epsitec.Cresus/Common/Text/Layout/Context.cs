@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// La classe TextContext stocke le contexte de layout lié à un paragraphe
+	/// La classe TextContext stocke le contexte de layout liÃ© Ã  un paragraphe
 	/// entier.
 	/// </summary>
 	public class Context
@@ -317,8 +317,8 @@ namespace Epsitec.Common.Text.Layout
 		public double							LineSkipBefore
 		{
 			//	Ne pas confondre LineSpaceBefore qui provient de LeadingProperty
-			//	et LineSkipBefore qui est la valeur imposée par le TextFitter en
-			//	début de paragraphe, à cause d'une fin de paragraphe précédente.
+			//	et LineSkipBefore qui est la valeur imposÃ©e par le TextFitter en
+			//	dÃ©but de paragraphe, Ã  cause d'une fin de paragraphe prÃ©cÃ©dente.
 			
 			get
 			{
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				//	Retourne la position Y de la ligne dans le frame, alors que FrameY retourne
-				//	la prochaine position Y à utiliser...
+				//	la prochaine position Y Ã  utiliser...
 				
 				return this.frameYLine;
 			}
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Text.Layout
 
 		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraphLineCount, bool continuation)
 		{
-			//	Détermine les points de découpe pour le texte, selon le contexte
+			//	DÃ©termine les points de dÃ©coupe pour le texte, selon le contexte
 			//	courant.
 			
 			if (this.textStart + this.textOffset >= this.text.Length)
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			if (continuation)
 			{
-				//	TODO: gérer la continuation...
+				//	TODO: gÃ©rer la continuation...
 				
 				this.mxLeft = this.ox;
 			}
@@ -569,8 +569,8 @@ restart:
 				
 				if (paragraphLineCount == 0)
 				{
-					//	Sélectionne le frame qui convient pour ce paragraphe (selon
-					//	les réglages de la propriété Keep.ParagraphStartMode) :
+					//	SÃ©lectionne le frame qui convient pour ce paragraphe (selon
+					//	les rÃ©glages de la propriÃ©tÃ© Keep.ParagraphStartMode) :
 					
 					this.UpdateFrameIndex (ref frameIndex, this.frameY == 0, this.paraStartMode);
 				}
@@ -581,7 +581,7 @@ restart:
 				if ((frameIndex < this.frameList.Count) &&
 					(frameIndex > -1))
 				{
-					//	Reprend avec un autre frame. Vérifions d'abord si ce changement
+					//	Reprend avec un autre frame. VÃ©rifions d'abord si ce changement
 					//	de frame est permis ici :
 					
 					if ((this.frameList[frameIndex-1] is SingleLineTextFrame) ||
@@ -593,7 +593,7 @@ restart:
 					if ((paragraphLineCount < this.keepStartLines) &&
 						(paragraphLineCount > 0))
 					{
-						//	Il n'y a pas assez de lignes de texte consécutives en début
+						//	Il n'y a pas assez de lignes de texte consÃ©cutives en dÃ©but
 						//	de paragraphe !
 						
 						this.frameFences.Add (frameIndex-1, 0);
@@ -612,9 +612,9 @@ restart:
 						(this.keepWithPrevPara) &&
 						(this.paraStartMode == Properties.ParagraphStartMode.Anywhere))
 					{
-						//	Le paragraphe ne peut pas être dissocié de celui qui précède.
+						//	Le paragraphe ne peut pas Ãªtre dissociÃ© de celui qui prÃ©cÃ¨de.
 						//	Un changement de frame ici va affecter le paragraphe qui
-						//	précède immédiatement (récursivement)
+						//	prÃ©cÃ¨de immÃ©diatement (rÃ©cursivement)
 						
 						this.frameFences.Add (frameIndex-1, 0);
 						
@@ -623,7 +623,7 @@ restart:
 					
 				select_new_frame:
 					
-					//	On reprend tout à zéro depuis ici :
+					//	On reprend tout Ã  zÃ©ro depuis ici :
 					
 					this.SelectLayoutEngine (this.textOffset);
 					this.SelectMarginsAndJustification (this.textOffset, paragraphLineCount, false);
@@ -631,7 +631,7 @@ restart:
 					this.SelectLineHeightAndLeading (this.textOffset, initialLineHeight, initialLineAscender, initialLineDescender);
 					this.SelectVerticalAlignment (paragraphLineCount);
 					
-					//	Prend note du nouveau frame de référence et de la position dans
+					//	Prend note du nouveau frame de rÃ©fÃ©rence et de la position dans
 					//	le paragraphe au sommet du frame :
 					
 					this.frameFirstLine = paragraphLineCount;
@@ -640,7 +640,7 @@ restart:
 				}
 				else
 				{
-					//	Il n'y a plus de ITextFrame ! On s'arrête donc immédiatement
+					//	Il n'y a plus de ITextFrame ! On s'arrÃªte donc immÃ©diatement
 					//	avec une erreur.
 					
 					return Layout.Status.ErrorNeedMoreRoom;
@@ -675,8 +675,8 @@ restart:
 					if ((paragraphLineCount == 0) &&
 						(this.frameY != 0))
 					{
-						//	A la première ligne du paragraphe, on ajoute l'espace "avant"
-						//	tel que défini par la propriété de "leading". Mais on n'ajoute
+						//	A la premiÃ¨re ligne du paragraphe, on ajoute l'espace "avant"
+						//	tel que dÃ©fini par la propriÃ©tÃ© de "leading". Mais on n'ajoute
 						//	cet espace que si on n'est pas en sommet de frame :
 						
 						if (! continuation)
@@ -700,10 +700,10 @@ restart:
 					{
 						if (continuation)
 						{
-							//	Cas spécial: il n'y a plus de place dans le ITextFrame,
-							//	mais nous n'avons pas commencé en début de ligne (suite
-							//	à un TAB, par exemple). Il faut que l'appelant relance
-							//	tout le processus depuis le début de la ligne.
+							//	Cas spÃ©cial: il n'y a plus de place dans le ITextFrame,
+							//	mais nous n'avons pas commencÃ© en dÃ©but de ligne (suite
+							//	Ã  un TAB, par exemple). Il faut que l'appelant relance
+							//	tout le processus depuis le dÃ©but de la ligne.
 							
 							return Layout.Status.RestartLineLayout;
 						}
@@ -755,8 +755,8 @@ restart:
 								(this.lineHeight > defLineHeight))
 							{
 								//	Si on est en train de traiter une ligne avec des TABs et
-								//	que la hauteur de la ligne a changé, il faut demander à
-								//	l'appellant de refaire une seconde passe complète de la
+								//	que la hauteur de la ligne a changÃ©, il faut demander Ã 
+								//	l'appellant de refaire une seconde passe complÃ¨te de la
 								//	ligne :
 								
 								return Layout.Status.RestartLineLayout;
@@ -765,8 +765,8 @@ restart:
 							if ((this.frameList != null) &&
 								(this.lineHeight > defLineHeight))
 							{
-								//	Oups. On vient de réaliser un fit idéal, mais qui ne tient
-								//	pas dans l'espace alloué verticalement. Il faut forcer une
+								//	Oups. On vient de rÃ©aliser un fit idÃ©al, mais qui ne tient
+								//	pas dans l'espace allouÃ© verticalement. Il faut forcer une
 								//	nouvelle passe :
 								
 								defLineHeight = this.lineHeight;
@@ -785,7 +785,7 @@ restart:
 						if ((status == Layout.Status.OkFitEnded) &&
 							(this.LastProcessedCode == Unicode.Code.LineSeparator))
 						{
-							//	C'est une fin de ligne forcée, pas une fin de paragraphe...
+							//	C'est une fin de ligne forcÃ©e, pas une fin de paragraphe...
 							
 							status = Layout.Status.Ok;
 						}
@@ -804,7 +804,7 @@ restart:
 								(this.frameList[frameIndex-0] is SingleLineTextFrame))
 							{
 								//	N'applique pas les contraintes dans le cas de lignes de texte
-								//	isolées; cela n'aurait aucun sens !
+								//	isolÃ©es; cela n'aurait aucun sens !
 							}
 							else
 							{
@@ -824,8 +824,8 @@ restart:
 					
 					case Layout.Status.OkHiddenFitEnded:
 						
-						//	Arrivé à la fin d'un paragraphe entièrement vide; il n'a pas de
-						//	contenu visible, mais il fait quand-même avancer la position dans
+						//	ArrivÃ© Ã  la fin d'un paragraphe entiÃ¨rement vide; il n'a pas de
+						//	contenu visible, mais il fait quand-mÃªme avancer la position dans
 						//	le texte...
 						
 						{
@@ -892,7 +892,7 @@ restart:
 			if ((current != null) &&
 				(current.Length > 0))
 			{
-				//	Ne s'occupe de l'information liée à la couleur du texte que si
+				//	Ne s'occupe de l'information liÃ©e Ã  la couleur du texte que si
 				//	un soulignement est en cours :
 				
 				string color;
@@ -901,7 +901,7 @@ restart:
 				currentColor = new Properties.FontColorProperty (color);
 			}
 			
-			//	Supprime les définitions qui donnent lieu à des soulignements
+			//	Supprime les dÃ©finitions qui donnent lieu Ã  des soulignements
 			//	invisibles :
 			
 			if ((current != null) &&
@@ -913,7 +913,7 @@ restart:
 			if (! Property.CompareEqualContents (previous, current) ||
 				! Property.CompareEqualContents (previousColor, currentColor))
 			{
-				//	Enregistre le changement d'état de soulignement.
+				//	Enregistre le changement d'Ã©tat de soulignement.
 				
 				double oy   = this.LineBaseY;
 				double asc  = this.LineAscender;
@@ -1000,8 +1000,8 @@ restart:
 		
 		public void InvisibleLine(ITextRenderer renderer, int length, double lineBaseX, double lineBaseY)
 		{
-			//	Appelé lorsqu'une ligne ne doit pas être affichée parce qu'elle
-			//	est entièrement hors du frame.
+			//	AppelÃ© lorsqu'une ligne ne doit pas Ãªtre affichÃ©e parce qu'elle
+			//	est entiÃ¨rement hors du frame.
 			
 			Debug.Assert.IsNotNull (this.text);
 			Debug.Assert.IsTrue (this.textStart + this.textOffset + length <= this.text.Length);
@@ -1014,8 +1014,8 @@ restart:
 		
 		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double lineBaseX, double lineBaseY, double lineWidth, int paragraphLineCount, bool isTab, bool isLastLine)
 		{
-			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
-			//	layout associés au texte.
+			//	RÃ©alise le rendu de la ligne, en appelant les divers moteurs de
+			//	layout associÃ©s au texte.
 			
 			Debug.Assert.IsNotNull (this.text);
 			
@@ -1069,10 +1069,10 @@ restart:
 			}
 			
 			
-			//	Détermine si le contenu de la ligne peut être représenté avec les
-			//	facteurs d'étirement calculés dans la phase de 'fit'. En cas de
-			//	problèmes, on peut introduire des cales ('glue') entre les carac-
-			//	tères et modifier la gestion des substitutions de glyphes :
+			//	DÃ©termine si le contenu de la ligne peut Ãªtre reprÃ©sentÃ© avec les
+			//	facteurs d'Ã©tirement calculÃ©s dans la phase de 'fit'. En cas de
+			//	problÃ¨mes, on peut introduire des cales ('glue') entre les carac-
+			//	tÃ¨res et modifier la gestion des substitutions de glyphes :
 			
 			double wouldBeCharacterWidth  = this.textProfile.WidthCharacter * this.textScales.ScaleCharacter;
 			double wouldBeNoStretchWidth = this.textProfile.WidthNoStretch * this.textScales.ScaleNoStretch;
@@ -1094,7 +1094,7 @@ restart:
 				
 				this.textGlue = glueWidth / glueCount;
 				
-				//	Le nombre de caractères à analyser correspond en principe à la
+				//	Le nombre de caractÃ¨res Ã  analyser correspond en principe Ã  la
 				//	longueur de la ligne (length), mais si la ligne se termine par
 				//	une marque de fin de ligne, c'est l'info de textProfile qu'il
 				//	faut utiliser.
@@ -1233,7 +1233,7 @@ restart:
 		{
 			wordBreakInfo = Unicode.BreakInfo.No;
 			
-			//	TODO: gérer le sens <-- pour l'avance du texte
+			//	TODO: gÃ©rer le sens <-- pour l'avance du texte
 			
 			int end   = this.text.Length;
 			int pos   = this.textStart + offset;
@@ -1261,7 +1261,7 @@ restart:
 			}
 			
 			//	Copie le texte dans le buffer temporaire. C'est plus rapide de faire
-			//	la copie à la main que d'appeler System.Array.Copy :
+			//	la copie Ã  la main que d'appeler System.Array.Copy :
 			
 			pos = this.textStart + offset;
 			
@@ -1275,7 +1275,7 @@ restart:
 		
 		public bool GetTextCopy(int offset, out ulong[] text, ref int length)
 		{
-			//	TODO: gérer le sens <-- pour l'avance du texte
+			//	TODO: gÃ©rer le sens <-- pour l'avance du texte
 			
 			int end = System.Math.Min (this.textStart + offset + length, this.text.Length);
 			int pos = this.textStart + offset;
@@ -1289,7 +1289,7 @@ restart:
 			}
 			
 			//	Copie le texte dans le buffer temporaire. C'est plus rapide de faire
-			//	la copie à la main que d'appeler System.Array.Copy :
+			//	la copie Ã  la main que d'appeler System.Array.Copy :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -1344,7 +1344,7 @@ restart:
 					{
 						if (code == utf32[j])
 						{
-							//	Trouvé un terminateur dans le texte. Il faut raccourcir
+							//	TrouvÃ© un terminateur dans le texte. Il faut raccourcir
 							//	le texte en le tronquant ici :
 							
 							int     count = i - start;
@@ -1352,7 +1352,7 @@ restart:
 							
 							System.Array.Copy (this.text, start, copy, 0, count);
 							
-							//	Ajoute une fin de texte synthétique, au cas où :
+							//	Ajoute une fin de texte synthÃ©tique, au cas oÃ¹ :
 							
 							copy[count] = this.text[i];
 							
@@ -1467,9 +1467,9 @@ restart:
 				this.keepStartLines = System.Math.Max (1, keep.StartLines);
 				this.keepEndLines   = System.Math.Max (1, keep.EndLines);
 				
-				//	Le TextFitter peut forcer un 'keep with previous paragraph' basé
-				//	sur les informations relatives au paragraphe précédent; on doit
-				//	donc conserver l'état 'keepWithPrevPara = true'...
+				//	Le TextFitter peut forcer un 'keep with previous paragraph' basÃ©
+				//	sur les informations relatives au paragraphe prÃ©cÃ©dent; on doit
+				//	donc conserver l'Ã©tat 'keepWithPrevPara = true'...
 				
 				this.keepWithPrevPara |= keep.KeepWithPreviousParagraph == Properties.ThreeState.True;
 				this.keepWithNextPara  = keep.KeepWithNextParagraph == Properties.ThreeState.True;
@@ -1489,15 +1489,15 @@ restart:
 			}
 			else
 			{
-				//	Combine les deux modes de début de paragraphe :
+				//	Combine les deux modes de dÃ©but de paragraphe :
 				
 				switch (this.paraDefaultStartMode)
 				{
 					case Properties.ParagraphStartMode.NewFrame:
 						
-						//	Si le paragraphe est précédé d'un saut de frame, on force
-						//	un saut uniquement si le paragraphe lui-même ne force pas
-						//	déjà un saut de page :
+						//	Si le paragraphe est prÃ©cÃ©dÃ© d'un saut de frame, on force
+						//	un saut uniquement si le paragraphe lui-mÃªme ne force pas
+						//	dÃ©jÃ  un saut de page :
 						
 						switch (this.paraStartMode)
 						{
@@ -1512,9 +1512,9 @@ restart:
 					case Properties.ParagraphStartMode.NewOddPage:
 					case Properties.ParagraphStartMode.NewEvenPage:
 						
-						//	Si le paragraphe est précédé d'un saut de page, on force
-						//	un saut uniquement si le paragraphe lui-même ne force pas
-						//	déjà un saut de page précis (page paire/impaire) :
+						//	Si le paragraphe est prÃ©cÃ©dÃ© d'un saut de page, on force
+						//	un saut uniquement si le paragraphe lui-mÃªme ne force pas
+						//	dÃ©jÃ  un saut de page prÃ©cis (page paire/impaire) :
 						
 						switch (this.paraStartMode)
 						{
@@ -1560,7 +1560,7 @@ restart:
 					if ((leadingProperty.Leading.IsSafeNaN ()) ||
 						(leadingProperty.Leading == 0))
 					{
-						//	Pas d'interligne spécifié : utilise l'interligne automatique.
+						//	Pas d'interligne spÃ©cifiÃ© : utilise l'interligne automatique.
 					}
 					else
 					{
@@ -1638,8 +1638,8 @@ restart:
 		
 		private void UpdateFrameIndex(ref int frameIndex, bool isTopOfFrame, Properties.ParagraphStartMode paraStartMode)
 		{
-			//	Un paragraphe peut imposer des contraintes quant à sa position dans
-			//	un frame (début de frame, frame en début de page/page paire/page
+			//	Un paragraphe peut imposer des contraintes quant Ã  sa position dans
+			//	un frame (dÃ©but de frame, frame en dÃ©but de page/page paire/page
 			//	impaire).
 			
 			switch (paraStartMode)
@@ -1655,7 +1655,7 @@ restart:
 					if ((this.IsFirstFrameInPage (frameIndex)) &&
 						(isTopOfFrame))
 					{
-						//	OK : déjà au début d'une page.
+						//	OK : dÃ©jÃ  au dÃ©but d'une page.
 					}
 					else
 					{
@@ -1674,7 +1674,7 @@ restart:
 						(this.IsFrameInEvenPage (frameIndex)) &&
 						(isTopOfFrame))
 					{
-						//	OK : déjà au début d'une page paire.
+						//	OK : dÃ©jÃ  au dÃ©but d'une page paire.
 					}
 					else
 					{
@@ -1693,7 +1693,7 @@ restart:
 						(this.IsFrameInOddPage (frameIndex)) &&
 						(isTopOfFrame))
 					{
-						//	OK : déjà au début d'une page impaire.
+						//	OK : dÃ©jÃ  au dÃ©but d'une page impaire.
 					}
 					else
 					{
@@ -1848,7 +1848,7 @@ restart:
 		private ITextFrame						frame;
 		private double							frameY;
 		private double							frameYLine;
-		private int								frameFirstLine;			//	# première ligne du paragraphe dans ce frame
+		private int								frameFirstLine;			//	# premiÃ¨re ligne du paragraphe dans ce frame
 		
 		private int								leftToRight;
 		

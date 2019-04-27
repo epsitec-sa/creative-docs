@@ -23,8 +23,8 @@ namespace Epsitec.Common.Tests.Drawing
 		public void CheckGetUnicodeName()
 		{
 			System.Console.Out.WriteLine ("% --> {0}", TextBreak.GetUnicodeName ('%'));
-			System.Console.Out.WriteLine ("º --> {0}", TextBreak.GetUnicodeName ('º'));
-			System.Console.Out.WriteLine ("Á --> {0}", TextBreak.GetUnicodeName ('Á'));
+			System.Console.Out.WriteLine ("¬º --> {0}", TextBreak.GetUnicodeName ('¬º'));
+			System.Console.Out.WriteLine ("√ß --> {0}", TextBreak.GetUnicodeName ('√ß'));
 		}
 		
 		[Test]
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Tests.Drawing
 			path.MoveTo (0, y);
 			path.LineTo (form.ClientSize.Width, y);
 			
-			string text = "tjf‡";
+			string text = "tjf√†";
 			
 			Rectangle text_r = font.GetTextBounds (text);
 			text_r.Scale (size);
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Tests.Drawing
 			path.MoveTo (0, y);
 			path.LineTo (form.ClientSize.Width, y);
 			
-			string text = "ijf‡";
+			string text = "ijf√†";
 			
 //-			rasterizer.FillMode = FillMode.NonZero;
 			

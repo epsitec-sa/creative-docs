@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextFrame permet de représenter du texte en associant un widget
-	/// à un frame (cf. Common.Text pour les concepts utilisés).
+	/// La classe TextFrame permet de reprÃ©senter du texte en associant un widget
+	/// Ã  un frame (cf. Common.Text pour les concepts utilisÃ©s).
 	/// </summary>
 	public class TextFrame : Widget, Epsitec.Common.Text.ITextRenderer
 	{
@@ -196,8 +196,8 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert (mapping != null);
 			
-			//	Vérifions d'abord que le mapping du texte vers les glyphes est
-			//	correct et correspond à quelque chose de valide :
+			//	VÃ©rifions d'abord que le mapping du texte vers les glyphes est
+			//	correct et correspond Ã  quelque chose de valide :
 			
 			int  offset = 0;
 			bool isInSelection = false;
@@ -228,12 +228,12 @@ namespace Epsitec.Common.Widgets
 				{
 					if ((tArray[i] & this.markerSelected) != 0)
 					{
-						//	Le caractère considéré est sélectionné.
+						//	Le caractÃ¨re considÃ©rÃ© est sÃ©lectionnÃ©.
 						
 						if (isInSelection == false)
 						{
-							//	C'est le premier caractère d'une tranche. Il faut
-							//	mémoriser son début :
+							//	C'est le premier caractÃ¨re d'une tranche. Il faut
+							//	mÃ©moriser son dÃ©but :
 							
 							double xx = x1 + ((x2 - x1) * i) / numChars;
 							isInSelection = true;
@@ -244,8 +244,8 @@ namespace Epsitec.Common.Widgets
 					{
 						if (isInSelection)
 						{
-							//	Nous avons quitté une tranche sélectionnée. Il faut
-							//	mémoriser sa fin :
+							//	Nous avons quittÃ© une tranche sÃ©lectionnÃ©e. Il faut
+							//	mÃ©moriser sa fin :
 							
 							double xx = x1 + ((x2 - x1) * i) / numChars;
 							isInSelection = false;
@@ -283,8 +283,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (isInSelection)
 			{
-				//	Nous avons quitté une tranche sélectionnée. Il faut
-				//	mémoriser sa fin :
+				//	Nous avons quittÃ© une tranche sÃ©lectionnÃ©e. Il faut
+				//	mÃ©moriser sa fin :
 				
 				double xx = x2;
 				isInSelection = false;
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Widgets
 			double x1 = 0;
 			double y1 = 0;
 			
-			//	Dans ce test, la couleur est stockée directement comme LineStyle pour la propriété
+			//	Dans ce test, la couleur est stockÃ©e directement comme LineStyle pour la propriÃ©tÃ©
 			//	"underline".
 			
 			string color = "Yellow";

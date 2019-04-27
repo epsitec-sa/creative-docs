@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La class StringDict implémente un dictionnaire de clefs/valeurs de
+	/// La class StringDict implÃ©mente un dictionnaire de clefs/valeurs de
 	/// type string.
 	/// </summary>
 	public class StringDict : Dictionary<string, string>, IStringDict

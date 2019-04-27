@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// La classe TextFieldExName est un TextFieldEx qui ne sélectionne que la dernière
+	/// La classe TextFieldExName est un TextFieldEx qui ne sÃ©lectionne que la derniÃ¨re
 	/// partie du texte lors d'un SelectAll.
 	/// </summary>
 	public class TextFieldExName : TextFieldEx
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (i != -1)
 			{
 				this.CursorFrom  = this.TextLayout.FindIndexFromOffset(i+1);
-				this.CursorTo    = 10000;  // à la fin
+				this.CursorTo    = 10000;  // Ã  la fin
 				this.CursorAfter = false;
 			}
 			else

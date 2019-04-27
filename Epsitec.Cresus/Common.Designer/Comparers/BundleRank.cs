@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Comparers
 {
 	/// <summary>
-	///	Compare deux bundles d'après leurs rangs.
+	///	Compare deux bundles d'aprÃ¨s leurs rangs.
 	/// </summary>
 	public class BundleRank : IComparer<ResourceBundle>
 	{

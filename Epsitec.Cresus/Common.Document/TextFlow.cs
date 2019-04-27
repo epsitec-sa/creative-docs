@@ -16,13 +16,13 @@ namespace Epsitec.Common.Document
 		private TextFlow()
 		{
 			//	Constructeur commun pour le constructeur standard et pour celui
-			//	utilisé par la désérialisation. Ce point d'entrée commun est
-			//	uniquement utilisé pour le debug.
+			//	utilisÃ© par la dÃ©sÃ©rialisation. Ce point d'entrÃ©e commun est
+			//	uniquement utilisÃ© pour le debug.
 		}
 		
 		public TextFlow(Document document) : this()
 		{
-			//	Crée un nouveau flux pour un seul pavé.
+			//	CrÃ©e un nouveau flux pour un seul pavÃ©.
 			this.document = document;
 
 			this.InitializeNavigator ();
@@ -45,8 +45,8 @@ namespace Epsitec.Common.Document
 				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, context);
 			}
 			
-			//	Il est important de ne pas générer d'oplets pour le undo/redo ici,
-			//	car ils interféreraient avec la gestion faite au plus haut niveau.
+			//	Il est important de ne pas gÃ©nÃ©rer d'oplets pour le undo/redo ici,
+			//	car ils interfÃ©reraient avec la gestion faite au plus haut niveau.
 			this.textStory.DisableOpletQueue();
 			
 			this.textFitter    = new Text.TextFitter(this.textStory);
@@ -70,8 +70,8 @@ namespace Epsitec.Common.Document
 		{
 			System.Diagnostics.Debug.Assert(this.textStory.TextLength == 0);
 			
-			//	Il est important de ne pas générer d'oplets pour le undo/redo ici,
-			//	car ils interféreraient avec la gestion faite au plus haut niveau.
+			//	Il est important de ne pas gÃ©nÃ©rer d'oplets pour le undo/redo ici,
+			//	car ils interfÃ©reraient avec la gestion faite au plus haut niveau.
 			this.textStory.DisableOpletQueue();
 			
 			this.textNavigator.Insert(Text.Unicode.Code.EndOfText);
@@ -104,9 +104,9 @@ namespace Epsitec.Common.Document
 
 		public void Add(Objects.AbstractText obj, Objects.AbstractText parent, bool after)
 		{
-			//	Ajoute un pavé de texte dans la chaîne de l'objet parent.
-			//	Si le pavé obj fait déjà partie d'une autre chaîne, toute sa chaîne est ajoutée
-			//	dans la chaîne de l'objet parent.
+			//	Ajoute un pavÃ© de texte dans la chaÃ®ne de l'objet parent.
+			//	Si le pavÃ© obj fait dÃ©jÃ  partie d'une autre chaÃ®ne, toute sa chaÃ®ne est ajoutÃ©e
+			//	dans la chaÃ®ne de l'objet parent.
 			if ( parent == null )
 			{
 				this.objectsChain.Add(obj);
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document
 			{
 				System.Diagnostics.Debug.Assert(parent.TextFlow == this);
 
-				//	Si l'objet à ajouter dans la chaîne y est déjà, mais ailleurs,
+				//	Si l'objet Ã  ajouter dans la chaÃ®ne y est dÃ©jÃ , mais ailleurs,
 				//	il faut d'abord l'enlever.
 				if ( this.objectsChain.Contains(obj) )
 				{
@@ -126,8 +126,8 @@ namespace Epsitec.Common.Document
 				int index = this.objectsChain.IndexOf(parent);
 				System.Diagnostics.Debug.Assert(index != -1);
 
-				//	Met dans la liste srcChain tous les objets faisant partie de la chaîne
-				//	de l'objet à ajouter (il peut faire partie d'une autre chaîne).
+				//	Met dans la liste srcChain tous les objets faisant partie de la chaÃ®ne
+				//	de l'objet Ã  ajouter (il peut faire partie d'une autre chaÃ®ne).
 				TextFlow srcFlow = obj.TextFlow;
 				System.Collections.ArrayList srcChain = new System.Collections.ArrayList();
 				foreach ( Objects.AbstractText listObj in srcFlow.Chain )
@@ -140,10 +140,10 @@ namespace Epsitec.Common.Document
 					listObj.TextFlow.Remove(listObj);
 				}
 
-				this.MergeWith(srcFlow);  // chaîne parent <- texte source
+				this.MergeWith(srcFlow);  // chaÃ®ne parent <- texte source
 				this.document.TextFlows.Remove(srcFlow);
 
-				//	Ajoute toute la chaîne initiale à la chaîne de l'objet parent.
+				//	Ajoute toute la chaÃ®ne initiale Ã  la chaÃ®ne de l'objet parent.
 				if ( after )  index ++;
 				foreach ( Objects.AbstractText listObj in srcChain )
 				{
@@ -161,8 +161,8 @@ namespace Epsitec.Common.Document
 
 		public void MergeWith(TextFlow src)
 		{
-			//	Fusionne le texte d'un flux source à la fin du flux courant.
-			//	TODO: gérer les tabulateurs, les styles, etc.
+			//	Fusionne le texte d'un flux source Ã  la fin du flux courant.
+			//	TODO: gÃ©rer les tabulateurs, les styles, etc.
 			src.metaNavigator.ClearSelection();
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
 			src.textNavigator.StartSelection();
@@ -187,8 +187,8 @@ namespace Epsitec.Common.Document
 
 				if (text.Length == 0)
 				{
-					//	Cas particulier : la copie n'a rien copié, mais on veut
-					//	tout de même s'assurer que le caractère de fin de texte
+					//	Cas particulier : la copie n'a rien copiÃ©, mais on veut
+					//	tout de mÃªme s'assurer que le caractÃ¨re de fin de texte
 					//	a les bons attributs.
 
 					TextStyle[] srcStyles = src.textNavigator.TextStyles;
@@ -203,8 +203,8 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				//	Les TextContext sont différents; il faudrait passer par une
-				//	représentation "portable"; comme elle n'existe pas pour le
+				//	Les TextContext sont diffÃ©rents; il faudrait passer par une
+				//	reprÃ©sentation "portable"; comme elle n'existe pas pour le
 				//	moment, on se contente de copier juste le texte :
 				
 				string[] texts = src.textNavigator.GetSelectedTexts();
@@ -216,8 +216,8 @@ namespace Epsitec.Common.Document
 
 		public void Remove(Objects.AbstractText obj)
 		{
-			//	Supprime un pavé de texte de la chaîne. Le pavé sera alors solitaire.
-			//	Le texte lui-même reste dans la chaîne initiale.
+			//	Supprime un pavÃ© de texte de la chaÃ®ne. Le pavÃ© sera alors solitaire.
+			//	Le texte lui-mÃªme reste dans la chaÃ®ne initiale.
 			if ( this.objectsChain.Count == 1 )  return;
 
 			this.objectsChain.Remove(obj);
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Document
 		
 		public int Count
 		{
-			//	Nombre de pavés de texte dans la chaîne.
+			//	Nombre de pavÃ©s de texte dans la chaÃ®ne.
 			get
 			{
 				return this.objectsChain.Count;
@@ -255,13 +255,13 @@ namespace Epsitec.Common.Document
 
 		public int Rank(Objects.AbstractText obj)
 		{
-			//	Rang d'un pavé de texte dans la chaîne.
+			//	Rang d'un pavÃ© de texte dans la chaÃ®ne.
 			return this.objectsChain.IndexOf(obj);
 		}
 
 		public UndoableList Chain
 		{
-			//	Donne la chaîne des pavés de texte.
+			//	Donne la chaÃ®ne des pavÃ©s de texte.
 			get
 			{
 				return this.objectsChain;
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Document
 		
 		public Objects.AbstractText ActiveTextBox
 		{
-			//	Pavé actuellement en édition.
+			//	PavÃ© actuellement en Ã©dition.
 			get
 			{
 				return this.activeTextBox;
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Document
 		
 		public bool HasActiveTextBox
 		{
-			//	Y a-t-il un pavé en édition ?
+			//	Y a-t-il un pavÃ© en Ã©dition ?
 			get
 			{
 				return this.activeTextBox != null;
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document
 
 		public void UpdateTextRulers()
 		{
-			//	Met à jour les règles pour le texte en édition.
+			//	Met Ã  jour les rÃ¨gles pour le texte en Ã©dition.
 			if ( this.document.HRuler == null )  return;
 
 			if ( this.HasActiveTextBox )
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Document
 		
 		public void UpdateClipboardCommands()
 		{
-			//	Met à jour les commandes du clipboard.
+			//	Met Ã  jour les commandes du clipboard.
 			if ( this.document.CommandDispatcher == null )  return;
 
 			bool sel = (this.TextNavigator.SelectionCount != 0);
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyAreaFlow()
 		{
-			//	Notifie "à repeindre" toute la chaîne des pavés.
+			//	Notifie "Ã  repeindre" toute la chaÃ®ne des pavÃ©s.
 			UndoableList chain = this.Chain;
 
 			foreach ( Viewer viewer in this.document.Modifier.Viewers )
@@ -359,8 +359,8 @@ namespace Epsitec.Common.Document
 
 		public void NotifyAboutToExecuteCommand()
 		{
-			//	Signale que le document va exécuter une commande. Cette méthode est
-			//	par exemple appelée avant que le UNDO ne soit exécuté.
+			//	Signale que le document va exÃ©cuter une commande. Cette mÃ©thode est
+			//	par exemple appelÃ©e avant que le UNDO ne soit exÃ©cutÃ©.
 			if ( this.textNavigator != null && this.textNavigator.IsSelectionActive )
 			{
 				this.textNavigator.EndSelection();
@@ -369,9 +369,9 @@ namespace Epsitec.Common.Document
 
 		private void ChangeObjectEdited()
 		{
-			//	Change éventuellement le pavé édité en fonction de la position du curseur.
-			//	Si un changement a lieu, des oplets seront créés. Cette méthode ne peut donc
-			//	pas être appelée pendant une opération de undo/redo.
+			//	Change Ã©ventuellement le pavÃ© Ã©ditÃ© en fonction de la position du curseur.
+			//	Si un changement a lieu, des oplets seront crÃ©Ã©s. Cette mÃ©thode ne peut donc
+			//	pas Ãªtre appelÃ©e pendant une opÃ©ration de undo/redo.
 			System.Diagnostics.Debug.Assert(!this.textStory.OpletQueue.IsUndoRedoInProgress);
 			
 			Text.ITextFrame frame;
@@ -404,9 +404,9 @@ namespace Epsitec.Common.Document
 				{
 					if ( frame != this.activeTextBox.TextFrame )
 					{
-						//	En provoquant une fin de sélection provisoire ici, on force la
-						//	génération d'un oplet et l'appel indirect de ChangeObjectEdited
-						//	qui va mettre à jour le pavé en édition :
+						//	En provoquant une fin de sÃ©lection provisoire ici, on force la
+						//	gÃ©nÃ©ration d'un oplet et l'appel indirect de ChangeObjectEdited
+						//	qui va mettre Ã  jour le pavÃ© en Ã©dition :
 						
 						this.textNavigator.EndSelection();
 					}
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Document
 
 		private Objects.AbstractText FindMatchingTextBox(Text.ITextFrame frame)
 		{
-			//	Trouve le pavé correspondant au frame donné.
+			//	Trouve le pavÃ© correspondant au frame donnÃ©.
 			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				if ( frame == obj.TextFrame )
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Document
 		
 		public Objects.AbstractText FindInTextFrame(Drawing.Point pos)
 		{
-			//	Trouve le TextFrame qui correspond à la coordonnée souris.
+			//	Trouve le TextFrame qui correspond Ã  la coordonnÃ©e souris.
 			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				if ( obj.IsInTextFrame(pos) )
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Document
 		{
 			this.textFitter.GenerateMarks();
 
-			//	Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
+			//	Indique qu'il faudra recalculer les bbox Ã  toute la chaÃ®ne des pavÃ©s.
 			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				if ( obj == null )  continue;
@@ -473,7 +473,7 @@ namespace Epsitec.Common.Document
 
 		public static void StatisticFonts(List<OpenType.FontName> list, UndoableList textFlows, TextStats.FontNaming fontNaming)
 		{
-			//	Remplit une liste avec tous les noms des polices utilisées dans tous
+			//	Remplit une liste avec tous les noms des polices utilisÃ©es dans tous
 			//	les TextFlows du document.
 			foreach ( TextFlow flow in textFlows )
 			{
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Document
 
 		public static void ReadCheckWarnings(UndoableList textFlows, System.Collections.ArrayList warnings)
 		{
-			//	Vérifie que toutes les polices existent après l'ouverture d'un document.
+			//	VÃ©rifie que toutes les polices existent aprÃ¨s l'ouverture d'un document.
 			if ( textFlows.Count == 0 )  return;
 
 			List<OpenType.FontName> documentList = new List<OpenType.FontName>();
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Document
 		private void HandleTextStoryRenamingOplet(string name, ref string output)
 		{
 			//	Quand TextStory valide un ou plusieurs oplets et qu'il n'y a aucun
-			//	nom défini, ce call-back est appelé, permettant de fournir un nom
+			//	nom dÃ©fini, ce call-back est appelÃ©, permettant de fournir un nom
 			//	qui a un sens pour l'utilisateur.
 			
 			if ( name.IndexOf("TextDelete") >= 0 )
@@ -614,7 +614,7 @@ namespace Epsitec.Common.Document
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise l'objet.
+			//	SÃ©rialise l'objet.
 			info.AddValue("ObjectsChain", this.objectsChain);
 
 			byte[] textStoryData = this.textStory.Serialize();
@@ -623,7 +623,7 @@ namespace Epsitec.Common.Document
 
 		protected TextFlow(SerializationInfo info, StreamingContext context) : this()
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 			this.document = Document.ReadDocument;
 
 			this.objectsChain = (UndoableList) info.GetValue("ObjectsChain", typeof(UndoableList));
@@ -632,7 +632,7 @@ namespace Epsitec.Common.Document
 
 		public void ReadFinalizeTextStory()
 		{
-			//	Adapte l'objet après une désérialisation.
+			//	Adapte l'objet aprÃ¨s une dÃ©sÃ©rialisation.
 			this.InitializeNavigator ();
 			
 			System.Diagnostics.Debug.Assert(this.textStory != null);
@@ -652,8 +652,8 @@ again:
 				if ( obj.TextFrame == null )
 				{
 					//	Catastrophe: le fichier lu contient des objets texte qui n'ont
-					//	pas de frame associé; ça ne devrait jamais arriver, mais ça
-					//	arrive quand-même...
+					//	pas de frame associÃ©; Ã§a ne devrait jamais arriver, mais Ã§a
+					//	arrive quand-mÃªme...
 					
 					this.objectsChain.Remove(obj);
 					goto again;

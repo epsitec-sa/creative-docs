@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Align permet de choisir les commandes d'alignement de la sélection.
+	/// La classe Align permet de choisir les commandes d'alignement de la sÃ©lection.
 	/// </summary>
 	public class AlignRibbon : AbstractRibbon
 	{
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonAlignLeft == null )  return;

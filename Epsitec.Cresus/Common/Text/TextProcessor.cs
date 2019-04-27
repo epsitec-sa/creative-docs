@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe TextProcessor encapsule les opérations qui s'appliquent à un
-	/// texte (et rend l'exécution en tâche de fond possible).
+	/// La classe TextProcessor encapsule les opÃ©rations qui s'appliquent Ã  un
+	/// texte (et rend l'exÃ©cution en tÃ¢che de fond possible).
 	/// </summary>
 	public class TextProcessor
 	{
@@ -38,8 +38,8 @@ namespace Epsitec.Common.Text
 		
 		public void Process(Executor method, int chunkSize, int chunkSizeIncrement)
 		{
-			//	Exécute une méthode pour tout le texte, en procédant par tranches
-			//	(exécution itérative).
+			//	ExÃ©cute une mÃ©thode pour tout le texte, en procÃ©dant par tranches
+			//	(exÃ©cution itÃ©rative).
 			
 			int pos = this.startPos;
 			
@@ -54,8 +54,8 @@ namespace Epsitec.Common.Text
 				
 				for (;;)
 				{
-					//	TODO: lock et détection d'altérations du texte (et de la liste des
-					//	ITextFrame liés à ce TextFitter).
+					//	TODO: lock et dÃ©tection d'altÃ©rations du texte (et de la liste des
+					//	ITextFrame liÃ©s Ã  ce TextFitter).
 					
 					int    length = System.Math.Min (this.story.TextLength - pos, step);
 					Status status;
@@ -86,17 +86,17 @@ namespace Epsitec.Common.Text
 					
 					if (length == 0)
 					{
-						//	La méthode de traitement n'a rien pu faire avec le texte passé
-						//	en entrée, vraisemblablement parce que le paragraphe mesure plus
-						//	de 'step' caractères. Il faut donc augmenter cette limite avant
+						//	La mÃ©thode de traitement n'a rien pu faire avec le texte passÃ©
+						//	en entrÃ©e, vraisemblablement parce que le paragraphe mesure plus
+						//	de 'step' caractÃ¨res. Il faut donc augmenter cette limite avant
 						//	de tenter un nouvel essai :
 						
 						step += chunkSizeIncrement;
 					}
 					else
 					{
-						//	Avance le curseur du nombre de caractères consommés par la
-						//	méthode de traitement et reprend une taille par défaut :
+						//	Avance le curseur du nombre de caractÃ¨res consommÃ©s par la
+						//	mÃ©thode de traitement et reprend une taille par dÃ©faut :
 						
 						this.story.MoveCursor (cursor, length);
 						

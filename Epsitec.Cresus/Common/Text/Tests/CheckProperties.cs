@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// Vérifie le bon fonctionnement des propriétés.
+	/// VÃ©rifie le bon fonctionnement des propriÃ©tÃ©s.
 	/// </summary>
 	public sealed class CheckProperties
 	{
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Clear ();
 			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
-			story.ConvertToStyledText ("généré", style, properties, out text);			//	12
+			story.ConvertToStyledText ("gÃ©nÃ©rÃ©", style, properties, out text);			//	12
 			story.InsertText (cursor, text);
 			
 			story.ConvertToStyledText (" automatiquement ", style, null, out text);		//	29

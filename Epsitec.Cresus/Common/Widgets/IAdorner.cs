@@ -1,25 +1,25 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'interface IAdorner donne accès aux routines de dessin des divers
-	/// éléments de l'interface graphique.
+	/// L'interface IAdorner donne accÃ¨s aux routines de dessin des divers
+	/// Ã©lÃ©ments de l'interface graphique.
 	/// </summary>
 	public interface IAdorner
 	{
 		/*
 		 * Le dessin de l'ombre se fait en principe sur le bord droit et sur le bord
-		 * inférieur (orientation normale, éclairage venant du coin supérieur gauche).
+		 * infÃ©rieur (orientation normale, Ã©clairage venant du coin supÃ©rieur gauche).
 		 * 
-		 * Lorsqu'un widget est tourné, Widget.RootDirection indique comment peindre
-		 * l'ombre. Les cas suivants doivent être traités :
+		 * Lorsqu'un widget est tournÃ©, Widget.RootDirection indique comment peindre
+		 * l'ombre. Les cas suivants doivent Ãªtre traitÃ©s :
 		 * 
-		 * Direction.Up     => ombre en bas et à droite (standard, pas de rotation)
-		 * Direction.Left   => ombre à gauche et en bas
-		 * Direction.Down   => ombre en haut et à gauche
-		 * Direction.Right  => ombre à droite et en haut
+		 * Direction.Up     => ombre en bas et Ã  droite (standard, pas de rotation)
+		 * Direction.Left   => ombre Ã  gauche et en bas
+		 * Direction.Down   => ombre en haut et Ã  gauche
+		 * Direction.Right  => ombre Ã  droite et en haut
 		 */
 
 		void PaintWindowBackground(Drawing.Graphics graphics, Drawing.Rectangle windowRect, Drawing.Rectangle paintRect, WidgetPaintState state);
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 		void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text);
 
 		/*
-		 * Méthodes de dessin complémentaires.
+		 * MÃ©thodes de dessin complÃ©mentaires.
 		 */
 		
 		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);

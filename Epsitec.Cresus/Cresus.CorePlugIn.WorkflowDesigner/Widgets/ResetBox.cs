@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -11,8 +11,8 @@ using System.Linq;
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 {
 	/// <summary>
-	/// Le widget ResetBox contient un groupe quelconque de widgets avec un bouton 'reset' à droite.
-	/// Le fond peut être coloré pour indiquer divers modes.
+	/// Le widget ResetBox contient un groupe quelconque de widgets avec un bouton 'reset' Ã  droite.
+	/// Le fond peut Ãªtre colorÃ© pour indiquer divers modes.
 	/// </summary>
 	public class ResetBox : FrameBox
 	{
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 
 		public FrameBox GroupBox
 		{
-			//	Retourne le groupe à utiliser comme parent pour tous les widgets contenus.
+			//	Retourne le groupe Ã  utiliser comme parent pour tous les widgets contenus.
 			get
 			{
 				return this.groupBox;
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 
 		public IconButton ResetButton
 		{
-			//	Retourne le bouton 'reset', pour se connecter sur l'événement 'clicked' par exemple.
+			//	Retourne le bouton 'reset', pour se connecter sur l'Ã©vÃ©nement 'clicked' par exemple.
 			get
 			{
 				return this.resetButton;

@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		public override void UpdateAfterAttach()
 		{
-			//	Mise à jour après avoir attaché le wrappers.
+			//	Mise Ã  jour aprÃ¨s avoir attachÃ© le wrappers.
 			this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultParagraphStyle;
 		}
 
@@ -64,14 +64,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void HandleWrapperChanged(object sender)
 		{
-			//	Le wrapper associé a changé.
+			//	Le wrapper associÃ© a changÃ©.
 			this.UpdateAfterChanging();
 		}
 
 		
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonAlignLeft == null )  return;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected override void UpdateAfterChanging()
 		{
-			//	Met à jour après un changement du wrapper.
+			//	Met Ã  jour aprÃ¨s un changement du wrapper.
 			base.UpdateAfterChanging();
 
 			if ( this.ParagraphWrapper.IsAttached == false )  return;

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public AbstractObject AttachObject
 		{
-			//	Object liée (boîte ou connexion).
+			//	Object liÃ©e (boÃ®te ou connexion).
 			get
 			{
 				return this.attachObject;
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public Rectangle InternalBounds
 		{
-			//	Retourne la boîte de l'objet.
+			//	Retourne la boÃ®te de l'objet.
 			get
 			{
 				return this.bounds;
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void Move(double dx, double dy)
 		{
-			//	Déplace l'objet.
+			//	DÃ©place l'objet.
 			this.bounds.Offset (dx, dy);
 			this.UpdateGeometry ();
 		}
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			rect.Offset (AbstractObject.shadowOffset, -AbstractObject.shadowOffset);
 			this.DrawRoundShadow (graphics, rect, 4, (int) AbstractObject.shadowOffset, 0.2);
 
-			//	Dessine l'en-tête.
+			//	Dessine l'en-tÃªte.
 			if (!rh.IsEmpty)
 			{
 				rect = rh;
@@ -121,13 +121,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				graphics.AddRectangle (rect);
 				graphics.RenderSolid (this.colorFactory.GetColor (0, (this.draggingMode == DraggingMode.None) ? 1 : 0.2));
 
-				rect.Width -= rect.Height;  // place pur le bouton 'x' à droite
+				rect.Width -= rect.Height;  // place pur le bouton 'x' Ã  droite
 				rect.Offset (0, 1);
 				this.textLayoutTitle.LayoutSize = rect.Size;
 				this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (1), GlyphPaintStyle.Normal);
 			}
 
-			//	Dessine la boîte vide avec la queue (bulle de bd).
+			//	Dessine la boÃ®te vide avec la queue (bulle de bd).
 			Path path = this.GetFramePath ();
 
 			graphics.Rasterizer.AddSurface (path);
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private Path GetFramePath()
 		{
-			//	Retourne le chemin du cadre du commentaire (rectangle avec éventuellement une queue,
+			//	Retourne le chemin du cadre du commentaire (rectangle avec Ã©ventuellement une queue,
 			//	comme une bulle de bd).
 			Path path = new Path();
 
@@ -470,7 +470,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private Point GetAttachOther(AttachMode mode)
 		{
-			//	Retourne le point d'attache sur l'objet lié (boîte ou commentaire).
+			//	Retourne le point d'attache sur l'objet liÃ© (boÃ®te ou commentaire).
 			Point pos = Point.Zero;
 
 			if (mode != AttachMode.None)
@@ -575,7 +575,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected AttachMode GetAttachMode()
 		{
-			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
+			//	Cherche d'oÃ¹ doit partir la queue du commentaire (de quel cÃ´tÃ©).
 			if (this.attachObject is LinkableObject)
 			{
 				var box = this.attachObject as LinkableObject;
@@ -614,12 +614,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 						return AttachMode.Top;
 					}
 
-					if (this.bounds.Left >= boxBounds.Right)  // commentaire à droite ?
+					if (this.bounds.Left >= boxBounds.Right)  // commentaire Ã  droite ?
 					{
 						return AttachMode.Left;
 					}
 
-					if (this.bounds.Right <= boxBounds.Left)  // commentaire à gauche ?
+					if (this.bounds.Right <= boxBounds.Left)  // commentaire Ã  gauche ?
 					{
 						return AttachMode.Right;
 					}
@@ -662,12 +662,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 						return AttachMode.Top;
 					}
 
-					if (this.bounds.Left >= attach.X)  // commentaire à droite ?
+					if (this.bounds.Left >= attach.X)  // commentaire Ã  droite ?
 					{
 						return AttachMode.Left;
 					}
 
-					if (this.bounds.Right <= attach.X)  // commentaire à gauche ?
+					if (this.bounds.Right <= attach.X)  // commentaire Ã  gauche ?
 					{
 						return AttachMode.Right;
 					}
@@ -726,7 +726,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		protected Point PositionAttachToLinkButton
 		{
-			//	Retourne la position du bouton pour modifier l'attache à la connexion.
+			//	Retourne la position du bouton pour modifier l'attache Ã  la connexion.
 			get
 			{
 				if (this.attachObject != null && this.attachObject is ObjectLink)

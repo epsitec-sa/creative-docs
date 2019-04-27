@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	public class IndexDisplayerWidget : Widget
 	{
 		/// <summary>
-		/// Widget très spécialisé qui s'affiche dans la première colonne du tableau CellTable, pour
-		/// mettre en évidence les groupes de lignes à plusieurs niveaux.
+		/// Widget trÃ¨s spÃ©cialisÃ© qui s'affiche dans la premiÃ¨re colonne du tableau CellTable, pour
+		/// mettre en Ã©vidence les groupes de lignes Ã  plusieurs niveaux.
 		/// </summary>
 		public IndexDisplayerWidget()
 		{
@@ -77,18 +77,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				int x = bandWidth*i;
 				Rectangle band = new Rectangle (rect.Left+x, rect.Bottom, rect.Width-x, rect.Height);
 
-				//	Dessine la surface colorée.
+				//	Dessine la surface colorÃ©e.
 				graphics.AddFilledRectangle (band);
 				graphics.RenderSolid (this.colors[i]);
 
-				//	Dessine le trait vertical de séparation.
+				//	Dessine le trait vertical de sÃ©paration.
 				graphics.AddLine (band.Left+0.5, band.Bottom, band.Left+0.5, band.Top);
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
 
 			if (this.DrawTopSeparator)
 			{
-				//	Dessine le trait horizontal supérieur.
+				//	Dessine le trait horizontal supÃ©rieur.
 				int shift = IndexDisplayerWidget.GetShift (this.TopGroupIndex, this.CurrentGroupIndex);
 				double x = bandWidth*shift + 0.5;
 

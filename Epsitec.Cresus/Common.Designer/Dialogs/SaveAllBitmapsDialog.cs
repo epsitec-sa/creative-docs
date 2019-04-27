@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant d'éditer les informations d'un module.
+	/// Dialogue permettant d'Ã©diter les informations d'un module.
 	/// </summary>
 	public class SaveAllBitmapsDialog : AbstractDialog
 	{
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit ("SaveAllBitmaps", 700, 402, true);
-				this.window.Text = "Génération en série d'images bitmap";  // Res.Strings.Dialog.SaveAllBitmaps.Title;
+				this.window.Text = "GÃ©nÃ©ration en sÃ©rie d'images bitmap";  // Res.Strings.Dialog.SaveAllBitmaps.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonOk = new Button (footer);
 				this.buttonOk.PreferredWidth = 75;
-				this.buttonOk.Text = "Générer";
+				this.buttonOk.Text = "GÃ©nÃ©rer";
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins (0, 6, 0, 0);
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			var group = new GroupBox
 			{
 				Parent = parent,
-				Text = "Entités pour lesquelles il faut générer une image",
+				Text = "EntitÃ©s pour lesquelles il faut gÃ©nÃ©rer une image",
 				Dock = DockStyle.Fill,
 				Padding = new Margins (8),
 			};
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonBoxes = new Button
 			{
 				Parent = footer,
-				Text = "Plusieurs boîtes",
+				Text = "Plusieurs boÃ®tes",
 				Dock = DockStyle.Fill,
 				Margins = new Margins (1, 1, 0, 0),
 			};
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateGenerateUI(Widget parent)
 		{
-			var group = this.CreateGroupBox (parent, "Options pour les cartouches en bas à gauche");
+			var group = this.CreateGroupBox (parent, "Options pour les cartouches en bas Ã  gauche");
 
 			this.checkUser    = this.CreateCheckButton (group, "user",    "Met le nom de l'utilisateur");
 			this.checkDate    = this.CreateCheckButton (group, "date",    "Met la date");
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateZoomUI(Widget parent)
 		{
-			var group = this.CreateGroupBox (parent, "Zoom des images à générer");
+			var group = this.CreateGroupBox (parent, "Zoom des images Ã  gÃ©nÃ©rer");
 
 			this.radioZoom1 = this.CreateRadioButton (group, "zoom1", "100%");
 			this.radioZoom2 = this.CreateRadioButton (group, "zoom2", "200%");
@@ -314,17 +314,17 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateExtensionUI(Widget parent)
 		{
-			var group = this.CreateGroupBox (parent, "Type des images à générer");
+			var group = this.CreateGroupBox (parent, "Type des images Ã  gÃ©nÃ©rer");
 
-			this.radioPng = this.CreateRadioButton (group, "png", "Images PNG (comprimées sans pertes)");
-			this.radioTif = this.CreateRadioButton (group, "tif", "Images TIFF (comprimées sans pertes)");
-			this.radioJpg = this.CreateRadioButton (group, "jpg", "Images JPEG (comprimées avec pertes)");
-			this.radioBmp = this.CreateRadioButton (group, "bmp", "Images BMP (non comprimées)");
+			this.radioPng = this.CreateRadioButton (group, "png", "Images PNG (comprimÃ©es sans pertes)");
+			this.radioTif = this.CreateRadioButton (group, "tif", "Images TIFF (comprimÃ©es sans pertes)");
+			this.radioJpg = this.CreateRadioButton (group, "jpg", "Images JPEG (comprimÃ©es avec pertes)");
+			this.radioBmp = this.CreateRadioButton (group, "bmp", "Images BMP (non comprimÃ©es)");
 		}
 
 		private void CreateBrowseUI(Widget parent)
 		{
-			var group = this.CreateGroupBox (parent, "Dossier où mettre les images");
+			var group = this.CreateGroupBox (parent, "Dossier oÃ¹ mettre les images");
 			group.Margins = new Margins (0);
 
 			this.fieldFolder = new TextField
@@ -503,7 +503,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				new StaticText
 				{
 					Parent = line,
-					Text = this.entitySamples[i].BoxCountDescription,  // par exemple "2 boîtes"
+					Text = this.entitySamples[i].BoxCountDescription,  // par exemple "2 boÃ®tes"
 					ContentAlignment = Drawing.ContentAlignment.MiddleRight,
 					PreferredWidth = 50,
 					Dock = DockStyle.Right,
@@ -513,7 +513,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				new StaticText
 				{
 					Parent = line,
-					Text = this.entitySamples[i].FlagsDescription,  // par exemple "Schéma"
+					Text = this.entitySamples[i].FlagsDescription,  // par exemple "SchÃ©ma"
 					ContentAlignment = Drawing.ContentAlignment.MiddleLeft,
 					PreferredWidth = 50,
 					Dock = DockStyle.Right,
@@ -573,15 +573,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (this.selectedEntityNames.Count == 0)
 			{
-				this.statistics.Text = "Aucune image à générer.";
+				this.statistics.Text = "Aucune image Ã  gÃ©nÃ©rer.";
 			}
 			else if (this.selectedEntityNames.Count == 1)
 			{
-				this.statistics.Text = "Une image à générer.";
+				this.statistics.Text = "Une image Ã  gÃ©nÃ©rer.";
 			}
 			else
 			{
-				this.statistics.Text = string.Format ("{0} images à générer.", this.selectedEntityNames.Count.ToString ());
+				this.statistics.Text = string.Format ("{0} images Ã  gÃ©nÃ©rer.", this.selectedEntityNames.Count.ToString ());
 			}
 		}
 
@@ -678,7 +678,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Choix d'un dossier.
 			var dialog = new System.Windows.Forms.FolderBrowserDialog ();
 
-			dialog.Description = "Choisisser le dossier où mettre les images bitmap générées automatiquement.\nAttention: Les images présentes dans ce dossier seront détruites !";
+			dialog.Description = "Choisisser le dossier oÃ¹ mettre les images bitmap gÃ©nÃ©rÃ©es automatiquement.\nAttention: Les images prÃ©sentes dans ce dossier seront dÃ©truites !";
 			dialog.ShowNewFolderButton = true;
 			dialog.SelectedPath = folder;
 			

@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.scroller = new VScroller(this);
-			this.scroller.IsInverted = true;  // zéro en haut
+			this.scroller.IsInverted = true;  // zÃ©ro en haut
 			this.scroller.ValueChanged += this.ScrollerValueChanged;
 			
 			this.samples = new Common.Document.Widgets.FontSample[0];
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public double SampleHeight
 		{
-			//	Hauteur d'un échantillon.
+			//	Hauteur d'un Ã©chantillon.
 			get
 			{
 				return this.sampleHeight;
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool SampleAbc
 		{
-			//	Type d'un échantillon.
+			//	Type d'un Ã©chantillon.
 			get
 			{
 				return this.sampleAbc;
@@ -84,11 +84,11 @@ namespace Epsitec.Common.Document.Widgets
 
 		public static double BestHeight(double height, int totalLines, double sampleHeight)
 		{
-			//	Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandée.
+			//	Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandÃ©e.
 			int lines = (int) (height / sampleHeight);
 			if ( lines == 0 )  lines ++;  // au moins une ligne, faut pas pousser
 
-			lines = System.Math.Min(lines, totalLines);  // pas plus que nécessaire
+			lines = System.Math.Min(lines, totalLines);  // pas plus que nÃ©cessaire
 
 			return lines*sampleHeight;
 		}
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public System.Collections.ArrayList FontList
 		{
-			//	Liste des OpenType.FontIdentity représentée.
+			//	Liste des OpenType.FontIdentity reprÃ©sentÃ©e.
 			get
 			{
 				return this.fontList;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public int QuickCount
 		{
-			//	Nombre de fontes rapides en tête de liste.
+			//	Nombre de fontes rapides en tÃªte de liste.
 			get
 			{
 				return this.quickCount;
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public System.Collections.ArrayList SelectedList
 		{
-			//	Liste des FontFace (string) sélectionné (sélection multiple).
+			//	Liste des FontFace (string) sÃ©lectionnÃ© (sÃ©lection multiple).
 			get
 			{
 				return this.selectedList;
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public string SelectedFontFace
 		{
-			//	Police sélectionnée.
+			//	Police sÃ©lectionnÃ©e.
 			get
 			{
 				return this.fontFace;
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 			if ( this.RebuildContents() )
 			{
@@ -183,11 +183,11 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle rect = this.Client.Bounds;
 			bool changed = false;
 
-			//	Crée les échantillons, si nécessaire.
+			//	CrÃ©e les Ã©chantillons, si nÃ©cessaire.
 			int lines = (int) (rect.Height/this.sampleHeight);
 			double suppl = rect.Height - lines*this.sampleHeight;
-			double supplAll  = (double) ((int) (suppl/lines));  // supplément pour toutes les lignes
-			double supplLast = (double) ((int) (suppl%lines));  // supplément pour la dernière ligne
+			double supplAll  = (double) ((int) (suppl/lines));  // supplÃ©ment pour toutes les lignes
+			double supplLast = (double) ((int) (suppl%lines));  // supplÃ©ment pour la derniÃ¨re ligne
 
 			if ( this.samples == null || this.samples.Length != lines )
 			{
@@ -215,12 +215,12 @@ namespace Epsitec.Common.Document.Widgets
 			r.Left = r.Right-this.scroller.PreferredWidth;
 			this.scroller.SetManualBounds(r);
 
-			//	Positionne les échantillons.
+			//	Positionne les Ã©chantillons.
 			double top = rect.Top;
 			for ( int i=0 ; i<lines ; i++ )
 			{
 				double h = this.sampleHeight+supplAll;
-				if ( i == lines-1 )  h += supplLast;  // dernière ligne ?
+				if ( i == lines-1 )  h += supplLast;  // derniÃ¨re ligne ?
 				r = new Rectangle(rect.Left, top-h, rect.Width-this.scroller.ActualWidth, h);
 				this.samples[i].SetManualBounds(r);
 				this.samples[i].FontHeight = this.sampleHeight;
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	Gestion des événements clavier/souris.
+			//	Gestion des Ã©vÃ©nements clavier/souris.
 			if ( message.MessageType == MessageType.MouseDown )
 			{
 				if ( pos.X < this.ActualBounds.Right-this.scroller.ActualWidth )
@@ -257,12 +257,12 @@ namespace Epsitec.Common.Document.Widgets
 					{
 						string face = this.RankToFace(sel);
 
-						if ( this.selectedList == null )  // sélection unique ?
+						if ( this.selectedList == null )  // sÃ©lection unique ?
 						{
 							this.SelectedFontFace = face;
 							this.OnSelectionChanged();
 						}
-						else	// sélection multiple ?
+						else	// sÃ©lection multiple ?
 						{
 							if ( this.selectedList.Contains(face) )
 							{
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Document.Widgets
 
 					case KeyCode.NumericEnter:
 					case KeyCode.Return:
-						if ( this.selectedList == null && this.selectedLine != -1 )  // sélection unique ?
+						if ( this.selectedList == null && this.selectedLine != -1 )  // sÃ©lection unique ?
 						{
 							string face = this.RankToFace(this.selectedLine);
 							this.SelectedFontFace = face;
@@ -391,8 +391,8 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 				}
 				
-				//	Indique que l'événement clavier a été consommé, sinon il sera
-				//	traité par le parent, son parent, etc.
+				//	Indique que l'Ã©vÃ©nement clavier a Ã©tÃ© consommÃ©, sinon il sera
+				//	traitÃ© par le parent, son parent, etc.
 				if ( ok )
 				{
 					message.Consumer = this;
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected int Detect(Point pos)
 		{
-			//	Détecte la ligne visée par la souris.
+			//	DÃ©tecte la ligne visÃ©e par la souris.
 			for ( int i=0 ; i<this.samples.Length ; i++ )
 			{
 				if ( this.samples[i].ActualBounds.Contains(pos) )  return this.firstLine+i;
@@ -455,7 +455,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected int SelectedLine
 		{
-			//	Ligne sélectionnée.
+			//	Ligne sÃ©lectionnÃ©e.
 			get
 			{
 				return this.selectedLine;
@@ -473,12 +473,12 @@ namespace Epsitec.Common.Document.Widgets
 					if (this.samples.Length > 0)
 					{
 						if ((this.selectedLine <  this.firstLine) ||
-							(this.selectedLine >= this.firstLine+this.samples.Length))  // sélection cachée ?
+							(this.selectedLine >= this.firstLine+this.samples.Length))  // sÃ©lection cachÃ©e ?
 						{
 							int first = this.selectedLine;
 							first = System.Math.Min (first+this.samples.Length/2, this.fontList.Count-1);
 							first = System.Math.Max (first-(this.samples.Length-1), 0);
-							this.firstLine = first;  // montre la sélection
+							this.firstLine = first;  // montre la sÃ©lection
 						}
 
 						this.UpdateContents ();
@@ -489,7 +489,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected int FirstLine
 		{
-			//	Première ligne visible.
+			//	PremiÃ¨re ligne visible.
 			get
 			{
 				return this.firstLine;
@@ -512,7 +512,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void UpdateScroller()
 		{
-			//	Met à jour l'ascenseur.
+			//	Met Ã  jour l'ascenseur.
 			this.ignoreChange = true;
 
 			if ( this.samples.Length >= this.fontList.Count )
@@ -546,7 +546,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void UpdateList()
 		{
-			//	Met à jour le contenu de la liste.
+			//	Met Ã  jour le contenu de la liste.
 			for (int i=0; i<this.samples.Length; i++)
 			{
 				int ii = this.firstLine+i;
@@ -575,11 +575,11 @@ namespace Epsitec.Common.Document.Widgets
 					this.samples[i].SetFontFace (prefix, face, suffix);
 					this.samples[i].IsSampleAbc = this.sampleAbc;
 
-					if (this.selectedList == null)  // sélection unique ?
+					if (this.selectedList == null)  // sÃ©lection unique ?
 					{
 						this.samples[i].ActiveState = (ii == this.selectedLine) ? ActiveState.Yes : ActiveState.No;
 					}
-					else	// sélection multiple ?
+					else	// sÃ©lection multiple ?
 					{
 						face = this.samples[i].FontIdentity.InvariantFaceName;
 						this.samples[i].ActiveState = this.selectedList.Contains (face) ? ActiveState.Yes : ActiveState.No;
@@ -601,7 +601,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void ScrollerValueChanged(object sender)
 		{
-			//	La valeur de l'ascenseur a changé.
+			//	La valeur de l'ascenseur a changÃ©.
 			if ( this.ignoreChange )  return;
 
 			if ( this.firstLine != (int) this.scroller.Value )
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected virtual void OnSelectionChanged()
 		{
-			//	Génère un événement pour dire que la fermeture est nécessaire.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que la fermeture est nÃ©cessaire.
 			var handler = this.GetUserEventHandler("SelectionChanged");
 			if (handler != null)
 			{

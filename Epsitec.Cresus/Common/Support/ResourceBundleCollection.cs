@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Support
 			{
 				if (level == ResourceLevel.Merged)
 				{
-					//	L'appelant aimerait avoir la version fusionnée des ressources.
+					//	L'appelant aimerait avoir la version fusionnÃ©e des ressources.
 					//	Vu que le ResourceManager maintient un cache actif, il suffit
 					//	d'utiliser ce dernier :
 					

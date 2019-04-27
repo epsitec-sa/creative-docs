@@ -1,12 +1,12 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération WellKnownType liste les propriétés les plus connues
-	/// afin d'éviter de devoir passer par Object.GetType pour déterminer leur
-	/// type. L'énumération sert aussi de critère de tri pour les propriétés.
+	/// L'Ã©numÃ©ration WellKnownType liste les propriÃ©tÃ©s les plus connues
+	/// afin d'Ã©viter de devoir passer par Object.GetType pour dÃ©terminer leur
+	/// type. L'Ã©numÃ©ration sert aussi de critÃ¨re de tri pour les propriÃ©tÃ©s.
 	/// </summary>
 	public enum WellKnownType
 	{

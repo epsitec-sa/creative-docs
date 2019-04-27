@@ -7,7 +7,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Tableau permettant d'Èditer une collection de strings.
+	/// Tableau permettant d'√©diter une collection de strings.
 	/// </summary>
 	public class StringCollection : Widget
 	{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public List<string> Collection
 		{
-			//	Collection de strings ÈditÈe par le widget.
+			//	Collection de strings √©dit√©e par le widget.
 			get
 			{
 				return this.strings;
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public AbstractTextField FocusedTextField
 		{
-			//	Retourne la ligne Èditable qui a le focus.
+			//	Retourne la ligne √©ditable qui a le focus.
 			get
 			{
 				int sel = this.SelectedRow;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public AbstractTextField GetTextField(int index)
 		{
-			//	Retourne une ligne Èditable.
+			//	Retourne une ligne √©ditable.
 			if (index < this.textFields.Count)
 			{
 				return this.textFields[index];
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public int GetIndex(AbstractTextField textField)
 		{
-			//	Cherche l'index d'une ligne Èditable.
+			//	Cherche l'index d'une ligne √©ditable.
 			for (int i=0; i<this.textFields.Count; i++)
 			{
 				if (textField == this.textFields[i])
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void CreateGrid()
 		{
-			//	CrÈe le tableau principal.
+			//	Cr√©e le tableau principal.
 			this.grid = new GridLayoutEngine();
 
 			this.grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(20, GridUnitType.Absolute)));
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void CreateToolbar()
 		{
-			//	CrÈe la barre d'outils dans la premiËre ligne du tableau.
+			//	Cr√©e la barre d'outils dans la premi√®re ligne du tableau.
 			FrameBox toolbar = new FrameBox();
 			GridLayoutEngine.SetColumn(toolbar, 2);
 			GridLayoutEngine.SetRow(toolbar, 0);
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void AdaptTextFieldLines()
 		{
-			//	Adapte le nombre de lignes des lignes Èditables.
+			//	Adapte le nombre de lignes des lignes √©ditables.
 			for (int i=0; i<this.textFields.Count; i++)
 			{
 				this.AdaptTextFieldLines(this.textFields[i]);
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void AdaptTextFieldLines(TextFieldMulti field)
 		{
-			//	Adapte le nombre de lignes d'une ligne Èditable.
+			//	Adapte le nombre de lignes d'une ligne √©ditable.
 			double h = 20;
 			if (this.lineCount > 1)
 			{
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateGrid()
 		{
-			//	Adapte les textes des lignes Èditables en fonction de la collection.
+			//	Adapte les textes des lignes √©ditables en fonction de la collection.
 			for (int i=0; i<this.textFields.Count; i++)
 			{
 				string text = "";
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			//	Met ‡ jour les boutons pour ajouter/supprimer/dÈplacer la ligne sÈlectionnÈe.
+			//	Met √† jour les boutons pour ajouter/supprimer/d√©placer la ligne s√©lectionn√©e.
 			int sel = this.SelectedRow;
 			int count = this.textFields.Count;
 			bool enable = (this.strings != null && this.Enable);
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateArrows()
 		{
-			//	Met ‡ jour les flËches ">" dans les boutons de la 2Ëme colonne.
+			//	Met √† jour les fl√®ches ">" dans les boutons de la 2√®me colonne.
 			for (int i=0; i<this.textFields.Count; i++)
 			{
 				this.glyphButtons[i].GlyphShape = (this.selectedRow == i) ? GlyphShape.ArrowRight : GlyphShape.None;
@@ -326,10 +326,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected int SelectedRow
 		{
-			//	Ligne sÈlectionnÈe dans le tableau.
+			//	Ligne s√©lectionn√©e dans le tableau.
 			get
 			{
-				if (this.selectedRow >= this.textFields.Count)  // la ligne sÈlectionnÈe a ÈtÈ dÈtruite ?
+				if (this.selectedRow >= this.textFields.Count)  // la ligne s√©lectionn√©e a √©t√© d√©truite ?
 				{
 					return -1;
 				}
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetFocusInSelection()
 		{
-			//	Met le focus dans la ligne Èditable sÈlectionnÈe.
+			//	Met le focus dans la ligne √©ditable s√©lectionn√©e.
 			int sel = this.SelectedRow;
 			if (sel != -1)
 			{
@@ -364,11 +364,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonAddClicked(object sender, MessageEventArgs e)
 		{
-			//	AppelÈ lorsque le bouton pour crÈer une nouvelle ligne est pressÈ.
+			//	Appel√© lorsque le bouton pour cr√©er une nouvelle ligne est press√©.
 			int sel = this.SelectedRow;
 			if (sel == -1)
 			{
-				sel = this.strings.Count-1;  // si aucune ligne sÈlectionnÈe -> insËre ‡ la fin
+				sel = this.strings.Count-1;  // si aucune ligne s√©lectionn√©e -> ins√®re √† la fin
 			}
 
 			this.strings.Insert(sel+1, "");
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonDuplicateClicked(object sender, MessageEventArgs e)
 		{
-			//	AppelÈ lorsque le bouton pour dupliquer une ligne est pressÈ.
+			//	Appel√© lorsque le bouton pour dupliquer une ligne est press√©.
 			int sel = this.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonRemoveClicked(object sender, MessageEventArgs e)
 		{
-			//	AppelÈ lorsque le bouton pour supprimer une ligne est pressÈ.
+			//	Appel√© lorsque le bouton pour supprimer une ligne est press√©.
 			int sel = this.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				sel = this.strings.Count-1;
 			}
-			this.selectedRow = -1;  // pour forcer SelectedRow ‡ refaire son travail
+			this.selectedRow = -1;  // pour forcer SelectedRow √† refaire son travail
 			this.SelectedRow = sel;
 			this.SetFocusInSelection();
 			this.OnStringTextChanged();
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonDefaultClicked(object sender, MessageEventArgs e)
 		{
-			//	AppelÈ lorsque le bouton 'par dÈfaut' est pressÈ.
+			//	Appel√© lorsque le bouton 'par d√©faut' est press√©.
 			while (this.strings.Count > 1)
 			{
 				this.strings.RemoveAt(0);
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.AdaptGrid();
 			this.UpdateGrid();
 
-			this.selectedRow = -1;  // pour forcer SelectedRow ‡ refaire son travail
+			this.selectedRow = -1;  // pour forcer SelectedRow √† refaire son travail
 			this.SelectedRow = 0;
 			this.SetFocusInSelection();
 			this.OnStringTextChanged();
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonPrevClicked(object sender, MessageEventArgs e)
 		{
-			//	AppelÈ lorsque le bouton pour monter une ligne est pressÈ.
+			//	Appel√© lorsque le bouton pour monter une ligne est press√©.
 			int sel = this.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonNextClicked(object sender, MessageEventArgs e)
 		{
-			//	AppelÈ lorsque le bouton pour descendre une ligne est pressÈ.
+			//	Appel√© lorsque le bouton pour descendre une ligne est press√©.
 			int sel = this.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 
@@ -462,7 +462,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void HandleSliderChanged(object sender)
 		{
-			//	AppelÈ lorsque le slider pour le nombre de lignes Èditables a ÈtÈ dÈplacÈ.
+			//	Appel√© lorsque le slider pour le nombre de lignes √©ditables a √©t√© d√©plac√©.
 			HSlider slider = sender as HSlider;
 			this.lineCount = (double) slider.Value;  // 1..5
 			this.AdaptTextFieldLines();
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonTextClicked(object sender, MessageEventArgs e)
 		{
-			//	AppelÈ lorsque le bouton ">" pour sÈlectionner une ligne est pressÈ.
+			//	Appel√© lorsque le bouton ">" pour s√©lectionner une ligne est press√©.
 			GlyphButton button = sender as GlyphButton;
 			this.SelectedRow = glyphButtons.IndexOf(button);
 			this.SetFocusInSelection();
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		void HandleTextChanged(object sender)
 		{
-			//	AppelÈ lorsqu'une ligne Èditable a changÈ.
+			//	Appel√© lorsqu'une ligne √©ditable a chang√©.
 			TextFieldMulti field = sender as TextFieldMulti;
 			int i = textFields.IndexOf(field);
 			if (this.strings.Count == 0)
@@ -491,7 +491,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleTextFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	AppelÈ lorsqu'une ligne Èditable voit son focus changer.
+			//	Appel√© lorsqu'une ligne √©ditable voit son focus changer.
 			TextFieldMulti field = sender as TextFieldMulti;
 			bool focused = (bool) e.NewValue;
 
@@ -506,7 +506,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Events handler
 		protected virtual void OnStringTextChanged()
 		{
-			//	GÈnËre un ÈvÈnement pour dire qu'une string a changÈ.
+			//	G√©n√®re un √©v√©nement pour dire qu'une string a chang√©.
 			var handler = this.GetUserEventHandler("StringTextChanged");
 			if (handler != null)
 			{
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnStringFocusChanged()
 		{
-			//	GÈnËre un ÈvÈnement pour dire qu'une string a changÈ.
+			//	G√©n√®re un √©v√©nement pour dire qu'une string a chang√©.
 			var handler = this.GetUserEventHandler("StringFocusChanged");
 			if (handler != null)
 			{

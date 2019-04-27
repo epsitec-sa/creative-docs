@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -26,12 +26,12 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.StartDate, "—", TextFormatter.Command.IfEmpty, "…", this.EndDate, "—", TextFormatter.Command.IfEmpty);
+			return TextFormatter.FormatText (this.StartDate, "â€”", TextFormatter.Command.IfEmpty, "â€¦", this.EndDate, "â€”", TextFormatter.Command.IfEmpty);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.StartDate, "—", TextFormatter.Command.IfEmpty, "…", this.EndDate, "—", TextFormatter.Command.IfEmpty);
+			return TextFormatter.FormatText (this.StartDate, "â€”", TextFormatter.Command.IfEmpty, "â€¦", this.EndDate, "â€”", TextFormatter.Command.IfEmpty);
 		}
 
 		public FormattedText GetSummaryWithHierarchicalGroupName()

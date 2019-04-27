@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel Loup, Maintainer: Samuel Loup
 
 using System.Collections.Generic;
@@ -33,45 +33,45 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				tw.WriteLine ("# Rapport Analyse ECH du " + System.DateTime.Now);
 
-				tw.WriteLine ("## Résumé des départs et arrivées");
-				tw.WriteLine (this.NewFamily.Count + " familles sans enfants sont arrivées dans le registre");
+				tw.WriteLine ("## RÃ©sumÃ© des dÃ©parts et arrivÃ©es");
+				tw.WriteLine (this.NewFamily.Count + " familles sans enfants sont arrivÃ©es dans le registre");
 				tw.WriteLine ("");
 				tw.WriteLine (this.MissingFamily.Count + " familles sans enfants sont sorties du registre");
 				tw.WriteLine ("");
-				tw.WriteLine (this.NewFamilyWithChildren.Count + " familles avec enfants sont arrivées dans le registre");
+				tw.WriteLine (this.NewFamilyWithChildren.Count + " familles avec enfants sont arrivÃ©es dans le registre");
 				tw.WriteLine ("");
 				tw.WriteLine (this.MissingFamilyWithChildren.Count + " familles avec enfants sont sorties du registre");
 				tw.WriteLine ("");
-				tw.WriteLine (this.NewFamilyMonoWithChildren.Count + " familles monoparentales avec enfants sont arrivées dans le registre");
+				tw.WriteLine (this.NewFamilyMonoWithChildren.Count + " familles monoparentales avec enfants sont arrivÃ©es dans le registre");
 				tw.WriteLine ("");
 				tw.WriteLine (this.MissingFamilyMonoWithChildren.Count + " familles monoparentales avec enfants sont sorties du registre");
 				tw.WriteLine ("");
-				tw.WriteLine (this.NewFamilyMono.Count + " personnes seules sont arrivées dans le registre");
+				tw.WriteLine (this.NewFamilyMono.Count + " personnes seules sont arrivÃ©es dans le registre");
 				tw.WriteLine ("");
 				tw.WriteLine (this.MissingFamilyMono.Count + " personnes seules sont sorties du registre");
 				tw.WriteLine ("");
-				tw.WriteLine ("## Résumé des cas impactants les familles");
+				tw.WriteLine ("## RÃ©sumÃ© des cas impactants les familles");
 				tw.WriteLine (this.NewUnion.Count + " unions");
 				tw.WriteLine ("");
-				tw.WriteLine (this.MissingUnion.Count + " séparatations");
+				tw.WriteLine (this.MissingUnion.Count + " sÃ©paratations");
 				tw.WriteLine ("");
 				tw.WriteLine (this.WidowFamily.Count + " famille avec perte du conjoint");
 				tw.WriteLine ("");
-				tw.WriteLine (this.ChildrenMove.Count + " familles dont le ou les enfants a/ont changé de foyer");
+				tw.WriteLine (this.ChildrenMove.Count + " familles dont le ou les enfants a/ont changÃ© de foyer");
 				tw.WriteLine ("");
-				tw.WriteLine (this.GainMajority.Count + " cas de majorité");
+				tw.WriteLine (this.GainMajority.Count + " cas de majoritÃ©");
 				tw.WriteLine ("");
-				tw.WriteLine (this.NewChildren.Count + " enfants ajoutés au registre");
+				tw.WriteLine (this.NewChildren.Count + " enfants ajoutÃ©s au registre");
 				tw.WriteLine ("");
 				tw.WriteLine (this.ChildrenMissing.Count + " enfants sortis du registre");
 				tw.WriteLine ("");
 
 
-				tw.WriteLine ("## Résumé des cas non-résolus");
-				tw.WriteLine (this.AddCaseToResolve.Count + " ajouts non-résolus");
+				tw.WriteLine ("## RÃ©sumÃ© des cas non-rÃ©solus");
+				tw.WriteLine (this.AddCaseToResolve.Count + " ajouts non-rÃ©solus");
 				tw.WriteLine ("");
 
-				tw.WriteLine ("## Détail des arrivées");
+				tw.WriteLine ("## DÃ©tail des arrivÃ©es");
 
 
 				tw.WriteLine ("### Nouvelles familles sans enfants dans le registre (" + this.NewFamily.Count + ")");
@@ -132,19 +132,19 @@ namespace Epsitec.Aider.Data.ECh
 				foreach (var child in this.NewChildren)
 				{
 					tw.WriteLine ("#### Famille " + child.Item1.Adult1.OfficialName);
-					tw.WriteLine (" * (E) " + child.Item2.FirstNames + " " + child.Item2.OfficialName + " né le " + child.Item2.DateOfBirth);
+					tw.WriteLine (" * (E) " + child.Item2.FirstNames + " " + child.Item2.OfficialName + " nÃ© le " + child.Item2.DateOfBirth);
 				}
 
 
-				tw.WriteLine ("### Majorités (" + this.GainMajority.Count + ")");
+				tw.WriteLine ("### MajoritÃ©s (" + this.GainMajority.Count + ")");
 				foreach (var family in this.GainMajority)
 				{
-					tw.WriteLine (" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName + " né le " + family.Adult1.DateOfBirth);
+					tw.WriteLine (" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName + " nÃ© le " + family.Adult1.DateOfBirth);
 				}
 
-				tw.WriteLine ("## Détail des départs");
+				tw.WriteLine ("## DÃ©tail des dÃ©parts");
 
-				tw.WriteLine ("### Départ de familles sans enfants dans le registre (" + this.MissingFamily.Count + ")");
+				tw.WriteLine ("### DÃ©part de familles sans enfants dans le registre (" + this.MissingFamily.Count + ")");
 				foreach (var family in this.MissingFamily)
 				{
 					tw.WriteLine ("#### Famille " + family.Adult1.OfficialName);
@@ -159,7 +159,7 @@ namespace Epsitec.Aider.Data.ECh
 					}
 				}
 
-				tw.WriteLine ("### Départ de familles avec enfants dans le registre (" + this.MissingFamilyWithChildren.Count + ")");
+				tw.WriteLine ("### DÃ©part de familles avec enfants dans le registre (" + this.MissingFamilyWithChildren.Count + ")");
 				foreach (var family in this.MissingFamilyWithChildren)
 				{
 					tw.WriteLine ("#### Famille " + family.Adult1.OfficialName);
@@ -174,7 +174,7 @@ namespace Epsitec.Aider.Data.ECh
 					}
 				}
 
-				tw.WriteLine ("### Départ de familles monoparentales dans le registre (" + this.MissingFamilyMonoWithChildren.Count + ")");
+				tw.WriteLine ("### DÃ©part de familles monoparentales dans le registre (" + this.MissingFamilyMonoWithChildren.Count + ")");
 				foreach (var family in this.MissingFamilyMonoWithChildren)
 				{
 					tw.WriteLine ("#### Famille " + family.Adult1.OfficialName);
@@ -206,11 +206,11 @@ namespace Epsitec.Aider.Data.ECh
 				foreach (var child in this.ChildrenMissing)
 				{
 					tw.WriteLine ("#### Famille " + child.Item1.Adult1.OfficialName);
-					tw.WriteLine (" * (E) " + child.Item2.FirstNames + " " + child.Item2.OfficialName + " né le " + child.Item2.DateOfBirth);
+					tw.WriteLine (" * (E) " + child.Item2.FirstNames + " " + child.Item2.OfficialName + " nÃ© le " + child.Item2.DateOfBirth);
 				}
 
 
-				tw.WriteLine ("## Détail des cas impactants les familles");
+				tw.WriteLine ("## DÃ©tail des cas impactants les familles");
 
 				tw.WriteLine ("### Nouvelles union (" + this.NewUnion.Count + ")");
 				foreach (var family in this.NewUnion)
@@ -226,7 +226,7 @@ namespace Epsitec.Aider.Data.ECh
 					}
 				}
 
-				tw.WriteLine ("### Séparations / perte d'un conjoint (" + this.MissingUnion.Count + ")");
+				tw.WriteLine ("### SÃ©parations / perte d'un conjoint (" + this.MissingUnion.Count + ")");
 				foreach (var family in this.MissingUnion)
 				{
 					tw.WriteLine ("#### Famille " + family.Adult1.OfficialName);

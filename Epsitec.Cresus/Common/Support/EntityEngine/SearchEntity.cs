@@ -1,4 +1,4 @@
-//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
-	/// The <c>SearchEntity</c> class is a façade to <see cref="AbstractEntity"/>
+	/// The <c>SearchEntity</c> class is a faÃ§ade to <see cref="AbstractEntity"/>
 	/// with support for the <see cref="IFieldPropertyStore"/> interface.
 	/// </summary>
 	internal sealed class SearchEntity : AbstractEntity, IFieldPropertyStore

@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -43,17 +43,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var message = new NotificationMessage ()
 				{
 					Title     = "Attention AIDER",
-					Body      = "Veuillez associer votre contact à votre profil. Cliquez sur ce message pour accéder à votre profil...",
+					Body      = "Veuillez associer votre contact Ã  votre profil. Cliquez sur ce message pour accÃ©der Ã  votre profil...",
 					Dataset   = Res.CommandIds.Base.ShowAiderUser,
 					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
-					HeaderErrorMessage = "Contact non défini",
+					HeaderErrorMessage = "Contact non dÃ©fini",
 					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Contact),
 					ErrorFieldMessage = "votre contact"
 				};
 				
 				var notifManager = NotificationManager.GetCurrentNotificationManager ();
 				notifManager.WarnUser (user.LoginName, message, When.Now);
-				throw new BusinessRuleException ("Vous n'avez pas associé votre contact à votre profil. Il est impossible de rejoindre l'entité " + this.Entity.OfficeName + ".");
+				throw new BusinessRuleException ("Vous n'avez pas associÃ© votre contact Ã  votre profil. Il est impossible de rejoindre l'entitÃ© " + this.Entity.OfficeName + ".");
 			}
 
 			AiderOfficeManagementEntity.JoinOfficeManagement (this.BusinessContext, this.Entity, user);		

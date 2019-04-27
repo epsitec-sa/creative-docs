@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -162,9 +162,9 @@ namespace Epsitec.Cresus.Database
 			}
 			set
 			{
-				//	On ne touche pas aux valeurs min/max, car l'utilisateur a peut-être décidé
-				//	de spécifier le min, le max, la précision puis le shift. C'est superflu,
-				//	mais il ne faudrait pas que ça altère les définitions.
+				//	On ne touche pas aux valeurs min/max, car l'utilisateur a peut-Ãªtre dÃ©cidÃ©
+				//	de spÃ©cifier le min, le max, la prÃ©cision puis le shift. C'est superflu,
+				//	mais il ne faudrait pas que Ã§a altÃ¨re les dÃ©finitions.
 
 				this.digitPrecision = (byte) value;
 			}
@@ -277,9 +277,9 @@ namespace Epsitec.Cresus.Database
 					return this.minValue;
 				}
 				
-				//	MaxValue est peut-être définie. Si ce n'est pas le cas, il y a un
-				//	algorithme dans MaxValue qui détermine une valeur plausible en
-				//	fonction du nombre de décimales.
+				//	MaxValue est peut-Ãªtre dÃ©finie. Si ce n'est pas le cas, il y a un
+				//	algorithme dans MaxValue qui dÃ©termine une valeur plausible en
+				//	fonction du nombre de dÃ©cimales.
 				
 				return - this.MaxValue;
 			}
@@ -305,9 +305,9 @@ namespace Epsitec.Cresus.Database
 					return this.maxValue;
 				}
 				
-				//	Le maximum n'est pas défini, alors on va utiliser une valeur automatique
-				//	liée au nombre de décimales et à la précision (nombre de décimales après
-				//	le point décimal) :
+				//	Le maximum n'est pas dÃ©fini, alors on va utiliser une valeur automatique
+				//	liÃ©e au nombre de dÃ©cimales et Ã  la prÃ©cision (nombre de dÃ©cimales aprÃ¨s
+				//	le point dÃ©cimal) :
 
 				decimal max = DbNumDef.digitTable[this.digitPrecision] - 1M;
 				
@@ -348,9 +348,9 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				//	Calcule le nombre de bits nécessaire pour représenter un nombre
+				//	Calcule le nombre de bits nÃ©cessaire pour reprÃ©senter un nombre
 				//	compris entre le minimum et le maximum (bornes comprises), en tenant
-				//	en outre compte de l'échelle (shift).
+				//	en outre compte de l'Ã©chelle (shift).
 
 				switch (this.rawType)
 				{
@@ -362,9 +362,9 @@ namespace Epsitec.Cresus.Database
 					case DbRawType.LargeDecimal:	return 64;
 				}
 				
-				//	Le nombre ne correspond à aucun format prédéfini. On va donc convertir
-				//	la plus grande valeur possible en une représentation "transportable"
-				//	(entier positif) et déterminer combien de bits sont nécessaires à son
+				//	Le nombre ne correspond Ã  aucun format prÃ©dÃ©fini. On va donc convertir
+				//	la plus grande valeur possible en une reprÃ©sentation "transportable"
+				//	(entier positif) et dÃ©terminer combien de bits sont nÃ©cessaires Ã  son
 				//	stockage :
 				
 				ulong span = this.ConvertToUnsignedInt64 (this.MaxValue);
@@ -393,8 +393,8 @@ namespace Epsitec.Cresus.Database
 				if ((this.IsMinMaxDefined) &&
 					(this.IsDigitDefined))
 				{
-					//	Contrôle que la précision donnée est suffisante pour représenter
-					//	les bornes extrêmes.
+					//	ContrÃ´le que la prÃ©cision donnÃ©e est suffisante pour reprÃ©senter
+					//	les bornes extrÃªmes.
 
 					if (this.digitPrecision < this.digitPrecisionAuto)
 					{
@@ -423,8 +423,8 @@ namespace Epsitec.Cresus.Database
 			if ((value >= this.MinValue) &&
 				(value <= this.MaxValue))
 			{
-				//	Vérifie que le nombre de décimales après le point décimal ne
-				//	dépasse le maximum autorisé :
+				//	VÃ©rifie que le nombre de dÃ©cimales aprÃ¨s le point dÃ©cimal ne
+				//	dÃ©passe le maximum autorisÃ© :
 
 				decimal v1 = value * DbNumDef.digitTable[this.digitShift];
 				decimal v2 = System.Decimal.Truncate (v1);
@@ -444,7 +444,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.CheckCompatibility (value))
 			{
-				//	Valeur compatible telle quelle, pas besoin de l'éditer !
+				//	Valeur compatible telle quelle, pas besoin de l'Ã©diter !
 
 				return true;
 			}
@@ -598,30 +598,30 @@ namespace Epsitec.Cresus.Database
 			
 			int fracDigits = this.DigitShift;
 			
-			//	Commence par faire en sorte de laisser tomber les zéros superflus (ce qui
+			//	Commence par faire en sorte de laisser tomber les zÃ©ros superflus (ce qui
 			//	peut arriver avec le type 'decimal', car 1.00M stocke en effet les deux
-			//	décimales).
+			//	dÃ©cimales).
 			
 			value *= DbNumDef.digitTable[fracDigits];
 			value  = decimal.Truncate (value);
 			value *= DbNumDef.digitTableScale[fracDigits];
 			
-			//	Convertit la valeur en un texte, en tenant compte des divers réglages
-			//	internes (nombre de décimales, etc.)
+			//	Convertit la valeur en un texte, en tenant compte des divers rÃ©glages
+			//	internes (nombre de dÃ©cimales, etc.)
 			
-			//	(1) Convertit déjà le nombre en chaîne selon ToString de la classe "decimal" :
+			//	(1) Convertit dÃ©jÃ  le nombre en chaÃ®ne selon ToString de la classe "decimal" :
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			string decimalString = value.ToString (formatProvider);
 			
 			buffer.Append (decimalString);
 			
-			//	(2) Détermine quel séparateur utiliser :
+			//	(2) DÃ©termine quel sÃ©parateur utiliser :
 			
 			System.Globalization.CultureInfo culture = formatProvider as System.Globalization.CultureInfo;
 			string sep = (culture == null) ? "." : culture.NumberFormat.NumberDecimalSeparator;
 			
-			//	(3) Retrouve la position du séparateur décimal dans le nombre :
+			//	(3) Retrouve la position du sÃ©parateur dÃ©cimal dans le nombre :
 			
 			int pos = decimalString.IndexOf (sep);
 			
@@ -911,13 +911,13 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		private void UpdateAutoPrecision()
 		{
-			//	Détermine la précision nécessaire à la représentation d'un nombre donné.
+			//	DÃ©termine la prÃ©cision nÃ©cessaire Ã  la reprÃ©sentation d'un nombre donnÃ©.
 
-			//	La routine donne à la fois la précision (nombre total de décimales) et
-			//	le "shift" (nombre de décimales après le point décimal).
+			//	La routine donne Ã  la fois la prÃ©cision (nombre total de dÃ©cimales) et
+			//	le "shift" (nombre de dÃ©cimales aprÃ¨s le point dÃ©cimal).
 
-			//	Le résultat est mémorisé de manière à ne pas devoir recalculer cela à
-			//	chaque fois que nécessaire.
+			//	Le rÃ©sultat est mÃ©morisÃ© de maniÃ¨re Ã  ne pas devoir recalculer cela Ã 
+			//	chaque fois que nÃ©cessaire.
 
 			System.Diagnostics.Debug.Assert (this.IsMinMaxDefined);
 			System.Diagnostics.Debug.Assert (this.digitShiftAuto == 0);
@@ -926,7 +926,7 @@ namespace Epsitec.Cresus.Database
 			decimal min = System.Math.Abs (this.MinValue);
 			decimal max = System.Math.Abs (this.MaxValue);
 
-			//	Cherche déjà le nombre de décimales :
+			//	Cherche dÃ©jÃ  le nombre de dÃ©cimales :
 
 			while ((System.Decimal.Truncate (min) != min)
 				|| (System.Decimal.Truncate (max) != max))
@@ -963,9 +963,9 @@ namespace Epsitec.Cresus.Database
 		[System.Diagnostics.Conditional ("DEBUG")]
 		private void DebugCheckAbsolute(decimal value)
 		{
-			//	Utilisé pour vérifier que ni le minValue, ni le maxValue
-			//	n'est pas donné au delà des 24 digits autorisés. Cette méthode
-			//	de vérification n'est pas appelée si le projet est compilé en
+			//	UtilisÃ© pour vÃ©rifier que ni le minValue, ni le maxValue
+			//	n'est pas donnÃ© au delÃ  des 24 digits autorisÃ©s. Cette mÃ©thode
+			//	de vÃ©rification n'est pas appelÃ©e si le projet est compilÃ© en
 			//	mode 'Release'.
 
 			System.Diagnostics.Debug.Assert (value >= minAbsolute);
@@ -977,8 +977,8 @@ namespace Epsitec.Cresus.Database
 		
 		static DbNumDef()
 		{
-			//	Initialise la table de conversion entre nombre de décimales après la
-			//	virgule et facteur multiplicatif/facteur d'échelle.
+			//	Initialise la table de conversion entre nombre de dÃ©cimales aprÃ¨s la
+			//	virgule et facteur multiplicatif/facteur d'Ã©chelle.
 			
 			DbNumDef.digitTable = new decimal[DbNumDef.digitMax];
 			DbNumDef.digitTableScale = new decimal[DbNumDef.digitMax];
@@ -1010,7 +1010,7 @@ namespace Epsitec.Cresus.Database
 
 		private byte							digitPrecision;
 		private byte							digitShift;
-		private byte							digitPrecisionAuto;	//	cache les val. dét. selon Min et Max
-		private byte							digitShiftAuto;		//	cache les val. dét. selon Min et Max
+		private byte							digitPrecisionAuto;	//	cache les val. dÃ©t. selon Min et Max
+		private byte							digitShiftAuto;		//	cache les val. dÃ©t. selon Min et Max
 	}
 }

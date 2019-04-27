@@ -4,15 +4,15 @@ namespace Epsitec.Common.Document
 {
 	/// <summary>
 	/// La classe InsideSurface permet de calculer si un point est dans une surface
-	/// fermée quelconque constituée de segments de droites ou de courbes de Bézier.
+	/// fermÃ©e quelconque constituÃ©e de segments de droites ou de courbes de BÃ©zier.
 	/// </summary>
 	public class InsideSurface
 	{
 		public InsideSurface(Point p, int max)
 		{
-			//	Constructeur. Il faut donner le point dont on désire savoir s'il est
+			//	Constructeur. Il faut donner le point dont on dÃ©sire savoir s'il est
 			//	dans la surface, ainsi que le nombre maximum de lignes qui seront
-			//	ajoutées. Une segment de Bézier compte pour InsideSurface.bezierStep.
+			//	ajoutÃ©es. Une segment de BÃ©zier compte pour InsideSurface.bezierStep.
 			this.p = p;
 			this.total = 0;
 			this.list = new double[max+10];
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document
 
 		public void AddBezier(Point p1, Point s1, Point s2, Point p2)
 		{
-			//	Ajoute un segment de Bézier.
+			//	Ajoute un segment de BÃ©zier.
 			Point a = p1;
 			double step = 1.0/InsideSurface.bezierStep;
 			for (double t=step; t<1.0; t+=step)
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsInside()
 		{
-			//	Indique si le point donné dans le constructeur est à l'intérieur de la surface.
+			//	Indique si le point donnÃ© dans le constructeur est Ã  l'intÃ©rieur de la surface.
 			int nb = 0;
 			for (int i=0; i<this.total; i++)
 			{

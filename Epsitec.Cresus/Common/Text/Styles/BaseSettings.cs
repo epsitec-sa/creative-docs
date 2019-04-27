@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// La classe BaseSettings sert de base à CoreSettings.
+	/// La classe BaseSettings sert de base Ã  CoreSettings.
 	/// </summary>
 	public abstract class BaseSettings : PropertyContainer, IContentsComparer
 	{
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text.Styles
 		public int								CoreIndex
 		{
 			//	L'index d'un coreSettings est compris entre 1 et 100'000. Un index
-			//	de zéro correspond à un coreSettings non défini.
+			//	de zÃ©ro correspond Ã  un coreSettings non dÃ©fini.
 			
 			get
 			{
@@ -97,8 +97,8 @@ namespace Epsitec.Common.Text.Styles
 		
 		public int FindSettings(LocalSettings settings)
 		{
-			//	Trouve l'index du réglage spécifié. Retourne 0 si aucun réglage
-			//	ne peut être trouvé.
+			//	Trouve l'index du rÃ©glage spÃ©cifiÃ©. Retourne 0 si aucun rÃ©glage
+			//	ne peut Ãªtre trouvÃ©.
 			
 			int n = this.CountLocalSettings;
 			
@@ -116,8 +116,8 @@ namespace Epsitec.Common.Text.Styles
 		
 		public int FindSettings(ExtraSettings settings)
 		{
-			//	Trouve l'index du réglage spécifié. Retourne 0 si aucun réglage
-			//	ne peut être trouvé.
+			//	Trouve l'index du rÃ©glage spÃ©cifiÃ©. Retourne 0 si aucun rÃ©glage
+			//	ne peut Ãªtre trouvÃ©.
 			
 			int n = this.CountExtraSettings;
 			
@@ -136,8 +136,8 @@ namespace Epsitec.Common.Text.Styles
         
 		public LocalSettings GetLocalSettings(ulong code)
 		{
-			//	Retourne les réglages locaux pour le caractère spécifié.
-			//	Si aucun réglage n'est associé, retourne null.
+			//	Retourne les rÃ©glages locaux pour le caractÃ¨re spÃ©cifiÃ©.
+			//	Si aucun rÃ©glage n'est associÃ©, retourne null.
 			
 			int index = Internal.CharMarker.GetLocalIndex (code);
 			
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Text.Styles
 				return null;
 			}
 			
-			index--;		//	ramène à 0..n
+			index--;		//	ramÃ¨ne Ã  0..n
 			
 			Debug.Assert.IsNotNull (this.localSettings);
 			Debug.Assert.IsInBounds (index, 0, this.localSettings.Length-1);
@@ -158,8 +158,8 @@ namespace Epsitec.Common.Text.Styles
 		
 		public ExtraSettings GetExtraSettings(ulong code)
 		{
-			//	Retourne les réglages supplémentaires pour le caractère
-			//	spécifié. Si aucun réglage n'est associé, retourne null.
+			//	Retourne les rÃ©glages supplÃ©mentaires pour le caractÃ¨re
+			//	spÃ©cifiÃ©. Si aucun rÃ©glage n'est associÃ©, retourne null.
 			
 			int index = Internal.CharMarker.GetExtraIndex (code);
 			
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Text.Styles
 				return null;
 			}
 			
-			index--;		//	ramène à 0..n
+			index--;		//	ramÃ¨ne Ã  0..n
 			
 			Debug.Assert.IsNotNull (this.extraSettings);
 			Debug.Assert.IsInBounds (index, 0, this.extraSettings.Length-1);
@@ -181,9 +181,9 @@ namespace Epsitec.Common.Text.Styles
 		
 		public LocalSettings Attach(LocalSettings settings)
 		{
-			//	Ajoute des réglages locaux. S'il n'y a plus de place dans
-			//	ce coreSettings, retourne null, sinon retourne les réglages qui
-			//	ont été réellement utilisés.
+			//	Ajoute des rÃ©glages locaux. S'il n'y a plus de place dans
+			//	ce coreSettings, retourne null, sinon retourne les rÃ©glages qui
+			//	ont Ã©tÃ© rÃ©ellement utilisÃ©s.
 			
 			if (this.localSettings == null)
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Text.Styles
 			int index;
 			int count = this.localSettings.Length;
 			
-			//	Essaie de réutiliser des réglages identiques :
+			//	Essaie de rÃ©utiliser des rÃ©glages identiques :
 			
 			for (index = 0; index < count; index++)
 			{
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Text.Styles
 				}
 			}
 			
-			//	Essaie de réutiliser un emplacement vide de la table des réglages :
+			//	Essaie de rÃ©utiliser un emplacement vide de la table des rÃ©glages :
 			
 			for (index = 0; index < count; index++)
 			{
@@ -215,14 +215,14 @@ namespace Epsitec.Common.Text.Styles
 				}
 			}
 			
-			//	Agrandit la table des réglages et ajoute le nouveau réglage à
+			//	Agrandit la table des rÃ©glages et ajoute le nouveau rÃ©glage Ã 
 			//	la fin :
 			
 			Debug.Assert.IsTrue (index == count);
 			
 			if (this.localSettings.Length == BaseSettings.MaxSettingsCount)
 			{
-				//	La table est pleine. On s'arrête ici !
+				//	La table est pleine. On s'arrÃªte ici !
 				
 				return null;
 			}
@@ -235,8 +235,8 @@ namespace Epsitec.Common.Text.Styles
 			newSettings[index] = settings;
 			this.localSettings = newSettings;
 			
-			//	Trouvé le bon enregistrement pour les réglages; il faut encore
-			//	mettre à jour le compteur d'utilisation :
+			//	TrouvÃ© le bon enregistrement pour les rÃ©glages; il faut encore
+			//	mettre Ã  jour le compteur d'utilisation :
 			
 		assign:
 			this.localSettings[index].SettingsIndex = index+1;
@@ -247,9 +247,9 @@ namespace Epsitec.Common.Text.Styles
 		
 		public ExtraSettings Attach(ExtraSettings settings)
 		{
-			//	Ajoute des réglages supplémentaires. S'il n'y a plus de place dans
-			//	ce coreSettings, retourne null, sinon retourne les réglages qui
-			//	ont été réellement utilisés.
+			//	Ajoute des rÃ©glages supplÃ©mentaires. S'il n'y a plus de place dans
+			//	ce coreSettings, retourne null, sinon retourne les rÃ©glages qui
+			//	ont Ã©tÃ© rÃ©ellement utilisÃ©s.
 			
 			if (this.extraSettings == null)
 			{
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Text.Styles
 			int index;
 			int count = this.extraSettings.Length;
 			
-			//	Essaie de réutiliser des réglages identiques :
+			//	Essaie de rÃ©utiliser des rÃ©glages identiques :
 			
 			for (index = 0; index < count; index++)
 			{
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Text.Styles
 				}
 			}
 			
-			//	Essaie de réutiliser un emplacement vide de la table des réglages :
+			//	Essaie de rÃ©utiliser un emplacement vide de la table des rÃ©glages :
 			
 			for (index = 0; index < count; index++)
 			{
@@ -281,14 +281,14 @@ namespace Epsitec.Common.Text.Styles
 				}
 			}
 			
-			//	Agrandit la table des réglages et ajoute le nouveau réglage à
+			//	Agrandit la table des rÃ©glages et ajoute le nouveau rÃ©glage Ã 
 			//	la fin :
 			
 			Debug.Assert.IsTrue (index == count);
 			
 			if (this.extraSettings.Length == BaseSettings.MaxSettingsCount)
 			{
-				//	La table est pleine. On s'arrête ici !
+				//	La table est pleine. On s'arrÃªte ici !
 				
 				return null;
 			}
@@ -301,8 +301,8 @@ namespace Epsitec.Common.Text.Styles
 			newSettings[index] = settings;
 			this.extraSettings = newSettings;
 			
-			//	Trouvé le bon enregistrement pour les réglages; il faut encore
-			//	mettre à jour le compteur d'utilisation :
+			//	TrouvÃ© le bon enregistrement pour les rÃ©glages; il faut encore
+			//	mettre Ã  jour le compteur d'utilisation :
 			
 		assign:
 			this.extraSettings[index].SettingsIndex = index+1;
@@ -314,8 +314,8 @@ namespace Epsitec.Common.Text.Styles
 		
 		public void Remove(LocalSettings settings)
 		{
-			//	Supprime la référence aux réglages spécifiés. Si les réglages
-			//	ne peuvent pas être trouvés, génère une exception.
+			//	Supprime la rÃ©fÃ©rence aux rÃ©glages spÃ©cifiÃ©s. Si les rÃ©glages
+			//	ne peuvent pas Ãªtre trouvÃ©s, gÃ©nÃ¨re une exception.
 			
 			if (this.localSettings != null)
 			{
@@ -335,8 +335,8 @@ namespace Epsitec.Common.Text.Styles
 		
 		public void Remove(ExtraSettings settings)
 		{
-			//	Supprime la référence aux réglages spécifiés. Si les réglages
-			//	ne peuvent pas être trouvés, génère une exception.
+			//	Supprime la rÃ©fÃ©rence aux rÃ©glages spÃ©cifiÃ©s. Si les rÃ©glages
+			//	ne peuvent pas Ãªtre trouvÃ©s, gÃ©nÃ¨re une exception.
 			
 			if (this.extraSettings != null)
 			{
@@ -376,12 +376,12 @@ namespace Epsitec.Common.Text.Styles
 		
 		public static bool CompareEqual(BaseSettings a, BaseSettings b)
 		{
-			//	Détermine si les deux cores ont le même contenu. Utilise le
-			//	plus d'indices possibles avant de passer à la comparaison.
+			//	DÃ©termine si les deux cores ont le mÃªme contenu. Utilise le
+			//	plus d'indices possibles avant de passer Ã  la comparaison.
 			
 			///////////////////////////////////////////////////////////////////
 			//	NB: contenu identique n'implique pas que le CoreIndex ou les //
-			//	réglages sont identiques !                               //
+			//	rÃ©glages sont identiques !                               //
 			///////////////////////////////////////////////////////////////////
 			
 			if (a == b)
@@ -402,8 +402,8 @@ namespace Epsitec.Common.Text.Styles
 				return false;
 			}
 			
-			//	Il y a de fortes chances que les deux objets aient le même
-			//	contenu. Il faut donc opérer une comparaison des contenus.
+			//	Il y a de fortes chances que les deux objets aient le mÃªme
+			//	contenu. Il faut donc opÃ©rer une comparaison des contenus.
 			
 			return a.CompareEqualContents (b);
 		}
@@ -420,7 +420,7 @@ namespace Epsitec.Common.Text.Styles
 			
 			this.SerializeProperties (buffer);
 			
-			//	Sérialise maintenant les réglages "local", s'il y en a :
+			//	SÃ©rialise maintenant les rÃ©glages "local", s'il y en a :
 			
 			if ((this.localSettings != null) &&
 				(this.localSettings.Length > 0))
@@ -428,7 +428,7 @@ namespace Epsitec.Common.Text.Styles
 				this.SerializeSettings (this.localSettings, buffer);
 			}
 			
-			//	Sérialise maintenant les réglages "extra", s'il y en a :
+			//	SÃ©rialise maintenant les rÃ©glages "extra", s'il y en a :
 			
 			if ((this.extraSettings != null) &&
 				(this.extraSettings.Length > 0))
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Text.Styles
 		
 		private int								coreIndex;
 		
-		private LocalSettings[]					localSettings;		//	0..n valides; (prendre index-1 pour l'accès)
-		private ExtraSettings[]					extraSettings;		//	0..n valides; (prendre index-1 pour l'accès)
+		private LocalSettings[]					localSettings;		//	0..n valides; (prendre index-1 pour l'accÃ¨s)
+		private ExtraSettings[]					extraSettings;		//	0..n valides; (prendre index-1 pour l'accÃ¨s)
 	}
 }

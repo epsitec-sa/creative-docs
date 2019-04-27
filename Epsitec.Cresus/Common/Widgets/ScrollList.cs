@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -100,8 +100,8 @@ namespace Epsitec.Common.Widgets
 
 		public bool								AllRowsHaveSameWidth
 		{
-			//	DÈtermine si toutes les lignes ont la mÍme largeur (par exemple parce qu'elles
-			//	contiennent de simples icÙnes), pour accÈlÈrer l'ouverture.
+			//	D√©termine si toutes les lignes ont la m√™me largeur (par exemple parce qu'elles
+			//	contiennent de simples ic√¥nes), pour acc√©l√©rer l'ouverture.
 			get
 			{
 				return this.allRowsHaveSameWidth;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Widgets
 
 		public int								FirstVisibleRow
 		{
-			//	PremiËre ligne visible.
+			//	Premi√®re ligne visible.
 			get
 			{
 				return this.firstRow;
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void ShowSelected(ScrollShowMode mode)
 		{
-			//	Rend la ligne sÈlectionnÈe visible.
+			//	Rend la ligne s√©lectionn√©e visible.
 
 			Layouts.LayoutContext.SyncArrange (this);
 			
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 			
-			//	Gestion d'une touche pressÈe avec KeyDown dans la liste.
+			//	Gestion d'une touche press√©e avec KeyDown dans la liste.
 			
 			int sel = this.SelectedItemIndex;
 			
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateTextLayouts()
 		{
-			//	Met ‡ jour les textes.
+			//	Met √† jour les textes.
 
 			if (this.isDirty)
 			{
@@ -737,7 +737,7 @@ namespace Epsitec.Common.Widgets
 		}
 		protected virtual void OnSelectedItemChanged()
 		{
-			//	GÈnËre un ÈvÈnement pour dire que la sÈlection dans la liste a changÈ.
+			//	G√©n√®re un √©v√©nement pour dire que la s√©lection dans la liste a chang√©.
 			var handler = this.GetUserEventHandler ("SelectedItemChanged");
 			if (handler != null)
 			{
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectionActivated()
 		{
-			//	GÈnËre un ÈvÈnement pour dire que la sÈlection a ÈtÈ validÈe
+			//	G√©n√®re un √©v√©nement pour dire que la s√©lection a √©t√© valid√©e
 			var handler = this.GetUserEventHandler("SelectionActivated");
 			if (handler != null)
 			{
@@ -880,7 +880,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				//	-1 => pas de ligne sÈlectionnÈe
+				//	-1 => pas de ligne s√©lectionn√©e
 
 				return this.selectedRow;
 			}
@@ -924,7 +924,7 @@ namespace Epsitec.Common.Widgets
 		
 		public string							SelectedKey
 		{
-			//	Nom de la ligne sÈlectionnÈe, null si aucune.
+			//	Nom de la ligne s√©lectionn√©e, null si aucune.
 			get
 			{
 				if ( this.selectedRow == -1 )
@@ -997,7 +997,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleScrollerValueChanged(object sender)
 		{
-			//	AppelÈ lorsque l'ascenseur a bougÈ.
+			//	Appel√© lorsque l'ascenseur a boug√©.
 			
 			this.FirstVisibleRow = (int)(this.scroller.DoubleValue + 0.5);
 		}

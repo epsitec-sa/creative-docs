@@ -1,11 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// L'exception ResourceException est levée lorsqu'un problème survient avec
-	/// l'accès aux ressources.
+	/// L'exception ResourceException est levÃ©e lorsqu'un problÃ¨me survient avec
+	/// l'accÃ¨s aux ressources.
 	/// </summary>
 	
 	[System.Serializable]

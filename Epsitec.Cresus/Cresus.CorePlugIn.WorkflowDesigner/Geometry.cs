@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -9,14 +9,14 @@ using System.Linq;
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
-	/// La classe Geometry contient quelques routines générales.
+	/// La classe Geometry contient quelques routines gÃ©nÃ©rales.
 	/// </summary>
 	public class Geometry
 	{
 		public static double AngleAvg(IList<double> angles)
 		{
-			//	Retourne la moyenne de plusieurs angles donnés en degrés.
-			//	Pour effectuer la moyenne des angles, on procède à une addition de vecteurs unitaires.
+			//	Retourne la moyenne de plusieurs angles donnÃ©s en degrÃ©s.
+			//	Pour effectuer la moyenne des angles, on procÃ¨de Ã  une addition de vecteurs unitaires.
 			double x = 0;
 			double y = 0;
 
@@ -64,25 +64,25 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		public static Point[] Intersect(Point a, Point b, Point c, Point d)
 		{
 			//	Calcule le point d'intersection entre deux droites ab et cd.
-			//	Utilise l'algorithme de Gauss-Jordan utilisé pour le calcul
-			//	matriciel. Les calculs ont été spécialisés au cas simple de
-			//	l'intersection de segments pour des questions de rapidité.
+			//	Utilise l'algorithme de Gauss-Jordan utilisÃ© pour le calcul
+			//	matriciel. Les calculs ont Ã©tÃ© spÃ©cialisÃ©s au cas simple de
+			//	l'intersection de segments pour des questions de rapiditÃ©.
 			//
 			//		Q=BX-AX : T=BY-AY
 			//		R=CX-DX : U=CY-DY   matrice  [ Q R | S ]
 			//		S=CX-AX : V=CY-AY            [ T U | V ]
 			//
-			//	Cette matrice représente les coefficients de l'équation
+			//	Cette matrice reprÃ©sente les coefficients de l'Ã©quation
 			//	vectorielle suivante :
 			//		AB*a + CD*b = AC
 			//
-			//	La coordonnée du point "P" s'obtient par :
+			//	La coordonnÃ©e du point "P" s'obtient par :
 			//		P = OA + a*AB
 			//
 			//	ou encore :
 			//		P = OC + b*CD
 			//
-			//	Traite les cas particuliers des segments confondus ou parallèles.
+			//	Traite les cas particuliers des segments confondus ou parallÃ¨les.
 			double	q,r,s,t,u,v;
 
 			q = b.X-a.X;
@@ -138,8 +138,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public static Point PointOnPath(Path path, double offset)
 		{
-			//	Calcule la position d'un point sur un chemin, à partir d'un offset compris entre 0 et 1.
-			//	0 -> début du chemin
+			//	Calcule la position d'un point sur un chemin, Ã  partir d'un offset compris entre 0 et 1.
+			//	0 -> dÃ©but du chemin
 			//	1 -> fin du chemin
 			var list = Geometry.PathExtract (path);
 
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		public static double OffsetOnPath(Path path, Point pos)
 		{
 			//	Calcule l'offset d'un point sur un chemin.
-			//	0 -> début du chemin
+			//	0 -> dÃ©but du chemin
 			//	1 -> fin du chemin
 			var list = Geometry.PathExtract (path);
 
@@ -189,9 +189,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		private static void DetectBezier(SingleBezier b, Point pos, out double distance, out double offset)
 		{
-			//	Détecte si le point P est sur un segment de Bezier d'épaisseur 'width'.
+			//	DÃ©tecte si le point P est sur un segment de Bezier d'Ã©paisseur 'width'.
 
-			int maxStep = 100;		//	nombre d'étapes arbitraire fixé à 100
+			int maxStep = 100;		//	nombre d'Ã©tapes arbitraire fixÃ© Ã  100
 
 			Point  a = b.p1;
 			double t = 0;
@@ -331,15 +331,15 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public static bool DetectOutline(Path path, double width, Point pos)
 		{
-			//	Détecte si la souris est sur le trait d'un chemin.
+			//	DÃ©tecte si la souris est sur le trait d'un chemin.
 			return (Geometry.DetectOutlineRank (path, width, pos) != -1);
 		}
 
 		public static int DetectOutlineRank(Path path, double width, Point pos)
 		{
-			//	Détecte sur quel trait d'un chemin est la souris.
+			//	DÃ©tecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			Point p1,s1,s2,p2;
 			return Geometry.DetectOutlineRank (path, width, pos, out p1, out s1, out s2, out p2);
 		}
@@ -347,9 +347,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		public static int DetectOutlineRank(Path path, double width, Point pos,
 											out Point bp1, out Point bs1, out Point bs2, out Point bp2)
 		{
-			//	Détecte sur quel trait d'un chemin est la souris.
+			//	DÃ©tecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			//	Attention Ã  utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			bp1 = Point.Zero;
 			bs1 = Point.Zero;
 			bs2 = Point.Zero;
@@ -452,8 +452,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		public static void BezierS1ToS2(Point p1, ref Point s1, ref Point s2, Point p2)
 		{
-			//	Convertit une courbe de Bézier définie par un seul point secondaire en
-			//	une courbe "traditionnelle" définie par deux points secondaires.
+			//	Convertit une courbe de BÃ©zier dÃ©finie par un seul point secondaire en
+			//	une courbe "traditionnelle" dÃ©finie par deux points secondaires.
 			//	Il s'agit ici d'une approximation empyrique !
 			s1 = Point.Scale (p1, s1, 2.0/3.0);
 			s2 = Point.Scale (p2, s2, 2.0/3.0);

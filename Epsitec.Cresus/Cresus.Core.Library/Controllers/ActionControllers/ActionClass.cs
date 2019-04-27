@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -109,17 +109,17 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				{
 					case ActionClasses.Create:
 					case ActionClasses.NextStep:
-						return Color.FromHexa ("e6ffdc");  // vert p‚le
+						return Color.FromHexa ("e6ffdc");  // vert p√¢le
 
 					case ActionClasses.Delete:
-						return Color.FromHexa ("ffdcdc");  // rouge p‚le
+						return Color.FromHexa ("ffdcdc");  // rouge p√¢le
 
 					case ActionClasses.Output:
 					case ActionClasses.Input:
-						return Color.FromHexa ("dcf7ff");  // bleu p‚le
+						return Color.FromHexa ("dcf7ff");  // bleu p√¢le
 
 					case ActionClasses.Validate:
-						return Color.FromHexa ("ffffdc");  // jaune p‚le
+						return Color.FromHexa ("ffffdc");  // jaune p√¢le
 
 					default:
 						return Color.FromHexa ("ffffff");  // blanc

@@ -1,4 +1,4 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -458,7 +458,7 @@ namespace Epsitec.Common.OpenType
 				int src = 0;
 				int dst = 0;
 				
-				//	TODO: gérer le cas où il y a plus de glyphes en sortie qu'il n'y a de
+				//	TODO: gÃ©rer le cas oÃ¹ il y a plus de glyphes en sortie qu'il n'y a de
 				//	place dans la table des attributs.
 				
 				for (int i = 0; i < length; i++)
@@ -515,7 +515,7 @@ namespace Epsitec.Common.OpenType
 				int src = 0;
 				int dst = 0;
 				
-				//	TODO: gérer le cas où il y a plus de glyphes en sortie qu'il n'y a de
+				//	TODO: gÃ©rer le cas oÃ¹ il y a plus de glyphes en sortie qu'il n'y a de
 				//	place dans la table des attributs.
 				
 				for (int i = 0; i < length; i++)
@@ -1389,8 +1389,8 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
-			//	Ajoute des features "synthétiques" comme le crénage et les ligatures
-			//	que nous savons émuler au besoin :
+			//	Ajoute des features "synthÃ©tiques" comme le crÃ©nage et les ligatures
+			//	que nous savons Ã©muler au besoin :
 			
 			if (otKernFormat0 != null)
 			{
@@ -2053,8 +2053,8 @@ namespace Epsitec.Common.OpenType
 
 			int count = glyphs.Length;
 			
-			//	Exécute les substitutions de glyphes en fonction des 'features'
-			//	sélectionnées :
+			//	ExÃ©cute les substitutions de glyphes en fonction des 'features'
+			//	sÃ©lectionnÃ©es :
 			
 			int maxSize = count + 16;
 			
@@ -2256,7 +2256,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (substitution.ProcessSubstitution (inputGlyphs, ref inputOffset, inputLength, outputGlyphs, ref outputOffset))
 					{
-						//	Substitution avec succès.
+						//	Substitution avec succÃ¨s.
 					}
 					else
 					{
@@ -2276,7 +2276,7 @@ namespace Epsitec.Common.OpenType
 					
 					if (substitution.ProcessSubstitution (inputGlyphs, ref inputOffset, inputLength, outputGlyphs, ref outputOffset))
 					{
-						//	Substitution avec succès.
+						//	Substitution avec succÃ¨s.
 						
 						int inputAdvance  = inputOffset  - inputOrigin;
 						int outputAdvance = outputOffset - outputOrigin;
@@ -2286,9 +2286,9 @@ namespace Epsitec.Common.OpenType
 						
 						glMap[outputOrigin++] = glMap[inputOrigin++] + inputAdvance - outputAdvance;
 						
-						//	Attention, quand les substitutions pourront générer
-						//	plusieurs glyphes en sortie, ce code devra être
-						//	adapté.
+						//	Attention, quand les substitutions pourront gÃ©nÃ©rer
+						//	plusieurs glyphes en sortie, ce code devra Ãªtre
+						//	adaptÃ©.
 					}
 					else
 					{
@@ -2326,7 +2326,7 @@ namespace Epsitec.Common.OpenType
 		
 		private bool HitTest(ushort[] glyphs, int[] glMap, double size, int pos, out double x, out double y)
 		{
-			//	TODO: gérer useSystemGlyphSize
+			//	TODO: gÃ©rer useSystemGlyphSize
 			
 			double scale = size / this.otHead.UnitsPerEm;
 			
@@ -2395,7 +2395,7 @@ namespace Epsitec.Common.OpenType
 		
 		private bool HitTest(ushort[] glyphs, int[] glMap, double size, double x, double y, out int pos, out double subpos)
 		{
-			//	TODO: gérer useSystemGlyphSize
+			//	TODO: gÃ©rer useSystemGlyphSize
 			
 			if (x <= 0)
 			{
@@ -2433,7 +2433,7 @@ namespace Epsitec.Common.OpenType
 						pos    = count;
 						subpos = (width > 0.0) ? (x - x1) / width : 0.0;
 						
-						//	A partir de 50%, considère que l'on est dans le glyphe
+						//	A partir de 50%, considÃ¨re que l'on est dans le glyphe
 						//	suivant :
 						
 						if (subpos > 0.5)
@@ -2493,14 +2493,14 @@ namespace Epsitec.Common.OpenType
 								return;
 							
 							case 2:
-								//	TODO: gérer...
+								//	TODO: gÃ©rer...
 								break;
 							
 							case 3:
 								x = ligTable.GetCaretCoordinateFmt3 (caretIndex) * scale;
 								y = 0;
 								
-								//	TODO: gérer la "device table"
+								//	TODO: gÃ©rer la "device table"
 								
 								return;
 						}

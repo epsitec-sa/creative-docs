@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 #if true
 			this.fieldAssetName   = this.AddSettings (BaseType.AssetsUserFields, "Nom",    FieldType.String, true,  200, 380, 1,    1,  0);
-			this.fieldAssetNumber = this.AddSettings (BaseType.AssetsUserFields, "Numéro", FieldType.String, false,  70,  90, 1, null,  0);
+			this.fieldAssetNumber = this.AddSettings (BaseType.AssetsUserFields, "NumÃ©ro", FieldType.String, false,  70,  90, 1, null,  0);
 #else
 			var t1 = new Epsitec.Common.Types.MultilingualText ();
 			t1.SetText ("fr", "Nom");
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			t1.SetText ("en", "Name");
 
 			var t2 = new Epsitec.Common.Types.MultilingualText ();
-			t2.SetText ("fr", "Numéro");
+			t2.SetText ("fr", "NumÃ©ro");
 			t2.SetText ("de", "Numer");
 			t2.SetText ("en", "Number");
 
@@ -54,16 +54,16 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected virtual void AddPersonsSettings()
 		{
 			this.fieldPersonLastName  = this.AddSettings (BaseType.PersonsUserFields, "Nom",           FieldType.String, true,  120, 380, 1, 2,     0);
-			this.fieldPersonFirstName = this.AddSettings (BaseType.PersonsUserFields, "Prénom",        FieldType.String, false, 120, 380, 1, 1,     0);
+			this.fieldPersonFirstName = this.AddSettings (BaseType.PersonsUserFields, "PrÃ©nom",        FieldType.String, false, 120, 380, 1, 1,     0);
 			this.fieldPersonTitle     = this.AddSettings (BaseType.PersonsUserFields, "Titre",         FieldType.String, false,  80, 120, 1, null,  0);
 			this.fieldPersonCompany   = this.AddSettings (BaseType.PersonsUserFields, "Entreprise",    FieldType.String, false, 120, 380, 1, 3,     0);
 			this.fieldPersonAddress   = this.AddSettings (BaseType.PersonsUserFields, "Adresse",       FieldType.String, false, 150, 380, 2, null,  0);
 			this.fieldPersonZip       = this.AddSettings (BaseType.PersonsUserFields, "NPA",           FieldType.String, true,   50,  60, 1, null,  0);
 			this.fieldPersonCity      = this.AddSettings (BaseType.PersonsUserFields, "Ville",         FieldType.String, true,  120, 380, 1, null,  0);
 			this.fieldPersonCountry   = this.AddSettings (BaseType.PersonsUserFields, "Pays",          FieldType.String, false, 120, 380, 1, null,  0);
-			this.fieldPersonPhone1    = this.AddSettings (BaseType.PersonsUserFields, "Tél. prof.",    FieldType.String, false, 100, 120, 1, null, 10);
-			this.fieldPersonPhone2    = this.AddSettings (BaseType.PersonsUserFields, "Tél. privé",    FieldType.String, false, 100, 120, 1, null,  0);
-			this.fieldPersonPhone3    = this.AddSettings (BaseType.PersonsUserFields, "Tél. portable", FieldType.String, false, 100, 120, 1, null,  0);
+			this.fieldPersonPhone1    = this.AddSettings (BaseType.PersonsUserFields, "TÃ©l. prof.",    FieldType.String, false, 100, 120, 1, null, 10);
+			this.fieldPersonPhone2    = this.AddSettings (BaseType.PersonsUserFields, "TÃ©l. privÃ©",    FieldType.String, false, 100, 120, 1, null,  0);
+			this.fieldPersonPhone3    = this.AddSettings (BaseType.PersonsUserFields, "TÃ©l. portable", FieldType.String, false, 100, 120, 1, null,  0);
 			this.fieldPersonMail      = this.AddSettings (BaseType.PersonsUserFields, "E-mail",        FieldType.String, false, 200, 380, 1, null,  0);
 			this.fieldPersonDesc      = this.AddSettings (BaseType.PersonsUserFields, "Description",   FieldType.String, false, 200, 380, 5, null, 10);
 		}
@@ -347,10 +347,10 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected virtual void CreateMethodsSamples()
 		{
 			this.AddMethod ("Aucun",            AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.None           ));
-			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",           "RoundAmount", "ResidualAmount", "Prorata");
-			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",           "RoundAmount", "ResidualAmount", "Prorata");
-			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "FirstYearCount", "RoundAmount", "ResidualAmount", "Prorata");
-			this.AddMethod ("Durée dégressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "FirstYearCount", "RoundAmount", "ResidualAmount", "Prorata");
+			this.AddMethod ("Taux linÃ©aire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",           "RoundAmount", "ResidualAmount", "Prorata");
+			this.AddMethod ("Taux dÃ©gressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",           "RoundAmount", "ResidualAmount", "Prorata");
+			this.AddMethod ("DurÃ©e linÃ©aire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "FirstYearCount", "RoundAmount", "ResidualAmount", "Prorata");
+			this.AddMethod ("DurÃ©e dÃ©gressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "FirstYearCount", "RoundAmount", "ResidualAmount", "Prorata");
 		}
 
 		protected void AddMethod(string name, string expression, params string[] arguments)
@@ -380,9 +380,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		public virtual void CreateArgumentsSamples()
 		{
 			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Rate,   false, "Rate",           "0.1");
-			this.AddArgument (ObjectField.ArgumentFirst+1, "Durée",             "Nombre d'années de l'amortissement", ArgumentType.Years,  false, "FirstYearCount", "10");
+			this.AddArgument (ObjectField.ArgumentFirst+1, "DurÃ©e",             "Nombre d'annÃ©es de l'amortissement", ArgumentType.Years,  false, "FirstYearCount", "10");
 			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Amount, false, "RoundAmount",    "1");
-			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Amount, false, "ResidualAmount", "1");
+			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur rÃ©siduelle", "Valeur rÃ©siduelle",                  ArgumentType.Amount, false, "ResidualAmount", "1");
 			this.AddArgument (ObjectField.ArgumentFirst+4, "Prorata",           "Amortissement au prorata",           ArgumentType.Bool,   false, "Prorata",        "false");
 		}
 
@@ -497,7 +497,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				}
 			}
 
-			System.Diagnostics.Debug.Fail (string.Format ("La catégorie {0} n'existe pas !", text));
+			System.Diagnostics.Debug.Fail (string.Format ("La catÃ©gorie {0} n'existe pas !", text));
 			return null;
 		}
 
@@ -531,7 +531,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				}
 			}
 
-			System.Diagnostics.Debug.Fail (string.Format ("La méthode d'amortissement {0} n'existe pas !", text));
+			System.Diagnostics.Debug.Fail (string.Format ("La mÃ©thode d'amortissement {0} n'existe pas !", text));
 			return null;
 		}
 

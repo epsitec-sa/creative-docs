@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// La classe Decompression supporte la décompression d'un stream
-	/// avec détection automatique du format utilisé à la compression.
+	/// La classe Decompression supporte la dÃ©compression d'un stream
+	/// avec dÃ©tection automatique du format utilisÃ© Ã  la compression.
 	/// </summary>
 	public class Decompression : AbstractStream
 	{

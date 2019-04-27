@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe FontColorProperty définit la couleur à appliquer au corps
+	/// La classe FontColorProperty dÃ©finit la couleur Ã  appliquer au corps
 	/// du texte.
 	/// </summary>
 	public class FontColorProperty : Property

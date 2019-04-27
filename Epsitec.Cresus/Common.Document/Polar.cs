@@ -16,14 +16,14 @@ namespace Epsitec.Common.Document
 		
 		[XmlAttribute] public double			R
 		{
-			//	Distance à l'origine.
+			//	Distance Ã  l'origine.
 			get { return this.r; }
 			set { this.r = value; }
 		}
 		
 		[XmlAttribute] public double			A
 		{
-			//	Angle en degrés.
+			//	Angle en degrÃ©s.
 			get { return this.a; }
 			set { this.a = value; }
 		}

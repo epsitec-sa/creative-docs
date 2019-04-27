@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -31,12 +31,12 @@ namespace Epsitec.Aider.Rules
 
 			if (group.IsNull ())
 			{
-				Logic.BusinessRuleException (mailingCategory, TextFormatter.FormatText ("Il faut lier cette catégorie à un groupe"));
+				Logic.BusinessRuleException (mailingCategory, TextFormatter.FormatText ("Il faut lier cette catÃ©gorie Ã  un groupe"));
 			}
 
 			if (group.CanBeEditedByCurrentUser () == false)
 			{
-				Logic.BusinessRuleException (mailingCategory, TextFormatter.FormatText ("Vous n'avez pas accès au groupe sélectionné"));
+				Logic.BusinessRuleException (mailingCategory, TextFormatter.FormatText ("Vous n'avez pas accÃ¨s au groupe sÃ©lectionnÃ©"));
 			}
 		}
 	}

@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// L'interface IParagraphManager décrit les fonctions qu'un gestionnaire de
-	/// paragraphe doit mettre à disposition.
+	/// L'interface IParagraphManager dÃ©crit les fonctions qu'un gestionnaire de
+	/// paragraphe doit mettre Ã  disposition.
 	/// du texte.
 	/// </summary>
 	public interface IParagraphManager
@@ -16,11 +16,11 @@ namespace Epsitec.Common.Text
 		void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
 		void RefreshParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
 		
-		//	En attachant un gestionnaire de paragraphe à un paragraphe donné, il
-		//	est possible de modifier le texte pour y ajouter des caractères marqués
-		//	avec la propriété AutoTextProperty.
+		//	En attachant un gestionnaire de paragraphe Ã  un paragraphe donnÃ©, il
+		//	est possible de modifier le texte pour y ajouter des caractÃ¨res marquÃ©s
+		//	avec la propriÃ©tÃ© AutoTextProperty.
 		//
-		//	NB: Le curseur pointe toujours au début du paragraphe.
+		//	NB: Le curseur pointe toujours au dÃ©but du paragraphe.
 		
 	}
 }

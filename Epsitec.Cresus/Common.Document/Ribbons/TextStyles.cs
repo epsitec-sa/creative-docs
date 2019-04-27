@@ -6,7 +6,7 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe TextStyles permet de choisir un style de paragraphe ou de caractère.
+	/// La classe TextStyles permet de choisir un style de paragraphe ou de caractÃ¨re.
 	/// </summary>
 	public class TextStyles : Abstract
 	{
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.FirstIconChanged += this.HandleFirstIconChanged;
 
 			// (*)	Ce nom permet de griser automatiquement les widgets lorsqu'il n'y a
-			//		pas de texte en édition.
+			//		pas de texte en Ã©dition.
 
 //			this.UpdateClientGeometry();
 			this.UpdateMode();
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void SetDocument(Settings.GlobalSettings gs, Document document)
 		{
-			//	Indique quel est le document actif, puisque les rubans sont globaux à l'application.
+			//	Indique quel est le document actif, puisque les rubans sont globaux Ã  l'application.
 			base.SetDocument(gs, document);
 
 			if ( this.document == null )
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void NotifyChanged(string changed)
 		{
-			//	Appelé lorsqu'un style à été créé, supprimé ou déplacé.
+			//	AppelÃ© lorsqu'un style Ã  Ã©tÃ© crÃ©Ã©, supprimÃ© ou dÃ©placÃ©.
 			if ( changed == "TextStyleListChanged" )
 			{
 				this.UpdateAfterTextStyleListChanged();
@@ -111,8 +111,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void NotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
 		{
-			//	Appelé lorsque les définitions d'un style ont changés, et que l'échantillon
-			//	correspondant doit être redessiné.
+			//	AppelÃ© lorsque les dÃ©finitions d'un style ont changÃ©s, et que l'Ã©chantillon
+			//	correspondant doit Ãªtre redessinÃ©.
 			this.document.Wrappers.ClearDynamicImageStyle();
 
 			foreach ( Text.TextStyle textStyle in textStyleList )
@@ -135,8 +135,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void NotifyTextStylesChanged()
 		{
-			//	Appelé lorsque le style courant a été changé, par exemple suite au
-			//	déplacement du curseur.
+			//	AppelÃ© lorsque le style courant a Ã©tÃ© changÃ©, par exemple suite au
+			//	dÃ©placement du curseur.
 			if ( this.document == null )  return;
 			this.UpdateSelectedStyle();
 		}
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void UpdateAfterTextStyleListChanged()
 		{
-			//	Met à jour la liste des styles.
+			//	Met Ã  jour la liste des styles.
 			this.comboStyle.Items.Clear();
 
 			Text.TextStyle[] styles = this.document.TextStyles(this.characterMode ? StyleCategory.Character : StyleCategory.Paragraph);
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void UpdateSelectedStyle()
 		{
-			//	Met à jour le style sélectionné en fonction du texte en édition.
+			//	Met Ã  jour le style sÃ©lectionnÃ© en fonction du texte en Ã©dition.
 			if ( this.document.Wrappers.TextFlow != null )
 			{
 				Text.TextStyle[] styles = this.document.Wrappers.TextFlow.TextNavigator.TextStyles;
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void UpdateMode()
 		{
-			//	Met à jour les 2 boutons pour choisir style de paragraphe ou de caractère.
+			//	Met Ã  jour les 2 boutons pour choisir style de paragraphe ou de caractÃ¨re.
 			this.buttonParagraph.ActiveState = this.characterMode ? ActiveState.No  : ActiveState.Yes;
 			this.buttonCharacter.ActiveState = this.characterMode ? ActiveState.Yes : ActiveState.No;
 		}
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected int RibbonStyleFirst
 		{
-			//	Première icône visible, en fonction des boutons prev/next de IconButtonsCombo.
+			//	PremiÃ¨re icÃ´ne visible, en fonction des boutons prev/next de IconButtonsCombo.
 			get
 			{
 				if ( this.characterMode )  return this.document.Wrappers.RibbonCharacterStyleFirst;
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.comboStyle == null )  return;

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -11,8 +11,8 @@ namespace Epsitec.App.Dolphin
 {
 	/// <summary>
 	/// Assembleur CALM selon le principe bien connu des deux passes.
-	/// La 1ère passe récolte les définitions de variables et d'étiquettes dans un dictionnaire.
-	/// La 2ème passe génère le code.
+	/// La 1Ã¨re passe rÃ©colte les dÃ©finitions de variables et d'Ã©tiquettes dans un dictionnaire.
+	/// La 2Ã¨me passe gÃ©nÃ¨re le code.
 	/// </summary>
 	public class Assembler
 	{
@@ -30,7 +30,7 @@ namespace Epsitec.App.Dolphin
 
 			this.memory.ClearRam();
 
-			//	Enlève les éventuelles erreurs précédentes.
+			//	EnlÃ¨ve les Ã©ventuelles erreurs prÃ©cÃ©dentes.
 			this.RemoveErrors();
 
 			string[] seps = {"<br/>"};
@@ -39,16 +39,16 @@ namespace Epsitec.App.Dolphin
 			int instructionCounter = 0;
 			int byteCounter = 0;
 
-			//	Ces 2 listes stockent toutes les erreurs rencontrées.
+			//	Ces 2 listes stockent toutes les erreurs rencontrÃ©es.
 			List<int> errorLines = new List<int>();
 			List<string> errorTexts = new List<string>();
 
-			//	Crée le dictionnaire principal pour les variables et étiquettes.
+			//	CrÃ©e le dictionnaire principal pour les variables et Ã©tiquettes.
 			Dictionary<string, int> variables = new Dictionary<string, int>();
 			this.processor.RomVariables(Components.Memory.RomBase, variables);
 			this.memory.RomVariables(variables);
 
-			//	Longueurs des instructions, construite lors de la 1ère passe et utilisées à la 2ème.
+			//	Longueurs des instructions, construite lors de la 1Ã¨re passe et utilisÃ©es Ã  la 2Ã¨me.
 			List<int> instructionLengths = new List<int>();
 
 			//	Effectue les deux passes.
@@ -58,11 +58,11 @@ namespace Epsitec.App.Dolphin
 
 				if (errorLines.Count != 0)
 				{
-					break;  // si erreur pendant la 1ère passe -> pas de 2ème
+					break;  // si erreur pendant la 1Ã¨re passe -> pas de 2Ã¨me
 				}
 			}
 
-			//	Dialogue selon le déroulement de l'assemblage.
+			//	Dialogue selon le dÃ©roulement de l'assemblage.
 			string icon, message;
 			if (errorLines.Count == 0)
 			{
@@ -99,10 +99,10 @@ namespace Epsitec.App.Dolphin
 
 		protected void DoPass(string[] lines, int pass, Dictionary<string, int> variables, List<int> instructionLengths, List<int> errorLines, List<string> errorTexts, ref int instructionCounter, ref int byteCounter)
 		{
-			//	Première ou deuxième passe de l'assemblage (pass = 0..1).
-			//	La 1ère passe récolte les définitions de variables et d'étiquettes dans un dictionnaire.
-			//	La 2ème passe génère le code.
-			int pc = Components.Memory.RamBase;  // on place toujours le code au début de la RAM
+			//	PremiÃ¨re ou deuxiÃ¨me passe de l'assemblage (pass = 0..1).
+			//	La 1Ã¨re passe rÃ©colte les dÃ©finitions de variables et d'Ã©tiquettes dans un dictionnaire.
+			//	La 2Ã¨me passe gÃ©nÃ¨re le code.
+			int pc = Components.Memory.RamBase;  // on place toujours le code au dÃ©but de la RAM
 			int lineCounter = 0;
 			this.ending = false;
 
@@ -134,10 +134,10 @@ namespace Epsitec.App.Dolphin
 					{
 						if (!string.IsNullOrEmpty(instruction))
 						{
-							int npc = pc;  // npc est faux à la 1ère passe, mais c'est sans importance !
-							if (pass == 1 && instructionCounter < instructionLengths.Count)  // deuxième passe ?
+							int npc = pc;  // npc est faux Ã  la 1Ã¨re passe, mais c'est sans importance !
+							if (pass == 1 && instructionCounter < instructionLengths.Count)  // deuxiÃ¨me passe ?
 							{
-								npc += instructionLengths[instructionCounter];  // npc = adresse après l'instruction, pour adressage relatif
+								npc += instructionLengths[instructionCounter];  // npc = adresse aprÃ¨s l'instruction, pour adressage relatif
 							}
 
 							instruction = this.processor.AssemblyPreprocess(instruction);
@@ -151,7 +151,7 @@ namespace Epsitec.App.Dolphin
 
 									if (codes.Count == 0)
 									{
-										if (pass == 1)  // deuxième passe ?
+										if (pass == 1)  // deuxiÃ¨me passe ?
 										{
 											if (!string.IsNullOrEmpty(err))
 											{
@@ -162,12 +162,12 @@ namespace Epsitec.App.Dolphin
 									}
 									else
 									{
-										if (pass == 0)  // première passe ?
+										if (pass == 0)  // premiÃ¨re passe ?
 										{
 											pc += codes.Count;
 											instructionLengths.Add(codes.Count);
 										}
-										else  // deuxième passe ?
+										else  // deuxiÃ¨me passe ?
 										{
 											foreach (int code in codes)
 											{
@@ -199,8 +199,8 @@ namespace Epsitec.App.Dolphin
 
 		protected string ReplaceCharacter(string instruction)
 		{
-			//	Remplace les caractères par des valeurs simples.
-			//	Par exemple, 'move #"A",X' est remplacé par 'move #H'41,X'.
+			//	Remplace les caractÃ¨res par des valeurs simples.
+			//	Par exemple, 'move #"A",X' est remplacÃ© par 'move #H'41,X'.
 			instruction = TextLayout.ConvertToSimpleText(instruction);
 
 			//	Remplace les apostrophes et guillemets typographiques par
@@ -245,25 +245,25 @@ namespace Epsitec.App.Dolphin
 
 		protected string RemoveComment(string instruction)
 		{
-			//	Supprime l'éventuel commentaire "; blabla" en fin de ligne.
+			//	Supprime l'Ã©ventuel commentaire "; blabla" en fin de ligne.
 			instruction = instruction.ToUpper().Trim();
 
-			int index = instruction.IndexOf(";");  // point-virgule: commentaire à la fin de la ligne ?
+			int index = instruction.IndexOf(";");  // point-virgule: commentaire Ã  la fin de la ligne ?
 			if (index != -1)
 			{
-				instruction = instruction.Substring(0, index);  // enlève le commentaire
+				instruction = instruction.Substring(0, index);  // enlÃ¨ve le commentaire
 			}
 			
-			index = instruction.IndexOf("\\");  // boa: commentaire à la fin de la ligne ?
+			index = instruction.IndexOf("\\");  // boa: commentaire Ã  la fin de la ligne ?
 			if (index != -1)
 			{
-				instruction = instruction.Substring(0, index);  // enlève le commentaire
+				instruction = instruction.Substring(0, index);  // enlÃ¨ve le commentaire
 			}
 			
-			index = instruction.IndexOf("//");  // double slash (style C): commentaire à la fin de la ligne ?
+			index = instruction.IndexOf("//");  // double slash (style C): commentaire Ã  la fin de la ligne ?
 			if (index != -1)
 			{
-				instruction = instruction.Substring(0, index);  // enlève le commentaire
+				instruction = instruction.Substring(0, index);  // enlÃ¨ve le commentaire
 			}
 			
 			return instruction;
@@ -272,7 +272,7 @@ namespace Epsitec.App.Dolphin
 		protected bool ProcessPseudo(string instruction, int pass, Dictionary<string, int> variables, ref int pc, out string err)
 		{
 			//	Traite les pseudos-instructions .TITLE, .LOC, etc.
-			//	Retourne true si une pseudo a été traitée.
+			//	Retourne true si une pseudo a Ã©tÃ© traitÃ©e.
 			err = null;
 
 			if (!instruction.StartsWith("."))
@@ -329,13 +329,13 @@ namespace Epsitec.App.Dolphin
 		protected string ProcessVariables(string instruction, int pass, int pc, Dictionary<string, int> variables, out string err)
 		{
 			//	Traite les variables dans une instruction.
-			//	Retourne l'instruction expurgée des variables.
-			//	Gère les définitions de variables du genre "TOTO = 12*TITI", retourne NULL.
-			//	Gère les étiquettes, du genre "LOOP: MOVE A,B", retourne "MOVE A,B".
+			//	Retourne l'instruction expurgÃ©e des variables.
+			//	GÃ¨re les dÃ©finitions de variables du genre "TOTO = 12*TITI", retourne NULL.
+			//	GÃ¨re les Ã©tiquettes, du genre "LOOP: MOVE A,B", retourne "MOVE A,B".
 			string[] defs = instruction.Split('=');
 			if (defs.Length == 2)  // variable = expression ?
 			{
-				if (pass == 0)  // première passe ?
+				if (pass == 0)  // premiÃ¨re passe ?
 				{
 					string variable   = defs[0].Trim();
 					string expression = defs[1].Trim();
@@ -361,21 +361,21 @@ namespace Epsitec.App.Dolphin
 						}
 					}
 				}
-				else  // deuxième passe ?
+				else  // deuxiÃ¨me passe ?
 				{
 					err = null;
 				}
 				return null;  // ce n'est pas une instruction
 			}
 
-			//	Gère les définitions d'étiquettes, du genre "LOOP: MOVE A,B".
+			//	GÃ¨re les dÃ©finitions d'Ã©tiquettes, du genre "LOOP: MOVE A,B".
 			int index = instruction.IndexOf(":");
 			if (index != -1)
 			{
 				string label = instruction.Substring(0, index).Trim();
 				if (!string.IsNullOrEmpty(label) && label.IndexOf(" ") == -1 && label.IndexOf("\t") == -1)
 				{
-					if (pass == 0)  // première passe ?
+					if (pass == 0)  // premiÃ¨re passe ?
 					{
 						if (this.IsRegister(label))
 						{
@@ -398,7 +398,7 @@ namespace Epsitec.App.Dolphin
 						}
 					}
 
-					instruction = instruction.Substring(index+1);  // enlève le "label:" au début
+					instruction = instruction.Substring(index+1);  // enlÃ¨ve le "label:" au dÃ©but
 				}
 			}
 
@@ -408,7 +408,7 @@ namespace Epsitec.App.Dolphin
 
 		protected string PrepareInstruction(string instruction, int pass, int npc, Dictionary<string, int> variables, out string err)
 		{
-			//	Prépare une instruction pour l'assemblage.
+			//	PrÃ©pare une instruction pour l'assemblage.
 			//	Effectue les substitutions dans les arguments en fonction des variables.
 			//	Par exemple, remplace "MOVE #TOTO+1,A" par "MOVE H'12 A", si TOTO=H'11.
 			//	Par exemple, remplace "MOVE {SP}+TITI,A" par "MOVE {SP}+H'02 A", si TITI=H'02.
@@ -433,7 +433,7 @@ namespace Epsitec.App.Dolphin
 
 					if (this.IsRegister(word))  // r ?
 					{
-						//	Aucune substitution à effectuer s'il s'agit d'un registre.
+						//	Aucune substitution Ã  effectuer s'il s'agit d'un registre.
 					}
 					else if (word.Length >= 1 && word[0] == '#')  // #val ?
 					{
@@ -463,7 +463,7 @@ namespace Epsitec.App.Dolphin
 
 						if (text.StartsWith("R^"))  // adressage relatif ?
 						{
-							text = text.Substring(2);  // enlève le R^
+							text = text.Substring(2);  // enlÃ¨ve le R^
 							int value = this.Expression(text, pass, true, variables, out err);
 							if (err == null)
 							{
@@ -518,7 +518,7 @@ namespace Epsitec.App.Dolphin
 
 		protected static bool IsByteOverflow(int value)
 		{
-			//	Vérifie si une valeur dépasse la capacité d'un byte.
+			//	VÃ©rifie si une valeur dÃ©passe la capacitÃ© d'un byte.
 			//	Erreur d'assemblage avec MOVE #256,A ou MOVE -129,A.
 			if (value >= 0)
 			{
@@ -532,8 +532,8 @@ namespace Epsitec.App.Dolphin
 
 		public int Expression(string expression, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
 		{
-			//	Evalue une expression pouvant contenir les 4 opérations de base et des parenthèses.
-			//	Donne la priorité aux multiplications et divisions: "2*3+4*5" = "(2*3)+(4*5)" = 26.
+			//	Evalue une expression pouvant contenir les 4 opÃ©rations de base et des parenthÃ¨ses.
+			//	Donne la prioritÃ© aux multiplications et divisions: "2*3+4*5" = "(2*3)+(4*5)" = 26.
 			List<string> words = Assembler.Fragment(expression);
 			List<Item> items = new List<Item>();
 
@@ -627,7 +627,7 @@ namespace Epsitec.App.Dolphin
 
 		protected bool OperUnary(List<Item> items, out string err)
 		{
-			//	Résoud les opérations unaires "-n" en "n".
+			//	RÃ©soud les opÃ©rations unaires "-n" en "n".
 			bool action = false;
 			int i = 0;
 			while (i < items.Count-1)
@@ -655,7 +655,7 @@ namespace Epsitec.App.Dolphin
 
 		protected Item OperUnary(string op, int v, out string err)
 		{
-			//	Retourne le résultat d'une opération binaire "-n".
+			//	Retourne le rÃ©sultat d'une opÃ©ration binaire "-n".
 			err = null;
 
 			switch (op)
@@ -673,7 +673,7 @@ namespace Epsitec.App.Dolphin
 
 		protected bool OperBinary(List<Item> items, string ops, out string err)
 		{
-			//	Résoud les opérations binaires "n+n" en "n".
+			//	RÃ©soud les opÃ©rations binaires "n+n" en "n".
 			bool action = false;
 			int i = 0;
 			while (i < items.Count-2)
@@ -702,7 +702,7 @@ namespace Epsitec.App.Dolphin
 
 		protected Item OperBinary(int v1, string op, int v2, out string err)
 		{
-			//	Retourne le résultat d'une opération binaire "n+n".
+			//	Retourne le rÃ©sultat d'une opÃ©ration binaire "n+n".
 			err = null;
 
 			switch (op)
@@ -752,9 +752,9 @@ namespace Epsitec.App.Dolphin
 
 		protected static List<string> Fragment(string expression)
 		{
-			//	Fragmente une expression en "mots" élémentaires.
+			//	Fragmente une expression en "mots" Ã©lÃ©mentaires.
 			//	Par exemple, "12+H'34*(TOTO-1)" devient "12", "+", "H'34", "*", "(", "TOTO", "-", "1", ")".
-			expression = Misc.RemoveSpaces(expression);  // enlève les espaces
+			expression = Misc.RemoveSpaces(expression);  // enlÃ¨ve les espaces
 			List<string> words = new List<string>();
 
 			int i = 0;
@@ -834,7 +834,7 @@ namespace Epsitec.App.Dolphin
 
 		protected static int GetValue(string word, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
 		{
-			//	Cherche une valeur, qui peut être soit une constante, soit une variable.
+			//	Cherche une valeur, qui peut Ãªtre soit une constante, soit une variable.
 			int value = Assembler.GetNumber(word, out err);
 			
 			if (err != null)
@@ -851,17 +851,17 @@ namespace Epsitec.App.Dolphin
 					return Misc.undefined;
 				}
 
-				if (variables.ContainsKey(variable))  // variable définie ?
+				if (variables.ContainsKey(variable))  // variable dÃ©finie ?
 				{
 					value = variables[variable];  // prend la valeur de la variable
 				}
 				else
 				{
-					if (pass == 0 && acceptUndefined)  // première passe ?
+					if (pass == 0 && acceptUndefined)  // premiÃ¨re passe ?
 					{
 						value = 0;  // valeur quelconque, juste pour assembler une instruction avec le bon nombre de bytes
 					}
-					else  // deuxième passe ?
+					else  // deuxiÃ¨me passe ?
 					{
 						err = string.Format(Res.Strings.Assembler.Value.Error.Undefined, variable);
 						return Misc.undefined;
@@ -881,7 +881,7 @@ namespace Epsitec.App.Dolphin
 				return Misc.undefined;
 			}
 
-			if (word[0] >= '0' && word[0] <= '9')  // décimal par défaut ?
+			if (word[0] >= '0' && word[0] <= '9')  // dÃ©cimal par dÃ©faut ?
 			{
 				int value;
 				if (!int.TryParse(word, out value))
@@ -895,7 +895,7 @@ namespace Epsitec.App.Dolphin
 
 			if (word.Length > 1 && word[1] == '\'')
 			{
-				if (word[0] == 'H')  // hexadécimal ?
+				if (word[0] == 'H')  // hexadÃ©cimal ?
 				{
 					int value = Misc.ParseHexa(word.Substring(2), Misc.undefined, Misc.undefined);
 					if (value == Misc.undefined)
@@ -917,7 +917,7 @@ namespace Epsitec.App.Dolphin
 					err = null;
 					return value;
 				}
-				else if (word[0] == 'D')  // décimal ?
+				else if (word[0] == 'D')  // dÃ©cimal ?
 				{
 					int value;
 					if (!int.TryParse(word.Substring(2), out value))
@@ -941,7 +941,7 @@ namespace Epsitec.App.Dolphin
 
 		protected static string GetString(string word)
 		{
-			//	Cherche une chaîne (un nom de variable ou une opération).
+			//	Cherche une chaÃ®ne (un nom de variable ou une opÃ©ration).
 			if (word.Length == 0)
 			{
 				return null;
@@ -962,7 +962,7 @@ namespace Epsitec.App.Dolphin
 
 		protected bool IsRegister(string word)
 		{
-			//	Indique si le mot correspond à un nom de registre du processeur.
+			//	Indique si le mot correspond Ã  un nom de registre du processeur.
 			foreach (string register in this.processor.RegisterNames)
 			{
 				if (word == register)
@@ -975,7 +975,7 @@ namespace Epsitec.App.Dolphin
 
 		protected bool IsVariable(string word)
 		{
-			//	Indique si le mot correspond à un nom de variable valide.
+			//	Indique si le mot correspond Ã  un nom de variable valide.
 			//	Exemples valides: "TOTO", "TOTO23", "TOTO_2", "_TOTO", "A1000"
 			//	Exemples invalides: "2TOTO", "TOTO 2"
 			if (word.Length == 0)
@@ -1026,7 +1026,7 @@ namespace Epsitec.App.Dolphin
 			{
 				if (string.IsNullOrEmpty(lines[i]))
 				{
-					total--;  // supprime les lignes vides à la fin
+					total--;  // supprime les lignes vides Ã  la fin
 				}
 				else
 				{
@@ -1051,7 +1051,7 @@ namespace Epsitec.App.Dolphin
 
 		protected void InsertErrors(List<int> errorLines, List<string> errorTexts)
 		{
-			//	Insère les erreurs dans le texte du programme.
+			//	InsÃ¨re les erreurs dans le texte du programme.
 			string program = TextLayout.ConvertToSimpleText(this.field.Text);  // remplace <br/> par \n et <tab/> par \t
 
 			int cursor = 0;
@@ -1074,8 +1074,8 @@ namespace Epsitec.App.Dolphin
 
 		protected static string Balast(string text)
 		{
-			//	Retourne tout le balast présent au début d'une ligne.
-			//	TextLayout.ConvertToSimpleText doit avoir été exécuté (<br/> et <tab/> remplacés par \n et \t).
+			//	Retourne tout le balast prÃ©sent au dÃ©but d'une ligne.
+			//	TextLayout.ConvertToSimpleText doit avoir Ã©tÃ© exÃ©cutÃ© (<br/> et <tab/> remplacÃ©s par \n et \t).
 			int index = 0;
 			while (true)
 			{
@@ -1117,8 +1117,8 @@ namespace Epsitec.App.Dolphin
 
 		protected static int LineIndex(string text, int lineRank)
 		{
-			//	Cherche l'index de la nième ligne d'un texte.
-			//	TextLayout.ConvertToSimpleText doit avoir été exécuté (<br/> et <tab/> remplacés par \n et \t).
+			//	Cherche l'index de la niÃ¨me ligne d'un texte.
+			//	TextLayout.ConvertToSimpleText doit avoir Ã©tÃ© exÃ©cutÃ© (<br/> et <tab/> remplacÃ©s par \n et \t).
 			if (lineRank == 0)
 			{
 				return 0;
@@ -1143,7 +1143,7 @@ namespace Epsitec.App.Dolphin
 
 		protected static string FirstLine(string err)
 		{
-			//	Retourne la première ligne d'un texte.
+			//	Retourne la premiÃ¨re ligne d'un texte.
 			int index = err.IndexOf("<br/>");
 			if (index == -1)
 			{

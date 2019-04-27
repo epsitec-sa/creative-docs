@@ -19,7 +19,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -59,14 +59,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("About");
 		}
 
 
 		public static StaticText CreateWidgetSplash(Widget parent, InstallType type, DocumentType docType)
 		{
-			//	Crée les widgets pour l'image de bienvenue.
+			//	CrÃ©e les widgets pour l'image de bienvenue.
 			double y = parent.ActualHeight-200;
 
 			string res;
@@ -144,7 +144,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public static string GetVersion()
 		{
-			//	Donne le numéro de version.
+			//	Donne le numÃ©ro de version.
 			string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
 			int i = version.LastIndexOf('.');
 			if (i != -1)
@@ -156,7 +156,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected static string GetKey()
 		{
-			//	Lit la clé d'installation.
+			//	Lit la clÃ© d'installation.
 			string key = Common.Support.SerialAlgorithm.ReadCrDocSerial();
 
 			if ( key != null && key.Length == 24 )

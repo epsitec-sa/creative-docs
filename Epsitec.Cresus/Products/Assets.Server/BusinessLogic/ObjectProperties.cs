@@ -1,4 +1,4 @@
-﻿//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
 using System.Linq;

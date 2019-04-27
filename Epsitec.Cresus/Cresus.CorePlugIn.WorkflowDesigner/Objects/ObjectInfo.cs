@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -52,8 +52,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
+			//	Met en Ã©vidence la boÃ®te selon la position de la souris.
+			//	Si la souris est dans cette boÃ®te, retourne true.
 			base.MouseMove (message, pos);
 
 			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.HilitedElement == ActiveElement.InfoMove)
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseDown(Message message, Point pos)
 		{
-			//	Le bouton de la souris est pressé.
+			//	Le bouton de la souris est pressÃ©.
 			base.MouseDown (message, pos);
 
 			if (this.HilitedElement == ActiveElement.InfoWidth)
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void MouseUp(Message message, Point pos)
 		{
-			//	Le bouton de la souris est relâché.
+			//	Le bouton de la souris est relÃ¢chÃ©.
 			base.MouseUp (message, pos);
 
 			if (this.draggingMode == DraggingMode.MoveObject)
@@ -188,19 +188,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
 			}
 
-			//	Souris dans l'en-tête ?
+			//	Souris dans l'en-tÃªte ?
 			if (this.HeaderRectangle.Contains (pos))
 			{
 				return ActiveElement.InfoMove;
 			}
 
-			//	Souris dans la boîte ?
+			//	Souris dans la boÃ®te ?
 			if (this.bounds.Contains(pos))
 			{
 				int  lineCount = this.LineCount;
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
-			//	Détecte l'élément actif visé par la souris.
+			//	DÃ©tecte l'Ã©lÃ©ment actif visÃ© par la souris.
 			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Dessine la flèche pendant un déplacement de ligne.
+			//	Dessine la flÃ¨che pendant un dÃ©placement de ligne.
 			if (this.draggingMode == DraggingMode.MoveInfoLine && this.draggingLineCurrentRank != -1)
 			{
 				if (this.draggingLineCurrentRank <= this.draggingLineInitialRank-1 ||
@@ -352,12 +352,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			Rectangle rect;
 
-			//	Dessine la moitié gauche.
+			//	Dessine la moitiÃ© gauche.
 			rect = new Rectangle (p1.X, p1.Y-0.5, (p2.X-p1.X)/2, 1);
 			graphics.AddFilledRectangle (rect);
 			this.RenderHorizontalGradient (graphics, this.bounds, c1, c2);
 
-			//	Dessine la moitié droite.
+			//	Dessine la moitiÃ© droite.
 			rect.Offset (rect.Width, 0);
 			graphics.AddFilledRectangle (rect);
 			this.RenderHorizontalGradient (graphics, this.bounds, c2, c1);
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
 		{
-			//	Dessine une flèche pendant le déplacement d'un champ.
+			//	Dessine une flÃ¨che pendant le dÃ©placement d'un champ.
 			p2 = Point.Move (p2, p1, 1);
 			double d = (p1.Y > p2.Y) ? -6 : 6;
 			double sx = 3;
@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool IsHeaderHilite
 		{
-			//	Indique si la souris est dans l'en-tête.
+			//	Indique si la souris est dans l'en-tÃªte.
 			get
 			{
 				return (this.hilitedElement == ActiveElement.InfoInside ||
@@ -408,13 +408,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			int lineCount = this.LineCount;
 
-			//	Supprime les TextLayout en excès.
+			//	Supprime les TextLayout en excÃ¨s.
 			while (this.textLayouts.Count > lineCount)
 			{
 				this.textLayouts.RemoveAt (0);
 			}
 
-			//	Crée les TextLayout manquants.
+			//	CrÃ©e les TextLayout manquants.
 			while (this.textLayouts.Count < lineCount)
 			{
 				var textLayout = new TextLayout ();
@@ -460,7 +460,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 						{
 							if (node.IsPublic && node.Code == code)
 							{
-								return string.Concat ("<i>Vers le nœud <b>", node.Name, "</b> du workflow <b>", def.WorkflowName, "</b></i>");
+								return string.Concat ("<i>Vers le nÅ“ud <b>", node.Name, "</b> du workflow <b>", def.WorkflowName, "</b></i>");
 							}
 						}
 					}
@@ -516,7 +516,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				{
 					if (this.LinkToForeign)
 					{
-						return 1;  // toujours une seule ligne pour afficher "Vers Entité.Noeud"
+						return 1;  // toujours une seule ligne pour afficher "Vers EntitÃ©.Noeud"
 					}
 					else
 					{

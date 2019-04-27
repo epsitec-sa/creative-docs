@@ -71,7 +71,7 @@ namespace Epsitec.Common.Tests.Drawing
 			a.Font = Font.GetFont ("Tahoma", "Regular");
 			a.FontSize = 12.0;
 			
-			//	TODO : ajouter les autres propriétés ici...
+			//	TODO : ajouter les autres propriÃ©tÃ©s ici...
 			
 			string sa = a.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Tests.Drawing
 			Assert.AreEqual (a.Font, b.Font);
 			Assert.AreEqual (a.FontSize, b.FontSize);
 			
-			//	TODO : ajouter les autres propriétés ici...
+			//	TODO : ajouter les autres propriÃ©tÃ©s ici...
 		}
 	}
 }

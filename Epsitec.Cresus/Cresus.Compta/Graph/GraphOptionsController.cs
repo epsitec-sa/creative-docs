@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			ToolTip.Default.SetToolTip (this.swapButton, "Permute les axes");
 
-			//	Connexion des événements.
+			//	Connexion des Ã©vÃ©nements.
 			this.sideBySideModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.SideBySide;
@@ -464,7 +464,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.legendButton = new CheckButton
 			{
 				Parent         = frame1,
-				FormattedText  = "Légendes",
+				FormattedText  = "LÃ©gendes",
 				PreferredWidth = 80,
 				AutoToggle     = false,
 				Dock           = DockStyle.Top,
@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.startAtZeroButton = new CheckButton
 			{
 				Parent         = frame2,
-				FormattedText  = "Zéro inclu",
+				FormattedText  = "ZÃ©ro inclu",
 				PreferredWidth = 80,
 				AutoToggle     = false,
 				Dock           = DockStyle.Top,
@@ -566,7 +566,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			});
 
 			this.lineAlphaController = new SliderController ();
-			this.lineAlphaController.CreateUI (frame3, 0.1, 1.0, 0.1, 1.0, "Opacité", delegate
+			this.lineAlphaController.CreateUI (frame3, 0.1, 1.0, 0.1, 1.0, "OpacitÃ©", delegate
 			{
 				this.options.LineAlpha = this.lineAlphaController.Value;
 				this.OptionsChanged ();
@@ -612,7 +612,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				SwallowReturnOnAcceptEdition = true,
 			};
 
-			//	Connexion des événements.
+			//	Connexion des Ã©vÃ©nements.
 			this.styleCombo.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -950,7 +950,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					return "Arc-en-ciel pastel";
 
 				case GraphStyle.DarkRainbow:
-					return "Arc-en-ciel foncé";
+					return "Arc-en-ciel foncÃ©";
 
 				case GraphStyle.Grey:
 					return "Niveaux de gris";
@@ -1023,13 +1023,13 @@ namespace Epsitec.Cresus.Compta.Graph
 					return "Aucun";
 
 				case GraphPoint.Mix:
-					return "Mélangés";
+					return "MÃ©langÃ©s";
 
 				case GraphPoint.Circle:
 					return "Cercles";
 
 				case GraphPoint.Square:
-					return "Carrés";
+					return "CarrÃ©s";
 
 				case GraphPoint.TriangleUp:
 					return "Triangles haut";
@@ -1079,11 +1079,11 @@ namespace Epsitec.Cresus.Compta.Graph
 				}
 				else if (n == 1)
 				{
-					return "1 élément";
+					return "1 Ã©lÃ©ment";
 				}
 				else
 				{
-					return string.Format ("{0} éléments", n.ToString ());
+					return string.Format ("{0} Ã©lÃ©ments", n.ToString ());
 				}
 			}
 		}

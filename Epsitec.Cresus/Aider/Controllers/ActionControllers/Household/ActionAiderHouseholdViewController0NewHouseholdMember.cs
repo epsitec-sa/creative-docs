@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Créer un nouveau membre et l'ajouter au ménage");
+			return Resources.Text ("CrÃ©er un nouveau membre et l'ajouter au mÃ©nage");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (isUserSure == false)
 			{
-				Logic.BusinessRuleException (household, Resources.Text ("Avez-vous bien vérifié que cette personne n'existait pas déjà dans AIDER?"));
+				Logic.BusinessRuleException (household, Resources.Text ("Avez-vous bien vÃ©rifiÃ© que cette personne n'existait pas dÃ©jÃ  dans AIDER?"));
 			}
 
 			var person = context.CreateAndRegisterEntity<AiderPersonEntity> ();
@@ -130,10 +130,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Créer un nouveau membre et l'ajouter au ménage")
+				.Title ("CrÃ©er un nouveau membre et l'ajouter au mÃ©nage")
 
 				.Field<string> ()
-					.Title ("Prénom")
+					.Title ("PrÃ©nom")
 				.End ()
 				.Field<string> ()
 					.Title ("Nom")
@@ -147,11 +147,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Date de naissance")
 				.End ()
 				.Field<bool> ()
-					.Title ("Le nouveau membre est un chef du ménage")
+					.Title ("Le nouveau membre est un chef du mÃ©nage")
 					.InitialValue (false)
 				.End ()
 				.Field<bool> ()
-					.Title ("J'ai vérifié que cette personne n'existait pas déjà")
+					.Title ("J'ai vÃ©rifiÃ© que cette personne n'existait pas dÃ©jÃ ")
 					.InitialValue (false)
 				.End ()
 			.End ();

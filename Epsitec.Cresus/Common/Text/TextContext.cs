@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe TextContext décrit un contexte (pour la désérialisation) lié à
+	/// La classe TextContext dÃ©crit un contexte (pour la dÃ©sÃ©rialisation) liÃ© Ã 
 	/// un environnement 'texte'.
 	/// </summary>
 	public class TextContext : ILanguageRecognizer
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Text
 			
 			ulong strippedCode = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			//	TODO: optimiser l'accès aux coreSettings, localSettings et extraSettings dans
+			//	TODO: optimiser l'accÃ¨s aux coreSettings, localSettings et extraSettings dans
 			//	tout TextContext en utilisant SettingsTable.GetCoreAndSettings()
 			
 			Styles.CoreSettings  coreSettings  = this.styleList[strippedCode];
@@ -451,8 +451,8 @@ namespace Epsitec.Common.Text
 			
 			if (Unicode.Bits.GetSpecialCodeFlag (code))
 			{
-				//	Ce n'est pas un caractère normal, mais un caractère qui doit
-				//	être remplacé par un glyph à la volée. Modifie aussi la fonte
+				//	Ce n'est pas un caractÃ¨re normal, mais un caractÃ¨re qui doit
+				//	Ãªtre remplacÃ© par un glyph Ã  la volÃ©e. Modifie aussi la fonte
 				//	si besoin.
 				
 				ushort        sGlyph;
@@ -473,8 +473,8 @@ namespace Epsitec.Common.Text
 			
 			if (Unicode.Bits.GetSpecialCodeFlag (code))
 			{
-				//	Ce n'est pas un caractère normal, mais un caractère qui doit
-				//	être remplacé par un glyph à la volée. Modifie aussi la fonte
+				//	Ce n'est pas un caractÃ¨re normal, mais un caractÃ¨re qui doit
+				//	Ãªtre remplacÃ© par un glyph Ã  la volÃ©e. Modifie aussi la fonte
 				//	si besoin.
 				
 				ushort        sGlyph;
@@ -637,7 +637,7 @@ namespace Epsitec.Common.Text
 			if ((this.getFontLastStyleVersion != currentStyleVersion) ||
 				(this.getFontLastStyleIndex   != currentStyleIndex))
 			{
-				//	Rafraîchit les informations sur la fonte utilisée :
+				//	RafraÃ®chit les informations sur la fonte utilisÃ©e :
 				
 				OpenType.Font font;
 				double        fontSize;
@@ -1114,8 +1114,8 @@ namespace Epsitec.Common.Text
 		#region Internal Property & Style Related Methods
 		internal void GetAllProperties(ulong code, out Property[] properties)
 		{
-			//	Retourne les propriétés associées à un code de caractère donné.
-			//	Les propriétés sont brutes, telles que vues par le système de
+			//	Retourne les propriÃ©tÃ©s associÃ©es Ã  un code de caractÃ¨re donnÃ©.
+			//	Les propriÃ©tÃ©s sont brutes, telles que vues par le systÃ¨me de
 			//	layout, par exemple.
 			
 			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
@@ -1144,8 +1144,8 @@ namespace Epsitec.Common.Text
 		
 		internal void GetLocalAndExtraSettingsProperties(ulong code, out Property[] properties)
 		{
-			//	Retourne les propriétés associées à un code de caractère donné.
-			//	Les propriétés sont brutes, telles que vues par le système de
+			//	Retourne les propriÃ©tÃ©s associÃ©es Ã  un code de caractÃ¨re donnÃ©.
+			//	Les propriÃ©tÃ©s sont brutes, telles que vues par le systÃ¨me de
 			//	layout, par exemple.
 			
 			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
@@ -1180,7 +1180,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			//	Il y a à la fois des réglages locaux et extra, il faut donc
+			//	Il y a Ã  la fois des rÃ©glages locaux et extra, il faut donc
 			//	accumuler les deux :
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -1193,10 +1193,10 @@ namespace Epsitec.Common.Text
 		
 		internal void GetLocalSettingsProperties(ulong code, out Property[] properties)
 		{
-			//	Retourne les propriétés associées à un code de caractère donné.
-			//	Les propriétés sont brutes, telles que vues par le système de
+			//	Retourne les propriÃ©tÃ©s associÃ©es Ã  un code de caractÃ¨re donnÃ©.
+			//	Les propriÃ©tÃ©s sont brutes, telles que vues par le systÃ¨me de
 			//	layout, par exemple.
-			//	Ne retourne que les propriétés de la catégorie LocalSettings.
+			//	Ne retourne que les propriÃ©tÃ©s de la catÃ©gorie LocalSettings.
 			
 			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
 			
@@ -1214,26 +1214,26 @@ namespace Epsitec.Common.Text
 		
 		internal void GetFlatProperties(System.Collections.ICollection textStyles, out TextStyle[] styles, out Property[] properties)
 		{
-			//	Retourne les propriétés définies par une collection de styles.
-			//	Retourne aussi les styles sous la forme d'un tableau trié.
+			//	Retourne les propriÃ©tÃ©s dÃ©finies par une collection de styles.
+			//	Retourne aussi les styles sous la forme d'un tableau triÃ©.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			//	Trie les styles selon leur priorité, avant de les convertir en
-			//	propriétés :
+			//	Trie les styles selon leur prioritÃ©, avant de les convertir en
+			//	propriÃ©tÃ©s :
 			
 			styles = new TextStyle[textStyles.Count];
 			textStyles.CopyTo (styles, 0);
 			System.Array.Sort (styles, TextStyle.Comparer);
 			
-			//	Les diverses propriétés des styles passés en entrée sont
-			//	extraites et ajoutées dans la liste complète des propriétés :
+			//	Les diverses propriÃ©tÃ©s des styles passÃ©s en entrÃ©e sont
+			//	extraites et ajoutÃ©es dans la liste complÃ¨te des propriÃ©tÃ©s :
 			
 			foreach (TextStyle style in styles)
 			{
-				//	Passe en revue toutes les propriétés définies par le style
-				//	en cours d'analyse et ajoute celles-ci séquentiellement dans
-				//	la liste des propriétés :
+				//	Passe en revue toutes les propriÃ©tÃ©s dÃ©finies par le style
+				//	en cours d'analyse et ajoute celles-ci sÃ©quentiellement dans
+				//	la liste des propriÃ©tÃ©s :
 				
 				list.AddRange (style.GetProperties ());
 			}
@@ -1243,19 +1243,19 @@ namespace Epsitec.Common.Text
 		
 		internal void GetPropertiesQuickAndDirty(ulong code, out TextStyle[] styles, out Property[] properties)
 		{
-			//	Détermine quels styles et propriétés ont conduit aux propriétés
-			//	associées avec le caractère spécifié. Cette méthode se base sur
+			//	DÃ©termine quels styles et propriÃ©tÃ©s ont conduit aux propriÃ©tÃ©s
+			//	associÃ©es avec le caractÃ¨re spÃ©cifiÃ©. Cette mÃ©thode se base sur
 			//	un certain nombre de simplifications :
 			//
-			//	- Un style ne fait pas référence à des propriétés LocalSettings.
+			//	- Un style ne fait pas rÃ©fÃ©rence Ã  des propriÃ©tÃ©s LocalSettings.
 			//
-			//	- Les propriétés PropertyType.CoreSettings et ExtraSettings sont
-			//	  toujours enrobées dans une méta-propriété (donc un TextStyle).
+			//	- Les propriÃ©tÃ©s PropertyType.CoreSettings et ExtraSettings sont
+			//	  toujours enrobÃ©es dans une mÃ©ta-propriÃ©tÃ© (donc un TextStyle).
 			//
-			//	- TabsProperty doit être adaptée (catégorie des ExtraSettings)
+			//	- TabsProperty doit Ãªtre adaptÃ©e (catÃ©gorie des ExtraSettings)
 			//	  pour ne garder que les taquets locaux (TabClass.Auto).
 			//
-			//	Avec ces données, la liste des propriétés se laisse reconstruire
+			//	Avec ces donnÃ©es, la liste des propriÃ©tÃ©s se laisse reconstruire
 			//	relativement facilement.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -1286,8 +1286,8 @@ namespace Epsitec.Common.Text
 				else if ((property.WellKnownType == Properties.WellKnownType.Generator) ||
 					/**/ (property.WellKnownType == Properties.WellKnownType.AutoText))
 				{
-					//	Ces propriétés ne peuvent jamais faire partie d'un style que
-					//	l'utilisateur peut appliquer; elles sont générées uniquement
+					//	Ces propriÃ©tÃ©s ne peuvent jamais faire partie d'un style que
+					//	l'utilisateur peut appliquer; elles sont gÃ©nÃ©rÃ©es uniquement
 					//	par les "managed paragraphs" :
 					
 					list.Add (property);
@@ -1679,10 +1679,10 @@ namespace Epsitec.Common.Text
 		
 		public int GetTextStartDistance(TextStory story, ICursor cursor, Property property)
 		{
-			//	Trouve le début du texte marqué avec la propriété indiquée; retourne
+			//	Trouve le dÃ©but du texte marquÃ© avec la propriÃ©tÃ© indiquÃ©e; retourne
 			//	la distance parcourue (-1 en cas d'erreur).
 			//
-			//	Si le curseur se trouve au début du texte marqué, retourne 0.
+			//	Si le curseur se trouve au dÃ©but du texte marquÃ©, retourne 0.
 			
 			if (this.ContainsProperty (story, cursor, 0, property))
 			{
@@ -1700,7 +1700,7 @@ namespace Epsitec.Common.Text
 		
 		public int GetTextEndDistance(TextStory story, ICursor cursor, Property property)
 		{
-			//	Trouve la fin du texte marqué avec la propriété indiquée; retourne
+			//	Trouve la fin du texte marquÃ© avec la propriÃ©tÃ© indiquÃ©e; retourne
 			//	la distance parcourue (-1 en cas d'erreur).
 			
 			if (this.ContainsProperty (story, cursor, 0, property))

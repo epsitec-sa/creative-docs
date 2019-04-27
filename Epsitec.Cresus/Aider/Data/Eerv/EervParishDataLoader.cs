@@ -1,4 +1,4 @@
-﻿using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 

@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyAllChanged()
 		{
-			//	Indique que tout a changé.
+			//	Indique que tout a changÃ©.
 			if ( !this.enable )  return;
 
 			this.documentChanged = true;
@@ -78,15 +78,15 @@ namespace Epsitec.Common.Document
 			this.textStyleListChanged = true;
 			this.selNamesChanged = true;
 
-			// (*REM1*)	Il ne faut surtout pas dire que le texte a changé, car DocumentEditor appelle
-			//			document.SetDirtySerialize lorsque cet événement arrive.
+			// (*REM1*)	Il ne faut surtout pas dire que le texte a changÃ©, car DocumentEditor appelle
+			//			document.SetDirtySerialize lorsque cet Ã©vÃ©nement arrive.
 
 			this.NotifyArea();
 		}
 
 		public void NotifyCreateChanged()
 		{
-			//	Indique que la création d'un objet à débuté ou s'est terminée.
+			//	Indique que la crÃ©ation d'un objet Ã  dÃ©butÃ© ou s'est terminÃ©e.
 			if ( !this.enable )  return;
 
 			this.toolChanged = true;
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyDocumentChanged()
 		{
-			//	Indique que les informations sur le document ont changé.
+			//	Indique que les informations sur le document ont changÃ©.
 			//	Nom du document, taille, etc.
 			if ( !this.enable )  return;
 			this.documentChanged = true;
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyMouseChanged()
 		{
-			//	Indique que la position de la souris a changé.
+			//	Indique que la position de la souris a changÃ©.
 			if ( !this.enable )  return;
 			this.mouseChanged = true;
 			this.NotifyAsync();
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyModifChanged()
 		{
-			//	Indique que le texte des modifications a changé.
+			//	Indique que le texte des modifications a changÃ©.
 			if ( !this.enable )  return;
 			this.modifChanged = true;
 			this.NotifyAsync();
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyOriginChanged()
 		{
-			//	Indique que l'origine a changé.
+			//	Indique que l'origine a changÃ©.
 			if ( !this.enable )  return;
 			this.originChanged = true;
 			this.NotifyAsync();
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyZoomChanged()
 		{
-			//	Indique que le zoom a changé.
+			//	Indique que le zoom a changÃ©.
 			if ( !this.enable )  return;
 			this.zoomChanged = true;
 			this.NotifyAsync();
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyToolChanged()
 		{
-			//	Indique que l'outil sélectionné a changé.
+			//	Indique que l'outil sÃ©lectionnÃ© a changÃ©.
 			if ( !this.enable )  return;
 			this.toolChanged = true;
 			this.NotifyAsync();
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifySaveChanged()
 		{
-			//	Indique que le bouton "enregistrer" a changé.
+			//	Indique que le bouton "enregistrer" a changÃ©.
 			if ( !this.enable )  return;
 			this.saveChanged = true;
 			this.NotifyAsync();
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifySelectionChanged()
 		{
-			//	Indique que les objets sélectionnés ont changé.
+			//	Indique que les objets sÃ©lectionnÃ©s ont changÃ©.
 			if ( !this.enable || !this.enableSelectionChanged )  return;
 			this.selectionChanged = true;
 			this.NotifyAsync();
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyGeometryChanged()
 		{
-			//	Indique que les objets sélectionnés ont changé.
+			//	Indique que les objets sÃ©lectionnÃ©s ont changÃ©.
 			if ( !this.enable )  return;
 			this.geometryChanged = true;
 			this.NotifyAsync();
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyShaperChanged()
 		{
-			//	Indique que les objets pour le modeleur ont changé.
+			//	Indique que les objets pour le modeleur ont changÃ©.
 			if ( !this.enable )  return;
 			this.shaperChanged = true;
 			this.NotifyAsync();
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyTextChanged()
 		{
-			//	Indique que le texte en édition a changé.
+			//	Indique que le texte en Ã©dition a changÃ©.
 			if ( !this.enable )  return;
 			this.textChanged = true;
 			this.NotifyAsync();
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyTextCursorChanged()
 		{
-			//	Indique que le curseur du texte en édition a changé.
+			//	Indique que le curseur du texte en Ã©dition a changÃ©.
 			if ( !this.enable )  return;
 			this.textCursorChanged = true;
 			this.NotifyAsync();
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyStyleChanged()
 		{
-			//	Indique que les styles ont changé.
+			//	Indique que les styles ont changÃ©.
 			if ( !this.enable )  return;
 			this.styleChanged = true;
 			this.NotifyAsync();
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyPagesChanged()
 		{
-			//	Indique que les pages ont changé.
+			//	Indique que les pages ont changÃ©.
 			if ( !this.enable )  return;
 			this.pagesChanged = true;
 
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyLayersChanged()
 		{
-			//	Indique que les calques ont changé.
+			//	Indique que les calques ont changÃ©.
 			if ( !this.enable )  return;
 			this.layersChanged = true;
 			this.NotifyAsync();
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyPageChanged(Objects.Abstract page)
 		{
-			//	Indique qu'une page a changé.
+			//	Indique qu'une page a changÃ©.
 			if ( !this.enable )  return;
 			this.pageObject = page;
 			this.NotifyAsync();
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyLayerChanged(Objects.Abstract layer)
 		{
-			//	Indique qu'un calque a changé.
+			//	Indique qu'un calque a changÃ©.
 			if ( !this.enable )  return;
 			this.layerObject = layer;
 			this.NotifyAsync();
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyUndoRedoChanged()
 		{
-			//	Indique que les commandes undo/redo ont changé.
+			//	Indique que les commandes undo/redo ont changÃ©.
 			if ( !this.enable )  return;
 			this.undoRedoChanged = true;
 			this.NotifyAsync();
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyGridChanged()
 		{
-			//	Indique que les commandes pour la grille ont changé.
+			//	Indique que les commandes pour la grille ont changÃ©.
 			if ( !this.enable )  return;
 			this.gridChanged = true;
 			this.NotifyAsync();
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyLabelPropertiesChanged()
 		{
-			//	Indique que les commandes pour les noms d'attributs ont changé.
+			//	Indique que les commandes pour les noms d'attributs ont changÃ©.
 			if ( !this.enable )  return;
 			this.labelPropertiesChanged = true;
 			this.NotifyAsync();
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyConstrainChanged()
 		{
-			//	Indique que les commandes pour les lignes magnétiques ont changé.
+			//	Indique que les commandes pour les lignes magnÃ©tiques ont changÃ©.
 			if (!this.enable)  return;
 			this.constrainChanged = true;
 			this.NotifyAsync();
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyMagnetChanged()
 		{
-			//	Indique que les commandes pour les lignes magnétiques ont changé.
+			//	Indique que les commandes pour les lignes magnÃ©tiques ont changÃ©.
 			if (!this.enable)  return;
 			this.magnetChanged = true;
 			this.NotifyAsync();
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyPreviewChanged()
 		{
-			//	Indique que la commande aperçu a changé.
+			//	Indique que la commande aperÃ§u a changÃ©.
 			if ( !this.enable )  return;
 			this.previewChanged = true;
 			this.NotifyAsync();
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifySettingsChanged()
 		{
-			//	Indique que les réglages ont changé.
+			//	Indique que les rÃ©glages ont changÃ©.
 			if ( !this.enable )  return;
 			this.settingsChanged = true;
 			this.NotifyAsync();
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyFontsSettingsChanged()
 		{
-			//	Indique que les réglages de police ont changé.
+			//	Indique que les rÃ©glages de police ont changÃ©.
 			if ( !this.enable )  return;
 			this.fontsSettingsChanged = true;
 			this.NotifyAsync();
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyGuidesChanged()
 		{
-			//	Indique que les repères ont changé.
+			//	Indique que les repÃ¨res ont changÃ©.
 			if ( !this.enable )  return;
 			this.guidesChanged = true;
 			this.NotifyAsync();
@@ -317,7 +317,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyHideHalfChanged()
 		{
-			//	Indique que la commande estompé a changé.
+			//	Indique que la commande estompÃ© a changÃ©.
 			if ( !this.enable )  return;
 			this.hideHalfChanged = true;
 			this.NotifyAsync();
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyDebugChanged()
 		{
-			//	Indique que les commandes pour le debug ont changé.
+			//	Indique que les commandes pour le debug ont changÃ©.
 			if ( !this.enable )  return;
 			this.debugChanged = true;
 			this.NotifyAsync();
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyPropertyChanged(Properties.Abstract property)
 		{
-			//	Indique qu'une propriété a changé.
+			//	Indique qu'une propriÃ©tÃ© a changÃ©.
 			if ( !this.enable )  return;
 			if ( !this.propertyList.Contains(property) )
 			{
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyAggregateChanged(Properties.Aggregate agg)
 		{
-			//	Indique qu'un aggrégat a changé.
+			//	Indique qu'un aggrÃ©gat a changÃ©.
 			if ( !this.enable )  return;
 			if ( !this.aggregateList.Contains(agg) )
 			{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyTextStyleChanged(Text.TextStyle textStyle)
 		{
-			//	Indique qu'un style de texte a changé.
+			//	Indique qu'un style de texte a changÃ©.
 			if ( !this.enable )  return;
 			if ( !this.textStyleList.Contains(textStyle) )
 			{
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyTextStyleListChanged()
 		{
-			//	Indique qu'un style de texte a été ajouté ou supprimé.
+			//	Indique qu'un style de texte a Ã©tÃ© ajoutÃ© ou supprimÃ©.
 			if ( !this.enable )  return;
 			this.textStyleListChanged = true;
 			this.NotifyAsync();
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifySelNamesChanged()
 		{
-			//	Indique que la sélection par noms a changé.
+			//	Indique que la sÃ©lection par noms a changÃ©.
 			if ( !this.enable )  return;
 			this.selNamesChanged = true;
 			this.NotifyAsync();
@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document
 		public void NotifyArea(Rectangle rect)
 		{
 			//	Agrandit la zone de redessin de tous les visualisateurs.
-			//	Les unités pour le rectangle sont internes.
+			//	Les unitÃ©s pour le rectangle sont internes.
 			if ( !this.enable )  return;
 			if ( rect.IsEmpty )  return;
 			foreach ( Viewer viewer in this.document.Modifier.Viewers )
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Document
 		public void NotifyArea(Viewer viewer, Rectangle rect)
 		{
 			//	Agrandit la zone de redessin d'un visualisateur.
-			//	Les unités pour le rectangle sont internes.
+			//	Les unitÃ©s pour le rectangle sont internes.
 			if ( !this.enable )  return;
 			if ( viewer == null || rect.IsEmpty )  return;
 			viewer.RedrawAreaMerge(rect);
@@ -437,7 +437,7 @@ namespace Epsitec.Common.Document
 
 		public void NotifyBookPanelShowPage(string page, string sub)
 		{
-			//	Indique qu'il faut afficher un onglet donné.
+			//	Indique qu'il faut afficher un onglet donnÃ©.
 			this.OnBookPanelShowPage(page, sub);
 		}
 
@@ -450,8 +450,8 @@ namespace Epsitec.Common.Document
 		
 		public void GenerateEvents()
 		{
-			//	Génère tous les événements pour informer des changements, en fonction
-			//	des NotifyXYZ fait précédemment.
+			//	GÃ©nÃ¨re tous les Ã©vÃ©nements pour informer des changements, en fonction
+			//	des NotifyXYZ fait prÃ©cÃ©demment.
 			if ( this.documentChanged )
 			{
 				this.OnDocumentChanged();
@@ -663,7 +663,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnDocumentChanged()
 		{
-			if ( this.DocumentChanged != null )  // qq'un écoute ?
+			if ( this.DocumentChanged != null )  // qq'un Ã©coute ?
 			{
 				this.DocumentChanged();
 			}
@@ -671,7 +671,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnMouseChanged()
 		{
-			if ( this.MouseChanged != null )  // qq'un écoute ?
+			if ( this.MouseChanged != null )  // qq'un Ã©coute ?
 			{
 				this.MouseChanged();
 			}
@@ -679,7 +679,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnModifChanged()
 		{
-			if ( this.ModifChanged != null )  // qq'un écoute ?
+			if ( this.ModifChanged != null )  // qq'un Ã©coute ?
 			{
 				this.ModifChanged();
 			}
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnOriginChanged()
 		{
-			if ( this.OriginChanged != null )  // qq'un écoute ?
+			if ( this.OriginChanged != null )  // qq'un Ã©coute ?
 			{
 				this.OriginChanged();
 			}
@@ -695,7 +695,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnZoomChanged()
 		{
-			if ( this.ZoomChanged != null )  // qq'un écoute ?
+			if ( this.ZoomChanged != null )  // qq'un Ã©coute ?
 			{
 				this.ZoomChanged();
 			}
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnToolChanged()
 		{
-			if ( this.ToolChanged != null )  // qq'un écoute ?
+			if ( this.ToolChanged != null )  // qq'un Ã©coute ?
 			{
 				this.ToolChanged();
 			}
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnSaveChanged()
 		{
-			if ( this.SaveChanged != null )  // qq'un écoute ?
+			if ( this.SaveChanged != null )  // qq'un Ã©coute ?
 			{
 				this.SaveChanged();
 			}
@@ -719,7 +719,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnSelectionChanged()
 		{
-			if ( this.SelectionChanged != null )  // qq'un écoute ?
+			if ( this.SelectionChanged != null )  // qq'un Ã©coute ?
 			{
 				this.SelectionChanged();
 			}
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnGeometryChanged()
 		{
-			if ( this.GeometryChanged != null )  // qq'un écoute ?
+			if ( this.GeometryChanged != null )  // qq'un Ã©coute ?
 			{
 				this.GeometryChanged();
 			}
@@ -735,7 +735,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnShaperChanged()
 		{
-			if ( this.ShaperChanged != null )  // qq'un écoute ?
+			if ( this.ShaperChanged != null )  // qq'un Ã©coute ?
 			{
 				this.ShaperChanged();
 			}
@@ -743,7 +743,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnTextChanged()
 		{
-			if ( this.TextChanged != null )  // qq'un écoute ?
+			if ( this.TextChanged != null )  // qq'un Ã©coute ?
 			{
 				this.TextChanged();
 			}
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnTextCursorChanged()
 		{
-			if ( this.TextCursorChanged != null )  // qq'un écoute ?
+			if ( this.TextCursorChanged != null )  // qq'un Ã©coute ?
 			{
 				this.TextCursorChanged();
 			}
@@ -759,7 +759,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnStyleChanged()
 		{
-			if ( this.StyleChanged != null )  // qq'un écoute ?
+			if ( this.StyleChanged != null )  // qq'un Ã©coute ?
 			{
 				this.StyleChanged();
 			}
@@ -767,7 +767,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnPagesChanged()
 		{
-			if ( this.PagesChanged != null )  // qq'un écoute ?
+			if ( this.PagesChanged != null )  // qq'un Ã©coute ?
 			{
 				this.PagesChanged();
 			}
@@ -775,7 +775,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnLayersChanged()
 		{
-			if ( this.LayersChanged != null )  // qq'un écoute ?
+			if ( this.LayersChanged != null )  // qq'un Ã©coute ?
 			{
 				this.LayersChanged();
 			}
@@ -783,7 +783,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnPageChanged(Objects.Abstract page)
 		{
-			if ( this.PageChanged != null )  // qq'un écoute ?
+			if ( this.PageChanged != null )  // qq'un Ã©coute ?
 			{
 				this.PageChanged(page);
 			}
@@ -791,7 +791,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnLayerChanged(Objects.Abstract layer)
 		{
-			if ( this.LayerChanged != null )  // qq'un écoute ?
+			if ( this.LayerChanged != null )  // qq'un Ã©coute ?
 			{
 				this.LayerChanged(layer);
 			}
@@ -799,7 +799,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnUndoRedoChanged()
 		{
-			if ( this.UndoRedoChanged != null )  // qq'un écoute ?
+			if ( this.UndoRedoChanged != null )  // qq'un Ã©coute ?
 			{
 				this.UndoRedoChanged();
 			}
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnGridChanged()
 		{
-			if ( this.GridChanged != null )  // qq'un écoute ?
+			if ( this.GridChanged != null )  // qq'un Ã©coute ?
 			{
 				this.GridChanged();
 			}
@@ -815,7 +815,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnLabelPropertiesChanged()
 		{
-			if ( this.LabelPropertiesChanged != null )  // qq'un écoute ?
+			if ( this.LabelPropertiesChanged != null )  // qq'un Ã©coute ?
 			{
 				this.LabelPropertiesChanged();
 			}
@@ -823,7 +823,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnConstrainChanged()
 		{
-			if (this.ConstrainChanged != null)  // qq'un écoute ?
+			if (this.ConstrainChanged != null)  // qq'un Ã©coute ?
 			{
 				this.ConstrainChanged();
 			}
@@ -831,7 +831,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnMagnetChanged()
 		{
-			if (this.MagnetChanged != null)  // qq'un écoute ?
+			if (this.MagnetChanged != null)  // qq'un Ã©coute ?
 			{
 				this.MagnetChanged();
 			}
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnPreviewChanged()
 		{
-			if ( this.PreviewChanged != null )  // qq'un écoute ?
+			if ( this.PreviewChanged != null )  // qq'un Ã©coute ?
 			{
 				this.PreviewChanged();
 			}
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnSettingsChanged()
 		{
-			if ( this.SettingsChanged != null )  // qq'un écoute ?
+			if ( this.SettingsChanged != null )  // qq'un Ã©coute ?
 			{
 				this.SettingsChanged();
 			}
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnFontsSettingsChanged()
 		{
-			if ( this.FontsSettingsChanged != null )  // qq'un écoute ?
+			if ( this.FontsSettingsChanged != null )  // qq'un Ã©coute ?
 			{
 				this.FontsSettingsChanged();
 			}
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnGuidesChanged()
 		{
-			if ( this.GuidesChanged != null )  // qq'un écoute ?
+			if ( this.GuidesChanged != null )  // qq'un Ã©coute ?
 			{
 				this.GuidesChanged();
 			}
@@ -871,7 +871,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnHideHalfChanged()
 		{
-			if ( this.HideHalfChanged != null )  // qq'un écoute ?
+			if ( this.HideHalfChanged != null )  // qq'un Ã©coute ?
 			{
 				this.HideHalfChanged();
 			}
@@ -879,7 +879,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnDebugChanged()
 		{
-			if ( this.DebugChanged != null )  // qq'un écoute ?
+			if ( this.DebugChanged != null )  // qq'un Ã©coute ?
 			{
 				this.DebugChanged();
 			}
@@ -887,7 +887,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnPropertyChanged(System.Collections.ArrayList propertyList)
 		{
-			if ( this.PropertyChanged != null )  // qq'un écoute ?
+			if ( this.PropertyChanged != null )  // qq'un Ã©coute ?
 			{
 				this.PropertyChanged(propertyList);
 			}
@@ -895,7 +895,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnAggregateChanged(System.Collections.ArrayList aggregateList)
 		{
-			if ( this.AggregateChanged != null )  // qq'un écoute ?
+			if ( this.AggregateChanged != null )  // qq'un Ã©coute ?
 			{
 				this.AggregateChanged(aggregateList);
 			}
@@ -903,7 +903,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnTextStyleChanged(System.Collections.ArrayList textStyleList)
 		{
-			if ( this.TextStyleChanged != null )  // qq'un écoute ?
+			if ( this.TextStyleChanged != null )  // qq'un Ã©coute ?
 			{
 				this.TextStyleChanged(textStyleList);
 			}
@@ -911,7 +911,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnTextStyleListChanged()
 		{
-			if ( this.TextStyleListChanged != null )  // qq'un écoute ?
+			if ( this.TextStyleListChanged != null )  // qq'un Ã©coute ?
 			{
 				this.TextStyleListChanged();
 			}
@@ -919,7 +919,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnSelNamesChanged()
 		{
-			if ( this.SelNamesChanged != null )  // qq'un écoute ?
+			if ( this.SelNamesChanged != null )  // qq'un Ã©coute ?
 			{
 				this.SelNamesChanged();
 			}
@@ -927,7 +927,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnDrawChanged(Viewer viewer, Rectangle rect)
 		{
-			if ( this.DrawChanged != null )  // qq'un écoute ?
+			if ( this.DrawChanged != null )  // qq'un Ã©coute ?
 			{
 				this.DrawChanged(viewer, rect);
 			}
@@ -935,7 +935,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnRibbonCommand(string name)
 		{
-			if ( this.RibbonCommand != null )  // qq'un écoute ?
+			if ( this.RibbonCommand != null )  // qq'un Ã©coute ?
 			{
 				this.RibbonCommand(name);
 			}
@@ -943,7 +943,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnBookPanelShowPage(string page, string sub)
 		{
-			if ( this.BookPanelShowPage != null )  // qq'un écoute ?
+			if ( this.BookPanelShowPage != null )  // qq'un Ã©coute ?
 			{
 				this.BookPanelShowPage(page, sub);
 			}
@@ -951,7 +951,7 @@ namespace Epsitec.Common.Document
 
 		protected void OnSettingsShowPage(string book, string tab)
 		{
-			if ( this.SettingsShowPage != null )  // qq'un écoute ?
+			if ( this.SettingsShowPage != null )  // qq'un Ã©coute ?
 			{
 				this.SettingsShowPage(book, tab);
 			}

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -8,7 +8,7 @@ using System;
 namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
-	/// La classe ExportPDFInfo contient tous les réglages pour l'exportation PDF.
+	/// La classe ExportPDFInfo contient tous les rÃ©glages pour l'exportation PDF.
 	/// </summary>
 	public class ExportPdfInfo
 	{
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Pdf.Engine
 			this.pageFrom         = null;
 			this.pageTo           = null;
 			this.pageSize         = new Size (2100.0, 2970.0);  // A4 vertical
-			this.bleedMargin      = 0.0;  // débord
+			this.bleedMargin      = 0.0;  // dÃ©bord
 			this.cropMarks        = false;
 			this.cropMarksLength  = 100.0;  // 10mm
 			this.cropMarksWidth   = 1.0;    // 0.1mm

@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe LanguageProperty définit la langue utilisée pour un fragment
+	/// La classe LanguageProperty dÃ©finit la langue utilisÃ©e pour un fragment
 	/// de texte.
 	/// </summary>
 	public class LanguageProperty : Property

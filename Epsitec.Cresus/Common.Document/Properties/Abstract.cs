@@ -6,20 +6,20 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum Type
 	{
 		None            = 0,		// aucune
 		Name            = 1,		// nom de l'objet
 		LineColor       = 2,		// couleur du trait
 		LineMode        = 3,		// mode du trait
-		Arrow           = 4,		// extrémité des segments
-		FillGradient    = 5,		// dégradé de remplissage
-		BackColor       = 6,		// texte: couleur de fond (plus utilisé)
+		Arrow           = 4,		// extrÃ©mitÃ© des segments
+		FillGradient    = 5,		// dÃ©gradÃ© de remplissage
+		BackColor       = 6,		// texte: couleur de fond (plus utilisÃ©)
 		Shadow          = 7,		// ombre sous l'objet
 		PolyClose       = 8,		// mode de fermeture des polygones
 		Corner          = 9,		// coins des rectangles
-		Regular         = 10,		// définitions du polygone régulier
+		Regular         = 10,		// dÃ©finitions du polygone rÃ©gulier
 		Arc             = 11,		// arc de cercle ou d'ellipse
 		TextFont        = 12,		// texte: police
 		TextJustif      = 13,		// texte: justification
@@ -28,25 +28,25 @@ namespace Epsitec.Common.Document.Properties
 		ModColor        = 16,		// modification de couleur
 		Surface         = 17,		// surface 2d
 		Volume          = 18,		// volume 3d
-		FillGradientVT  = 19,		// dégradé de remplissage volume top
-		FillGradientVL  = 20,		// dégradé de remplissage volume left
-		FillGradientVR  = 21,		// dégradé de remplissage volume right
-		DimensionArrow  = 22,		// extrémité des cotes
+		FillGradientVT  = 19,		// dÃ©gradÃ© de remplissage volume top
+		FillGradientVL  = 20,		// dÃ©gradÃ© de remplissage volume left
+		FillGradientVR  = 21,		// dÃ©gradÃ© de remplissage volume right
+		DimensionArrow  = 22,		// extrÃ©mitÃ© des cotes
 		Dimension       = 23,		// cotes
 		LineDimension   = 24,		// lignes secondaires d'une cote
-		Tension         = 25,		// tension d'un trait à main levée
+		Tension         = 25,		// tension d'un trait Ã  main levÃ©e
 		Frame           = 26,		// cadre
 
-		//	Les propriétés additionnelles ne sont jamais sérialisées.
-		//	Elles sont créées à la volée en cas de besoin, et jamais détruites.
-		FrameStroke     = 100,		// propriété additionnelle: trait du cadre
-		FrameSurface    = 101,		// propriété additionnelle: surface du cadre
-		FrameBackground = 102,		// propriété additionnelle: fond du cadre
-		FrameShadow     = 103,		// propriété additionnelle: ombre du cadre
+		//	Les propriÃ©tÃ©s additionnelles ne sont jamais sÃ©rialisÃ©es.
+		//	Elles sont crÃ©Ã©es Ã  la volÃ©e en cas de besoin, et jamais dÃ©truites.
+		FrameStroke     = 100,		// propriÃ©tÃ© additionnelle: trait du cadre
+		FrameSurface    = 101,		// propriÃ©tÃ© additionnelle: surface du cadre
+		FrameBackground = 102,		// propriÃ©tÃ© additionnelle: fond du cadre
+		FrameShadow     = 103,		// propriÃ©tÃ© additionnelle: ombre du cadre
 	}
 
 	/// <summary>
-	/// La classe Property représente une propriété d'un objet graphique.
+	/// La classe Property reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public abstract class Abstract : System.IComparable, ISerializable
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document.Properties
 
 		static public Abstract NewProperty(Document document, Type type)
 		{
-			//	Crée une nouvelle propriété.
+			//	CrÃ©e une nouvelle propriÃ©tÃ©.
 			Abstract property = null;
 			switch ( type )
 			{
@@ -105,13 +105,13 @@ namespace Epsitec.Common.Document.Properties
 
 		static public string TypeName(Type type)
 		{
-			//	Retourne le nom d'un type de propriété.
+			//	Retourne le nom d'un type de propriÃ©tÃ©.
 			return type.ToString();
 		}
 
 		static public Type TypeName(string typeName)
 		{
-			//	Retourne le type de propriété d'après son nom.
+			//	Retourne le type de propriÃ©tÃ© d'aprÃ¨s son nom.
 			if ( typeName == null )
 			{
 				return Type.None;
@@ -129,8 +129,8 @@ namespace Epsitec.Common.Document.Properties
 
 		static public int SortOrder(Type type)
 		{
-			//	Retourne un numéro d'ordre pour le tri.
-			//	Ceci détermine l'ordre d'empilement vertical dans le panneau des propriétés.
+			//	Retourne un numÃ©ro d'ordre pour le tri.
+			//	Ceci dÃ©termine l'ordre d'empilement vertical dans le panneau des propriÃ©tÃ©s.
 			switch ( type )
 			{
 				case Type.Name:            return 1;
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Document.Properties
 
 		static public Type SortOrder(int index)
 		{
-			//	Retourne le type selon un numéro d'ordre de tri.
+			//	Retourne le type selon un numÃ©ro d'ordre de tri.
 			foreach ( int value in System.Enum.GetValues(typeof(Type)) )
 			{
 				Type type = (Type) value;
@@ -176,8 +176,8 @@ namespace Epsitec.Common.Document.Properties
 
 		public UndoableList Owners
 		{
-			//	Liste des propriétaires. Normalement, un propriétaire est un Objects.Abstract.
-			//	Mais une propriété "isMulti" contient une liste de propriétaires de type
+			//	Liste des propriÃ©taires. Normalement, un propriÃ©taire est un Objects.Abstract.
+			//	Mais une propriÃ©tÃ© "isMulti" contient une liste de propriÃ©taires de type
 			//	Abstract !
 			get
 			{
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Type Type
 		{
-			//	Type de la propriété.
+			//	Type de la propriÃ©tÃ©.
 			get
 			{
 				return this.type;
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool IsStrokingGradient
 		{
-			//	Indique s'il s'agit d'une propriété de surface pour un trait.
+			//	Indique s'il s'agit d'une propriÃ©tÃ© de surface pour un trait.
 			get
 			{
 				return ( this.type == Type.LineColor );
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool IsOnlyForCreation
 		{
-			//	Indique si la propriété ne sert qu'à créer de nouveaux objets.
+			//	Indique si la propriÃ©tÃ© ne sert qu'Ã  crÃ©er de nouveaux objets.
 			get
 			{
 				return this.isOnlyForCreation;
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool IsStyle
 		{
-			//	Indique si la propriété est un style.
+			//	Indique si la propriÃ©tÃ© est un style.
 			get
 			{
 				return this.isStyle;
@@ -244,10 +244,10 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool IsFloating
 		{
-			//	Indique si la propriété est flottante.
-			//	Une propriété flottante n'est référencée par personne et elle n'est pas
-			//	dans la liste des propriétés du document. ObjectPoly crée un ObjectLine
-			//	avec des propriétés flottantes, pendant la création.
+			//	Indique si la propriÃ©tÃ© est flottante.
+			//	Une propriÃ©tÃ© flottante n'est rÃ©fÃ©rencÃ©e par personne et elle n'est pas
+			//	dans la liste des propriÃ©tÃ©s du document. ObjectPoly crÃ©e un ObjectLine
+			//	avec des propriÃ©tÃ©s flottantes, pendant la crÃ©ation.
 			get
 			{
 				return this.isFloating;
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static double BackgroundIntensity(Type type)
 		{
-			//	Intensité pour le fond du panneau.
+			//	IntensitÃ© pour le fond du panneau.
 			switch ( type )
 			{
 				case Type.Name:            return 0.70;
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string Text(Type type)
 		{
-			//	Nom de la propriété.
+			//	Nom de la propriÃ©tÃ©.
 			switch ( type )
 			{
 				case Type.Name:            return Res.Strings.Property.Abstract.Name;
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public static string IconText(Type type)
 		{
-			//	Nom de l'icône de la propriété.
+			//	Nom de l'icÃ´ne de la propriÃ©tÃ©.
 			switch ( type )
 			{
 				case Type.Name:            return "PropertyName";
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public virtual string SampleText
 		{
-			//	Donne le petit texte pour les échantillons.
+			//	Donne le petit texte pour les Ã©chantillons.
 			get
 			{
 				return "";
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public string TextStyle
 		{
-			//	Nom de la propriété ou du style si c'en est un.
+			//	Nom de la propriÃ©tÃ© ou du style si c'en est un.
 			get
 			{
 				return Abstract.Text(this.type);
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Document.Properties
 		#region StyleBrief
 		public virtual void PutStyleBrief(System.Text.StringBuilder builder)
 		{
-			//	Construit le texte résumé d'un style pour une propriété.
+			//	Construit le texte rÃ©sumÃ© d'un style pour une propriÃ©tÃ©.
 			this.PutStyleBriefPrefix(builder);
 			this.PutStyleBriefPostfix(builder);
 		}
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool IsSelected
 		{
-			//	Indique si la propriété est utilisée par un objet sélectionnée.
+			//	Indique si la propriÃ©tÃ© est utilisÃ©e par un objet sÃ©lectionnÃ©e.
 			get
 			{
 				return this.isSelected;
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool IsExtendedSize
 		{
-			//	Mode de déploiement du panneau associé.
+			//	Mode de dÃ©ploiement du panneau associÃ©.
 			get
 			{
 				return this.isExtendedSize;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public bool IsMulti
 		{
-			//	Représentation de plusieurs propriétés contradictoires.
+			//	ReprÃ©sentation de plusieurs propriÃ©tÃ©s contradictoires.
 			get
 			{
 				return this.isMulti;
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public virtual bool IsComplexPrinting
 		{
-			//	Indique si une impression complexe est nécessaire.
+			//	Indique si une impression complexe est nÃ©cessaire.
 			get
 			{
 				return false;
@@ -468,25 +468,25 @@ namespace Epsitec.Common.Document.Properties
 
 		public virtual bool AlterBoundingBox
 		{
-			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
+			//	Indique si un changement de cette propriÃ©tÃ© modifie la bbox de l'objet.
 			get { return false; }
 		}
 
 		public virtual void InflateBoundingBox(SurfaceAnchor sa, ref Rectangle bboxFull)
 		{
-			//	Engraisse la bbox en fonction de la propriété.
+			//	Engraisse la bbox en fonction de la propriÃ©tÃ©.
 		}
 
 		public virtual bool IsVisible(IPaintPort port)
 		{
-			//	Indique si la propriété est visible.
+			//	Indique si la propriÃ©tÃ© est visible.
 			return true;
 		}
 
 
 		public static bool StyleAbility(Type type)
 		{
-			//	Indique si cette propriété peut faire l'objet d'un style.
+			//	Indique si cette propriÃ©tÃ© peut faire l'objet d'un style.
 			return ( type != Type.None       &&
 					 type != Type.Name       &&
 					 type != Type.Shadow     &&
@@ -499,7 +499,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public void PickerProperty(Abstract model)
 		{
-			//	Reprend une propriété d'un objet modèle.
+			//	Reprend une propriÃ©tÃ© d'un objet modÃ¨le.
 			System.Diagnostics.Debug.Assert(this.isStyle);
 			System.Diagnostics.Debug.Assert(this.Type == model.Type);
 			this.NotifyBefore();
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public void DeepCopyTo(Abstract property)
 		{
-			//	Effectue une copie complète de la propriété.
+			//	Effectue une copie complÃ¨te de la propriÃ©tÃ©.
 			this.CopyTo(property);
 
 			this.owners.CopyTo(property.owners);
@@ -522,58 +522,58 @@ namespace Epsitec.Common.Document.Properties
 
 		public virtual void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			property.type    = this.type;
 			property.isStyle = this.isStyle;
 		}
 
 		public virtual bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			//	Il ne faut surtout pas comparer isStyle, car les styles et les
-			//	propriétés sont dans des listes différentes.
+			//	propriÃ©tÃ©s sont dans des listes diffÃ©rentes.
 			if ( property.type != this.type )  return false;
 			return true;
 		}
 
 		public virtual Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			return null;
 		}
 
 
 		public virtual void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Début du déplacement d'une poignée.
+			//	DÃ©but du dÃ©placement d'une poignÃ©e.
 		}
 
 		public virtual int TotalHandle(Objects.Abstract obj)
 		{
-			//	Nombre de poignées.
+			//	Nombre de poignÃ©es.
 			return 0;
 		}
 
 		public virtual bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
-			//	Indique si une poignée est visible.
+			//	Indique si une poignÃ©e est visible.
 			return false;
 		}
 
 		public virtual Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
-			//	Retourne la position d'une poignée.
+			//	Retourne la position d'une poignÃ©e.
 			return new Point();
 		}
 		
 		public virtual void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			//	Modifie la position d'une poignée.
-			//	Si la position est hors limite, les méthodes override n'auront pas
-			//	modifié la propriété. Donc, le NotifyAfter qui s'occupe d'appeler
-			//	HandlePropertiesUpdate n'aura pas été appelé. C'est pourquoi il
-			//	est appelé ici encore une fois, afin d'être certain qu'il soit
-			//	exécuté au moins une fois !
+			//	Modifie la position d'une poignÃ©e.
+			//	Si la position est hors limite, les mÃ©thodes override n'auront pas
+			//	modifiÃ© la propriÃ©tÃ©. Donc, le NotifyAfter qui s'occupe d'appeler
+			//	HandlePropertiesUpdate n'aura pas Ã©tÃ© appelÃ©. C'est pourquoi il
+			//	est appelÃ© ici encore une fois, afin d'Ãªtre certain qu'il soit
+			//	exÃ©cutÃ© au moins une fois !
 			obj.HandlePropertiesUpdate();
 
 			this.document.Notifier.NotifyPropertyChanged(this);
@@ -581,17 +581,17 @@ namespace Epsitec.Common.Document.Properties
 
 		public virtual void MoveGlobalStarting()
 		{
-			//	Début du déplacement global de la propriété.
+			//	DÃ©but du dÃ©placement global de la propriÃ©tÃ©.
 		}
 		
 		public virtual void MoveGlobalProcess(Selector selector)
 		{
-			//	Effectue le déplacement global de la propriété.
+			//	Effectue le dÃ©placement global de la propriÃ©tÃ©.
 		}
 		
 		public virtual void DrawEdit(Graphics graphics, DrawingContext drawingContext, Objects.Abstract obj)
 		{
-			//	Dessine les traits de construction avant les poignées.
+			//	Dessine les traits de construction avant les poignÃ©es.
 		}
 
 
@@ -606,7 +606,7 @@ namespace Epsitec.Common.Document.Properties
 
 		static public double DefaultZoom(DrawingContext drawingContext)
 		{
-			//	Initialise le zoom par défaut d'un chemin.
+			//	Initialise le zoom par dÃ©faut d'un chemin.
 			if ( drawingContext == null )
 			{
 				return 2.0;
@@ -647,7 +647,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Notify
 		protected void NotifyBefore()
 		{
-			//	Signale que tous les propriétaires vont changer.
+			//	Signale que tous les propriÃ©taires vont changer.
 			this.NotifyBefore(true);
 		}
 		
@@ -663,8 +663,8 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( this.isMulti )
 				{
-					//	Normalement, un propriétaire est un Objects.Abstract.
-					//	Mais une propriété "isMulti" contient une liste de propriétaires
+					//	Normalement, un propriÃ©taire est un Objects.Abstract.
+					//	Mais une propriÃ©tÃ© "isMulti" contient une liste de propriÃ©taires
 					//	de type Abstract !
 					Abstract realProp = this.owners[i] as Abstract;
 					realProp.NotifyBefore(oplet);
@@ -682,7 +682,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected void NotifyAfter()
 		{
-			//	Signale que tous les propriétaires ont changé.
+			//	Signale que tous les propriÃ©taires ont changÃ©.
 			this.NotifyAfter(true);
 		}
 
@@ -725,12 +725,12 @@ namespace Epsitec.Common.Document.Properties
 					else
 					{
 						// Il ne faut surtout pas recalculer les bbox ici, car le nombre de recalculs
-						// serait beaucoup trop important. Si deux objets A et B utilisent la même
-						// propriété P, le NotifyAfter fait pour la propriété de l'objet A va demander
-						// de recalculer les bbox des objets l'utilisant, soit A et B. De même pour
+						// serait beaucoup trop important. Si deux objets A et B utilisent la mÃªme
+						// propriÃ©tÃ© P, le NotifyAfter fait pour la propriÃ©tÃ© de l'objet A va demander
+						// de recalculer les bbox des objets l'utilisant, soit A et B. De mÃªme pour
 						// l'objet B !
 						// A la place, le Modifier.AccumulateObject garde la trace de tous les objets
-						// modifiés, pour les traiter globalement en une seule fois, lors du
+						// modifiÃ©s, pour les traiter globalement en une seule fois, lors du
 						// Modifier.AccumulateEnding.
 						this.document.Modifier.AccumulateObject(obj);
 					}
@@ -755,8 +755,8 @@ namespace Epsitec.Common.Document.Properties
 
 				if ( this.owners.Count == 0 || property.owners.Count == 0 )  return eq;
 
-				//	Attention: lors d'une sélection de plusieurs objets ayant des
-				//	propriétés différentes, les propriétaires de la propriété ne sont
+				//	Attention: lors d'une sÃ©lection de plusieurs objets ayant des
+				//	propriÃ©tÃ©s diffÃ©rentes, les propriÃ©taires de la propriÃ©tÃ© ne sont
 				//	pas des Objects.Abstract, mais des Abstract (isMulti).
 				Objects.Abstract obj1 = this.owners[0] as Objects.Abstract;
 				int id1 = -1;  if ( obj1 != null )  id1 = obj1.UniqueId;
@@ -774,13 +774,13 @@ namespace Epsitec.Common.Document.Properties
 		#region OpletProperty
 		protected void InsertOpletProperty()
 		{
-			//	Ajoute un oplet pour mémoriser la propriété.
+			//	Ajoute un oplet pour mÃ©moriser la propriÃ©tÃ©.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletProperty oplet = new OpletProperty(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		//	Mémorise toute la propriété.
+		//	MÃ©morise toute la propriÃ©tÃ©.
 		protected class OpletProperty : AbstractOplet
 		{
 			public OpletProperty(Abstract host)
@@ -835,14 +835,14 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			info.AddValue("Type", this.type);
 			info.AddValue("IsStyle", this.isStyle);
 		}
 
 		protected Abstract(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.document = Document.ReadDocument;
 			this.Initialize();
 			this.type = (Type) info.GetValue("Type", typeof(Type));

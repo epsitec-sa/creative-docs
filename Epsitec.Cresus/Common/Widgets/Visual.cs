@@ -1,4 +1,4 @@
-//	Copyright © 2005-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Rectangle				ActualBounds
 		{
-			//	Coordonnées du widget par rapport à son parent.
+			//	CoordonnÃ©es du widget par rapport Ã  son parent.
 			get
 			{
 				if (!this.IsActualGeometryValid)
@@ -392,7 +392,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Point					ActualLocation
 		{
-			//	Origine du widget par rapport à son parent.
+			//	Origine du widget par rapport Ã  son parent.
 			get
 			{
 				if (!this.IsActualGeometryValid)
@@ -904,7 +904,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								DrawDesignerFrame
 		{
-			//	Détermine s'il faut dessiner un cadre traitillé (utilisé par Designer).
+			//	DÃ©termine s'il faut dessiner un cadre traitillÃ© (utilisÃ© par Designer).
 			get
 			{
 				return (bool) this.GetValue (Visual.DrawDesignerFrameProperty);
@@ -917,7 +917,7 @@ namespace Epsitec.Common.Widgets
 
 		public FrameEdges						DrawFrameEdges
 		{
-			//	Détermine s'il faut dessiner un cadre dans les quatre bords du widget.
+			//	DÃ©termine s'il faut dessiner un cadre dans les quatre bords du widget.
 			get
 			{
 				return (FrameEdges) this.GetValue (Visual.DrawFrameEdgesProperty);

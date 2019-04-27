@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe TextMarkerProperty permet de régler les détails relatifs à
-	/// la mise en évidence (au marquer "Stabylo") du texte.
+	/// La classe TextMarkerProperty permet de rÃ©gler les dÃ©tails relatifs Ã 
+	/// la mise en Ã©vidence (au marquer "Stabylo") du texte.
 	/// </summary>
 	public class TextMarkerProperty : AbstractXlineProperty
 	{

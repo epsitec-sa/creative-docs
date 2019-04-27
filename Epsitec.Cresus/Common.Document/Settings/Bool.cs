@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe Bool contient un réglage numérique.
+	/// La classe Bool contient un rÃ©glage numÃ©rique.
 	/// </summary>
 	[System.Serializable()]
 	public class Bool : Abstract
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Document.Settings
                     break;
 
                 case "ImageAlphaPremultiplied":
-                    this.text = "Canal alpha pré-multiplié";
+                    this.text = "Canal alpha prÃ©-multipliÃ©";
                     break;
             }
         }
@@ -406,14 +406,14 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le réglage.
+			//	SÃ©rialise le rÃ©glage.
 			base.GetObjectData(info, context);
 			info.AddValue("Value", this.Value);
 		}
 
 		protected Bool(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise le réglage.
+			//	Constructeur qui dÃ©sÃ©rialise le rÃ©glage.
 			this.Value = info.GetBoolean("Value");
 			this.Initialize();
 		}

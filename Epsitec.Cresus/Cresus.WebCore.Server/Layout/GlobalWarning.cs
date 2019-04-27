@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Cresus.WebCore.Server.Layout
+namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 

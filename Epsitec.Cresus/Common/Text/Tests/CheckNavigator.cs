@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// La batterie de tests CheckNavigator vérifie le bon fonctionnement des
+	/// La batterie de tests CheckNavigator vÃ©rifie le bon fonctionnement des
 	/// navigateurs.
 	/// </summary>
 	public sealed class CheckNavigator

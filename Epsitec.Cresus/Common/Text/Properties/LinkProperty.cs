@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe LinkProperty permet de représenter l'information liée à un
-	/// lien hypertexte (mais pas l'aspect graphique qui est géré par un
+	/// La classe LinkProperty permet de reprÃ©senter l'information liÃ©e Ã  un
+	/// lien hypertexte (mais pas l'aspect graphique qui est gÃ©rÃ© par un
 	/// soulignement via UnderlineProperty).
 	/// </summary>
 	public class LinkProperty : Property

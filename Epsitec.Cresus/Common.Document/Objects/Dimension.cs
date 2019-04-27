@@ -47,24 +47,24 @@ namespace Epsitec.Common.Document.Objects
 
 		public override string IconUri
 		{
-			//	Nom de l'icÙne.
+			//	Nom de l'ic√¥ne.
 			get { return Misc.Icon("ObjectDimension"); }
 		}
 
 
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	DÈbut du dÈplacement d'une poignÈe.
+			//	D√©but du d√©placement d'une poign√©e.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
-			if ( rank < this.handles.Count )  // poignÈe de l'objet ?
+			if ( rank < this.handles.Count )  // poign√©e de l'objet ?
 			{
 				drawingContext.ConstrainClear();
 
 				Handle handle = this.Handle(rank);
 				if ( handle.PropertyType == Properties.Type.None )
 				{
-					if ( rank == 0 || rank == 1 )  // extrÈmitÈ ?
+					if ( rank == 0 || rank == 1 )  // extr√©mit√© ?
 					{
 						drawingContext.ConstrainAddHV(this.Handle(0).Position, false, -1);
 						drawingContext.ConstrainAddHV(this.Handle(1).Position, false, -1);
@@ -122,8 +122,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	DÈplace une poignÈe.
-			if ( rank >= 5 )  // poignÈe d'une propriÈtÈ ?
+			//	D√©place une poign√©e.
+			if ( rank >= 5 )  // poign√©e d'une propri√©t√© ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Document.Objects
 				drawingContext.SnapPos(ref pos);
 			}
 
-			if ( rank == 0 )  // extrÈmitÈ gauche ?
+			if ( rank == 0 )  // extr√©mit√© gauche ?
 			{
 				if ( this.IsRight )
 				{
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			if ( rank == 1 )  // extrÈmitÈ droite ?
+			if ( rank == 1 )  // extr√©mit√© droite ?
 			{
 				if ( this.IsRight )
 				{
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveGlobalProcess(Selector selector)
 		{
-			//	DÈplace globalement l'objet.
+			//	D√©place globalement l'objet.
 			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -270,13 +270,13 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			//	DÈbut de la crÈation d'un objet.
+			//	D√©but de la cr√©ation d'un objet.
 			if ( this.creatingPhase == 0 )
 			{
 				drawingContext.ConstrainClear();
 				drawingContext.ConstrainAddHV(pos, false, -1);
-				this.HandleAdd(pos, HandleType.Primary);  // poignÈe 0
-				this.HandleAdd(pos, HandleType.Primary);  // poignÈe 1
+				this.HandleAdd(pos, HandleType.Primary);  // poign√©e 0
+				this.HandleAdd(pos, HandleType.Primary);  // poign√©e 1
 			}
 			drawingContext.MagnetFixStarting(pos);
 			this.isCreating = true;
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
-			//	DÈplacement pendant la crÈation d'un objet.
+			//	D√©placement pendant la cr√©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			if ( this.creatingPhase == 0 )
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
-			//	Fin de la crÈation d'un objet.
+			//	Fin de la cr√©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 
@@ -324,9 +324,9 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.Handle(1).Position = pos;
 
-				this.HandleAdd(pos, HandleType.Secondary);  // poignÈe 2
-				this.HandleAdd(pos, HandleType.Secondary);  // poignÈe 3
-				this.HandleAdd(pos, HandleType.Secondary);  // poignÈe 4
+				this.HandleAdd(pos, HandleType.Secondary);  // poign√©e 2
+				this.HandleAdd(pos, HandleType.Secondary);  // poign√©e 3
+				this.HandleAdd(pos, HandleType.Secondary);  // poign√©e 4
 
 				this.Handle(2).Position = this.Handle(0).Position;
 				this.Handle(3).Position = this.Handle(1).Position;
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override bool CreateIsEnding(DrawingContext drawingContext)
 		{
-			//	Indique si la crÈation de l'objet est terminÈe.
+			//	Indique si la cr√©ation de l'objet est termin√©e.
 			if ( this.creatingPhase < 2 )
 			{
 				return !this.CreateIsExist(drawingContext);
@@ -367,15 +367,15 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
-			//	pas exister et doit Ítre dÈtruit.
+			//	pas exister et doit √™tre d√©truit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 		public override bool CreateEnding(DrawingContext drawingContext)
 		{
-			//	Termine la crÈation de l'objet. Retourne false si l'objet ne peut
-			//	pas exister et doit Ítre dÈtruit.
+			//	Termine la cr√©ation de l'objet. Retourne false si l'objet ne peut
+			//	pas exister et doit √™tre d√©truit.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void Reset()
 		{
-			//	Remet l'objet droit et d'Èquerre.
+			//	Remet l'objet droit et d'√©querre.
 			if (this.handles.Count >= 5 && !this.IsRight)
 			{
 				//	TODO:
@@ -402,7 +402,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void FillFontFaceList(List<OpenType.FontName> list)
 		{
-			//	Ajoute toutes les fontes utilisÈes par l'objet dans une liste.
+			//	Ajoute toutes les fontes utilis√©es par l'objet dans une liste.
 			OpenType.FontName fontName = new OpenType.FontName(this.PropertyTextFont.FontName, "");
 
 			if ( !list.Contains(fontName) )
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
-			//	Ajoute tous les caractËres utilisÈs par l'objet dans une table.
+			//	Ajoute tous les caract√®res utilis√©s par l'objet dans une table.
 			Properties.Font propFont = this.PropertyTextFont;
 			Drawing.Font font = propFont.GetFont();
 			double fontSize = propFont.FontSize;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		protected string ConvertDoubleToString(double value)
 		{
-			//	Conversion d'une longueur en chaÓne.
+			//	Conversion d'une longueur en cha√Æne.
 			value *= this.document.Modifier.DimensionScale;
 			double precision = 1.0/System.Math.Pow(10.0, this.document.Modifier.DimensionDecimal);
 
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected string GetText()
 		{
-			//	Retourne le texte ‡ mettre sur la cote.
+			//	Retourne le texte √† mettre sur la cote.
 			Properties.Dimension dimension = this.PropertyDimension;
 			double length = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			if (!System.Globalization.RegionInfo.CurrentRegion.IsMetric)
@@ -469,7 +469,7 @@ namespace Epsitec.Common.Document.Objects
 
 			string text = dimension.DimensionText;
 			text = text.Replace("##", "\x0001");  // "##" -> "#"
-			text = text.Replace("#", num);        // "#" -> valeur numÈrique
+			text = text.Replace("#", num);        // "#" -> valeur num√©rique
 			text = text.Replace("\x0001", "#");
 
 			return text;
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Document.Objects
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
-			//	Forme de la surface de dÈpart.
+			//	Forme de la surface de d√©part.
 			if ( surfaceStart )
 			{
 				shapes[i] = new Shape();
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			//	Forme de la surface d'arrivÈe.
+			//	Forme de la surface d'arriv√©e.
 			if ( surfaceEnd )
 			{
 				shapes[i] = new Shape();
@@ -518,7 +518,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			//	Forme du chemin de dÈpart.
+			//	Forme du chemin de d√©part.
 			if ( outlineStart )
 			{
 				shapes[i] = new Shape();
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			//	Forme du chemin d'arrivÈe.
+			//	Forme du chemin d'arriv√©e.
 			if ( outlineEnd )
 			{
 				shapes[i] = new Shape();
@@ -542,12 +542,12 @@ namespace Epsitec.Common.Document.Objects
 			shapes[i].SetPropertyStroke(port, this.PropertyLineDimension, this.PropertyLineColor);
 			i ++;
 
-			//	CaractËres du texte.
+			//	Caract√®res du texte.
 			shapes[i] = new Shape();
 			shapes[i].SetTextObject(this);
 			i ++;
 
-			//	CaractËres du texte pour bbox et dÈtection
+			//	Caract√®res du texte pour bbox et d√©tection
 			shapes[i] = new Shape();
 			shapes[i].Path = pathText;
 			shapes[i].Type = Type.Surface;
@@ -562,7 +562,7 @@ namespace Epsitec.Common.Document.Objects
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
 								 out Path pathLine, out Path pathSupport, out Path pathText)
 		{
-			//	CrÈe les 3 chemins de l'objet.
+			//	Cr√©e les 3 chemins de l'objet.
 			pathStart   = new Path();
 			pathEnd     = new Path();
 			pathLine    = new Path();
@@ -794,8 +794,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override Path GetMagnetPath()
 		{
-			//	Retourne le chemin gÈomÈtrique de l'objet pour les constructions
-			//	magnÈtiques.
+			//	Retourne le chemin g√©om√©trique de l'objet pour les constructions
+			//	magn√©tiques.
 			Path path = new Path();
 
 			path.MoveTo(this.Handle(0).Position);
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected override Path GetPath()
 		{
-			//	Retourne le chemin gÈomÈtrique de l'objet.
+			//	Retourne le chemin g√©om√©trique de l'objet.
 			Path pathStart, pathEnd, pathLine, pathSupport, pathText;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(null,
@@ -838,7 +838,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public void CreateFromPoints(Point p1, Point p2)
 		{
-			//	CrÈe une ligne ‡ partir de 2 points.
+			//	Cr√©e une ligne √† partir de 2 points.
 			this.HandleAdd(p1, HandleType.Primary);
 			this.HandleAdd(p2, HandleType.Primary);
 			this.SetDirtyBbox();
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected bool IsRight
 		{
-			//	Indique si la cote et les 2 traits de supports sont ‡ angles droits.
+			//	Indique si la cote et les 2 traits de supports sont √† angles droits.
 			get
 			{
 				return ( Geometry.IsRight(this.Handle(1).Position, this.Handle(0).Position, this.Handle(2).Position) &&
@@ -982,18 +982,18 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	SÈrialise l'objet.
+			//	S√©rialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
 		protected Dimension(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui dÈsÈrialise l'objet.
+			//	Constructeur qui d√©s√©rialise l'objet.
 		}
 
 		public override void ReadCheckWarnings(System.Collections.ArrayList warnings)
 		{
-			//	VÈrifie si tous les fichiers existent.
+			//	V√©rifie si tous les fichiers existent.
 			OpenType.FontName fontName = new OpenType.FontName(this.PropertyTextFont.FontName, "");
 
 			if (!Misc.IsExistingFont(fontName))

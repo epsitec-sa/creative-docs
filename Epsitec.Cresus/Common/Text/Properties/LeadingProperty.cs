@@ -1,12 +1,12 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La propriété LeadingProperty définit l'interligne (leading = bandes de
-	/// plomb qui se rajoutaient entre les lignes de caractères), l'alignement
-	/// sur une grille et les espacements avant/après un paragraphe.
+	/// La propriÃ©tÃ© LeadingProperty dÃ©finit l'interligne (leading = bandes de
+	/// plomb qui se rajoutaient entre les lignes de caractÃ¨res), l'alignement
+	/// sur une grille et les espacements avant/aprÃ¨s un paragraphe.
 	/// </summary>
 	public class LeadingProperty : Property
 	{

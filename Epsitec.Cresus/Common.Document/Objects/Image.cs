@@ -40,14 +40,14 @@ namespace Epsitec.Common.Document.Objects
 
 		public override string IconUri
 		{
-			//	Nom de l'icÙne.
+			//	Nom de l'ic√¥ne.
 			get { return Misc.Icon("ObjectImage"); }
 		}
 
 
 		public override Polygon PropertyHandleSupport
 		{
-			//	Retourne le polygone de support pour les poignÈes des propriÈtÈs.
+			//	Retourne le polygone de support pour les poign√©es des propri√©t√©s.
 			get
 			{
 				var polygons = this.GetImagePixelPolygons ();
@@ -58,10 +58,10 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	DÈbut du dÈplacement d'une poignÈe.
+			//	D√©but du d√©placement d'une poign√©e.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
-			if ( rank < this.handles.Count )  // poignÈe de l'objet ?
+			if ( rank < this.handles.Count )  // poign√©e de l'objet ?
 			{
 				drawingContext.ConstrainClear();
 
@@ -85,8 +85,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	DÈplace une poignÈe.
-			if ( rank >= 4 )  // poignÈe d'une propriÈtÈ ?
+			//	D√©place une poign√©e.
+			if ( rank >= 4 )  // poign√©e d'une propri√©t√© ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			//	DÈbut de la crÈation d'un objet.
+			//	D√©but de la cr√©ation d'un objet.
 			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHomo(pos, false, -1);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
-			//	DÈplacement pendant la crÈation d'un objet.
+			//	D√©placement pendant la cr√©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
-			//	Fin de la crÈation d'un objet.
+			//	Fin de la cr√©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
-			//	CrÈe les 2 autres poignÈes dans les coins opposÈs.
+			//	Cr√©e les 2 autres poign√©es dans les coins oppos√©s.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromPoints(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
 			Point p2 = rect.TopRight;
@@ -158,20 +158,20 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
-			//	pas exister et doit Ítre dÈtruit.
+			//	pas exister et doit √™tre d√©truit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 		public override bool SelectAfterCreation()
 		{
-			//	Indique s'il faut sÈlectionner l'objet aprËs sa crÈation.
+			//	Indique s'il faut s√©lectionner l'objet apr√®s sa cr√©ation.
 			return true;
 		}
 
 		public override void Reset()
 		{
-			//	Remet l'objet droit et d'Èquerre.
+			//	Remet l'objet droit et d'√©querre.
 			if (this.handles.Count >= 4)
 			{
 				Drawing.Rectangle box = this.BoundingBoxThin;
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Document.Objects
 				shape.Type = Type.Stroke;
 				if (drawingContext != null && (drawingContext.FillEmptyPlaceholders || drawingContext.PreviewActive || (drawingContext.DrawImageFilter != null && drawingContext.DrawImageFilter (new DrawingContext.DrawImageFilterInfo (this, "box")) == false)))
 				{
-					shape.Aspect = Aspect.InvisibleBox;  // n'affiche pas le pourtour pointillÈ
+					shape.Aspect = Aspect.InvisibleBox;  // n'affiche pas le pourtour pointill√©
 				}
 
 				shapes.Add (shape);
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Document.Objects
 				frame.AddShapes (this, shapes, objectShapes, port, drawingContext, this.GetImagePixelPolygons (), this.PropertyCorner);
 			}
 
-			//	Rectangle complet pour bbox et dÈtection.
+			//	Rectangle complet pour bbox et d√©tection.
 			{
 				var shape = new Shape ();
 				shape.Path = pathSurface;
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Document.Objects
 				shapes.Add (shape);
 			}
 
-			//	Rectangle complet pour bbox et dÈtection.
+			//	Rectangle complet pour bbox et d√©tection.
 			{
 				var shape = new Shape ();
 				shape.Path = pathImage;
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected List<Polygon> GetImagePixelPolygons()
 		{
-			//	CrÈe le chemin correspondant ‡ la partie rÈelle de l'image, inclue dans le rectangle englobant.
+			//	Cr√©e le chemin correspondant √† la partie r√©elle de l'image, inclue dans le rectangle englobant.
 			ImageCache.Item item = this.Item;
 
 			if (item == null)
@@ -302,14 +302,14 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathBuildImage()
 		{
-			//	CrÈe le chemin de l'objet pour dessiner la surface exacte de l'image.
+			//	Cr√©e le chemin de l'objet pour dessiner la surface exacte de l'image.
 			var polygons = this.GetImagePolygons ();
 			return Polygon.GetPolygonPath (polygons);
 		}
 
 		protected List<Polygon> GetImagePolygons()
 		{
-			//	CrÈe le chemin de l'objet pour dessiner la surface exacte de l'image.
+			//	Cr√©e le chemin de l'objet pour dessiner la surface exacte de l'image.
 			var polygons = new List<Polygon> ();
 			var polygon = new Polygon ();
 			polygons.Add (polygon);
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathBuildSurface()
 		{
-			//	CrÈe le chemin de l'objet pour dessiner sa surface.
+			//	Cr√©e le chemin de l'objet pour dessiner sa surface.
 			Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
 
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathBuildOutline()
 		{
-			//	CrÈe le chemin de l'objet pour dessiner son pourtour.
+			//	Cr√©e le chemin de l'objet pour dessiner son pourtour.
 			Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
 
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Size ImageBitmapSize
 		{
-			//	Donne les dimensions effectives utilisÈes par le bitmap rectangulaire de l'image.
+			//	Donne les dimensions effectives utilis√©es par le bitmap rectangulaire de l'image.
 			get
 			{
 				Point center;
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void ImageGeometry(out Point center, out double width, out double height, out double angle)
 		{
 			//	Calcule le centre, les dimensions et l'angle de l'image en fonction
-			//	du quadrilatËre de l'objet, qui n'est pas forcÈment rectangulaire.
+			//	du quadrilat√®re de l'objet, qui n'est pas forc√©ment rectangulaire.
 			Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
 
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public ImageCache.Item Item
 		{
-			//	Retourne l'item de l'image cachÈe, s'il existe.
+			//	Retourne l'item de l'image cach√©e, s'il existe.
 			get
 			{
 				Properties.Image pi = this.PropertyImage;
@@ -486,11 +486,11 @@ namespace Epsitec.Common.Document.Objects
 
 		protected override string NameToDisplay
 		{
-			//	Retourne le nom de l'objet ‡ afficher (Label) en haut ‡ gauche.
-			//	Le nom est composÈ de trois parties:
+			//	Retourne le nom de l'objet √† afficher (Label) en haut √† gauche.
+			//	Le nom est compos√© de trois parties:
 			//	1) Le nom de l'objet (s'il existe)
 			//	2) Le nom du fichier bitmap (sans dossiers ni extension)
-			//	3) La rÈsolution en dpi (entre parenthÈses)
+			//	3) La r√©solution en dpi (entre parenth√©ses)
 			get
 			{
 				string name = base.NameToDisplay;
@@ -567,9 +567,9 @@ namespace Epsitec.Common.Document.Objects
 
 		public ImageFilter GetFilter(IPaintPort port, DrawingContext drawingContext)
 		{
-			//	Retourne le filtre ‡ utiliser pour l'image. Le filtre n'est pas le mÍme selon
+			//	Retourne le filtre √† utiliser pour l'image. Le filtre n'est pas le m√™me selon
 			//	les dimensions de l'objet image, car il faut utiliser un filtre 'Resampling*'
-			//	lors d'une rÈduction, pour Èviter les moirÈs.
+			//	lors d'une r√©duction, pour √©viter les moir√©s.
 			Size size = Size.Zero;
 			double scale = 1;
 
@@ -661,7 +661,7 @@ namespace Epsitec.Common.Document.Objects
 					System.Diagnostics.Debug.Assert (surface != null);
 					System.Diagnostics.Debug.Assert (surface.FilePath != null);
 
-					image = null;	// on ne va pas spÈcifier l'image plus loin; le PDF Port se souvient de la derniËre surface cherchÈe...
+					image = null;	// on ne va pas sp√©cifier l'image plus loin; le PDF Port se souvient de la derni√®re surface cherch√©e...
 
 					imageWidth  = surface.BitmapSize.Width;
 					imageHeight = surface.BitmapSize.Height;
@@ -764,8 +764,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override Path GetMagnetPath()
 		{
-			//	Retourne le chemin gÈomÈtrique de l'objet pour les constructions
-			//	magnÈtiques.
+			//	Retourne le chemin g√©om√©trique de l'objet pour les constructions
+			//	magn√©tiques.
 			Path path = this.PathBuildSurface();
 			return path;
 		}
@@ -786,27 +786,27 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	SÈrialise l'objet.
+			//	S√©rialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
 		protected Image(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui dÈsÈrialise l'objet.
+			//	Constructeur qui d√©s√©rialise l'objet.
 		}
 
 		public override void ReadCheckWarnings(System.Collections.ArrayList warnings)
 		{
-			//	VÈrifie si tous les fichiers existent.
+			//	V√©rifie si tous les fichiers existent.
 			Properties.Image pi = this.PropertyImage;
 			if ( pi == null )
 			{
 				return;
 			}
 
-			if (pi.InsideDoc)  // image incorporÈe au document ?
+			if (pi.InsideDoc)  // image incorpor√©e au document ?
 			{
-				return;  // oui -> forcÈment OK
+				return;  // oui -> forc√©ment OK
 			}
 			if (pi.FileName == null ||			//  pas de nom d'image ?
 				pi.FileName.Trim().Length == 0)

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe RegexConstraint implémente une contrainte sur des chaînes, au
-	/// moyen d'une expression régulière (qui peut être définie de diverses
-	/// manières).
+	/// La classe RegexConstraint implÃ©mente une contrainte sur des chaÃ®nes, au
+	/// moyen d'une expression rÃ©guliÃ¨re (qui peut Ãªtre dÃ©finie de diverses
+	/// maniÃ¨res).
 	/// </summary>
 	
 	[System.ComponentModel.TypeConverter (typeof (RegexConstraint.Converter))]

@@ -1,12 +1,12 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe CharMarker gère l'attribution des marqueurs temporaires
-	/// associés au texte; ces marqueurs sont stockés comme des fanions aux
-	/// bits 27..31 de chaque caractère.
+	/// La classe CharMarker gÃ¨re l'attribution des marqueurs temporaires
+	/// associÃ©s au texte; ces marqueurs sont stockÃ©s comme des fanions aux
+	/// bits 27..31 de chaque caractÃ¨re.
 	/// </summary>
 	internal sealed class CharMarker : System.Collections.IEnumerable
 	{
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		
 		/*
-		 *	Structure d'un caractère en mémoire :
+		 *	Structure d'un caractÃ¨re en mÃ©moire :
 		 *
 		 *	[bbbb bbb][c:cccc cc][dd:dddd dddd:dddd dddd]:[mmmm m][sss]:[xxx][y yyyy:yyyy yyyy:yyyy yyyy]
 		 *
@@ -39,21 +39,21 @@ namespace Epsitec.Common.Text.Internal
 		 *	- 20...0 : y, 21-bit, "unicode code"
 		 *
 		 *	- Le "extra index" pointe (au sein du style) sur un descripteur qui
-		 *	  définit des propriétés non typographiques (couleur, langue, etc.)
+		 *	  dÃ©finit des propriÃ©tÃ©s non typographiques (couleur, langue, etc.)
 		 *
 		 *	- Le "local index" pointe (au sein du style) sur un descripteur qui
-		 *	  définit des ajustement locaux (crénage, variante de glyphe, etc.)
+		 *	  dÃ©finit des ajustement locaux (crÃ©nage, variante de glyphe, etc.)
 		 *
-		 *	- Le "style index" pointe soit sur un descripteur qui définit toues
-		 *	  les propriétés principales (fonte, style, paragraphe, etc.)
+		 *	- Le "style index" pointe soit sur un descripteur qui dÃ©finit toues
+		 *	  les propriÃ©tÃ©s principales (fonte, style, paragraphe, etc.)
 		 *
-		 *	- Les "markers" sont des bits de marquage temporaire (gérés par la
+		 *	- Les "markers" sont des bits de marquage temporaire (gÃ©rÃ©s par la
 		 *	  class CharMarker).
 		 *
-		 *	- Les "unicode & misc. flags" encodent des propriétés du caractère
-		 *	  Unicode. Leur manipulation incombe à la classe Unicode.Bits.
+		 *	- Les "unicode & misc. flags" encodent des propriÃ©tÃ©s du caractÃ¨re
+		 *	  Unicode. Leur manipulation incombe Ã  la classe Unicode.Bits.
 		 * 
-		 *	- Le "unicode code" forme le caractère Unicode à proprement dit.
+		 *	- Le "unicode code" forme le caractÃ¨re Unicode Ã  proprement dit.
 		 */
 		
 		public const int						MarkerShift				 = 27;
@@ -134,8 +134,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool SetMarkers(ulong marker, ulong[] text, int offset, int length)
 		{
-			//	Place le marqueur spécifié sur le fragment de texte et retourne
-			//	'true' si des modifications ont été apportées au texte.
+			//	Place le marqueur spÃ©cifiÃ© sur le fragment de texte et retourne
+			//	'true' si des modifications ont Ã©tÃ© apportÃ©es au texte.
 			
 			Debug.Assert.IsTrue (marker != 0);
 			Debug.Assert.IsTrue ((marker & ~CharMarker.MarkerMask) == 0);
@@ -154,8 +154,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool ClearMarkers(ulong marker, ulong[] text, int offset, int length)
 		{
-			//	Efface le marqueur spécifié sur le fragment de texte et retourne
-			//	'true' si des modifications ont été apportées au texte.
+			//	Efface le marqueur spÃ©cifiÃ© sur le fragment de texte et retourne
+			//	'true' si des modifications ont Ã©tÃ© apportÃ©es au texte.
 			
 			Debug.Assert.IsTrue (marker != 0);
 			Debug.Assert.IsTrue ((marker & ~CharMarker.MarkerMask) == 0);
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Text.Internal
 		public static bool ClearAllMarkers(ulong[] text, int offset, int length)
 		{
 			//	Efface tous les marqueurs sur le fragment de texte et retourne
-			//	'true' si des modifications ont été apportées au texte.
+			//	'true' si des modifications ont Ã©tÃ© apportÃ©es au texte.
 			
 			ulong all  = CharMarker.MarkerMask;
 			ulong mask = ~all;
@@ -195,8 +195,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static ulong Accumulate(ulong[] text, int offset, int length)
 		{
-			//	Accumule (avec un "ou" logique) les marqueurs du texte passé
-			//	en entrée.
+			//	Accumule (avec un "ou" logique) les marqueurs du texte passÃ©
+			//	en entrÃ©e.
 			
 			int   end = offset + length;
 			ulong acc = 0;

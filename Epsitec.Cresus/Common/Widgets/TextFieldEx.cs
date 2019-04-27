@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -11,8 +11,8 @@ using Epsitec.Common.Widgets.Behaviors;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextFieldEx implémente une variante de TextField, avec une fonction
-	/// pour accepter/annuler une édition.
+	/// La classe TextFieldEx implÃ©mente une variante de TextField, avec une fonction
+	/// pour accepter/annuler une Ã©dition.
 	/// </summary>
 	public class TextFieldEx : TextField
 	{

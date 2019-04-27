@@ -1,4 +1,4 @@
-//	Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Cursors
@@ -149,8 +149,8 @@ namespace Epsitec.Common.Text.Cursors
 		
 		public override void Clear()
 		{
-			//	Efface les informations liées au curseur, mais se souvient du
-			//	fitter attaché...
+			//	Efface les informations liÃ©es au curseur, mais se souvient du
+			//	fitter attachÃ©...
 			
 			base.Clear ();
 			this.elements = null;
@@ -247,8 +247,8 @@ namespace Epsitec.Common.Text.Cursors
 		
 		internal int[] GetLineStartPositions(Internal.TextTable text)
 		{
-			//	Détermine où commencent des lignes (position exprimée par rapport
-			//	au début du texte) en filtrant les éléments qui sont liés à des
+			//	DÃ©termine oÃ¹ commencent des lignes (position exprimÃ©e par rapport
+			//	au dÃ©but du texte) en filtrant les Ã©lÃ©ments qui sont liÃ©s Ã  des
 			//	marques de tabulation :
 			
 			int   count = this.elements.Length + 1;

@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe StylesProperty contient une liste de styles (cascadés)
+	/// La classe StylesProperty contient une liste de styles (cascadÃ©s)
 	/// qui doivent s'appliquer au texte.
 	/// </summary>
 	public class StylesProperty : Property
@@ -112,8 +112,8 @@ namespace Epsitec.Common.Text.Properties
 
 		public override Property GetCombination(Property property)
 		{
-			//	Produit une propriété qui est le résultat de la combinaison de
-			//	la propriété actuelle avec celle passée en entrée (qui vient
+			//	Produit une propriÃ©tÃ© qui est le rÃ©sultat de la combinaison de
+			//	la propriÃ©tÃ© actuelle avec celle passÃ©e en entrÃ©e (qui vient
 			//	ajouter ses attributs aux attributs actuels).
 			
 			Debug.Assert.IsTrue (property is Properties.StylesProperty);
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Text.Properties
 			StylesProperty b = property as StylesProperty;
 			StylesProperty c = new StylesProperty ();
 			
-			//	TODO: gérer les doublets
+			//	TODO: gÃ©rer les doublets
 			
 			c.styleNames = new string[a.styleNames.Length + b.styleNames.Length];
 			
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static Property[] RemoveStylesProperties(System.Collections.ICollection properties)
 		{
-			//	Supprime les propriétés StylesProprty de la liste.
+			//	Supprime les propriÃ©tÃ©s StylesProprty de la liste.
 			
 			int count = 0;
 			
@@ -209,14 +209,14 @@ namespace Epsitec.Common.Text.Properties
 		
 		private void RefreshStyleCache(StyleList list)
 		{
-			//	La propriété stocke de manière interne une table des TextStyle
-			//	correspondant à la table des noms de styles. Celle-ci ne peut
-			//	pas être construite à la désérialisation (car les styles ne sont
+			//	La propriÃ©tÃ© stocke de maniÃ¨re interne une table des TextStyle
+			//	correspondant Ã  la table des noms de styles. Celle-ci ne peut
+			//	pas Ãªtre construite Ã  la dÃ©sÃ©rialisation (car les styles ne sont
 			//	pas encore disponibles dans le StyleList).
 			
-			//	Profite de l'occasion pour remplacer d'éventuelles références à
-			//	des styles supprimés (qui ne se trouvent plus dans le StyleList)
-			//	par le style par défaut correspondant.
+			//	Profite de l'occasion pour remplacer d'Ã©ventuelles rÃ©fÃ©rences Ã 
+			//	des styles supprimÃ©s (qui ne se trouvent plus dans le StyleList)
+			//	par le style par dÃ©faut correspondant.
 			
 			int n = (this.styleNames == null) ? 0 : this.styleNames.Length;
 			
@@ -234,8 +234,8 @@ namespace Epsitec.Common.Text.Properties
 				{
 					if (!replaceDone)
 					{
-						//	Le style a été supprimé et nous n'avons pas encore généré
-						//	de référence au style de paragraphe par défaut :
+						//	Le style a Ã©tÃ© supprimÃ© et nous n'avons pas encore gÃ©nÃ©rÃ©
+						//	de rÃ©fÃ©rence au style de paragraphe par dÃ©faut :
 						
 						string         name;
 						TextStyleClass textStyleClass;
@@ -244,9 +244,9 @@ namespace Epsitec.Common.Text.Properties
 						
 						if (textStyleClass == TextStyleClass.Paragraph)
 						{
-							//	Ne remplace que le style qui faisait référence à un
+							//	Ne remplace que le style qui faisait rÃ©fÃ©rence Ã  un
 							//	style de paragraphe; les autres styles peuvent simple-
-							//	ment être "oubliés".
+							//	ment Ãªtre "oubliÃ©s".
 							
 							style        = list.TextContext.DefaultParagraphStyle;
 							replaceDone = true;
@@ -271,8 +271,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			if (refreshNames)
 			{
-				//	Regénère la table des noms de styles; ceci est nécessaire, car
-				//	nous avons fait le ménage plus haut :
+				//	RegÃ©nÃ¨re la table des noms de styles; ceci est nÃ©cessaire, car
+				//	nous avons fait le mÃ©nage plus haut :
 				
 				this.styleNames = new string[this.styleCache.Length];
 				

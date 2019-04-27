@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Drawing;
+using Epsitec.Common.Drawing;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction

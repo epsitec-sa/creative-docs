@@ -1,10 +1,10 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe HMenu implémente le menu horizontal (ligne).
+	/// La classe HMenu implÃ©mente le menu horizontal (ligne).
 	/// </summary>
 	public class HMenu : AbstractMenu
 	{

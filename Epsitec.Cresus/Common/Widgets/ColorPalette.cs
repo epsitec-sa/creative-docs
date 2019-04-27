@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.ColorCollection			ColorCollection
 		{
-			//	Donne la liste de couleurs à lier avec la palette.
+			//	Donne la liste de couleurs Ã  lier avec la palette.
 			get
 			{
 				return this.colorCollection;
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Widgets
 
 		private void OnExportSelectedColor()
 		{
-			//	Génère un événement pour dire qu'on exporte une couleur.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'on exporte une couleur.
 			var handler = this.GetUserEventHandler (ColorPalette.ExportEvent);
 
 			if (handler != null)
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Widgets
 
 		private void OnImportSelectedColor()
 		{
-			//	Génère un événement pour dire qu'on importe une couleur.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire qu'on importe une couleur.
 			var handler = this.GetUserEventHandler (ColorPalette.ImportEvent);
 
 			if (handler != null)

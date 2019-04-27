@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe StrikeoutProperty permet de régler les détails relatifs au
-	/// biffé du texte.
+	/// La classe StrikeoutProperty permet de rÃ©gler les dÃ©tails relatifs au
+	/// biffÃ© du texte.
 	/// </summary>
 	public class StrikeoutProperty : AbstractXlineProperty
 	{

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.OpenEnumType))]
@@ -6,10 +6,10 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe OpenEnumType décrit une énumération, basée sur une enum
-	/// native, mais avec la possibilité d'accepter d'autres valeurs. En ce
-	/// sens, l'énumération est "ouverte".
-	/// Les noms des éléments ajoutés à l'énumération native sont décorés par
+	/// La classe OpenEnumType dÃ©crit une Ã©numÃ©ration, basÃ©e sur une enum
+	/// native, mais avec la possibilitÃ© d'accepter d'autres valeurs. En ce
+	/// sens, l'Ã©numÃ©ration est "ouverte".
+	/// Les noms des Ã©lÃ©ments ajoutÃ©s Ã  l'Ã©numÃ©ration native sont dÃ©corÃ©s par
 	/// une paire d'accolades; par exemple "{Xyz}"
 	/// </summary>
 	public class OpenEnumType : EnumType

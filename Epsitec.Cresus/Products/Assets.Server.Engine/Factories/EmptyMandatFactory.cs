@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.Engine
 {
 	/// <summary>
-	/// Cette classe sait fabriquer un nouveau mandat entièrement vide.
+	/// Cette classe sait fabriquer un nouveau mandat entiÃ¨rement vide.
 	/// </summary>
 	public class EmptyMandatFactory : AbstractMandatFactory
 	{

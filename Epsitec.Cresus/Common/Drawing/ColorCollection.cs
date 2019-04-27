@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Runtime.Serialization;
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Drawing
 
 		private void OnChanged()
 		{
-			if ( this.Changed != null )  // qq'un écoute ?
+			if ( this.Changed != null )  // qq'un Ã©coute ?
 			{
 				this.Changed(this);
 			}

@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer
 	}
 
 	/// <summary>
-	/// Fenêtre principale de l'éditeur de ressources.
+	/// FenÃªtre principale de l'Ã©diteur de ressources.
 	/// </summary>
 	public class DesignerApplication : Application
 	{
@@ -53,13 +53,13 @@ namespace Epsitec.Common.Designer
 
 		public void Show(Window parentWindow)
 		{
-			//	Crée et montre la fenêtre de l'éditeur.
+			//	CrÃ©e et montre la fenÃªtre de l'Ã©diteur.
 			if (this.Window == null)
 			{
 				string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
 				this.icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48);
 
-				//	Les réglages doivent être lus avant de créer l'interface graphique.
+				//	Les rÃ©glages doivent Ãªtre lus avant de crÃ©er l'interface graphique.
 				this.settings.Read ();
 
 				Window window = new Window ();
@@ -94,10 +94,10 @@ namespace Epsitec.Common.Designer
 				window.IsFullScreen = isFullScreen;
 				window.Root.MinSize = new Size (500, 400);
 				window.Text = Res.Strings.Application.Title;
-				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
+				window.Name = "Application";  // utilisÃ© pour gÃ©nÃ©rer "QuitApplication" !
 				window.PreventAutoClose = true;
 				
-				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
+				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication Ã  la fenÃªtre
 
 				this.dlgNew              = new Dialogs.NewDialog(this);
 				this.dlgOpen             = new Dialogs.OpenDialog(this);
@@ -159,8 +159,8 @@ namespace Epsitec.Common.Designer
 
 		public bool Standalone
 		{
-			//	Standalone = true signifie que Designer est une application à
-			//	part entière : quand on ferme la fenêtre, on doit réellement
+			//	Standalone = true signifie que Designer est une application Ã 
+			//	part entiÃ¨re : quand on ferme la fenÃªtre, on doit rÃ©ellement
 			//	quitter l'application.
 			get
 			{
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonBook = new RibbonBook(this.Window.Root);
 			this.ribbonBook.Dock = DockStyle.Top;
 
-			//	Crée le ruban principal.
+			//	CrÃ©e le ruban principal.
 			this.ribbonMain = new RibbonPage();
 			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
 			this.ribbonBook.Pages.Add(this.ribbonMain);
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Items.Add(new Ribbons.DisplayRibbon(this));
 			this.ribbonMain.Items.Add(new Ribbons.LocatorRibbon(this));
 
-			//	Crée le ruban des opérations.
+			//	CrÃ©e le ruban des opÃ©rations.
 			this.ribbonOper = new RibbonPage();
 			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
 			this.ribbonBook.Pages.Add(this.ribbonOper);
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.Items.Add(new Ribbons.OrderRibbon(this));
 			this.ribbonOper.Items.Add(new Ribbons.TabIndexRibbon(this));
 
-			//	Crée la barre de statuts.
+			//	CrÃ©e la barre de statuts.
 			this.info = new StatusBar(this.Window.Root);
 			this.info.Dock = DockStyle.Bottom;
 			this.info.Margins = new Margins(0, 0, 0, 0);
@@ -290,10 +290,10 @@ namespace Epsitec.Common.Designer
 			this.resize = new ResizeKnob();
 			this.resize.Margins = new Margins(2, 0, 0, 0);
 			this.info.Items.Add(this.resize);
-			this.resize.Dock = DockStyle.Right;  // doit être fait après le Items.Add !
+			this.resize.Dock = DockStyle.Right;  // doit Ãªtre fait aprÃ¨s le Items.Add !
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
-			//	Crée le TabBook principal pour les modules ouverts.
+			//	CrÃ©e le TabBook principal pour les modules ouverts.
 			this.bookModules = new TabBook(this.Window.Root);
 			this.bookModules.Dock = DockStyle.Fill;
 			this.bookModules.Margins = new Margins(0, 0, 3, 0);
@@ -309,9 +309,9 @@ namespace Epsitec.Common.Designer
 
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			//	Evite que cette commande ne soit exécutée par Widgets.Application,
+			//	Evite que cette commande ne soit exÃ©cutÃ©e par Widgets.Application,
 			//	car cela provoquerait la fin du programme, quelle que soit la
-			//	réponse donnée par l'utilisateur au dialogue affiché par DocumentEditor.
+			//	rÃ©ponse donnÃ©e par l'utilisateur au dialogue affichÃ© par DocumentEditor.
 		}
 
 		public void ActiveButton(string command, bool active)
@@ -327,8 +327,8 @@ namespace Epsitec.Common.Designer
 
 		private void StyleButton(string command, string style)
 		{
-			//	Modifie le style d'un bouton dans un ruban. L'icône affichée change en fonction des noms
-			//	de style dans les "pages" définis depuis CrPicto.
+			//	Modifie le style d'un bouton dans un ruban. L'icÃ´ne affichÃ©e change en fonction des noms
+			//	de style dans les "pages" dÃ©finis depuis CrPicto.
 			IconButton button = this.SearchIconButton(command);
 			if (button != null)
 			{
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Designer
 
 		private IconButton SearchIconButton(string command)
 		{
-			//	Cherche le bouton utilisé pour une commande, dans tous les rubans.
+			//	Cherche le bouton utilisÃ© pour une commande, dans tous les rubans.
 			IconButton button;
 
 			button = this.SearchIconButton(this.ribbonMain, command);
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Designer
 
 		private IconButton SearchIconButton(RibbonPage page, string command)
 		{
-			//	Cherche le bouton utilisé pour une commande, dans un ruban.
+			//	Cherche le bouton utilisÃ© pour une commande, dans un ruban.
 			foreach (Widget widget in page.Items)
 			{
 				Ribbons.AbstractRibbon section = widget as Ribbons.AbstractRibbon;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateViewer(Viewers.Changing oper)
 		{
-			//	Met à jour le visualisateur en cours.
+			//	Met Ã  jour le visualisateur en cours.
 			Module module = this.CurrentModule;
 			if (module != null && module.Modifier.ActiveViewer!= null)
 			{
@@ -475,7 +475,7 @@ namespace Epsitec.Common.Designer
 				var mi = this.OpenModule (item);
 				this.bookModules.ActivePage = mi.TabPage;
 
-				//	Affiche l'éventuel message initial.
+				//	Affiche l'Ã©ventuel message initial.
 				this.UpdateInitialMessage();
 				if (this.CurrentModule.InitialMessage != null)  // message initial existe ?
 				{
@@ -544,10 +544,10 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					// Ouvre le module d'on vient de créer.
+					// Ouvre le module d'on vient de crÃ©er.
 					if (this.dlgNew.IsPatch)
 					{
-						this.CloseModule();  // ferme le module initial de référence
+						this.CloseModule();  // ferme le module initial de rÃ©fÃ©rence
 					}
 
 					Module module = new Module (this, this.mode, info.FullId, this.MissingModuleResolver);
@@ -614,7 +614,7 @@ namespace Epsitec.Common.Designer
 
 			if (counter == 0)
 			{
-				this.DialogError ("Aucune image n'a été exportée.");
+				this.DialogError ("Aucune image n'a Ã©tÃ© exportÃ©e.");
 			}
 			else
 			{
@@ -622,11 +622,11 @@ namespace Epsitec.Common.Designer
 
 				if (counter == 1)
 				{
-					message = "Une image a été exportée avec succès.";
+					message = "Une image a Ã©tÃ© exportÃ©e avec succÃ¨s.";
 				}
 				else
 				{
-					message = string.Format ("{0} images de {1} modules ont été exportées avec succès.", counter.ToString (), module.ToString ());
+					message = string.Format ("{0} images de {1} modules ont Ã©tÃ© exportÃ©es avec succÃ¨s.", counter.ToString (), module.ToString ());
 				}
 
 				this.DialogMessage (message);
@@ -1265,7 +1265,7 @@ namespace Epsitec.Common.Designer
 
 		private CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
 		{
-			//	Crée une nouvelle commande et son command state associé.
+			//	CrÃ©e une nouvelle commande et son command state associÃ©.
 			Command command = Command.Get(commandName);
 
 			if (command.IsReadWrite)
@@ -1320,13 +1320,13 @@ namespace Epsitec.Common.Designer
 					this.displayFullScreenState.ActiveState = (this.displayMode == DisplayMode.FullScreen) ? ActiveState.Yes : ActiveState.No;
 					this.displayWindowState.ActiveState     = (this.displayMode == DisplayMode.Window    ) ? ActiveState.Yes : ActiveState.No;
 
-					if (this.displayMode == DisplayMode.Window)  // mode avec fenêtre supplémentaire ?
+					if (this.displayMode == DisplayMode.Window)  // mode avec fenÃªtre supplÃ©mentaire ?
 					{
-						if (this.viewersWindow == null)  // fenêtre pas encore créée ?
+						if (this.viewersWindow == null)  // fenÃªtre pas encore crÃ©Ã©e ?
 						{
 							Rectangle bounds = new Rectangle(this.Window.WindowLocation, this.Window.WindowSize);
 							bounds = new Rectangle(bounds.Center, bounds.Center);
-							bounds.Inflate(640/2, 480/2);  // fenêtre initiale de 640x480
+							bounds.Inflate(640/2, 480/2);  // fenÃªtre initiale de 640x480
 
 							this.viewersWindow = new Window();
 							this.viewersWindow.Icon = this.icon;
@@ -1340,11 +1340,11 @@ namespace Epsitec.Common.Designer
 							this.viewersWindow.WindowCloseClicked += this.HandleViewersWindowCloseClicked;
 						}
 					}
-					else  // mode normal (sans fenêtre supplémentaire) ?
+					else  // mode normal (sans fenÃªtre supplÃ©mentaire) ?
 					{
 						if (this.viewersWindow != null)
 						{
-							this.viewersWindow.Hide();  // si la fenêtre supplémentaire existe, ferme-la sans la supprimer
+							this.viewersWindow.Hide();  // si la fenÃªtre supplÃ©mentaire existe, ferme-la sans la supprimer
 						}
 					}
 
@@ -1355,15 +1355,15 @@ namespace Epsitec.Common.Designer
 
 		private void HandleViewersWindowCloseClicked(object sender)
 		{
-			//	Le bouton de fermeture de la fenêtre supplémentaire a été cliqué.
-			//	Il faut juste cacher la fenêtre sans la supprimer et remettre le mode DisplayMode.Horizontal.
-			this.viewersWindow.Hide();  // cache la fenêtre supplémentaire
+			//	Le bouton de fermeture de la fenÃªtre supplÃ©mentaire a Ã©tÃ© cliquÃ©.
+			//	Il faut juste cacher la fenÃªtre sans la supprimer et remettre le mode DisplayMode.Horizontal.
+			this.viewersWindow.Hide();  // cache la fenÃªtre supplÃ©mentaire
 			this.DisplayModeState = DisplayMode.Horizontal;
 		}
 
 		public Window ViewersWindow
 		{
-			//	Retourne la fenêtre à utiliser pour étendre l'interface en mode DisplayMode.Window.
+			//	Retourne la fenÃªtre Ã  utiliser pour Ã©tendre l'interface en mode DisplayMode.Window.
 			//	Si le mode n'est pas DisplayMode.Window, retourne null.
 			get
 			{
@@ -1380,22 +1380,22 @@ namespace Epsitec.Common.Designer
 
 		public void ViewersWindowUpdate(string title, bool useWindow)
 		{
-			//	Met à jour le titre de la fenêtre supplémentaire et détermine si elle est visible.
+			//	Met Ã  jour le titre de la fenÃªtre supplÃ©mentaire et dÃ©termine si elle est visible.
 			this.viewersWindow.Text = title;
 
 			if (useWindow)
 			{
-				this.viewersWindow.Show();  // montre la fenêtre supplémentaire
+				this.viewersWindow.Show();  // montre la fenÃªtre supplÃ©mentaire
 			}
 			else
 			{
-				this.viewersWindow.Hide();  // cache la fenêtre supplémentaire
+				this.viewersWindow.Hide();  // cache la fenÃªtre supplÃ©mentaire
 			}
 		}
 
 		private void ViewersWindowClear()
 		{
-			//	Supprime tous les widgets contenus dans la fenêtre supplémentaire.
+			//	Supprime tous les widgets contenus dans la fenÃªtre supplÃ©mentaire.
 			if (this.viewersWindow != null)
 			{
 				this.viewersWindow.Root.Children.Clear();  // vide tout le contenu
@@ -1435,7 +1435,7 @@ namespace Epsitec.Common.Designer
 		#region InitialMessage
 		private void UpdateInitialMessage()
 		{
-			//	Met à jour la commande du message initial pour l'ensemble des modules ouverts.
+			//	Met Ã  jour la commande du message initial pour l'ensemble des modules ouverts.
 			this.initialMessageState.Enable = this.IsInitialMessageExisting;
 		}
 
@@ -1466,7 +1466,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				builder.Append(" ");  // à cause d'un bug dans TextLayout !
+				builder.Append(" ");  // Ã  cause d'un bug dans TextLayout !
 
 				this.dlgInitialMessage.Initialise(builder.ToString());
 				this.dlgInitialMessage.Show();  // affiche le message initial
@@ -1479,7 +1479,7 @@ namespace Epsitec.Common.Designer
 
 		private void CloseInitialMessage()
 		{
-			//	Ferme le dialogue du message initial, si nécessaire.
+			//	Ferme le dialogue du message initial, si nÃ©cessaire.
 			if (this.initialMessageState.ActiveState == ActiveState.Yes)
 			{
 				this.initialMessageState.ActiveState = ActiveState.No;
@@ -1510,7 +1510,7 @@ namespace Epsitec.Common.Designer
 		#region Navigate
 		public bool NavigateToString(Druid stringId)
 		{
-			//	Sélectionne la string correspondante dans la liste du bon module.
+			//	SÃ©lectionne la string correspondante dans la liste du bon module.
 			Module module = this.SearchModule(stringId);
 			if (module == null)
 			{
@@ -1524,7 +1524,7 @@ namespace Epsitec.Common.Designer
 
 		public bool NavigateToCaption(Druid captionId)
 		{
-			//	Sélectionne la ressource correspondante dans la liste du bon module.
+			//	SÃ©lectionne la ressource correspondante dans la liste du bon module.
 			Module module = this.SearchModule(captionId);
 			if (module == null)
 			{
@@ -1544,7 +1544,7 @@ namespace Epsitec.Common.Designer
 
 		public bool NavigateToEntityField(Druid entityId, Druid fieldId)
 		{
-			//	Sélectionne l'entité correspondante dans la liste du bon module puis édite l'expression d'un champ.
+			//	SÃ©lectionne l'entitÃ© correspondante dans la liste du bon module puis Ã©dite l'expression d'un champ.
 			Module module = this.SearchModule(entityId);
 			if (module == null)
 			{
@@ -1599,9 +1599,9 @@ namespace Epsitec.Common.Designer
 
 		public void LocatorFix()
 		{
-			//	Fixe une vue que l'on vient d'atteindre. Si on est déjà exactement sur cette même
-			//	localisation, on ne mémorise rien. Ceci est primordial, car on appelle LocatorFix
-			//	lorsqu'on retourne à une position localisation mémorisée, et il ne faudrait surtout
+			//	Fixe une vue que l'on vient d'atteindre. Si on est dÃ©jÃ  exactement sur cette mÃªme
+			//	localisation, on ne mÃ©morise rien. Ceci est primordial, car on appelle LocatorFix
+			//	lorsqu'on retourne Ã  une position localisation mÃ©morisÃ©e, et il ne faudrait surtout
 			//	pas modifier alors la liste des localisations !
 			System.Diagnostics.Debug.Assert(this.locators != null);
 			if (this.locatorIgnore)
@@ -1642,13 +1642,13 @@ namespace Epsitec.Common.Designer
 
 			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
 			{
-				if (locator == this.locators[this.locatorIndex])  // localisation déjà fixée ?
+				if (locator == this.locators[this.locatorIndex])  // localisation dÃ©jÃ  fixÃ©e ?
 				{
 					return;  // si oui, il ne faut surtout rien fixer
 				}
 			}
 
-			//	Supprime les localisations après la localisation courante.
+			//	Supprime les localisations aprÃ¨s la localisation courante.
 			while (this.locators.Count-1 > this.locatorIndex)
 			{
 				this.locators.RemoveAt(this.locators.Count-1);
@@ -1662,7 +1662,7 @@ namespace Epsitec.Common.Designer
 
 		public VMenu LocatorCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
-			//	Construit le menu des localisations visitées.
+			//	Construit le menu des localisations visitÃ©es.
 			int all = this.locators.Count;
 			int total = System.Math.Min(all, 20);
 			int start = this.locatorIndex;
@@ -1671,7 +1671,7 @@ namespace Epsitec.Common.Designer
 
 			List<MenuItem> list = new List<MenuItem>();
 
-			//	Met éventuellement la première localisation où aller.
+			//	Met Ã©ventuellement la premiÃ¨re localisation oÃ¹ aller.
 			if (start > 0)
 			{
 				string action = this.LocatorGetNiceText(0);
@@ -1683,7 +1683,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			//	Met les localisations où aller.
+			//	Met les localisations oÃ¹ aller.
 			for (int i=start; i<start+total; i++)
 			{
 				if (i <= this.locatorIndex)  // prev ?
@@ -1710,7 +1710,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			//	Met éventuellement la dernière localisation où aller.
+			//	Met Ã©ventuellement la derniÃ¨re localisation oÃ¹ aller.
 			if (start+total < all)
 			{
 				if (start+total < all-1)
@@ -1723,7 +1723,7 @@ namespace Epsitec.Common.Designer
 				this.LocatorCreateMenu(list, message, "", all-1, action);
 			}
 
-			//	Génère le menu.
+			//	GÃ©nÃ¨re le menu.
 			VMenu menu = new VMenu();
 			menu.Items.AddRange (list);
 			menu.AdjustSize();
@@ -1732,7 +1732,7 @@ namespace Epsitec.Common.Designer
 
 		private void LocatorCreateMenu(List<MenuItem> list, Support.EventHandler<MessageEventArgs> message, string icon, int rank, string action)
 		{
-			//	Crée une case du menu des localisations.
+			//	CrÃ©e une case du menu des localisations.
 			if (icon != "")
 			{
 				icon = Misc.Icon(icon);
@@ -1754,7 +1754,7 @@ namespace Epsitec.Common.Designer
 
 		private string LocatorGetNiceText(int index)
 		{
-			//	Retourne le joli texte correspondant à une localisations.
+			//	Retourne le joli texte correspondant Ã  une localisations.
 			string moduleName              = this.locators[index].ModuleName;
 			ResourceAccess.Type viewerType = this.locators[index].ViewerType;
 			int subView                    = this.locators[index].SubView;
@@ -1785,7 +1785,7 @@ namespace Epsitec.Common.Designer
 
 		private void LocatorClose(string moduleName)
 		{
-			//	Suite à la fermeture d'un module, supprime toutes les localisations en rapport avec ce module.
+			//	Suite Ã  la fermeture d'un module, supprime toutes les localisations en rapport avec ce module.
 			int i = 0;
 			while (i<this.locators.Count)
 			{
@@ -1805,7 +1805,7 @@ namespace Epsitec.Common.Designer
 
 		private bool LocatorPrevIsEnable
 		{
-			//	Donne l'état de la commande "LocatorPrev".
+			//	Donne l'Ã©tat de la commande "LocatorPrev".
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.locators != null);
@@ -1815,7 +1815,7 @@ namespace Epsitec.Common.Designer
 
 		private bool LocatorNextIsEnable
 		{
-			//	Donne l'état de la commande "LocatorNext".
+			//	Donne l'Ã©tat de la commande "LocatorNext".
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.locators != null);
@@ -1851,7 +1851,7 @@ namespace Epsitec.Common.Designer
 
 		private void LocatorMenuGoto(int index)
 		{
-			//	Revient à une location choisie dans le menu.
+			//	Revient Ã  une location choisie dans le menu.
 			if (!this.Terminate())
 			{
 				return;
@@ -1878,7 +1878,7 @@ namespace Epsitec.Common.Designer
 
 		private void LocatorGoto(Viewers.Locator locator)
 		{
-			//	Va sur une ressource définie par une localisation.
+			//	Va sur une ressource dÃ©finie par une localisation.
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			if (mi.Module.ModuleId.Name != locator.ModuleName)
@@ -1929,7 +1929,7 @@ namespace Epsitec.Common.Designer
 					if (viewer != null)
 					{
 						this.locatorIgnore = true;
-						viewer.Window.ForceLayout();  // StringArray.LineCount nécessite que la hauteur du widget soit juste !
+						viewer.Window.ForceLayout();  // StringArray.LineCount nÃ©cessite que la hauteur du widget soit juste !
 						viewer.Update();
 						viewer.ShowSelectedRow();
 						this.locatorIgnore = false;
@@ -1938,7 +1938,7 @@ namespace Epsitec.Common.Designer
 			}
 
 #if false
-			//	Remet le widget dans le même état. Cela ne semble pas fonctionner, à cause de problèmes
+			//	Remet le widget dans le mÃªme Ã©tat. Cela ne semble pas fonctionner, Ã  cause de problÃ¨mes
 			//	dans StringArray !
 			if (locator.WidgetFocused != null)
 			{
@@ -1958,7 +1958,7 @@ namespace Epsitec.Common.Designer
 
 		private void LocatorAdjustWidgetFocused(ref Widget widgetFocused, ref int lineSelected)
 		{
-			//	Si le focus est dans une StringList, cherche la sélection dans le StringArray parent.
+			//	Si le focus est dans une StringList, cherche la sÃ©lection dans le StringArray parent.
 			if (widgetFocused != null && widgetFocused.Parent is MyWidgets.StringArray)
 			{
 				MyWidgets.StringArray array = widgetFocused.Parent as MyWidgets.StringArray;
@@ -1968,7 +1968,7 @@ namespace Epsitec.Common.Designer
 
 		private void LocatorUpdateCommand()
 		{
-			//	Met à jour les commandes du navigateur.
+			//	Met Ã  jour les commandes du navigateur.
 			this.locatorPrevState.Enable = this.LocatorPrevIsEnable;
 			this.locatorNextState.Enable = this.LocatorNextIsEnable;
 		}
@@ -2009,7 +2009,7 @@ namespace Epsitec.Common.Designer
 					Margins = new Margins (0, 6, 0, 0),
 				};
 
-				ToolTip.Default.SetToolTip (accessButton, "Accès aux informations du module");
+				ToolTip.Default.SetToolTip (accessButton, "AccÃ¨s aux informations du module");
 
 				accessButton.Clicked += delegate
 				{
@@ -2031,7 +2031,7 @@ namespace Epsitec.Common.Designer
 				};
 			}
 
-			//	Bande horizontale pour les boutons d'accès aux différents types de ressources.
+			//	Bande horizontale pour les boutons d'accÃ¨s aux diffÃ©rents types de ressources.
 			{
 				mi.BundleTypeWidget = new MyWidgets.BundleType
 				{
@@ -2088,8 +2088,8 @@ namespace Epsitec.Common.Designer
 				mi.Module.Modifier.AttachViewer(viewer);
 				mi.Module.Modifier.ActiveViewer = viewer;
 
-				//	Montre la ressource sélectionnée. Il faut le faire très tard, lorsque le tableau UI.ItemTable
-				//	est correctement dimensionné.
+				//	Montre la ressource sÃ©lectionnÃ©e. Il faut le faire trÃ¨s tard, lorsque le tableau UI.ItemTable
+				//	est correctement dimensionnÃ©.
 				viewer.Window.ForceLayout();
 				viewer.ShowSelectedRow();
 			}
@@ -2110,15 +2110,15 @@ namespace Epsitec.Common.Designer
 
 		public bool Terminate()
 		{
-			//	Termine le travail sur une ressource, avant de passer à une autre.
+			//	Termine le travail sur une ressource, avant de passer Ã  une autre.
 			//	Retourne false si l'utilisateur a choisi "annuler".
 			return this.Terminate(false);
 		}
 
 		public bool Terminate(bool soft)
 		{
-			//	Termine le travail sur une ressource, avant de passer à une autre.
-			//	Si soft = true, on sérialise temporairement sans poser de question.
+			//	Termine le travail sur une ressource, avant de passer Ã  une autre.
+			//	Si soft = true, on sÃ©rialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
 			if (this.HasCurrentModule && this.CurrentModule.Modifier.ActiveViewer != null)
 			{
@@ -2130,7 +2130,7 @@ namespace Epsitec.Common.Designer
 
 		private void UpdateAfterTypeChanged()
 		{
-			//	Mise à jour après avoir changé le type de ressource.
+			//	Mise Ã  jour aprÃ¨s avoir changÃ© le type de ressource.
 			this.ViewersWindowClear();
 
 			if (this.HasCurrentModule)
@@ -2144,10 +2144,10 @@ namespace Epsitec.Common.Designer
 
 		private void HandleTypeChanged(object sender, CancelEventArgs e)
 		{
-			//	Appelé lorsque le type de vue a changé.
+			//	AppelÃ© lorsque le type de vue a changÃ©.
 			if (!this.Terminate())
 			{
-				e.Cancel = true;  // revient à la sélection précédente
+				e.Cancel = true;  // revient Ã  la sÃ©lection prÃ©cÃ©dente
 				return;
 			}
 
@@ -2156,7 +2156,7 @@ namespace Epsitec.Common.Designer
 
 		private void HandleBookModulesActivePageChanged(object sender, CancelEventArgs e)
 		{
-			//	L'onglet pour le module courant a été cliqué.
+			//	L'onglet pour le module courant a Ã©tÃ© cliquÃ©.
 			if (this.ignoreChange)
 			{
 				return;
@@ -2164,7 +2164,7 @@ namespace Epsitec.Common.Designer
 
 			if (!this.Terminate())
 			{
-				e.Cancel = true;  // revient à la sélection précédente
+				e.Cancel = true;  // revient Ã  la sÃ©lection prÃ©cÃ©dente
 				return;
 			}
 
@@ -2236,7 +2236,7 @@ namespace Epsitec.Common.Designer
 
 		private Module LastModule
 		{
-			//	Retourne le module précédemment sélectionné.
+			//	Retourne le module prÃ©cÃ©demment sÃ©lectionnÃ©.
 			get
 			{
 				if (this.lastModule < 0 || this.lastModule >= this.moduleInfoList.Count)
@@ -2255,7 +2255,7 @@ namespace Epsitec.Common.Designer
 
 		public Module SearchModule(string name)
 		{
-			//	Cherche un module d'après son nom.
+			//	Cherche un module d'aprÃ¨s son nom.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
 				if (name == info.Module.ModuleId.Name)
@@ -2269,7 +2269,7 @@ namespace Epsitec.Common.Designer
 
 		public Module SearchModule(Druid druid)
 		{
-			//	Cherche à quel module appartient un druid.
+			//	Cherche Ã  quel module appartient un druid.
 			if (druid.IsEmpty)
 			{
 				return null;
@@ -2280,7 +2280,7 @@ namespace Epsitec.Common.Designer
 
 		private Module SearchModuleId(int id)
 		{
-			//	Cherche un module d'après son identificateur.
+			//	Cherche un module d'aprÃ¨s son identificateur.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
 				if (info.Module.ModuleId.Id == id)
@@ -2294,7 +2294,7 @@ namespace Epsitec.Common.Designer
 
 		public Module SearchModuleId(ResourceModuleId id)
 		{
-			//	Cherche un module d'après son identificateur.
+			//	Cherche un module d'aprÃ¨s son identificateur.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
 				if (info.Module.ModuleId.Equals(id))
@@ -2324,7 +2324,7 @@ namespace Epsitec.Common.Designer
 
 		private int SearchModuleRank(string moduleName)
 		{
-			//	Cherche le rang d'un module d'après son nom.
+			//	Cherche le rang d'un module d'aprÃ¨s son nom.
 			for (int i=0; i<this.moduleInfoList.Count; i++)
 			{
 				ModuleInfo mi = this.moduleInfoList[i];
@@ -2355,7 +2355,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.ignoreChange = true;
 				
-				//	Force le défocus du widget courant, qui peut être une ligne éditable
+				//	Force le dÃ©focus du widget courant, qui peut Ãªtre une ligne Ã©ditable
 				//	TextFieldEx avec DefocusAction et remet le focus sur le 1er widget du
 				//	nouvel onglet :
 				
@@ -2489,8 +2489,8 @@ namespace Epsitec.Common.Designer
 
 		public static int IsOriginalModule(ResourceModuleId moduleInfo)
 		{
-			//	Méthode "magique" pour déterminer si un module est l'original !
-			//	Retourne -1 -> module à rejeter toujours
+			//	MÃ©thode "magique" pour dÃ©terminer si un module est l'original !
+			//	Retourne -1 -> module Ã  rejeter toujours
 			//	Retourne  0 -> module secondaire
 			//	Retourne  1 -> module original
 			var path = moduleInfo.Path.Replace ('\\', '/');
@@ -2498,7 +2498,7 @@ namespace Epsitec.Common.Designer
 
 			if (path.Contains ("/bin/"))
 			{
-				return -1;  // module rejeté
+				return -1;  // module rejetÃ©
 			}
 
 			var paths = path.Split ('/');
@@ -2553,15 +2553,15 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateCommandEditLocked()
 		{
-			//	Met à jour la commande "EditLocked".
+			//	Met Ã  jour la commande "EditLocked".
 			this.editLockedState.Enable = (this.CurrentModule != null && this.settings.IdentityCard != null);
 			this.StyleButton("EditLocked", this.IsReadonly ? null : "Unlock");  // ouvre ou ferme le cadenas
 		}
 
 		private bool AutoSave(CommandDispatcher dispatcher)
 		{
-			//	Fait tout ce qu'il faut pour éventuellement sauvegarder les ressources
-			//	avant de passer à autre chose.
+			//	Fait tout ce qu'il faut pour Ã©ventuellement sauvegarder les ressources
+			//	avant de passer Ã  autre chose.
 			//	Retourne false si on ne peut pas continuer.
 			var result = this.DialogSave(dispatcher);
 			if (result == Common.Dialogs.DialogResult.Yes)
@@ -2578,8 +2578,8 @@ namespace Epsitec.Common.Designer
 
 		private bool AutoSaveAll(CommandDispatcher dispatcher)
 		{
-			//	Fait tout ce qu'il faut pour éventuellement sauvegarder toutes les
-			//	ressources avant de passer à autre chose.
+			//	Fait tout ce qu'il faut pour Ã©ventuellement sauvegarder toutes les
+			//	ressources avant de passer Ã  autre chose.
 			//	Retourne false si on ne peut pas continuer.
 			int cm = this.currentModule;
 
@@ -2600,7 +2600,7 @@ namespace Epsitec.Common.Designer
 
 		private void ReadSettings()
 		{
-			//	Reprend tous les réglages globaux.
+			//	Reprend tous les rÃ©glages globaux.
 			if (!this.settings.Read() || this.settings.Modules.Count == 0)
 			{
 				this.UseModule(-1);  // grise toutes les commandes puisqu'aucun module n'est ouvert
@@ -2623,7 +2623,7 @@ namespace Epsitec.Common.Designer
 
 		private bool WriteSettings()
 		{
-			//	Sauve tous les réglages globaux.
+			//	Sauve tous les rÃ©glages globaux.
 			this.settings.Modules.Clear();
 
 			foreach (ModuleInfo info in this.moduleInfoList)
@@ -2634,14 +2634,14 @@ namespace Epsitec.Common.Designer
 			this.settings.WindowBounds = this.Window.WindowPlacementBounds;
 			this.settings.IsFullScreen = this.Window.IsFullScreen;
 			
-			return this.settings.Write();  // enregistre les réglages globaux
+			return this.settings.Write();  // enregistre les rÃ©glages globaux
 
 		}
 
 		public bool IsReadonly
 		{
 			//	Indique si Designer est en mode "consultation", lorsque l'identificateur est anonyme
-			//	ou lorsqu'on est en mode "bloqué".
+			//	ou lorsqu'on est en mode "bloquÃ©".
 			get
 			{
 				return this.settings.IdentityCard == null || this.IsEditLocked;
@@ -2682,8 +2682,8 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateBookModules()
 		{
-			//	Met à jour les noms des l'onglets des modules.
-			//	Il faut passer en revue tous les modules, car on peut très bien avoir rendu 'dirty' un autre
+			//	Met Ã  jour les noms des l'onglets des modules.
+			//	Il faut passer en revue tous les modules, car on peut trÃ¨s bien avoir rendu 'dirty' un autre
 			//	module que le module courant.
 			bool changed = false;
 
@@ -2712,7 +2712,7 @@ namespace Epsitec.Common.Designer
 		#region Dialogs
 		public bool DlgBindingSelector(Module baseModule, StructuredType type, PanelEditor.ObjectModifier.ObjectType objectType, ref Binding binding)
 		{
-			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
+			//	Ouvre le dialogue pour choisir une rubrique dans une structure de donnÃ©es.
 			this.dlgBindingSelector.Initialise(baseModule, type, objectType, binding);
 
 			this.dlgBindingSelector.Show();  // choix dans le dialogue...
@@ -2724,7 +2724,7 @@ namespace Epsitec.Common.Designer
 
 		public Common.Dialogs.DialogResult DlgResourceSelector(Dialogs.ResourceSelectorDialog.Operation operation, Module baseModule, ResourceAccess.Type type, ref StructuredTypeClass typeClass, ref Druid resource, ref bool isNullable, List<Druid> exclude, Druid typeId)
 		{
-			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid) d'un type à choix.
+			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid) d'un type Ã  choix.
 			this.dlgResourceSelector.AccessOpen(operation, baseModule, type, resource, isNullable, exclude, typeId);
 			this.dlgResourceSelector.StructuredTypeClass = typeClass;
 
@@ -2739,7 +2739,7 @@ namespace Epsitec.Common.Designer
 
 		public string DlgIcon(ResourceManager manager, string icon)
 		{
-			//	Ouvre le dialogue pour choisir une icône.
+			//	Ouvre le dialogue pour choisir une icÃ´ne.
 			ModuleInfo mi = this.CurrentModuleInfo;
 			this.dlgIcon.SetResourceManager(manager, mi.Module.ModuleId.Name);
 			this.dlgIcon.IconValue = icon;
@@ -2751,7 +2751,7 @@ namespace Epsitec.Common.Designer
 
 		public string DlgNewCulture(ResourceAccess access)
 		{
-			//	Ouvre le dialogue pour choisir la culture à créer.
+			//	Ouvre le dialogue pour choisir la culture Ã  crÃ©er.
 			this.dlgNewCulture.SetAccess(access);
 			this.dlgNewCulture.Show();
 			return this.dlgNewCulture.Culture;
@@ -2781,7 +2781,7 @@ namespace Epsitec.Common.Designer
 
 		public Common.Dialogs.DialogResult DlgEntityField(Module baseModule, ResourceAccess.Type type, string prefix, ref string fieldName, ref Druid resource, ref Epsitec.Common.Designer.Dialogs.EntityFieldDialogOptions options)
 		{
-			//	Ouvre le dialogue pour choisir les paramètres d'un champ d'une entité.
+			//	Ouvre le dialogue pour choisir les paramÃ¨tres d'un champ d'une entitÃ©.
 			this.dlgEntityField.AccessOpen (baseModule, type, prefix, fieldName, resource, options);
 
 			this.dlgEntityField.Show();  // choix dans le dialogue...
@@ -2810,7 +2810,7 @@ namespace Epsitec.Common.Designer
 
 		public Common.Dialogs.DialogResult DlgEntityParameters(EntitiesEditor.ObjectBox objectBox, ref DataLifetimeExpectancy lifetime, ref StructuredTypeFlags flags)
 		{
-			//	Ouvre le dialogue pour choisir les paramètres d'une entité.
+			//	Ouvre le dialogue pour choisir les paramÃ¨tres d'une entitÃ©.
 			this.dlgEntityParameters.ObjectBox              = objectBox;
 			this.dlgEntityParameters.DataLifetimeExpectancy = lifetime;
 			this.dlgEntityParameters.StructuredTypeFlags    = flags;
@@ -2832,7 +2832,7 @@ namespace Epsitec.Common.Designer
 
 		public Common.Dialogs.DialogResult DlgEntityCreation(Module module, ref string name, ref StructuredTypeClass typeClass, ref Druid resource, ref DataLifetimeExpectancy lifetime, ref StructuredTypeFlags flags)
 		{
-			//	Ouvre le dialogue (en 3 volets) pour créer une entité.
+			//	Ouvre le dialogue (en 3 volets) pour crÃ©er une entitÃ©.
 			this.dlgEntityCreation.ResourceName.Initialise (Dialogs.ResourceNameDialog.Operation.Create, Dialogs.ResourceNameDialog.Type.Entity, name);
 
 			this.dlgEntityCreation.ResourceSelector.AccessOpen (Dialogs.ResourceSelectorDialog.Operation.InheritEntities, module, Common.Designer.ResourceAccess.Type.Entities, resource, false, null, Druid.Empty);
@@ -2863,7 +2863,7 @@ namespace Epsitec.Common.Designer
 
 		public bool DlgEntityExpression(bool isInterface, bool isPatchModule, string deepExpression, ref string expression)
 		{
-			//	Ouvre le dialogue pour éditer une expression.
+			//	Ouvre le dialogue pour Ã©diter une expression.
 			this.dlgEntityExpression.Initialise(this.IsReadonly, isInterface, isPatchModule, deepExpression, expression);
 			
 			this.dlgEntityExpression.Show();  // choix dans le dialogue...
@@ -2875,7 +2875,7 @@ namespace Epsitec.Common.Designer
 
 		public bool DlgModuleInfo(Module module)
 		{
-			//	Ouvre le dialogue pour éditer les informations d'un module.
+			//	Ouvre le dialogue pour Ã©diter les informations d'un module.
 			this.dlgModuleInfo.Module = module;
 			
 			this.dlgModuleInfo.Show ();
@@ -2885,7 +2885,7 @@ namespace Epsitec.Common.Designer
 
 		public System.Windows.Forms.DialogResult DlgSaveAllBitmaps(List<EntitiesEditor.EntitySample> entitySamples, List<string> selectedEntityNames, ref string folder, ref string extension, ref EntitiesEditor.BitmapParameters bitmapParameters)
 		{
-			//	Ouvre le dialogue pour éditer les informations d'un module.
+			//	Ouvre le dialogue pour Ã©diter les informations d'un module.
 			this.dlgSaveAllBitmaps.EntitySamples.Clear ();
 			this.dlgSaveAllBitmaps.EntitySamples.AddRange (entitySamples);
 
@@ -2933,7 +2933,7 @@ namespace Epsitec.Common.Designer
 		private Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
 		{
 			//	Affiche le dialogue pour demander s'il faut enregistrer les
-			//	ressources modifiées, avant de passer à d'autres ressources.
+			//	ressources modifiÃ©es, avant de passer Ã  d'autres ressources.
 			if (this.CurrentModule == null || !this.CurrentModule.IsGlobalDirty)
 			{
 				return Common.Dialogs.DialogResult.None;
@@ -3017,7 +3017,7 @@ namespace Epsitec.Common.Designer
 
 			string title = Res.Strings.Application.Title;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-			//?string message = TextLayout.ConvertToTaggedText(error);  // surtout pas, à cause des textes mis en page avec des <b>, etc.
+			//?string message = TextLayout.ConvertToTaggedText(error);  // surtout pas, Ã  cause des textes mis en page avec des <b>, etc.
 			string message = error;
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.CommandDispatcher);
@@ -3040,7 +3040,7 @@ namespace Epsitec.Common.Designer
 
 		private void HandleDlgClosed(object sender)
 		{
-			//	Un dialogue a été fermé.
+			//	Un dialogue a Ã©tÃ© fermÃ©.
 			if (sender == this.dlgGlyphs)
 			{
 				this.glyphsState.ActiveState = ActiveState.No;

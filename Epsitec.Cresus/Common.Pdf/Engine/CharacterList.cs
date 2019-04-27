@@ -3,11 +3,11 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
-	/// La classe CharacterList enregistre les informations sur chaque caractère.
+	/// La classe CharacterList enregistre les informations sur chaque caractÃ¨re.
 	/// </summary>
 	public class CharacterList
 	{
-		//	TODO: résoudre le cas où Drawing.Font est synthétique (IsSynthetic = true) -- pour réaliser des
+		//	TODO: rÃ©soudre le cas oÃ¹ Drawing.Font est synthÃ©tique (IsSynthetic = true) -- pour rÃ©aliser des
 		//	obliques par exemple ("Tahoma Oblique" n'existe pas et est construit artificiellement).
 		
 		public CharacterList(TextLayout.OneCharStructure oneChar)
@@ -86,8 +86,8 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public override bool Equals(object obj)
 		{
-			//	Compare deux caractères. Ils doivent utiliser des fontes ayant une apparence identique
-			//	pour être considérés comme identiques.
+			//	Compare deux caractÃ¨res. Ils doivent utiliser des fontes ayant une apparence identique
+			//	pour Ãªtre considÃ©rÃ©s comme identiques.
 			CharacterList o = obj as CharacterList;
 
 			return ( this.unicode == o.unicode &&

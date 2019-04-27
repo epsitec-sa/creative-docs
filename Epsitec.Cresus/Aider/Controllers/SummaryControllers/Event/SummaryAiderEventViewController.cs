@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -27,14 +27,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.Icon ("Data.AiderEvent")
-					.Title ("Acte en préparation")
+					.Title ("Acte en prÃ©paration")
 					.Text (x => x.GetSummary ())
 					.EnableActionButton<ActionAiderEventViewController1SetToValidate> ()
 					.EnableActionButton<ActionAiderEventViewController4DeleteDraft> ()
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
 				wall.AddBrick (x => x.Participants)
-					.Title ("Gérer les participations")
+					.Title ("GÃ©rer les participations")
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
 					.Attribute (BrickMode.AutoGroup)
@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.Icon ("Data.AiderEvent")
-					.Title ("Acte à valider")
+					.Title ("Acte Ã  valider")
 					.Text (x => x.GetSummary ())
 					.EnableActionButton<ActionAiderEventViewController2Rollback> ()
 					.EnableActionButton<ActionAiderEventViewController9PreviewReport> ().IfTrue (userCanValidate)
@@ -81,7 +81,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.Icon ("Data.AiderEvent")
-					.Title (x => "Acte N° " + x.Report.GetEventNumber ())
+					.Title (x => "Acte NÂ° " + x.Report.GetEventNumber ())
 					.Text (x => x.GetSummary ())
 					.Attribute (BrickMode.DefaultToNoSubView)
 					.EnableActionMenu<ActionAiderEventViewController11Delete> ().IfTrue (user.IsAdmin ());

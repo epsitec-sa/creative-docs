@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Objects
 {
 	/// <summary>
-	/// La classe TextBox2 est la classe de l'objet graphique "pavé de texte".
+	/// La classe TextBox2 est la classe de l'objet graphique "pavÃ© de texte".
 	/// </summary>
 	[System.Serializable()]
 	public class TextBox2 : Objects.AbstractText, Text.ITextRenderer
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected override Objects.Abstract CreateNewObject(Document document, Objects.Abstract model)
 		{
-			//	Crée une instance de l'objet.
+			//	CrÃ©e une instance de l'objet.
 			return new TextBox2(document, model);
 		}
 
@@ -51,17 +51,17 @@ namespace Epsitec.Common.Document.Objects
 
 		public override string IconUri
 		{
-			//	Nom de l'icône.
+			//	Nom de l'icÃ´ne.
 			get { return Misc.Icon("ObjectTextBox"); }
 		}
 
 
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Début du déplacement d'une poignée.
+			//	DÃ©but du dÃ©placement d'une poignÃ©e.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
-			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			if ( rank < this.handles.Count )  // poignÃ©e de l'objet ?
 			{
 				drawingContext.ConstrainClear();
 
@@ -85,8 +85,8 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
-			//	Déplace une poignée.
-			if ( rank >= 4 )  // poignée d'une propriété ?
+			//	DÃ©place une poignÃ©e.
+			if ( rank >= 4 )  // poignÃ©e d'une propriÃ©tÃ© ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -134,14 +134,14 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void MoveAllProcess(Point move)
 		{
-			//	Effectue le déplacement de tout l'objet.
+			//	Effectue le dÃ©placement de tout l'objet.
 			base.MoveAllProcess(move);
 			this.UpdateGeometry();
 		}
 
 		public override void MoveGlobalProcess(Selector selector)
 		{
-			//	Déplace globalement l'objet.
+			//	DÃ©place globalement l'objet.
 			base.MoveGlobalProcess(selector);
 			this.UpdateGeometry();
 			this.HandlePropertiesUpdate();
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document.Objects
 		#region ForSamples
 		public void CreateForSample()
 		{
-			//	Crée un objet pour un échantillon.
+			//	CrÃ©e un objet pour un Ã©chantillon.
 			Point pos = new Point(0, 0);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public void RectangleToSample(Drawing.Rectangle rect)
 		{
-			//	Spécifie les dimensions pour un échantillon.
+			//	SpÃ©cifie les dimensions pour un Ã©chantillon.
 			this.Handle(0).Position = rect.BottomLeft;
 			this.Handle(1).Position = rect.TopRight;
 			this.Handle(2).Position = rect.TopLeft;
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			//	Début de la création d'un objet.
+			//	DÃ©but de la crÃ©ation d'un objet.
 			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHomo(pos, false, -1);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
-			//	Déplacement pendant la création d'un objet.
+			//	DÃ©placement pendant la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
-			//	Fin de la création d'un objet.
+			//	Fin de la crÃ©ation d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			//	Crée les 2 autres poignées dans les coins opposés.
+			//	CrÃ©e les 2 autres poignÃ©es dans les coins opposÃ©s.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromPoints(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
 			Point p2 = rect.TopRight;
@@ -237,20 +237,20 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
-			//	pas exister et doit être détruit.
+			//	pas exister et doit Ãªtre dÃ©truit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 		public override bool EditAfterCreation()
 		{
-			//	Indique s'il faut sélectionner l'objet après sa création.
+			//	Indique s'il faut sÃ©lectionner l'objet aprÃ¨s sa crÃ©ation.
 			return true;
 		}
 
 		public override void Reset()
 		{
-			//	Remet l'objet droit et d'équerre.
+			//	Remet l'objet droit et d'Ã©querre.
 			if (this.handles.Count >= 4)
 			{
 				Drawing.Rectangle box = this.BoundingBoxThin;
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override Drawing.Rectangle RealBoundingBox()
 		{
-			//	Retourne la bounding réelle, en fonction des caractères contenus.
+			//	Retourne la bounding rÃ©elle, en fonction des caractÃ¨res contenus.
 			this.mergingBoundingBox = Drawing.Rectangle.Empty;
 			this.DrawText(null, null, InternalOperation.RealBoundingBox);
 
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			i ++;
 
-			//	Caractères du texte.
+			//	CaractÃ¨res du texte.
 			shapes[i] = new Shape();
 			shapes[i].SetTextObject(this);
 			i ++;
@@ -332,7 +332,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			//	Rectangle complet pour bbox et détection.
+			//	Rectangle complet pour bbox et dÃ©tection.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].Type = Type.Surface;
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Path PathBuild()
 		{
-			//	Crée le chemin de l'objet.
+			//	CrÃ©e le chemin de l'objet.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = new Point();
 			Point p3 = this.Handle(1).Position;
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Document.Objects
 		#region FlowHandles
 		protected override void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
-			//	Calcules les 4 coins de la poignée "pavé précédent".
+			//	Calcules les 4 coins de la poignÃ©e "pavÃ© prÃ©cÃ©dent".
 			Point c1, c2, c3, c4;
 			this.Corners(out c1, out c2, out c3, out c4);
 
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected override void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
-			//	Calcules les 4 coins de la poignée "pavé suivant".
+			//	Calcules les 4 coins de la poignÃ©e "pavÃ© suivant".
 			Point c1, c2, c3, c4;
 			this.Corners(out c1, out c2, out c3, out c4);
 
@@ -461,7 +461,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected override void UpdateTextFrame()
 		{
-			//	Met à jour le TextFrame en fonction des dimensions du pavé.
+			//	Met Ã  jour le TextFrame en fonction des dimensions du pavÃ©.
 			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
 			
 			Point p1, p2, p3, p4;
@@ -484,14 +484,14 @@ namespace Epsitec.Common.Document.Objects
 		
 		public override Drawing.Point ConvertInTextFrame(Drawing.Point pos)
 		{
-			//	Calcule la coordonnée transformée dans le texte frame.
+			//	Calcule la coordonnÃ©e transformÃ©e dans le texte frame.
 			return this.transform.TransformInverse (pos);
         }
 
 
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
 		{
-			//	Effectue une opération quelconque sur le texte du pavé.
+			//	Effectue une opÃ©ration quelconque sur le texte du pavÃ©.
 			this.internalOperation = op;
 			double angle;
 
@@ -588,8 +588,8 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.textFlow.HasActiveTextBox && this.graphics != null && this.internalOperation == InternalOperation.Painting )
 			{
-				//	Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
-				//	de sélection et que l'on est en train d'afficher à l'écran.
+				//	Peint le curseur uniquement si l'objet est en Ã©dition, qu'il n'y a pas
+				//	de sÃ©lection et que l'on est en train d'afficher Ã  l'Ã©cran.
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender;
 				this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
@@ -667,7 +667,7 @@ namespace Epsitec.Common.Document.Objects
 
 			Color color = isTabDefined ? Drawing.Color.FromBrightness(0.8) : DrawingContext.ColorTabZombie;
 			
-			if ( (tabCode & this.markerSelected) != 0 )  // tabulateur sélectionné ?
+			if ( (tabCode & this.markerSelected) != 0 )  // tabulateur sÃ©lectionnÃ© ?
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(x1, layout.LineY1, x2-x1, layout.LineY2-layout.LineY1);
 				rect = graphics.Align (rect);
@@ -725,7 +725,7 @@ namespace Epsitec.Common.Document.Objects
 					PDF.CharacterList cl;
 					if (numChars == 1)
 					{
-						if (i == 1)  // TODO: césure gérée de façon catastrophique !
+						if (i == 1)  // TODO: cÃ©sure gÃ©rÃ©e de faÃ§on catastrophique !
 						{
 							cl = new PDF.CharacterList(gArray[i], (int) '-', font);
 						}
@@ -752,8 +752,8 @@ namespace Epsitec.Common.Document.Objects
 			System.Diagnostics.Debug.Assert(mapping != null);
 			Text.ITextFrame frame = layout.Frame;
 
-			//	Vérifions d'abord que le mapping du texte vers les glyphes est
-			//	correct et correspond à quelque chose de valide :
+			//	VÃ©rifions d'abord que le mapping du texte vers les glyphes est
+			//	correct et correspond Ã  quelque chose de valide :
 			int offset = 0;
 			bool isInSelection = false;
 			double selX = 0;
@@ -788,11 +788,11 @@ namespace Epsitec.Common.Document.Objects
 						isSpace = true;  // contient au moins un espace
 						if (code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060)
 						{
-							iArray[ii++] = SpaceType.NoBreakSpace;  // espace insécable
+							iArray[ii++] = SpaceType.NoBreakSpace;  // espace insÃ©cable
 						}
 						else
 						{
-							iArray[ii++] = SpaceType.BreakSpace;  // espace sécable
+							iArray[ii++] = SpaceType.BreakSpace;  // espace sÃ©cable
 						}
 					}
 					else if (code == 0x0C)  // saut ?
@@ -827,10 +827,10 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ((tArray[i] & this.markerSelected) != 0)
 					{
-						//	Le caractère considéré est sélectionné.
+						//	Le caractÃ¨re considÃ©rÃ© est sÃ©lectionnÃ©.
 						if (isInSelection == false)
 						{
-							//	C'est le premier caractère d'une tranche. Il faut mémoriser son début :
+							//	C'est le premier caractÃ¨re d'une tranche. Il faut mÃ©moriser son dÃ©but :
 							double xx = x1 + ((x2 - x1) * i) / numChars;
 							isInSelection = true;
 							selX = xx;
@@ -840,7 +840,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						if (isInSelection)
 						{
-							//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+							//	Nous avons quittÃ© une tranche sÃ©lectionnÃ©e. Il faut mÃ©moriser sa fin :
 							double xx = x1 + ((x2 - x1) * i) / numChars;
 							isInSelection = false;
 
@@ -857,7 +857,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if (isInSelection)
 			{
-				//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+				//	Nous avons quittÃ© une tranche sÃ©lectionnÃ©e. Il faut mÃ©moriser sa fin :
 				double xx = x2;
 				isInSelection = false;
 
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if (this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null && !this.drawingContext.IsBitmap)
 			{
-				//	Dessine les rectangles correspondant à la sélection.
+				//	Dessine les rectangles correspondant Ã  la sÃ©lection.
 				foreach (Drawing.Rectangle rect in selRectList)
 				{
 					this.graphics.AddFilledRectangle(rect);
@@ -894,7 +894,7 @@ namespace Epsitec.Common.Document.Objects
 
 		private void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
 		{
-			//	Marque une tranche sélectionnée.
+			//	Marque une tranche sÃ©lectionnÃ©e.
 			if ( this.graphics == null )  return;
 
 			double dx = x - selX;
@@ -912,7 +912,7 @@ namespace Epsitec.Common.Document.Objects
 
 		private void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] spaces, double[] x, double[] y, double[] sx, double[] sy, bool isSpace)
 		{
-			//	Effectue le rendu des caractères.
+			//	Effectue le rendu des caractÃ¨res.
 			if (this.internalOperation == InternalOperation.Painting)
 			{
 				this.RenderTextPainting(font, size, glyphs, spaces, x, y, sx, sy, isSpace);
@@ -980,7 +980,7 @@ namespace Epsitec.Common.Document.Objects
 
 		private void RenderTextPainting(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] spaces, double[] x, double[] y, double[] sx, double[] sy, bool isSpace)
 		{
-			if (this.graphics != null)  // affichage sur écran ?
+			if (this.graphics != null)  // affichage sur Ã©cran ?
 			{
 				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 				if (drawingFont != null)
@@ -1039,12 +1039,12 @@ namespace Epsitec.Common.Document.Objects
 				double width = font.GetGlyphWidth(glyphs[i], size);
 				double oy = font.GetAscender(size)*0.3;
 
-				if (spaces[i] == SpaceType.BreakSpace)  // espace sécable ?
+				if (spaces[i] == SpaceType.BreakSpace)  // espace sÃ©cable ?
 				{
 					this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
 				}
 
-				if (spaces[i] == SpaceType.NoBreakSpace)  // espace insécable ?
+				if (spaces[i] == SpaceType.NoBreakSpace)  // espace insÃ©cable ?
 				{
 					this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
 				}
@@ -1117,17 +1117,17 @@ namespace Epsitec.Common.Document.Objects
 						
 						for ( int j=0 ; j<records[i].Xlines.Length ; j++ )
 						{
-							if ( xline == null )  // cherche le début ?
+							if ( xline == null )  // cherche le dÃ©but ?
 							{
 								if ( TextBox2.XlineContains(process, records[i].Xlines[j], records[i].TextColor) )  continue;
 
 								xline    = records[i].Xlines[j];
 								color    = records[i].TextColor;
 								starting = records[i];
-								ending   = null;  // la fin ne peut pas être dans ce record
+								ending   = null;  // la fin ne peut pas Ãªtre dans ce record
 								break;
 							}
-							else if ( starting == null )	// cherche un autre début ?
+							else if ( starting == null )	// cherche un autre dÃ©but ?
 							{
 								if ( !Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) ||
 									 !Text.Property.CompareEqualContents(color, records[i].TextColor) )
@@ -1136,7 +1136,7 @@ namespace Epsitec.Common.Document.Objects
 								}
 								
 								starting = records[i];
-								ending   = null;  // la fin ne peut pas être dans ce record
+								ending   = null;  // la fin ne peut pas Ãªtre dans ce record
 								break;
 							}
 							else	// cherche la fin ?
@@ -1144,21 +1144,21 @@ namespace Epsitec.Common.Document.Objects
 								if ( Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) &&
 									 Text.Property.CompareEqualContents(color, records[i].TextColor) )
 								{
-									ending = null;  // la fin ne peut pas être dans ce record
+									ending = null;  // la fin ne peut pas Ãªtre dans ce record
 									break;
 								}
 							}
 						}
 						
-						if ( starting != null && ending != null )  // fin trouvée ?
+						if ( starting != null && ending != null )  // fin trouvÃ©e ?
 						{
 							System.Diagnostics.Debug.Assert(xline != null);
 							
 							this.RenderXline(context, xline, starting, ending);  // dessine le trait
 							process.Add(new XlineInfo(xline, color));  // le trait est fait
 							
-							//	Cherche encore d'autres occurrences de la même propriété dans
-							//	la même ligne...
+							//	Cherche encore d'autres occurrences de la mÃªme propriÃ©tÃ© dans
+							//	la mÃªme ligne...
 							
 							starting = null;
 							ending   = null;
@@ -1169,7 +1169,7 @@ namespace Epsitec.Common.Document.Objects
 				while ( found );
 				
 				//	Saute les enregistrements de la ligne courante et reprend tout depuis
-				//	le début de la ligne suivante:
+				//	le dÃ©but de la ligne suivante:
 				
 				while ( lineStart<records.Length )
 				{
@@ -1182,7 +1182,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void RenderXline(Text.Layout.Context context, Text.Properties.AbstractXlineProperty xline, Text.Layout.XlineRecord starting, Text.Layout.XlineRecord ending)
 		{
-			//	Dessine un trait souligné, surligné ou biffé.
+			//	Dessine un trait soulignÃ©, surlignÃ© ou biffÃ©.
 			if ( ending.X <= starting.X )  return;
 			
 			double y = starting.Y;
@@ -1204,7 +1204,7 @@ namespace Epsitec.Common.Document.Objects
 			Path path = Path.FromRectangle(starting.X, y-xline.Thickness/2, ending.X-starting.X, xline.Thickness);
 
 			string color = xline.DrawStyle;
-			if ( color == null )  // couleur par défaut (comme le texte) ?
+			if ( color == null )  // couleur par dÃ©faut (comme le texte) ?
 			{
 				color = starting.TextColor.TextColor;
 			}
@@ -1217,7 +1217,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void UpdateTextGrid(bool notify)
 		{
-			//	Met à jour le pavé en fonction des lignes magnétiques.
+			//	Met Ã  jour le pavÃ© en fonction des lignes magnÃ©tiques.
 			if ( this.document.Modifier == null )  return;
 			if ( this.document.Modifier.ActiveViewer == null )  return;
 
@@ -1236,14 +1236,14 @@ namespace Epsitec.Common.Document.Objects
 		
 		public override Path GetMagnetPath()
 		{
-			//	Retourne le chemin géométrique de l'objet pour les constructions
-			//	magnétiques.
+			//	Retourne le chemin gÃ©omÃ©trique de l'objet pour les constructions
+			//	magnÃ©tiques.
 			return this.PathBuild();
 		}
 
 		public override Path[] GetPaths()
 		{
-			//	Retourne les chemins géométriques de l'objet.
+			//	Retourne les chemins gÃ©omÃ©triques de l'objet.
 			Graphics port = new Graphics();
 			Drawing.PathAccumulationRasterizer rasterizer = new PathAccumulationRasterizer();
 			port.ReplaceRasterizer(rasterizer);
@@ -1257,7 +1257,7 @@ namespace Epsitec.Common.Document.Objects
 		#region Serialization
 		protected TextBox2(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise l'objet.
+			//	Constructeur qui dÃ©sÃ©rialise l'objet.
 		}
 		#endregion
 

@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateCategoryGroup();
 			this.CreateAggregateToolBar();
 
-			//	Table des agrégats (styles graphiques).
+			//	Table des agrÃ©gats (styles graphiques).
 			this.graphicList = new Widgets.AggregateList();
 			this.graphicList.Document = this.document;
 			this.graphicList.List = this.document.Aggregates;
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.TabIndex = 2;
 			this.paragraphList.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			//	Table des styles de caractère.
+			//	Table des styles de caractÃ¨re.
 			this.characterList = new Widgets.TextStylesList();
 			this.characterList.Document = this.document;
 			this.characterList.Category = StyleCategory.Character;
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateNameToolBar();
 			this.CreateChildrenToolBar();
 
-			//	Sélectionneur.
+			//	SÃ©lectionneur.
 			this.CreateSelectorToolBar();
 
 			this.bottomScrollable = new Scrollable();
@@ -124,13 +124,13 @@ namespace Epsitec.Common.Document.Containers
 			this.category = StyleCategory.Graphic;
 			this.UpdateCategory();
 
-			this.panelContainer.PreferredHeight = 1;  // nécessaire pour mettre à jour la première fois !
+			this.panelContainer.PreferredHeight = 1;  // nÃ©cessaire pour mettre Ã  jour la premiÃ¨re fois !
 //-			this.panelContainer.ForceLayout();
 		}
 
 		protected void CreateCategoryGroup()
 		{
-			//	Crée les boutons radio pour le choix de la catégorie.
+			//	CrÃ©e les boutons radio pour le choix de la catÃ©gorie.
 			this.categoryContainer = new Widget(this.topPage);
 			this.categoryContainer.PreferredHeight = 20+8;
 			this.categoryContainer.Dock = DockStyle.Top;
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateAggregateToolBar()
 		{
-			//	Crée la toolbar principale.
+			//	CrÃ©e la toolbar principale.
 			this.aggregateToolBar = new HToolBar(this.topPage);
 			this.aggregateToolBar.Dock = DockStyle.Top;
 			this.aggregateToolBar.Margins = new Margins(0, 0, 0, -1);
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateChildrenToolBar()
 		{
-			//	Crée la toolbar pour le choix des enfants.
+			//	CrÃ©e la toolbar pour le choix des enfants.
 			this.childrenToolBar = new HToolBar(this.bottomPage);
 			this.childrenToolBar.Dock = DockStyle.Top;
 			this.childrenToolBar.Margins = new Margins(0, 0, 0, 0);
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateNameToolBar()
 		{
-			//	Crée la toolbar pour le nom de l'agrégat.
+			//	CrÃ©e la toolbar pour le nom de l'agrÃ©gat.
 			this.nameToolBar = new HToolBar(this.bottomPage);
 			this.nameToolBar.Dock = DockStyle.Top;
 			this.nameToolBar.Margins = new Margins(0, 0, 0, 0);
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void CreateSelectorToolBar()
 		{
-			//	Crée la toolbar pour le sélectionneur de panneaux.
+			//	CrÃ©e la toolbar pour le sÃ©lectionneur de panneaux.
 			this.selectorContainer = new Widget(this.bottomPage);
 			this.selectorContainer.PreferredHeight = Styles.selectorSize+8;
 			this.selectorContainer.Dock = DockStyle.Top;
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Document.Containers
 
 		public override void Hilite(Objects.Abstract hiliteObject)
 		{
-			//	Met en évidence l'objet survolé par la souris.
+			//	Met en Ã©vidence l'objet survolÃ© par la souris.
 			if ( !this.IsVisible )  return;
 
 			if ( this.graphicList.Rows != this.document.Aggregates.Count )
@@ -366,7 +366,7 @@ namespace Epsitec.Common.Document.Containers
 		
 		protected override void DoUpdateContent()
 		{
-			//	Effectue la mise à jour du contenu.
+			//	Effectue la mise Ã  jour du contenu.
 			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties;
 
 			this.graphicList.List = this.document.Aggregates;
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected override void DoUpdateAggregates(System.Collections.ArrayList aggregateList)
 		{
-			//	Effectue la mise à jour des agrégats.
+			//	Effectue la mise Ã  jour des agrÃ©gats.
 			foreach ( Properties.Aggregate agg in aggregateList )
 			{
 				int row = this.document.Aggregates.IndexOf(agg);
@@ -404,7 +404,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected override void DoUpdateTextStyles(System.Collections.ArrayList textStyleList)
 		{
-			//	Effectue la mise à jour des styles de texte.
+			//	Effectue la mise Ã  jour des styles de texte.
 			foreach ( Text.TextStyle textStyle in textStyleList )
 			{
 				int row = this.document.TextContext.StyleList.StyleMap.GetRank(textStyle);
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected override void DoUpdateProperties(System.Collections.ArrayList propertyList)
 		{
-			//	Effectue la mise à jour des propriétés.
+			//	Effectue la mise Ã  jour des propriÃ©tÃ©s.
 			if ( this.panel != null )
 			{
 				if ( propertyList.Contains(panel.Property) )
@@ -439,7 +439,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdateCategory()
 		{
-			//	Met à jour la catégorie.
+			//	Met Ã  jour la catÃ©gorie.
 			this.graphicList.Visibility = (this.category == StyleCategory.Graphic);
 			this.paragraphList.Visibility = (this.category == StyleCategory.Paragraph);
 			this.characterList.Visibility = (this.category == StyleCategory.Character);
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdateToolBar()
 		{
-			//	Met à jour les boutons de la toolbar.
+			//	Met Ã  jour les boutons de la toolbar.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int total = this.graphicList.Rows;
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdateSelector()
 		{
-			//	Met à jour le sélectionneur du panneau.
+			//	Met Ã  jour le sÃ©lectionneur du panneau.
 			foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
 			{
 				widget.Dispose();  // supprime tous les boutons existants
@@ -533,7 +533,7 @@ namespace Epsitec.Common.Document.Containers
 					}
 
 					//	Ne demande la largeur actuelle de selectorToolBar qu'une seule fois,
-					//	lorsqu'elle est à jour et ne provoque pas de 'dirty layout' !
+					//	lorsqu'elle est Ã  jour et ne provoque pas de 'dirty layout' !
 					if (this.selectorToolBarWidth == 0)
 					{
 						this.selectorToolBarWidth = this.selectorToolBar.ActualWidth;
@@ -562,11 +562,11 @@ namespace Epsitec.Common.Document.Containers
 				int sel = this.document.GetSelectedTextStyle(this.category);
 				if ( sel != -1 )
 				{
-					bool enable = (sel != 0);  // le premier style est forcément le style de base !
+					bool enable = (sel != 0);  // le premier style est forcÃ©ment le style de base !
 
 					if ( !enable && this.SelectorName == "Generator" )
 					{
-						this.SelectorName = null;  // ferme un éventuel panneau ouvert
+						this.SelectorName = null;  // ferme un Ã©ventuel panneau ouvert
 					}
 
 					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Justif",    "TextJustif",    Res.Strings.TextPanel.Justif.Title);
@@ -587,11 +587,11 @@ namespace Epsitec.Common.Document.Containers
 				int sel = this.document.GetSelectedTextStyle(this.category);
 				if ( sel != -1 )
 				{
-					bool enable = (sel != 0);  // le premier style est forcément le style de base !
+					bool enable = (sel != 0);  // le premier style est forcÃ©ment le style de base !
 
 					if ( !enable )
 					{
-						this.SelectorName = null;  // ferme un éventuel panneau ouvert
+						this.SelectorName = null;  // ferme un Ã©ventuel panneau ouvert
 					}
 
 					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
@@ -621,7 +621,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdateAggregateName()
 		{
-			//	Met à jour le panneau pour éditer le nom de l'agrégat sélectionné.
+			//	Met Ã  jour le panneau pour Ã©diter le nom de l'agrÃ©gat sÃ©lectionnÃ©.
 			string text = "";
 
 			if ( this.category == StyleCategory.Graphic )
@@ -648,7 +648,7 @@ namespace Epsitec.Common.Document.Containers
 			this.name.Text = text;
 			this.name.SelectAll();
 
-			if ( this.oneShootSelectName )  // vient-on de créer/dupliquer un style ?
+			if ( this.oneShootSelectName )  // vient-on de crÃ©er/dupliquer un style ?
 			{
 				this.oneShootSelectName = false;
 				this.name.SelectAll();
@@ -660,7 +660,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdateAggregateChildren()
 		{
-			//	Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
+			//	Met Ã  jour le panneau pour Ã©diter les enfants de l'agrÃ©gat sÃ©lectionnÃ©.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			if ( this.category == StyleCategory.Graphic )
@@ -701,7 +701,7 @@ namespace Epsitec.Common.Document.Containers
 				this.nameChildren.Enable = (sel != 0);
 			}
 
-			int overflow = builder.Length-30;  // nb de caractères en "trop"
+			int overflow = builder.Length-30;  // nb de caractÃ¨res en "trop"
 			if ( overflow > 0 )
 			{
 				double size = System.Math.Max((1-((double)overflow/(30*2)))*100, 60);  // zoom 60..100
@@ -714,7 +714,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdatePanel()
 		{
-			//	Met à jour le panneau pour éditer la propriété sélectionnée.
+			//	Met Ã  jour le panneau pour Ã©diter la propriÃ©tÃ© sÃ©lectionnÃ©e.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				Properties.Abstract property = this.PropertyPanel();
@@ -731,7 +731,7 @@ namespace Epsitec.Common.Document.Containers
 					this.styleBriefPanel = new StaticText(this.panelContainer);
 					this.styleBriefPanel.ContentAlignment = ContentAlignment.TopLeft;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
-					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dÃ©passe largement Ã  droite
 					this.styleBriefPanel.Text = brief;
 					this.styleBriefPanel.PreferredHeight = this.styleBriefPanel.GetBestFitSize().Height;
 
@@ -800,7 +800,7 @@ namespace Epsitec.Common.Document.Containers
 					this.styleBriefPanel.ContentAlignment = ContentAlignment.TopLeft;
 					this.styleBriefPanel.PreferredHeight = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
-					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dÃ©passe largement Ã  droite
 					this.styleBriefPanel.Text = brief;
 
 					this.panelContainer.PreferredHeight = h;
@@ -826,7 +826,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Properties.Abstract PropertyPanel()
 		{
-			//	Cherche la propriété pour le panneau.
+			//	Cherche la propriÃ©tÃ© pour le panneau.
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg == null )  return null;
 
@@ -838,7 +838,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void ClosePanel()
 		{
-			//	Ferme le panneau pour la propriété et la roue des couleurs.
+			//	Ferme le panneau pour la propriÃ©tÃ© et la roue des couleurs.
 			this.colorSelector.Visibility = false;
 			this.colorSelector.BackColor = Color.Empty;
 
@@ -873,7 +873,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void ShowSelection()
 		{
-			//	Montre la ligne sélectionnée dans la liste.
+			//	Montre la ligne sÃ©lectionnÃ©e dans la liste.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				this.graphicList.ShowSelect();
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Document.Containers
 
 		public void SetCategory(string name)
 		{
-			//	Choix d'une catégorie à partir d'une string, depuis le monde extérieur.
+			//	Choix d'une catÃ©gorie Ã  partir d'une string, depuis le monde extÃ©rieur.
 			if ( name == "Graphic"   )  this.Category = StyleCategory.Graphic;
 			if ( name == "Paragraph" )  this.Category = StyleCategory.Paragraph;
 			if ( name == "Character" )  this.Category = StyleCategory.Character;
@@ -911,7 +911,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected StyleCategory Category
 		{
-			//	Catégorie sélectionnée (Graphic, Paragraph ou Character).
+			//	CatÃ©gorie sÃ©lectionnÃ©e (Graphic, Paragraph ou Character).
 			get
 			{
 				return this.category;
@@ -931,7 +931,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void StylesShiftRanks(int startRank)
 		{
-			//	Décale le rank de tous les styles plus grands ou égaux à startRank.
+			//	DÃ©cale le rank de tous les styles plus grands ou Ã©gaux Ã  startRank.
 			Text.TextStyle[] styles = this.TextStyleList.List;
 			foreach ( Text.TextStyle style in styles )
 			{
@@ -978,7 +978,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonAggregateNewEmpty(object sender, MessageEventArgs e)
 		{
-			//	Crée un nouvel agrégat.
+			//	CrÃ©e un nouvel agrÃ©gat.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int sel = this.document.Aggregates.Selected;
@@ -1015,14 +1015,14 @@ namespace Epsitec.Common.Document.Containers
 
 				this.oneShootSelectName = true;
 
-				// plus nécessaire: c'est maintenant fait dans NotifyTextStyleListChanged();
+				// plus nÃ©cessaire: c'est maintenant fait dans NotifyTextStyleListChanged();
 				// this.SetDirtyContent();
 			}
 		}
 
 		private void HandleButtonAggregateNew3(object sender, MessageEventArgs e)
 		{
-			//	Crée un nouvel agrégat.
+			//	CrÃ©e un nouvel agrÃ©gat.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int sel = this.document.Aggregates.Selected;
@@ -1034,7 +1034,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonAggregateNewAll(object sender, MessageEventArgs e)
 		{
-			//	Crée un nouvel agrégat.
+			//	CrÃ©e un nouvel agrÃ©gat.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int sel = this.document.Aggregates.Selected;
@@ -1046,7 +1046,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonAggregateDuplicate(object sender, MessageEventArgs e)
 		{
-			//	Duplique un agrégat.
+			//	Duplique un agrÃ©gat.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int sel = this.document.Aggregates.Selected;
@@ -1089,7 +1089,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonAggregateUp(object sender, MessageEventArgs e)
 		{
-			//	Monte d'une ligne l'agrégat sélectionné.
+			//	Monte d'une ligne l'agrÃ©gat sÃ©lectionnÃ©.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int sel = this.document.Aggregates.Selected;
@@ -1121,7 +1121,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonAggregateDown(object sender, MessageEventArgs e)
 		{
-			//	Descend d'une ligne l'agrégat sélectionné.
+			//	Descend d'une ligne l'agrÃ©gat sÃ©lectionnÃ©.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int sel = this.document.Aggregates.Selected;
@@ -1153,7 +1153,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonAggregateDelete(object sender, MessageEventArgs e)
 		{
-			//	Supprime l'agrégat sélectionné.
+			//	Supprime l'agrÃ©gat sÃ©lectionnÃ©.
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int sel = this.document.Aggregates.Selected;
@@ -1186,7 +1186,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleAggregatesTableSelectionChanged(object sender)
 		{
-			//	Sélection changée dans la liste.
+			//	SÃ©lection changÃ©e dans la liste.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 
 			if ( this.document.Aggregates.Selected != this.graphicList.SelectedRow )
@@ -1216,7 +1216,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleAggregatesTableDoubleClicked(object sender, MessageEventArgs e)
 		{
-			//	Liste double-cliquée.
+			//	Liste double-cliquÃ©e.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 			this.name.SelectAll();
 			this.name.Focus();
@@ -1224,7 +1224,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleAggregatesTableFlyOverChanged(object sender)
 		{
-			//	La cellule survolée a changé.
+			//	La cellule survolÃ©e a changÃ©.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 			int rank = this.graphicList.FlyOverRow;
 
@@ -1251,7 +1251,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleStylesTableSelectionChanged(object sender)
 		{
-			//	Sélection changée dans la liste.
+			//	SÃ©lection changÃ©e dans la liste.
 			System.Diagnostics.Debug.Assert(this.category != StyleCategory.Graphic);
 			this.document.SetSelectedTextStyle(this.category, this.TextStyleList.SelectedRow);
 
@@ -1265,7 +1265,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleStylesTableDoubleClicked(object sender, MessageEventArgs e)
 		{
-			//	Liste double-cliquée.
+			//	Liste double-cliquÃ©e.
 			System.Diagnostics.Debug.Assert(this.category != StyleCategory.Graphic);
 			this.name.SelectAll();
 			this.name.Focus();
@@ -1273,7 +1273,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleMenuChildrenOpenPressed(object sender)
 		{
-			//	Crée un nouveau parent.
+			//	CrÃ©e un nouveau parent.
 			Widget widget = this.dummyChildren;
 			VMenu menu = this.CreateMenuChildren();
 			if ( menu == null )  return;
@@ -1285,7 +1285,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonStyleNew(object sender, MessageEventArgs e)
 		{
-			//	Crée une nouvelle propriété.
+			//	CrÃ©e une nouvelle propriÃ©tÃ©.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 			IconButton button = sender as IconButton;
 			VMenu menu = this.CreateMenuTypes();
@@ -1297,7 +1297,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
 		{
-			//	Supprime la propriété sélectionnée.
+			//	Supprime la propriÃ©tÃ© sÃ©lectionnÃ©e.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateStyleDelete(agg, Properties.Abstract.TypeName(this.SelectorName));
@@ -1307,7 +1307,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleNameTextChanged(object sender)
 		{
-			//	Le nom de l'agrégat a changé.
+			//	Le nom de l'agrÃ©gat a changÃ©.
 			if ( this.ignoreChanged )  return;
 
 			if ( this.category == StyleCategory.Graphic )
@@ -1359,7 +1359,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandlePanelChanged(object sender)
 		{
-			//	Le contenu du panneau a changé.
+			//	Le contenu du panneau a changÃ©.
 			int sel = this.graphicList.SelectedRow;
 			if ( sel != -1 )
 			{
@@ -1377,7 +1377,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleOriginColorChanged(object sender)
 		{
-			//	Le widget qui détermine la couleur d'origine a changé.
+			//	Le widget qui dÃ©termine la couleur d'origine a changÃ©.
 			this.colorSelector.Visibility = true;
 
 			if ( this.panel != null )
@@ -1399,13 +1399,13 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleOriginColorClosed(object sender)
 		{
-			//	Le widget qui détermine la couleur d'origine doit être fermé.
+			//	Le widget qui dÃ©termine la couleur d'origine doit Ãªtre fermÃ©.
 			this.HandleColorSelectorClosed(sender);
 		}
 
 		private void HandleColorSelectorChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			//	Couleur changée dans la roue.
+			//	Couleur changÃ©e dans la roue.
 			if ( this.ignoreChanged )  return;
 
 			if ( this.panel != null )
@@ -1493,7 +1493,7 @@ namespace Epsitec.Common.Document.Containers
 		#region MenuChildren
 		protected VMenu CreateMenuChildren()
 		{
-			//	Construit le menu pour choisir un enfant à ajouter.
+			//	Construit le menu pour choisir un enfant Ã  ajouter.
 			VMenu menu = new VMenu();
 			int used = 0;
 
@@ -1523,7 +1523,7 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle[] styles = this.TextStyleList.List;
 				Text.TextStyle currentStyle = styles[sel];
 
-				//	Met les styles de paragraphe, avec des icônes "radio".
+				//	Met les styles de paragraphe, avec des icÃ´nes "radio".
 				for ( int i=0 ; i<styles.Length ; i++ )
 				{
 					Text.TextStyle style = styles[i];
@@ -1539,7 +1539,7 @@ namespace Epsitec.Common.Document.Containers
 					used ++;
 				}
 
-				//	Met les styles de caractère, avec des icônes "check".
+				//	Met les styles de caractÃ¨re, avec des icÃ´nes "check".
 				bool firstCharacter = true;
 				styles = this.characterList.List;
 				for ( int i=1 ; i<styles.Length ; i++ )  // saute le style de base (toujours le premier)
@@ -1683,7 +1683,7 @@ namespace Epsitec.Common.Document.Containers
 		
 		protected Properties.Aggregate GetAggregate()
 		{
-			//	Donne l'agrégat sélectionné.
+			//	Donne l'agrÃ©gat sÃ©lectionnÃ©.
 			int sel = this.document.Aggregates.Selected;
 
 			if ( sel == -1 )  return null;
@@ -1694,7 +1694,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Widgets.TextStylesList TextStyleList
 		{
-			//	Donne le widget pour la liste des styles selon la catégorie actuelle.
+			//	Donne le widget pour la liste des styles selon la catÃ©gorie actuelle.
 			get
 			{
 				if ( this.category == StyleCategory.Paragraph )  return this.paragraphList;
@@ -1705,7 +1705,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected string SelectorName
 		{
-			//	Nom du panneau sélectionné selon la catégorie actuelle.
+			//	Nom du panneau sÃ©lectionnÃ© selon la catÃ©gorie actuelle.
 			get
 			{
 				int i = (int) this.category;

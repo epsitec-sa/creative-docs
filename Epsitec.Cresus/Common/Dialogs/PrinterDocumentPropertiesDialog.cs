@@ -1,12 +1,12 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// La classe PrinterDocumentProperties présente le dialogue pour choisir
-	/// les préférences de l'imprimante (ce sont les réglages avancés propres
-	/// à l'imprimante et généralement pas accessibles via programmation).
+	/// La classe PrinterDocumentProperties prÃ©sente le dialogue pour choisir
+	/// les prÃ©fÃ©rences de l'imprimante (ce sont les rÃ©glages avancÃ©s propres
+	/// Ã  l'imprimante et gÃ©nÃ©ralement pas accessibles via programmation).
 	/// </summary>
 	public class PrinterDocumentPropertiesDialog : PrintDialog
 	{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			//	Pour pouvoir travailler, nous avons besoins des pointeurs vers les structures
 			//	internes DEVMODE; .NET permet heureusement d'obtenir un HDEVMODE et c'est facile
-			//	ensuite d'obtenir la mémoire en faisant un "GlobalLock".
+			//	ensuite d'obtenir la mÃ©moire en faisant un "GlobalLock".
 			
 			System.IntPtr devModeHandle  = this.document.PrinterSettings.GetDevMode ();
 
@@ -65,8 +65,8 @@ namespace Epsitec.Common.Dialogs
 				string printerName = this.dialog.PrinterSettings.PrinterName;
 				string deviceName  = printerName;
 				
-				//	Obtient un handle de l'imprimante et affiche le dialogue des réglages
-				//	avancés (via winspool.drv), puis copie les réglages du DEVMODE vers
+				//	Obtient un handle de l'imprimante et affiche le dialogue des rÃ©glages
+				//	avancÃ©s (via winspool.drv), puis copie les rÃ©glages du DEVMODE vers
 				//	les classes de support .NET :
 				
 				if (PrinterDocumentPropertiesDialog.OpenPrinter (printerName, out printerHandle, printerDefaults))
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			finally
 			{
-				//	Dans tous les cas, ne pas oublier de libérer la mémoire globale associée
+				//	Dans tous les cas, ne pas oublier de libÃ©rer la mÃ©moire globale associÃ©e
 				//	au HDEVMODE :
 
 				PrinterDocumentPropertiesDialog.GlobalUnlock (devModeHandle);

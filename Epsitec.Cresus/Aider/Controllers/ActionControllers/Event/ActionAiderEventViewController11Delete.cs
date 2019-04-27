@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -39,7 +39,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (this.Entity.State != Enumerations.EventState.Validated)
 			{
-				Logic.BusinessRuleException ("Cette action fonctionne uniquement pour supprimer un act validé par erreur");
+				Logic.BusinessRuleException ("Cette action fonctionne uniquement pour supprimer un act validÃ© par erreur");
 			}
 
 			if (user.IsAdmin ())

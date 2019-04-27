@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Préparer un acte ecclésiastique");
+			return Resources.Text ("PrÃ©parer un acte ecclÃ©siastique");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -45,20 +45,20 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var favoritesPlaces = AiderOfficeManagementEntity.GetOfficeEventPlaces (this.BusinessContext, this.Entity);
 
 			form
-				.Title ("Préparation d'un acte")
+				.Title ("PrÃ©paration d'un acte")
 				.Field<EventType> ()
 					.Title ("Registre")
 				.End ()
 				.Field<EventKind> ()
-					.Title ("Type d'événement")
+					.Title ("Type d'Ã©vÃ©nement")
 					.InitialValue (EventKind.None)
 				.End ()
 				.Field<AiderEventPlaceEntity> ()
-					.Title ("Lieu de la célébration")
+					.Title ("Lieu de la cÃ©lÃ©bration")
 					.WithFavorites (favoritesPlaces)
 				.End ()
 				.Field<Date> ()
-					.Title ("Date de la célébration")
+					.Title ("Date de la cÃ©lÃ©bration")
 					.InitialValue (Date.Today)
 				.End ()
 			.End ();
@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (place.IsNull ())
 			{
-				throw new BusinessRuleException ("Il faut choisir un lieu de célébration");
+				throw new BusinessRuleException ("Il faut choisir un lieu de cÃ©lÃ©bration");
 			}
 
 			AiderEventEntity.Create (

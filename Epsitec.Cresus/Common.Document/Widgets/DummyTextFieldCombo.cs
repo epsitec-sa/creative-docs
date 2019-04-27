@@ -5,8 +5,8 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe DummyTextFieldCombo est un TextFieldCombo qui ne déroule aucun menu.
-	/// Il faut utiliser DummyTextFieldCombo.Button.Clicked pour dérouler qq chose à choix.
+	/// La classe DummyTextFieldCombo est un TextFieldCombo qui ne dÃ©roule aucun menu.
+	/// Il faut utiliser DummyTextFieldCombo.Button.Clicked pour dÃ©rouler qq chose Ã  choix.
 	/// </summary>
 	public class DummyTextFieldCombo : TextFieldCombo
 	{

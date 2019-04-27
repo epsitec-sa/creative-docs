@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public abstract void BindCreateItem(TileDataItem data, ICollectionAccessor collectionAccessor);
 
 		public static readonly FormattedText DefaultEmptyText = new FormattedText ("<i>vide</i>");
-		public static readonly FormattedText DefaultDefinitionInProgressText = new FormattedText ("<i>définition en cours</i>");
+		public static readonly FormattedText DefaultDefinitionInProgressText = new FormattedText ("<i>dÃ©finition en cours</i>");
 
 		private readonly string name;
 	}

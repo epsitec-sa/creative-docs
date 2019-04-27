@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
 	/// La classe GeneratorEnumerator permet de trouver rapidement tous les
-	/// textes correspondant à un générateur donné.
+	/// textes correspondant Ã  un gÃ©nÃ©rateur donnÃ©.
 	/// </summary>
 	public class GeneratorEnumerator : System.IDisposable, System.Collections.IEnumerator, System.Collections.IEnumerable
 	{
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text.Internal
 		public bool MoveNext()
 		{
 			//	Recherche l'occurrence suivante dans le texte; il faut appeler
-			//	cette méthode au moins une fois avant de pouvoir lire la position
+			//	cette mÃ©thode au moins une fois avant de pouvoir lire la position
 			//	du curseur.
 			
 			if (this.atEndOfText)
@@ -81,15 +81,15 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (this.atStartOfText)
 				{
-					//	Au début du texte, on ne va pas avancer, mais simplement
-					//	analyser le code lié à la première tranche :
+					//	Au dÃ©but du texte, on ne va pas avancer, mais simplement
+					//	analyser le code liÃ© Ã  la premiÃ¨re tranche :
 					
 					this.atStartOfText = false;
 				}
 				else
 				{
 					//	Dans le texte, on commence par sauter l'ancienne tranche
-					//	déjà analysée et on va s'intéresser à la suite :
+					//	dÃ©jÃ  analysÃ©e et on va s'intÃ©resser Ã  la suite :
 					
 					this.story.MoveCursor (this.cursor, length);
 					code = next;
@@ -105,9 +105,9 @@ namespace Epsitec.Common.Text.Internal
 					continue;
 				}
 				
-				//	Le code n'a pas encore été classé dans la catégorie de ceux
-				//	qui ne correspondent pas à notre générateur, c'est donc un
-				//	candidat sérieux :
+				//	Le code n'a pas encore Ã©tÃ© classÃ© dans la catÃ©gorie de ceux
+				//	qui ne correspondent pas Ã  notre gÃ©nÃ©rateur, c'est donc un
+				//	candidat sÃ©rieux :
 				
 				Properties.GeneratorProperty generator = this.GetGeneratorProperty (code);
 				
@@ -156,8 +156,8 @@ namespace Epsitec.Common.Text.Internal
 				}
 				else
 				{
-					//	Evolue-t-on actuellement dans un paragraphe géré par le
-					//	même paragraph manager que celui qui nous intéresse ?
+					//	Evolue-t-on actuellement dans un paragraphe gÃ©rÃ© par le
+					//	mÃªme paragraph manager que celui qui nous intÃ©resse ?
 						
 					if (Property.CompareEqualContents (this.property, property))
 					{
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Text.Internal
 					
 				foreach (Properties.GeneratorProperty generator in properties)
 				{
-					//	On vient de trouver un générateur qui correspond à ce
+					//	On vient de trouver un gÃ©nÃ©rateur qui correspond Ã  ce
 					//	que nous rechercons :
 						
 					if (generator.Generator == this.generator)
@@ -285,9 +285,9 @@ namespace Epsitec.Common.Text.Internal
 		private enum State
 		{
 			None,
-			Continue,							//	continue la séquence normalement
-			RestartPending,						//	il faudra reprendre au début
-			Restarted							//	on vient de reprendre au début
+			Continue,							//	continue la sÃ©quence normalement
+			RestartPending,						//	il faudra reprendre au dÃ©but
+			Restarted							//	on vient de reprendre au dÃ©but
 		}
 		
 		private TextStory						story;

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
 using NUnit.Framework;
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Tests.Text.Exchange
 
 			context.DefaultTextStyle = charStyle;
 			context.StyleList.StyleMap.SetRank (null, charStyle, 0);
-			context.StyleList.StyleMap.SetCaption (null, charStyle, "Caractères par défaut");
+			context.StyleList.StyleMap.SetCaption (null, charStyle, "CaractÃ¨res par dÃ©faut");
 		}
 		
 		private static void CreateEmptyTextStoryAndNavigator(TextContext context, out TextStory story, out Epsitec.Common.Text.TextNavigator navigator)
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Tests.Text.Exchange
 					}
 				}
 				
-				//	La façon "haut niveau" de faire :
+				//	La faÃ§on "haut niveau" de faire :
 				
 				if (textWrapper.Defined.IsFontFaceDefined)
 				{

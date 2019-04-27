@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Tests.UI
 			text1.Margins = new Epsitec.Common.Drawing.Margins (4, 0, 4, 0);
 			text1.PreferredSize = new Epsitec.Common.Drawing.Size (60, 24);
 
-			text2.Text = "Prénom :";
+			text2.Text = "PrÃ©nom :";
 			text2.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
 			text2.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft;
 			text2.Margins = new Epsitec.Common.Drawing.Margins (4, 0, 28, 0);

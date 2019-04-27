@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document
 
 		public void UpdateAllSettings()
 		{
-			//	Met à jour tous les réglages dans les différents dialogues.
+			//	Met Ã  jour tous les rÃ©glages dans les diffÃ©rents dialogues.
 			this.UpdateSettings(false);
 			this.UpdatePrint(false);
 			this.UpdateExport(false);
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document
 
 		public void UpdateInfos()
 		{
-			//	Met à jour le dialogue des informations.
+			//	Met Ã  jour le dialogue des informations.
 			if ( this.windowInfos == null || !this.windowInfos.IsVisible )  return;
 
 			TextFieldMulti multi = this.windowInfos.Root.FindChild("Infos") as TextFieldMulti;
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document
 		#region Settings
 		public void BuildSettings(Window window)
 		{
-			//	Peuple le dialogue des réglages.
+			//	Peuple le dialogue des rÃ©glages.
 			if ( this.windowSettings == null )
 			{
 				this.windowSettings = window;
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Document
 
 		protected void UpdateSettings(bool force)
 		{
-			//	Appelé lorsque les réglages ont changé.
+			//	AppelÃ© lorsque les rÃ©glages ont changÃ©.
 			if ( !force )
 			{
 				if ( this.windowSettings == null || !this.windowSettings.IsVisible )  return;
@@ -209,30 +209,30 @@ namespace Epsitec.Common.Document
 
 		public void UpdateGuides()
 		{
-			//	Appelé lorsque les repères ont changé.
+			//	AppelÃ© lorsque les repÃ¨res ont changÃ©.
 			if ( this.containerGuides == null )  return;
 			this.containerGuides.SetDirtyContent();
 		}
 
 		public void SelectGuide(int rank)
 		{
-			//	Sélectionne un repère.
+			//	SÃ©lectionne un repÃ¨re.
 			if ( this.containerGuides == null )  return;
 			this.containerGuides.SelectGuide = rank;
 		}
 
 		public void UpdateFontsAdded()
 		{
-			//	Appelé lorsque la liste de polices s'est allongée.
-			//	Ceci peut arriver après l'ouverture d'un document qui contenait des polices
-			//	non installées.
+			//	AppelÃ© lorsque la liste de polices s'est allongÃ©e.
+			//	Ceci peut arriver aprÃ¨s l'ouverture d'un document qui contenait des polices
+			//	non installÃ©es.
 			if ( this.containerFonts == null )  return;
 			this.containerFonts.UpdateListAdded();
 		}
 
 		public void UpdateFonts()
 		{
-			//	Appelé lorsque la liste de polices rapides a changé.
+			//	AppelÃ© lorsque la liste de polices rapides a changÃ©.
 			if ( this.containerFonts == null )  return;
 			this.containerFonts.UpdateList();
 		}
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Document
 				this.CreateBool(container, "PrintReverse");
 				DocumentDialogs.CreateSeparator(container);
 
-				//	Onglet Paramètres:
+				//	Onglet ParamÃ¨tres:
 				parent = book.FindChild("Param");
 				container = new Widget(parent);
 				container.Name = "Container";
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Document
 				this.CreateCombo(container, "PrintImageFilterB");
 				DocumentDialogs.CreateSeparator(container);
 
-				//	Onglet Pré-presse:
+				//	Onglet PrÃ©-presse:
 				parent = book.FindChild("Publisher");
 				container = new Widget(parent);
 				container.Name = "Container";
@@ -324,7 +324,7 @@ namespace Epsitec.Common.Document
 
 		protected void UpdatePrint(bool force)
 		{
-			//	Appelé lorsque les réglages ont changé.
+			//	AppelÃ© lorsque les rÃ©glages ont changÃ©.
 			if ( !force )
 			{
 				if ( this.windowPrint == null || !this.windowPrint.IsVisible )  return;
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Document
 
 		public void UpdatePrintPages()
 		{
-			//	Appelé lorsque les pages ont changé.
+			//	AppelÃ© lorsque les pages ont changÃ©.
 			if ( this.windowPrint == null || !this.windowPrint.IsVisible )  return;
 
 			this.UpdateRangeField("PrintRange");
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Document
 				Widget parent, container;
 				Widget book = this.windowExport.Root.FindChild("Book");
 
-				//	Onglet Général:
+				//	Onglet GÃ©nÃ©ral:
 				parent = book.FindChild("Generic");
 				container = new Widget(parent);
 				container.Name = "Container";
@@ -403,7 +403,7 @@ namespace Epsitec.Common.Document
 
 		protected void UpdateExport(bool force)
 		{
-			//	Appelé lorsque les réglages ont changé.
+			//	AppelÃ© lorsque les rÃ©glages ont changÃ©.
 			if ( !force )
 			{
 				if ( this.windowExport == null || !this.windowExport.IsVisible )  return;
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Document
 				Widget parent, container;
 				Widget book = this.windowExportPDF.Root.FindChild("Book");
 
-				//	Onglet Général:
+				//	Onglet GÃ©nÃ©ral:
 				parent = book.FindChild("Generic");
 				container = new Widget(parent);
 				container.Name = "Container";
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Document
 				this.CreateCombo(container, "ExportPDFImageFilterB");
 				DocumentDialogs.CreateSeparator(container);
 
-				//	Onglet Pré-presse:
+				//	Onglet PrÃ©-presse:
 				parent = book.FindChild("Publisher");
 				container = new Widget(parent);
 				container.Name = "Container";
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Document
 
 		protected void UpdateExportPDF(bool force)
 		{
-			//	Appelé lorsque les réglages ont changé.
+			//	AppelÃ© lorsque les rÃ©glages ont changÃ©.
 			if ( !force )
 			{
 				if ( this.windowExportPDF == null || !this.windowExportPDF.IsVisible )  return;
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Document
 
 		public void UpdateExportPDFPages()
 		{
-			//	Appelé lorsque les pages ont changé.
+			//	AppelÃ© lorsque les pages ont changÃ©.
 			if ( this.windowExportPDF == null || !this.windowExportPDF.IsVisible )  return;
 
 			this.UpdateRangeField("ExportPDFRange");
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Document
 
         protected void UpdateExportICO(bool force)
         {
-            //	Appelé lorsque les réglages ont changé.
+            //	AppelÃ© lorsque les rÃ©glages ont changÃ©.
             if (!force)
             {
                 if (this.windowExportICO == null || !this.windowExportICO.IsVisible)  return;
@@ -584,7 +584,7 @@ namespace Epsitec.Common.Document
 
         public void UpdateExportICOPages()
         {
-            //	Appelé lorsque les pages ont changé.
+            //	AppelÃ© lorsque les pages ont changÃ©.
             if (this.windowExportICO == null || !this.windowExportICO.IsVisible)  return;
         }
         #endregion
@@ -603,7 +603,7 @@ namespace Epsitec.Common.Document
 
 		public void UpdateGlyphs()
 		{
-			//	Met à jour le dialogue des informations.
+			//	Met Ã  jour le dialogue des informations.
 			if ( this.windowGlyphs == null || !this.windowGlyphs.IsVisible )  return;
 		}
 		#endregion
@@ -612,7 +612,7 @@ namespace Epsitec.Common.Document
 		#region WidgetTitle
 		public static void CreateTitle(Widget parent, string labelText)
 		{
-			//	Crée un widget de titre pour un onglet.
+			//	CrÃ©e un widget de titre pour un onglet.
 #if false
 			StaticText text = new StaticText(parent);
 			text.Text = Misc.Bold(labelText);
@@ -626,8 +626,8 @@ namespace Epsitec.Common.Document
 			sep.Margins = new Margins(0, 0, 3, 6);
 #else
 			Separator sep = new Separator(parent);
-//@			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
-//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
+//@			sep.PreferredWidth = parent.PreferredWidth;  // fenÃªtre trop grande
+//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts Ã  l'ouverture
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 6, 3);
@@ -642,10 +642,10 @@ namespace Epsitec.Common.Document
 
 		public static void CreateSeparator(Widget parent)
 		{
-			//	Crée un séparateur pour un onglet.
+			//	CrÃ©e un sÃ©parateur pour un onglet.
 			Separator sep = new Separator(parent);
-//@			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
-//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
+//@			sep.PreferredWidth = parent.PreferredWidth;  // fenÃªtre trop grande
+//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts Ã  l'ouverture
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 4, 6);
@@ -655,7 +655,7 @@ namespace Epsitec.Common.Document
 		#region WidgetLabel
 		public static void CreateLabel(Widget parent, string label, string info)
 		{
-			//	Crée des widgets pour afficher un texte fixe.
+			//	CrÃ©e des widgets pour afficher un texte fixe.
 			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 18;
 			container.Dock = DockStyle.Top;
@@ -678,7 +678,7 @@ namespace Epsitec.Common.Document
 		#region WidgetBool
 		protected void CreateBool(Widget parent, string name)
 		{
-			//	Crée un widget pour éditer un réglage de type Bool.
+			//	CrÃ©e un widget pour Ã©diter un rÃ©glage de type Bool.
 			Settings.Abstract settings = this.document.Settings.Get(name);
 			if ( settings == null )  return;
 			Settings.Bool sBool = settings as Settings.Bool;
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Document
 		#region WidgetDouble
 		protected void CreateDouble(Widget parent, string name)
 		{
-			//	Crée des widgets pour éditer un réglage de type Double.
+			//	CrÃ©e des widgets pour Ã©diter un rÃ©glage de type Double.
 			Settings.Abstract settings = this.document.Settings.Get(name);
 			if ( settings == null )  return;
 			Settings.Double sDouble = settings as Settings.Double;
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Document
 			{
 				Size size = this.document.Printer.ImagePixelSize;
 
-				//	Ligne supplémentaire pour la largeur.
+				//	Ligne supplÃ©mentaire pour la largeur.
 				container = new Viewport(parent);
 				container.PreferredHeight = 22;
 				container.TabIndex = this.tabIndex++;
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Document
 				field.Margins = new Margins(0, 0, 0, 0);
 				this.WidgetsTableAdd(field, "");
 
-				//	Ligne supplémentaire pour la hauteur.
+				//	Ligne supplÃ©mentaire pour la hauteur.
 				container = new Viewport(parent);
 				container.PreferredHeight = 22;
 				container.TabIndex = this.tabIndex++;
@@ -973,7 +973,7 @@ namespace Epsitec.Common.Document
 		#region WidgetPoint
 		protected void CreatePoint(Widget parent, string name)
 		{
-			//	Crée des widgets pour éditer un réglage de type Point.
+			//	CrÃ©e des widgets pour Ã©diter un rÃ©glage de type Point.
 			Settings.Abstract settings = this.document.Settings.Get(name);
 			if ( settings == null )  return;
 			Settings.Point sPoint = settings as Settings.Point;
@@ -1281,7 +1281,7 @@ namespace Epsitec.Common.Document
 		#region WidgetCombo
 		protected void CreateCombo(Widget parent, string name)
 		{
-			//	Crée un widget combo pour éditer un réglage de type Integer.
+			//	CrÃ©e un widget combo pour Ã©diter un rÃ©glage de type Integer.
 			Settings.Abstract settings = this.document.Settings.Get(name);
 			if ( settings == null )  return;
 			Settings.Integer sInteger = settings as Settings.Integer;
@@ -1359,7 +1359,7 @@ namespace Epsitec.Common.Document
 		#region WidgetFilename
 		protected void CreateFilename(Widget parent, string name)
 		{
-			//	Crée des widgets pour choisir un nom de fichier.
+			//	CrÃ©e des widgets pour choisir un nom de fichier.
 			Settings.Abstract settings = this.document.Settings.Get(name);
 			if ( settings == null )  return;
 			Settings.String sString = settings as Settings.String;
@@ -1424,7 +1424,7 @@ namespace Epsitec.Common.Document
 		#region WidgetPaper
 		protected void CreatePaper(Widget parent)
 		{
-			//	Crée un widget combo pour éditer le format d'une page.
+			//	CrÃ©e un widget combo pour Ã©diter le format d'une page.
 			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
@@ -1500,7 +1500,7 @@ namespace Epsitec.Common.Document
 			if ( field == null )  return;
 
 			int sel = field.SelectedItemIndex;
-			if ( sel == 0 )  return;  // personnalisé ?
+			if ( sel == 0 )  return;  // personnalisÃ© ?
 
 			Settings.Abstract settings = this.document.Settings.Get("PageSize");
 			if ( settings == null )  return;
@@ -1590,7 +1590,7 @@ namespace Epsitec.Common.Document
 			"Slide",
 			"Letter US",
 			"Legal",
-			"Tabloïd",
+			"TabloÃ¯d",
 			"Letter - Half",
 			"Legal - Half",
 			"Executive US",
@@ -1598,7 +1598,7 @@ namespace Epsitec.Common.Document
 			"Poster",
 			"A1",
 			"A2",
-			"A3+ (329×483)",
+			"A3+ (329Ã—483)",
 			"A3",
 			"A4",
 			"A5",
@@ -1612,11 +1612,11 @@ namespace Epsitec.Common.Document
 			"C4",
 			"C5",
 			"C6",
-			"RA2 (430×610)",
-			"RA3 (305×430)",
-			"RA4 (215×305)",
+			"RA2 (430Ã—610)",
+			"RA3 (305Ã—430)",
+			"RA4 (215Ã—305)",
 			"DL",
-			"SRA3 (320×450)",
+			"SRA3 (320Ã—450)",
 		};
 
 		protected static Size PaperRankToSize(int rank)
@@ -1627,7 +1627,7 @@ namespace Epsitec.Common.Document
 				case  1:  size = new Size(279.400, 186.182);  break;  // Slide
 				case  2:  size = new Size(215.900, 279.400);  break;  // Lettre US
 				case  3:  size = new Size(215.900, 355.600);  break;  // Legal
-				case  4:  size = new Size(279.400, 431.800);  break;  // Tabloïd
+				case  4:  size = new Size(279.400, 431.800);  break;  // TabloÃ¯d
 				case  5:  size = new Size(139.700, 215.900);  break;  // Letter - Half
 				case  6:  size = new Size(177.800, 215.900);  break;  // Legal - Half
 				case  7:  size = new Size(184.150, 266.700);  break;  // Executive US
@@ -1680,7 +1680,7 @@ namespace Epsitec.Common.Document
 		#region WidgetPrinter
 		protected void CreatePrinter(Widget parent, string name)
 		{
-			//	Crée des widgets pour choisir un nom d'imprimante.
+			//	CrÃ©e des widgets pour choisir un nom d'imprimante.
 			Settings.Abstract settings = this.document.Settings.Get(name);
 			if ( settings == null )  return;
 			Settings.String sString = settings as Settings.String;
@@ -1770,7 +1770,7 @@ namespace Epsitec.Common.Document
 		#region WidgetRange
 		protected void CreateRange(Widget parent, string name)
 		{
-			//	Crée des widgets pour choisir les pages à imprimer.
+			//	CrÃ©e des widgets pour choisir les pages Ã  imprimer.
 			Settings.Abstract settings = this.document.Settings.Get(name);
 			if ( settings == null )  return;
 			Settings.Range sRange = settings as Settings.Range;
@@ -1793,7 +1793,7 @@ namespace Epsitec.Common.Document
 			radio.Index = 1;
 			this.WidgetsTableAdd(radio, ".All");
 			
-			//	début from-to
+			//	dÃ©but from-to
 			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 20;
 			container.TabIndex = this.tabIndex++;
@@ -2004,7 +2004,7 @@ namespace Epsitec.Common.Document
 			if ( this.windowSettings != null )
 			{
 				this.containerGuides.SetParent(null);
-				this.containerFonts.SetParent(null);  // il ne faut pas détruire ces widgets
+				this.containerFonts.SetParent(null);  // il ne faut pas dÃ©truire ces widgets
 
 				Widget parent = this.windowSettings.Root.FindChild("BookDocument");
 				this.DeletePage(parent, "Format");
@@ -2082,7 +2082,7 @@ namespace Epsitec.Common.Document
 
 		protected void UpdateDialogSettings(string dialog)
 		{
-			//	Met à jour tous les widgets d'un dialogue.
+			//	Met Ã  jour tous les widgets d'un dialogue.
 			this.ignoreChanged = true;
 
 			int total = this.document.Settings.Count;
@@ -2192,7 +2192,7 @@ namespace Epsitec.Common.Document
 
 		protected void EnableWidget(string name, bool enabled)
 		{
-			//	Modifie l'état d'un widget.
+			//	Modifie l'Ã©tat d'un widget.
 			Widget widget = this.WidgetsTableSearch(name, "");
 			if ( widget == null )  return;
 			widget.Enable = (enabled);

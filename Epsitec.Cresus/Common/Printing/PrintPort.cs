@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Printing
 {
 	/// <summary>
-	/// La classe PrintPort permet d'imprimer des éléments graphiques simples.
+	/// La classe PrintPort permet d'imprimer des Ã©lÃ©ments graphiques simples.
 	/// </summary>
 	public sealed class PrintPort : Drawing.IPaintPort
 	{
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Printing
 
 		private void SetClippingRectangle(double x, double y, double width, double height)
 		{
-			//	Le rectangle de clipping est passé en coordonnées brutes (sans aucune
+			//	Le rectangle de clipping est passÃ© en coordonnÃ©es brutes (sans aucune
 			//	transformation), c'est pourquoi on supprime temporairement la transformation
 			//	avant d'appliquer le rectangle de clipping :
 			
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Printing
 				return;
 			}
 			
-			//	Le rectangle de clipping est passé en coordonnées brutes (sans aucune
+			//	Le rectangle de clipping est passÃ© en coordonnÃ©es brutes (sans aucune
 			//	transformation), c'est pourquoi on supprime temporairement la transformation
 			//	avant d'appliquer le rectangle de clipping :
 			
@@ -536,9 +536,9 @@ namespace Epsitec.Common.Printing
 			
 			this.UpdateBrush ();
 			
-			//	Comme GDI+ ne sait pas accéder à une fonte par ses glyphes, on triche ici
-			//	en peignant la surface des caractères, en attendant d'avoir le temps de
-			//	faire appel à ExtTextOut avec ETO_GLYPH_INDEX.
+			//	Comme GDI+ ne sait pas accÃ©der Ã  une fonte par ses glyphes, on triche ici
+			//	en peignant la surface des caractÃ¨res, en attendant d'avoir le temps de
+			//	faire appel Ã  ExtTextOut avec ETO_GLYPH_INDEX.
 			
 			Drawing.Path path = new Drawing.Path ();
 			Drawing.Transform ft = font.SyntheticTransform;
@@ -604,9 +604,9 @@ namespace Epsitec.Common.Printing
 				ushort[] glyph;
 				byte[]   glyphN;
 				
-				//	On n'a pas réussi à obtenir la fonte système pour représenter le texte, alors
-				//	on va générer le chemin équivalent et le peindre ainsi. Ca va revenir exactement
-				//	au même.
+				//	On n'a pas rÃ©ussi Ã  obtenir la fonte systÃ¨me pour reprÃ©senter le texte, alors
+				//	on va gÃ©nÃ©rer le chemin Ã©quivalent et le peindre ainsi. Ca va revenir exactement
+				//	au mÃªme.
 				
 				font.GetGlyphsEndX (text, out glyphX, out glyph, out glyphN);
 				
@@ -635,9 +635,9 @@ namespace Epsitec.Common.Printing
 				
 				if (true)
 				{
-					//	Algorithme méga-touille (brevet pas encore déposé) permettant de déterminer le facteur
-					//	de correction à appliquer entre la taille de la fonte déterminée via les tables OpenType
-					//	et AGG, et la taille que GDI+ utilise réellement :
+					//	Algorithme mÃ©ga-touille (brevet pas encore dÃ©posÃ©) permettant de dÃ©terminer le facteur
+					//	de correction Ã  appliquer entre la taille de la fonte dÃ©terminÃ©e via les tables OpenType
+					//	et AGG, et la taille que GDI+ utilise rÃ©ellement :
 					
 					System.Drawing.StringFormat     format  = new System.Drawing.StringFormat (System.Drawing.StringFormat.GenericTypographic);
 					System.Drawing.RectangleF       rect    = new System.Drawing.RectangleF (0f, 0f, 1000000f, 1000000f);
@@ -697,7 +697,7 @@ namespace Epsitec.Common.Printing
 		
 		public double PaintText(double x, double y, string text, Drawing.Font font, double size, Drawing.FontClassInfo[] infos)
 		{
-			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
+			//	TODO: dÃ©placer ce code dans la librairie AGG; faire en sorte que Ã§a marche aussi
 			//	si GlyphClass != GlyphClass.Space...
 			
 			for (int i = 0; i < infos.Length; i++)
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Printing
 			if (ix1 >= idx) return;
 			if (iy1 >= idy) return;
 			
-			if (ix1 < 0)			//	Clipping à gauche.
+			if (ix1 < 0)			//	Clipping Ã  gauche.
 			{
 				fillX     -= ix1;
 				fillWidth += ix1;
@@ -780,7 +780,7 @@ namespace Epsitec.Common.Printing
 				iy1 = 0;
 			}
 			
-			if (ix2 > idx)			//	Clipping à droite
+			if (ix2 > idx)			//	Clipping Ã  droite
 			{
 				fillWidth -= ix2 - idx;
 				ix2 = idx;

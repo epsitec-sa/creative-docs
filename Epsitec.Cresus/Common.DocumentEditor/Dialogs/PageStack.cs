@@ -22,7 +22,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -159,7 +159,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public override void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 			this.WindowSave("PageStack");
 		}
 
@@ -173,7 +173,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public void Update()
 		{
-			//	Met à jour le contenu de la table.
+			//	Met Ã  jour le contenu de la table.
 			if ( this.window == null )  return;
 			if ( !this.window.IsVisible )  return;
 			this.UpdateTable();
@@ -182,7 +182,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void UpdateTable()
 		{
-			//	Met à jour le contenu de la table.
+			//	Met Ã  jour le contenu de la table.
 			List<Modifier.PageStackInfos> infos;
 			if ( this.editor.HasCurrentDocument )
 			{
@@ -265,7 +265,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void TableFillRow(int row)
 		{
-			//	Peuple une ligne de la table, si nécessaire.
+			//	Peuple une ligne de la table, si nÃ©cessaire.
 			for ( int column=0 ; column<this.table.Columns ; column++ )
 			{
 				if ( this.table[column, row].IsEmpty )

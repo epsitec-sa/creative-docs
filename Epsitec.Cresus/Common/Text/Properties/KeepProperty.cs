@@ -1,12 +1,12 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La propriété KeepProperty détermine comment un paragraphe se comporte
-	/// par rapport aux autres (paragraphes liés) et comment les veuves et les
-	/// orphelines sont gérées.
+	/// La propriÃ©tÃ© KeepProperty dÃ©termine comment un paragraphe se comporte
+	/// par rapport aux autres (paragraphes liÃ©s) et comment les veuves et les
+	/// orphelines sont gÃ©rÃ©es.
 	/// </summary>
 	public class KeepProperty : Property
 	{

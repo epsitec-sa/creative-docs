@@ -1,4 +1,4 @@
-//	Copyright © 2005-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public int SelectedRank
 		{
-			//	Ligne sélectionnée.
+			//	Ligne sÃ©lectionnÃ©e.
 			get
 			{
 				return this.selectedRank;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public int ExcludeRank
 		{
-			//	Ligne éventuelle à exclure.
+			//	Ligne Ã©ventuelle Ã  exclure.
 			get
 			{
 				return this.excludeRank;
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsDeep
 		{
-			//	Attributs cherchés en profondeur, dans les enfants.
+			//	Attributs cherchÃ©s en profondeur, dans les enfants.
 			get
 			{
 				return this.isDeep;
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsHeader
 		{
-			//	En-tête en haut de la liste.
+			//	En-tÃªte en haut de la liste.
 			get
 			{
 				return this.isHeader;
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsNoneLine
 		{
-			//	Première ligne avec <aucun>.
+			//	PremiÃ¨re ligne avec <aucun>.
 			get
 			{
 				return this.isNoneLine;
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsHiliteColumn
 		{
-			//	Première colonne pour les mises en évidences.
+			//	PremiÃ¨re colonne pour les mises en Ã©vidences.
 			get
 			{
 				return this.isHiliteColumn;
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public bool IsOrderColumn
 		{
-			//	Première colonne pour les numéros d'ordre.
+			//	PremiÃ¨re colonne pour les numÃ©ros d'ordre.
 			get
 			{
 				return this.isOrderColumn;
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void UpdateContents()
 		{
-			//	Met à jour le contenu de la table.
+			//	Met Ã  jour le contenu de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
 
 			int fix = this.FixColumns;
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					w = this.fixWidth-widthUsed-7;  // largeur restante
 				}
-				this.SetWidthColumn(i++, w);  // échantillons
+				this.SetWidthColumn(i++, w);  // Ã©chantillons
 			}
 
 			i = 0;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void FillRow(int row)
 		{
-			//	Peuple une ligne de la table, si nécessaire.
+			//	Peuple une ligne de la table, si nÃ©cessaire.
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void UpdateRow(int row, bool updateSelection)
 		{
-			//	Met à jour le contenu d'une ligne de la table.
+			//	Met Ã  jour le contenu d'une ligne de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
 			int rank = this.RowToRank(row);
 			bool selected = (rank == this.selectedRank);
@@ -366,7 +366,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public int RankToRow(int rank)
 		{
-			//	Conversion d'un rang d'agrégat en numéro de ligne.
+			//	Conversion d'un rang d'agrÃ©gat en numÃ©ro de ligne.
 			if ( this.isNoneLine )  rank ++;
 			if ( this.excludeRank != -1 && rank-1 == this.excludeRank )  return -1;
 			if ( this.excludeRank != -1 && rank > this.excludeRank )  rank --;
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public int RowToRank(int row)
 		{
-			//	Conversion d'un numéro de ligne en rang d'agrégat.
+			//	Conversion d'un numÃ©ro de ligne en rang d'agrÃ©gat.
 			if ( this.isNoneLine )  row --;
 			if ( this.excludeRank != -1 && row >= this.excludeRank )  row ++;
 			return row;
@@ -433,13 +433,13 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected virtual AbstractSample CreateSample()
 		{
-			//	Crée un échantillon.
+			//	CrÃ©e un Ã©chantillon.
 			return null;
 		}
 
 		protected virtual void ListSample(AbstractSample sample, int rank)
 		{
-			//	 Met à jour l'échantillon d'une ligne de la liste.
+			//	 Met Ã  jour l'Ã©chantillon d'une ligne de la liste.
 		}
 
 

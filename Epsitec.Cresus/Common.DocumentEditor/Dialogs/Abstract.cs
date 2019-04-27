@@ -21,12 +21,12 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public virtual void Show()
 		{
-			//	Crée et montre la fenêtre du dialogue.
+			//	CrÃ©e et montre la fenÃªtre du dialogue.
 		}
 
 		public virtual void Hide()
 		{
-			//	Cache la fenêtre du dialogue.
+			//	Cache la fenÃªtre du dialogue.
 			if ( this.window != null )
 			{
 				this.window.Hide();
@@ -35,7 +35,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		public virtual void Save()
 		{
-			//	Enregistre la position de la fenêtre du dialogue.
+			//	Enregistre la position de la fenÃªtre du dialogue.
 		}
 
 		public virtual void Rebuild()
@@ -46,8 +46,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void WindowInit(string name, double dx, double dy)
 		{
-			//	Initialise la fenêtre, à partir de la taille intérieure,
-			//	c'est-à-dire sans le cadre.
+			//	Initialise la fenÃªtre, Ã  partir de la taille intÃ©rieure,
+			//	c'est-Ã -dire sans le cadre.
 			this.WindowInit(name, dx, dy, false);
 		}
 
@@ -82,14 +82,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void WindowSave(string name)
 		{
-			//	Sauve la fenêtre.
+			//	Sauve la fenÃªtre.
 			if ( this.window == null )  return;
 			this.globalSettings.SetWindowBounds(name, this.window.WindowLocation, this.window.ClientSize);
 		}
 
 		protected Rectangle CurrentBounds
 		{
-			//	Donne les frontières de l'application.
+			//	Donne les frontiÃ¨res de l'application.
 			get
 			{
 				if ( this.editor.Window == null )
@@ -106,7 +106,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected virtual void CloseWindow()
 		{
-			//	Ferme la fenêtre du dialogue.
+			//	Ferme la fenÃªtre du dialogue.
 			this.editor.Window.MakeActive();
 			this.window.Hide();
 			this.OnClosed();

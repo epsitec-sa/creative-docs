@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération PropertyFilter permet de déterminer quelles propriétés
-	/// doivent être retournées.
+	/// L'Ã©numÃ©ration PropertyFilter permet de dÃ©terminer quelles propriÃ©tÃ©s
+	/// doivent Ãªtre retournÃ©es.
 	/// </summary>
 	public enum PropertyFilter
 	{

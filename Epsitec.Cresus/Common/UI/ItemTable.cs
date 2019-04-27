@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -397,8 +397,8 @@ namespace Epsitec.Common.UI
 				{
 					graphics.AddLine (bounds.Left+0.5,  bounds.Bottom+0.5, bounds.Left+0.5,  bounds.Top+0.5);		//	trait vertical gauche
 					graphics.AddLine (bounds.Right+0.5, bounds.Bottom+0.5, bounds.Right+0.5, bounds.Top+0.5);		//	trait vertical droite
-					graphics.AddLine (bounds.Left+0.5,  bounds.Top+0.5,    bounds.Right+0.5, bounds.Top+0.5);		//	trait horizontal supérieur
-					graphics.AddLine (bounds.Left+0.5,  bounds.Bottom+0.5, bounds.Right+0.5, bounds.Bottom+0.5);	//	trait horizontal inférieur
+					graphics.AddLine (bounds.Left+0.5,  bounds.Top+0.5,    bounds.Right+0.5, bounds.Top+0.5);		//	trait horizontal supÃ©rieur
+					graphics.AddLine (bounds.Left+0.5,  bounds.Bottom+0.5, bounds.Right+0.5, bounds.Bottom+0.5);	//	trait horizontal infÃ©rieur
 					graphics.RenderSolid (adorner.ColorBorder);
 				}
 			}
@@ -406,7 +406,7 @@ namespace Epsitec.Common.UI
 
 		private void PaintColumnSeparators(Graphics graphics, Widgets.IAdorner adorner, Rectangle bounds)
 		{
-			//	Affiche les séparations verticales des colonnes.
+			//	Affiche les sÃ©parations verticales des colonnes.
 			double x = bounds.Left + 0.5 - this.horizontalOffset;
 			
 			for (int i = 0; i < this.columnHeader.ColumnCount; i++)
@@ -729,7 +729,7 @@ namespace Epsitec.Common.UI
 							break;
 
 						case Widgets.Layouts.GridUnitType.Proportional:
-							//	TODO: gérer les colonnes proportionnelles
+							//	TODO: gÃ©rer les colonnes proportionnelles
 							break;
 					}
 

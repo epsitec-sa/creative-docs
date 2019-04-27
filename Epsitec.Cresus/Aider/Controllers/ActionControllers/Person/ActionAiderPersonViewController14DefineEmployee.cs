@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Définir en tant que collaborateur...");
+			return Resources.Text ("DÃ©finir en tant que collaborateur...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			form
-				.Title ("Définir en tant que collaborateur")
+				.Title ("DÃ©finir en tant que collaborateur")
 				.Field<EmployeeType> ()
 					.Title ("Type de collaborateur")
 					.InitialValue (EmployeeType.Pasteur)
@@ -50,15 +50,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Fonction")
 				.End ()
 				.Field<EmployeeActivity> ()
-					.Title ("Degré d'activité")
+					.Title ("DegrÃ© d'activitÃ©")
 					.InitialValue (EmployeeActivity.Active)
 				.End ()
 				.Field<string> ()
-					.Title ("Numéro AVS")
+					.Title ("NumÃ©ro AVS")
 					.InitialValue ("756.")
 				.End ()
 				.Field<AiderUserEntity> ()
-					.Title ("Utilisateur associé")
+					.Title ("Utilisateur associÃ©")
 				.End ()
 			.End ();
 		}

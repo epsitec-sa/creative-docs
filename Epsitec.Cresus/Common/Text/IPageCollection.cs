@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Text
 	
 	/// <summary>
 	/// Le bitset PageFlags permet d'indiquer si une page est paire/impaire et
-	/// s'il s'agit de la première page d'un document/d'une section.
+	/// s'il s'agit de la premiÃ¨re page d'un document/d'une section.
 	/// </summary>
 	
 	[System.Flags]

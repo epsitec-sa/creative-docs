@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum GuideType
 	{
 		None             = 0,
@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.Settings
 	}
 
 	/// <summary>
-	/// La classe Guide contient un repère magnétique.
+	/// La classe Guide contient un repÃ¨re magnÃ©tique.
 	/// </summary>
 	[System.Serializable()]
 	public class Guide : ISerializable
@@ -237,14 +237,14 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le repère.
+			//	SÃ©rialise le repÃ¨re.
 			info.AddValue("Type", this.type);
 			info.AddValue("Pos", this.position);
 		}
 
 		protected Guide(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise le repère.
+			//	Constructeur qui dÃ©sÃ©rialise le repÃ¨re.
 			this.document = Document.ReadDocument;
 			this.type = (GuideType) info.GetValue("Type", typeof(GuideType));
 			this.position = info.GetDouble("Pos");

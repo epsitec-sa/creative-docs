@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP,
 
 using Epsitec.Common.Support.EntityEngine;
@@ -68,7 +68,7 @@ namespace Epsitec.Aider.Entities
 		{
             if (place.Town.IsNull ())
             {
-                throw new BusinessRuleException ("Le lieu de célébration n'a pas de localité renseignée");
+                throw new BusinessRuleException ("Le lieu de cÃ©lÃ©bration n'a pas de localitÃ© renseignÃ©e");
             }
 
             var newEvent = context.CreateAndRegisterEntity<AiderEventEntity> ();
@@ -88,7 +88,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.State == Enumerations.EventState.Validated)
 			{
-				throw new BusinessRuleException ("Impossible de supprimer un acte validé");
+				throw new BusinessRuleException ("Impossible de supprimer un acte validÃ©");
 			}
 
 			foreach (var participant in this.Participants)
@@ -193,17 +193,17 @@ namespace Epsitec.Aider.Entities
 			switch (this.Type)
 			{
 				case Enumerations.EventType.Baptism:
-					return "Baptême";
+					return "BaptÃªme";
 				case Enumerations.EventType.Blessing:
-					return "Bénédiction";
+					return "BÃ©nÃ©diction";
 				case Enumerations.EventType.CelebrationRegisteredPartners:
-					return "Partenariat enregistré";
+					return "Partenariat enregistrÃ©";
 				case Enumerations.EventType.Confirmation:
 					return "Confirmation";
 				case Enumerations.EventType.EndOfCatechism:
-					return "Bénédictions des catéchumènes ";
+					return "BÃ©nÃ©dictions des catÃ©chumÃ¨nes ";
 				case Enumerations.EventType.FuneralService:
-					return "Service funèbre";
+					return "Service funÃ¨bre";
 				case Enumerations.EventType.Marriage:
 					return "Mariage";
 				case Enumerations.EventType.None:
@@ -267,31 +267,31 @@ namespace Epsitec.Aider.Entities
 
 			if (this.Participants.Any (p => p.Role == Enumerations.EventParticipantRole.None))
 			{
-				error = "Il manque un rôle pour un des participants";
+				error = "Il manque un rÃ´le pour un des participants";
 				return false;
 			}
 
 			if (this.Office.ParishGroup.IsNoParish ())
 			{
-				error = "Cette gestion n'est pas liée à une paroisse, aucun acte ne peut y être généré";
+				error = "Cette gestion n'est pas liÃ©e Ã  une paroisse, aucun acte ne peut y Ãªtre gÃ©nÃ©rÃ©";
 				return false;
 			}
 
 			if (this.Place.IsNull ())
 			{
-				error = "La lieu de célébration n'est pas renseigné";
+				error = "La lieu de cÃ©lÃ©bration n'est pas renseignÃ©";
 				return false;
 			}
 
 			if (this.Town.IsNull ())
 			{
-				error = "La localité de célébration n'est pas renseignée";
+				error = "La localitÃ© de cÃ©lÃ©bration n'est pas renseignÃ©e";
 				return false;
 			}
 
 			if (this.Date.Value == null)
 			{
-				error = "La date de célébration n'est pas renseignée";
+				error = "La date de cÃ©lÃ©bration n'est pas renseignÃ©e";
 				return false;
 			}
 
@@ -309,7 +309,7 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.EventType.Baptism:
 					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.ChildBatise))
 					{
-						error = "Aucun enfant à baptisé dans les participants";
+						error = "Aucun enfant Ã  baptisÃ© dans les participants";
 						return false;
 					}
 					if(!this.CheckActorValidity (main, out error))
@@ -320,7 +320,7 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.EventType.Blessing:
 					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.BlessedChild))
 					{
-						error = "Aucune personne à bénir";
+						error = "Aucune personne Ã  bÃ©nir";
 						return false;
 					}
 					if(!this.CheckActorValidity (main, out error))
@@ -331,12 +331,12 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.EventType.Confirmation:
 					if (this.Kind == null)
 					{
-						error = "Type de célébration non renseigné (Rameaux etc.)";
+						error = "Type de cÃ©lÃ©bration non renseignÃ© (Rameaux etc.)";
 						return false;
 					}
 					if (!this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant))
 					{
-						error = "Aucunes personnes à confirmer";
+						error = "Aucunes personnes Ã  confirmer";
 						return false;
 					}
 					foreach (var actor in actors)
@@ -350,7 +350,7 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.EventType.EndOfCatechism:
 					if (!this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Catechumen))
 					{
-						error = "Aucunes personnes pour la fin de caté.";
+						error = "Aucunes personnes pour la fin de catÃ©.";
 						return false;
 					}
 					foreach (var actor in actors)
@@ -364,7 +364,7 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.EventType.FuneralService:
 					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.DeceasedPerson))
 					{
-						error = "Aucun défunt";
+						error = "Aucun dÃ©funt";
 						return false;
 					}
 					if(!this.CheckActorValidity (main, out error))
@@ -377,7 +377,7 @@ namespace Epsitec.Aider.Entities
 						&& this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.PartnerB))
 					)
 					{
-						error = "Aucune personnes à célébrer";
+						error = "Aucune personnes Ã  cÃ©lÃ©brer";
 						return false;
 					}
 					foreach (var actor in actors)
@@ -393,7 +393,7 @@ namespace Epsitec.Aider.Entities
 						&& this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse))
 					)
 					{
-						error = "Aucune personnes à célébrer";
+						error = "Aucune personnes Ã  cÃ©lÃ©brer";
 						return false;
 					}
 					foreach (var actor in actors)
@@ -418,19 +418,19 @@ namespace Epsitec.Aider.Entities
 
 			if (participant.GetBirthDate ()== null)
 			{
-				error = main.GetFullName () + ": date de naissance non renseignée";
+				error = main.GetFullName () + ": date de naissance non renseignÃ©e";
 				return false;
 			}
 
 			if (participant.GetTown ().IsNullOrWhiteSpace ())
 			{
-				error = main.GetFullName () + ": adresse non renseignée";
+				error = main.GetFullName () + ": adresse non renseignÃ©e";
 				return false;
 			}
 
 			if (participant.GetParishName ().IsNullOrWhiteSpace ())
 			{
-				error = main.GetFullName () + ": paroisse non renseignée";
+				error = main.GetFullName () + ": paroisse non renseignÃ©e";
 				return false;
 			}
 
@@ -513,7 +513,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return "Lieu de célébration non renseigné";
+				return "Lieu de cÃ©lÃ©bration non renseignÃ©";
 			}		
 		}
 

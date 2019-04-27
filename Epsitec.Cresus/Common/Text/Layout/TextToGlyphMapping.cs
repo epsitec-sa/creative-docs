@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// La classe TextToGlyphMapping permet de déterminer les correspondances
+	/// La classe TextToGlyphMapping permet de dÃ©terminer les correspondances
 	/// entre un fragment de texte Unicode et les glyphes correspondants.
 	/// </summary>
 	public class TextToGlyphMapping
@@ -32,15 +32,15 @@ namespace Epsitec.Common.Text.Layout
 		
 		public bool GetNextMapping(out int[] characters, out ushort[] glyphs)
 		{
-			//	Retourne le prochain paquet de caractères avec le prochain paquet
+			//	Retourne le prochain paquet de caractÃ¨res avec le prochain paquet
 			//	de glyphes. Pour les cas simples, les deux paquets ont exactement
-			//	un élément (1 caractère -> 1 glyphe).
+			//	un Ã©lÃ©ment (1 caractÃ¨re -> 1 glyphe).
 			
-			//	Dans le cas d'une ligature, on aura plusieurs caractères pour un
+			//	Dans le cas d'une ligature, on aura plusieurs caractÃ¨res pour un
 			//	seul glyphe ("ffi" --> glyphe #123).
 			
-			//	Dans le cas de caractères composites, on aura plusieurs glyphes
-			//	pour un seul caractère ("â" --> glyphes de 'a' + '^').
+			//	Dans le cas de caractÃ¨res composites, on aura plusieurs glyphes
+			//	pour un seul caractÃ¨re ("Ã¢" --> glyphes de 'a' + '^').
 
 			if ((this.textIndex < this.text.Length) &&
 				(this.glyphIndex < this.glyphs.Length))
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (glyphCount > 1)
 				{
-					//	Il y a plusieurs glyphes pour représenter un unique
-					//	caractère de texte :
+					//	Il y a plusieurs glyphes pour reprÃ©senter un unique
+					//	caractÃ¨re de texte :
 					
 					characters = new int[1];
 					glyphs     = new ushort[glyphCount];
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Text.Layout
 					return true;
 				}
 				
-				//	Peut-être y a-t-il plusieurs caractères représentés par cet
+				//	Peut-Ãªtre y a-t-il plusieurs caractÃ¨res reprÃ©sentÃ©s par cet
 				//	unique glyphe :
 				
 				int charCount = this.map[this.glyphIndex+1] - this.map[this.glyphIndex];
@@ -128,8 +128,8 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (glyphCount > 1)
 				{
-					//	Il y a plusieurs glyphes pour représenter un unique
-					//	caractère de texte :
+					//	Il y a plusieurs glyphes pour reprÃ©senter un unique
+					//	caractÃ¨re de texte :
 					
 					characters = new int[1];
 					text       = new ulong[1];
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Text.Layout
 					return true;
 				}
 				
-				//	Peut-être y a-t-il plusieurs caractères représentés par cet
+				//	Peut-Ãªtre y a-t-il plusieurs caractÃ¨res reprÃ©sentÃ©s par cet
 				//	unique glyphe :
 				
 				int charCount = this.map[this.glyphIndex+1] - this.map[this.glyphIndex];

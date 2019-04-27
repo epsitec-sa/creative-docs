@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -185,14 +185,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				}
 
 				Point mouseCursor = DragHelper.MouseCursorLocation;
-				//?mouseCursor.X = this.dragBeginPoint.X;  // essai pour forcer un déplacement vertical
+				//?mouseCursor.X = this.dragBeginPoint.X;  // essai pour forcer un dÃ©placement vertical
 
 				if (this.dragWindow == null)
 				{
 					this.dragGroupId = this.host.GroupId;
 
 					double distance = Point.Distance (this.dragBeginPoint, mouseCursor);
-					if (distance >= DragHelper.dragBeginMinimalMove)  // déplacement minimal atteint ?
+					if (distance >= DragHelper.dragBeginMinimalMove)  // dÃ©placement minimal atteint ?
 					{
 						this.dragWindowSourceBeginPosition = mouseCursor;
 						this.dragWindowSourceOffset = this.host.MapScreenToClient (mouseCursor);
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 						this.host.PreferredSize = this.dragWindowSize;
 						this.host.Margins       = Margins.Zero;
 
-						//	Crée la fenêtre qui contient la tuile déplacée.
+						//	CrÃ©e la fenÃªtre qui contient la tuile dÃ©placÃ©e.
 						this.dragWindow = new DragWindow ();
 						this.dragWindow.Alpha = 0.8;
 						this.dragWindow.DefineWidget (box, this.dragWindowSize, Margins.Zero);
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 							Dock          = DockStyle.Fill,
 						};
 
-						//	Crée la fenêtre qui contient le marqueur '>------'.
+						//	CrÃ©e la fenÃªtre qui contient le marqueur '>------'.
 						this.dragWindowTarget = new DragWindow ();
 						this.dragWindowTarget.Alpha = 1.0;
 						this.dragWindowTarget.DefineWidget (this.dragTargetMarker, this.dragTargetMarker.PreferredSize, Margins.Zero);
@@ -311,8 +311,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 				if (!(widget is ControllerTile) || widget.IsFrozen)
 				{
-					//	Si on a trouvé un widget qui n'est pas une tuile ou une tuile gelée, il faut remonter
-					//	jusqu'à le prochaine tuile non gelée.
+					//	Si on a trouvÃ© un widget qui n'est pas une tuile ou une tuile gelÃ©e, il faut remonter
+					//	jusqu'Ã  le prochaine tuile non gelÃ©e.
 					while (widget.Parent != null)
 					{
 						widget = widget.Parent;
@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					this.host.Anchor  = this.dragErsatzTile.Anchor;
 					this.host.PreferredSize = this.dragBeginSize;
 
-					this.dragErsatzTile.Parent.Children[this.dragErsatzIndex] = this.host;  // remet la vraie tuile à sa place
+					this.dragErsatzTile.Parent.Children[this.dragErsatzIndex] = this.host;  // remet la vraie tuile Ã  sa place
 
 					this.dragWindow.Hide ();
 					this.dragWindow.Dispose ();
@@ -426,7 +426,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			#endregion
 
 			/// <summary>
-			/// Tuile simple (sans flèche) avec toujours un cadre et un fond neutre.
+			/// Tuile simple (sans flÃ¨che) avec toujours un cadre et un fond neutre.
 			/// </summary>
 			private class DragTile : ErsatzTile
 			{

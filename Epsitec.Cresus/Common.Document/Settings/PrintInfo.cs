@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum PrintCentring
 	{
 		BottomLeft   = 10,
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Settings
 	}
 
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum PrintRange
 	{
 		All     = 0,
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.Settings
 	}
 
 	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	//	sous peine de plantée lors de la désérialisation.
+	//	sous peine de plantÃ©e lors de la dÃ©sÃ©rialisation.
 	public enum PrintArea
 	{
 		All  = 0,
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Settings
 	}
 
 	/// <summary>
-	/// La classe PrintInfo contient tous les réglages secondaires pour l'impression.
+	/// La classe PrintInfo contient tous les rÃ©glages secondaires pour l'impression.
 	/// </summary>
 	[System.Serializable()]
 	public class PrintInfo : ISerializable
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise les réglages.
+			//	SÃ©rialise les rÃ©glages.
 			info.AddValue("Rev", 4);
 			info.AddValue("PrintName", this.printName);
 			info.AddValue("PrintRange", this.printRange);
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected PrintInfo(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise les réglages.
+			//	Constructeur qui dÃ©sÃ©rialise les rÃ©glages.
 			this.document = Document.ReadDocument;
 			this.Initialize();
 
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Document.Settings
 				this.printArea = (PrintArea) info.GetValue("PrintArea", typeof(PrintArea));
 				this.printFrom = info.GetInt32("PrintFrom");
 				this.printTo = info.GetInt32("PrintTo");
-				//	On ne veut pas mémoriser le nombre de copies, mais toujours remettre 1 par défaut !
+				//	On ne veut pas mÃ©moriser le nombre de copies, mais toujours remettre 1 par dÃ©faut !
 				//this.copies = info.GetInt32("Copies");
 				this.copies = 1;
 				this.collate = info.GetBoolean("Collate");

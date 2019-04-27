@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Properties
 {
 	/// <summary>
-	/// La classe Name représente une propriété d'un objet graphique.
+	/// La classe Name reprÃ©sente une propriÃ©tÃ© d'un objet graphique.
 	/// </summary>
 	[System.Serializable()]
 	public class Name : Abstract
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Properties
 			
 			set
 			{
-				value = value.Trim();  // enlève les espaces superflus avant et après
+				value = value.Trim();  // enlÃ¨ve les espaces superflus avant et aprÃ¨s
 
 				if ( this.stringValue != value )
 				{
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void CopyTo(Abstract property)
 		{
-			//	Effectue une copie de la propriété.
+			//	Effectue une copie de la propriÃ©tÃ©.
 			base.CopyTo(property);
 			Name p = property as Name;
 			p.stringValue = this.stringValue;
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override bool Compare(Abstract property)
 		{
-			//	Compare deux propriétés.
+			//	Compare deux propriÃ©tÃ©s.
 			if ( !base.Compare(property) )  return false;
 
 			Name p = property as Name;
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public override Panels.Abstract CreatePanel(Document document)
 		{
-			//	Crée le panneau permettant d'éditer la propriété.
+			//	CrÃ©e le panneau permettant d'Ã©diter la propriÃ©tÃ©.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Name(document);
 		}
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise la propriété.
+			//	SÃ©rialise la propriÃ©tÃ©.
 			base.GetObjectData(info, context);
 
 			info.AddValue("StringValue", this.stringValue);
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected Name(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Constructeur qui désérialise la propriété.
+			//	Constructeur qui dÃ©sÃ©rialise la propriÃ©tÃ©.
 			this.stringValue = info.GetString("StringValue");
 		}
 		#endregion

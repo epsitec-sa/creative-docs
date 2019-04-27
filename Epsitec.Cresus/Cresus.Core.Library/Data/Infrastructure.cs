@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Data
 			{
 				if (CoreContext.IsInteractive)
 				{
-					IDialog d = MessageDialog.CreateYesNo ("Base de données incompatible", DialogIcon.Warning, "La base de données est incompatible. Voulez vous la modifier pour la mettre à jour?");
+					IDialog d = MessageDialog.CreateYesNo ("Base de donnÃ©es incompatible", DialogIcon.Warning, "La base de donnÃ©es est incompatible. Voulez vous la modifier pour la mettre Ã  jour?");
 
 					d.OpenDialog ();
 

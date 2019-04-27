@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -277,7 +277,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if(!functionDef.IsFunction ())
 			{
-				throw new BusinessRuleException ("Action impossible sur cette définition de groupe");
+				throw new BusinessRuleException ("Action impossible sur cette dÃ©finition de groupe");
 			}
 
 			var dataContext = businessContext.DataContext;

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -8,9 +8,9 @@ namespace Epsitec.Common.Widgets
 	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 
 	/// <summary>
-	/// La classe IconButtonCombo implémente un IconButton avec bouton "v"
-	/// qui fait apparaître un menu dit "combo" pour permettre de choisir une
-	/// icône prédéfinie.
+	/// La classe IconButtonCombo implÃ©mente un IconButton avec bouton "v"
+	/// qui fait apparaÃ®tre un menu dit "combo" pour permettre de choisir une
+	/// icÃ´ne prÃ©dÃ©finie.
 	/// </summary>
 	public class IconButtonCombo : Widget
 	{
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Widgets
 		
 		public System.Collections.ArrayList		Items
 		{
-			//	Donne la collection d'éléments de type IconButtonCombo.Item.
+			//	Donne la collection d'Ã©lÃ©ments de type IconButtonCombo.Item.
 			get
 			{
 				return this.items;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Widgets
 
 		public int								SelectedItemIndex
 		{
-			//	Donne le rang de l'élément sélectionné (-1 si aucune sélection).
+			//	Donne le rang de l'Ã©lÃ©ment sÃ©lectionnÃ© (-1 si aucune sÃ©lection).
 			get
 			{
 				return this.selectedItemIndex;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Widgets
 
 		public string							SelectedName
 		{
-			//	Donne le nom de l'élément sélectionné (null si aucune sélection).
+			//	Donne le nom de l'Ã©lÃ©ment sÃ©lectionnÃ© (null si aucune sÃ©lection).
 			get
 			{
 				int sel = this.SelectedItemIndex;
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Widgets
 				int rank = 0;
 				foreach ( Item item in this.items )
 				{
-					if ( item == null )  continue;  // séparateur ?
+					if ( item == null )  continue;  // sÃ©parateur ?
 
 					if ( rank == sel )
 					{
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Widgets
 				int rank = 0;
 				foreach ( Item item in this.items )
 				{
-					if ( item == null )  continue;  // séparateur ?
+					if ( item == null )  continue;  // sÃ©parateur ?
 
 					if ( item.Name == value )
 					{
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateIcon()
 		{
-			//	Met à jour l'icône dans le bouton, en fonction de la sélection.
+			//	Met Ã  jour l'icÃ´ne dans le bouton, en fonction de la sÃ©lection.
 			int sel = this.SelectedItemIndex;
 
 			if ( sel == -1 )
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Widgets
 			int rank = 0;
 			foreach ( Item item in this.items )
 			{
-				if ( item == null )  continue;  // séparateur ?
+				if ( item == null )  continue;  // sÃ©parateur ?
 
 				if ( rank == sel )
 				{
@@ -238,8 +238,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectedItemChanged()
 		{
-			//	Ne notifie les changements d'index que lorsque le menu déroulant
-			//	est fermé.
+			//	Ne notifie les changements d'index que lorsque le menu dÃ©roulant
+			//	est fermÃ©.
 			if ( this.IsComboOpen == false )
 			{
 				var handler = this.GetUserEventHandler ("SelectedItemChanged");
@@ -285,9 +285,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ProcessComboActivatedIndex(int sel)
 		{
-			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
-			//	qui est appelée à chaque changement "visuel".
+			//	Cette mÃ©thode n'est appelÃ©e que lorsque le contenu de la liste dÃ©roulÃ©e
+			//	est validÃ©e par un clic de souris, au contraire de ProcessComboSelectedIndex
+			//	qui est appelÃ©e Ã  chaque changement "visuel".
 			int index = this.MapComboListToIndex(sel);
 			
 			if ( index >= 0 )
@@ -299,9 +299,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ProcessComboSelectedIndex(int sel)
 		{
-			//	Met à jour le contenu de la combo en cas de changement de sélection
-			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
-			//	activée.
+			//	Met Ã  jour le contenu de la combo en cas de changement de sÃ©lection
+			//	dans la liste, pour autant qu'une telle mise Ã  jour "live" ait Ã©tÃ©
+			//	activÃ©e.
 			if ( this.isLiveUpdateEnabled )
 			{
 				this.SelectedItemIndex = this.MapComboListToIndex (sel);
@@ -321,8 +321,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void Navigate(int dir)
 		{
-			//	Cherche le nom suivant ou précédent dans la comboList, même si elle
-			//	n'est pas "déroulée".
+			//	Cherche le nom suivant ou prÃ©cÃ©dent dans la comboList, mÃªme si elle
+			//	n'est pas "dÃ©roulÃ©e".
 			if ( this.items.Count == 0 )
 			{
 				return;
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OpenCombo()
 		{
-			//	Rend la liste visible et démarre l'interaction.
+			//	Rend la liste visible et dÃ©marre l'interaction.
 			if ( this.IsComboOpen )
 			{
 				return;
@@ -378,8 +378,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CloseCombo(CloseMode mode)
 		{
-			//	Ferme la liste (si nécessaire) et valide/rejette la modification
-			//	en fonction du mode spécifié.
+			//	Ferme la liste (si nÃ©cessaire) et valide/rejette la modification
+			//	en fonction du mode spÃ©cifiÃ©.
 			
 			if ( this.menu.IsMenuOpen )
 			{
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Widgets
 			int rank = 0;
 			foreach ( Item item in this.items )
 			{
-				if ( item == null )  continue;  // séparateur ?
+				if ( item == null )  continue;  // sÃ©parateur ?
 
 				bool sel = (rank == this.SelectedItemIndex);
 				this.scrollList.Items.Add(item.Name, sel ? item.SelectedText : item.RegularText);
@@ -481,19 +481,19 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
 		{
-			//	L'utilisateur a cliqué dans le bouton d'ouverture de la liste.
+			//	L'utilisateur a cliquÃ© dans le bouton d'ouverture de la liste.
 			this.OpenCombo();
 		}
 		
 		private void HandleScrollListSelectionActivated(object sender)
 		{
-			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
+			//	L'utilisateur a cliquÃ© dans la liste pour terminer son choix.
 			this.ProcessComboActivatedIndex (this.scrollList.SelectedItemIndex);
 		}
 
 		private void HandleScrollListSelectedItemChanged(object sender)
 		{
-			//	L'utilisateur a simplement déplacé la souris dans la liste.
+			//	L'utilisateur a simplement dÃ©placÃ© la souris dans la liste.
 			this.ProcessComboSelectedIndex(this.scrollList.SelectedItemIndex);
 		}
 
@@ -516,8 +516,8 @@ namespace Epsitec.Common.Widgets
 		#region Items
 		public class Item
 		{
-			//	Les instances de cette classe servent à peupler la liste Items de IconButtonCombo.
-			//	Chaque instance correspond à une ligne du menu-combo.
+			//	Les instances de cette classe servent Ã  peupler la liste Items de IconButtonCombo.
+			//	Chaque instance correspond Ã  une ligne du menu-combo.
 
 			public Item(string name, string briefIcon, string regularText, string selectedText)
 			{

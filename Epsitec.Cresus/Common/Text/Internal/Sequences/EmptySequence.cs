@@ -1,10 +1,10 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal.Sequences
 {
 	/// <summary>
-	/// La classe Empty produit des séquences vides.
+	/// La classe Empty produit des sÃ©quences vides.
 	/// </summary>
 	public class Empty : Generator.Sequence
 	{

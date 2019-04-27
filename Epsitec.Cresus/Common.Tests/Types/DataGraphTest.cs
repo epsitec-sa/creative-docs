@@ -193,7 +193,7 @@ namespace Epsitec.Common.Tests.Types
 		
 		private static void CompareFolders(IDataFolder f1, IDataFolder f2)
 		{
-			//	Vérifie que les dossiers sont identiques... récursivement.
+			//	VÃ©rifie que les dossiers sont identiques... rÃ©cursivement.
 			
 			Assert.AreEqual (f1.Name, f2.Name);
 			Assert.AreEqual (f1.CaptionId, f2.CaptionId);

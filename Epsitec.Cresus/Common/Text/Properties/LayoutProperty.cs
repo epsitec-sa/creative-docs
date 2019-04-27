@@ -1,10 +1,10 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe LayoutProperty décrit quel moteur de layout utiliser pour
+	/// La classe LayoutProperty dÃ©crit quel moteur de layout utiliser pour
 	/// un fragment de texte.
 	/// </summary>
 	public class LayoutProperty : Property

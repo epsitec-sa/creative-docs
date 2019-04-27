@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Core.Business.Accounting;
+using Epsitec.Cresus.Core.Business.Accounting;
 
 namespace Epsitec.Cresus.Core.Business
 {

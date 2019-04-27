@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Panels
 {
 	/// <summary>
-	/// La classe Font permet de choisir une police de caractères.
+	/// La classe Font permet de choisir une police de caractÃ¨res.
 	/// </summary>
 	public class Font : Abstract
 	{
@@ -82,18 +82,18 @@ namespace Epsitec.Common.Document.Panels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau étendu ?
+				if ( this.isExtendedSize )  // panneau Ã©tendu ?
 				{
-					if ( this.IsLabelProperties )  // étendu/détails ?
+					if ( this.IsLabelProperties )  // Ã©tendu/dÃ©tails ?
 					{
 						h += 80;
 					}
-					else	// étendu/compact ?
+					else	// Ã©tendu/compact ?
 					{
 						h += 55;
 					}
 				}
-				else	// panneau réduit ?
+				else	// panneau rÃ©duit ?
 				{
 					h += 30;
 				}
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void PropertyToWidgets()
 		{
-			//	Propriété -> widgets.
+			//	PropriÃ©tÃ© -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Font p = this.property as Properties.Font;
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void WidgetsToProperty()
 		{
-			//	Widgets -> propriété.
+			//	Widgets -> propriÃ©tÃ©.
 			Properties.Font p = this.property as Properties.Font;
 			if ( p == null )  return;
 
@@ -138,13 +138,13 @@ namespace Epsitec.Common.Document.Panels
 
 		public override void OriginColorDeselect()
 		{
-			//	Désélectionne toutes les origines de couleurs possibles.
+			//	DÃ©sÃ©lectionne toutes les origines de couleurs possibles.
 			this.fontColor.ActiveState = ActiveState.No;
 		}
 
 		public override void OriginColorSelect(int rank)
 		{
-			//	Sélectionne l'origine de couleur.
+			//	SÃ©lectionne l'origine de couleur.
 			this.fontColor.ActiveState = ActiveState.Yes;
 		}
 
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.fontFace == null )  return;
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleFontFaceComboOpening(object sender, CancelEventArgs e)
 		{
-			//	Le combo pour les polices va être ouvert.
+			//	Le combo pour les polices va Ãªtre ouvert.
 			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
 			string selectedFontFace = this.fontFace.Text;
 			int quickCount;
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a été changé.
+			//	Un champ a Ã©tÃ© changÃ©.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

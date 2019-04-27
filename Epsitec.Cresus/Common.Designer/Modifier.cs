@@ -12,9 +12,9 @@ namespace Epsitec.Common.Designer
 	{
 		public enum ModificationState
 		{
-			Normal,			//	défini normalement
+			Normal,			//	dÃ©fini normalement
 			Empty,			//	vide (fond rouge)
-			Modified,		//	modifié (fond jaune)
+			Modified,		//	modifiÃ© (fond jaune)
 		}
 
 
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer
 		#region Viewers
 		public Viewers.Abstract ActiveViewer
 		{
-			//	Un seul visualisateur privilégié peut être actif.
+			//	Un seul visualisateur privilÃ©giÃ© peut Ãªtre actif.
 			get
 			{
 				return this.activeViewer;
@@ -78,19 +78,19 @@ namespace Epsitec.Common.Designer
 
 		public void AttachViewer(Viewers.Abstract viewer)
 		{
-			//	Attache un nouveau visualisateur à ce module.
+			//	Attache un nouveau visualisateur Ã  ce module.
 			this.attachViewers.Add(viewer);
 		}
 
 		public void DetachViewer(Viewers.Abstract viewer)
 		{
-			//	Détache un visualisateur de ce module.
+			//	DÃ©tache un visualisateur de ce module.
 			this.attachViewers.Remove(viewer);
 		}
 
 		public List<Viewers.Abstract> AttachViewers
 		{
-			//	Liste des visualisateurs attachés au module.
+			//	Liste des visualisateurs attachÃ©s au module.
 			get
 			{
 				return this.attachViewers;

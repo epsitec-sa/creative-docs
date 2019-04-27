@@ -1,10 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// La classe Compression donne accès aux divers streams comprimés
+	/// La classe Compression donne accÃ¨s aux divers streams comprimÃ©s
 	/// (BZip2, GZip, Deflate = LZW & Huffman, ZIP).
 	/// </summary>
 	public class Compression : AbstractStream

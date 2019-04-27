@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (null, this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Localized, Epsitec.Common.Support.Resources.FindCultureInfo ("en")));
 
 			Assert.AreEqual ("Cf. Common.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Default)[Druid.Parse ("[7001]")].About);
-			Assert.AreEqual ("Author muss nicht übersetzt werden", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Epsitec.Common.Support.Resources.FindCultureInfo ("de"))[Druid.Parse ("[7001]")].About, "Incorrect override by 'de' over '00' of Field.About");
+			Assert.AreEqual ("Author muss nicht Ã¼bersetzt werden", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Epsitec.Common.Support.Resources.FindCultureInfo ("de"))[Druid.Parse ("[7001]")].About, "Incorrect override by 'de' over '00' of Field.About");
 			Assert.AreEqual ("Cf. Common.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Epsitec.Common.Support.Resources.FindCultureInfo ("en"))[Druid.Parse ("[7001]")].About, "Incorrect fallback from 'en' to '00' of Field.About");
 
 			ResourceBundle bundle = this.manager.GetBundle (new Druid (4, 0, 0));
@@ -208,8 +208,8 @@ namespace Epsitec.Common.Tests.Support
 			scrap.Add (captionA);
 			scrap.Add (captionQ);
 			
-			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA.Description);
-			Assert.AreEqual ("Coefficient de Qualité.", captionQ.Description);
+			Assert.AreEqual ("Angle de rotation de la trame, exprimÃ© en degrÃ©s.", captionA.Description);
+			Assert.AreEqual ("Coefficient de QualitÃ©.", captionQ.Description);
 			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
 			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
@@ -226,8 +226,8 @@ namespace Epsitec.Common.Tests.Support
 			
 			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindSpecificCultureInfo ("fr");
 			
-			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA.Description);
-			Assert.AreEqual ("Coefficient de Qualité.", captionQ.Description);
+			Assert.AreEqual ("Angle de rotation de la trame, exprimÃ© en degrÃ©s.", captionA.Description);
+			Assert.AreEqual ("Coefficient de QualitÃ©.", captionQ.Description);
 			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
 			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Tests.Support
 			
 			Assert.AreEqual ("[Test]", caption.Description);
 			Assert.AreEqual ("Text B", Collection.Extract (caption.Labels, 0));
-			Assert.AreEqual ("Texte C en français", Collection.Extract (caption.Labels, 1));
+			Assert.AreEqual ("Texte C en franÃ§ais", Collection.Extract (caption.Labels, 1));
 
 			//	Switching to English changes the caption's contents :
 			

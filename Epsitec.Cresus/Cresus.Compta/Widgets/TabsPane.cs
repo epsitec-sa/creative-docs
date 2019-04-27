@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -14,9 +14,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Widgets
 {
 	/// <summary>
-	/// Ce widget affiche des onglets, ainsi que quelques widgets quelconques (généralement des boutons) à leurs
-	/// droite. Les onglets peuvent être renommés, supprimés et déplacés (par drag & drop). S'il y a trop d'onglets
-	/// par rapport à la largeur disponible, un dernier onglet "v" affiche un menu avec les onglets surnuméraires.
+	/// Ce widget affiche des onglets, ainsi que quelques widgets quelconques (gÃ©nÃ©ralement des boutons) Ã  leurs
+	/// droite. Les onglets peuvent Ãªtre renommÃ©s, supprimÃ©s et dÃ©placÃ©s (par drag & drop). S'il y a trop d'onglets
+	/// par rapport Ã  la largeur disponible, un dernier onglet "v" affiche un menu avec les onglets surnumÃ©raires.
 	/// </summary>
 	public class TabsPane : FrameBox, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void ClearLeftWidgets()
 		{
-			//	Supprime tous les widgets additionnels à gauche des onglets.
+			//	Supprime tous les widgets additionnels Ã  gauche des onglets.
 			this.leftWidgets.Clear ();
 			this.Children.Clear ();
 
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void AddLeftWidget(Widget widget)
 		{
-			//	Ajoute un widget à gauche des onglets.
+			//	Ajoute un widget Ã  gauche des onglets.
 			this.leftWidgets.Add (widget);
 
 			widget.Parent = this;
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void ClearRightWidgets()
 		{
-			//	Supprime tous les widgets additionnels à droite des onglets.
+			//	Supprime tous les widgets additionnels Ã  droite des onglets.
 			this.rightWidgets.Clear ();
 			this.Children.Clear ();
 
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void AddRightWidget(Widget widget)
 		{
-			//	Ajoute un widget à droite des onglets.
+			//	Ajoute un widget Ã  droite des onglets.
 			this.rightWidgets.Add (widget);
 
 			widget.Parent = this;
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			if (this.IsDragSource)
 			{
-				//	Le widget source d'un déplacement (placé dans une fenêtre flottante) doit être totalement inerte.
+				//	Le widget source d'un dÃ©placement (placÃ© dans une fenÃªtre flottante) doit Ãªtre totalement inerte.
 				return;
 			}
 
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				else
 				{
 					var tab = this.GetShowedTabFromIndex (this.selectedIndex);
-					if (this.selectedIndex == index && tab != null && tab.TabItem.RenameEnable)  // clic sur l'onglet déjà sélectionné ?
+					if (this.selectedIndex == index && tab != null && tab.TabItem.RenameEnable)  // clic sur l'onglet dÃ©jÃ  sÃ©lectionnÃ© ?
 					{
 						this.menuTabIndex = this.selectedIndex;
 						this.StartRename ();
@@ -409,7 +409,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private int GetDetectedIndex(Point pos)
 		{
-			//	Retourne l'index de l'onglet visé, ou -1.
+			//	Retourne l'index de l'onglet visÃ©, ou -1.
 			this.UpdateIndexes ();
 
 			foreach (var rank in this.RanksForDetection)
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private int GetDetectedGapRank(Point pos)
 		{
-			//	Retourne le rang (à ne pas confondre avec l'index) de l'espace inter-onglet visé.
+			//	Retourne le rang (Ã  ne pas confondre avec l'index) de l'espace inter-onglet visÃ©.
 			//	Si on est entre les onglets 12 et 13, retourne 12.
 			for (int rank = 0; rank < this.showedIndexes.Count; rank++ )
 			{
@@ -723,7 +723,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private Path GetTabPath(Rectangle rect, Margins margins, bool selected = false)
 		{
-			//	Retourne le chemin pour dessiner/détecter un onglet.
+			//	Retourne le chemin pour dessiner/dÃ©tecter un onglet.
 			var path = new Path ();
 
 			rect.Deflate (margins);
@@ -844,7 +844,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			if (this.IsDragSource)
 			{
-				path.Close ();  // on dessine le trait horizontal inférieur
+				path.Close ();  // on dessine le trait horizontal infÃ©rieur
 			}
 
 			return path;
@@ -853,7 +853,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void PaintGapMark(Graphics graphics)
 		{
-			//	Dessine le marqueur entre deux onglets, pendant un déplacement d'onglet.
+			//	Dessine le marqueur entre deux onglets, pendant un dÃ©placement d'onglet.
 			if (this.gapHilitedRank == -1)
 			{
 				return;
@@ -953,7 +953,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private IEnumerable<int> RanksForDetection
 		{
-			//	Retourne les rangs dans l'ordre pour la détection.
+			//	Retourne les rangs dans l'ordre pour la dÃ©tection.
 			//	Il faut utiliser l'ordre inverse pour le dessin.
 			get
 			{
@@ -965,7 +965,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					yield return this.showedIndexes.IndexOf (this.menuTabIndex);
 				}
 
-				//	Retourne toujours l'onglet sélectionné en premier.
+				//	Retourne toujours l'onglet sÃ©lectionnÃ© en premier.
 				if (this.selectedIndex != -1)
 				{
 					yield return this.showedIndexes.IndexOf (this.selectedIndex);
@@ -986,7 +986,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private Rectangle GetTextRect(int rank)
 		{
-			//	Retourne le rectangle du texte d'un onglet. Le cadre de l'onglet déborde ce rectangle.
+			//	Retourne le rectangle du texte d'un onglet. Le cadre de l'onglet dÃ©borde ce rectangle.
 			double x = this.LeftWidgetsWidth + TabsPane.tabMargin;
 
 			for (int r = 0; r < rank; r++)
@@ -1045,8 +1045,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void UpdateIndexes()
 		{
-			//	Met à jour les index devant être dessinés et ceux qui sont cachés, dans l'ordre de visibilité
-			//	de gauche à droite. A ne pas confondre avec l'ordre de détection/dessin.
+			//	Met Ã  jour les index devant Ãªtre dessinÃ©s et ceux qui sont cachÃ©s, dans l'ordre de visibilitÃ©
+			//	de gauche Ã  droite. A ne pas confondre avec l'ordre de dÃ©tection/dessin.
 			if (!this.dirtyLayout && this.lastWidth == this.ActualWidth)
 			{
 				return;
@@ -1064,7 +1064,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				this.UpdateIndexesNormal ();
 			}
 
-			//	Met à jour la liste des index invisibles.
+			//	Met Ã  jour la liste des index invisibles.
 			this.hiddenIndexes.Clear ();
 
 			for (int i = 0; i < this.tabs.Count; i++)
@@ -1099,7 +1099,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				tab.CurrentWidth = System.Math.Min (tab.TextWidth, max);
 			}
 
-			//	Génère la table des positions droites des onglets.
+			//	GÃ©nÃ¨re la table des positions droites des onglets.
 			var rigths = new List<double> ();
 			double x = TabsPane.tabMargin;
 			for (int i = 0; i < this.tabs.Count; i++)
@@ -1113,7 +1113,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			if (rigths[this.tabs.Count-1] <= actualWidth-TabsPane.tabMargin*1.8)  // assez de place ?
 			{
-				//	Cas où on a assez de place pour tout mettre normalement.
+				//	Cas oÃ¹ on a assez de place pour tout mettre normalement.
 				for (int i = 0; i < tabs.Count; i++)
 				{
 					this.showedIndexes.Add (i);
@@ -1125,7 +1125,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (this.selectedIndex == -1 || rigths[this.selectedIndex] <= max)
 				{
-					//	Cas où il manque de la place, mais où l'onglet sélectionné est visible normalement.
+					//	Cas oÃ¹ il manque de la place, mais oÃ¹ l'onglet sÃ©lectionnÃ© est visible normalement.
 					for (int i = 0; i < this.tabs.Count; i++)
 					{
 						if (rigths[i] > max)
@@ -1138,7 +1138,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 				else
 				{
-					//	Cas où il manque de la place et où l'onglet sélectionné est invisible normalement.
+					//	Cas oÃ¹ il manque de la place et oÃ¹ l'onglet sÃ©lectionnÃ© est invisible normalement.
 					max -= this.tabs[this.selectedIndex].CurrentWidth;
 
 					for (int i = 0; i < this.tabs.Count; i++)
@@ -1154,7 +1154,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 						}
 					}
 
-					//	L'onglet sélectionné vient en dernier à droite.
+					//	L'onglet sÃ©lectionnÃ© vient en dernier Ã  droite.
 					this.showedIndexes.Add (this.selectedIndex);
 				}
 
@@ -1162,7 +1162,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				this.showedIndexes.Add (TabsPane.menuIndex);
 			}
 
-			//	Garde-fou. Si l'onglet sélectionné n'y est pas, on l'ajoute !
+			//	Garde-fou. Si l'onglet sÃ©lectionnÃ© n'y est pas, on l'ajoute !
 			if (this.selectedIndex != -1)
 			{
 				if (!this.showedIndexes.Contains (this.selectedIndex))
@@ -1251,7 +1251,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void UpdateLeftWidgetsLayout()
 		{
-			//	Met à jour les positions des widgets additionnels de gauche.
+			//	Met Ã  jour les positions des widgets additionnels de gauche.
 			double x = 0;
 
 			foreach (var widget in this.rightWidgets)
@@ -1263,7 +1263,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void UpdateRightWidgetsLayout()
 		{
-			//	Met à jour les positions des widgets additionnels de droite.
+			//	Met Ã  jour les positions des widgets additionnels de droite.
 			double x = 0;
 
 			foreach (var widget in this.rightWidgets)
@@ -1331,7 +1331,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				var tab = this.GetShowedTabFromIndex (index);
 				if (tab != null)
 				{
-					if (!tab.TabItem.Tooltip.IsNullOrEmpty ())  // existe-t-il un tooltip spécifique ?
+					if (!tab.TabItem.Tooltip.IsNullOrEmpty ())  // existe-t-il un tooltip spÃ©cifique ?
 					{
 						return tab.TabItem.Tooltip;
 					}
@@ -1351,7 +1351,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		#region Menus
 		private void ShowHiddenMenu()
 		{
-			//	Affiche le menu sous l'onglet 'v', qui permet d'accèder aux onglets cachés.
+			//	Affiche le menu sous l'onglet 'v', qui permet d'accÃ¨der aux onglets cachÃ©s.
 			var menu = new VMenu ();
 
 			foreach (var index in this.hiddenIndexes)
@@ -1366,7 +1366,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					IconUri       = UIBuilder.GetResourceIconUri (this.tabs[index].TabItem.Icon),
 					FormattedText = text,
-					TabIndex      = index,  // il est étrange d'utiliser TabIndex, mais cela fonctionne !
+					TabIndex      = index,  // il est Ã©trange d'utiliser TabIndex, mais cela fonctionne !
 				};
 
 				menu.Items.Add (item);
@@ -1438,7 +1438,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (tab.TabItem.ReloadVisibility)
 				{
-					this.AddToContextMenu (menu, "ViewSettings.Reload", "Réutiliser les réglages initiaux", tab.TabItem.ReloadEnable, delegate
+					this.AddToContextMenu (menu, "ViewSettings.Reload", "RÃ©utiliser les rÃ©glages initiaux", tab.TabItem.ReloadEnable, delegate
 					{
 						this.OnReloadDoing (this.menuTabIndex);
 					});
@@ -1446,7 +1446,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (tab.TabItem.SaveVisibility)
 				{
-					this.AddToContextMenu (menu, "ViewSettings.Save", "Enregistrer les réglages actuels", tab.TabItem.SaveEnable, delegate
+					this.AddToContextMenu (menu, "ViewSettings.Save", "Enregistrer les rÃ©glages actuels", tab.TabItem.SaveEnable, delegate
 					{
 						this.OnSaveDoing (this.menuTabIndex);
 					});
@@ -1466,12 +1466,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				menu.Items.Add (new MenuSeparator ());
 
-				this.AddToContextMenu (menu, "Edit.Tab.Begin", "Déplacer en tête", tab.TabItem.MoveBeginEnable, delegate
+				this.AddToContextMenu (menu, "Edit.Tab.Begin", "DÃ©placer en tÃªte", tab.TabItem.MoveBeginEnable, delegate
 				{
 					this.OnDraggingDoing (this.selectedIndex, this.BeginIndex);
 				});
 
-				this.AddToContextMenu (menu, "Edit.Tab.End", "Déplacer en queue", tab.TabItem.MoveEndEnable, delegate
+				this.AddToContextMenu (menu, "Edit.Tab.End", "DÃ©placer en queue", tab.TabItem.MoveEndEnable, delegate
 				{
 					this.OnDraggingDoing (this.selectedIndex, this.EndIndex);
 				});
@@ -1714,7 +1714,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			public double TextWidth
 			{
-				//	Largeur requise pour afficher la totalité du texte.
+				//	Largeur requise pour afficher la totalitÃ© du texte.
 				get
 				{
 					return System.Math.Floor (this.textWidth + TabsPane.textMargin*2) + 1;
@@ -1723,7 +1723,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			public double CurrentWidth
 			{
-				//	Largeur utilisée pour l'onglet.
+				//	Largeur utilisÃ©e pour l'onglet.
 				get;
 				set;
 			}
@@ -1736,12 +1736,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private enum TabState
 		{
-			Normal,				// onglet non sélectionné
-			Selected,			// onglet sélectionné
-			Hilited,			// onglet survolé par la souris
+			Normal,				// onglet non sÃ©lectionnÃ©
+			Selected,			// onglet sÃ©lectionnÃ©
+			Hilited,			// onglet survolÃ© par la souris
 			MenuOpened,			// onglet 'v' du menu, avec le menu ouvert
-			StartDragging,		// onglet en cours de déplacement
-			Floating,			// onglet déplacé, dans la fenêtre flottante
+			StartDragging,		// onglet en cours de dÃ©placement
+			Floating,			// onglet dÃ©placÃ©, dans la fenÃªtre flottante
 		}
 
 

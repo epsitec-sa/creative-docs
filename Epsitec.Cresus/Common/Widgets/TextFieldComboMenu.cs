@@ -1,10 +1,10 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextFieldComboMenu implémente le menu affiché par TextFieldCombo.
+	/// La classe TextFieldComboMenu implÃ©mente le menu affichÃ© par TextFieldCombo.
 	/// </summary>
 	public class TextFieldComboMenu : AbstractMenu
 	{

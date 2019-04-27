@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public int GetUnicodeIndex(int unicode)
 		{
-			//	Retourne l'index d'un caractère dans la fonte.
+			//	Retourne l'index d'un caractÃ¨re dans la fonte.
 			for ( int i=0 ; i<this.characters.Count ; i++ )
 			{
 				CharacterList cl = this.characters[i] as CharacterList;
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public int GetGlyphIndex(ushort glyph)
 		{
-			//	Retourne l'index d'un caractère dans la fonte.
+			//	Retourne l'index d'un caractÃ¨re dans la fonte.
 			for ( int i=0 ; i<this.characters.Count ; i++ )
 			{
 				CharacterList cl = this.characters[i] as CharacterList;
@@ -104,8 +104,8 @@ namespace Epsitec.Common.Document.PDF
 
 		public override bool Equals(object obj)
 		{
-			//	Compare si deux fontes ont des apparences identiques, même si les objets
-			//	ne sont pas physiquement les mêmes.
+			//	Compare si deux fontes ont des apparences identiques, mÃªme si les objets
+			//	ne sont pas physiquement les mÃªmes.
 			FontList o = obj as FontList;
 
 			return OpenType.Font.HaveEqualTypography(this.openTypeFont, o.openTypeFont);
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public static void CreateFonts(FontHash fonts, CharacterHash characters)
 		{
-			//	Crée les fontes d'après les caractères.
+			//	CrÃ©e les fontes d'aprÃ¨s les caractÃ¨res.
 			int id = 0;
 			foreach ( System.Collections.DictionaryEntry dict in characters )
 			{

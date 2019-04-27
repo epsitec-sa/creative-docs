@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Binders
 			}
 			else
 			{
-				return ValidationResult.CreateError ("Numéro de téléphone incorrect. Pour la Suisse, le numéro a le format <i>021 345 67 89</i>, par exemple.");
+				return ValidationResult.CreateError ("NumÃ©ro de tÃ©lÃ©phone incorrect. Pour la Suisse, le numÃ©ro a le format <i>021 345 67 89</i>, par exemple.");
 			}
 		}
 

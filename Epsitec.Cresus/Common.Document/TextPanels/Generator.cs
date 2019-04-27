@@ -6,11 +6,11 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.TextPanels
 {
 	/// <summary>
-	/// La classe Generator permet de choisir les puces et les numérotations.
+	/// La classe Generator permet de choisir les puces et les numÃ©rotations.
 	/// </summary>
 	public class Generator : Abstract
 	{
-		//	Possibilités (level.part1.part2) :
+		//	PossibilitÃ©s (level.part1.part2) :
 		//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
 		//	0.[Generic].[Disposition]
 		//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		public override void UpdateAfterAttach()
 		{
-			//	Mise à jour après avoir attaché le wrappers.
+			//	Mise Ã  jour aprÃ¨s avoir attachÃ© le wrappers.
 			this.UpdateButtonClear();
 		}
 
@@ -143,11 +143,11 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				double h = this.LabelHeight;
 
-				if ( this.isExtendedSize )  // panneau étendu ?
+				if ( this.isExtendedSize )  // panneau Ã©tendu ?
 				{
 					h += 111 + (23+17*4);
 				}
-				else	// panneau réduit ?
+				else	// panneau rÃ©duit ?
 				{
 					h += 35;
 				}
@@ -159,14 +159,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void HandleWrapperChanged(object sender)
 		{
-			//	Le wrapper associé a changé.
+			//	Le wrapper associÃ© a changÃ©.
 			this.UpdateAfterChanging();
 		}
 
 
 		protected void CreateGenerator(string type)
 		{
-			//	Crée un nouveau générateur prédéfini.
+			//	CrÃ©e un nouveau gÃ©nÃ©rateur prÃ©dÃ©fini.
 			Text.TabList tabs = this.document.TextContext.TabList;
 			Text.ParagraphManagers.ItemListManager.Parameters p;
 
@@ -218,12 +218,12 @@ namespace Epsitec.Common.Document.TextPanels
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,           "\u25A0");  // puce carrée pleine
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,           "\u25A0");  // puce carrÃ©e pleine
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,       "Arial");
 //				this.SetValue(p, 1, Part1.Prefix,  Part2.FontColor,      RichColor.ToString(RichColor.FromRgb(1,0,0)));
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "\u25A1");  // puce carrée vide
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "\u25A1");  // puce carrÃ©e vide
 				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,       "Arial");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected int GetCount()
 		{
-			//	Nombre de lignes du générateur.
+			//	Nombre de lignes du gÃ©nÃ©rateur.
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return 0;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 			if ( p == null )  return 0;
@@ -404,7 +404,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void IncCount()
 		{
-			//	Ajoute une nouvelle ligne au générateur.
+			//	Ajoute une nouvelle ligne au gÃ©nÃ©rateur.
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void DecCount()
 		{
-			//	Supprime la dernière ligne du générateur.
+			//	Supprime la derniÃ¨re ligne du gÃ©nÃ©rateur.
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 
@@ -427,8 +427,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetResume(int level)
 		{
-			//	Donne le texte résumé pour un niveau complet. Le résumé contient aussi tous
-			//	les niveaux précédents.
+			//	Donne le texte rÃ©sumÃ© pour un niveau complet. Le rÃ©sumÃ© contient aussi tous
+			//	les niveaux prÃ©cÃ©dents.
 			if ( level == 0 )
 			{
 				return Res.Strings.TextPanel.Generator.Short.Global;
@@ -460,8 +460,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetResume(int level, Part1 part1, bool isShort)
 		{
-			//	Donne le texte résumé d'une partie d'un niveau (Prefix, Value ou Suffix).
-			//	Le résumé contient les commandes pour la police et la couleur.
+			//	Donne le texte rÃ©sumÃ© d'une partie d'un niveau (Prefix, Value ou Suffix).
+			//	Le rÃ©sumÃ© contient les commandes pour la police et la couleur.
 			string s = this.GetValue(level, part1, Part2.Text);
 			if ( s == null )  return "";
 
@@ -507,8 +507,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetValue(int level, Part1 part1, Part2 part2)
 		{
-			//	Donne la valeur d'une partie d'un niveau. Il s'agit du passage obligé
-			//	pour lire les définitions de puces/numérotations.
+			//	Donne la valeur d'une partie d'un niveau. Il s'agit du passage obligÃ©
+			//	pour lire les dÃ©finitions de puces/numÃ©rotations.
 			if ( level < 0 || level > 10 )  return null;
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return null;
 
@@ -653,8 +653,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void SetValue(Text.ParagraphManagers.ItemListManager.Parameters p, int level, Part1 part1, Part2 part2, string value)
 		{
-			//	Modifie une valeur d'une partie d'un niveau. Il s'agit du passage obligé
-			//	pour modifier les définitions de puces/numérotations.
+			//	Modifie une valeur d'une partie d'un niveau. Il s'agit du passage obligÃ©
+			//	pour modifier les dÃ©finitions de puces/numÃ©rotations.
 			if ( level < 0 || level > 10 )  return;
 
 			if ( value == "" )  value = null;
@@ -689,7 +689,7 @@ namespace Epsitec.Common.Document.TextPanels
 					{
 						if ( p.TabItem == null )
 						{
-							//	Si aucun tabulateur n'est défini, pose 10x2 taquets par défaut.
+							//	Si aucun tabulateur n'est dÃ©fini, pose 10x2 taquets par dÃ©faut.
 							double[] offsetsItem = new double[10];
 							double[] offsetsBody = new double[10];
 							double inc = System.Globalization.RegionInfo.CurrentRegion.IsMetric ? 100 : 127;  // 10mm ou 0.5in
@@ -915,7 +915,7 @@ namespace Epsitec.Common.Document.TextPanels
 		#region Properties array manager
 		protected static Common.Text.Property PropertyGet(Common.Text.Property[] properties, Common.Text.Properties.WellKnownType type)
 		{
-			//	Cherche une propriété dans un tableau.
+			//	Cherche une propriÃ©tÃ© dans un tableau.
 			if ( properties == null )  return null;
 
 			foreach ( Common.Text.Property property in properties )
@@ -927,7 +927,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static void PropertyModify(Common.Text.Property[] properties, Common.Text.Property n)
 		{
-			//	Modifie une propriété d'un tableau.
+			//	Modifie une propriÃ©tÃ© d'un tableau.
 			for ( int i=0 ; i<properties.Length ; i++ )
 			{
 				Common.Text.Property property = properties[i] as Common.Text.Property;
@@ -940,7 +940,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static Common.Text.Property[] PropertyAdd(Common.Text.Property[] properties, Common.Text.Property n)
 		{
-			//	Ajoute une propriété à la fin d'un tableau.
+			//	Ajoute une propriÃ©tÃ© Ã  la fin d'un tableau.
 			int length = (properties == null) ? 0 : properties.Length;
 			Common.Text.Property[] list = new Common.Text.Property[length+1];
 			for ( int i=0 ; i<length ; i++ )
@@ -953,7 +953,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static Common.Text.Property[] PropertyRemove(Common.Text.Property[] properties, Common.Text.Properties.WellKnownType type)
 		{
-			//	Supprime une propriété d'un tableau.
+			//	Supprime une propriÃ©tÃ© d'un tableau.
 			if ( properties == null )  return null;
 
 			int length = 0;
@@ -1066,7 +1066,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			value /= Modifier.FontSizeScale;
 			value *= 1000000.0;
-			value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+			value = System.Math.Floor(value+0.5);  // arrondi Ã  la 6Ã¨me dÃ©cimale
 			value /= 1000000.0;
 			return value.ToString();
 		}
@@ -1264,13 +1264,13 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		public override void OriginColorDeselect()
 		{
-			//	Désélectionne toutes les origines de couleurs possibles.
+			//	DÃ©sÃ©lectionne toutes les origines de couleurs possibles.
 			this.colorText.ActiveState = ActiveState.No;
 		}
 
 		public override void OriginColorSelect(int rank)
 		{
-			//	Sélectionne l'origine de couleur.
+			//	SÃ©lectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -1322,7 +1322,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		protected void UpdateTable()
 		{
-			//	Met à jour le contenu de la liste.
+			//	Met Ã  jour le contenu de la liste.
 			int columns = 4;
 			int rows = 0;
 
@@ -1360,7 +1360,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void TableFillRow(int row)
 		{
-			//	Peuple une ligne de la table, si nécessaire.
+			//	Peuple une ligne de la table, si nÃ©cessaire.
 			if ( this.table[0, row].IsEmpty )
 			{
 				StaticText st = new StaticText();
@@ -1409,7 +1409,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void TableUpdateRow(int row)
 		{
-			//	Met à jour le contenu d'une ligne de la table.
+			//	Met Ã  jour le contenu d'une ligne de la table.
 			StaticText st;
 			string s;
 
@@ -1446,7 +1446,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonClear == null )  return;
@@ -1462,7 +1462,7 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Right = rect.Right;
 			this.buttonClear.SetManualBounds(r);
 
-			if ( this.isExtendedSize )  // panneau étendu ?
+			if ( this.isExtendedSize )  // panneau Ã©tendu ?
 			{
 				r.Offset(0, -25);
 				r.Bottom = r.Top-20;
@@ -1541,7 +1541,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected override void UpdateAfterChanging()
 		{
-			//	Met à jour après un changement du wrapper.
+			//	Met Ã  jour aprÃ¨s un changement du wrapper.
 			base.UpdateAfterChanging();
 			
 			if ( this.ParagraphWrapper.IsAttached == false )  return;

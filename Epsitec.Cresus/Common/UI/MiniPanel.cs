@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 //	******* EN CHANTIER *******
@@ -14,8 +14,8 @@ namespace Epsitec.Common.UI
 {
 	//	TODO: terminer cette classe.
 	
-	//	L'idée est de pouvoir utiliser un Placeholder dont le contenu peut éventuellement
-	//	s'élargir au besoin, en cours d'édition, même si son parent direct est trop petit.
+	//	L'idÃ©e est de pouvoir utiliser un Placeholder dont le contenu peut Ã©ventuellement
+	//	s'Ã©largir au besoin, en cours d'Ã©dition, mÃªme si son parent direct est trop petit.
 	//	On place les widgets de l'interface graphique du Placeholder provisoirement dans
 	//	un MiniPanel qui est un enfant du PanelStack.
 	

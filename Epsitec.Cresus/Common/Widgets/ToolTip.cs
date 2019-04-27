@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ToolTip implémente les "info bulles".
+	/// La classe ToolTip implÃ©mente les "info bulles".
 	/// </summary>
 	public sealed class ToolTip : DependencyObject
 	{
@@ -558,7 +558,7 @@ namespace Epsitec.Common.Widgets
 			
 			mouse.Y -= tip.PreferredHeight;
 			
-			//	Modifie la position du tool-tip pour qu'il ne dépasse pas de l'écran.
+			//	Modifie la position du tool-tip pour qu'il ne dÃ©passe pas de l'Ã©cran.
 			
 			Drawing.Rectangle wa = ScreenInfo.Find (mouse).WorkingArea;
 			
@@ -566,7 +566,7 @@ namespace Epsitec.Common.Widgets
 			{
 				mouse.Y = wa.Bottom;
 			}
-			if (mouse.X + tip.PreferredWidth > wa.Right)  // dépasse à droite ?
+			if (mouse.X + tip.PreferredWidth > wa.Right)  // dÃ©passe Ã  droite ?
 			{
 				mouse.X = wa.Right - tip.PreferredWidth;
 			}
@@ -779,9 +779,9 @@ namespace Epsitec.Common.Widgets
 
 		private static double GetTooltipAutoCloseDelay(DependencyObject obj)
 		{
-			//	Retourne le délai de fermeture pour le tooltip, en se basant sur une vitesse de lecture
-			//	de 40 caractères/seconde. Le délai est toujours compris entre 5 et 20 secondes.
-			//	Si le tooltip n'est pas défini avec un texte (par exemple un Caption ou un Widget), le délai
+			//	Retourne le dÃ©lai de fermeture pour le tooltip, en se basant sur une vitesse de lecture
+			//	de 40 caractÃ¨res/seconde. Le dÃ©lai est toujours compris entre 5 et 20 secondes.
+			//	Si le tooltip n'est pas dÃ©fini avec un texte (par exemple un Caption ou un Widget), le dÃ©lai
 			//	est de 5 secondes.
 			int length = ToolTip.GetTooltipTextLength (obj);
 			return System.Math.Min (System.Math.Max (length/40, SystemInformation.ToolTipAutoCloseDelay), SystemInformation.ToolTipAutoCloseDelay*4);
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Widgets
 
 		private static int GetTooltipTextLength(DependencyObject obj)
 		{
-			//	Retourne le nombre de caractères du texte, ou zéro si ce n'est pas un texte.
+			//	Retourne le nombre de caractÃ¨res du texte, ou zÃ©ro si ce n'est pas un texte.
 			string text = ToolTip.GetToolTipText (obj);
 
 			if (string.IsNullOrEmpty (text))

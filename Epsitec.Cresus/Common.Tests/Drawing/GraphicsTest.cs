@@ -359,7 +359,7 @@ namespace Epsitec.Common.Tests.Drawing
 			e.Graphics.PaintText (10, 20, "Hello, world. 10pt", font, 10.0);
 			e.Graphics.PaintText (10, 10, "Hello, world. 9pt",  font,  9.0);
 			
-			text = "Quelle idée\u00A0! Un fjord finlandais...";
+			text = "Quelle idÃ©e\u00A0! Un fjord finlandais...";
 			y    = 80;
 			
 			double font_size  = 14;
@@ -1171,7 +1171,7 @@ namespace Epsitec.Common.Tests.Drawing
 				a[i] = 1.0;
 			}
 			
-			//	Pour voir les extrémités :
+			//	Pour voir les extrÃ©mitÃ©s :
 			
 			r[0]   = g[0]   = b[0]   = 1.0;
 			r[255] = g[255] = b[255] = 1.0;
@@ -1394,7 +1394,7 @@ namespace Epsitec.Common.Tests.Drawing
 			e.Graphics.PaintImage (bitmap,  10,  82, 200, 20, 0, 0);			//	clip
 			e.Graphics.PaintImage (bitmap,  10, 104, 200, 20, 0, 0, 125, 20);	//	clip + stretch
 			e.Graphics.PaintImage (bitmap,  10, 126, 200, 20, 0, 10, 200, 80);	//	clip + stretch
-			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 100, 10, 200, 80);//	clip + stretch (déborde de l'image, 185 pixels en dehors à droite)
+			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 100, 10, 200, 80);//	clip + stretch (dÃ©borde de l'image, 185 pixels en dehors Ã  droite)
 			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 120, 10, 200, 80);//	clip + stretch (plus rien)
 		}
 		

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;

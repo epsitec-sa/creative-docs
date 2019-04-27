@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Action permet de gérer les commandes du menu aide.
+	/// La classe Action permet de gÃ©rer les commandes du menu aide.
 	/// </summary>
 	public class Action : Abstract
 	{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonSettings == null )  return;

@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe Sample est un widget affichant un échantillon d'une propriété graphique.
+	/// La classe Sample est un widget affichant un Ã©chantillon d'une propriÃ©tÃ© graphique.
 	/// </summary>
 	public class Sample : AbstractSample
 	{
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public Properties.Aggregate Aggregate
 		{
-			//	Style représenté.
+			//	Style reprÃ©sentÃ©.
 			get
 			{
 				return this.aggregate;
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//	Dessine l'échantillon.
+			//	Dessine l'Ã©chantillon.
 			if ( this.document == null )  return;
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -90,11 +90,11 @@ namespace Epsitec.Common.Document.Widgets
 						texts.Add(text);
 					}
 				}
-				total += (texts.Count+3)/4;  // total: nombre de places nécessaire
+				total += (texts.Count+3)/4;  // total: nombre de places nÃ©cessaire
 
 				int places = System.Math.Max((int)(rect.Width/rect.Height), 1);  // places disponibles
 
-				double dim = rect.Height;  // dimension d'une place (une place est carrée)
+				double dim = rect.Height;  // dimension d'une place (une place est carrÃ©e)
 				bool small = false;
 				if ( total > places )
 				{

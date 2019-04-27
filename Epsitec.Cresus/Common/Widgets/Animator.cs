@@ -1,4 +1,4 @@
-//	Copyright © 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -9,8 +9,8 @@ using System.Linq;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Animator permet d'animer des widgets de manière simplifiée,
-	/// en offrant le support nécessaire pour faire évoluer une valeur de A à B
+	/// La classe Animator permet d'animer des widgets de maniÃ¨re simplifiÃ©e,
+	/// en offrant le support nÃ©cessaire pour faire Ã©voluer une valeur de A Ã  B
 	/// progressivement.
 	/// </summary>
 	public sealed class Animator : System.IDisposable

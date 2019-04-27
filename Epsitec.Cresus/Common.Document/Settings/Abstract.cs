@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe Abstract représente un réglage.
+	/// La classe Abstract reprÃ©sente un rÃ©glage.
 	/// </summary>
 	[System.Serializable()]
 	public abstract class Abstract : ISerializable
@@ -59,13 +59,13 @@ namespace Epsitec.Common.Document.Settings
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			//	Sérialise le réglage.
+			//	SÃ©rialise le rÃ©glage.
 			info.AddValue("Name", this.name);
 		}
 
 		protected Abstract(SerializationInfo info, StreamingContext context)
 		{
-			//	Constructeur qui désérialise le réglage.
+			//	Constructeur qui dÃ©sÃ©rialise le rÃ©glage.
 			this.document = Document.ReadDocument;
 			this.name = info.GetString("Name");
 		}

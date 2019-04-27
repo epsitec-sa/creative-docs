@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 	public class ActiveButton
 	{
 		/// <summary>
-		/// Crée un bouton rond avec un glyphe.
+		/// CrÃ©e un bouton rond avec un glyphe.
 		/// </summary>
 		/// <param name="element"></param>
 		/// <param name="parentColorFactory"></param>
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		}
 
 		/// <summary>
-		/// Crée un bouton rond avec un texte d'un seul caractère.
+		/// CrÃ©e un bouton rond avec un texte d'un seul caractÃ¨re.
 		/// </summary>
 		/// <param name="element"></param>
 		/// <param name="parentColorFactory"></param>
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		}
 
 		/// <summary>
-		/// Crée un petit bouton carré pour choisir une couleur.
+		/// CrÃ©e un petit bouton carrÃ© pour choisir une couleur.
 		/// </summary>
 		/// <param name="element"></param>
 		/// <param name="parentColorFactory"></param>
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 
 		/// <summary>
-		/// Met à jour la géométrie du bouton, c'est-à-dire sa position.
+		/// Met Ã  jour la gÃ©omÃ©trie du bouton, c'est-Ã -dire sa position.
 		/// </summary>
 		public void UpdateGeometry()
 		{
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		}
 
 		/// <summary>
-		/// Met à jour l'état du bouton (ActiveButtonState).
+		/// Met Ã  jour l'Ã©tat du bouton (ActiveButtonState).
 		/// </summary>
 		public void UpdateState()
 		{
@@ -162,13 +162,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		}
 
 		/// <summary>
-		/// Détecte si une position (généralement la souris) est dans le bouton.
+		/// DÃ©tecte si une position (gÃ©nÃ©ralement la souris) est dans le bouton.
 		/// </summary>
 		/// <param name="pos"></param>
 		/// <returns></returns>
 		public bool Detect(Point pos)
 		{
-			//	Il faut détecter les boutons invisibles !
+			//	Il faut dÃ©tecter les boutons invisibles !
 			if (this.state.Detectable && !this.center.IsZero)
 			{
 				if (this.roundButton)
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool DetectSquareButton(Point pos)
 		{
-			//	Détecte si la souris est dans un bouton carré.
+			//	DÃ©tecte si la souris est dans un bouton carrÃ©.
 			if (this.center.IsZero)
 			{
 				return false;
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void DrawSquareButton(Graphics graphics)
 		{
-			//	Dessine un bouton carré avec une couleur.
+			//	Dessine un bouton carrÃ© avec une couleur.
 			if (this.center.IsZero)
 			{
 				return;
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private bool DetectRoundButton(Point pos)
 		{
-			//	Détecte si la souris est dans un bouton circulaire.
+			//	DÃ©tecte si la souris est dans un bouton circulaire.
 			if (this.center.IsZero)
 			{
 				return false;
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void DrawTextRoundButton(Graphics graphics)
 		{
-			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
+			//	Dessine un bouton circulaire avec un texte (gÃ©nÃ©ralement une seule lettre).
 			if (this.center.IsZero)
 			{
 				return;
@@ -325,10 +325,10 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
 				double size = 14;
 
-				if (this.text == "*")  // texte étoile pour une relation privée ?
+				if (this.text == "*")  // texte Ã©toile pour une relation privÃ©e ?
 				{
 					size = 30;  // beaucoup plus grand
-					rect.Offset (0, -4);  // légèrement plus bas
+					rect.Offset (0, -4);  // lÃ©gÃ¨rement plus bas
 				}
 
 				graphics.AddText (rect.Left, rect.Bottom+1, rect.Width, rect.Height, this.text, Font.GetFont (Font.DefaultFontFamily, "Bold"), size, ContentAlignment.MiddleCenter);

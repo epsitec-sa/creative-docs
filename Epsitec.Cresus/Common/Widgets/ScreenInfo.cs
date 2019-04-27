@@ -1,10 +1,10 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ScreenInfo fournit les informations au sujet d'un Ècran.
+	/// La classe ScreenInfo fournit les informations au sujet d'un √©cran.
 	/// </summary>
 	public class ScreenInfo
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		/// <summary>
-		/// Retourne le rectangle correspondant ‡ l'Ècran par rapport ‡ la surface
+		/// Retourne le rectangle correspondant √† l'√©cran par rapport √† la surface
 		/// de travail globale.
 		/// </summary>
 		public Drawing.Rectangle			Bounds
@@ -35,9 +35,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		/// <summary>
-		/// Retourne le rectangle correspondant ‡ la surface de travail sur l'Ècran
-		/// par rapport ‡ la surface de travail globale. L'espace pris par la barre
-		/// des t‚ches est automatiquement enlevÈ.
+		/// Retourne le rectangle correspondant √† la surface de travail sur l'√©cran
+		/// par rapport √† la surface de travail globale. L'espace pris par la barre
+		/// des t√¢ches est automatiquement enlev√©.
 		/// </summary>
 		public Drawing.Rectangle			WorkingArea
 		{
@@ -53,8 +53,8 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		/// <summary>
-		/// Indique s'il s'agit de l'Ècran principal (celui o˘ il y a la barre des
-		/// t‚ches).
+		/// Indique s'il s'agit de l'√©cran principal (celui o√π il y a la barre des
+		/// t√¢ches).
 		/// </summary>
 		public bool							IsPrimary
 		{
@@ -79,8 +79,8 @@ namespace Epsitec.Common.Widgets
 		
 		
 		/// <summary>
-		/// Retourne le rectangle correspondant ‡ la surface de travail globale. Cette
-		/// surface peut avoir une origine nÈgative...
+		/// Retourne le rectangle correspondant √† la surface de travail globale. Cette
+		/// surface peut avoir une origine n√©gative...
 		/// </summary>
 		public static Drawing.Rectangle		GlobalArea
 		{
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		/// <summary>
-		/// Construit la table de tous les Ècrans disponibles.
+		/// Construit la table de tous les √©crans disponibles.
 		/// </summary>
 		public static ScreenInfo[]			AllScreens
 		{
@@ -119,10 +119,10 @@ namespace Epsitec.Common.Widgets
 		
 		
 		/// <summary>
-		/// Trouve l'Ècran qui se trouve au point indiquÈ.
+		/// Trouve l'√©cran qui se trouve au point indiqu√©.
 		/// </summary>
 		/// <param name="point">position absolue</param>
-		/// <returns>Ècran trouvÈ</returns>
+		/// <returns>√©cran trouv√©</returns>
 		public static ScreenInfo Find(Drawing.Point point)
 		{
 			int ox = (int)(point.X + 0.5);
@@ -133,10 +133,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		/// <summary>
-		/// Trouve l'Ècran qui est le plus recouvert par le rectangle indiquÈ.
+		/// Trouve l'√©cran qui est le plus recouvert par le rectangle indiqu√©.
 		/// </summary>
-		/// <param name="rect">rectangle ‡ tester</param>
-		/// <returns>Ècran trouvÈ</returns>
+		/// <param name="rect">rectangle √† tester</param>
+		/// <returns>√©cran trouv√©</returns>
 		public static ScreenInfo Find(Drawing.Rectangle rect)
 		{
 			int ox = (int)(rect.Left + 0.5);
@@ -162,22 +162,22 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Min (rect.Width, area.Width);
 			rect.Height = System.Math.Min (rect.Height, area.Height);
 
-			if (rect.Left < area.Left)		// dÈpasse ‡ gauche ?
+			if (rect.Left < area.Left)		// d√©passe √† gauche ?
 			{
 				rect.Offset (area.Left-rect.Left, 0);
 			}
 
-			if (rect.Right > area.Right)	// dÈpasse ‡ droite ?
+			if (rect.Right > area.Right)	// d√©passe √† droite ?
 			{
 				rect.Offset (area.Right-rect.Right, 0);
 			}
 
-			if (rect.Bottom < area.Bottom)	// dÈpasse en bas ?
+			if (rect.Bottom < area.Bottom)	// d√©passe en bas ?
 			{
 				rect.Offset (0, area.Bottom-rect.Bottom);
 			}
 
-			if (rect.Top > area.Top)		// dÈpasse en haut ?
+			if (rect.Top > area.Top)		// d√©passe en haut ?
 			{
 				rect.Offset (0, area.Top-rect.Top);
 			}

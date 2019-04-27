@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Designer.Comparers
 {
 	/// <summary>
-	///	Compare deux proxies d'après leurs rangs.
+	///	Compare deux proxies d'aprÃ¨s leurs rangs.
 	/// </summary>
 	public class ProxyRank : IComparer<IProxy>
 	{

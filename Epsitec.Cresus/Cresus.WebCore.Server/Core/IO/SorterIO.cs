@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Core.Metadata;
+using Epsitec.Cresus.Core.Metadata;
 
 using System;
 

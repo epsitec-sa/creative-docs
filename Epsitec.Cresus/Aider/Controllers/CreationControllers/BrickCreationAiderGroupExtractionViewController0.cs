@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.CreationControllers;
@@ -23,16 +23,16 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		protected override void GetForm(ActionBrick<AiderGroupExtractionEntity, SimpleBrick<AiderGroupExtractionEntity>> action)
 		{
 			action
-				.Title ("Créer une nouvelle extraction par groupe")
+				.Title ("CrÃ©er une nouvelle extraction par groupe")
 				.Field<string> ()
-					.Title ("Nom (laisser vide pour une création automatique)")
+					.Title ("Nom (laisser vide pour une crÃ©ation automatique)")
 				.End ()
 				.Field<bool> ()
 					.Title ("Ajouter le nom du groupe parent")
 					.InitialValue(true)
 				.End ()
 				.Field<AiderGroupEntity> ()
-					.Title ("Groupe de référence")
+					.Title ("Groupe de rÃ©fÃ©rence")
 					.WithSpecialField<AiderGroupSpecialField<AiderGroupExtractionEntity>> ()
 				.End ()
 				.Field<GroupExtractionMatch> ()
@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		{
 			if (group.IsNull () && match != GroupExtractionMatch.Path)
 			{
-				Logic.BusinessRuleException ("Le groupe de référence est obligatoire.");
+				Logic.BusinessRuleException ("Le groupe de rÃ©fÃ©rence est obligatoire.");
 			}
 
 			var extraction = this.BusinessContext.CreateAndRegisterEntity<AiderGroupExtractionEntity> ();

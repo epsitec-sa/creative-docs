@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Enumerations;
@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Marquer comme lu<br/>pour tout le ménage");
+			return Resources.FormattedText ("Marquer comme lu<br/>pour tout le mÃ©nage");
 		}
 
 		protected override void Execute()

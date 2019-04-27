@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Move permet de déplacer la sélection.
+	/// La classe Move permet de dÃ©placer la sÃ©lection.
 	/// </summary>
 	public class Move : Abstract
 	{
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour la géométrie.
+			//	Met Ã  jour la gÃ©omÃ©trie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonMoveH == null )  return;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void CreateFieldMove(ref TextFieldReal field, string tooltip)
 		{
-			//	Crée un champ éditable pour un déplacement.
+			//	CrÃ©e un champ Ã©ditable pour un dÃ©placement.
 			field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void AdaptFieldMove(TextFieldReal field)
 		{
-			//	Adapte un champ éditable pour un déplacement.
+			//	Adapte un champ Ã©ditable pour un dÃ©placement.
 			if ( this.document == null )
 			{
 				field.Enable = false;

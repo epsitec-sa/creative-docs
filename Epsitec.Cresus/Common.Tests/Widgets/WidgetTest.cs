@@ -164,7 +164,7 @@ namespace Epsitec.Common.Tests.Widgets
 			
 			buttonFr.Margins = new Margins (0, 20, 2, 1);
 			buttonEn.Margins = new Margins (0, 20, 1, 0);
-			buttonFr.Text = "Français";
+			buttonFr.Text = "FranÃ§ais";
 			buttonEn.Text = "Anglais";
 
 			w1.Children.Add (buttonFr);
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Tests.Widgets
 			story.TextContext.ShowControlCharacters = true;
 			story.TextContext.IsDegradedLayoutEnabled = true;
 			
-			string words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
+			string words = "Bonjour, ceci est un texte d'exemple permettant de vÃ©rifier le bon fonctionnement des divers algorithmes de dÃ©coupe et d'affichage. Le nombre de mots moyen s'Ã©lÃ¨ve Ã  environ 40 mots par paragraphe, ce qui correspond Ã  des paragraphes de taille rÃ©duite. Quelle idÃ©e, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 			
 			navigator.Insert (Epsitec.Common.Text.Unicode.Code.EndOfText);
 			navigator.TextNavigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.TextStart, 0);

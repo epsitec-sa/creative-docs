@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -35,9 +35,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderEmployeeEntity, SimpleBrick<AiderEmployeeEntity>> form)
 		{
 			form
-				.Title ("Définir un nouveau poste")
+				.Title ("DÃ©finir un nouveau poste")
 				.Field<AiderOfficeManagementEntity> ()
-					.Title ("Lieu d'église")
+					.Title ("Lieu d'Ã©glise")
 				.End ()
 				.Field<string> ()
 					.Title ("Site ou secteur")
@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			if (office.IsNull ())
 			{
-				throw new BusinessRuleException ("Le lieu d'église manque.");
+				throw new BusinessRuleException ("Le lieu d'Ã©glise manque.");
 			}
 
 			AiderEmployeeJobEntity.Create (this.BusinessContext, this.Entity, function, employer, office, detail);

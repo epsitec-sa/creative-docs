@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ¬© 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 						var s = reader.ReadElementContentAsString ();
 						this.Field = IOHelpers.ParseObjectField  (s);
 
-						break;  // fin de la lecture de la classe abstraite -> on passe ‡ la classe dÈrivÈe
+						break;  // fin de la lecture de la classe abstraite -> on passe √† la classe d√©riv√©e
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)

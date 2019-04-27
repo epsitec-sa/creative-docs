@@ -1,12 +1,12 @@
-//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe ManagedParagraphProperty décrit un paragraphe géré par une
-	/// class implémentant IParagraphManager (en principe une liste à puces,
-	/// par exemple) qui génère du texte automatique (AutoText).
+	/// La classe ManagedParagraphProperty dÃ©crit un paragraphe gÃ©rÃ© par une
+	/// class implÃ©mentant IParagraphManager (en principe une liste Ã  puces,
+	/// par exemple) qui gÃ©nÃ¨re du texte automatique (AutoText).
 	/// </summary>
 	public class ManagedParagraphProperty : Property
 	{
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Text.Properties
 				
 				if (result == 0)
 				{
-					//	TODO: comparer les paramètres...
+					//	TODO: comparer les paramÃ¨tres...
 				}
 				
 				return result;

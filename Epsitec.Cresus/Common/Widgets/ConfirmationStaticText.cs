@@ -3,7 +3,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La class ConfirmationStaticText représente un bouton pour le dialogue ConfirmationDialog.
+	/// La class ConfirmationStaticText reprÃ©sente un bouton pour le dialogue ConfirmationDialog.
 	/// </summary>
 	public class ConfirmationStaticText : StaticText
 	{
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnSizeChanged(oldValue, newValue);
 
-			if (oldValue.Width != newValue.Width)  // largeur changée ?
+			if (oldValue.Width != newValue.Width)  // largeur changÃ©e ?
 			{
 				double h = this.TextLayout.FindTextHeight();
 				this.PreferredHeight = h+ConfirmationStaticText.marginY*2+2;  // TODO: pourquoi +2 ?

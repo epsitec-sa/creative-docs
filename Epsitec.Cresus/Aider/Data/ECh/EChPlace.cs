@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Aider.Data.ECh
+namespace Epsitec.Aider.Data.ECh
 {
 
 

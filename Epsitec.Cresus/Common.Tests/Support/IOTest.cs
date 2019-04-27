@@ -307,8 +307,8 @@ namespace Epsitec.Common.Tests.Support
 		{
 			get
 			{
-				return "Ceci est un petit essai qui devrait permettre de comparer la qualité de la "
-					 + "compression de divers algorithmes, appliqués à un morceau de texte relativement "
+				return "Ceci est un petit essai qui devrait permettre de comparer la qualitÃ© de la "
+					 + "compression de divers algorithmes, appliquÃ©s Ã  un morceau de texte relativement "
 					 + "simple. L'utilisation de tags <italique>XML</italique> dans un tel <gras>texte</gras> "
 					 + "est quelque peu <italique>artificielle</italique>, mais c'est un <gras>test</gras>, "
 					 + "alors que veut-on de plus&#160;? Voici donc le XML alibi&#160;:\n"

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -11,9 +11,9 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
-	/// La classe Port permet d'exporter en PDF des éléments graphiques simples.
-	/// L'unité est le dixième de millimètre (2100 = 21cm).
-	/// L'origine graphique est en bas à gauche.
+	/// La classe Port permet d'exporter en PDF des Ã©lÃ©ments graphiques simples.
+	/// L'unitÃ© est le dixiÃ¨me de millimÃ¨tre (2100 = 21cm).
+	/// L'origine graphique est en bas Ã  gauche.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
 	public class Port : IPaintPort, System.IDisposable
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void Reset()
 		{
-			//	Réinitialise le port, mais surtout pas le stack des modificateurs de couleurs.
+			//	RÃ©initialise le port, mais surtout pas le stack des modificateurs de couleurs.
 			this.colorForce       = ColorForce.Default;
 			this.defaultDecimals  = 2;
 			this.LineWidth        = 1.0;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Pdf.Engine
 			this.fontHash.Clear ();
 			this.characterHash.Clear ();
 
-			//	Libère toutes les images.
+			//	LibÃ¨re toutes les images.
 			foreach (ImageSurface image in this.imageSurfaces)
 			{
 				image.Dispose ();
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public int DefaultDecimals
 		{
-			//	Indique le nombre de décimales par défaut.
+			//	Indique le nombre de dÃ©cimales par dÃ©faut.
 			get
 			{
 				return this.defaultDecimals;
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public double LineWidth
 		{
-			//	Spécifie un trait continu.
+			//	SpÃ©cifie un trait continu.
 			get
 			{
 				return this.lineWidth;
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void SetLineDash(double width, double pen1, double gap1, double pen2, double gap2, double pen3, double gap3)
 		{
-			//	Spécifie un traitillé.
+			//	SpÃ©cifie un traitillÃ©.
 			this.lineWidth    = width;
 			this.lineDash     = true;
 			this.lineDashPen1 = pen1;
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 
 			//	S'il s'agit d'une couleur transparente, on ajoute une surface complexe
-			//	qui s'y réfère.
+			//	qui s'y rÃ©fÃ¨re.
 			foreach (var x in this.complexSurfaces)
 			{
 				if (x.Page == this.CurrentPage &&
@@ -639,7 +639,7 @@ namespace Epsitec.Common.Pdf.Engine
 			{
 				var textLayout = Port.GetTextLayout (new Size (10000, 10000), formattedText, style);
 				var size = textLayout.GetSingleLineSize ();
-				size.Width += 1.0;  // il faut ajouter un chouia (0.1mm) pour éviter des plantées dans TextLayout !
+				size.Width += 1.0;  // il faut ajouter un chouia (0.1mm) pour Ã©viter des plantÃ©es dans TextLayout !
 				return size;
 			}
 		}
@@ -697,11 +697,11 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void PreProcessText(Size boxSize, FormattedText formattedText, TextStyle style)
 		{
-			//	Préprocessing d'un texte. On construit la Hashtable de tous les
-			//	caractères utilisés, et on collectionne les images utilisées.
+			//	PrÃ©processing d'un texte. On construit la Hashtable de tous les
+			//	caractÃ¨res utilisÃ©s, et on collectionne les images utilisÃ©es.
 			var textLayout = Port.GetTextLayout (boxSize, formattedText, style);
 
-			//	On s'occupe des caractères.
+			//	On s'occupe des caractÃ¨res.
 			TextLayout.OneCharStructure[] fix = textLayout.ComputeStructure ();
 
 			foreach (TextLayout.OneCharStructure oneChar in fix)
@@ -740,7 +740,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 						if (image != null)
 						{
-							//	Le préprocessing d'une image n'a pas besoin des informations géométriques !
+							//	Le prÃ©processing d'une image n'a pas besoin des informations gÃ©omÃ©triques !
 							this.PaintImage (image, 0, 0, 0, 0);
 						}
 					}
@@ -759,7 +759,7 @@ namespace Epsitec.Common.Pdf.Engine
 				BreakMode     = TextBreakMode.None,  // voir (*)
 			};
 
-			//	(*)	Il faut à tout prix éviter le mode Ellipsis, qui provoque des plantées
+			//	(*)	Il faut Ã  tout prix Ã©viter le mode Ellipsis, qui provoque des plantÃ©es
 			//		dans TextLayout lorsque la surface est trop petite pour accueillir le
 			//		texte !
 		}
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Pdf.Engine
 		public double PaintText(double x, double y, string text, Font font, double fontSize, FontClassInfo[] infos)
 		{
 #if false
-			// Ce code ne fonctionne pas. Et je ne sais plus à quoi il sert !
+			// Ce code ne fonctionne pas. Et je ne sais plus Ã  quoi il sert !
 			for ( int i=0 ; i<infos.Length ; i++ )
 			{
 				if ( infos[i].Scale != 1.00 &&
@@ -924,7 +924,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
-			//	Tous les modes ne sont pas supportés. imageOriginX/imageOriginY doivent être nuls,
+			//	Tous les modes ne sont pas supportÃ©s. imageOriginX/imageOriginY doivent Ãªtre nuls,
 			//	et imageWidth/imageHeight doivent correspondre aux dimensions de l'image.
 			//	Autrement dit, il faut dessiner toute l'image.
 			
@@ -971,7 +971,7 @@ namespace Epsitec.Common.Pdf.Engine
 		
 		public StringBuffer GetPDF()
 		{
-			//	Donne tout le texte PDF généré.
+			//	Donne tout le texte PDF gÃ©nÃ©rÃ©.
 			try
 			{
 				return this.stringBuilder;
@@ -984,8 +984,8 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void Init()
 		{
-			//	Initialise tous les paramètres graphiques à des valeurs différentes
-			//	des valeurs utilisées par la suite, ou aux valeurs par défaut.
+			//	Initialise tous les paramÃ¨tres graphiques Ã  des valeurs diffÃ©rentes
+			//	des valeurs utilisÃ©es par la suite, ou aux valeurs par dÃ©faut.
 			this.stringBuilder           = new StringBuffer ();
 			this.currentWidth            = -1.0;
 			this.currentCap              = (CapStyle) 999;
@@ -1004,7 +1004,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetStrokeColor(RichColor color)
 		{
-			//	Spécifie la couleur de trait.
+			//	SpÃ©cifie la couleur de trait.
 			if (this.currentStrokeColor != color || this.currentComplexSurfaceId != this.complexSurfaceId)
 			{
 				if (this.currentComplexSurfaceId != -1)
@@ -1039,7 +1039,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetFillColor(RichColor color)
 		{
-			//	Spécifie la couleur de surface.
+			//	SpÃ©cifie la couleur de surface.
 			if (this.currentFillColor != color || this.currentComplexSurfaceId != this.complexSurfaceId)
 			{
 				if (this.currentComplexSurfaceId != -1)
@@ -1085,7 +1085,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void DoFill(Path path)
 		{
-			//	Rempli la surface du chemin défini.
+			//	Rempli la surface du chemin dÃ©fini.
 			if (this.complexSurfaceId == -1 || this.complexType != PdfComplexSurfaceType.ExtGState)
 			{
 				this.PutPath (path);
@@ -1147,7 +1147,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetWidth(double width)
 		{
-			//	Spécifie l'épaisseur des traits.
+			//	SpÃ©cifie l'Ã©paisseur des traits.
 			if ( this.currentWidth != width )
 			{
 				this.currentWidth = width;
@@ -1159,7 +1159,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetCap(CapStyle cap)
 		{
-			//	Spécifie l'extrémité des traits.
+			//	SpÃ©cifie l'extrÃ©mitÃ© des traits.
 			if ( this.currentCap != cap )
 			{
 				this.currentCap = cap;
@@ -1176,7 +1176,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetJoin(JoinStyle join)
 		{
-			//	Spécifie les coins des traits.
+			//	SpÃ©cifie les coins des traits.
 			if ( this.currentJoin != join )
 			{
 				this.currentJoin = join;
@@ -1194,7 +1194,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetDash(bool dash, double pen1, double gap1, double pen2, double gap2, double pen3, double gap3)
 		{
-			//	Spécifie le mode de traitillé.
+			//	SpÃ©cifie le mode de traitillÃ©.
 			if ( this.currentDash != dash ||
 				 this.currentPen1 != pen1 ||
 				 this.currentGap1 != gap1 ||
@@ -1238,7 +1238,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetLimit(double limit)
 		{
-			//	Spécifie la limite pour JoinMiter.
+			//	SpÃ©cifie la limite pour JoinMiter.
 			if ( this.currentLimit != limit )
 			{
 				this.currentLimit = limit;
@@ -1250,7 +1250,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void SetTransform(Transform transform)
 		{
-			//	Spécifie la matrice de transformation.
+			//	SpÃ©cifie la matrice de transformation.
 			if ( this.currentTransform != transform )
 			{
 				Transform t = Transform.Inverse(this.currentTransform);
@@ -1342,7 +1342,7 @@ namespace Epsitec.Common.Pdf.Engine
 				 matrix.YX != 0.0 ||
 				 matrix.YY != 1.0 ||
 				 matrix.TX != 0.0 ||
-				 matrix.TY != 0.0 )  // autre que matrice identité ?
+				 matrix.TY != 0.0 )  // autre que matrice identitÃ© ?
 			{
 				//	Attention: inversion de XY et YX !
 				this.PutValue(matrix.XX, -1);
@@ -1443,7 +1443,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void PutValue(double num)
 		{
-			//	Met une valeur avec 2 décimales.
+			//	Met une valeur avec 2 dÃ©cimales.
 			this.PutValue(num, this.defaultDecimals);
 		}
 
@@ -1491,7 +1491,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void PutCommandStroke()
 		{
-			//	Met une commande de tracé.
+			//	Met une commande de tracÃ©.
 			if (this.fillMode == FillMode.NonZero)
 			{
 				this.PutCommand ("W ");  // nonzero stroke, voir [*] page 205
@@ -1529,18 +1529,18 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private static string StringValue(double num)
 		{
-			//	Met une valeur avec 2 décimales.
+			//	Met une valeur avec 2 dÃ©cimales.
 			return Port.StringValue(num, 2);
 		}
 
 		public static string StringValue(double num, int decimals)
 		{
 			//	Met une valeur.
-			if ( decimals == -1 )  // précision automatique ?
+			if ( decimals == -1 )  // prÃ©cision automatique ?
 			{
 				double log = System.Math.Log10(System.Math.Abs(num));
 				log = (log >= 0) ? System.Math.Ceiling(log) : -System.Math.Ceiling(-log);
-				decimals = 4 - (int)log;  // 4 digits de précision
+				decimals = 4 - (int)log;  // 4 digits de prÃ©cision
 				decimals = System.Math.Max(decimals, 1);
 			}
 
@@ -1565,7 +1565,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private ComplexSurface GetComplexSurface(int id)
 		{
-			//	Cherche la surface complexe d'après son identificateur.
+			//	Cherche la surface complexe d'aprÃ¨s son identificateur.
 			foreach (ComplexSurface cs in this.complexSurfaces)
 			{
 				if (cs.Id == id)
@@ -1578,7 +1578,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private int SearchComplexColor(int page, RichColor color)
 		{
-			//	Cherche la surface complexe à utiliser pour une couleur transparente.
+			//	Cherche la surface complexe Ã  utiliser pour une couleur transparente.
 			foreach (ComplexSurface cs in this.complexSurfaces)
 			{
 				if (cs.Page == page && cs.Color == color)
@@ -1592,8 +1592,8 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private static void BezierS1ToS2(Point p1, ref Point s1, ref Point s2, Point p2)
 		{
-			//	Convertit une courbe de Bézier définie par un seul point secondaire en
-			//	une courbe "traditionnelle" définie par deux points secondaires.
+			//	Convertit une courbe de BÃ©zier dÃ©finie par un seul point secondaire en
+			//	une courbe "traditionnelle" dÃ©finie par deux points secondaires.
 			//	Il s'agit ici d'une approximation empyrique !
 			s1 = Point.Scale (p1, s1, 2.0/3.0);
 			s2 = Point.Scale (p2, s2, 2.0/3.0);

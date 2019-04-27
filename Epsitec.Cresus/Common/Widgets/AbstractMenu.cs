@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright Â© 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Menu représente un menu (horizontal ou vertical).
+	/// La classe Menu reprÃ©sente un menu (horizontal ou vertical).
 	/// </summary>
 	public abstract class AbstractMenu : Widget, Collections.IWidgetCollectionHost<MenuItem>
 	{
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Widgets
 		public virtual void AdjustSize()
 		{
 			//	Ajuste les dimensions du menu selon son contenu.
-			//	Il faut appeler AdjustSize après avoir fini de remplir le
+			//	Il faut appeler AdjustSize aprÃ¨s avoir fini de remplir le
 			//	menu.
 			
 			if (this.IsVertical)
@@ -223,8 +223,8 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Size GetBestFitSize()
 		{
-			//	Retourne les dimensions nécessaires pour tout le menu,
-			//	en partant de l'idée qu'il est vertical.
+			//	Retourne les dimensions nÃ©cessaires pour tout le menu,
+			//	en partant de l'idÃ©e qu'il est vertical.
 			
 			this.UpdateAdornerInformation ();
 			
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (test.X <= workingArea.Right)
 					{
-						//	Le menu a suffisamment de place pour s'afficher à droite
+						//	Le menu a suffisamment de place pour s'afficher Ã  droite
 						//	de son parent :
 						
 						animation = Animation.RollRight;
@@ -477,8 +477,8 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						//	Il n'y a plus de place à droite; on affiche par conséquent
-						//	le sous-menu à gauche :
+						//	Il n'y a plus de place Ã  droite; on affiche par consÃ©quent
+						//	le sous-menu Ã  gauche :
 						
 						animation = Animation.RollLeft;
 						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, item.ActualHeight));
@@ -488,8 +488,8 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				//	Détermine s'il faut décaler verticalement le menu pour qu'il tienne
-				//	dans la partie visible de l'écran :
+				//	DÃ©termine s'il faut dÃ©caler verticalement le menu pour qu'il tienne
+				//	dans la partie visible de l'Ã©cran :
 				
 				screenInfo  = ScreenInfo.Find (new Drawing.Rectangle (location, size));
 				workingArea = screenInfo.WorkingArea;

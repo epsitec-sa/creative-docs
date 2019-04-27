@@ -4,9 +4,9 @@ namespace Epsitec.Common.Widgets
 {
 	public enum TabBookArrows
 	{
-		Right,							// les 2 flèches à droite
-		LeftRight,						// flèches à gauche et à droite
-		Stretch,						// jamais de flèches
+		Right,							// les 2 flÃ¨ches Ã  droite
+		LeftRight,						// flÃ¨ches Ã  gauche et Ã  droite
+		Stretch,						// jamais de flÃ¨ches
 	}
 
 	/// <summary>
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleTabButton(object sender, MessageEventArgs e)
 		{
-			//	Gestion d'un événement lorsqu'un bouton d'onglet est pressé.
+			//	Gestion d'un Ã©vÃ©nement lorsqu'un bouton d'onglet est pressÃ©.
 			if (!(sender is TabButton))
 			{
 				return;
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleScrollButton(object sender)
 		{
-			//	Gestion d'un événement lorsqu'un bouton de scroll < > est pressé.
+			//	Gestion d'un Ã©vÃ©nement lorsqu'un bouton de scroll < > est pressÃ©.
 			GlyphButton button = sender as GlyphButton;
 
 			double move = 0;
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool ShowSelectedTabButton()
 		{
-			//	Scroll les boutons pour rendre entièrement visible l'onglet actif.
+			//	Scroll les boutons pour rendre entiÃ¨rement visible l'onglet actif.
 			if ( !this.scrollArrow )  return false;
 
 			double begin = 0;
@@ -385,15 +385,15 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			//	Scroll si l'onglet n'est pas entièrement visible.
-			if ( begin < this.TabOffsetMin )  // dépasse à gauche ?
+			//	Scroll si l'onglet n'est pas entiÃ¨rement visible.
+			if ( begin < this.TabOffsetMin )  // dÃ©passe Ã  gauche ?
 			{
 				this.scrollOffset = this.scrollOffset+begin-this.TabOffsetMin;
 				this.scrollOffset = System.Math.Floor(this.scrollOffset);
 				this.UpdateButtons();
 				return true;
 			}
-			else if ( end > this.TabOffsetMax )  // dépasse à droite ?
+			else if ( end > this.TabOffsetMax )  // dÃ©passe Ã  droite ?
 			{
 				this.scrollOffset = this.scrollOffset+end-this.TabOffsetMax;
 				this.scrollOffset = System.Math.Floor(this.scrollOffset);
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateVisiblePages()
 		{
-			//	Met à jour la page visible. Toutes les autres sont cachées.
+			//	Met Ã  jour la page visible. Toutes les autres sont cachÃ©es.
 			foreach ( TabPage page in this.items )
 			{
 				if ( page == this.ActivePage )  // est-ce la page active ?
@@ -485,14 +485,14 @@ namespace Epsitec.Common.Widgets
 
 		public void UpdateButtons()
 		{
-			//	Met à jour les boutons, en faisant disparaître les flèches si nécessaire.
+			//	Met Ã  jour les boutons, en faisant disparaÃ®tre les flÃ¨ches si nÃ©cessaire.
 			this.UpdateTabButtons();
 			this.UpdateGlyphButtons();
 		}
 
 		public void UpdateAfterChanges()
 		{
-			//	Met à jour les boutons après un changement (insertion ou suppression
+			//	Met Ã  jour les boutons aprÃ¨s un changement (insertion ou suppression
 			//	d'un onglet, ou modification du texte d'un onglet).
 			this.UpdateButtons();
 
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateTabButtons()
 		{
-			//	Met à jour tous les boutons des onglets.
+			//	Met Ã  jour tous les boutons des onglets.
 			
 			this.scrollTotalWidth = 0;
 			
@@ -556,7 +556,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateGlyphButtons()
 		{
-			//	Met à jour les 4 boutons spéciaux.
+			//	Met Ã  jour les 4 boutons spÃ©ciaux.
 			if ( this.Arrows == TabBookArrows.Stretch )
 			{
 				this.scrollArrow = false;
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Widgets
 				this.buttonClose.Visibility = false;
 			}
 
-			//	Pour détecter le clic sur les flèches en premier.
+			//	Pour dÃ©tecter le clic sur les flÃ¨ches en premier.
 			if ( this.isRefreshNeeded )
 			{
 				this.Children.Remove(this.arrowLeft);
@@ -790,7 +790,7 @@ namespace Epsitec.Common.Widgets
 						if (! this.IsFocused)
 						{
 							//	On n'a pas le focus clavier, il faut donc activer le focus de la
-							//	nouvelle page activée.
+							//	nouvelle page activÃ©e.
 							
 							this.ActivePage.SetFocusOnTabWidget ();
 						}

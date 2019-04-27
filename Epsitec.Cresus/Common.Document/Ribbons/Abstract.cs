@@ -46,12 +46,12 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public virtual void OriginColorDeselect()
 		{
-			//	DÈsÈlectionne toutes les origines de couleurs possibles.
+			//	D√©s√©lectionne toutes les origines de couleurs possibles.
 		}
 
 		public virtual void OriginColorSelect(int rank)
 		{
-			//	SÈlectionne l'origine de couleur.
+			//	S√©lectionne l'origine de couleur.
 		}
 
 		public virtual int OriginColorRank()
@@ -74,8 +74,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected virtual void OnOriginColorChanged()
 		{
-			//	GÈnËre un ÈvÈnement pour dire que la couleur d'origine a changÈ.
-			if ( this.OriginColorChanged != null )  // qq'un Ècoute ?
+			//	G√©n√®re un √©v√©nement pour dire que la couleur d'origine a chang√©.
+			if ( this.OriginColorChanged != null )  // qq'un √©coute ?
 			{
 				this.OriginColorChanged(this);
 			}
@@ -86,13 +86,13 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected IconButton CreateIconButton(string command)
 		{
-			//	CrÈe un bouton pour une commande.
+			//	Cr√©e un bouton pour une commande.
 			return this.CreateIconButton(command, "Normal");
 		}
 
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
-			//	CrÈe un bouton pour une commande, en prÈcisant la taille prÈfÈrÈe pour l'icÙne.
+			//	Cr√©e un bouton pour une commande, en pr√©cisant la taille pr√©f√©r√©e pour l'ic√¥ne.
 			Command c = Common.Widgets.Command.Get(command);
 			IconButton button = new IconButton(this);
 
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected IconButtonCombo CreateIconButtonCombo(string command)
 		{
-			//	CrÈe un bouton combo pour une commande.
+			//	Cr√©e un bouton combo pour une commande.
 			Command c = Common.Widgets.Command.Get(command);
 			IconButtonCombo button = new IconButtonCombo(this);
 
@@ -158,14 +158,14 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void BriefIconButtonComboDyn(IconButtonCombo combo, string briefIcon, string parameter)
 		{
-			//	SpÈcifie le contenu (au repos, c‡d menu fermÈ) d'un IconButtonCombo.
+			//	Sp√©cifie le contenu (au repos, c√†d menu ferm√©) d'un IconButtonCombo.
 			briefIcon = Misc.IconDyn(briefIcon, parameter);
 			combo.IconButton.IconUri = briefIcon;
 		}
 
 		protected IconButtonsCombo CreateIconButtonsCombo(string command)
 		{
-			//	CrÈe un bouton combo pour une commande.
+			//	Cr√©e un bouton combo pour une commande.
 			Command c = Common.Widgets.Command.Get(command);
 			IconButtonsCombo button = new IconButtonsCombo(this);
 
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected GlyphButton CreateMenuButton(string command, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
-			//	CrÈe un bouton "v" pour un menu.
+			//	Cr√©e un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
 			button.CommandObject = Epsitec.Common.Widgets.Command.Get(command);
 			button.ButtonStyle = ButtonStyle.ComboItem;
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
 		{
-			//	Ajoute une icÙne.
+			//	Ajoute une ic√¥ne.
 			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
 		}
 		
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected Objects.Abstract EditObject
 		{
-			//	Donne l'objet en cours d'Èdition, s'il existe.
+			//	Donne l'objet en cours d'√©dition, s'il existe.
 			get
 			{
 				if ( this.document == null )  return null;

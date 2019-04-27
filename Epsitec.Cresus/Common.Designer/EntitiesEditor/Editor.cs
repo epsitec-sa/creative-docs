@@ -9,7 +9,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	/// <summary>
-	/// Widget permettant d'éditer graphiquement des entités.
+	/// Widget permettant d'Ã©diter graphiquement des entitÃ©s.
 	/// </summary>
 	public class Editor : Widget, Widgets.Helpers.IToolTipHost
 	{
@@ -130,11 +130,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void AddBox(ObjectBox box)
 		{
-			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
-			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateBoxes().
-			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
-			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
-			//	fonction de la boîte parent.
+			//	Ajoute une nouvelle boÃ®te dans l'Ã©diteur. Elle est positionnÃ©e toujours au mÃªme endroit,
+			//	avec une hauteur nulle. La hauteur sera de toute faÃ§on adaptÃ©e par UpdateBoxes().
+			//	La position initiale n'a pas d'importance. La premiÃ¨re boÃ®te ajoutÃ©e (la boÃ®te racine)
+			//	est positionnÃ©e par RedimArea(). La position des autres est de toute faÃ§on recalculÃ©e en
+			//	fonction de la boÃ®te parent.
 			box.SetBounds(new Rectangle(0, 0, Editor.defaultWidth, 0));
 			box.IsExtended = true;
 
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public int BoxCount
 		{
-			//	Retourne le nombre de boîtes existantes.
+			//	Retourne le nombre de boÃ®tes existantes.
 			get
 			{
 				return this.boxes.Count;
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public List<ObjectBox> Boxes
 		{
-			//	Retourne la liste des boîtes.
+			//	Retourne la liste des boÃ®tes.
 			get
 			{
 				return this.boxes;
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public ObjectBox RootBox
 		{
-			//	Retourne la boîte racine.
+			//	Retourne la boÃ®te racine.
 			get
 			{
 				return this.boxes[0];
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public ObjectBox SearchBox(string title)
 		{
-			//	Cherche une boîte d'après son titre.
+			//	Cherche une boÃ®te d'aprÃ¨s son titre.
 			foreach (ObjectBox box in this.boxes)
 			{
 				if (box.Title == title)
@@ -185,31 +185,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void AddConnection(ObjectConnection connection)
 		{
-			//	Ajoute une nouvelle liaison dans l'éditeur.
+			//	Ajoute une nouvelle liaison dans l'Ã©diteur.
 			this.connections.Add(connection);
 		}
 
 		public void AddComment(ObjectComment comment)
 		{
-			//	Ajoute un nouveau commentaire dans l'éditeur.
+			//	Ajoute un nouveau commentaire dans l'Ã©diteur.
 			this.comments.Add (comment);
 		}
 
 		public void RemoveComment(ObjectComment comment)
 		{
-			//	Supprime un commentaire dans l'éditeur.
+			//	Supprime un commentaire dans l'Ã©diteur.
 			this.comments.Remove (comment);
 		}
 
 		public void AddInfo(ObjectInfo info)
 		{
-			//	Ajoute une nouvelle information dans l'éditeur.
+			//	Ajoute une nouvelle information dans l'Ã©diteur.
 			this.infos.Add(info);
 		}
 
 		public void Clear()
 		{
-			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
+			//	Supprime toutes les boÃ®tes et toutes les liaisons de l'Ã©diteur.
 			this.boxes.Clear();
 			this.connections.Clear();
 			this.comments.Clear();
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Size AreaSize
 		{
-			//	Dimensions de la surface pour représenter les boîtes et les liaisons.
+			//	Dimensions de la surface pour reprÃ©senter les boÃ®tes et les liaisons.
 			get
 			{
 				return this.areaSize;
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double Zoom
 		{
-			//	Zoom pour représenter les boîtes et les liaisons.
+			//	Zoom pour reprÃ©senter les boÃ®tes et les liaisons.
 			get
 			{
 				return this.zoom;
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Point AreaOffset
 		{
-			//	Offset de la zone visible, déterminée par les ascenseurs.
+			//	Offset de la zone visible, dÃ©terminÃ©e par les ascenseurs.
 			get
 			{
 				return this.areaOffset;
@@ -301,14 +301,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateGeometry()
 		{
-			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
+			//	Met Ã  jour la gÃ©omÃ©trie de toutes les boÃ®tes et de toutes les liaisons.
 			this.UpdateBoxes();
 			this.UpdateConnections();
 		}
 
 		public void UpdateAfterCommentChanged()
 		{
-			//	Appelé lorsqu'un commentaire ou une information a changé.
+			//	AppelÃ© lorsqu'un commentaire ou une information a changÃ©.
 			this.RedimArea();
 
 			this.UpdateConnections();
@@ -319,8 +319,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateAfterGeometryChanged(ObjectBox box)
 		{
-			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
-			this.UpdateBoxes();  // adapte la taille selon compact/étendu
+			//	AppelÃ© lorsque la gÃ©omÃ©trie d'une boÃ®te a changÃ© (changement compact/Ã©tendu).
+			this.UpdateBoxes();  // adapte la taille selon compact/Ã©tendu
 			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
@@ -332,7 +332,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateAfterMoving(ObjectBox box)
 		{
-			//	Appelé lorsqu'une boîte a été bougée.
+			//	AppelÃ© lorsqu'une boÃ®te a Ã©tÃ© bougÃ©e.
 			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
@@ -342,13 +342,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateAfterAddOrRemoveConnection(ObjectBox box)
 		{
-			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
+			//	AppelÃ© lorsqu'une liaison a Ã©tÃ© ajoutÃ©e ou supprimÃ©e.
 			this.UpdateBoxes();
 			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
-			//	Il ne faut surtout pas faire un RedimArea entre ces deux opérations, car cela déplace
-			//	parfois les commentaires liés aux connexions !
+			//	Il ne faut surtout pas faire un RedimArea entre ces deux opÃ©rations, car cela dÃ©place
+			//	parfois les commentaires liÃ©s aux connexions !
 			this.CreateConnections();
 			this.UpdateConnections();
 			this.RedimArea();
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateBoxes()
 		{
-			//	Met à jour la géométrie de toutes les boîtes.
+			//	Met Ã  jour la gÃ©omÃ©trie de toutes les boÃ®tes.
 			foreach (ObjectBox box in this.boxes)
 			{
 				Rectangle bounds = box.Bounds;
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateConnections()
 		{
-			//	Met à jour la géométrie de toutes les liaisons.
+			//	Met Ã  jour la gÃ©omÃ©trie de toutes les liaisons.
 			this.CommentsMemorize();
 
 			foreach (ObjectBox box in this.boxes)
@@ -407,9 +407,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Réparti astucieusement le point d'arrivé en haut ou en bas d'une boîte de toutes les
-			//	connections de type Bt ou Bb, pour éviter que deux connections n'arrivent sur le même point.
-			//	Les croisements sont minimisés.
+			//	RÃ©parti astucieusement le point d'arrivÃ© en haut ou en bas d'une boÃ®te de toutes les
+			//	connections de type Bt ou Bb, pour Ã©viter que deux connections n'arrivent sur le mÃªme point.
+			//	Les croisements sont minimisÃ©s.
 			foreach (ObjectBox box in this.boxes)
 			{
 				box.ConnectionListBt.Clear();
@@ -471,7 +471,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						Rectangle rect = connection.Field.CommentBounds;
 						rect.Offset(newPos-oldPos);
-						comment.SetBounds(rect);  // déplace le commentaire
+						comment.SetBounds(rect);  // dÃ©place le commentaire
 					}
 				}
 			}
@@ -481,7 +481,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateConnection(ObjectConnection connection, ObjectBox src, int srcRank, ObjectBox dst)
 		{
-			//	Met à jour la géométrie d'une liaison.
+			//	Met Ã  jour la gÃ©omÃ©trie d'une liaison.
 			Rectangle srcBounds = src.Bounds;
 			Rectangle dstBounds = dst.Bounds;
 
@@ -495,7 +495,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			connection.Field.RouteClear();
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
-			if (src == dst)  // connection à soi-même ?
+			if (src == dst)  // connection Ã  soi-mÃªme ?
 			{
 				Point p = new Point(srcBounds.Right-1, v);
 				connection.Points.Add(p);
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Point p = new Point(0, v);
 
-				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour/3)  // destination à droite ?
+				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour/3)  // destination Ã  droite ?
 				{
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					connection.Points.Add(start);
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 				}
-				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination à gauche ?
+				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination Ã  gauche ?
 				{
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					connection.Points.Add(start);
@@ -587,7 +587,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 				}
-				else if (connection.Field.IsAttachToRight)  // destination à droite à cheval ?
+				else if (connection.Field.IsAttachToRight)  // destination Ã  droite Ã  cheval ?
 				{
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
@@ -598,7 +598,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(end);
 					connection.Field.Route = Field.RouteType.D;
 				}
-				else  // destination à gauche à cheval ?
+				else  // destination Ã  gauche Ã  cheval ?
 				{
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
@@ -612,12 +612,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		// (*)	Sera calculé par ObjectConnection.UpdateRoute !
+		// (*)	Sera calculÃ© par ObjectConnection.UpdateRoute !
 
 		private void ShiftConnectionsB(ObjectBox box, List<ObjectConnection> connections)
 		{
-			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
-			//	n'arrive au même endroit.
+			//	Met Ã  jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
+			//	n'arrive au mÃªme endroit.
 			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
 
 			double space = (box.Bounds.Width/(connections.Count+1.0))*0.75;
@@ -650,8 +650,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void ShiftConnectionsC(ObjectBox box, List<ObjectConnection> connections)
 		{
-			//	Met à jour une liste de connections de type C, afin qu'aucune connection
-			//	n'arrive au même endroit.
+			//	Met Ã  jour une liste de connections de type C, afin qu'aucune connection
+			//	n'arrive au mÃªme endroit.
 			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
 
 			double spaceX = 5;
@@ -674,8 +674,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void ShiftConnectionsD(ObjectBox box, List<ObjectConnection> connections)
 		{
-			//	Met à jour une liste de connections de type D, afin qu'aucune connection
-			//	n'arrive au même endroit.
+			//	Met Ã  jour une liste de connections de type D, afin qu'aucune connection
+			//	n'arrive au mÃªme endroit.
 			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
 
 			double spaceX = 5;
@@ -698,10 +698,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void CreateConnections()
 		{
-			//	Crée (ou recrée) toutes les liaisons nécessaires.
+			//	CrÃ©e (ou recrÃ©e) toutes les liaisons nÃ©cessaires.
 			this.CommentsMemorize();
 
-			//	Supprime tous les commentaires liés aux connections.
+			//	Supprime tous les commentaires liÃ©s aux connections.
 			int j = 0;
 			while (j < this.comments.Count)
 			{
@@ -727,8 +727,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (field.Relation != FieldRelation.None)
 					{
-						//	Si la liaison est ouverte sur une boîte qui n'existe plus,
-						//	considère la liaison comme fermée !
+						//	Si la liaison est ouverte sur une boÃ®te qui n'existe plus,
+						//	considÃ¨re la liaison comme fermÃ©e !
 						if (field.IsExplored)
 						{
 							if (!this.boxes.Contains(field.DstBox))
@@ -746,7 +746,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Recrée tous les commentaires liés aux connections.
+			//	RecrÃ©e tous les commentaires liÃ©s aux connections.
 			foreach (ObjectConnection connection in this.connections)
 			{
 				if (connection.Field.HasComment && connection.Field.IsExplored)
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void CommentsMemorize()
 		{
-			//	Mémorise l'état de tous les commentaires liés à des connections.
+			//	MÃ©morise l'Ã©tat de tous les commentaires liÃ©s Ã  des connections.
 			foreach (ObjectConnection connection in this.connections)
 			{
 				connection.Field.HasComment = false;
@@ -798,7 +798,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateDimmed()
 		{
-			//	Met en estompé toutes les connections qui partent ou qui arrivent sur une entité estompée.
+			//	Met en estompÃ© toutes les connections qui partent ou qui arrivent sur une entitÃ© estompÃ©e.
 			if (this.enableDimmed)
 			{
 				foreach (ObjectConnection connection in this.connections)
@@ -873,7 +873,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsEmptyArea(Rectangle area)
 		{
-			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connections).
+			//	Retourne true si une zone est entiÃ¨rement vide (aucune boÃ®te, on ignore les connections).
 			foreach (ObjectBox box in this.boxes)
 			{
 				if (box.Bounds.IntersectsWith(area))
@@ -887,22 +887,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void CloseBox(ObjectBox box)
 		{
-			//	Ferme une boîte et toutes les boîtes liées, en essayant de fermer le moins possible de boîtes.
-			//	La stratégie utilisée est la suivante:
-			//	1. On ferme la boîte demandée.
-			//	2. Parmi toutes les boîtes restantes, on regarde si une boîte est isolée, c'est-à-dire si
-			//	   elle n'est plus reliée à la racine. Si oui, on la détruit.
-			//	3. Tant qu'on a détruit au moins une boîte, on recommence au point 2.
+			//	Ferme une boÃ®te et toutes les boÃ®tes liÃ©es, en essayant de fermer le moins possible de boÃ®tes.
+			//	La stratÃ©gie utilisÃ©e est la suivante:
+			//	1. On ferme la boÃ®te demandÃ©e.
+			//	2. Parmi toutes les boÃ®tes restantes, on regarde si une boÃ®te est isolÃ©e, c'est-Ã -dire si
+			//	   elle n'est plus reliÃ©e Ã  la racine. Si oui, on la dÃ©truit.
+			//	3. Tant qu'on a dÃ©truit au moins une boÃ®te, on recommence au point 2.
 			if (box != null && box.IsRoot)
 			{
-				return;  // on ne détruit jamais la boîte racine
+				return;  // on ne dÃ©truit jamais la boÃ®te racine
 			}
 
 			bool dirty = false;
 
 			if (box != null)
 			{
-				this.CloseOneBox(box);  // supprime la boîte demandée
+				this.CloseOneBox(box);  // supprime la boÃ®te demandÃ©e
 				this.CloseConnections(box);  // supprime ses connections
 				dirty = true;
 			}
@@ -955,24 +955,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			do
 			{
 				removed = false;
-				int i = 1;  // on saute toujours la boîte racine
+				int i = 1;  // on saute toujours la boÃ®te racine
 				while (i < this.boxes.Count)
 				{
 					box = this.boxes[i];
-					if (box.IsConnectedToRoot)  // boîte liée à la racine ?
+					if (box.IsConnectedToRoot)  // boÃ®te liÃ©e Ã  la racine ?
 					{
 						i++;
 					}
-					else  // boîte isolée ?
+					else  // boÃ®te isolÃ©e ?
 					{
-						this.CloseOneBox(box);  // supprime la boîte isolée
+						this.CloseOneBox(box);  // supprime la boÃ®te isolÃ©e
 						this.CloseConnections(box);  // supprime ses connections
 						removed = true;
 						dirty = true;
 					}
 				}
 			}
-			while (removed);  // recommence tant qu'on a détruit quelque chose
+			while (removed);  // recommence tant qu'on a dÃ©truit quelque chose
 
 			foreach (ObjectBox abox in this.boxes)
 			{
@@ -1003,12 +1003,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				box.Info = null;
 			}
 
-			this.boxes.Remove(box);  // supprime la boîte demandée
+			this.boxes.Remove(box);  // supprime la boÃ®te demandÃ©e
 		}
 
 		private void ExploreConnectedToRoot(List<ObjectBox> visited, ObjectBox root)
 		{
-			//	Cherche récursivement tous les objets depuis 'root'.
+			//	Cherche rÃ©cursivement tous les objets depuis 'root'.
 			foreach (Field field in root.Fields)
 			{
 				ObjectBox dstBox = field.DstBox;
@@ -1034,8 +1034,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void CloseConnections(ObjectBox removedBox)
 		{
-			//	Parcourt toutes les connections de toutes les boîtes, pour fermer toutes
-			//	les connections sur la boîte supprimée.
+			//	Parcourt toutes les connections de toutes les boÃ®tes, pour fermer toutes
+			//	les connections sur la boÃ®te supprimÃ©e.
 			foreach (ObjectBox box in this.boxes)
 			{
 				foreach (Field field in box.Fields)
@@ -1051,7 +1051,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateAfterOpenOrCloseBox()
 		{
-			//	Appelé après avoir ajouté ou supprimé une boîte.
+			//	AppelÃ© aprÃ¨s avoir ajoutÃ© ou supprimÃ© une boÃ®te.
 			foreach (ObjectBox box in this.boxes)
 			{
 				box.UpdateAfterOpenOrCloseBox();
@@ -1061,8 +1061,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void PushLayout(ObjectBox exclude, PushDirection direction, double margin)
 		{
-			//	Pousse les boîtes pour éviter tout chevauchement.
-			//	Une boîte peut être poussée hors de la surface de dessin.
+			//	Pousse les boÃ®tes pour Ã©viter tout chevauchement.
+			//	Une boÃ®te peut Ãªtre poussÃ©e hors de la surface de dessin.
 			for (int max=0; max<100; max++)
 			{
 				bool push = false;
@@ -1089,7 +1089,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private ObjectBox PushSearch(ObjectBox box, ObjectBox exclude, double margin)
 		{
-			//	Cherche une boîte qui chevauche 'box'.
+			//	Cherche une boÃ®te qui chevauche 'box'.
 			Rectangle rect = box.Bounds;
 			rect.Inflate(margin);
 
@@ -1111,7 +1111,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void PushAction(ObjectBox box, ObjectBox inter, PushDirection direction, double margin)
 		{
-			//	Pousse 'inter' pour venir après 'box' selon la direction choisie.
+			//	Pousse 'inter' pour venir aprÃ¨s 'box' selon la direction choisie.
 			Rectangle rect = inter.Bounds;
 
 			double dr = box.Bounds.Right - rect.Left + margin;
@@ -1200,7 +1200,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void MoveObjects(double dx, double dy)
 		{
-			//	Déplace tous les objets.
+			//	DÃ©place tous les objets.
 			if (dx == 0 && dy == 0)  // immobile ?
 			{
 				return;
@@ -1242,8 +1242,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				case MessageType.KeyDown:
 				case MessageType.KeyUp:
-					//	Ne consomme l'événement que si on l'a bel et bien reconnu ! Evite
-					//	qu'on ne mange les raccourcis clavier généraux (Alt-F4, CTRL-S, ...)
+					//	Ne consomme l'Ã©vÃ©nement que si on l'a bel et bien reconnu ! Evite
+					//	qu'on ne mange les raccourcis clavier gÃ©nÃ©raux (Alt-F4, CTRL-S, ...)
 					break;
 
 				case MessageType.MouseMove:
@@ -1290,7 +1290,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Point ConvWidgetToEditor(Point pos)
 		{
-			//	Conversion d'une coordonnée dans l'espace normal des widgets vers l'espace de l'éditeur,
+			//	Conversion d'une coordonnÃ©e dans l'espace normal des widgets vers l'espace de l'Ã©diteur,
 			//	qui varie selon les ascenseurs (AreaOffset) et le zoom.
 			pos.Y = this.Client.Size.Height-pos.Y;
 			pos /= this.zoom;
@@ -1302,7 +1302,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Point ConvEditorToWidget(Point pos)
 		{
-			//	Conversion d'une coordonnée dans l'espace de l'éditeur vers l'espace normal des widgets.
+			//	Conversion d'une coordonnÃ©e dans l'espace de l'Ã©diteur vers l'espace normal des widgets.
 			pos.Y = this.areaSize.Height-pos.Y;
 			pos -= this.areaOffset;
 			pos *= this.zoom;
@@ -1313,8 +1313,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private new void MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence tous les widgets selon la position visée par la souris.
-			//	L'objet à l'avant-plan a la priorité.
+			//	Met en Ã©vidence tous les widgets selon la position visÃ©e par la souris.
+			//	L'objet Ã  l'avant-plan a la prioritÃ©.
 			if (message.MessageType == MessageType.MouseMove &&
 				Message.CurrentState.Buttons == MouseButtons.None)
 			{
@@ -1343,7 +1343,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+						pos = Point.Zero;  // si on Ã©tait dans cet objet -> plus aucun hilite pour les objets placÃ©s dessous
 					}
 				}
 
@@ -1353,7 +1353,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+						pos = Point.Zero;  // si on Ã©tait dans cet objet -> plus aucun hilite pour les objets placÃ©s dessous
 					}
 				}
 
@@ -1363,7 +1363,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+						pos = Point.Zero;  // si on Ã©tait dans cet objet -> plus aucun hilite pour les objets placÃ©s dessous
 					}
 				}
 
@@ -1373,7 +1373,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+						pos = Point.Zero;  // si on Ã©tait dans cet objet -> plus aucun hilite pour les objets placÃ©s dessous
 					}
 				}
 
@@ -1482,7 +1482,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void MouseDown(Message message, Point pos)
 		{
-			//	Début du déplacement d'une boîte.
+			//	DÃ©but du dÃ©placement d'une boÃ®te.
 			if (this.lastCursor == MouseCursorType.Hand)
 			{
 				this.isAreaMoving = true;
@@ -1501,7 +1501,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void MouseUp(Message message, Point pos)
 		{
-			//	Fin du déplacement d'une boîte.
+			//	Fin du dÃ©placement d'une boÃ®te.
 			if (this.isAreaMoving)
 			{
 				this.isAreaMoving = false;
@@ -1519,8 +1519,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Rectangle BoxGridAlign(Rectangle rect)
 		{
-			//	Aligne un rectangle d'une boîte (ObjectBox) sur son coin supérieur/gauche,
-			//	en ajustant également sa largeur, mais pas sa hauteur.
+			//	Aligne un rectangle d'une boÃ®te (ObjectBox) sur son coin supÃ©rieur/gauche,
+			//	en ajustant Ã©galement sa largeur, mais pas sa hauteur.
 			if (this.grid)
 			{
 				Point topLeft = this.GridAlign (rect.TopLeft);
@@ -1569,13 +1569,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsLocateAction(Message message)
 		{
-			//	Indique si l'action débouche sur une opération de navigation.
+			//	Indique si l'action dÃ©bouche sur une opÃ©ration de navigation.
 			return (message.IsControlPressed || this.CurrentModifyMode != ModifyMode.Unlocked);
 		}
 
 		public bool IsLocateActionHeader(Message message)
 		{
-			//	Indique si l'action débouche sur une opération de navigation (pour BoxHeader).
+			//	Indique si l'action dÃ©bouche sur une opÃ©ration de navigation (pour BoxHeader).
 			return (message.IsControlPressed || this.CurrentModifyMode == ModifyMode.Locked);
 		}
 
@@ -1611,8 +1611,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private AbstractObject DetectObject(Point pos)
 		{
-			//	Détecte l'objet visé par la souris.
-			//	L'objet à l'avant-plan a la priorité.
+			//	DÃ©tecte l'objet visÃ© par la souris.
+			//	L'objet Ã  l'avant-plan a la prioritÃ©.
 			for (int i=this.comments.Count-1; i>=0; i--)
 			{
 				ObjectComment comment = this.comments[i];
@@ -1685,7 +1685,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect = new Rectangle(this.areaSize.Width, bl.Y, tr.X-this.areaSize.Width, tr.Y-bl.Y);
 			if (!rect.IsSurfaceZero)
 			{
-				graphics.AddFilledRectangle(rect);  // à droite
+				graphics.AddFilledRectangle(rect);  // Ã  droite
 			}
 			
 			rect = new Rectangle(0, bl.Y, this.areaSize.Width, -bl.Y);
@@ -1710,7 +1710,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void PaintGrid(Graphics graphics, Rectangle clipRect)
 		{
-			//	Dessine la grille magnétique.
+			//	Dessine la grille magnÃ©tique.
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/this.zoom;
 
@@ -1787,7 +1787,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void PaintObjects(Graphics graphics)
 		{
-			//	Dessine l'arrière-plan de tous les objets.
+			//	Dessine l'arriÃ¨re-plan de tous les objets.
 			foreach (AbstractObject obj in this.boxes)
 			{
 				obj.DrawBackground (graphics);
@@ -1851,8 +1851,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Size CartridgeSize(BitmapParameters bitmapParameters)
 		{
-			//	Retourne la taille nécessaire pour le cartouche.
-			//	Le cartouche est entièrement dynamique; seuls les exemples utilisés dans le dessin sont comptés.
+			//	Retourne la taille nÃ©cessaire pour le cartouche.
+			//	Le cartouche est entiÃ¨rement dynamique; seuls les exemples utilisÃ©s dans le dessin sont comptÃ©s.
 			double width  = 0;
 			double height = 0;
 
@@ -1892,8 +1892,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void PaintCartridge(Graphics graphics, BitmapParameters bitmapParameters)
 		{
-			//	Dessine le cartouche avec les légendes explicatives.
-			//	Le cartouche est entièrement dynamique; seuls les exemples utilisés dans le dessin y figurent.
+			//	Dessine le cartouche avec les lÃ©gendes explicatives.
+			//	Le cartouche est entiÃ¨rement dynamique; seuls les exemples utilisÃ©s dans le dessin y figurent.
 			Transform initialTransform = graphics.Transform;
 			graphics.ScaleTransform (Editor.CartridgeZoom, Editor.CartridgeZoom, 0, 0);
 
@@ -1903,7 +1903,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bounds = new Rectangle (1, 1, size.Width/Editor.CartridgeZoom, size.Height/Editor.CartridgeZoom);
 			bounds.Inflate (0.5);
 			graphics.AddFilledRectangle (bounds);
-			graphics.RenderSolid (Color.FromHexa ("fff6e0"));  // beige pâle
+			graphics.RenderSolid (Color.FromHexa ("fff6e0"));  // beige pÃ¢le
 			graphics.AddRectangle (bounds);
 			graphics.RenderSolid (Color.FromBrightness (0));
 
@@ -1955,7 +1955,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if ((samples & CartridgeSamples.Schema) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Schéma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "SchÃ©ma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
@@ -1973,7 +1973,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if ((samples & CartridgeSamples.Creation) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Création indiv.", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.StandaloneCreation);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "CrÃ©ation indiv.", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.StandaloneCreation);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
@@ -2005,7 +2005,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if ((samples & CartridgeSamples.PublicRelation) != 0)
 				{
-					Editor.PaintRelation (graphics, rect, "Relation publique", "de type référence", FieldRelation.Reference, false);
+					Editor.PaintRelation (graphics, rect, "Relation publique", "de type rÃ©fÃ©rence", FieldRelation.Reference, false);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
@@ -2017,13 +2017,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if ((samples & CartridgeSamples.PrivateRelation) != 0)
 				{
-					Editor.PaintRelation (graphics, rect, "Relation privée", "de type référence", FieldRelation.Reference, true);
+					Editor.PaintRelation (graphics, rect, "Relation privÃ©e", "de type rÃ©fÃ©rence", FieldRelation.Reference, true);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
 				if ((samples & CartridgeSamples.PrivateCollection) != 0)
 				{
-					Editor.PaintRelation (graphics, rect, "Relation privée", "de type collection", FieldRelation.Collection, true);
+					Editor.PaintRelation (graphics, rect, "Relation privÃ©e", "de type collection", FieldRelation.Collection, true);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 			}
@@ -2033,7 +2033,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static void PaintRelation(Graphics graphics, Rectangle bounds, string title1, string title2, FieldRelation relation, bool isPrivateRelation)
 		{
-			//	Dessine la flèche '--->>*' d'une relation dans le cartouche.
+			//	Dessine la flÃ¨che '--->>*' d'une relation dans le cartouche.
 			bounds.Deflate (1.5);
 			graphics.AddFilledRectangle (bounds);
 			graphics.RenderSolid (Color.FromBrightness (0.9));
@@ -2060,7 +2060,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private CartridgeSamples GetCartridgeSamplesUsed()
 		{
 			//	Retourne tous les exemples qui ont un sens de voir figurer dans le cartouche,
-			//	c'est-à-dire ceux qui figurent dans le dessin.
+			//	c'est-Ã -dire ceux qui figurent dans le dessin.
 			CartridgeSamples samples = 0;
 
 			foreach (ObjectBox obj in this.boxes)
@@ -2073,7 +2073,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static void AddCartridgeSamplesUsed(ref CartridgeSamples samples, ObjectBox box)
 		{
-			//	Ajoute tous les exemples utilisés par un objet.
+			//	Ajoute tous les exemples utilisÃ©s par un objet.
 			if (box.IsInterface)
 			{
 				samples |= CartridgeSamples.Interface;
@@ -2127,7 +2127,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static void AddCartridgeSamplesUsed(ref CartridgeSamples samples, Field field)
 		{
-			//	Ajoute tous les exemples utilisés par un champ.
+			//	Ajoute tous les exemples utilisÃ©s par un champ.
 			if (field.IsInterfaceLocal)
 			{
 				samples |= CartridgeSamples.Interface;
@@ -2174,7 +2174,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public string Serialize()
 		{
-			//	Sérialise la vue éditée et retourne le résultat dans un string.
+			//	SÃ©rialise la vue Ã©ditÃ©e et retourne le rÃ©sultat dans un string.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
 			XmlTextWriter writer = new XmlTextWriter(stringWriter);
@@ -2189,7 +2189,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void Deserialize(string data)
 		{
-			//	Désérialise la vue à partir d'un string de données.
+			//	DÃ©sÃ©rialise la vue Ã  partir d'un string de donnÃ©es.
 			System.IO.StringReader stringReader = new System.IO.StringReader(data);
 			XmlTextReader reader = new XmlTextReader(stringReader);
 			
@@ -2200,7 +2200,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise toutes les boîtes.
+			//	SÃ©rialise toutes les boÃ®tes.
 			writer.WriteStartDocument();
 
 			writer.WriteStartElement(Xml.Boxes);
@@ -2215,7 +2215,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void ReadXml(XmlReader reader)
 		{
-			//	Désérialise toutes les boîtes.
+			//	DÃ©sÃ©rialise toutes les boÃ®tes.
 			this.Clear();
 
 			while (reader.ReadToFollowing(Xml.Box))
@@ -2331,7 +2331,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Events handler
 		protected virtual void OnAreaSizeChanged()
 		{
-			//	Génère un événement pour dire que les dimensions ont changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que les dimensions ont changÃ©.
 			var handler = this.GetUserEventHandler("AreaSizeChanged");
 			if (handler != null)
 			{
@@ -2353,7 +2353,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected virtual void OnAreaOffsetChanged()
 		{
-			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que l'offset de la surface de travail a changÃ©.
 			var handler = this.GetUserEventHandler("AreaOffsetChanged");
 			if (handler != null)
 			{
@@ -2375,7 +2375,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected virtual void OnZoomChanged()
 		{
-			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
+			//	GÃ©nÃ¨re un Ã©vÃ©nement pour dire que l'offset de la surface de travail a changÃ©.
 			var handler = this.GetUserEventHandler("ZoomChanged");
 			if (handler != null)
 			{
