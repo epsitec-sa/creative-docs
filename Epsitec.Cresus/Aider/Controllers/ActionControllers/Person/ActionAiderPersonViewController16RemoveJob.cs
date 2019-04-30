@@ -32,9 +32,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
         protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
         {
-            var jobs = this.Entity.Employee.EmployeeJobs;
+            //  Restrict jobs to *real job* entities (exluding AIDER users), as we
+            //  do not allow the deletion of a "user" job:
 
-            //  TODO: restrict jobs to *real job* entities (exluding AIDER users)
+            var jobs = this.Entity.Employee
+                .EmployeeJobs
+                .Where (x => x.IsUser () == false)
+                .ToList ();
 
             form
                 .Title ("Supprimer un poste")
