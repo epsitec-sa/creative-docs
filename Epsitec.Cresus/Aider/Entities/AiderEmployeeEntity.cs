@@ -129,9 +129,7 @@ namespace Epsitec.Aider.Entities
                 this.GetEmployeeJobs (ref this.jobs);
             }
 
-            return this.jobs.Any (j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER
-                                    || j.EmployeeJobFunction == EmployeeJobFunction.SuppléantAIDER
-                                    || j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER);
+            return this.jobs.Any (j => j.IsUser ());
         }
 
         private IList<AiderEmployeeJobEntity>	jobs;
