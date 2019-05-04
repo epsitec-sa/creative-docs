@@ -49,7 +49,7 @@ if %cleanup%==1 (
 @echo on
 
 @rem Restore NuGet packages.
-..\External\NuGet.exe restore ..\Epsitec.Cresus.Aider.sln
+nuget.exe restore ..\Epsitec.Cresus.Aider.sln
 
 @rem Build the solution.
 msbuild /verbosity:minimal /property:Configuration="Release" ..\Epsitec.Cresus.Aider.sln
