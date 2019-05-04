@@ -53,7 +53,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			AiderEmployeeEntity.Delete (this.BusinessContext, this.Entity.Employee);
+            var user = AiderUserManager.Current.AuthenticatedUser;
+
+            if (user.IsSysAdmin ())
+            {
+                AiderEmployeeEntity.Delete (this.BusinessContext, this.Entity.Employee);
+            }
+            else
+            {
+                Logic.BusinessRuleException ("Seul un administrateur système peut supprimer un collaborateur. Si le collaborateur a quitté l'EERV, modifiez son champ 'Activité'.");
+            }
 		}
 	}
 }
