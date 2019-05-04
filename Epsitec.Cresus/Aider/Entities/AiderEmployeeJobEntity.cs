@@ -7,7 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
-
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Entities
 {
@@ -44,6 +44,11 @@ namespace Epsitec.Aider.Entities
             }
             else
             {
+                if (this.Employee.IsNotNull ())
+                {
+                    this.Employee.ClearCache ();
+                }
+
                 context.DeleteEntity (this);
             }
 		}

@@ -62,7 +62,15 @@ namespace Epsitec.Aider.Entities
             return this.users;
         }
 
-		public static AiderEmployeeEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderUserEntity user, EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
+        public void ClearCache()
+        {
+            this.jobs = null;
+            this.refereeEntries = null;
+            this.users = null;
+        }
+
+
+        public static AiderEmployeeEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderUserEntity user, EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
 		{
 			var employee    = businessContext.CreateAndRegisterEntity<AiderEmployeeEntity> ();
 
@@ -77,23 +85,45 @@ namespace Epsitec.Aider.Entities
 			return employee;
 		}
 
-		public static void Delete(BusinessContext businessContext, AiderEmployeeEntity employee)
+        public static void Delete(BusinessContext context, AiderEmployeeEntity employee, AiderEmployeeJobEntity job)
+        {
+            if (job.Employee == employee)
+            {
+                if (job.IsUser ())
+                {
+                    //  TODO: handle removal of existing user association
+
+                    throw new System.NotImplementedException ("AiderEmployeeEntity.Delete");
+                }
+                else
+                {
+                    job.Delete (context);
+                }
+            }
+            else
+            {
+                Logic.BusinessRuleException ("Le poste et l'employé ne sont pas correctement liés.");
+            }
+        }
+
+
+        public static void Delete(BusinessContext businessContext, AiderEmployeeEntity employee)
 		{
 			if (employee.IsNotNull ())
 			{
-				//Delete each jobs
-				foreach (var job in employee.EmployeeJobs)
+                var jobs    = employee.EmployeeJobs.ToList ();
+                var entries = employee.RefereeEntries.ToList ();
+
+                foreach (var job in jobs)
 				{
-					businessContext.DeleteEntity (job);
+                    AiderEmployeeEntity.Delete (businessContext, employee, job);
 				}
 
-				//Delete each referee
-				foreach (var referee in employee.RefereeEntries)
+				foreach (var referee in entries)
 				{
 					businessContext.DeleteEntity (referee);
 				}
 
-				//Finally delete entity
 				businessContext.DeleteEntity (employee);
 			}			
 		}
