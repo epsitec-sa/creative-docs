@@ -11,7 +11,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.Core.Entities;
-
+using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -28,7 +28,8 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.FormatText ("E-mail: ").ApplyBold (), this.Email, "\n",
 				TextFormatter.FormatText ("Groupe: ").ApplyBold (), this.Parish.Name, "\n",
 				TextFormatter.FormatText ("Rôle: ").ApplyBold (), this.Role.Name, "\n",
-				TextFormatter.FormatText ("administrateur: ").ApplyBold (), this.HasPowerLevel (UserPowerLevel.Administrator).ToYesOrNo (), "\n",
+                TextFormatter.FormatText ("Privilège: ").ApplyBold (), this.PowerLevel, "\n",
+//				TextFormatter.FormatText ("administrateur: ").ApplyBold (), this.HasPowerLevel (UserPowerLevel.Administrator).ToYesOrNo (), "\n",
 				TextFormatter.FormatText ("Actif: ").ApplyBold (), this.IsActive.ToYesOrNo (), "\n",
 				TextFormatter.FormatText ("Dernier login: ").ApplyBold (), this.LastLoginDate.ToLocalTime (), "\n",
 				TextFormatter.FormatText ("Dernier accès: ").ApplyBold (), this.LastActivityDate.ToLocalTime (), "\n"
@@ -85,14 +86,24 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void AssignGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
-		{
-			var group = AiderUserEntity.GetSoftwareUserGroup (businessContext, powerLevel);
+        public void AssignUserGroups(BusinessContext businessContext, UserPowerLevel powerLevel)
+        {
+            this.AssignUserGroups (businessContext.DataContext, powerLevel);
+        }
 
-			if (group != null)
-			{
-				this.UserGroups.Add (group);
-			}
+        public void AssignUserGroups(DataContext dataContext, UserPowerLevel powerLevel)
+        {
+            //	Setting the power level picks the proper user group and associates it with
+            //	the user; unless the level is more restricted than "standard", we should
+            //	always include the standard user level too.
+
+            var groups = AiderUserEntity
+                .GetSoftwareUserGroups (dataContext, powerLevel)
+                .Where (x => x != null)
+                .ToList ();
+
+            this.UserGroups.Clear ();
+            this.UserGroups.AddRange (groups);
 		}
 
 		public IEnumerable<AiderOfficeManagementEntity> GetOfficesByJobs()
@@ -310,7 +321,7 @@ namespace Epsitec.Aider.Entities
 
 			if (!isAdmin && admin)
 			{
-				this.AssignGroup (businessContext, powerLevel);
+				this.AssignUserGroups (businessContext, powerLevel);
 			}
 			else if (isAdmin && !admin)
 			{
@@ -529,13 +540,6 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetPowerLevel(UserPowerLevel value)
 		{
-            this.UserGroups.Clear ();
-
-			if (value == UserPowerLevel.None)
-			{
-				return;
-			}
-
             var dataContext = this.GetDataContext ();
 
             if (dataContext == null)
@@ -543,50 +547,52 @@ namespace Epsitec.Aider.Entities
                 throw new System.Exception ("Don't set power level of user for example queries; it won't work as this is a synthetic property");
             }
 
-            //	Setting the power level picks the proper user group and associates it with
-            //	the user; unless the level is more restricted than "standard", we should
-            //	always include the standard user level too.
-
-            if (value < UserPowerLevel.Restricted)
-			{
-				var example = new SoftwareUserGroupEntity
-				{
-					UserPowerLevel = UserPowerLevel.Standard
-				};
-
-				var std = dataContext.GetByExample (example).Single ();
-				
-				this.UserGroups.Add (std);
-			}
-
-			if (value != UserPowerLevel.Standard)
-			{
-				var example = new SoftwareUserGroupEntity
-				{
-					UserPowerLevel = value
-				};
-
-				var group = dataContext.GetByExample (example).FirstOrDefault ();
-
-				if (group != null)
-				{
-					this.UserGroups.Add (group);
-				}
-			}
+            this.AssignUserGroups (dataContext, value);
 		}
 		
 		
 		
-		private static SoftwareUserGroupEntity GetSoftwareUserGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
+		private static IEnumerable<SoftwareUserGroupEntity> GetSoftwareUserGroups(DataContext dataContext, UserPowerLevel powerLevel)
 		{
-			var example = new SoftwareUserGroupEntity ()
-			{
-				UserPowerLevel = powerLevel
-			};
+            //	Tthe power level picks the proper user group; unless the level is
+            //  more restricted than "standard", we always include the standard user
+            //  level too.
 
-			var dataContext = businessContext.DataContext;
+            if (powerLevel == UserPowerLevel.None)
+            {
+                yield break;
+            }
 
-			return dataContext.GetByExample (example).FirstOrDefault ();
+            if (powerLevel < UserPowerLevel.Restricted)
+            {
+                var example = new SoftwareUserGroupEntity
+                {
+                    UserPowerLevel = UserPowerLevel.Standard
+                };
+
+                yield return dataContext
+                    .GetByExample (example)
+                    .Single ();
+            }
+
+            if (powerLevel != UserPowerLevel.Standard)
+            {
+                var example = new SoftwareUserGroupEntity
+                {
+                    UserPowerLevel = powerLevel
+                };
+
+                var result = dataContext
+                    .GetByExample (example)
+                    .FirstOrDefault ();
+
+                if (result == null)
+                {
+                    //  TODO: fix the database, missing power level description found
+                }
+
+                yield return result;
+            }
 		}
 	}
 }

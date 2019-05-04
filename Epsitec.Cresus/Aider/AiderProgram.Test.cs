@@ -308,7 +308,7 @@ namespace Epsitec.Aider
 
 			if (isAdmin)
 			{
-				user.AssignGroup (businessContext, UserPowerLevel.Administrator);
+				user.AssignUserGroups (businessContext, UserPowerLevel.Administrator);
 			}
 
 			user.Role = AiderUserRoleEntity.GetRole (businessContext, roleName);
