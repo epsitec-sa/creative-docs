@@ -109,6 +109,7 @@
     </Content>
     <Content Include="ServerConfigProduction\Aider.Environment.crconfig" />
     <Content Include="ServerConfigProduction\Aider.Features.crconfig" />
+    <None Include="build2019.bat" />
     <None Include="packages.config" />
     <None Include="ServerConfigProduction\app.config" />
     <None Include="ServerConfigProduction\certificate.key" />
