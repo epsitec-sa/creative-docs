@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Override;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
@@ -549,10 +550,26 @@ namespace Epsitec.Aider.Entities
 		partial void SetPowerLevel(UserPowerLevel value)
 		{
             var dataContext = this.GetDataContext ();
+            var callingUser = AiderUserManager.Current.AuthenticatedUser;
 
             if (dataContext == null)
             {
                 throw new System.Exception ("Don't set power level of user for example queries; it won't work as this is a synthetic property");
+            }
+
+            if ((callingUser.IsNotNull ()) &&
+                (callingUser.IsSysAdmin () == false))
+            {
+                if ((callingUser.IsAdmin ()) &&
+                    (this.PowerLevel >= UserPowerLevel.AdminUser) &&
+                    (value >= UserPowerLevel.AdminUser))
+                {
+                    //  OK, accept that the caller changes the value...
+                }
+                else
+                {
+                    return;
+                }
             }
 
             this.AssignUserGroups (dataContext, value);
