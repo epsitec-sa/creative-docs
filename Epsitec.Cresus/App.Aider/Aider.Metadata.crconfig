@@ -1820,6 +1820,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVAKI]" title="Privilège" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVAOG]" title="Dernière connexion" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
