@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core.Library
 			);
 		}
 
-		private void CreateTestUsers()
+		protected void CreateTestUsers()
 		{
 			this.CreateUser
 			(
