@@ -1642,6 +1642,12 @@ Lancé le 28.04.2019
 
 -echupdate -newechfile:S:\eerv\eerv-2019-04-27.xml -oldechfile:S:\eerv\eerv-2019-04-20.xml -output:s:\eerv\ech-diff-2019-04-27.md
 
+
+
+
+-upgradeusergroups
+
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée

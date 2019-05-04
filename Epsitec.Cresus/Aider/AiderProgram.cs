@@ -1,4 +1,4 @@
-//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -250,6 +250,12 @@ namespace Epsitec.Aider
                 if (args.Contains ("-updatebirthday")) // must be run every day
                 {
                     ConsoleCreator.RunWithConsole (() => AiderProgram.UpdateBirthdayOfToday ());
+                    return;
+                }
+
+                if (args.Contains ("-upgradeusergroups"))
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.UpgradeUserGroups (args));
                     return;
                 }
 
@@ -851,7 +857,13 @@ namespace Epsitec.Aider
 			);
 		}
 
-		private static void CalculateAge(string[] args)
+        private static void UpgradeUserGroups(string[] args)
+        {
+            AiderProgram.RunWithCoreData (coreData => UserGroupFixer.UpgradeUserGroups (coreData));
+        }
+
+
+        private static void CalculateAge(string[] args)
 		{
 			AiderProgram.RunWithCoreData
 			(
