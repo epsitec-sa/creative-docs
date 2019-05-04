@@ -290,7 +290,9 @@ namespace Epsitec.Aider.Entities
         public bool IsPowerUser()
 		{
 			return (this.Role.Name == AiderUserRoleEntity.AleRole)
-                || (this.Role.Name == AiderUserRoleEntity.PowerRole);
+                || (this.Role.Name == AiderUserRoleEntity.PowerRole)
+                || (this.Role.Name == AiderUserRoleEntity.AdminRole)
+                || (this.IsAdmin ());
 		}
 
 		public void SetPassword(string password, string confirmation)
