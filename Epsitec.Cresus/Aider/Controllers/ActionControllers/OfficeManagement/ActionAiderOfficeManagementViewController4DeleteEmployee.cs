@@ -1,5 +1,5 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
@@ -30,13 +30,22 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Supprimer le collaborateur...");
+			return Resources.Text ("Dissocier le collaborateur...");
 		}
 
 		public FormattedText GetText()
 		{
-			return "Voulez-vous vraiment supprimer ce collaborateur ?";
-		}
+            var num = this.AdditionalEntity.EmployeeJobs.Where (x => x.Office == this.Entity).Count ();
+
+            if (num > 1)
+            {
+                return $"Voulez-vous vraiment supprimer les {num} postes qui lient ce collaborateur à cette gestion ?";
+            }
+            else
+            {
+                return "Voulez-vous vraiment supprimer le poste qui lie ce collaborateur à cette gestion ?";
+            }
+        }
 
 		public override ActionExecutor GetExecutor()
 		{
@@ -53,7 +62,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			AiderEmployeeEntity.Delete (this.BusinessContext, this.AdditionalEntity);
+            var jobs = this.AdditionalEntity
+                .EmployeeJobs
+                .Where (x => x.Office == this.Entity)
+                .ToList ();
+
+            foreach (var job in jobs)
+            {
+                AiderEmployeeEntity.Delete (this.BusinessContext, this.AdditionalEntity, job);
+            }
 		}
 	}
 }
