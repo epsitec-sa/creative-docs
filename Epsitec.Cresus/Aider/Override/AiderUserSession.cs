@@ -305,15 +305,21 @@ namespace Epsitec.Aider.Override
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if ((user.Office.IsNotNull ()) ||
-				(user.IsAdmin ()))
+            if (user.IsPowerUser ())
+            {
+                return new LambdaFilter<AiderOfficeManagementEntity> (
+                    x => SqlMethods.Like (x.ParishGroupPathCache, pattern)
+                    );
+            }
+
+            if ((user.Office.IsNotNull ()) ||
+                (user.Contact.Person.Employee.IsNotNull ()))
 			{
 				var list = new List<string> ();
 
 				// hack for root user case,
 				// SqlMethods.IsInSet (x.OfficeName, offices) needs one entry in the list of offices
-
-				list.Add ("n0where");
+				// list.Add ("n0where");
 
 				if (user.Office.IsNotNull ())
 				{
@@ -330,9 +336,28 @@ namespace Epsitec.Aider.Override
 				
 				var offices = list.Distinct ().ToList ();
 
-				return new LambdaFilter<AiderOfficeManagementEntity> (
-					x => SqlMethods.IsInSet (x.OfficeName, offices) ||
-						 SqlMethods.Like (x.ParishGroupPathCache, pattern));
+                if (offices.Count > 0)
+                {
+                    if (pattern == "%")
+                    {
+                        return new LambdaFilter<AiderOfficeManagementEntity> (
+                            x => SqlMethods.IsInSet (x.OfficeName, offices)
+                            );
+                    }
+                    else
+                    {
+                        return new LambdaFilter<AiderOfficeManagementEntity> (
+                            x => SqlMethods.IsInSet (x.OfficeName, offices)
+                              || SqlMethods.Like (x.ParishGroupPathCache, pattern)
+                            );
+                    }
+                }
+                else
+                {
+                    return new LambdaFilter<AiderOfficeManagementEntity> (
+                        x => SqlMethods.Like (x.ParishGroupPathCache, pattern)
+                        );
+                }
 			}
 			
 			//	Users who don't have access to an office management entity should only see
