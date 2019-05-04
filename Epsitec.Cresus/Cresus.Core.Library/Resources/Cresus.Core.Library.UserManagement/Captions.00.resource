@@ -16,11 +16,11 @@
   <data name="Val.UserPowerLevel.None" id="AF">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Aucun'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.System" id="AG">&lt;s:data id="_0" f:Name="System" f:Labels="{Collection {Text 'Système'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.Developer" id="AH">&lt;s:data id="_0" f:Name="Developer" f:Labels="{Collection {Text 'Développeur'}}" /&gt;</data>
-  <data name="Val.UserPowerLevel.Administrator" id="AI">&lt;s:data id="_0" f:Name="Administrator" f:Labels="{Collection {Text 'Administrateur'}}" /&gt;</data>
+  <data name="Val.UserPowerLevel.Administrator" id="AI">&lt;s:data id="_0" f:Name="Administrator" f:Labels="{Collection {Text 'Admin. système'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.PowerUser" id="AJ">&lt;s:data id="_0" f:Name="PowerUser" f:Labels="{Collection {Text 'Utilisateur privilégié'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.Standard" id="AK">&lt;s:data id="_0" f:Name="Standard" f:Labels="{Collection {Text 'Utilisateur normal'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.Restricted" id="AL">&lt;s:data id="_0" f:Name="Restricted" f:Labels="{Collection {Text 'Visiteur'}}" /&gt;</data>
-  <data name="Typ.UserPowerLevel" id="AE">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="UserPowerLevel" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel, Cresus.Core.Library" f:_2.EnumValues="{Collection {Text '0 [AVAF]'}, {Text '1 [AVAG]'}, {Text '2 [AVAH]'}, {Text '3 [AVAI]'}, {Text '4 [AVAJ]'}, {Text '5 [AVAK]'}, {Text '6 [AVAL]'}}" f:Labels="{Collection {Text 'Niveau de pouvoir de l&amp;amp;apos;utilisateur'}}" /&gt;</data>
+  <data name="Typ.UserPowerLevel" id="AE">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="UserPowerLevel" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel, Cresus.Core.Library" f:_2.EnumValues="{Collection {Text '0 [AVAF]'}, {Text '1 [AVAG]'}, {Text '2 [AVAH]'}, {Text '3 [AVAI]'}, {Text '4 [AVA31]'}, {Text '5 [AVAJ]'}, {Text '6 [AVAK]'}, {Text '7 [AVAL]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel, Cresus.Core.Library/None" f:Labels="{Collection {Text 'Niveau de pouvoir de l&amp;amp;apos;utilisateur'}}" /&gt;</data>
   <data name="Val.UserAuthenticationMethod.None" id="AN">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Aucun'}}" /&gt;</data>
   <data name="Val.UserAuthenticationMethod.System" id="AO">&lt;s:data id="_0" f:Name="System" f:Labels="{Collection {Text 'Système'}}" /&gt;</data>
   <data name="Val.UserAuthenticationMethod.Password" id="AP">&lt;s:data id="_0" f:Name="Password" f:Labels="{Collection {Text 'Mot de passe'}}" /&gt;</data>
@@ -38,4 +38,5 @@
   <data name="Fld.DataSetUISettings.DataSetCommandId" id="G102">&lt;s:data id="_0" f:Name="DataSetCommandId" /&gt;</data>
   <data name="Fld.DataSetUISettings.SerializedSettings" id="G202">&lt;s:data id="_0" f:Name="SerializedSettings" /&gt;</data>
   <data name="Fld.SoftwareUISettings.DataSetUISettings" id="G302">&lt;s:data id="_0" f:Name="DataSetUISettings" /&gt;</data>
+  <data name="Val.UserPowerLevel.AdminUser" id="A31">&lt;s:data id="_0" f:Name="AdminUser" f:Labels="{Collection {Text 'Admin. client'}}" /&gt;</data>
 </bundle>
