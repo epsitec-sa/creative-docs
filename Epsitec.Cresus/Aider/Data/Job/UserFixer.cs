@@ -1,7 +1,6 @@
 //	Copyright © 2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support.Extensions;
@@ -9,15 +8,12 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Epsitec.Aider.Data.Job
 {
-    /// <summary>
-    /// Update CalculatedAge on persons
-    /// </summary>
     internal static class UserFixer
     {
         public static void RemoveEmptyUsers(CoreData coreData, UserRemovalMode mode)

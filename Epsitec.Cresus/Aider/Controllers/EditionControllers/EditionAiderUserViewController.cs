@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			var senderDefined = this.Entity.Office.IsNotNull ();
 			var contactDefined = this.Entity.Contact.IsNotNull ();
 
-			if (user.HasPowerLevel (UserPowerLevel.Administrator))
+			if (user.HasPowerLevel (UserPowerLevel.AdminUser))
 			{
 				EditionAiderUserViewController.AddUserDataBrick (wall, contactDefined, senderDefined);
 			}

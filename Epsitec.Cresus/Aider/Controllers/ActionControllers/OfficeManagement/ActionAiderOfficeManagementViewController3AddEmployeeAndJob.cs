@@ -25,7 +25,9 @@ using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (3)]
+
+
+    [ControllerSubType (3)]
 	public sealed class ActionAiderOfficeManagementViewController3AddEmployeeAndJob : ActionViewController<AiderOfficeManagementEntity>
 	{
 		public override FormattedText GetTitle()

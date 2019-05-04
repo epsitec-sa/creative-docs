@@ -1,3 +1,6 @@
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -80,7 +83,7 @@ namespace Epsitec.Aider.Override
 
 			this.roleAle = this.CreateAiderRole
 			(
-				name: AiderUserRoleEntity.AleRole,
+				name: AiderUserRoleEntity.PowerRole,
 				scopes: new AiderUserScopeEntity[] { 
 					this.scopeCounty
 				}
@@ -134,7 +137,7 @@ namespace Epsitec.Aider.Override
 				displayName: "Administrateur",
 				userLogin: "administrateur",
 				userPassword: "mysuperadministrateurpassword",
-				authentificationMethod: UserAuthenticationMethod.Password,
+				authenticationMethod: UserAuthenticationMethod.Password,
 				groups: new SoftwareUserGroupEntity[] {
 					this.GroupAdministrator,
 					this.GroupStandard

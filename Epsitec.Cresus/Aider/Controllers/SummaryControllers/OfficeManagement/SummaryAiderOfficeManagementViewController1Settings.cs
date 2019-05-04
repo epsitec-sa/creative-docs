@@ -59,6 +59,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.AutoGroup)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.EnableActionMenu<ActionAiderOfficeManagementViewController3AddEmployeeAndJob> ().IfTrue (canAddEmployee)
+                .EnableActionMenu<ActionAiderOfficeManagementViewController9AssociateUser> ().IfTrue (canAddEmployee)
 				.EnableActionMenu<ActionAiderOfficeManagementViewController4DeleteEmployee> ().IfTrue (canRemoveEmployee)
 				.Template ()
 					.Title ("Collaborateurs et ministres")

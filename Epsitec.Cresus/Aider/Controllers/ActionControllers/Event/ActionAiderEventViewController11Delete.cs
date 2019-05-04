@@ -1,5 +1,5 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 
@@ -39,10 +39,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (this.Entity.State != Enumerations.EventState.Validated)
 			{
-				Logic.BusinessRuleException ("Cette action fonctionne uniquement pour supprimer un act validé par erreur");
+				Logic.BusinessRuleException ("Cette action fonctionne uniquement pour supprimer un acte validé par erreur");
 			}
 
-			if (user.IsAdmin ())
+			if (user.IsSysAdmin ())
 			{
 				// remove act from person view
 				this.Entity.GetMainActors ().ForEach ((a) =>
@@ -58,13 +58,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				act.Office.RemoveDocumentInternal (act);
 				
 				// office next acts of year must be renumbered and renamed
-				AiderEventOfficeReportEntity.GetNextOfficeActFromEvent (this.BusinessContext, this.Entity, act.EventNumberByYearAndRegistry)
-				.ForEach (a =>
-				{
-					var newNumber = a.EventNumberByYearAndRegistry -1;
-					a.EventNumberByYearAndRegistry = newNumber;
-					a.Name = AiderEventOfficeReportEntity.GetReportName (this.Entity, a);
-				});
+				AiderEventOfficeReportEntity
+                    .GetNextOfficeActFromEvent (this.BusinessContext, this.Entity, act.EventNumberByYearAndRegistry)
+                    .ForEach (a =>
+				        {
+					        var newNumber = a.EventNumberByYearAndRegistry -1;
+					        a.EventNumberByYearAndRegistry = newNumber;
+					        a.Name = AiderEventOfficeReportEntity.GetReportName (this.Entity, a);
+				        });
 
 				// delete report & event
 				this.BusinessContext.DeleteEntity (act);

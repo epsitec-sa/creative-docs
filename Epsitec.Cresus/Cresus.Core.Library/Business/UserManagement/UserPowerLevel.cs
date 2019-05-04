@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		Developer		= 11,
 		
 		Administrator	= 20,
+        AdminUser       = 28,
 
 		PowerUser		= 30,
 		Standard		= 40,

@@ -143,6 +143,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController3AddEmployeeAndJob.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController5PrepareEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
+    <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController9AssociateUser.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController100AddToBag.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController64ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController20CancelDead.cs" />
@@ -349,6 +350,7 @@
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\AgeCalculator.cs" />
     <Compile Include="Data\Job\AddressFixer.cs" />
+    <Compile Include="Data\Job\UserGroupFixer.cs" />
     <Compile Include="Data\Job\UserRemovalMode.cs" />
     <Compile Include="Data\QualityJob\DataQualityFlagsFixer.cs" />
     <Compile Include="Data\QualityJob\ClearDataQualityFlags.cs" />

@@ -1,4 +1,4 @@
-//	Copyright © 2012-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -44,8 +44,9 @@ namespace Epsitec.Aider.Entities
 			return result.Single ();
 		}
 
-		public static readonly string AdminRole =  "Administrateur";
-		public static readonly string AleRole = "Accès Ale";
+		public static readonly string AdminRole  = "Administrateur";
+        public static readonly string PowerRole  = "Accès avec pouvoir";
+        public static readonly string AleRole    = "Accès Ale";
 		public static readonly string CountyRole = "Accès cantonal";
 		public static readonly string RegionRole = "Accès régional";
 		public static readonly string ParishRole = "Accès paroissial";

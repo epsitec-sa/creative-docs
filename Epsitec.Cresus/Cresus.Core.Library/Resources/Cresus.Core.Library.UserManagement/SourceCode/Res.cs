@@ -1,4 +1,4 @@
-//  --------------------------------------------------------------------------- 
+﻿//  --------------------------------------------------------------------------- 
 //  ATTENTION !
 //  Ce fichier a été généré automatiquement. Ne pas l'éditer manuellement, car 
 //  toute modification sera perdue. 
@@ -81,6 +81,14 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 					get
 					{
 						return global::Epsitec.Cresus.Core.Library.UserManagement.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18));
+					}
+				}
+				//	designer:cap/AVA31
+				public static global::Epsitec.Common.Types.Caption AdminUser
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.UserManagement.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35));
 					}
 				}
 				//	designer:cap/AVAH

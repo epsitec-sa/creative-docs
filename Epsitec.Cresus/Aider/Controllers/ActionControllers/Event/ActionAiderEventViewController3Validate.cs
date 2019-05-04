@@ -1,5 +1,5 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 
@@ -45,7 +45,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
-			if (user.CanValidateEvents () || user.IsAdmin ())
+
+            if (user.CanValidateEvents () || user.IsAdmin ())
 			{
 				// check for existing act for main actors in the registry
 				if ((this.Entity.Type != Enumerations.EventType.Marriage) || 
@@ -66,25 +67,33 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 				this.Entity.State     = Enumerations.EventState.Validated;
 				this.Entity.Validator = this.BusinessContext.DataContext.GetLocalEntity (user);
-				this.Entity.GetMainActors ().ForEach ((a) =>
-				{
-					if (a.IsExternal == false)
-					{
-						a.Person.Events.Add (this.Entity);
-					}		
-				});
-				this.Entity.ApplyParticipantsInfo ();
+				this.Entity
+                    .GetMainActors ()
+                    .ForEach (a =>
+				        {
+					        if (a.IsExternal == false)
+					        {
+						        a.Person.Events.Add (this.Entity);
+					        }		
+				        });
+
+                this.Entity.ApplyParticipantsInfo ();
 				this.Entity.BuildMainActorsSummary ();
-				var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
-				if(previousAct.IsNotNull ())
+
+                var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
+
+                if (previousAct.IsNotNull ())
 				{
 					this.BusinessContext.DeleteEntity (previousAct);
 				}
-				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
 
-				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, this.Entity);
+                this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
+
+				var act = AiderEventOfficeReportEntity.Create (this.BusinessContext, this.Entity);
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
-				act.ProcessorUrl		= act.GetProcessorUrl (this.BusinessContext, "eventofficereport");
+
+                act.ProcessorUrl = act.GetProcessorUrl (this.BusinessContext, "eventofficereport");
+
 				this.Entity.Report = act;
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			}

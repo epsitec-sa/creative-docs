@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Rules
 
 		private void SetupUserGroups(AiderUserEntity user)
 		{
-			user.AssignGroup (this.GetBusinessContext (), UserPowerLevel.Standard);
+			user.AssignUserGroups (this.GetBusinessContext (), UserPowerLevel.Standard);
 		}
 
 		private void SetupCustomUISettings(AiderUserEntity user)

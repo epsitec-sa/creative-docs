@@ -1,4 +1,4 @@
-//  --------------------------------------------------------------------------- 
+﻿//  --------------------------------------------------------------------------- 
 //  ATTENTION !
 //  Ce fichier a été généré automatiquement. Ne pas l'éditer manuellement, car 
 //  toute modification sera perdue. 
@@ -659,6 +659,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 630));
+						}
+					}
+					//	designer:cap/LVAVM
+					public static global::Epsitec.Common.Types.Caption Left
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 735));
 						}
 					}
 					//	designer:cap/LVALJ
