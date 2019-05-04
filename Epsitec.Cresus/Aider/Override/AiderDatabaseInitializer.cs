@@ -83,7 +83,7 @@ namespace Epsitec.Aider.Override
 
 			this.roleAle = this.CreateAiderRole
 			(
-				name: AiderUserRoleEntity.AleRole,
+				name: AiderUserRoleEntity.PowerRole,
 				scopes: new AiderUserScopeEntity[] { 
 					this.scopeCounty
 				}

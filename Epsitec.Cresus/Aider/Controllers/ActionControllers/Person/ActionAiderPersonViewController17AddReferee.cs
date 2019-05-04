@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -41,7 +41,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
-			if(user.IsAdmin ())
+
+            if (user.IsAdmin ())
 			{
 				form
 					.Title ("Ajouter une répondance")
@@ -75,11 +76,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			if (group.IsNull ())
 			{
-				throw new BusinessRuleException ("Le groupe manque.");
+                Logic.BusinessRuleException ("Le groupe manque.");
 			}
 			if (group.IsRegion () == false)
 			{
-				throw new BusinessRuleException ("Le groupe ne fait pas référence à une région");
+                Logic.BusinessRuleException ("Le groupe ne fait pas référence à une région");
 			}
 
 			var employee = AiderEmployeeEntity.Create (this.BusinessContext, this.Entity, null, EmployeeType.None, "", EmployeeActivity.None, "");

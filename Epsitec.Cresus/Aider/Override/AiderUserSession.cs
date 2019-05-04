@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -61,7 +61,7 @@ namespace Epsitec.Aider.Override
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if (user.HasPowerLevel (UserPowerLevel.Administrator))
+			if (user.HasPowerLevel (UserPowerLevel.AdminUser))
 			{
 				return null;
 			}

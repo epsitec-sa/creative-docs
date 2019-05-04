@@ -188,39 +188,39 @@ namespace Epsitec.Aider.Entities
 
 		public bool CanViewConfidentialAddress()
 		{
-			return (this.IsAle () || this.IsAdmin ());
+			return (this.IsPowerUser () || this.IsAdmin ());
 		}
 
 		public bool CanViewOfficeDetails()
 		{
-			return (this.IsAle () || this.IsAdmin ());
+			return (this.IsPowerUser () || this.IsAdmin ());
 		}
 
 		public bool CanRemoveMailing()
 		{
-			return (this.IsAle () || this.IsAdmin ());
+			return (this.IsPowerUser () || this.IsAdmin ());
 		}
 
 		public bool CanEditEmployee()
 		{
-			return (this.IsAle () || this.IsAdmin ());
+			return (this.IsPowerUser () || this.IsAdmin ());
 		}
 
 		public bool CanBypassSubscriptionCheck()
 		{
-			return (this.IsAle () || this.IsAdmin ());
+			return (this.IsPowerUser () || this.IsAdmin ());
 		}
 
 		public bool CanEditReferee()
 		{
-			return ((this.Role.Name == AiderUserRoleEntity.RegionRole)  || 
+			return ((this.Role.Name == AiderUserRoleEntity.RegionRole) || 
 					this.IsAdmin ())
 					&& this.IsOfficeDefined ();
 		}
 
 		public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
 		{
-			if ((this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator))
+			if ((this.IsPowerUser ()) || this.HasPowerLevel (UserPowerLevel.Administrator))
 			{
 				return true;
 			}
@@ -277,14 +277,20 @@ namespace Epsitec.Aider.Entities
 			return this.Office.IsNotNull ();
 		}
 
-		public bool IsAdmin()
-		{
-			return this.HasPowerLevel (UserPowerLevel.Administrator);
-		}
+        public bool IsAdmin()
+        {
+            return this.HasPowerLevel (UserPowerLevel.AdminUser);
+        }
 
-		public bool IsAle()
+        public bool IsSysAdmin()
+        {
+            return this.HasPowerLevel (UserPowerLevel.Administrator);
+        }
+
+        public bool IsPowerUser()
 		{
-			return (this.Role.Name == AiderUserRoleEntity.AleRole);
+			return (this.Role.Name == AiderUserRoleEntity.AleRole)
+                || (this.Role.Name == AiderUserRoleEntity.PowerRole);
 		}
 
 		public void SetPassword(string password, string confirmation)

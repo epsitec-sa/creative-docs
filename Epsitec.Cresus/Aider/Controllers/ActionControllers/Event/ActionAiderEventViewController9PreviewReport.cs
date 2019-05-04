@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -44,7 +44,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
-			if (user.CanValidateEvents () || user.IsAdmin ())
+
+            if (user.CanValidateEvents () || user.IsAdmin ())
 			{
 				// Trigger validation rules
 				this.Entity.State     = Enumerations.EventState.ToValidate;
