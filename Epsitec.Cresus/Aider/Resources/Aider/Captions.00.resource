@@ -615,7 +615,7 @@
   <data name="Val.Enum.EmployeeActivity.Active" id="AMJ">&lt;s:data id="_0" f:Name="Active" f:Labels="{Collection {Text 'Actif'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeActivity.Retired" id="ANJ">&lt;s:data id="_0" f:Name="Retired" f:Labels="{Collection {Text 'Retraité'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeActivity.PartiallyRetired" id="AOJ">&lt;s:data id="_0" f:Name="PartiallyRetired" f:Labels="{Collection {Text 'Retraite partielle'}}" /&gt;</data>
-  <data name="Typ.Enum.EmployeeActivity" id="AKJ">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.EmployeeActivity" f:_1.SystemType="E:Epsitec.Aider.Enumerations.EmployeeActivity, Aider" f:_2.EnumValues="{Collection {Text '0 [LVALJ]'}, {Text '1 [LVAMJ]'}, {Text '2 [LVANJ]'}, {Text '3 [LVAOJ]'}}" f:Labels="{Collection {Text 'Statut professionel'}}" /&gt;</data>
+  <data name="Typ.Enum.EmployeeActivity" id="AKJ">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.EmployeeActivity" f:_1.SystemType="E:Epsitec.Aider.Enumerations.EmployeeActivity, Aider" f:_2.EnumValues="{Collection {Text '0 [LVALJ]'}, {Text '1 [LVAMJ]'}, {Text '2 [LVANJ]'}, {Text '3 [LVAOJ]'}, {Text '4 [LVAVM]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.EmployeeActivity, Aider/None" f:Labels="{Collection {Text 'Statut professionel'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeEmployer.None" id="AQJ">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeEmployer.CS" id="ARJ">&lt;s:data id="_0" f:Name="CS" f:Labels="{Collection {Text 'CS'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeEmployer.Parish" id="ASJ">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
@@ -896,4 +896,5 @@
   <data name="Fld.AiderContact.IsHouseholdHead" id="OL93">&lt;s:data id="_0" f:Name="IsHouseholdHead" f:Labels="{Collection {Text 'Chef de ménage ?'}}" /&gt;</data>
   <data name="Fld.AiderPerson.Birthdate" id="ON93">&lt;s:data id="_0" f:Name="Birthdate" f:Labels="{Collection {Text 'Date de naissance'}}" /&gt;</data>
   <data name="Cmd.Base.ShowAiderEmployeeJobAny" id="AUM">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderEmployeeJobAny" f:Icon="manifest:Epsitec.Aider.Images.Data.AiderGroupDef.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Postes et bénévoles AIDER'}}" /&gt;</data>
+  <data name="Val.Enum.EmployeeActivity.Left" id="AVM">&lt;s:data id="_0" f:Name="Left" f:Labels="{Collection {Text 'Ancien collaborateur'}}" /&gt;</data>
 </bundle>
