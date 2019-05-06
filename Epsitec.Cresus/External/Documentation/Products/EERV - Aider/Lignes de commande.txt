@@ -1648,6 +1648,7 @@ Lancé le 05.05.2019
 ___________________
 
 -upgradeusergroups
+-echupdate -newechfile:S:\eerv\eerv-2019-05-04.xml -oldechfile:S:\eerv\eerv-2019-04-27.xml -output:s:\eerv\ech-diff-2019-05-04.md
 
 Renommé le rôle d'utilisateur "Accès Ale" en "Accès avec pouvoir"
 

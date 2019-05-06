@@ -1,8 +1,8 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
-
+using Epsitec.Aider.Override;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
@@ -45,21 +45,20 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			var group = this.Entity;
+			var group    = this.Entity;
 			var subgroup = this.AdditionalEntity;
+            var user     = AiderUserManager.Current.AuthenticatedUser;
 
-			if (!subgroup.CanBeEdited ())
+            if (!subgroup.CanBeEdited ())
 			{
 				var message = "Ce groupe ne peut pas être détruit.";
-
-				throw new BusinessRuleException (message);
+				Logic.BusinessRuleException (message);
 			}
 
-			if (!subgroup.CanBeEditedByCurrentUser ())
+			if (!user.CanEditGroup (subgroup))
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
-
-				throw new BusinessRuleException (message);
+                Logic.BusinessRuleException (message);
 			}
 
 			group.DeleteSubgroup (this.BusinessContext, subgroup);

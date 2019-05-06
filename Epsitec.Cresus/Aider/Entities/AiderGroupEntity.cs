@@ -175,64 +175,6 @@ namespace Epsitec.Aider.Entities
 			return definition.IsNull () || definition.MembersAllowed;
 		}
 
-		public bool CanBeSeenByCurrentUser()
-		{
-			var path = this.Path;
-			var user = AiderUserManager.Current.AuthenticatedUser;
-			var userPowerLevel = user.PowerLevel;
-
-			if ((userPowerLevel != UserPowerLevel.None) &&
-				(userPowerLevel <= UserPowerLevel.Administrator))
-			{
-				return true;
-			}
-
-
-			if (this.IsParishOrParishSubgroup ())
-			{
-				if (user.EnableGroupEditionParish)
-				{
-					if (userPowerLevel == UserPowerLevel.PowerUser)
-					{
-						return true;
-					}
-
-					var userParishPath = user.ParishGroupPathCache;
-
-					if ((string.IsNullOrEmpty (userParishPath)) ||
-						(AiderGroupIds.IsSameOrWithinGroup (path, userParishPath)))
-					{
-						return true;
-					}
-				}
-			}
-			else if (this.IsRegionOrRegionSubgroup ())
-			{
-				if (user.EnableGroupEditionRegion)
-				{
-					if (userPowerLevel == UserPowerLevel.PowerUser)
-					{
-						return true;
-					}
-
-					var userParishPath = user.ParishGroupPathCache;
-					var userRegionPath = AiderGroupIds.GetParentPath (userParishPath);
-
-					if ((string.IsNullOrEmpty (userRegionPath)) ||
-						(AiderGroupIds.IsSameOrWithinGroup (path, userRegionPath)))
-					{
-						return true;
-					}
-				}
-			}
-			else
-			{
-				return user.EnableGroupEditionCanton;
-			}
-
-			return false;
-		}
-
 		public bool CanBeEditedByCurrentUser()
 		{
 			var path = this.Path;
@@ -301,32 +243,6 @@ namespace Epsitec.Aider.Entities
 			else
 			{
 				return user.EnableGroupEditionCanton;
-			}
-
-			return false;
-		}
-
-		public bool CanBeRenamedByCurrentUser()
-		{
-			//	Make sure nobody ever (ever, ever) renames a parish, or else lots of problems
-			//	will occur, as parish names are defined in external resources too, and those
-			//	must be kept in sync with the group names.
-
-			if (this.IsParish ())
-			{
-				if (this.IsParishOfGermanLanguage == false)
-				{
-					return false;
-				}
-			}
-
-			var user = AiderUserManager.Current.AuthenticatedUser;
-			var userPowerLevel = user.PowerLevel;
-
-			if ((userPowerLevel != UserPowerLevel.None) &&
-				(userPowerLevel <= UserPowerLevel.Administrator))
-			{
-				return true;
 			}
 
 			return false;

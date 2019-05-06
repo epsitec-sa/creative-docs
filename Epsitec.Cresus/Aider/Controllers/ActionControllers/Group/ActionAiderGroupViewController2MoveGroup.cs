@@ -1,5 +1,5 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
 
@@ -17,6 +17,7 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -79,14 +80,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-			if (!this.Entity.CanBeEditedByCurrentUser ())
+            var user = AiderUserManager.Current.AuthenticatedUser;
+
+            if (!user.CanEditGroup (this.Entity))
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 
 				throw new BusinessRuleException (message);
 			}
 
-			if (!newParent.CanBeEditedByCurrentUser ())
+			if (!user.CanEditGroup (newParent))
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 

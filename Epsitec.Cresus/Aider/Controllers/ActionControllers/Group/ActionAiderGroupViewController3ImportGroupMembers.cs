@@ -1,9 +1,9 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
-
+using Epsitec.Aider.Override;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
@@ -39,7 +39,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-			if (!this.Entity.CanBeEditedByCurrentUser ())
+            var user = AiderUserManager.Current.AuthenticatedUser;
+
+            if (!user.CanEditGroup (this.Entity))
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 

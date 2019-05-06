@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -7,6 +7,7 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -30,7 +31,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		
 		private void AddBrickWithDefinition(BrickWall<AiderGroupEntity> wall)
 		{
-			wall.AddBrick ()
+            var user  = AiderUserManager.Current.AuthenticatedUser;
+            var group = this.Entity;
+
+            wall.AddBrick ()
 				.Input ()
 					.Field (x => x.GroupDef)
 						.ReadOnly ()
@@ -38,7 +42,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
 						.ReadOnly ()
 					.Field (x => x.Name)
-						.ReadOnly (this.Entity.CanBeRenamedByCurrentUser () == false)
+						.ReadOnly (user.CanRenameGroup (group) == false)
 					.Field (x => x.Path)
 						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
 						.ReadOnly ()

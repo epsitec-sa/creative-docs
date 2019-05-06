@@ -1,18 +1,13 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Override;
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
-
-using Epsitec.Data.Platform;
-
-using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Aider.Rules
@@ -28,13 +23,14 @@ namespace Epsitec.Aider.Rules
 		public override void ApplyValidateRule(AiderMailingCategoryEntity mailingCategory)
 		{
 			var group = mailingCategory.Group;
+            var user  = AiderUserManager.Current.AuthenticatedUser;
 
-			if (group.IsNull ())
+            if (group.IsNull ())
 			{
 				Logic.BusinessRuleException (mailingCategory, TextFormatter.FormatText ("Il faut lier cette catégorie à un groupe"));
 			}
 
-			if (group.CanBeEditedByCurrentUser () == false)
+            if (!user.CanEditGroup (group))
 			{
 				Logic.BusinessRuleException (mailingCategory, TextFormatter.FormatText ("Vous n'avez pas accès au groupe sélectionné"));
 			}

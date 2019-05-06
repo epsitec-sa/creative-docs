@@ -1,9 +1,9 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
-
+using Epsitec.Aider.Override;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
@@ -15,8 +15,6 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using Epsitec.Cresus.Core.Entities;
 
-using System.Collections.Generic;
-
 using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
@@ -26,13 +24,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (2)]
 	public sealed class ActionAiderPersonViewController2AddToGroup : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
-		public override bool					RequiresAdditionalEntity
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool					RequiresAdditionalEntity => false;
 
 		
 		public override FormattedText GetTitle()
@@ -83,7 +75,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Cette personne est déjà membre de ce groupe");
 			}
 
-			if (!group.CanBeEditedByCurrentUser ())
+            var user = AiderUserManager.Current.AuthenticatedUser;
+
+            if (!user.CanEditGroup (group))
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 

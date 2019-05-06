@@ -1,6 +1,7 @@
 //	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Override;
 using Epsitec.Common.Support.EntityEngine;
@@ -219,29 +220,175 @@ namespace Epsitec.Aider.Entities
 					&& this.IsOfficeDefined ();
 		}
 
-		public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
+        public bool CanSeeGroup(AiderGroupEntity group)
+        {
+            var path = group.Path;
+
+            if (this.HasPowerLevel (UserPowerLevel.AdminUser))
+            {
+                return true;
+            }
+
+
+            if (group.IsParishOrParishSubgroup ())
+            {
+                if (this.EnableGroupEditionParish)
+                {
+                    if (this.HasPowerLevel (UserPowerLevel.PowerUser))
+                    {
+                        return true;
+                    }
+
+                    var userParishPath = this.ParishGroupPathCache;
+
+                    if ((string.IsNullOrEmpty (userParishPath)) ||
+                        (AiderGroupIds.IsSameOrWithinGroup (path, userParishPath)))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if (group.IsRegionOrRegionSubgroup ())
+            {
+                if (this.EnableGroupEditionRegion)
+                {
+                    if (this.HasPowerLevel (UserPowerLevel.PowerUser))
+                    {
+                        return true;
+                    }
+
+                    var userParishPath = this.ParishGroupPathCache;
+                    var userRegionPath = AiderGroupIds.GetParentPath (userParishPath);
+
+                    if ((string.IsNullOrEmpty (userRegionPath)) ||
+                        (AiderGroupIds.IsSameOrWithinGroup (path, userRegionPath)))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return this.EnableGroupEditionCanton;
+            }
+
+            return false;
+        }
+
+        public bool CanEditGroup(AiderGroupEntity group)
+        {
+            var path = group.Path;
+
+            if (group.GroupDef.MembersReadOnly)
+            {
+                return false;
+            }
+
+            if (this.HasPowerLevel (UserPowerLevel.Administrator))
+            {
+                return true;
+            }
+
+
+            //	A user can edit a group if he belongs to the matching parish or region, and he
+            //	has the rights to edit at that structural level.
+            //
+            //	A user who has the rights to edit both parent and local group levels, but who
+            //	has an empty match at the specified structural level, will also be allowed to
+            //	edit the group if edition is enabled (user with matching region at the parish
+            //	level, or with canton level edition rights).
+            //
+            //	This enables staff at the canton level to edit groups at the parish level if
+            //	property EnableGroupEditionParish is set for them.
+
+            if (group.IsParishOrParishSubgroup ())
+            {
+                if (this.EnableGroupEditionParish)
+                {
+                    if (this.HasPowerLevel (UserPowerLevel.PowerUser))
+                    {
+                        return true;
+                    }
+
+                    var userParishPath = this.ParishGroupPathCache;
+
+                    if ((string.IsNullOrEmpty (userParishPath)) ||
+                        (AiderGroupIds.IsSameOrWithinGroup (path, userParishPath)))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if (group.IsRegionOrRegionSubgroup ())
+            {
+                if (this.EnableGroupEditionRegion)
+                {
+                    if (this.HasPowerLevel (UserPowerLevel.PowerUser))
+                    {
+                        return true;
+                    }
+
+                    var userParishPath = this.ParishGroupPathCache;
+                    var userRegionPath = AiderGroupIds.GetParentPath (userParishPath);
+
+                    if ((string.IsNullOrEmpty (userRegionPath)) ||
+                        (AiderGroupIds.IsSameOrWithinGroup (path, userRegionPath)))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return this.EnableGroupEditionCanton;
+            }
+
+            return false;
+        }
+
+        public bool CanRenameGroup(AiderGroupEntity group)
+        {
+            //	Make sure nobody ever (ever, ever) renames a parish, or else lots of problems
+            //	will occur, as parish names are defined in external resources too, and those
+            //	must be kept in sync with the group names.
+
+            if (group.IsParish ())
+            {
+                if (group.IsParishOfGermanLanguage == false)
+                {
+                    return false;
+                }
+            }
+
+            if (this.HasPowerLevel (UserPowerLevel.Administrator))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+
+        public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
 		{
-			if ((this.IsPowerUser ()) || this.HasPowerLevel (UserPowerLevel.Administrator))
+			if (this.IsPowerUser ())
+			{
+				return true;
+			}
+
+            if (this.Office.IsNull ())
+            {
+                return false;
+            }
+
+            if (derogationParishGroup.Name == this.Office.ParishGroup.Name)
 			{
 				return true;
 			}
 			else
 			{
-				if (this.Office.IsNotNull ())
-				{
-					if (derogationParishGroup.Name == this.Office.ParishGroup.Name)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				else
-				{
-					return false;
-				}
+				return false;
 			}
 		}
 

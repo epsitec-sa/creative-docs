@@ -1,8 +1,8 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Override;
 
 using Epsitec.Common.Types;
 
@@ -11,13 +11,10 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
-using Epsitec.Cresus.Core.Entities;
-
-using System.Linq;
-using Epsitec.Aider.Override;
 using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
-using Epsitec.Common.Support.EntityEngine;
+using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -36,7 +33,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(Date? startDate, FormattedText comment)
 		{
-			if (!this.Entity.CanBeEditedByCurrentUser ())
+            var user = AiderUserManager.Current.AuthenticatedUser;
+
+            if (!user.CanEditGroup (this.Entity))
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 

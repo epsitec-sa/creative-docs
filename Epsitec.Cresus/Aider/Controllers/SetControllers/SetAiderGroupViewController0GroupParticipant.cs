@@ -1,9 +1,8 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
-
+using Epsitec.Aider.Override;
 using Epsitec.Common.Support;
 
 using Epsitec.Common.Types;
@@ -15,7 +14,6 @@ using Epsitec.Cresus.Core.Data;
 
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace Epsitec.Aider.Controllers.SetControllers
 {
@@ -54,7 +52,8 @@ namespace Epsitec.Aider.Controllers.SetControllers
 
 		private bool EnableButtons()
 		{
-			return this.Entity.CanBeEditedByCurrentUser ();
+            var user = AiderUserManager.Current.AuthenticatedUser;
+            return user.CanEditGroup (this.Entity);
 		}
 
 		protected override void SetupDisplayDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)

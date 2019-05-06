@@ -1,9 +1,10 @@
-//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.SetControllers;
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Override;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -19,9 +20,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
 			var group = this.Entity;
+            var user  = AiderUserManager.Current.AuthenticatedUser;
 
-			bool canSubgroupsBeEdited					= group.CanSubgroupsBeEdited ();
-			bool canGroupBeEditedByCurrentUser			= group.CanBeEditedByCurrentUser ();
+            bool canSubgroupsBeEdited					= group.CanSubgroupsBeEdited ();
+			bool canGroupBeEditedByCurrentUser			= user.CanEditGroup (group);
 			bool canSubgroupsBeEditedByCurrentUser		= canSubgroupsBeEdited && canGroupBeEditedByCurrentUser;
 
 			wall.AddBrick ()
