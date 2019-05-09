@@ -16,7 +16,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderGroupDefEntity> wall)
 		{
 			wall.AddBrick ()
-				.Attribute (BrickMode.DefaultToNoSubView).IfFalse (this.HasUserPowerLevel (UserPowerLevel.Administrator));
+				.Attribute (BrickMode.DefaultToNoSubView).IfFalse (this.HasUserPowerLevel (UserPowerLevel.AdminUser));
 
 			wall.AddBrick (x => x.Subgroups)
 				.Attribute (BrickMode.DefaultToSummarySubView)
