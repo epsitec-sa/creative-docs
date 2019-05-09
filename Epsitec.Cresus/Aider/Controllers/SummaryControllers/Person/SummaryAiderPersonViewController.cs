@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -37,8 +37,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var showEmployeeAction = (showEmployeeTile == false) && user.CanEditEmployee ();
 			var canEditEmployee	   = user.CanEditEmployee () || user.CanEditReferee ();
 			var canRemoveEmployee  = showEmployeeTile && user.CanEditEmployee ();
-
-			var canReactivate      = this.Entity.MainContact.IsNull ();
+			var canReactivate      = this.Entity.Visibility == Enumerations.PersonVisibilityStatus.Hidden
+                                  || this.Entity.MainContact.IsNull ()
+                                  || this.Entity.GetHouseholdContact ().IsNull ();
 
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
