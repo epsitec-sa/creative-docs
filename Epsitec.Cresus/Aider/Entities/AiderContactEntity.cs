@@ -328,12 +328,17 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderContactEntity ChangeHousehold(BusinessContext businessContext, AiderContactEntity contact, AiderHouseholdEntity newHousehold, bool isHead)
 		{
-            var oldHousehold = contact.Household;
 			var role = isHead
 				? HouseholdRole.Head
 				: HouseholdRole.None;
 
-			contact.Household.RemoveContactInternal (contact);
+            var oldHousehold = contact.Household;
+
+            if (oldHousehold.IsNotNull ())
+            {
+                oldHousehold.RemoveContactInternal (contact);
+            }
+
 			contact.Person.RemoveContactInternal (contact);
 
 			contact.Household     = newHousehold;
@@ -342,15 +347,20 @@ namespace Epsitec.Aider.Entities
 			contact.Person.AddContactInternal (contact);
 			newHousehold.AddContactInternal (contact);
 
+			var existingSubscription = AiderSubscriptionEntity.FindSubscription (businessContext, newHousehold);
 
-			var newSubscription = AiderSubscriptionEntity.FindSubscription (businessContext, newHousehold);
-			if (newSubscription.IsNotNull ())
+            if (existingSubscription.IsNotNull ())
 			{
-				newSubscription.RefreshCache ();
+				existingSubscription.RefreshCache ();
 			}
             
             businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
-            AiderHouseholdEntity.DeleteEmptyHousehold (businessContext, oldHousehold, true);
+
+            if (oldHousehold.IsNotNull ())
+            {
+                AiderHouseholdEntity.DeleteEmptyHousehold (businessContext, oldHousehold, true);
+            }
+
             return contact;
 		}
 
@@ -358,7 +368,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (person.IsDeceased)
 			{
-				throw new System.ArgumentException ("Cannot create contact for a dead person.");
+				Logic.BusinessRuleException ("Cannot create contact for a dead person.");
 			}
 
 			if (person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.None)
