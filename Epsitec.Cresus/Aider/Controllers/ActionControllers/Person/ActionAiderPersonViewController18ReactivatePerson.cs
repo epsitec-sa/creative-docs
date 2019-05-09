@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -8,20 +8,11 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
-
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
-using Epsitec.Aider.Override;
-
-using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Aider.Reporting;
-using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -41,12 +32,28 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var person = this.Entity;
-			person.Visibility = PersonVisibilityStatus.Default;
-			
-			if (person.HouseholdContact.IsNull ())
+
+            var mainContact      = person.MainContact;
+            var householdContact = person.HouseholdContact;
+
+            //  Try to repair the person, making it visible again and ensuring
+            //  that there is at least one contact and an associated household.
+
+            person.Visibility = PersonVisibilityStatus.Default;
+
+            if (householdContact.IsNull ())
 			{
-				var household = AiderHouseholdEntity.Create (this.BusinessContext, person.Address);
-				AiderContactEntity.Create (this.BusinessContext, person, household, true);
+                var address   = person.Address;
+				var household = AiderHouseholdEntity.Create (this.BusinessContext, address);
+
+                if (mainContact.IsNull ())
+                {
+                    AiderContactEntity.Create (this.BusinessContext, person, household, true);
+                }
+                else
+                {
+                    AiderContactEntity.ChangeHousehold (this.BusinessContext, mainContact, household, true);
+                }
 			}
 		}
 	}

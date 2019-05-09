@@ -910,10 +910,12 @@ namespace Epsitec.Aider.Entities
 		public AiderContactEntity GetMainContact()
 		{
 			var mainAddress = this.GetAddress ();
-			if (mainAddress.IsNotNull ())
+
+            if (mainAddress.IsNotNull ())
 			{
-				return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress);
-			}
+                return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress)
+                    ?? this.Contacts.FirstOrDefault ();
+            }
 			else
 			{
 				return this.Contacts.FirstOrDefault ();
@@ -922,7 +924,7 @@ namespace Epsitec.Aider.Entities
 		
 		public AiderContactEntity GetHouseholdContact()
 		{
-			return this.Contacts.Where (x => x.Household.IsNotNull ()).FirstOrDefault ();
+			return this.Contacts.FirstOrDefault (x => x.Household.IsNotNull ());
 		}
 
 		public void ClearParticipationsCache ()
@@ -1236,13 +1238,15 @@ namespace Epsitec.Aider.Entities
 
 		private AiderAddressEntity GetAddress()
 		{
-			//	A person's address is the one which was explicitely defined to be the default
-			//	(AddressType = Default), or the first household address, or any fully defined
-			//	available address for the person if everything else failed:
-			var defaultAddress = 
-				this.AdditionalAddresses.Where (x => x.AddressType == AddressType.Default).Select (x => x.Address).FirstOrDefault () ??
-				this.Households.Select (x => x.Address).FirstOrDefault () ??
-				this.AdditionalAddresses.Where (x => x.HasFullAddress ()).Select (x => x.Address).FirstOrDefault ();
+            //	A person's address is the one which was explicitely defined to be the default
+            //	(AddressType = Default), or the first household address, or any fully defined
+            //	available address for the person if everything else failed:
+
+            var defaultAddress = this.AdditionalAddresses.FirstOrDefault (x => x.AddressType == AddressType.Default)?.Address
+                              ?? this.Households.FirstOrDefault ()?.Address
+                              ?? this.AdditionalAddresses.FirstOrDefault (x => x.HasFullAddress ())?.Address
+                              ?? this.Contacts.FirstOrDefault (x => x.Address.IsNotNull ())?.Address;
+
 			return defaultAddress;
 		}
 
