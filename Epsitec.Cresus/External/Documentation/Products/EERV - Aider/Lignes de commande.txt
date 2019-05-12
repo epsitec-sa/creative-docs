@@ -1654,6 +1654,14 @@ Renommé le rôle d'utilisateur "Accès Ale" en "Accès avec pouvoir"
 
 
 
+Lancé le 12.05.2019
+-------------------
+
+-patchvillamont
+-echupdate -newechfile:S:\eerv\eerv-2019-05-11.xml -oldechfile:S:\eerv\eerv-2019-05-04.xml -output:s:\eerv\ech-diff-2019-05-11.md
+
+
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée

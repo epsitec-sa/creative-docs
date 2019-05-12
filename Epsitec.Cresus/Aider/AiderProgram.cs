@@ -211,6 +211,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+                if (args.Contains ("-patchvillamont"))
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.PatchVillamont (args));
+                    return;
+                }
+
                 if (args.Contains ("-fixbussigny"))
                 {
                     ConsoleCreator.RunWithConsole (() => AiderProgram.FixBussignyName (args));
@@ -826,7 +832,13 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (c => AmbiguousAddressFixer.FixAmbiguousAddresses (streetRepository, echReportedPersons, c));
 		}
 
-		private static void FixParishAssignation(string[] args)
+        private static void PatchVillamont(string[] args)
+        {
+            AiderProgram.RunWithCoreData (c => ParishGroupPathPatcher.PatchParishGroupPath (c, "R004.P008.", "R012.P005."));
+        }
+
+
+        private static void FixParishAssignation(string[] args)
 		{
 			var parishRepository = ParishAddressRepository.Current;
 
