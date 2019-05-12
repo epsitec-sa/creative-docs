@@ -834,7 +834,7 @@ namespace Epsitec.Aider
 
         private static void PatchVillamont(string[] args)
         {
-            AiderProgram.RunWithCoreData (c => ParishGroupPathPatcher.PatchParishGroupPath (c, "R004.P008.", "R012.P005."));
+            AiderProgram.RunWithCoreData (c => ParishGroupPathPatcher.PatchParishGroupPath (c, "R004.P008.", "R012.P005.", "R04", "PLA"));
         }
 
 
