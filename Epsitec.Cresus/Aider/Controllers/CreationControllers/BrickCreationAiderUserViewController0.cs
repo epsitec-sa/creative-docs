@@ -1,7 +1,6 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
-using System.Linq;
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
+
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
@@ -12,8 +11,6 @@ using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business.UserManagement;
-using System.Collections.Generic;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -50,29 +47,29 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private AiderUserEntity Execute(AiderContactEntity contact, AiderUserRoleEntity role, bool admin, string password, string confirmation)
 		{
-			if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
+			if (this.HasUserPowerLevel (UserPowerLevel.AdminUser) == false)
 			{
 				var message = "Seul un administrateur a le droit de créer des utilisateurs.";
 
-				throw new BusinessRuleException (this.Entity, message);
+				Logic.BusinessRuleException (this.Entity, message);
 			}
 
 			if (role.IsNull ())
 			{
-				throw new BusinessRuleException (this.Entity, "Le rôle est obligatoire");
+                Logic.BusinessRuleException (this.Entity, "Le rôle est obligatoire");
 			}
 
             if ((contact.IsNull ()) ||
                 (contact.Person.IsNull ()))
 			{
-				throw new BusinessRuleException (this.Entity, "Un contact avec une personne physique est obligatoire");
+                Logic.BusinessRuleException (this.Entity, "Un contact avec une personne physique est obligatoire");
 			}
 
             var email = contact.Person.MainEmail;
 
             if (string.IsNullOrEmpty (email))
             {
-                throw new BusinessRuleException (this.Entity, "Le contact sélectionné n'a pas d'adresse e-mail");
+                Logic.BusinessRuleException (this.Entity, "Le contact sélectionné n'a pas d'adresse e-mail");
             }
 
 			var user = AiderUserEntity.Create (this.BusinessContext, contact, role);
