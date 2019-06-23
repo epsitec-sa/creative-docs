@@ -16,7 +16,8 @@ using Epsitec.Aider.Controllers.SetControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-	[ControllerSubType (1)]
+#if false
+    [ControllerSubType (1)]
 	public sealed class SummaryAiderEventViewController1Person : SummaryViewController<AiderEventEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderEventEntity> wall)
@@ -25,7 +26,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Icon ("Data.AiderEvent")
 					.Title (x => "Acte N° " + x.Report.EventNumberByYearAndRegistry)
 					.Text (x => x.GetActSummary ())
-					.Attribute (BrickMode.DefaultToNoSubView);
+					.Attribute (BrickMode.DefaultToSummarySubView);
 
 			if (this.Entity.Report.IsNotNull ())
 			{
@@ -41,4 +42,5 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.WithSpecialController (typeof (SetAiderEventViewController0Participants));
 		}
 	}
+#endif
 }

@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.AutoGroup)
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
-					.WithSpecialController (typeof (SummaryAiderEventViewController1Person))
+//					.WithSpecialController (typeof (SummaryAiderEventViewController1Person))
 					.Template ()
 						.Text (x => x.GetTypeSummary ())
 					.End ();

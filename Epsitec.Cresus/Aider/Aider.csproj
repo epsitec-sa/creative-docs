@@ -274,6 +274,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderRefereeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEmployeeViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeReportViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController2DerogationsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderEventViewController0Participants.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController1ExcludedContact.cs" />

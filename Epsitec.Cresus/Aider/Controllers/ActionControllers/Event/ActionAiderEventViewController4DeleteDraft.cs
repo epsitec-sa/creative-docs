@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.Delete (this.BusinessContext);
+			this.Entity.DeleteMutableEntity (this.BusinessContext);
 		}
 	}
 }

@@ -25,51 +25,38 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Supprimer l'acte");
+			return Resources.Text ("Supprimer l'acte/radier le document");
 		}
 
-		public override ActionExecutor GetExecutor()
+        protected override void GetForm(ActionBrick<AiderEventEntity, SimpleBrick<AiderEventEntity>> form)
+        {
+            form
+                .Title (this.GetTitle ())
+                .Text ("Voulez-vous vraiment supprimer l'acte en radiant ce document ?")
+                .Field<bool> ()
+                    .Title ("Supprime définitivement le document (ceci renumérotera les actes)")
+                .End ()
+            .End ();
+        }
+
+        public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create(this.Execute);
+			return ActionExecutor.Create<bool>(this.Execute);
 		}
 
-		private void Execute()
+		private void Execute(bool deleteDocument)
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
 
 			if (this.Entity.State != Enumerations.EventState.Validated)
 			{
-				Logic.BusinessRuleException ("Cette action fonctionne uniquement pour supprimer un acte validé par erreur");
+				Logic.BusinessRuleException ("Cette action sert uniquement à supprimer un acte validé par erreur.");
 			}
 
-			if (user.IsSysAdmin ())
+			if ((user.IsSysAdmin ()) ||
+                (user.IsAdmin () && !deleteDocument))
 			{
-				// remove act from person view
-				this.Entity.GetMainActors ().ForEach ((a) =>
-				{
-					if (a.IsExternal == false)
-					{
-						a.Person.Events.Remove (this.Entity);
-					}
-				});
-
-				// remove act document from office
-				var act = this.Entity.Report;
-				act.Office.RemoveDocumentInternal (act);
-				
-				// office next acts of year must be renumbered and renamed
-				AiderEventOfficeReportEntity
-                    .GetNextOfficeActFromEvent (this.BusinessContext, this.Entity, act.EventNumberByYearAndRegistry)
-                    .ForEach (a =>
-				        {
-					        var newNumber = a.EventNumberByYearAndRegistry -1;
-					        a.EventNumberByYearAndRegistry = newNumber;
-					        a.Name = AiderEventOfficeReportEntity.GetReportName (this.Entity, a);
-				        });
-
-				// delete report & event
-				this.BusinessContext.DeleteEntity (act);
-				this.BusinessContext.DeleteEntity (this.Entity);
+                this.Entity.DeleteImmutableEntity (this.BusinessContext, deleteDocument);
 			}
 			else
 			{

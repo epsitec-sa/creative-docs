@@ -732,7 +732,10 @@ namespace Epsitec.Common.Pdf.Engine
 						Image image = null;
 						try
 						{
-							image = Bitmap.FromFile (filename);
+                            if (System.IO.File.Exists (filename))
+                            {
+                                image = Bitmap.FromFile (filename);
+                            }
 						}
 						catch
 						{
@@ -943,8 +946,8 @@ namespace Epsitec.Common.Pdf.Engine
 			{
 				System.Diagnostics.Debug.Assert (imageOriginX == 0);
 				System.Diagnostics.Debug.Assert (imageOriginY == 0);
-				System.Diagnostics.Debug.Assert (imageWidth == bitmap.Width);
-				System.Diagnostics.Debug.Assert (imageHeight == bitmap.Height);
+				//System.Diagnostics.Debug.Assert (imageWidth == bitmap.Width);
+				//System.Diagnostics.Debug.Assert (imageHeight == bitmap.Height);
 
 				if (imageSurface == null)
 				{
