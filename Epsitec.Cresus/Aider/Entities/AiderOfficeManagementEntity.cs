@@ -534,7 +534,7 @@ namespace Epsitec.Aider.Entities
 			};
 
 			return dataContext.GetByExample (example)
-							  .OrderBy (x => x.Name)
+							  .OrderBy (x => x.LexicalName)
 							  .ToList ();
 		}
 

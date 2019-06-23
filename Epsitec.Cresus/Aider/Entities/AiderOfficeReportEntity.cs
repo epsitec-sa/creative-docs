@@ -23,15 +23,48 @@ namespace Epsitec.Aider.Entities
 		public AiderOfficeReportEntity()
 		{
 		}
-		
-		public override FormattedText GetCompactSummary()
+
+
+        public bool IsRemoved => this.RemovalDate.HasValue;
+        public string LexicalName
+        {
+            get
+            {
+                var name = this.Name;
+
+                if (name.IndexOf ('/') >= 0)
+                {
+                    var tokens = this.Name.Split ('/');
+
+                    var prefix = tokens[0];
+                    var number = "0000" + tokens[1];
+
+                    tokens[1] = number.SubstringEnd (System.Math.Max (4, tokens[1].Length));
+
+                    return string.Join ("/", tokens);
+                }
+                else
+                {
+                    return name;
+                }
+            }
+        }
+
+        public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Name);		
 		}
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name, new FormattedText (" (<a href='" + this.ProcessorUrl +"' target='_blank'>PDF</a>)"));
+            if (this.IsRemoved)
+            {
+                return TextFormatter.FormatText (this.Name, "\n", "Doc. radié le", this.RemovalDate.Value);
+            }
+            else
+            {
+                return TextFormatter.FormatText (this.Name, new FormattedText (" (<a href='" + this.ProcessorUrl + "' target='_blank'>PDF</a>)"));
+            }
 		}
 
 		public void SetContent(IContent data)

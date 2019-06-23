@@ -203,7 +203,6 @@ namespace Epsitec.Aider.Processors.Pdf
 		private void WriteGroupAct (AiderEventEntity act, List<string> lines)
 		{
 			var actors = act.GetMainActors ();
-
 			
 			if (act.State != Enumerations.EventState.Validated)
 			{
@@ -211,23 +210,17 @@ namespace Epsitec.Aider.Processors.Pdf
 			}
 			else
 			{
-				lines.Add ("<b>Acte N°" + act.Report.GetEventNumber () + "</b><br/>");
+				lines.Add ("<b>Acte N° " + act.Report.GetEventNumber () + "</b><br/>");
 			}
 
-			switch (act.Kind)
-			{
-				case Enumerations.EventKind.Branches:
-					lines.Add ("<b>Rameaux " + act.Date.Value.Year + "</b><br/>");
-					break;
-				case Enumerations.EventKind.CultOfTheAlliance:
-					lines.Add ("<b>Culte de l'alliance " + act.Date.Value.Year + "</b><br/>");
-					break;
-				case Enumerations.EventKind.Other:
-					lines.Add ("<b>" + act.Comment + " " + act.Date.Value.Year + "</b><br/>");
-					break;
-			}
-			
-			foreach (var actor in actors)
+            var title = "<b>" + act.GetActTitle () + "</b>";
+
+            lines.Add ("");
+            lines.Add ("<font size=\"144%\">" + title + "</font>");
+            lines.Add ("");
+            lines.Add ("");
+
+            foreach (var actor in actors)
 			{
 				this.AddActorHeaderLines (act, actor, lines);
 			}

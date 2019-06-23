@@ -1643,7 +1643,6 @@ Lancé le 28.04.2019
 -echupdate -newechfile:S:\eerv\eerv-2019-04-27.xml -oldechfile:S:\eerv\eerv-2019-04-20.xml -output:s:\eerv\ech-diff-2019-04-27.md
 
 
-
 Lancé le 05.05.2019
 ___________________
 
@@ -1653,13 +1652,44 @@ ___________________
 Renommé le rôle d'utilisateur "Accès Ale" en "Accès avec pouvoir"
 
 
-
 Lancé le 12.05.2019
 -------------------
 
 -patchvillamont
 -echupdate -newechfile:S:\eerv\eerv-2019-05-11.xml -oldechfile:S:\eerv\eerv-2019-05-04.xml -output:s:\eerv\ech-diff-2019-05-11.md
 
+-exportsubscriptions -output:export-2019-05-xx.txt -error:error-2019-05-xx.txt -exclude-district-error:false
+
+
+Lancé le 18.05.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-05-18.xml -oldechfile:S:\eerv\eerv-2019-05-11.xml -output:s:\eerv\ech-diff-2019-05-18.md
+-updatebirthday
+
+
+Lancé le 26.05.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-05-25.xml -oldechfile:S:\eerv\eerv-2019-05-18.xml -output:s:\eerv\ech-diff-2019-05-25.md
+
+
+Lancé le 02.06.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-06-01.xml -oldechfile:S:\eerv\eerv-2019-05-25.xml -output:s:\eerv\ech-diff-2019-06-01.md
+
+Lancé le 09.06.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-06-08.xml -oldechfile:S:\eerv\eerv-2019-06-01.xml -output:s:\eerv\ech-diff-2019-06-08.md
+
+Lancé le 16.06.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-06-15.xml -oldechfile:S:\eerv\eerv-2019-06-08.xml -output:s:\eerv\ech-diff-2019-06-15.md
+
+-exportsubscriptions -output:export-2019-06-xx.txt -error:error-2019-06-xx.txt -exclude-district-error:false
 
 
 ___________________________________________________________________________________________________________________________________

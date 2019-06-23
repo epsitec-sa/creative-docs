@@ -3823,6 +3823,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ProcessingDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 87);
 				//	designer:cap/LVOT23
 				public static readonly global::Epsitec.Common.Support.Druid ProcessorUrl = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 93);
+				//	designer:cap/LVA0N
+				public static readonly global::Epsitec.Common.Support.Druid RemovalDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 736);
 			}
 			
 			public static class AiderOfficeSender

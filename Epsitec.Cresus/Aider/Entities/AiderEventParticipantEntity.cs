@@ -1,5 +1,5 @@
 //	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP,
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
@@ -23,6 +23,8 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (role, "\n", personSummary);
 			
 		}
+
+        public bool IsNotExternal => this.IsExternal == false;
 
 		public override FormattedText GetCompactSummary()
 		{

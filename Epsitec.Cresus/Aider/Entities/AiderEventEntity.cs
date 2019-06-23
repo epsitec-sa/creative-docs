@@ -1,15 +1,15 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP,
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Linq;
 using System.Collections.Generic;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Aider.Entities
 {
@@ -20,7 +20,17 @@ namespace Epsitec.Aider.Entities
 			var type = this.GetTypeCaption ();
 			var place = this.GetPlaceText ();
 			var actors = this.GetMainActors ().Select (p => p.GetFullName ()).Join ("\n");
-			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
+            var body = TextFormatter.FormatText (type + "\n" + actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
+
+            if (this.Report.IsRemoved)
+            {
+                var bold = TextFormatter.FormatText ("*** RADIÉ ***").ApplyBold ();
+                return bold + "<br/>" + body;
+            }
+            else
+            {
+                return body;
+            }
 		}
 
 		public FormattedText GetTypeSummary()
@@ -51,6 +61,35 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (lines);
 		}
 
+        public string GetActTitle()
+        {
+            var title = "";
+
+            switch (this.Kind)
+            {
+                case Enumerations.EventKind.Branches:
+                    title = "Rameaux";
+                    break;
+                case Enumerations.EventKind.CultOfTheAlliance:
+                    title = "Culte de l'alliance";
+                    break;
+                case Enumerations.EventKind.Other:
+                    title = this.Comment.Text.ToString ();
+                    break;
+            }
+
+            if (title.Length > 0)
+            {
+                title = title + " " + this.Date.Value.Year.ToString (System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                title = this.Date.Value.Year.ToString (System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            return title;
+        }
+
 		public AiderEventParticipantEntity GetParticipantByRole (Enumerations.EventParticipantRole role)
 		{
 			return this.GetParticipations ()
@@ -68,7 +107,7 @@ namespace Epsitec.Aider.Entities
 		{
             if (place.Town.IsNull ())
             {
-                throw new BusinessRuleException ("Le lieu de célébration n'a pas de localité renseignée");
+                Logic.BusinessRuleException ("Le lieu de célébration ne spécifie pas de localité.");
             }
 
             var newEvent = context.CreateAndRegisterEntity<AiderEventEntity> ();
@@ -84,11 +123,48 @@ namespace Epsitec.Aider.Entities
 			return newEvent;
 		}
 
-		public void Delete(BusinessContext context)
+
+        public void DeleteImmutableEntity(BusinessContext context, bool deleteReport = false)
+        {
+            // remove act from person view
+            var persons = this
+                .GetMainActors ()
+                .Where (x => x.IsNotExternal)
+                .Select (x => x.Person);
+
+            persons.ForEach (person => person.Events.Remove (this));
+
+            if (deleteReport)
+            {
+                this.Report.Office.RemoveDocumentInternal (this.Report);
+                
+                //  The caller requires us to remove the report without leaving any visible
+                //  hint that the document ever existed -- this means we have to renumber
+                //  all subsequent documents for the given year:
+
+                AiderEventOfficeReportEntity
+                    .GetNextOfficeActFromEvent (context, this, this.Report.EventNumberByYearAndRegistry)
+                    .ForEach (report =>
+                    {
+                        report.EventNumberByYearAndRegistry -= 1;
+                        report.Name = AiderEventOfficeReportEntity.GetReportName (this, report);
+                    });
+
+                // delete report & event
+                context.DeleteEntity (this.Report);
+                context.DeleteEntity (this);
+            }
+            else
+            {
+                this.Report.RemovalDate = Epsitec.Common.Types.Date.Today;
+            }
+        }
+
+        public void DeleteMutableEntity(BusinessContext context)
 		{
 			if (this.State == Enumerations.EventState.Validated)
 			{
-				throw new BusinessRuleException ("Impossible de supprimer un acte validé");
+                Logic.BusinessRuleException ("Impossible de supprimer un acte validé.");
 			}
 
 			foreach (var participant in this.Participants)
@@ -418,19 +494,19 @@ namespace Epsitec.Aider.Entities
 
 			if (participant.GetBirthDate ()== null)
 			{
-				error = main.GetFullName () + ": date de naissance non renseignée";
+				error = main.GetFullName () + " : date de naissance manquante";
 				return false;
 			}
 
 			if (participant.GetTown ().IsNullOrWhiteSpace ())
 			{
-				error = main.GetFullName () + ": adresse non renseignée";
+				error = main.GetFullName () + " : adresse manquante";
 				return false;
 			}
 
 			if (participant.GetParishName ().IsNullOrWhiteSpace ())
 			{
-				error = main.GetFullName () + ": paroisse non renseignée";
+				error = main.GetFullName () + " : paroisse manquante";
 				return false;
 			}
 
@@ -513,7 +589,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return "Lieu de célébration non renseigné";
+				return "Lieu de célébration non spécifié";
 			}		
 		}
 

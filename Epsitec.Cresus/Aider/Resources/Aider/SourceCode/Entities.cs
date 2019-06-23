@@ -10278,6 +10278,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>RemovalDate</c> field.
+		///	designer:fld/LVOE23/LVA0N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA0N]")]
+		public global::Epsitec.Common.Types.Date? RemovalDate
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[LVA0N]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.RemovalDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVA0N]"))
+				{
+					this.OnRemovalDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[LVA0N]", oldValue, value);
+					this.OnRemovalDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>ProcessingDate</c> field.
 		///	designer:fld/LVOE23/LVON23
 		///	</summary>
@@ -10414,6 +10436,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnCreationDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnCreationDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnRemovalDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnRemovalDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnProcessingDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnProcessingDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
