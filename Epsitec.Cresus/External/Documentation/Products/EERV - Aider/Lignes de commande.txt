@@ -1691,6 +1691,12 @@ Lancé le 16.06.2019
 
 -exportsubscriptions -output:export-2019-06-xx.txt -error:error-2019-06-xx.txt -exclude-district-error:false
 
+Lancé le 23.06.2019
+-------------------
+
+[Migration nouveaux schémas]
+-echupdate -newechfile:S:\eerv\eerv-2019-06-22.xml -oldechfile:S:\eerv\eerv-2019-06-15.xml -output:s:\eerv\ech-diff-2019-06-22.md
+
 
 ___________________________________________________________________________________________________________________________________
 

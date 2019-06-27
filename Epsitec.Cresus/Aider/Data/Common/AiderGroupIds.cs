@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -397,10 +397,13 @@ namespace Epsitec.Aider.Data.Common
 				var placeholder = string.Format (AiderGroupIds.PlaceholderFormat, prefix);
 
 				var startIndex = positionInParishPath * AiderGroupIds.PartLength;
-				var length = AiderGroupIds.PartLength;
-				var replacement = parishPath.Substring (startIndex, length);
+				var length     = AiderGroupIds.PartLength;
 
-				path = path.Replace (placeholder, replacement);
+                if (startIndex + length <= parishPath.Length)
+                {
+                    var replacement = parishPath.Substring (startIndex, length);
+                    path = path.Replace (placeholder, replacement);
+                }
 			}
 
 			return path;
