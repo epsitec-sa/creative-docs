@@ -1,21 +1,18 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Linq;
 using System.Collections.Generic;
-using Epsitec.Aider.Data.Common;
-using Epsitec.Aider.Data.Groups;
-using Epsitec.Aider.Enumerations;
-using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Entities
 {
@@ -42,11 +39,14 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (type);
 		}
 
-		public FormattedText GetDocumentsSummary(EventType type)
-		{
-            var doc = this.GetEventDocuments ()[type];
+        public FormattedText GetDocumentsSummary(EventType type)
+        {
+            return AiderOfficeManagementEntity.GetDocumentsSummary (this.GetEventDocuments ()[type].Count);
+        }
 
-            switch (doc.Count)
+        public static FormattedText GetDocumentsSummary(int count)
+        {
+            switch (count)
 			{
 				case 0:
 					return TextFormatter.FormatText ("Aucun");
@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Entities
 					return TextFormatter.FormatText ("1 document");
 
 				default:
-					return TextFormatter.FormatText (doc.Count, "documents");
+					return TextFormatter.FormatText (count, "documents");
 			}
 		}
 
@@ -498,13 +498,22 @@ namespace Epsitec.Aider.Entities
 			
 		}
 
-        public IReadOnlyDictionary<EventType, IReadOnlyList<AiderOfficeReportEntity>> GetEventDocuments()
+        public IReadOnlyDictionary<EventType, IList<AiderEventOfficeReportEntity>> GetEventDocuments()
         {
+            IList<AiderEventOfficeReportEntity> GetDocuments(EventType type)
+            {
+                return this
+                    .GetDocuments ()
+                    .OfType<AiderEventOfficeReportEntity> ()
+                    .Where (x => x.Event.Type == type)
+                    .ToList ();
+            }
+
             if (this.eventDocuments == null)
             {
                 this.eventDocuments = AiderOfficeManagementEntity
                     .GetEventTypes ()
-                    .ToDictionary (x => x, x => this.GetDocuments (x));
+                    .ToDictionary (x => x, x => GetDocuments (x));
             }
             return this.eventDocuments;
         }
@@ -520,16 +529,18 @@ namespace Epsitec.Aider.Entities
             yield return EventType.FuneralService;
         }
 
-        private IReadOnlyList<AiderOfficeReportEntity> GetDocuments(EventType type)
+        public IList<AiderEventOfficeReportEntity> GetDocuments(EventType type, int? year)
         {
-            return this
-                .GetDocuments ()
-                .OfType<AiderEventOfficeReportEntity> ()
-                .Where (x => x.Event.Type == type)
-                .AsReadOnlyCollection ();
+            var documents = (type == EventType.None)
+                ? this.GetDocuments ().OfType<AiderEventOfficeReportEntity> ()
+                : this.GetEventDocuments ()[type];
+
+            return documents
+                .Where (x => (year == null || x.Year == year))
+                .ToList ();
         }
 
-		private IList<AiderOfficeReportEntity> GetDocuments()
+        private IList<AiderOfficeReportEntity> GetDocuments()
 		{
 			if (this.documents == null)
 			{
@@ -622,7 +633,7 @@ namespace Epsitec.Aider.Entities
 		
 		private IList<AiderOfficeSenderEntity>	senders;
 		private IList<AiderOfficeReportEntity>	documents;
-        private Dictionary<EventType, IReadOnlyList<AiderOfficeReportEntity>> eventDocuments;
+        private Dictionary<EventType, IList<AiderEventOfficeReportEntity>> eventDocuments;
         private IList<AiderOfficeTaskEntity>	tasks;
 		private IList<AiderEventEntity>			eventsInPreparation;
 		private IList<AiderEventEntity>			eventsToValidate;

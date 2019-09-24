@@ -2,9 +2,10 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
-using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Bricks;
 
+using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
@@ -22,7 +23,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
                     .Title (p => p.GetDocumentTitleSummary (type))
                     .Text (p => p.GetDocumentsSummary (type))
                     .Attribute (BrickMode.DefaultToSummarySubView)
-                    .WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents), type.ToString ());
+                    .WithSpecialController (typeof (SummaryAiderOfficeManagementViewController8Documents), arg: type.ToString ());
             }
         }
     }
