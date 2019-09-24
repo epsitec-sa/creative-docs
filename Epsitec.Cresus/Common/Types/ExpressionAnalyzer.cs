@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -149,7 +149,11 @@ namespace Epsitec.Common.Types
 		/// <returns>The corresponding setter expression.</returns>
 		public static LambdaExpression CreateSetter(LambdaExpression getterExpression)
 		{
-			if (getterExpression.Body.NodeType == ExpressionType.Parameter)
+            //  If the getter expression is not a member access (i.e. it is a parameter
+            //  provided by value or a method call), then we cannot infer a setter:
+
+			if ((getterExpression.Body.NodeType == ExpressionType.Parameter) ||
+                (getterExpression.Body.NodeType == ExpressionType.Call))
 			{
 				return null;
 			}
