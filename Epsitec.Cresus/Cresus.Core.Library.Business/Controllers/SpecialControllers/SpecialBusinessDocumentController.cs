@@ -1,28 +1,18 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
-using Epsitec.Common.Dialogs;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 using Epsitec.Cresus.Core.Controllers.ComplexControllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
 
 using Epsitec.Cresus.DataLayer.Context;
-
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
@@ -32,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// </summary>
 	public sealed class SpecialBusinessDocumentController : IEntitySpecialController, System.IDisposable, IWidgetUpdater
 	{
-		private SpecialBusinessDocumentController(TileContainer tileContainer, BusinessDocumentEntity businessDocument, int mode)
+		private SpecialBusinessDocumentController(TileContainer tileContainer, BusinessDocumentEntity businessDocument, ViewId mode)
 		{
 			this.tileContainer    = tileContainer;
 			this.businessDocument = businessDocument;
@@ -47,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
-			switch (this.mode)
+			switch (this.mode.Id)
 			{
 				case 0:
 					this.CreateDocumentLinesUI (parent, builder);
@@ -141,7 +131,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		private class Factory : DefaultEntitySpecialControllerFactory<BusinessDocumentEntity>
 		{
-			protected override IEntitySpecialController Create(TileContainer container, BusinessDocumentEntity entity, int mode)
+			protected override IEntitySpecialController Create(TileContainer container, BusinessDocumentEntity entity, ViewId mode)
 			{
 				return new SpecialBusinessDocumentController (container, entity, mode);
 			}
@@ -152,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		private readonly TileContainer				tileContainer;
 		private readonly BusinessDocumentEntity		businessDocument;
-		private readonly int						mode;
+		private readonly ViewId     				mode;
 		private readonly EntityViewController		viewController;
 		private readonly BusinessContext			businessContext;
 		private readonly DataContext				dataContext;

@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 	/// </summary>
 	internal static class EntityViewControllerResolver
 	{
-		public static EntityViewController Resolve(System.Type entityType, ViewControllerMode mode, int? controllerSubTypeId, ResolutionMode resolutionMode)
+		public static EntityViewController Resolve(System.Type entityType, ViewControllerMode mode, ViewId controllerSubTypeId, ResolutionMode resolutionMode)
 		{
 			mode = EntityViewControllerResolver.FilterMode (mode);
 
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			}
 		}
 
-		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, int? controllerSubTypeId)
+		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, ViewId controllerSubTypeId)
 		{
 			System.Type match;
 
@@ -186,9 +186,9 @@ namespace Epsitec.Cresus.Core.Resolvers
 			return match;
 		}
 
-		private static IEnumerable<System.Type> FilterTypes(int? controllerSubTypeId, IEnumerable<System.Type> types)
+		private static IEnumerable<System.Type> FilterTypes(ViewId controllerSubTypeId, IEnumerable<System.Type> types)
 		{
-			int id = controllerSubTypeId.GetValueOrDefault (-1);
+			int id = controllerSubTypeId.Id.GetValueOrDefault (-1);
 			
 			if (id >= 0)
 			{
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			}
 		}
 
-		private static System.Type ResolveEntityViewController(System.Type entityType, ViewControllerMode mode, int? controllerSubTypeId)
+		private static System.Type ResolveEntityViewController(System.Type entityType, ViewControllerMode mode, ViewId controllerSubTypeId)
 		{
 			if (mode == ViewControllerMode.None)
 			{

@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support.EntityEngine;
@@ -11,6 +11,8 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Resolvers;
+
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 
 using System.Linq.Expressions;
 
@@ -28,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	/// </remarks>
 	internal static class Mason
 	{
-		public static BrickWall BuildBrickWall(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
+		public static BrickWall BuildBrickWall(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, ViewId viewId)
 		{
 			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
 			{
@@ -50,7 +52,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 		}
 
-		public static EntityViewController BuildController(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
+		public static EntityViewController BuildController(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, ViewId viewId)
 		{
 			var name = "js";
 			var resolutionMode = ResolutionMode.NullOnError;
@@ -58,7 +60,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode, businessContext, additionalEntity);
 		}
 
-		public static T BuildController<T>(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
+		public static T BuildController<T>(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, ViewId viewId)
 			where T : class
 		{
 			//	Here I would simply be able to cast the controller, but it is not possible because

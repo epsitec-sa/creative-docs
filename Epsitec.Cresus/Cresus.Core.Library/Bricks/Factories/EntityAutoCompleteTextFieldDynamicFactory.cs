@@ -1,14 +1,13 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Types.Converters.Marshalers;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -22,7 +21,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 {
 	internal static class EntityAutoCompleteTextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection, int? specialController, bool readOnly)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection, ViewId specialController, bool readOnly)
 		{
 			var getterLambda = lambda;
 			var setterLambda = ExpressionAnalyzer.CreateSetter (getterLambda);
@@ -45,7 +44,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 			where TSource : AbstractEntity
 			where TField : AbstractEntity, new ()
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection, int? specialController, bool readOnly)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection, ViewId specialController, bool readOnly)
 			{
 				this.business = business;
 				this.lambda = lambda;
@@ -116,7 +115,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 				{
 					var fieldGetter = this.CreateGetter ();
 					var entity      = fieldGetter ();
-					var mode        = this.specialController.Value;
+					var mode        = this.specialController;
 					var controller  = EntitySpecialControllerResolver.Create (builder.TileContainer, entity, mode);
 					var tile        = frame as EditionTile;
 
@@ -162,7 +161,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 			private readonly System.Delegate setter;
 			private readonly string title;
 			private readonly IEnumerable<TField> collection;
-			private readonly int? specialController;
+			private readonly ViewId specialController;
 			private readonly bool readOnly;
 		}
 

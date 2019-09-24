@@ -1,26 +1,16 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
 using Epsitec.Common.Dialogs;
+using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
-using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Widgets;
 
 using Epsitec.Cresus.DataLayer.Context;
-
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
@@ -168,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		private class Factory : DefaultEntitySpecialControllerFactory<ImageEntity>
 		{
-			protected override IEntitySpecialController Create(TileContainer container, ImageEntity entity, int mode)
+			protected override IEntitySpecialController Create(TileContainer container, ImageEntity entity, ViewId mode)
 			{
 				return new SpecialImageActionsController (container, entity);
 			}

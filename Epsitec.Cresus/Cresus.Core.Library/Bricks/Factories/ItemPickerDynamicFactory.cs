@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -9,10 +9,9 @@ using Epsitec.Cresus.Core.Bricks.Helpers;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets.Tiles;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Linq.Expressions;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 {
 	internal static class ItemPickerDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int? controllerSubType, bool readOnly)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, ViewId controllerSubType, bool readOnly)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
@@ -43,7 +42,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 			where TItem : AbstractEntity, new ()
 			where TField : IList<TItem>
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, string title, int? controllerSubType, bool readOnly)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, string title, ViewId controllerSubType, bool readOnly)
 			{
 				this.business = business;
 				this.lambda = lambda;
@@ -72,7 +71,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 				var caption = DynamicFactory.GetInputCaption (this.lambda);
 				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
 				var name    = DynamicFactory.GetInputName (caption);
-				var widget  = builder.CreateEditionDetailedItemPicker (tile, name, dummyList, title, controller, EnumValueCardinality.Any, this.readOnly, ViewControllerMode.Summary, this.controllerSubType.GetValueOrDefault (-1));
+				var widget  = builder.CreateEditionDetailedItemPicker (tile, name, dummyList, title, controller, EnumValueCardinality.Any, this.readOnly, ViewControllerMode.Summary, this.controllerSubType);
 
 				if ((caption != null) &&
 					(caption.HasDescription))
@@ -106,7 +105,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 			private readonly System.Func<TSource> sourceGetter;
 			private readonly System.Delegate getter;
 			private readonly string title;
-			private readonly int? controllerSubType;
+			private readonly ViewId controllerSubType;
 			private readonly bool readOnly;
 		}
 

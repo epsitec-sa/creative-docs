@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -6,7 +6,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Behaviors;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
@@ -21,7 +20,6 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core
 {
@@ -259,7 +257,7 @@ namespace Epsitec.Cresus.Core
 		class SummaryTileController<T> : ITileController
 			where T : AbstractEntity
 		{
-			public SummaryTileController(T entity, string name, ViewControllerMode mode, int controllerSubType)
+			public SummaryTileController(T entity, string name, ViewControllerMode mode, ViewId controllerSubType)
 			{
 				this.entity = entity;
 				this.navigationPathElement = new TileNavigationPathElement (name);
@@ -280,7 +278,7 @@ namespace Epsitec.Cresus.Core
 
 			private readonly T entity;
 			private readonly TileNavigationPathElement navigationPathElement;
-			private readonly int controllerSubType;
+			private readonly ViewId controllerSubType;
 			private readonly ViewControllerMode mode;
 		}
 
@@ -1341,7 +1339,7 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
-		public Widget CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, bool forceReadOnly, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+		public Widget CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, bool forceReadOnly, ViewControllerMode mode = ViewControllerMode.Summary, ViewId controllerSubType = default)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity, new ()
 		{

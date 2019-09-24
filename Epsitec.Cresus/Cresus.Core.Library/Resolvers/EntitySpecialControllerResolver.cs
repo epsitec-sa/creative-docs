@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -15,9 +15,11 @@ namespace Epsitec.Cresus.Core.Resolvers
 {
 	public static class EntitySpecialControllerResolver
 	{
-		public static IEntitySpecialController Create(TileContainer container, AbstractEntity entity, int mode)
+		public static IEntitySpecialController Create(TileContainer container, AbstractEntity entity, ViewId mode)
 		{
-			var factory = EntitySpecialControllerResolver.Resolve ().FirstOrDefault (x => x.CanRepresent (entity, mode));
+			var factory = EntitySpecialControllerResolver
+                .Resolve ()
+                .FirstOrDefault (x => x.CanRepresent (entity, mode));
 
 			if (factory == null)
 			{

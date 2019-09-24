@@ -1,3 +1,6 @@
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Bricks;
@@ -23,15 +26,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
-
-
 	/// <summary>
 	/// This module is used to update the data of existing entities.
 	/// </summary>
 	public class EntityModule : AbstractAuthenticatedModule
 	{
-
-
 		public EntityModule(CoreServer coreServer)
 			: base (coreServer, "/entity")
 		{
@@ -279,7 +278,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response ExecuteAction(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, dynamic parameters)
 		{
 			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
-			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
+			var viewId   = DataIO.ParseViewId ((string) parameters.viewId);
 
 			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
 			{
@@ -304,7 +303,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private void ExecuteActionInQueue(BusinessContext businessContext,CoreJob job, AbstractEntity entity, AbstractEntity additionalEntity, dynamic parameters)
 		{
 			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
-			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
+			var viewId   = DataIO.ParseViewId ((string) parameters.viewId);
 
 			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
 			{
@@ -445,9 +444,5 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			return arguments;
 		}
-
-
 	}
-
-
 }

@@ -1,23 +1,11 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
-
-using Epsitec.Cresus.DataLayer.Context;
-
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
@@ -47,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		private class Factory : DefaultEntitySpecialControllerFactory<FinanceSettingsEntity>
 		{
-			protected override IEntitySpecialController Create(TileContainer container, FinanceSettingsEntity entity, int mode)
+			protected override IEntitySpecialController Create(TileContainer container, FinanceSettingsEntity entity, ViewId mode)
 			{
 				return new SpecialChartsOfAccountsController (container, entity);
 			}

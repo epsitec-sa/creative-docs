@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -15,11 +15,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Factories
 {
-	/// <summary>
-	/// The <c>EntityViewControllerFactory</c> class creates <see cref="EntityViewController"/> instances
-	/// based on the entity and <see cref="ViewControllerMode"/> specified by the caller.
-	/// </summary>
-	public static class EntityViewControllerFactory
+    /// <summary>
+    /// The <c>EntityViewControllerFactory</c> class creates <see cref="EntityViewController"/> instances
+    /// based on the entity and <see cref="ViewControllerMode"/> specified by the caller.
+    /// </summary>
+    public static class EntityViewControllerFactory
 	{
 		/// <summary>
 		/// Gets the default settings for the controller currently being
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Factories
 		/// </returns>
 		/// <exception cref="System.InvalidOperationException">Throws <see cref="System.InvalidOperationException"/> if no controller could be found.</exception>
 		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, DataViewOrchestrator orchestrator, CoreViewController parentController,
-			int?                  controllerSubTypeId   = null,
+			ViewId                controllerSubTypeId   = default,
 			NavigationPathElement navigationPathElement = null,
 			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError,
 			BusinessContext       businessContext       = null,
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Factories
 				set;
 			}
 
-			public int?							ControllerSubTypeId
+			public ViewId                       ControllerSubTypeId
 			{
 				get;
 				set;

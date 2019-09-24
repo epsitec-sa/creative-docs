@@ -1,11 +1,9 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Cresus.Core.Factories
 {
@@ -19,12 +17,12 @@ namespace Epsitec.Cresus.Core.Factories
 	{
 		#region IEntitySpecialControllerFactory Members
 
-		public virtual bool CanRepresent(AbstractEntity entity, int mode)
+		public virtual bool CanRepresent(AbstractEntity entity, ViewId mode)
 		{
 			return entity is T;
 		}
 
-		IEntitySpecialController IEntitySpecialControllerFactory.Create(TileContainer container, AbstractEntity entity, int mode)
+		IEntitySpecialController IEntitySpecialControllerFactory.Create(TileContainer container, AbstractEntity entity, ViewId mode)
 		{
 			var controller = this.Create (container, entity as T, mode);
 			var disposable = controller as System.IDisposable;
@@ -50,6 +48,6 @@ namespace Epsitec.Cresus.Core.Factories
 
 		#endregion
 
-		protected abstract IEntitySpecialController Create(TileContainer container, T entity, int mode);
+		protected abstract IEntitySpecialController Create(TileContainer container, T entity, ViewId mode);
 	}
 }

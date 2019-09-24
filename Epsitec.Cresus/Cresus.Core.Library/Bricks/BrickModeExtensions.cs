@@ -1,5 +1,7 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Bricks
 {
@@ -40,9 +42,9 @@ namespace Epsitec.Cresus.Core.Bricks
 			}
 		}
 
-		public static int GetControllerSubTypeId(this BrickMode mode)
+		public static ViewId GetControllerSubTypeId(this BrickMode mode, string arg = null)
 		{
-			return (int) (mode - BrickMode.SpecialController0);
+			return new ViewId ((int) (mode - BrickMode.SpecialController0), arg);
 		}
 	}
 }

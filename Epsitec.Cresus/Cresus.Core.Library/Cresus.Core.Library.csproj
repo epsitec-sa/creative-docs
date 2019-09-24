@@ -377,6 +377,7 @@
     <Compile Include="Factories\IEntitySpecialControllerFactory.cs" />
     <Compile Include="Factories\IViewControllerComponentFactory.cs" />
     <Compile Include="Factories\ViewControllerComponentFactory.cs" />
+    <Compile Include="Factories\ViewId.cs" />
     <Compile Include="Favorites\FavoritesCache.cs" />
     <Compile Include="Favorites\FavoritesCollection.cs" />
     <Compile Include="Features\FeatureManager.cs" />

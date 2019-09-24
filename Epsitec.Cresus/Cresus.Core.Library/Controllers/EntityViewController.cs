@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -11,7 +11,6 @@ using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -122,16 +121,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <summary>
 		/// This method checks that the controller type can be used with the given entity type.
 		/// </summary>
-		public static bool AreCompatible(Type entityType, Type controllerType)
+		public static bool AreCompatible(System.Type entityType, System.Type controllerType)
 		{
 			if (!typeof (AbstractEntity).IsAssignableFrom (entityType))
 			{
-				throw new ArgumentException ("Invalid entity type: " + entityType.FullName);
+				throw new System.ArgumentException ("Invalid entity type: " + entityType.FullName);
 			}
 
 			if (!typeof (EntityViewController).IsAssignableFrom (controllerType))
 			{
-				throw new ArgumentException ("Invalid controller type: " + controllerType.FullName);
+				throw new System.ArgumentException ("Invalid controller type: " + controllerType.FullName);
 			}
 
 			var entityViewControllerType = typeof (EntityViewController<>);

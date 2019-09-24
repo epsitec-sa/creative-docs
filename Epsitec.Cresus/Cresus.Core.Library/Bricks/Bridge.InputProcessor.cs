@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -10,13 +10,13 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Dynamic;
-
 
 namespace Epsitec.Cresus.Core.Bricks
 {
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Bricks
 				string title    = InputProcessor<T>.GetInputTitle (fieldProperties);
 
 				System.Collections.IEnumerable collection = InputProcessor<T>.GetInputCollection (fieldProperties);
-				int? specialController = InputProcessor<T>.GetSpecialController (fieldProperties);
+                ViewId specialController = InputProcessor<T>.GetSpecialController (fieldProperties);
 
 				if (fieldType.IsEntity ())
 				{
@@ -364,17 +364,17 @@ namespace Epsitec.Cresus.Core.Bricks
 				}
 			}
 
-			private static int? GetSpecialController(BrickPropertyCollection properties)
+			private static ViewId GetSpecialController(BrickPropertyCollection properties)
 			{
 				var property = properties.PeekAfter (BrickPropertyKey.SpecialController, -1);
 
 				if (property.HasValue)
 				{
-					return property.Value.IntValue;
+					return new ViewId (property.Value.IntValue);
 				}
 				else
 				{
-					return null;
+					return ViewId.Empty;
 				}
 			}
 
