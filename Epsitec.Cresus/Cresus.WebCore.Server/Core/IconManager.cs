@@ -147,10 +147,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			// Save the image
 			bytes = bitmap.Save (ImageFormat.Png);
 			path = this.GetImageAbsoluteFilePath (iconName, IconSize.Sixteen);
-			File.WriteAllBytes (path, bytes);
+			System.IO.File.WriteAllBytes (path, bytes);
 
 			// Add it to the CSS
-			relativePath = GetImageRelativeFilePath (iconName, IconSize.Sixteen);
+			relativePath = this.GetImageRelativeFilePath (iconName, IconSize.Sixteen);
 			this.AddToCSS (iconUri, relativePath, IconSize.Sixteen);
 		}
 
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		private string GetImageAbsoluteFilePath(string name, IconSize size)
 		{
-			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFileNamePattern, name.Replace ('.', '/'), size);
+			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFileNamePattern, name.Replace ('.', '-').ToLowerInvariant (), size);
 
 			IconManager.EnsureDirectoryStructureExists (path);
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		private string GetImageRelativeFilePath(string name, IconSize size)
 		{
-			return string.Format (CultureInfo.InvariantCulture, IconManager.baseImagesFileNamePattern, name.Replace ('.', '/'), size);
+			return string.Format (CultureInfo.InvariantCulture, IconManager.baseImagesFileNamePattern, name.Replace ('.', '-').ToLowerInvariant (), size);
 		}
 
 

@@ -47,9 +47,9 @@ module.exports = function(grunt) {
         dest: 'WebCore/webcore.min.js'
       }
     },
-    jshint: {
-        all: ['Gruntfile.js','WebCore/app.js', 'WebCore/js/**/*.js']
-    }
+    //jshint: {
+    //    all: ['Gruntfile.js','WebCore/app.js', 'WebCore/js/**/*.js']
+    //}
   });
  
   // Defining a custom task to delete previously generated file before generate them
@@ -66,5 +66,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'uglify','jshint']);
+  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'uglify']);
 };
