@@ -68,8 +68,16 @@ namespace Epsitec.Aider.Entities
 			{
 				personInfo = person.GetFullName ();
 			}
-			return TextFormatter.FormatText (personInfo, "\n", "ID eCH:", this.PersonId, "\n", this.DeclarationStatus, "\n","Raison:",this.RemovalReason);
-		}
+
+            if (this.RemovalReason == RemovalReason.None)
+            {
+                return TextFormatter.FormatText (personInfo, "\n", "eCH-ID", this.PersonId, " (", this.DeclarationStatus, ")");
+            }
+            else
+            {
+                return TextFormatter.FormatText (personInfo, "\n", "eCH-ID", this.PersonId, " (", this.DeclarationStatus, ")\n", "Raison:", this.RemovalReason);
+            }
+        }
 
 		public override EntityStatus GetEntityStatus()
 		{

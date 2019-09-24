@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Bricks
@@ -9,15 +9,17 @@ namespace Epsitec.Cresus.Bricks
 		{
 			this.value = value;
 		}
+
+        public AttributeValue(T value, string arg)
+            : this (value)
+        {
+            this.arg = arg;
+        }
+
+
+        public override string                  Arg => this.arg;
 		
-		public T								Value
-		{
-			get
-			{
-				return this.value;
-			}
-		}
-		
+
 		protected override object GetInternalValue()
 		{
 			return this.value;
@@ -30,5 +32,6 @@ namespace Epsitec.Cresus.Bricks
 		
 		
 		private readonly T						value;
+        private readonly string                 arg;
 	}
 }

@@ -1,11 +1,9 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Common.Types;
 
 using Epsitec.Aider.Controllers.ActionControllers;
-using Epsitec.Aider.Controllers.EditionControllers;
-using Epsitec.Aider.Controllers.SetControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Override;
 
@@ -59,6 +57,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				(currentUser.CanViewOfficeEvents ()))
 			{
 				this.CreateBricksForParishCollaborators (wall);
+                this.CreateBricksForAnyCollaborators (wall);
 			}
 
 			if (this.IsRegion)
@@ -81,7 +80,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		private void CreateBricksTrustedUser(BrickWall<AiderOfficeManagementEntity> wall, AiderUserEntity user)
 		{
 			wall.AddBrick ()
-					.Icon ("Base.AiderGoup.Parish")
+					.Icon ("Data.AiderGroup.Parish")
 					.Title (x => x.GetCompactSummary ())
 					.Text ("Collaborateurs, expéditeurs, paramètres...")
 					.Attribute (BrickMode.DefaultToSummarySubView)
@@ -90,9 +89,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if (this.IsParish)
 			{
 				wall.AddBrick ()
-					.Icon ("Base.AiderGoup.Parish")
+					.Icon ("Data.AiderGroup.Parish")
 					.Title ("Dérogations")
-					.Text ("...")
+					.Text ("Liste des dérogations")
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController5Members));
 			}
@@ -101,30 +100,33 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			SummaryAiderOfficeManagementViewController.CreateBricksDocuments (wall);
 		}
 
-		private void CreateBricksForParishCollaborators(BrickWall<AiderOfficeManagementEntity> wall)
-		{
-			if (this.IsParish)
-			{
-				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);
-			}
+        private void CreateBricksForParishCollaborators(BrickWall<AiderOfficeManagementEntity> wall)
+        {
+            if (this.IsParish)
+            {
+                SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);
+            }
+        }
 
-			SummaryAiderOfficeManagementViewController.CreateBricksTasks (wall);
+        private void CreateBricksForAnyCollaborators(BrickWall<AiderOfficeManagementEntity> wall)
+        {
+            SummaryAiderOfficeManagementViewController.CreateBricksTasks (wall);
 		}
 
 		private static void CreateBricksDocuments(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-			wall.AddBrick ()
-				.Icon ("Base.AiderGoup.Parish")
-				.Title (p => p.GetDocumentTitleSummary ())
-				.Text (p => p.GetDocumentsSummary ())
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
+            wall.AddBrick ()
+                .Icon ("Data.ArticleAccountingDefinition")
+                .Title ("Registre des actes")
+                .Text ("Liste des actes")
+                .Attribute (BrickMode.DefaultToSummarySubView)
+                .WithSpecialController (typeof (SummaryAiderOfficeManagementViewController7Documents));
 		}
 
 		private static void CreateBricksTasks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 			wall.AddBrick ()
-				.Icon ("Base.AiderGoup.Parish")
+				.Icon ("Data.AiderGroup.Parish")
 				.Title (p => "Tâches")
 				.Text (p => p.GetTasksSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
@@ -149,16 +151,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		private static void CreateBricksEventsManagement(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 			wall.AddBrick ()
-				.Icon ("Base.AiderGoup.Parish")
-				.Title (p => p.GetEventsInPreparationTitleSummary ())
-				.Text (p => p.GetEventsInPreparationSummary ())
+				.Icon ("Data.ArticleAccountingDefinition")
+				.Title ("Actes en préparation")
+                .Text (p => p.GetEventsInPreparationSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.EnableActionButton<ActionAiderOfficeManagementViewController5PrepareEvent> ()
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController3EventsInPreparation));
 
 			wall.AddBrick ()
-				.Icon ("Base.AiderGoup.Parish")
-				.Title (p => p.GetEventsToValidateTitleSummary ())
+				.Icon ("Data.ArticleAccountingDefinition")
+				.Title ("Actes à valider")
 				.Text (p => p.GetEventsToValidateSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController4EventsToValidate));

@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Bricks
@@ -9,18 +9,25 @@ namespace Epsitec.Cresus.Bricks
 	/// </summary>
 	public abstract class AttributeValue
 	{
-		/// <summary>
-		/// Gets the value of the specified type, if possible.
-		/// </summary>
-		/// <typeparam name="T">The type of the value.</typeparam>
-		/// <returns>The value if it can be retrieved; otherwise, <c>default(T)</c>.</returns>
-		public T GetValue<T>()
+        public abstract string Arg { get; }
+
+        /// <summary>
+        /// Gets the value of the specified type, if possible.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <returns>The value if it can be retrieved; otherwise, <c>default(T)</c>.</returns>
+        public T GetValue<T>()
 		{
 			object value = this.GetInternalValue ();
-			if (value is T)
-				return (T) value;
-			else
-				return default (T);
+
+            if (value is T)
+            {
+                return (T)value;
+            }
+            else
+            {
+                return default (T);
+            }
 		}
 
 		/// <summary>

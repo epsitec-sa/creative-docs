@@ -37,32 +37,24 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public FormattedText GetDocumentTitleSummary()
+		public FormattedText GetDocumentTitleSummary(EventType type)
 		{
-			return TextFormatter.FormatText ("Documents");
+			return TextFormatter.FormatText (type);
 		}
 
-		public FormattedText GetEventsInPreparationTitleSummary()
+		public FormattedText GetDocumentsSummary(EventType type)
 		{
-			return TextFormatter.FormatText ("Actes en préparations");
-		}
+            var doc = this.GetEventDocuments ()[type];
 
-		public FormattedText GetEventsToValidateTitleSummary()
-		{
-			return TextFormatter.FormatText ("Actes à valider");
-		}
-
-		public FormattedText GetDocumentsSummary()
-		{
-			switch (this.Documents.Count)
+            switch (doc.Count)
 			{
 				case 0:
 					return TextFormatter.FormatText ("Aucun");
 				case 1:
-					return TextFormatter.FormatText ("Un document");
+					return TextFormatter.FormatText ("1 document");
 
 				default:
-					return TextFormatter.FormatText (this.Documents.Count, "documents");
+					return TextFormatter.FormatText (doc.Count, "documents");
 			}
 		}
 
@@ -238,15 +230,15 @@ namespace Epsitec.Aider.Entities
 		{
 			if(this.Documents.Any ())
 			{
-				throw new BusinessRuleException ("Des documents sont encore présent dans cette gestion. Suppresion annulée.");
+				throw new BusinessRuleException ("Des documents sont encore présents dans cette gestion. Suppresion annulée.");
 			}
 			if(this.Employees.Any ())
 			{
-				throw new BusinessRuleException ("Des collaborateurs sont encore présent dans cette gestion. Suppresion annulée.");
+				throw new BusinessRuleException ("Des collaborateurs sont encore présents dans cette gestion. Suppresion annulée.");
 			}
 			if(this.OfficeSenders.Any ())
 			{
-				throw new BusinessRuleException ("Des expéditeurs sont encore présent dans cette gestion. Suppresion annulée.");
+				throw new BusinessRuleException ("Des expéditeurs sont encore présents dans cette gestion. Suppresion annulée.");
 			}
 
 			businessContext.DeleteEntity (this);
@@ -506,6 +498,37 @@ namespace Epsitec.Aider.Entities
 			
 		}
 
+        public IReadOnlyDictionary<EventType, IReadOnlyList<AiderOfficeReportEntity>> GetEventDocuments()
+        {
+            if (this.eventDocuments == null)
+            {
+                this.eventDocuments = AiderOfficeManagementEntity
+                    .GetEventTypes ()
+                    .ToDictionary (x => x, x => this.GetDocuments (x));
+            }
+            return this.eventDocuments;
+        }
+
+        public static IEnumerable<EventType> GetEventTypes()
+        {
+            yield return EventType.Baptism;
+            yield return EventType.Blessing;
+            yield return EventType.Marriage;
+            yield return EventType.EndOfCatechism;
+            yield return EventType.CelebrationRegisteredPartners;
+            yield return EventType.Confirmation;
+            yield return EventType.FuneralService;
+        }
+
+        private IReadOnlyList<AiderOfficeReportEntity> GetDocuments(EventType type)
+        {
+            return this
+                .GetDocuments ()
+                .OfType<AiderEventOfficeReportEntity> ()
+                .Where (x => x.Event.Type == type)
+                .AsReadOnlyCollection ();
+        }
+
 		private IList<AiderOfficeReportEntity> GetDocuments()
 		{
 			if (this.documents == null)
@@ -599,7 +622,8 @@ namespace Epsitec.Aider.Entities
 		
 		private IList<AiderOfficeSenderEntity>	senders;
 		private IList<AiderOfficeReportEntity>	documents;
-		private IList<AiderOfficeTaskEntity>	tasks;
+        private Dictionary<EventType, IReadOnlyList<AiderOfficeReportEntity>> eventDocuments;
+        private IList<AiderOfficeTaskEntity>	tasks;
 		private IList<AiderEventEntity>			eventsInPreparation;
 		private IList<AiderEventEntity>			eventsToValidate;
 		private IList<AiderEmployeeJobEntity>	employeeJobs;

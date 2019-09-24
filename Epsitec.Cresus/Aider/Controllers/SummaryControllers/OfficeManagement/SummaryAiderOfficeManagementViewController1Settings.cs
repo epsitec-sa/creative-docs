@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.End ();
 
 			wall.AddBrick ()
-				.Icon ("Base.AiderGoup.Parish")
+				.Icon ("Base.AiderGroup.Parish")
 				.Title ("Editer les paramètres")
 				.Text ("...")
 				.Attribute (BrickMode.DefaultToCreationOrEditionSubView);

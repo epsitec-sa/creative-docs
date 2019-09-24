@@ -1,10 +1,9 @@
-//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -106,12 +105,17 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.GlobalWarning));
 		}
 
-		public SimpleBrick<T> Attribute<TAttribute>(TAttribute attributeValue)
-		{
-			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue)));
-		}
+        public SimpleBrick<T> Attribute<TAttribute>(TAttribute attributeValue)
+        {
+            return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue)));
+        }
 
-		public SimpleBrick<T> AttributeIf<TAttribute>(TAttribute attributeValue, bool condition)
+        public SimpleBrick<T> Attribute<TAttribute>(TAttribute attributeValue, string arg)
+        {
+            return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue, arg)));
+        }
+
+        public SimpleBrick<T> AttributeIf<TAttribute>(TAttribute attributeValue, bool condition)
 		{
 			if (condition)
 			{
