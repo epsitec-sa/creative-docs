@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -7,17 +7,12 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Core;
 
 using System.Globalization;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
-
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-
-
 	/// <summary>
 	/// This class is used to convert every ICON file that might be used in the application into
 	/// their equivalent PNG file. It creates a CSS file with classes that allow for easy access by
@@ -27,10 +22,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	/// </summary>
 	internal sealed class IconManager
 	{
-
-
 		private IconManager(string rootfolder)
 		{
+            this.cssClassNames = new HashSet<string> ();
 			this.cssFileName = string.Concat (rootfolder, IconManager.baseCssFileName);
 			this.cssLines = new ConcurrentQueue<string> ();
 			this.imagesFileNamePattern = string.Concat (rootfolder, IconManager.baseImagesFileNamePattern);
@@ -39,22 +33,48 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public static void BuildIcons(string rootfolder)
 		{
-			var manager = new IconManager (rootfolder);
-			
-			manager.BuildIcons ();
+            if (IconManager.instance == null)
+            {
+                var manager = new IconManager (rootfolder);
+                manager.BuildIcons ();
+
+                IconManager.instance = manager;
+            }
 		}
 
 
 		public static string GetCssClassName(string iconUri, IconSize size, System.Type entityType = null)
 		{
-			if (iconUri == null)
+			if (string.IsNullOrEmpty (iconUri))
 			{
 				return null;
 			}
 
 			var iconResource = Misc.IconProvider.GetResourceIconUri (iconUri, entityType);
+			var cssClassName = IconManager.GetCssClassName (iconResource, size);
 
-			return IconManager.GetCssClassName (iconResource, size);
+            if ((IconManager.instance != null) &&
+                (IconManager.instance.cssClassNames.Contains (cssClassName) == false))
+            {
+                var images = "-images-";
+                var imagesPos = cssClassName.IndexOf (images);
+                if (imagesPos > 0)
+                {
+                    var match = cssClassName.Substring (imagesPos);
+                    var found = IconManager.instance.cssClassNames.FirstOrDefault (x => x.EndsWith (match));
+
+                    if (found != null)
+                    {
+                        //  Silently subsitute image found in another namespace...
+                        return found;
+                    }
+                }
+
+
+                System.Diagnostics.Trace.WriteLine (string.Format ("Cannot resolve CSS class {0}", cssClassName));
+            }
+
+            return cssClassName;
 		}
 
 
@@ -70,7 +90,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
 
-			File.Delete (this.cssFileName);
+            System.IO.File.Delete (this.cssFileName);
 
 			var iconUris = ImageProvider.Instance.GetImageNames ("manifest", null);
 
@@ -83,8 +103,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 			
 			var cssLines = this.cssLines.ToArray ().OrderBy (x => x);
-			
-			File.AppendAllLines (this.cssFileName, cssLines);
+
+            System.IO.File.AppendAllLines (this.cssFileName, cssLines);
 		}
 
 
@@ -117,7 +137,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			// Save the image
 			var bytes = bitmap.Save (ImageFormat.Png);
 			var path = this.GetImageAbsoluteFilePath (iconName, IconSize.ThirtyTwo);
-			File.WriteAllBytes (path, bytes);
+			System.IO.File.WriteAllBytes (path, bytes);
 
 			// Add it to the CSS
 			var relativePath = this.GetImageRelativeFilePath (iconName, IconSize.ThirtyTwo);
@@ -157,11 +177,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		private void AddToCSS(string iconUri, string path, IconSize size)
 		{
-			var cssClassname = IconManager.GetCssClassName (iconUri, size);
+			var cssClassName = IconManager.GetCssClassName (iconUri, size);
 			var imagePath = string.Concat ("../", path);
-			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClassBodyPattern, cssClassname, imagePath);
+			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClassBodyPattern, cssClassName, imagePath);
 
 			this.cssLines.Enqueue (css);
+            this.cssClassNames.Add (cssClassName);
 		}
 
 
@@ -185,16 +206,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			var directory = System.IO.Path.GetDirectoryName (path);
 
-			if (Directory.Exists (directory) == false)
+			if (System.IO.Directory.Exists (directory) == false)
 			{
-				Directory.CreateDirectory (directory);
+                System.IO.Directory.CreateDirectory (directory);
 			}
 		}
 
 
+
+        private static IconManager instance;
+
 		private readonly string cssFileName;
 		private readonly string imagesFileNamePattern;
+
 		private readonly ConcurrentQueue<string> cssLines;
+        private readonly HashSet<string> cssClassNames;
 
 		private readonly static string baseCssFileName = "css/icons.css";
 		private readonly static string baseImagesFileNamePattern = "images/{0}{1:d}.png";
