@@ -84,14 +84,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick ()
-				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
+				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText ("Détails techniques"))
 				.Text (x => TextFormatter.FormatText ("Visibilité: " + x.Visibility))
 				.WithSpecialController (typeof (EditionAiderPersonViewController1Technical));
 
 			wall.AddBrick ()
-				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
+				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText ("Détails techniques du RCH"))
 				.Text (x => SummaryAiderPersonViewController.GetTechnicalSummary (x));
