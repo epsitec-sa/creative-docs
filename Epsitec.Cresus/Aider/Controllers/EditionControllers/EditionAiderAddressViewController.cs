@@ -43,7 +43,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.End ()
 				.Input ()
 					.Field (x => x.Comment.Text)
-				.End ();
+                    .IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
+                .End ();
 		}
 	}
 }

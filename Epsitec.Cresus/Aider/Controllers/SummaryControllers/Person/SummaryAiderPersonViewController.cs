@@ -123,7 +123,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			this.CreateContactsBrick (wall, contacts, user);
 
 			wall.AddBrick (x => x.Comment)
-				.Attribute (BrickMode.AutoCreateNullEntity);
+                .IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
+                .Attribute (BrickMode.AutoCreateNullEntity);
 		}
 
 		private void CreateHouseholdBrick(BrickWall<AiderPersonEntity> wall, System.Collections.Generic.IList<AiderHouseholdEntity> households)
