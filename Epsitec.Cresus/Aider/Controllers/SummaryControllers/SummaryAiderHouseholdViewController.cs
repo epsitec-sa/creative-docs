@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -111,6 +111,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick (x => x.Comment)
+				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
 				.Attribute (BrickMode.AutoCreateNullEntity);
 		}
 	}
