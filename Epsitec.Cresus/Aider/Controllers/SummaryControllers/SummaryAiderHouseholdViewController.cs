@@ -111,8 +111,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick (x => x.Comment)
-				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
-				.Attribute (BrickMode.AutoCreateNullEntity);
+                .IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
+                .Attribute (BrickMode.AutoCreateNullEntity);
 		}
 	}
 }
