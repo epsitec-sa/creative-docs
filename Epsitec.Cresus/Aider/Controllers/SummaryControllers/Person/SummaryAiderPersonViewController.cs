@@ -84,14 +84,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick ()
-				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
+				.IfTrue (user.IsAdmin ())
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText ("Détails techniques"))
 				.Text (x => TextFormatter.FormatText ("Visibilité: " + x.Visibility))
 				.WithSpecialController (typeof (EditionAiderPersonViewController1Technical));
 
 			wall.AddBrick ()
-				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
+				.IfTrue (user.IsAdmin ())
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText ("Détails techniques du RCH"))
 				.Text (x => SummaryAiderPersonViewController.GetTechnicalSummary (x));
@@ -123,7 +123,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			this.CreateContactsBrick (wall, contacts, user);
 
 			wall.AddBrick (x => x.Comment)
-                .IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
+                .IfTrue (user.CanAccessComment ())
                 .Attribute (BrickMode.AutoCreateNullEntity);
 		}
 

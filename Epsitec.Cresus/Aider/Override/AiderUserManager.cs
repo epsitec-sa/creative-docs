@@ -1,19 +1,19 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support;
-using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Override
 {
@@ -48,6 +48,7 @@ namespace Epsitec.Aider.Override
 				return UserManager.Current as AiderUserManager;
 			}
 		}
+
 
 		public override void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
@@ -186,26 +187,44 @@ namespace Epsitec.Aider.Override
 
 		private void NotifyMissingEMail(AiderUserEntity user, NotificationManager notif)
 		{
-			if (string.IsNullOrEmpty (user.Email))
-			{
-				var message = new NotificationMessage ()
-				{
-					Title     = "Attention AIDER",
-					Body      = "Merci de saisir votre adresse e-mail. Cliquez sur ce message pour accéder à votre profil...",
-					Dataset   = Res.CommandIds.Base.ShowAiderUser,
-					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
-					
-					HeaderErrorMessage = "Adresse e-mail manquante",
-					
-					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Email),
-					ErrorFieldMessage = "votre adresse e-mail"
-				};
+            if (string.IsNullOrEmpty (user.Email))
+            {
+                var message = new NotificationMessage ()
+                {
+                    Title = "Attention AIDER",
+                    Body = "Merci de saisir votre adresse e-mail. Cliquez sur ce message pour accéder à votre profil...",
+                    Dataset = Res.CommandIds.Base.ShowAiderUser,
+                    EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 
-				notif.WarnUser (user.LoginName, message, When.OnConnect);
-			}
-		}
+                    HeaderErrorMessage = "Adresse e-mail manquante",
 
-		private void NotifyInvalidContact(AiderUserEntity user, NotificationManager notif)
+                    ErrorField = LambdaUtils.Convert ((AiderUserEntity e) => e.Email),
+                    ErrorFieldMessage = "votre adresse e-mail"
+                };
+
+                notif.WarnUser (user.LoginName, message, When.OnConnect);
+            }
+
+            if (string.IsNullOrEmpty (user.Mobile))
+            {
+                var message = new NotificationMessage ()
+                {
+                    Title = "Attention AIDER",
+                    Body = "Merci de saisir votre numéro de téléphone mobile. Cliquez sur ce message pour accéder à votre profil...",
+                    Dataset = Res.CommandIds.Base.ShowAiderUser,
+                    EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
+
+                    HeaderErrorMessage = "Téléphone mobile inconnu",
+
+                    ErrorField = LambdaUtils.Convert ((AiderUserEntity e) => e.Mobile),
+                    ErrorFieldMessage = "votre numéro de mobile"
+                };
+
+                notif.WarnUser (user.LoginName, message, When.OnConnect);
+            }
+        }
+
+        private void NotifyInvalidContact(AiderUserEntity user, NotificationManager notif)
 		{
 			if (user.Contact.IsNull ())
 			{

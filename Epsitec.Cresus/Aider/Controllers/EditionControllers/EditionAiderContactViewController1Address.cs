@@ -1,16 +1,16 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Override;
 
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
-using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -20,8 +20,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
 			var bricks = wall.AddBrick ();
-			var currentUser = UserManager.Current.AuthenticatedUser;
-			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+            var user = AiderUserManager.Current.AuthenticatedUser;
+            var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, user);
 
 			if (this.Entity.ContactType == ContactType.Deceased)
 			{
@@ -48,7 +48,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			.End ()
 			.Input ()
 				.Field (x => x.Address.Comment.Text)
-			.End ();
+                .IfTrue (user.CanAccessComment ())
+            .End ();
 		}
 
 		private SimpleBrick<AiderContactEntity> GetHeader(SimpleBrick<AiderContactEntity> bricks)

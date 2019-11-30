@@ -435,22 +435,31 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns><c>true</c> if the user has the specified power level; otherwise, <c>false</c>.</returns>
 		public static bool HasUserPowerLevel(UserPowerLevel level)
 		{
-			var manager = UserManager.Current;
-			
-			if (manager == null)
-			{
-				return false;
-			}
-
-			var user = manager.AuthenticatedUser;
-
-			if (user == null)
-			{
-				return false;
-			}
-
-			return user.HasPowerLevel (level);
+            return UserManager.TryGetSoftwareUser (out var user)
+                && user.HasPowerLevel (level);
 		}
+
+        public static bool TryGetSoftwareUser(out SoftwareUserEntity user)
+        {
+            user = null;
+            var manager = UserManager.Current;
+
+            if (manager == null)
+            {
+                return false;
+            }
+
+            user = manager.AuthenticatedUser;
+
+            if (user != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
         #region NotificationMode Enumeration

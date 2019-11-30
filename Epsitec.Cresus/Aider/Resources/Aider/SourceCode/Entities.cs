@@ -6954,6 +6954,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Mobile</c> field.
+		///	designer:fld/LVAHC/LVA1N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA1N]")]
+		public string Mobile
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA1N]");
+			}
+			set
+			{
+				string oldValue = this.Mobile;
+				if (oldValue != value || !this.IsFieldDefined("[LVA1N]"))
+				{
+					this.OnMobileChanging (oldValue, value);
+					this.SetField<string> ("[LVA1N]", oldValue, value);
+					this.OnMobileChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Mutability</c> field.
 		///	designer:fld/LVAHC/LVGH22
 		///	</summary>
@@ -7126,6 +7148,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeSenderChanged(global::Epsitec.Aider.Entities.AiderOfficeSenderEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSenderEntity newValue);
 		partial void OnEmailChanging(string oldValue, string newValue);
 		partial void OnEmailChanged(string oldValue, string newValue);
+		partial void OnMobileChanging(string oldValue, string newValue);
+		partial void OnMobileChanged(string oldValue, string newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnEnableGroupEditionCantonChanging(bool oldValue, bool newValue);

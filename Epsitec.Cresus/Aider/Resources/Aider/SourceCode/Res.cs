@@ -4195,6 +4195,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid LastLoginDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 536);
 				//	designer:cap/LVACH
 				public static readonly global::Epsitec.Common.Support.Druid LastSoftwareReleaseDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 556);
+				//	designer:cap/LVA1N
+				public static readonly global::Epsitec.Common.Support.Druid Mobile = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 737);
 				//	designer:cap/LVGH22
 				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 81);
 				//	designer:cap/LVO523

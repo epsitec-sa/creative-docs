@@ -1,7 +1,8 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Override;
 
 using Epsitec.Cresus.Bricks;
 
@@ -22,8 +23,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			// their data.
 			Debug.WriteLine ("Warning: EditionAiderAddressViewController has been called.");
 
-			var currentUser = UserManager.Current.AuthenticatedUser;
-			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+            var user = AiderUserManager.Current.AuthenticatedUser;
+            var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, user);
 
 			wall.AddBrick ()
 				.Input ()
@@ -43,7 +44,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.End ()
 				.Input ()
 					.Field (x => x.Comment.Text)
-                    .IfTrue (this.HasUserPowerLevel (UserPowerLevel.PowerUser))
+                    .IfTrue (user.CanAccessComment ())
                 .End ();
 		}
 	}

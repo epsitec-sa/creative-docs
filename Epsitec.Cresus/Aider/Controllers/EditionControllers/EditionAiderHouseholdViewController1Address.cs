@@ -1,7 +1,8 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Override;
 
 using Epsitec.Common.Support;
 
@@ -9,7 +10,6 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
-using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -18,8 +18,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
-			var currentUser = UserManager.Current.AuthenticatedUser;
-			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+            var user = AiderUserManager.Current.AuthenticatedUser;
+            var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, user);
 
 			wall.AddBrick ()
 				.Title (Resources.Text ("Adresse du ménage"))
@@ -39,8 +39,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Address.Web)
 				.End ()
 				.Input ()
-					.Field (x => x.Address.Comment.Text)
-				.End ();
+                    .Field (x => x.Address.Comment.Text)
+                    .IfTrue (user.CanAccessComment ())
+                .End ();
 		}
 	}
 }

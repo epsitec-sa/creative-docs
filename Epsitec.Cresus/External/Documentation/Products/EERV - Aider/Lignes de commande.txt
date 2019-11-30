@@ -1739,6 +1739,53 @@ Lancé le 17.09.2019
 -echupdate -newechfile:S:\eerv\eerv-2019-09-14.xml -oldechfile:S:\eerv\eerv-2019-09-07.xml -output:s:\eerv\ech-diff-2019-09-14.md
 -exportsubscriptions -output:export-2019-10-xx.txt -error:error-2019-10-xx.txt -exclude-district-error:false
 
+Lancé le 06.10.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-10-05.xml -oldechfile:S:\eerv\eerv-2019-09-14.xml -output:s:\eerv\ech-diff-2019-10-05.md
+
+Lancé le 12.10.2019
+-------------------
+
+-exportsubscriptions -output:export-2019-11-xx.txt -error:error-2019-11-xx.txt -exclude-district-error:false
+
+Lancé le 20.10.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-10-19.xml -oldechfile:S:\eerv\eerv-2019-10-05.xml -output:s:\eerv\ech-diff-2019-10-19.md
+
+Lancé le 27.10.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-10-26.xml -oldechfile:S:\eerv\eerv-2019-10-19.xml -output:s:\eerv\ech-diff-2019-10-26.md
+-clearwarnings -beforedate:2019-06-01 -killpersons:true -createsubscriptions:true
+
+Lancé le 03.11.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-11-02.xml -oldechfile:S:\eerv\eerv-2019-10-26.xml -output:s:\eerv\ech-diff-2019-11-02.md
+
+Lancé le 10.11.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-11-09.xml -oldechfile:S:\eerv\eerv-2019-11-02.xml -output:s:\eerv\ech-diff-2019-11-09.md
+
+Lancé le 17.11.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-11-16.xml -oldechfile:S:\eerv\eerv-2019-11-09.xml -output:s:\eerv\ech-diff-2019-11-16.md
+-exportsubscriptions -output:export-2019-12-xx.txt -error:error-2019-12-xx.txt -exclude-district-error:false
+
+Lancé le 23.11.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-11-23.xml -oldechfile:S:\eerv\eerv-2019-11-16.xml -output:s:\eerv\ech-diff-2019-11-23.md
+-clearwarnings -beforedate:2019-08-01 -killpersons:true -createsubscriptions:true
+
+Mise à jour d'AIDER -- champ commentaires avec accès limité
+
+
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée

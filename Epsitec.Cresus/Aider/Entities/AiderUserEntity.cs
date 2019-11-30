@@ -28,6 +28,7 @@ namespace Epsitec.Aider.Entities
 			(
 				this.DisplayName, "(", this.LoginName, ")", "\n",
 				TextFormatter.FormatText ("E-mail: ").ApplyBold (), this.Email, "\n",
+                TextFormatter.FormatText ("Mobile: ").ApplyBold (), this.Mobile, "\n",
 				TextFormatter.FormatText ("Groupe: ").ApplyBold (), this.Parish.Name, "\n",
 				TextFormatter.FormatText ("Rôle: ").ApplyBold (), this.Role.Name, "\n",
                 TextFormatter.FormatText ("Privilège: ").ApplyBold (), this.PowerLevel, "\n",
@@ -411,6 +412,11 @@ namespace Epsitec.Aider.Entities
 
 			return false;
 		}
+
+        public bool CanAccessComment()
+        {
+            return this.IsAdmin ();
+        }
 
 		public bool IsParishLevelUser()
 		{
