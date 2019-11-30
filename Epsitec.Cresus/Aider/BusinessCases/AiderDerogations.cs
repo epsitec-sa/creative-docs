@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using System.Collections.Generic;
@@ -94,12 +94,6 @@ namespace Epsitec.Aider.BusinessCases
 			var office		 = AiderOfficeManagementEntity.Find (businessContext, newParish);
 			var recipient	 = person.MainContact;
 			var documentName = "Confirmation dérogation " + recipient.DisplayName;
-
-			if (sender.IsNull ())
-			{
-				var message = "Vous devez d'abord associer votre utilisateur à une gestion; la création de la dérogation est impossible.";
-				throw new BusinessRuleException (message);
-			}
 
 			if (CoreContext.HasExperimentalFeature ("OfficeManagement") == false)
 			{

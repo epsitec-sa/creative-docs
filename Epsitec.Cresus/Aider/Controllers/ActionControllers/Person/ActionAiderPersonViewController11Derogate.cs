@@ -67,7 +67,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (!user.CanDerogateTo (derogationParishGroup))
 			{
-				throw new BusinessRuleException ("Vos droits ne vous permettent pas de déroger vers cette paroisse");
+                Logic.BusinessRuleException ("Vos droits ne vous permettent pas de déroger vers cette paroisse");
 			}
 
 			System.Diagnostics.Trace.WriteLine ("Derogating from " + currentParishGroup.Name);
@@ -81,6 +81,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var userManager		= AiderUserManager.Current;
 				var aiderUser       = userManager.AuthenticatedUser;
 				var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
+
+                if (sender.IsNull ())
+                {
+                    Logic.BusinessRuleException ("Vous n'avez pas configuré d'expéditeur pour les courriers dans votre profil utilisateur.");
+                }
 
 				var letter = AiderDerogations.CreateDerogationLetter (this.BusinessContext, this.Entity, sender, aiderUser, derogationParishGroup, currentParishGroup);
 				//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
