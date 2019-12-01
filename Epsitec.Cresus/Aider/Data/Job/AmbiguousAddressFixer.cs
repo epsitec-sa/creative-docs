@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Data.Job
 	/// <summary>
 	/// This fixer is used to fix a problem with some addresses in the database. Because of a bug
 	/// in the algorithm that finds the street data in the MAT[CH] street light file, some
-	/// addresses where registered in the wrong town. This job fixes these addresses for those that
+	/// addresses were registered in the wrong town. This job fixes these addresses for those that
 	/// come from the ECH file. See commits 20964 and 20974 for more information.
 	/// </summary>
 	internal static class AmbiguousAddressFixer
