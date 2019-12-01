@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -113,33 +113,115 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			string prefix = AiderAddressBusinessRules.GetPostBoxPrefix (postBox);
+            if ((address.Town.IsNotNull ()) &&
+                (address.Town.SwissZipCode.HasValue) &&
+                (address.Town.SwissZipCodeAddOn.HasValue))
+            {
+                var prefix = AiderAddressBusinessRules.GetPostBoxPrefix (postBox);
 
-			if (prefix != null)
-			{
-				var number = postBox.SplitAfter (x => !char.IsDigit (x)).Item2;
-				address.PostBox = string.Format ("{0} {1}", prefix, number);
-			}
-		}
+                if (prefix == null)
+                {
+                    Logic.BusinessRuleException (address, Resources.Text ("La case postale n'est pas correctement renseignée (par ex. 'Case postale 123')."));
+                }
 
-		private static string GetPostBoxPrefix(string postBox)
+                var number = postBox.SplitAfter (x => !char.IsDigit (x)).Item2;
+                address.PostBox = string.Format ("{0} {1}", prefix, number);
+            }
+        }
+
+        public static string ParseAndFormatPostBox(AiderAddressEntity address, string postBox)
+        {
+            postBox = postBox.Trim ();
+
+            if (string.IsNullOrEmpty (postBox))
+            {
+                return postBox;
+            }
+
+            if ((address.Town.IsNotNull ()) &&
+                (address.Town.SwissZipCode.HasValue) &&
+                (address.Town.SwissZipCodeAddOn.HasValue))
+            {
+                var prefix = AiderAddressBusinessRules.GetPostBoxPrefix (postBox);
+                int n;
+
+                if (prefix == null)
+                {
+                    if (int.TryParse (postBox, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
+                    {
+                        if (address.Town.SwissZipCode == n)
+                        {
+                            return "";
+                        }
+                        if (address.StreetHouseNumberAndComplement == postBox)
+                        {
+                            return "";
+                        }
+
+                        return "Case postale " + postBox;
+                    }
+
+                    var addressText = address.Town.GetCompactSummary ().ToSimpleText ();
+
+                    if ((addressText == postBox) ||
+                        (address.Town.Name == postBox))
+                    {
+                        return "";
+                    }
+
+                    return null;
+                }
+
+                var split = postBox.SplitAfter (x => !char.IsDigit (x));
+                var text   = split.Item1.TrimEnd ();
+                var number = split.Item2;
+
+                if (string.IsNullOrEmpty (number))
+                {
+                    return postBox;
+                }
+
+                if (int.TryParse (number, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
+                {
+                    if (address.Town.SwissZipCode == n)
+                    {
+                        System.Console.WriteLine ("POBOX/ZIP Confusion: remove box number ({0})", postBox);
+                        return text;
+                    }
+                }
+
+                return string.Format ("{0} {1}", prefix, number).TrimEnd ();
+            }
+
+            return postBox;
+        }
+
+        private static string GetPostBoxPrefix(string postBox)
 		{
-			string upper  = postBox.ToUpperInvariant ();
-			string prefix = null;
+			string upper = postBox.ToUpperInvariant ();
 
 			if ((upper.StartsWith ("CASE")) ||
 				(upper.StartsWith ("CP")) ||
-				(upper.StartsWith ("C.")))
+				(upper.StartsWith ("C.")) ||
+                (upper.StartsWith ("BOÎTE")) ||
+                (upper.StartsWith ("BP")))
 			{
-				prefix = "Case postale";
+				return "Case postale";
 			}
-			else if ((upper.StartsWith ("POSTFACH")) ||
-					 (upper.StartsWith ("PF")))
-			{
-				prefix = "Postfach";
-			}
-			
-			return prefix;
+
+            if ((upper.StartsWith ("POSTFACH")) ||
+                (upper.StartsWith ("POSFACH")) ||
+                (upper.StartsWith ("PF")))
+            {
+                return "Postfach";
+            }
+
+            if (upper.StartsWith ("CASELLA"))
+            {
+                return "Casella postale";
+            }
+
+            return null;
 		}
 
 		private static void ValidateSwissPostAddress(AiderAddressEntity address)
