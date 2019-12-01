@@ -203,7 +203,18 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				
+
+                if (args.Contains ("-exportcomments"))
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.ExportComments (args));
+                    return;
+                }
+
+                if (args.Contains ("-fixpostboxes"))
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddressPostBoxes (args));
+                    return;
+                }
 
 				if (args.Contains ("-fixambiguousaddresses"))
 				{
@@ -831,6 +842,16 @@ namespace Epsitec.Aider
 
 			AiderProgram.RunWithCoreData (c => AmbiguousAddressFixer.FixAmbiguousAddresses (streetRepository, echReportedPersons, c));
 		}
+
+        private static void ExportComments(string[] args)
+        {
+            AiderProgram.RunWithCoreData (coreData => ExportCommentJob.ExportComments (coreData));
+        }
+
+        private static void FixAddressPostBoxes(string[] args)
+        {
+            AiderProgram.RunWithCoreData (coreData => AddressPostBoxFixer.FixPostBoxes (coreData));
+        }
 
         private static void PatchVillamont(string[] args)
         {

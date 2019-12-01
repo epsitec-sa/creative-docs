@@ -348,6 +348,8 @@
     <Compile Include="Data\Init\OfficeManagementEntities.cs" />
     <Compile Include="Data\Init\POGLFullInit.cs" />
     <Compile Include="Data\Init\DerogationGroups.cs" />
+    <Compile Include="Data\Job\ExportCommentJob.cs" />
+    <Compile Include="Data\Job\AddressPostBoxFixer.cs" />
     <Compile Include="Data\Job\ParishGroupPathPatcher.cs" />
     <Compile Include="Data\Job\UserFixer.cs" />
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
