@@ -1784,7 +1784,14 @@ Lancé le 23.11.2019
 
 Mise à jour d'AIDER -- champ commentaires avec accès limité
 
+Lancé le 01.12.2019
+-------------------
 
+Mise à jour du schéma de la base (numéro de mobile pour user)
+
+-fixpostboxes
+-exportcomments
+-echupdate -newechfile:S:\eerv\eerv-2019-11-30.xml -oldechfile:S:\eerv\eerv-2019-11-23.xml -output:s:\eerv\ech-diff-2019-11-30.md
 
 ___________________________________________________________________________________________________________________________________
 
