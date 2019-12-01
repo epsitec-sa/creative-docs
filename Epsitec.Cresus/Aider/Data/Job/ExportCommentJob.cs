@@ -1,13 +1,8 @@
 //	Copyright © 2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Entities;
-using Epsitec.Aider.Rules;
-using Epsitec.Common.IO;
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
@@ -15,21 +10,13 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
-using Epsitec.Data.Platform;
-
-using System;
-
 using System.Collections.Generic;
-
-using System.Diagnostics;
-
 using System.Linq;
-
 
 namespace Epsitec.Aider.Data.Job
 {
 	/// <summary>
-	/// 
+	/// Export contact summaries where comments are not empty.
 	/// </summary>
 	internal static class ExportCommentJob
 	{
@@ -62,7 +49,7 @@ namespace Epsitec.Aider.Data.Job
                 System.Console.WriteLine ("Extract addresses with comments");
                 var list = ExportCommentJob.GetContactsWithAddressComment (businessContext);
 
-                System.IO.File.WriteAllLines ("export-household-comments.txt",
+                System.IO.File.WriteAllLines ("export-address-comments.txt",
                     list.Select (c => (c.DisplayAddress + "\t" + c.DisplayName + "\t" + c.Address.Comment.Text.ToSimpleText ().Replace ('\n', '|'))));
 
                 System.Console.WriteLine ("{0} comments found", list.Count);

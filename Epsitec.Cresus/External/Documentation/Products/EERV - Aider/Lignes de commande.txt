@@ -1791,7 +1791,7 @@ Mise à jour du schéma de la base (numéro de mobile pour user)
 
 -fixpostboxes
 -exportcomments
--echupdate -newechfile:S:\eerv\eerv-2019-11-30.xml -oldechfile:S:\eerv\eerv-2019-11-23.xml -output:s:\eerv\ech-diff-2019-11-30.md
+-echupdate -newechfile:S:\eerv\eerv-2019-12-01.xml -oldechfile:S:\eerv\eerv-2019-11-23.xml -output:s:\eerv\ech-diff-2019-12-01.md
 
 ___________________________________________________________________________________________________________________________________
 
