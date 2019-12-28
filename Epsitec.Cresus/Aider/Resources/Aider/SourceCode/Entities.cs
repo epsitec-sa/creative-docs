@@ -6976,6 +6976,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>SecondFactorMode</c> field.
+		///	designer:fld/LVAHC/LVA5N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5N]")]
+		public global::Epsitec.Aider.Enumerations.SecondFactorMode SecondFactorMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.SecondFactorMode> ("[LVA5N]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.SecondFactorMode oldValue = this.SecondFactorMode;
+				if (oldValue != value || !this.IsFieldDefined("[LVA5N]"))
+				{
+					this.OnSecondFactorModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.SecondFactorMode> ("[LVA5N]", oldValue, value);
+					this.OnSecondFactorModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Mutability</c> field.
 		///	designer:fld/LVAHC/LVGH22
 		///	</summary>
@@ -7150,6 +7172,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnEmailChanged(string oldValue, string newValue);
 		partial void OnMobileChanging(string oldValue, string newValue);
 		partial void OnMobileChanged(string oldValue, string newValue);
+		partial void OnSecondFactorModeChanging(global::Epsitec.Aider.Enumerations.SecondFactorMode oldValue, global::Epsitec.Aider.Enumerations.SecondFactorMode newValue);
+		partial void OnSecondFactorModeChanged(global::Epsitec.Aider.Enumerations.SecondFactorMode oldValue, global::Epsitec.Aider.Enumerations.SecondFactorMode newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnEnableGroupEditionCantonChanging(bool oldValue, bool newValue);

@@ -370,6 +370,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType PesonNationalityStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
 				//	designer:cap/LVAK6
 				public static readonly Epsitec.Common.Types.EnumType RemovalReason = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212));
+				//	designer:cap/LVA2N
+				public static readonly Epsitec.Common.Types.EnumType SecondFactorMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 738));
 				//	designer:cap/LVA0I
 				public static readonly Epsitec.Common.Types.EnumType SharingType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 576));
 				//	designer:cap/LVA8H
@@ -2699,6 +2701,26 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class SecondFactorMode
+				{
+					//	designer:cap/LVA3N
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 739));
+						}
+					}
+					//	designer:cap/LVA4N
+					public static global::Epsitec.Common.Types.Caption PinByMobile
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 740));
+						}
+					}
+				}
+				
 				public static class SharingType
 				{
 					//	designer:cap/LVA1I
@@ -4213,6 +4235,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid PreferredScope = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 432);
 				//	designer:cap/LVALC
 				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 405);
+				//	designer:cap/LVA5N
+				public static readonly global::Epsitec.Common.Support.Druid SecondFactorMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 741);
 			}
 			
 			public static class AiderUserRole
