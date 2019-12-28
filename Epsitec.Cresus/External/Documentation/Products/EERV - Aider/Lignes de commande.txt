@@ -1793,6 +1793,23 @@ Mise à jour du schéma de la base (numéro de mobile pour user)
 -exportcomments
 -echupdate -newechfile:S:\eerv\eerv-2019-12-01.xml -oldechfile:S:\eerv\eerv-2019-11-23.xml -output:s:\eerv\ech-diff-2019-12-01.md
 
+Lancé le 08.12.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-12-07.xml -oldechfile:S:\eerv\eerv-2019-12-01.xml -output:s:\eerv\ech-diff-2019-12-07.md
+
+Lancé le 15.12.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-12-14.xml -oldechfile:S:\eerv\eerv-2019-12-07.xml -output:s:\eerv\ech-diff-2019-12-14.md
+-clearwarnings -beforedate:2019-09-01 -killpersons:true -createsubscriptions:true
+
+Lancé le 22.12.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-12-21.xml -oldechfile:S:\eerv\eerv-2019-12-14.xml -output:s:\eerv\ech-diff-2019-12-21.md
+
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
