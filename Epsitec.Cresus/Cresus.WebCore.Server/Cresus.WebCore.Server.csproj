@@ -109,6 +109,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Core\AuthenticationResult.cs" />
     <Compile Include="Core\BackupManager.cs" />
     <Compile Include="Core\Caches.cs" />
     <Compile Include="Core\ConfigurationFileGenerator.cs" />

@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Nancy;
@@ -62,14 +62,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		public static Response FormSuccess()
-		{
-			return CoreResponse.CreateFormResponse (true, null);
-		}
+        public static Response FormSuccess()
+        {
+            return CoreResponse.CreateFormResponse (true, null, null);
+        }
 
-		public static Response FormFailure(Dictionary<string, object> errors)
+        public static Response FormSuccess(string value)
+        {
+            return CoreResponse.CreateFormResponse (true, value, null);
+        }
+
+        public static Response FormFailure(Dictionary<string, object> errors)
 		{
-			return CoreResponse.CreateFormResponse (false, errors);
+			return CoreResponse.CreateFormResponse (false, null, errors);
 		}
 
 
@@ -100,7 +105,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			return CoreResponse.CreateJsonResponse (jsonData, HttpStatusCode.OK);
 		}
 
-		private static Response CreateFormResponse(bool success, object errors)
+		private static Response CreateFormResponse(bool success, object data, object errors)
 		{
 			// NOTE ExtJs uses the 'success' and 'errors' properties of the returned object in order
 			// to know if the form submit is a success or not and which fields are invalid. This is
@@ -110,6 +115,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			{
 				{ "success", success },
 			};
+
+            if (data != null)
+            {
+                jsonData["data"] = data;
+            }
 
 			if (errors != null)
 			{

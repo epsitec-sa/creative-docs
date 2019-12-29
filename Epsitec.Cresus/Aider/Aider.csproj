@@ -521,6 +521,7 @@
     <Compile Include="Entities\AiderUserEntity.cs" />
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
+    <Compile Include="Override\Pending2FA.cs" />
     <Compile Include="Properties\SqlRepository.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

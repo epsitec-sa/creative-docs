@@ -505,6 +505,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return isValid;
 		}
 
+        public virtual bool CheckUserPin(string loginName, string pin)
+        {
+            return false;
+        }
+
+        public virtual bool Start2FALogin(string loginName)
+        {
+            return false;
+        }
+
 		public bool CheckUserAuthentication(SoftwareUserEntity user, string password)
 		{
 			switch (user.AuthenticationMethod)

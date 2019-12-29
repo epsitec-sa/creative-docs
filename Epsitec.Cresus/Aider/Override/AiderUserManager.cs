@@ -22,6 +22,7 @@ namespace Epsitec.Aider.Override
 		public AiderUserManager(CoreData data, bool enableReload)
 			: base (data, enableReload)
 		{
+            this.pending2FApins = new Dictionary<string, Pending2FA> ();
 		}
 
 
@@ -50,7 +51,30 @@ namespace Epsitec.Aider.Override
 		}
 
 
-		public override void NotifySusccessfulLogin(SoftwareUserEntity user)
+        public override bool Start2FALogin(string loginName)
+        {
+            var user = this.FindUser (loginName) as AiderUserEntity;
+
+            if ((user != null) &&
+                (user.SecondFactorMode == Enumerations.SecondFactorMode.PinByMobile))
+            {
+                var pin = "1234";
+                this.AddPin (loginName, pin);
+                //  Send SMS to number stored in user.Mobile
+                return true;
+            }
+
+            return false; 
+        }
+
+        public override bool CheckUserPin(string loginName, string pin)
+        {
+            return (string.IsNullOrEmpty (loginName) == false)
+                && (string.IsNullOrEmpty (pin) == false)
+                && (this.CheckPin (loginName, pin));
+        }
+
+        public override void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
             this.UpdateUser (user.Code,
                 u =>
@@ -169,6 +193,38 @@ namespace Epsitec.Aider.Override
 										d.DataSetCommandId == dataSetCommandId
 								   );
 		}
+
+        private void AddPin(string loginName, string pin)
+        {
+            lock (this.pending2FApins)
+            {
+                this.pending2FApins[loginName] = new Pending2FA (loginName, pin);
+            }
+        }
+
+        private void RemovePin(string loginName, string pin)
+        {
+            lock (this.pending2FApins)
+            {
+                this.pending2FApins.Remove (loginName);
+            }
+        }
+
+        private bool CheckPin(string loginName, string pin)
+        {
+            lock (this.pending2FApins)
+            {
+                if ((this.pending2FApins.TryGetValue (loginName, out var info)) &&
+                    (info.Pin == pin))
+                {
+                    this.pending2FApins.Remove (loginName);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
 		private void NotifyChangePassword(AiderUserEntity user, NotificationManager notif)
 		{
@@ -315,5 +371,8 @@ namespace Epsitec.Aider.Override
 				}
 			}
 		}
-	}
+
+
+        private readonly Dictionary<string, Pending2FA> pending2FApins;
+    }
 }

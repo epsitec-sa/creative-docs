@@ -1,4 +1,4 @@
-//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -17,15 +17,28 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public bool CheckCredentials(string userName, string password)
+		public AuthenticationResult CheckCredentials(string userName, string password, bool requirePin)
 		{
-			System.Func<UserManager, bool> function = userManager =>
+			System.Func<UserManager, AuthenticationResult> function = userManager =>
 			{
-				return userManager.CheckUserAuthentication (userName, password);
-			};
+				var validUserPassword = password == null || userManager.CheckUserAuthentication (userName, password);
+                var requirePinValidation  = requirePin && validUserPassword && userManager.Start2FALogin (userName);
+                
+                return new AuthenticationResult (validUserPassword, requirePinValidation);
+            };
 
 			return this.coreWorkerPool.Execute (function);
 		}
+
+        public bool CheckPin(string userName, string pin)
+        {
+            System.Func<UserManager, bool> function = userManager =>
+            {
+                return userManager.CheckUserPin (userName, pin);
+            };
+
+            return this.coreWorkerPool.Execute (function);
+        }
 
 		public bool NotifySuccessfulLogin(string userName)
 		{
