@@ -1,20 +1,18 @@
-// This class is the login panel that is presented to the user when it starts
-// the application. It provides him with a simple form that it can fill to log
-// in.
+// This class is the login panel for the second factor (SMS PIN).
 
 Ext.require([
   'Epsitec.cresus.webcore.tools.ErrorHandler',
   'Epsitec.cresus.webcore.tools.Texts'
 ],
 function() {
-  Ext.define('Epsitec.cresus.webcore.ui.LoginPanel', {
+  Ext.define('Epsitec.cresus.webcore.ui.LoginPanelPin', {
     extend: 'Ext.form.Panel',
-    alternateClassName: ['Epsitec.LoginPanel'],
+    alternateClassName: ['Epsitec.LoginPanelPin'],
 
     /* Configuration */
 
     renderTo: document.body,
-    id: 'loginwindow',
+    id: 'loginwindowpin',
     title: Epsitec.Texts.getLoginTitle(),
     bodyPadding: 5,
     width: 400,
@@ -33,12 +31,13 @@ function() {
     /* Properties */
 
     application: null,
+    username: null,
 
     /* Constructor */
 
     constructor: function(options) {
       var newOptions = {
-        url: 'proxy/log/in1',
+        url: 'proxy/log/in2',
         items: this.getItems(),
         buttons: this.getButtons()
       };
@@ -52,7 +51,7 @@ function() {
     /* Methods */
 
     getItems: function() {
-      var header, usernameField, passwordField;
+      var header, pinField;
 
       header = Ext.create('Ext.Component', {
         autoEl: {
@@ -62,36 +61,31 @@ function() {
         margin: '0 0 20 0'
       });
 
-      usernameField = Ext.create('Ext.form.field.Text', {
-        fieldLabel: Epsitec.Texts.getUsernameLabel(),
-        name: 'username',
+      pinField = Ext.create('Ext.form.field.Text', {
+        fieldLabel: 'PIN reçu par SMS',
+        name: 'pin',
         value: '',
         allowBlank: true,
         listeners: {
           specialkey: this.onSpecialKeyPressed,
-          afterrender: function() { this.application.focusTextField('username'); },
+          afterrender: function() { this.application.focusTextField('pin'); },
           scope: this
         }
       });
-
-      passwordField = Ext.create('Ext.form.field.Text', {
-        inputType: 'password',
-        fieldLabel: Epsitec.Texts.getPasswordLabel(),
-        name: 'password',
-        value: '',
-        allowBlank: false,
-        listeners: {
-          specialkey: this.onSpecialKeyPressed,
-          scope: this
-        }
-      });
-
-      return [header, usernameField, passwordField];
+      return [header, pinField];
     },
 
     getButtons: function() {
-      var loginButton;
+      var backButton, loginButton;
 
+      backButton = Ext.create('Ext.button.Button', {
+        text: 'Retour',
+        listeners: {
+          click: this.onBackClick,
+          scope: this
+        }
+      });
+      
       loginButton = Ext.create('Ext.button.Button', {
         text: Epsitec.Texts.getLoginLabel(),
         listeners: {
@@ -100,13 +94,17 @@ function() {
         }
       });
 
-      return [loginButton];
+      return [backButton, loginButton];
     },
 
     onSpecialKeyPressed: function(field, e) {
       if (e.getKey() === e.ENTER) {
         this.onLoginClick();
       }
+    },
+
+    onBackClick: function() {
+      this.application.showLoginPanel();
     },
 
     onLoginClick: function() {
@@ -128,17 +126,11 @@ function() {
     onLoginClickCallback: function(success, form, action) {
       this.setLoading(false);
 
-      if (!success) {
-        Epsitec.ErrorHandler.handleFormError(action);
-        this.application.focusTextField('username');
-        return;
-      }
-
-      var username = form.getFieldValues().username;
-      if (action.result.data === 'pin') {
-        this.application.showLoginPanelPin(username);
+      if (success) {
+        this.application.showMainPanel(this.username);
       } else {
-        this.application.showMainPanel(username);
+        Epsitec.ErrorHandler.handleFormError(action);
+        this.application.focusTextField('pin');
       }
     }
   });

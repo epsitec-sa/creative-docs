@@ -20,6 +20,7 @@ $.getScript('signalr/hubs', function() {
     'Epsitec.cresus.webcore.hub.Hubs',
     'Epsitec.cresus.webcore.locale.Locale',
     'Epsitec.cresus.webcore.ui.LoginPanel',
+    'Epsitec.cresus.webcore.ui.LoginPanelPin',
     'Epsitec.cresus.webcore.ui.Menu',
     'Epsitec.cresus.webcore.ui.TabManager',
     'Epsitec.cresus.webcore.ui.ActionPage',
@@ -38,6 +39,7 @@ $.getScript('signalr/hubs', function() {
       viewport: null,
       menu: null,
       loginPanel: null,
+      loginPanelPin: null,
       tabManager: null,
       entityBag: null,
       actionPage: null,
@@ -85,8 +87,7 @@ $.getScript('signalr/hubs', function() {
             tagName = d.tagName.toUpperCase();
             tagType = d.type.toUpperCase();
 
-            isTextField = tagName === 'INPUT' &&
-                (tagType === 'TEXT' || tagType === 'PASSWORD');
+            isTextField = tagName === 'INPUT' && (tagType === 'TEXT' || tagType === 'PASSWORD');
             isTextArea = tagName === 'TEXTAREA';
 
             if (isTextField || isTextArea) {
@@ -225,18 +226,52 @@ $.getScript('signalr/hubs', function() {
         };
       },
 
+      focusTextField: function(id) {
+        var f = function() {
+          var field = Ext.ComponentQuery.query('textfield[name="' + id + '"]')[0];
+          field.focus(true);
+        };
+        Ext.TaskManager.start({
+          run: f,
+          scope: null,
+          interval: 1000,
+          repeat: 1
+        });
+      },      
 
       showLoginPanel: function() {
         this.loginPanel = Ext.create('Epsitec.LoginPanel', {
           application: this
         });
+        if (this.loginPanelPin) {
+          this.loginPanelPin.close();
+          this.loginPanelPin = null;
+        }
+      },
+
+      showLoginPanelPin: function(username) {
+        this.loginPanelPin = Ext.create('Epsitec.LoginPanelPin', {
+          application: this,
+          username: username
+        });
+        if (this.loginPanel) {
+          this.loginPanel.close();
+          this.loginPanel = null;
+        }
       },
 
       showMainPanel: function(username) {
         var items;
-
-        this.loginPanel.close();
-        this.loginPanel = null;
+        
+        if (this.loginPanel) {
+          this.loginPanel.close();
+          this.loginPanel = null;
+        }
+        
+        if (this.loginPanelPin) {
+          this.loginPanelPin.close();
+          this.loginPanelPin = null;
+        }
 
         this.menu = Ext.create('Epsitec.Menu', {
           application: this,
@@ -255,13 +290,13 @@ $.getScript('signalr/hubs', function() {
           items = [
             this.menu,
             this.createBanner('north', 'test-banner-top'),
-            this.tabManager,
+            this.tabManager
           ];
         }
         else {
           items = [
             this.menu,
-            this.tabManager,
+            this.tabManager
           ];
         }
 
