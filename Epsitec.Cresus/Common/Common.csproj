@@ -380,6 +380,7 @@
     <Compile Include="IO\ByteStream.cs" />
     <Compile Include="IO\CsvWriter.cs" />
     <Compile Include="IO\Web.cs" />
+    <Compile Include="IO\WinConsole.cs" />
     <Compile Include="Support\Extensions\HashSetExtensions.cs" />
     <Compile Include="Support\Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Support\ListEqualityComparer.cs" />
