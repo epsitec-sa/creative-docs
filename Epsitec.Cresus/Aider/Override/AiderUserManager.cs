@@ -1,4 +1,4 @@
-//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -14,6 +14,8 @@ using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Epsitec.Aider.Override
 {
@@ -23,6 +25,7 @@ namespace Epsitec.Aider.Override
 			: base (data, enableReload)
 		{
             this.pending2FApins = new Dictionary<string, Pending2FA> ();
+			this.randomGenerator = new System.Random ();
 		}
 
 
@@ -56,12 +59,21 @@ namespace Epsitec.Aider.Override
             var user = this.FindUser (loginName) as AiderUserEntity;
 
             if ((user != null) &&
-                (user.SecondFactorMode == Enumerations.SecondFactorMode.PinByMobile))
+                (user.SecondFactorMode == Enumerations.SecondFactorMode.PinByMobile) &&
+				(string.IsNullOrEmpty (user.Mobile) == false))
             {
-                var pin = "1234";
+				var rnd = this.GetRandomNumber (0, 9999);
+                var pin = rnd.ToString ("0000");
                 this.AddPin (loginName, pin);
-                //  Send SMS to number stored in user.Mobile
-                return true;
+
+				if ((user.Mobile.StartsWith ("+41")) &&
+					(user.Mobile.Length == 12))
+				{
+					//	Fire & forget task...
+					var task = this.Send2FAMessage (pin, user.Mobile.Substring (1));
+
+					return true;
+				}
             }
 
             return false; 
@@ -139,6 +151,31 @@ namespace Epsitec.Aider.Override
 			notif.WarnUser (user.LoginName, message, When.Now);
 		}
 
+
+		private int GetRandomNumber(int min, int max)
+		{
+			return this.randomGenerator.Next (min, max + 1);
+		}
+
+		private async Task Send2FAMessage(string pin, string destination)
+		{
+			var message = System.Uri.EscapeDataString ($"Code d'accès AIDER:\n{pin}");
+			var uri = new System.Uri ($"https://partout.cresus.ch/sms/v1/send/e37f7c4d-ad62-4f60-b520-1f054c038c04/{destination}/{message}");
+			
+			using var client = new HttpClient ();
+
+			System.Console.WriteLine ($"PIN {pin} for {destination}");
+
+			try
+			{
+				var result = await client.GetStringAsync (uri);
+			}
+			catch (System.Exception ex)
+			{
+				System.Console.WriteLine (ex.Message);
+				System.Console.WriteLine (ex.StackTrace);
+			}
+		}
 
 		private void NotifyUserLogin(AiderUserEntity user, NotificationManager notif)
 		{
@@ -374,5 +411,6 @@ namespace Epsitec.Aider.Override
 
 
         private readonly Dictionary<string, Pending2FA> pending2FApins;
+		private readonly System.Random randomGenerator;
     }
 }

@@ -261,7 +261,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
-      <Project>{234d3d26-89f5-48cc-a1b2-6bb5ada38a1b}</Project>
+      <Project>{79a62bab-fbdf-444a-8e23-3ad503940a17}</Project>
       <Name>Epsitec.TwixClip</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
