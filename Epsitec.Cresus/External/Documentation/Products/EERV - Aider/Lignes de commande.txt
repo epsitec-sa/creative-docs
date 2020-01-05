@@ -1809,6 +1809,14 @@ Lancé le 22.12.2019
 
 -echupdate -newechfile:S:\eerv\eerv-2019-12-21.xml -oldechfile:S:\eerv\eerv-2019-12-14.xml -output:s:\eerv\ech-diff-2019-12-21.md
 
+Lancé le 05.01.2020
+-------------------
+
+Mise à jour du schéma de la base (mode 2FA pour user)
+
+-echupdate -newechfile:S:\eerv\eerv-2019-12-28.xml -oldechfile:S:\eerv\eerv-2019-12-21.xml -output:s:\eerv\ech-diff-2019-12-28.md
+-echupdate -newechfile:S:\eerv\eerv-2020-01-04.xml -oldechfile:S:\eerv\eerv-2019-12-28.xml -output:s:\eerv\ech-diff-2020-01-04.md
+
 
 ___________________________________________________________________________________________________________________________________
 
