@@ -17,6 +17,9 @@ namespace Epsitec.Data.Platform.MatchSort
 	{
 		public static void WriteRecordsToFile<T>(string csvFilePath, string recordType, string outputFile)
 		{
+			var outputDir = System.IO.Path.GetDirectoryName (outputFile);
+			System.IO.Directory.CreateDirectory (outputDir);
+
 			using (var stream = File.OpenText (csvFilePath))
 			using (var outputStream = File.CreateText (outputFile))
 			{

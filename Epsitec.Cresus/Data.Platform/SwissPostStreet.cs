@@ -231,7 +231,11 @@ namespace Epsitec.Data.Platform
 		private static string GetMatchStreetCsvPath()
 		{
 			string path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
-			return System.IO.Path.Combine (path1, "Epsitec", "swisspoststreet.csv");
+			string path2 = System.IO.Path.Combine (path1, "Epsitec");
+
+			System.IO.Directory.CreateDirectory (path2);
+
+			return System.IO.Path.Combine (path2, "swisspoststreet.csv");
 		}
 
 		private static bool MustGenerateMatchStreetCsv()
