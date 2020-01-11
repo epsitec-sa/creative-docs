@@ -1817,6 +1817,8 @@ Mise à jour du schéma de la base (mode 2FA pour user)
 -echupdate -newechfile:S:\eerv\eerv-2019-12-28.xml -oldechfile:S:\eerv\eerv-2019-12-21.xml -output:s:\eerv\ech-diff-2019-12-28.md
 -echupdate -newechfile:S:\eerv\eerv-2020-01-04.xml -oldechfile:S:\eerv\eerv-2019-12-28.xml -output:s:\eerv\ech-diff-2020-01-04.md
 
+-exportsubscriptions -output:export-2020-01-xx.txt -error:error-2020-01-xx.txt -exclude-district-error:false
+
 
 ___________________________________________________________________________________________________________________________________
 
