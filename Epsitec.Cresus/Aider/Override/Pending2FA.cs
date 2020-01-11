@@ -15,5 +15,6 @@ namespace Epsitec.Aider.Override
         public string LoginName { get; }
         public string Pin { get; }
         public System.DateTime DateTime { get; }
+        public double ElapsedSeconds => (System.DateTime.UtcNow - this.DateTime).TotalSeconds;
     }
 }
