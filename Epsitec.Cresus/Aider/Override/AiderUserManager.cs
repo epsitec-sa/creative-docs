@@ -19,13 +19,11 @@ using System.Threading.Tasks;
 
 namespace Epsitec.Aider.Override
 {
-	public sealed class AiderUserManager : UserManager
+    public sealed class AiderUserManager : UserManager
 	{
 		public AiderUserManager(CoreData data, bool enableReload)
 			: base (data, enableReload)
 		{
-            this.pending2FApins = new Dictionary<string, Pending2FA> ();
-			this.randomGenerator = new System.Random ();
 		}
 
 
@@ -62,15 +60,15 @@ namespace Epsitec.Aider.Override
                 (user.SecondFactorMode == Enumerations.SecondFactorMode.PinByMobile) &&
 				(string.IsNullOrEmpty (user.Mobile) == false))
             {
-				var rnd = this.GetRandomNumber (0, 9999);
+				var rnd = AiderTwoFactorCentral.Instance.GetRandomNumber (0, 9999);
                 var pin = rnd.ToString ("0000");
-                this.AddPin (loginName, pin);
+                AiderTwoFactorCentral.Instance.AddPin (loginName, pin);
 
 				if ((user.Mobile.StartsWith ("+41")) &&
 					(user.Mobile.Length == 12))
 				{
 					//	Fire & forget task...
-					var task = this.Send2FAMessage (pin, user.Mobile.Substring (1));
+					var task = this.Send2FAMessage (pin, loginName, user.Mobile.Substring (1));
 
 					return true;
 				}
@@ -83,7 +81,7 @@ namespace Epsitec.Aider.Override
         {
             return (string.IsNullOrEmpty (loginName) == false)
                 && (string.IsNullOrEmpty (pin) == false)
-                && (this.CheckPin (loginName, pin));
+                && (AiderTwoFactorCentral.Instance.CheckPin (loginName, pin));
         }
 
         public override void NotifySusccessfulLogin(SoftwareUserEntity user)
@@ -152,19 +150,14 @@ namespace Epsitec.Aider.Override
 		}
 
 
-		private int GetRandomNumber(int min, int max)
-		{
-			return this.randomGenerator.Next (min, max + 1);
-		}
-
-		private async Task Send2FAMessage(string pin, string destination)
+		private async Task Send2FAMessage(string pin, string loginName, string destination)
 		{
 			var message = System.Uri.EscapeDataString ($"Code d'accès AIDER:\n{pin}");
 			var uri = new System.Uri ($"https://partout.cresus.ch/sms/v1/send/e37f7c4d-ad62-4f60-b520-1f054c038c04/{destination}/{message}");
 			
 			using var client = new HttpClient ();
 
-			System.Console.WriteLine ($"PIN {pin} for {destination}");
+			System.Console.WriteLine ($"Send PIN {pin} to {loginName} ({destination})");
 
 			try
 			{
@@ -230,38 +223,6 @@ namespace Epsitec.Aider.Override
 										d.DataSetCommandId == dataSetCommandId
 								   );
 		}
-
-        private void AddPin(string loginName, string pin)
-        {
-            lock (this.pending2FApins)
-            {
-                this.pending2FApins[loginName] = new Pending2FA (loginName, pin);
-            }
-        }
-
-        private void RemovePin(string loginName, string pin)
-        {
-            lock (this.pending2FApins)
-            {
-                this.pending2FApins.Remove (loginName);
-            }
-        }
-
-        private bool CheckPin(string loginName, string pin)
-        {
-            lock (this.pending2FApins)
-            {
-                if ((this.pending2FApins.TryGetValue (loginName, out var info)) &&
-                    (info.Pin == pin))
-                {
-                    this.pending2FApins.Remove (loginName);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
 
 		private void NotifyChangePassword(AiderUserEntity user, NotificationManager notif)
 		{
@@ -408,9 +369,5 @@ namespace Epsitec.Aider.Override
 				}
 			}
 		}
-
-
-        private readonly Dictionary<string, Pending2FA> pending2FApins;
-		private readonly System.Random randomGenerator;
     }
 }

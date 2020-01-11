@@ -488,6 +488,7 @@
     <Compile Include="Labels\AiderMailingParticipantLabelTextFactory1.cs" />
     <Compile Include="Override\AiderActivityLogger.cs" />
     <Compile Include="Override\AiderDatabaseInitializer.cs" />
+    <Compile Include="Override\AiderTwoFactorCentral.cs" />
     <Compile Include="Override\AiderUserManager.cs" />
     <Compile Include="Override\AiderUserSession.cs" />
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController0SetPassword.cs" />
