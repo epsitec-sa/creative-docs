@@ -378,6 +378,7 @@
     <Compile Include="FormEngine\Xml.cs" />
     <Compile Include="IO\BitConverter.cs" />
     <Compile Include="IO\ByteStream.cs" />
+    <Compile Include="IO\ConsoleCreatorOld.cs" />
     <Compile Include="IO\CsvWriter.cs" />
     <Compile Include="IO\Web.cs" />
     <Compile Include="IO\WinConsole.cs" />
@@ -398,7 +399,7 @@
     <Compile Include="IO\Checksum.cs" />
     <Compile Include="IO\Compression.cs" />
     <Compile Include="IO\Compressor.cs" />
-    <Compile Include="IO\ConsoleHelper.cs" />
+    <Compile Include="IO\ConsoleCreator.cs" />
     <Compile Include="IO\CsvFormat.cs" />
     <Compile Include="IO\CsvReader.cs" />
     <Compile Include="IO\Decompression.cs" />

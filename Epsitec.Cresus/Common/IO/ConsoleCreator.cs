@@ -1,9 +1,7 @@
-//	Copyright © 2008-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System;
-
-using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.IO
 {
@@ -33,62 +31,8 @@ namespace Epsitec.Common.IO
         /// <param name="windowWidth">Width of the window (or zero).</param>
         public static void RunWithConsole(Action action, int windowWidth = 0)
         {
-            bool success = false;
-
-            try
-            {
-                success = ConsoleCreator.CreateConsole ();
-
-                if (!success)
-                {
-                    throw new Exception("The console could not be created.");
-                }
-
-                if (windowWidth > 0)
-                {
-                    if (WinConsole.IsConsoleRedirected == false)
-                    {
-                        try
-                        {
-                            System.Console.SetWindowSize(windowWidth, System.Console.WindowHeight);
-                        }
-                        catch (System.ArgumentOutOfRangeException ex)
-                        {
-                            var find = "maximum window size of ";
-                            var message = ex.Message;
-                            var pos = message.IndexOf(find);
-
-                            System.Diagnostics.Trace.WriteLine($"RunWithConsole: {message}");
-
-                            if (pos > 0)
-                            {
-                                message = message.Substring(pos + find.Length);
-                                pos = message.IndexOf(' ');
-                                if (pos > 0)
-                                {
-                                    var value = int.Parse(message.Substring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
-                                    windowWidth = value;
-                                    System.Diagnostics.Trace.WriteLine($"Adjust to {windowWidth}");
-                                    System.Console.SetWindowSize(windowWidth, System.Console.WindowHeight);
-                                }
-                            }
-                        }
-                        
-                        System.Console.SetBufferSize(windowWidth, System.Console.BufferHeight);
-                    }
-                }
-
-                action();
-            }
-            finally
-            {
-                if (success)
-                {
-                    ConsoleCreator.DeleteConsole();
-                }
-            }
+            ConsoleCreatorOld.RunWithConsole (action, windowWidth);
         }
-
 
         public static void SetCursorPosition(int x, int y)
         {
@@ -104,6 +48,78 @@ namespace Epsitec.Common.IO
         /// </summary>
         /// <returns>return true for success and false for failure.</returns>
         private static bool CreateConsole()
+        {
+            return ConsoleCreatorOld.CreateConsole ();
+        }
+
+        /// <summary>
+        /// Deletes a console.
+        /// </summary>
+        /// <returns>return true for success and false for failure.</returns>
+        private static bool DeleteConsole()
+        {
+            return ConsoleCreatorOld.DeleteConsole ();
+        }
+
+        private static void RunWithConsoleWin10(Action action, int windowWidth = 0)
+        {
+            bool success = false;
+
+            try
+            {
+                success = ConsoleCreator.CreateConsole ();
+
+                if (!success)
+                {
+                    throw new Exception ("The console could not be created.");
+                }
+
+                if (windowWidth > 0)
+                {
+                    if (WinConsole.IsConsoleRedirected == false)
+                    {
+                        try
+                        {
+                            System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                        }
+                        catch (System.ArgumentOutOfRangeException ex)
+                        {
+                            var find = "maximum window size of ";
+                            var message = ex.Message;
+                            var pos = message.IndexOf(find);
+
+                            System.Diagnostics.Trace.WriteLine ($"RunWithConsole: {message}");
+
+                            if (pos > 0)
+                            {
+                                message = message.Substring (pos + find.Length);
+                                pos = message.IndexOf (' ');
+                                if (pos > 0)
+                                {
+                                    var value = int.Parse(message.Substring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
+                                    windowWidth = value;
+                                    System.Diagnostics.Trace.WriteLine ($"Adjust to {windowWidth}");
+                                    System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                                }
+                            }
+                        }
+
+                        System.Console.SetBufferSize (windowWidth, System.Console.BufferHeight);
+                    }
+                }
+
+                action ();
+            }
+            finally
+            {
+                if (success)
+                {
+                    ConsoleCreator.DeleteConsole ();
+                }
+            }
+        }
+
+        private static bool CreateConsoleWin10()
         {
             if (System.Threading.Interlocked.Increment(ref ConsoleCreator.counter) == 1)
             {
@@ -128,12 +144,7 @@ namespace Epsitec.Common.IO
             return ConsoleCreator.consoleAllocResult;
         }
 
-
-        /// <summary>
-        /// Deletes a console.
-        /// </summary>
-        /// <returns>return true for success and false for failure.</returns>
-        private static bool DeleteConsole()
+        private static bool DeleteConsoleWin10()
         {
             if (System.Threading.Interlocked.Decrement (ref ConsoleCreator.counter) == 0)
             {
@@ -151,4 +162,3 @@ namespace Epsitec.Common.IO
         private static bool disableSetCursor;
     }
 }
-
