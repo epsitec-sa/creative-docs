@@ -22,6 +22,8 @@ namespace Epsitec.Common.IO
             ConsoleCreator.CreateConsole();
         }
 
+        public static bool IsWin10 => (System.Environment.OSVersion.Version.Major >= 10);
+
         /// <summary>
         /// Creates a console, executes the given action and deletes the console afterwards. If the
         /// new console can't be created, an exception will be thrown and the action won't be
@@ -31,7 +33,14 @@ namespace Epsitec.Common.IO
         /// <param name="windowWidth">Width of the window (or zero).</param>
         public static void RunWithConsole(Action action, int windowWidth = 0)
         {
-            ConsoleCreatorOld.RunWithConsole (action, windowWidth);
+            if (ConsoleCreator.IsWin10)
+            {
+                ConsoleCreator.RunWithConsoleWin10 (action, windowWidth);
+            }
+            else
+            {
+                ConsoleCreatorOld.RunWithConsole (action, windowWidth);
+            }
         }
 
         public static void SetCursorPosition(int x, int y)
@@ -49,7 +58,7 @@ namespace Epsitec.Common.IO
         /// <returns>return true for success and false for failure.</returns>
         private static bool CreateConsole()
         {
-            return ConsoleCreatorOld.CreateConsole ();
+            return ConsoleCreator.IsWin10 ? ConsoleCreator.CreateConsoleWin10 () : ConsoleCreatorOld.CreateConsole ();
         }
 
         /// <summary>
@@ -58,7 +67,7 @@ namespace Epsitec.Common.IO
         /// <returns>return true for success and false for failure.</returns>
         private static bool DeleteConsole()
         {
-            return ConsoleCreatorOld.DeleteConsole ();
+            return ConsoleCreator.IsWin10 ? ConsoleCreator.DeleteConsoleWin10 () : ConsoleCreatorOld.DeleteConsole ();
         }
 
         private static void RunWithConsoleWin10(Action action, int windowWidth = 0)
