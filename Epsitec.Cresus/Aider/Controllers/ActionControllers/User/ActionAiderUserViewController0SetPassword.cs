@@ -1,20 +1,16 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
-using System.Collections.Generic;
-
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (0)]
+    [ControllerSubType (0)]
 	public sealed class ActionAiderUserViewController0SetPassword : ActionViewController<AiderUserEntity>
 	{
 
@@ -30,7 +26,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(string password, string confirmation)
 		{
-			this.Entity.SetPassword (password, confirmation);
+            AdminFence.Ensure (this.Entity);
+            this.Entity.SetPassword (password, confirmation);
 		}
 
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)

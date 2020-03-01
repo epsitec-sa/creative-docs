@@ -235,6 +235,7 @@
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController3SetMyOffice.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController1AssignFunctions.cs" />
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController4SetParishOrRegion.cs" />
+    <Compile Include="Controllers\ActionControllers\User\AdminFence.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />

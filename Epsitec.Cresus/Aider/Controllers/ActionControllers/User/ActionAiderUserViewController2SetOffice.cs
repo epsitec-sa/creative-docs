@@ -1,14 +1,12 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
-using System.Linq;
+
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
@@ -32,7 +30,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderOfficeManagementEntity newOffice)
 		{
-			AiderOfficeManagementEntity.JoinOfficeManagement (this.BusinessContext, newOffice, this.Entity);
+            AdminFence.Ensure ();
+            AiderOfficeManagementEntity.JoinOfficeManagement (this.BusinessContext, newOffice, this.Entity);
 		}
 
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)

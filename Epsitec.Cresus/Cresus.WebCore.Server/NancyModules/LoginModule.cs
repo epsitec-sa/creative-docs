@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// POST arguments:
 			// - username:    the name of the user.
 			// - password:    the password of the user.
-			this.Post["/in1"]  = p => this.LoginUserPassword ();
+			this.Post["/in1"] = p => this.LoginUserPassword ();
             this.Post["/in2"] = p => this.LoginUserPin ();
 
 			// Logs the user out. This request will remove the session data from the cookie.

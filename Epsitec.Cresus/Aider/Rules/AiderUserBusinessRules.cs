@@ -1,6 +1,7 @@
-//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -27,7 +28,9 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyValidateRule(AiderUserEntity user)
 		{
-			this.CheckLoginNameIsNotEmpty (user);
+            AdminFence.Ensure (user);
+
+            this.CheckLoginNameIsNotEmpty (user);
 			this.CheckLoginNameIsUnique (user);
 			this.CheckDisplayNameIsNotEmpty (user);
 			this.CheckParishIsParishOrRegionGroup (user);

@@ -1,6 +1,6 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
-using System.Linq;
+
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
@@ -33,7 +33,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderGroupEntity selected)
 		{
-			this.Entity.SetParishOrRegion (this.BusinessContext, selected);
+            AdminFence.Ensure ();
+            this.Entity.SetParishOrRegion (this.BusinessContext, selected);
 		}
 
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)
