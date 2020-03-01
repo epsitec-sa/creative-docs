@@ -1,4 +1,4 @@
-//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -19,47 +19,19 @@ namespace Epsitec.Cresus.Core.Library
 	/// </summary>
 	public static class CoreContext
 	{
-		public static bool						IsInteractive
-		{
-			get
-			{
-				return CoreContext.isInteractive;
-			}
-		}
+		public static bool						IsInteractive => CoreContext.isInteractive;
 
-		public static bool						IsServer
-		{
-			get
-			{
-				return CoreContext.isServer;
-			}
-		}
+        public static bool                      IsServer => CoreContext.isServer;
 
-		public static bool						EnableSnapshotService
-		{
-			get
-			{
-				return CoreContext.enableSnapshotService;
-			}
-		}
+        public static bool                      EnableSnapshotService => CoreContext.enableSnapshotService;
 
-		public static bool						EnableReadOnlyMode
-		{
-			get
-			{
-				return CoreContext.enableReadOnlyMode;
-			}
-		}
+        public static bool                      EnableReadOnlyMode => CoreContext.enableReadOnlyMode;
 
-		public static bool						EnableTestEnvironment
-		{
-			get
-			{
-				return CoreContext.enableTestEnvironment;
-			}
-		}
+        public static bool                      EnableActive2FA => CoreContext.enableActive2FA;
 
-		public static CoreDatabaseType			DatabaseType
+        public static bool                      EnableTestEnvironment => CoreContext.enableTestEnvironment;
+
+        public static CoreDatabaseType			DatabaseType
 		{
 			get
 			{
@@ -78,39 +50,15 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public static string					DatabaseName
-		{
-			get
-			{
-				return CoreContext.databaseName;
-			}
-		}
+        public static string                    DatabaseName => CoreContext.databaseName;
 
-		public static string					DatabaseHost
-		{
-			get
-			{
-				return CoreContext.databaseHost;
-			}
-		}
+        public static string                    DatabaseHost => CoreContext.databaseHost;
 
-		public static bool						UseEmbeddedDatabaseClient
-		{
-			get
-			{
-				return CoreContext.useEmbeddedDatabaseClient;
-			}
-		}
+        public static bool                      UseEmbeddedDatabaseClient => CoreContext.useEmbeddedDatabaseClient;
 
-		public static bool						DisableUserManagerReload
-		{
-			get
-			{
-				return CoreContext.disableUserManagerReload;
-			}
-		}
+        public static bool                      DisableUserManagerReload => CoreContext.disableUserManagerReload;
 
-		public static System.DateTime			SoftwareReleaseDate
+        public static System.DateTime			SoftwareReleaseDate
 		{
 			get;
 			set;
@@ -121,6 +69,7 @@ namespace Epsitec.Cresus.Core.Library
 			get;
 			set;
 		}
+
 
 		public static T CreateApplication<T>()
 			where T : CoreApp
@@ -283,6 +232,11 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			CoreContext.enableTestEnvironment = true;
 		}
+
+        public static void Configure2FA()
+        {
+            CoreContext.enableActive2FA = true;
+        }
 
 		public static void ConfigureExperimentalFeature(string feature)
 		{
@@ -724,6 +678,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static bool						enableSnapshotService;
 		private static bool						enableReadOnlyMode;
 		private static bool						enableTestEnvironment;
+        private static bool                     enableActive2FA;
 		private static bool						disableUserManagerReload;
 		
 		private static CoreDatabaseType			databaseType;

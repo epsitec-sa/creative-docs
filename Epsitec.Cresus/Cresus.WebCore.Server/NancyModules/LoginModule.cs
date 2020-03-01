@@ -1,6 +1,7 @@
 //	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.WebCore.Server.Core;
 
@@ -49,9 +50,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var authResult = this.CheckCredentials (username, password);
 
-			if (authResult.ValidUserPassword)
+			if ((authResult.ValidUserPassword) &&
+                (authResult.User2FALogin != User2FALogin.Fail))
 			{
-                if (authResult.RequirePinValidation)
+                if (authResult.User2FALogin == User2FALogin.Enforce)
                 {
                     this.SessionLogin1 (username);
                     //  Login needs a PIN to validate this session...
@@ -152,14 +154,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
             {
                 throw new System.ArgumentNullException (nameof (password));
             }
-            bool requirePinValidation = true || CoreContext.HasExperimentalFeature ("RequirePinValidation");
 
             if (CoreContext.HasExperimentalFeature ("DisablePasswordCheck"))
 			{
                 password = null;
 			}
 
-			return this.CoreServer.AuthenticationManager.CheckCredentials (userName, password, requirePinValidation);
+			return this.CoreServer.AuthenticationManager.CheckCredentials (userName, password);
 		}
 
         private bool CheckPin(string userName, string pin)

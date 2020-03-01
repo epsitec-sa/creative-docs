@@ -176,6 +176,7 @@
     <Compile Include="Business\Rules\WorkflowThreadBusinessRules.cs" />
     <Compile Include="Business\RuleType.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
+    <Compile Include="Business\UserManagement\User2FALogin.cs" />
     <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
     <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Business\UserManagement\UserPowerLevel.cs" />

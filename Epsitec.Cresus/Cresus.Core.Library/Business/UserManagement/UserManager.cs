@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -15,11 +15,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
-	/// <summary>
-	/// The <c>UserManager</c> class is used to authenticate users, based on their name
-	/// and on their credentials (which might be a password).
-	/// </summary>
-	public class UserManager : CoreDataComponent
+    /// <summary>
+    /// The <c>UserManager</c> class is used to authenticate users, based on their name
+    /// and on their credentials (which might be a password).
+    /// </summary>
+    public class UserManager : CoreDataComponent
 	{
 		protected UserManager(CoreData data, bool enableReload)
 			: base (data)
@@ -510,9 +510,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
             return false;
         }
 
-        public virtual bool Start2FALogin(string loginName)
+        public virtual User2FALogin Start2FALogin(string loginName)
         {
-            return false;
+            return User2FALogin.Skip;
         }
 
 		public bool CheckUserAuthentication(SoftwareUserEntity user, string password)

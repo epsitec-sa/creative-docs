@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public AuthenticationResult CheckCredentials(string userName, string password, bool requirePin)
+		public AuthenticationResult CheckCredentials(string userName, string password)
 		{
 			System.Func<UserManager, AuthenticationResult> function = userManager =>
 			{
 				var validUserPassword = password == null || userManager.CheckUserAuthentication (userName, password);
-                var requirePinValidation  = requirePin && validUserPassword && userManager.Start2FALogin (userName);
+                var user2FALogin      = validUserPassword ? userManager.Start2FALogin (userName) : User2FALogin.Fail;
                 
-                return new AuthenticationResult (validUserPassword, requirePinValidation);
+                return new AuthenticationResult (validUserPassword, user2FALogin);
             };
 
 			return this.coreWorkerPool.Execute (function);

@@ -7,5 +7,6 @@
 DefineFileDepot ("assets", "C:\aider\assets")
 DefineFileDepot ("downloads", "C:\AIDER.Store\Downloads")
 
+Configure2FA ();
 # ConfigureAsTestEnvironment ();
 # ConfigureAsReadOnly ();

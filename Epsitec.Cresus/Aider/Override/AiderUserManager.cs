@@ -52,29 +52,36 @@ namespace Epsitec.Aider.Override
 		}
 
 
-        public override bool Start2FALogin(string loginName)
+        public override User2FALogin Start2FALogin(string loginName)
         {
             var user = this.FindUser (loginName) as AiderUserEntity;
 
-            if ((user != null) &&
-                (user.SecondFactorMode == Enumerations.SecondFactorMode.PinByMobile) &&
-				(string.IsNullOrEmpty (user.Mobile) == false))
+            if (user == null)
             {
-				var rnd = AiderTwoFactorCentral.Instance.GetRandomNumber (0, 9999);
-                var pin = rnd.ToString ("0000");
-                AiderTwoFactorCentral.Instance.AddPin (loginName, pin);
-
-				if ((user.Mobile.StartsWith ("+41")) &&
-					(user.Mobile.Length == 12))
-				{
-					//	Fire & forget task...
-					var task = this.Send2FAMessage (pin, loginName, user.Mobile.Substring (1));
-
-					return true;
-				}
+                return User2FALogin.Fail;
             }
 
-            return false; 
+            if ((CoreContext.EnableActive2FA == false) &&
+                (user.SecondFactorMode == Enumerations.SecondFactorMode.None))
+            {
+                return User2FALogin.Skip;
+            }
+
+            if ((user.Mobile != null) &&
+                (user.Mobile.StartsWith ("+41")) &&
+                (user.Mobile.Length == 12))
+            {
+                var rnd = AiderTwoFactorCentral.Instance.GetRandomNumber (0, 9999);
+                var pin = rnd.ToString ("0000");
+
+                AiderTwoFactorCentral.Instance.AddPin (loginName, pin);
+                //	Fire & forget task...
+                var task = this.Send2FAMessage (pin, loginName, user.Mobile.Substring (1));
+                
+                return User2FALogin.Enforce;
+            }
+
+            return User2FALogin.Fail;
         }
 
         public override bool CheckUserPin(string loginName, string pin)
