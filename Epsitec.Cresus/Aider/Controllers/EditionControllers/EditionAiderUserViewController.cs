@@ -1,8 +1,7 @@
-//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2020, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Override;
 
@@ -11,6 +10,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
                     .Field (x => x.DisplayName)
                     .Field (x => x.Email)
                     .Field (x => x.Mobile)
-                    .Field (x => x.SecondFactorMode)
+                    .Field (x => x.SecondFactorMode).IfFalse (CoreContext.EnableActive2FA)
 					.Field (x => x.Role)
 					.Field (x => x.PowerLevel)
 					.Field (x => x.Disabled)
@@ -76,10 +76,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.DisplayName).ReadOnly ()
 					.Field (x => x.Email)
                     .Field (x => x.Mobile)
-                    .Field (x => x.SecondFactorMode).ReadOnly ()
+//                  .Field (x => x.SecondFactorMode).ReadOnly ()
                     .Field (x => x.Role).ReadOnly ()
 					.Field (x => x.PowerLevel).ReadOnly ()
-					.Field (x => x.Disabled).ReadOnly ()
+//					.Field (x => x.Disabled).ReadOnly ()
 					.Field (x => x.EnableGroupEditionCanton).ReadOnly ()
 					.Field (x => x.EnableGroupEditionRegion).ReadOnly ()
 					.Field (x => x.EnableGroupEditionParish).ReadOnly ()
