@@ -1819,6 +1819,14 @@ Mise à jour du schéma de la base (mode 2FA pour user)
 
 -exportsubscriptions -output:export-2020-01-xx.txt -error:error-2020-01-xx.txt -exclude-district-error:false
 
+...
+
+Lancé le 01.03.2020
+-------------------
+
+Mise à jour du logiciel pour 2FA (prêt pour activation le 03.03.2020)
+
+-echupdate -newechfile:S:\eerv\eerv-2020-02-29.xml -oldechfile:S:\eerv\eerv-2020-02-22.xml -output:s:\eerv\ech-diff-2020-02-29.md
 
 ___________________________________________________________________________________________________________________________________
 
