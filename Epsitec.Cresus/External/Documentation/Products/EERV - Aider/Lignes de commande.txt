@@ -2010,6 +2010,53 @@ Lancé le 31.01.2021
 
 -echupdate -newechfile:S:\eerv\eerv-2021-01-30.xml -oldechfile:S:\eerv\eerv-2021-01-23.xml -output:s:\eerv\ech-diff-2020-01-30.md
 
+Lancé le 07.02.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-02-06.xml -oldechfile:S:\eerv\eerv-2021-01-30.xml -output:s:\eerv\ech-diff-2020-02-06.md
+
+Lancé le 14.02.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-02-13.xml -oldechfile:S:\eerv\eerv-2021-02-06.xml -output:s:\eerv\ech-diff-2020-02-13.md
+-exportsubscriptions -output:export-2021-02-xx.txt -error:error-2021-02-xx.txt -exclude-district-error:false
+
+Lancé le 08.03.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-02-20.xml -oldechfile:S:\eerv\eerv-2021-02-13.xml -output:s:\eerv\ech-diff-2020-02-20.md
+-echupdate -newechfile:S:\eerv\eerv-2021-02-27.xml -oldechfile:S:\eerv\eerv-2021-02-20.xml -output:s:\eerv\ech-diff-2020-02-27.md
+-echupdate -newechfile:S:\eerv\eerv-2021-03-06.xml -oldechfile:S:\eerv\eerv-2021-02-27.xml -output:s:\eerv\ech-diff-2020-03-06.md
+
+-clearwarnings -beforedate:2020-12-01 -killpersons:true -createsubscriptions:true
+
+Lancé le 14.03.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-03-13.xml -oldechfile:S:\eerv\eerv-2021-03-06.xml -output:s:\eerv\ech-diff-2020-03-13.md
+-exportsubscriptions -output:export-2021-03-xx.txt -error:error-2021-03-xx.txt -exclude-district-error:false
+
+Lancé le 21.03.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-03-20.xml -oldechfile:S:\eerv\eerv-2021-03-13.xml -output:s:\eerv\ech-diff-2020-03-20.md
+
+Lancé le 11.04.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-03-27.xml -oldechfile:S:\eerv\eerv-2021-03-20.xml -output:s:\eerv\ech-diff-2020-03-27.md
+-echupdate -newechfile:S:\eerv\eerv-2021-04-03.xml -oldechfile:S:\eerv\eerv-2021-03-27.xml -output:s:\eerv\ech-diff-2020-04-03.md
+-echupdate -newechfile:S:\eerv\eerv-2021-04-10.xml -oldechfile:S:\eerv\eerv-2021-04-03.xml -output:s:\eerv\ech-diff-2020-04-10.md
+
+Lancé le xx.04.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-04-17.xml -oldechfile:S:\eerv\eerv-2021-04-10.xml -output:s:\eerv\ech-diff-2020-04-17.md
+
+-clearwarnings -beforedate:2021-01-01 -killpersons:true -createsubscriptions:true
+
+-exportsubscriptions -output:export-2021-04-xx.txt -error:error-2021-04-xx.txt -exclude-district-error:false
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
