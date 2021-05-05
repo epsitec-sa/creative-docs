@@ -205,13 +205,20 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderOfficeManagementEntity Find(BusinessContext businessContext, AiderGroupEntity group)
 		{
+            if (group.IsNull ())
+            {
+                return null;
+            }
+
 			var officeExample = new AiderOfficeManagementEntity
 			{
 				ParishGroup = group
 			};
 
-			return businessContext.DataContext.GetByExample (officeExample).SingleOrDefault ();
-		}
+            var list =  businessContext.DataContext.GetByExample (officeExample).ToList ();
+            
+            return list.SingleOrDefault ();
+        }
 
 		public static AiderOfficeManagementEntity Create(BusinessContext businessContext,string name,AiderGroupEntity managementGroup)
 		{
