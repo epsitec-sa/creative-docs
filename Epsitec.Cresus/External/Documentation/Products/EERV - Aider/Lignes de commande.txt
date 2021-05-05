@@ -2052,10 +2052,13 @@ Lancé le xx.04.2021
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2021-04-17.xml -oldechfile:S:\eerv\eerv-2021-04-10.xml -output:s:\eerv\ech-diff-2020-04-17.md
-
 -clearwarnings -beforedate:2021-01-01 -killpersons:true -createsubscriptions:true
+-calculateage
 
 -exportsubscriptions -output:export-2021-04-xx.txt -error:error-2021-04-xx.txt -exclude-district-error:false
+
+-echupdate -newechfile:S:\eerv\eerv-2021-04-24.xml -oldechfile:S:\eerv\eerv-2021-04-17.xml -output:s:\eerv\ech-diff-2020-04-24.md
+-echupdate -newechfile:S:\eerv\eerv-2021-05-01.xml -oldechfile:S:\eerv\eerv-2021-04-24.xml -output:s:\eerv\ech-diff-2020-05-01.md
 
 ___________________________________________________________________________________________________________________________________
 
