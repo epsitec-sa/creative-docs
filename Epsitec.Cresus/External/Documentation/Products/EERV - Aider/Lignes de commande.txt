@@ -2048,7 +2048,7 @@ Lancé le 11.04.2021
 -echupdate -newechfile:S:\eerv\eerv-2021-04-03.xml -oldechfile:S:\eerv\eerv-2021-03-27.xml -output:s:\eerv\ech-diff-2020-04-03.md
 -echupdate -newechfile:S:\eerv\eerv-2021-04-10.xml -oldechfile:S:\eerv\eerv-2021-04-03.xml -output:s:\eerv\ech-diff-2020-04-10.md
 
-Lancé le xx.04.2021
+Lancé le 18.04.2021
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2021-04-17.xml -oldechfile:S:\eerv\eerv-2021-04-10.xml -output:s:\eerv\ech-diff-2020-04-17.md
@@ -2057,8 +2057,42 @@ Lancé le xx.04.2021
 
 -exportsubscriptions -output:export-2021-04-xx.txt -error:error-2021-04-xx.txt -exclude-district-error:false
 
+Lancé le 02.05.2021
+-------------------
+
 -echupdate -newechfile:S:\eerv\eerv-2021-04-24.xml -oldechfile:S:\eerv\eerv-2021-04-17.xml -output:s:\eerv\ech-diff-2020-04-24.md
 -echupdate -newechfile:S:\eerv\eerv-2021-05-01.xml -oldechfile:S:\eerv\eerv-2021-04-24.xml -output:s:\eerv\ech-diff-2020-05-01.md
+
+Lancé le 17.05.2021
+-------------------
+
+-exportsubscriptions -output:export-2021-05-xx.txt -error:error-2021-05-xx.txt -exclude-district-error:false
+
+Lancé le 06.06.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-05-10.xml -oldechfile:S:\eerv\eerv-2021-05-01.xml -output:s:\eerv\ech-diff-2021-05-10.md
+-echupdate -newechfile:S:\eerv\eerv-2021-05-15.xml -oldechfile:S:\eerv\eerv-2021-05-10.xml -output:s:\eerv\ech-diff-2021-05-15.md
+-echupdate -newechfile:S:\eerv\eerv-2021-05-22.xml -oldechfile:S:\eerv\eerv-2021-05-15.xml -output:s:\eerv\ech-diff-2021-05-22.md
+-echupdate -newechfile:S:\eerv\eerv-2021-05-29.xml -oldechfile:S:\eerv\eerv-2021-05-22.xml -output:s:\eerv\ech-diff-2021-05-29.md
+-echupdate -newechfile:S:\eerv\eerv-2021-06-05.xml -oldechfile:S:\eerv\eerv-2021-05-29.xml -output:s:\eerv\ech-diff-2021-06-05.md
+
+Lancé le 13.06.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-06-12.xml -oldechfile:S:\eerv\eerv-2021-06-05.xml -output:s:\eerv\ech-diff-2021-06-12.md
+
+Lancé le 19.06.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-06-19.xml -oldechfile:S:\eerv\eerv-2021-06-12.xml -output:s:\eerv\ech-diff-2021-06-19.md
+-exportsubscriptions -output:export-2021-06-xx.txt -error:error-2021-06-xx.txt -exclude-district-error:false
+
+Lancé le 04.07.2021
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2021-06-26.xml -oldechfile:S:\eerv\eerv-2021-06-19.xml -output:s:\eerv\ech-diff-2021-06-26.md
+-echupdate -newechfile:S:\eerv\eerv-2021-07-03.xml -oldechfile:S:\eerv\eerv-2021-06-26.xml -output:s:\eerv\ech-diff-2021-07-03.md
 
 ___________________________________________________________________________________________________________________________________
 
