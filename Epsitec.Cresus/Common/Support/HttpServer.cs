@@ -36,6 +36,7 @@ namespace Epsitec.Common.Support
 			// those calls, as the listener thread has not been created yet and thus nobody else can
 			// access it.
 			this.httpListener = new HttpListener ();
+            this.httpListener.TimeoutManager.IdleConnection = System.TimeSpan.FromMinutes (5);
 			this.httpListener.Prefixes.Add (uri.ToString ());
 			try
 			{
