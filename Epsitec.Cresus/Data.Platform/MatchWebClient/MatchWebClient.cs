@@ -103,8 +103,12 @@ namespace Epsitec.Data.Platform
             {
                 using (var stream = this.OpenRead (uri))
                 {
+                    var memory = new System.IO.MemoryStream ();
+                    stream.CopyTo (memory);
+                    memory.Position = 0;
+
                     var zipFile = new Epsitec.Common.IO.ZipFile ();
-                    zipFile.LoadFile (stream);
+                    zipFile.LoadFile (memory);
                     var zipEntry = zipFile.Entries.First ();
                     System.Diagnostics.Trace.WriteLine (string.Format ("Writing file {0}", filename));
                     using (var sw = new StreamWriter (filename)) // output as UTF-8

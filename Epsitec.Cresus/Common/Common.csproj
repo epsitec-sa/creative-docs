@@ -68,9 +68,6 @@
     <Reference Include="AntiGrain.NET">
       <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Reference Include="AntiGrain.NET">
@@ -1726,6 +1723,7 @@
     <EmbeddedResource Include="Widgets\Images\TableReadOnly.icon" />
     <EmbeddedResource Include="Widgets\Images\TableSearch.icon" />
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

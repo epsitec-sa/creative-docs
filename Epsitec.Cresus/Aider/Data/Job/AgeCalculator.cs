@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Data.Job
         {
             using (var calculator = new AgeCalculator (coreData))
             {
-                calculator.UpdateCalculatedAge (System.DateTime.Now);
+                calculator.UpdateCalculatedAge (System.DateTime.Now.AddDays (0));
             }
         }
 

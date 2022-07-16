@@ -82,7 +82,7 @@ namespace AIDER.ParishPreprocessor
 				}
 			}
 
-			System.Diagnostics.Process.Start (@"S:\git\core\cresus\Epsitec.Cresus\Aider\DataFiles");
+			System.Diagnostics.Process.Start (@"S:\git\core\Epsitec.Cresus\Aider\DataFiles");
 			System.Diagnostics.Process.Start (dataDir);
 		}
 

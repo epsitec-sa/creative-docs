@@ -20,15 +20,20 @@ namespace Epsitec.Common.IO
 		/// </summary>
 		public ZipFile()
 		{
-			this.entries = new List<Entry> ();
+            this.entries = new List<Entry> ();
 		}
 
+        static ZipFile()
+        {
+            ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = 850;
+        }
 
-		/// <summary>
-		/// Gets or sets the compression level.
-		/// </summary>
-		/// <value>The compression level (<c>0</c> = store only, <c>5</c> = default, <c>9</c> = best compression).</value>
-		public int CompressionLevel
+
+        /// <summary>
+        /// Gets or sets the compression level.
+        /// </summary>
+        /// <value>The compression level (<c>0</c> = store only, <c>5</c> = default, <c>9</c> = best compression).</value>
+        public int CompressionLevel
 		{
 			get
 			{

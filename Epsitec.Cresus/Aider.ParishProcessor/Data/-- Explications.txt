@@ -20,7 +20,7 @@ Fichiers présents dans ce dossier, utiles pour le projet :
   Utilisé pour assigner les adresses aux paroisses.
   Utilisé pour initialiser les groupes "paroisses".
 
-  À copier vers S:\git\core\cresus\Epsitec.Cresus\Aider\DataFiles\ParishAddresses.zip
+  À copier vers S:\git\core\Epsitec.Cresus\Aider\DataFiles\ParishAddresses.zip
 
 
 
