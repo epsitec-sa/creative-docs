@@ -122,8 +122,11 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
+                var entityId = Override.AiderUserManager.Current.AuthenticatedUser.IsSysAdmin ()
+                    ? this.GetEntityContext ().GetPersistedId (this.Person) : "";
+                
                 return StringUtils
-                    .Join (" ", this.FirstName, this.LastName)
+                    .Join (" ", this.FirstName, this.LastName, entityId)
                     .Trim ();
 			}
 			else

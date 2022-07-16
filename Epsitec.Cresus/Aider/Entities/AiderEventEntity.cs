@@ -20,7 +20,15 @@ namespace Epsitec.Aider.Entities
 			var type = this.GetTypeCaption ();
 			var place = this.GetPlaceText ();
 			var actors = this.GetMainActors ().Select (p => p.GetFullName ()).Join ("\n");
-            var body = TextFormatter.FormatText (type + "\n" + actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
+            var entityId = "";
+            var user = Override.AiderUserManager.Current.AuthenticatedUser;
+
+            if (user.IsSysAdmin ())
+            {
+                entityId = this.GetEntityContext ().GetPersistedId (this);
+            }
+            
+            var body = TextFormatter.FormatText (type + "\n" + actors + "\n" + place + "\n" + this.Date + "\n" + this.Description + "\n" + entityId);
 
             if (this.Report.IsRemoved)
             {
