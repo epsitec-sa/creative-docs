@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,7 +11,14 @@
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>Dolphin.ico</ApplicationIcon>
     <ApplicationRevision>0</ApplicationRevision>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +29,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +39,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,9 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Properties\AssemblyInfo.Dolphin.cs">
-      <Link>Properties\AssemblyInfo.Dolphin.cs</Link>
-    </Compile>
+    <Compile Include="Properties\AssemblyInfo.Dolphin.cs" />
     <Compile Include="Components\AbstractProcessor.cs" />
     <Compile Include="Components\TinyProcessor.cs" />
     <Compile Include="Assembler.cs" />
@@ -108,11 +117,16 @@
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <None Include="app.config" />
     <None Include="App.ico" />
     <EmbeddedResource Include="Images\Application.icon" />
     <None Include="Dolphin.ico" />
@@ -211,11 +225,21 @@
     <Content Include="Resources\Common.Types\Captions.en.resource" />
     <Content Include="Resources\Common.Types\Strings.00.resource" />
     <Content Include="Resources\Common.Types\Strings.en.resource" />
-    <Content Include="Resources\App.Dolphin\module.info" />
-    <Content Include="Resources\App.Dolphin\Captions.00.resource" />
-    <Content Include="Resources\App.Dolphin\Captions.de.resource" />
-    <Content Include="Resources\App.Dolphin\Strings.00.resource" />
-    <Content Include="Resources\App.Dolphin\Strings.de.resource" />
+    <Content Include="Resources\App.Dolphin\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\App.Dolphin\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\App.Dolphin\Captions.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\App.Dolphin\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\App.Dolphin\Strings.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Images\FontUnderline.icon" />
     <EmbeddedResource Include="Images\FontItalic.icon" />
     <EmbeddedResource Include="Images\FontBold.icon" />
