@@ -2296,6 +2296,13 @@ Lancé le 26.06.2022
 
 -echupdate -newechfile:S:\eerv\eerv-2022-06-25.xml -oldechfile:S:\eerv\eerv-2022-06-18.xml -output:s:\eerv\ech-diff-2022-06-25.md
 
+Lancé le 16.07.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-07-02.xml -oldechfile:S:\eerv\eerv-2022-06-25.xml -output:s:\eerv\ech-diff-2022-07-02.md
+-echupdate -newechfile:S:\eerv\eerv-2022-07-09.xml -oldechfile:S:\eerv\eerv-2022-07-02.xml -output:s:\eerv\ech-diff-2022-07-09.md
+-echupdate -newechfile:S:\eerv\eerv-2022-07-16.xml -oldechfile:S:\eerv\eerv-2022-07-09.xml -output:s:\eerv\ech-diff-2022-07-16.md
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
