@@ -204,12 +204,7 @@ namespace Epsitec.Aider.Data.ECh
         {
 			List<EChPerson> missingAdults = new List<EChPerson>();
 			List<EChPerson> missingChilds = new List<EChPerson>();
-			var reportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity(businessContext, eChReportedPerson);
-			if(reportedPersonEntity == null)
-            {
-				Console.WriteLine("Missing eCh_ReportedPersonEntity, not impl.");
-				return null;
-            }
+
 
 			var adult1 = EChDataHelpers.GetEchPersonEntity(businessContext, eChReportedPerson.Adult1);
 			if(adult1 == null)
@@ -225,16 +220,23 @@ namespace Epsitec.Aider.Data.ECh
 					missingAdults.Add(eChReportedPerson.Adult2);
 				}
 			}
-			
-			if(missingAdults.Count > 0)
+
+			var reportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity(businessContext, eChReportedPerson);
+
+			if (missingAdults.Count > 0)
             {
-				missingAdults.ForEach((eChPerson) =>
+				
+				if (reportedPersonEntity == null)
 				{
-					Console.WriteLine("Missing adult:");
-					Console.WriteLine(eChPerson.ToString());
-				});
-				Console.WriteLine("Missing adults found, not impl.");
-				return null;
+					Console.WriteLine("Missing eCh_ReportedPersonEntity: do full import");
+					EChDataImporter.ImportHousehold(businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
+					return null;
+				}
+				else
+                {
+					Console.WriteLine("Missing adults found with existing reportedPersonEntity, not impl.");
+					return null;
+				}
 			}
 
 			eChReportedPerson.Children.ForEach((eChChild) =>
@@ -246,29 +248,37 @@ namespace Epsitec.Aider.Data.ECh
 				}
 			});
 
-			if (missingChilds.Count == 0)
-            {
-				Console.WriteLine("No Missing adults found, no missing childs... nothing to do!");
+			
+			var refPerson = EChDataHelpers.GetAiderPersonEntity(businessContext, adult1);
+			var aiderHousehold = EChDataHelpers.GetAiderHousehold(businessContext, refPerson);
+
+			if (reportedPersonEntity == null && aiderHousehold == null)
+			{
+				Console.WriteLine("Missing household: partial import");
+				EChDataImporter.ImportHousehold(businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
 				return null;
 			}
 
+			if (reportedPersonEntity == null && aiderHousehold != null)
+            {
+				Console.WriteLine("Missing eCH household");
+				return null;
+            }
+			Console.WriteLine("Missing childs: setup existing household");
 			missingChilds.ForEach((eChPerson) =>
 			{
 				Console.WriteLine("Missing child:");
 				Console.WriteLine(eChPerson.ToString());
 				var aiderChild = EChDataHelpers.GetOrCreateAiderPersonEntity(businessContext, eChPerson);
-				
-				var refPerson = EChDataHelpers.GetAiderPersonEntity(businessContext, adult1);
-				var aiderHousehold = EChDataHelpers.GetAiderHousehold(businessContext, refPerson);
-				if(aiderHousehold != null)
-                {
+				if (aiderHousehold != null)
+				{
 					EChDataHelpers.SetupHousehold(businessContext, aiderChild, aiderHousehold, reportedPersonEntity, false, false, false);
-                }
-               
+				}
+
 			});
+				
 
-
-
+			
 
 			return null;
 		}
