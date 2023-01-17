@@ -359,6 +359,12 @@ namespace Epsitec.Aider.Data.ECh
 
 		private static AiderPersonEntity ImportPerson(BusinessContext businessContext, EChPerson eChPerson)
 		{
+			//avoid importing duplicates
+			var existingAiderPersonEntity = EChDataHelpers.GetAiderPersonEntity(businessContext, eChPerson);
+			if(existingAiderPersonEntity != null)
+            {
+				return existingAiderPersonEntity;
+			}
 			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
