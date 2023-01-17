@@ -40,14 +40,21 @@ namespace Epsitec.Aider.Data.ECh
 
 			try
 			{
-				coreData.EnableIndexes (false);
+				if(mode == "full")
+                {
+					coreData.EnableIndexes(false);
+				}
+				
 
 				EChDataImporter.ImportPersons (coreData, parishRepository, eChReportedPersons, zipCodeIdToEntityKey, mode);
 			}
 			finally
 			{
-				coreData.EnableIndexes (true);
-				coreData.ResetIndexes ();
+				if (mode == "full")
+				{
+					coreData.EnableIndexes(true);
+					coreData.ResetIndexes();
+				}
 			}
 		}
 
