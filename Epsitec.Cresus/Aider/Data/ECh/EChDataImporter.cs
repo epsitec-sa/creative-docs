@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Data.Job;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -32,7 +33,7 @@ namespace Epsitec.Aider.Data.ECh
 {
 	internal static class EChDataImporter
 	{
-		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons)
+		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons, string mode = "")
 		{
 			EChDataImporter.ImportCountries (coreData);
 			var zipCodeIdToEntityKey = EChDataImporter.ImportTowns (coreData, eChReportedPersons);
@@ -41,7 +42,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				coreData.EnableIndexes (false);
 
-				EChDataImporter.ImportPersons (coreData, parishRepository, eChReportedPersons, zipCodeIdToEntityKey);
+				EChDataImporter.ImportPersons (coreData, parishRepository, eChReportedPersons, zipCodeIdToEntityKey, mode);
 			}
 			finally
 			{
@@ -113,7 +114,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void ImportPersons(CoreData coreData, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
+		private static void ImportPersons(CoreData coreData, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons, Dictionary<int, EntityKey> zipCodeIdToEntityKey,string mode)
 		{
 			int batchSize = 1000;
 			int nbBatches = 0;
@@ -127,7 +128,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				using (var businessContext = new BusinessContext (coreData, false))
 				{
-					EChDataImporter.ImportBatch (businessContext, parishRepository, batch, eChPersonIdToEntityKey, zipCodeIdToEntityKey);
+					EChDataImporter.ImportBatch (businessContext, parishRepository, batch, eChPersonIdToEntityKey, zipCodeIdToEntityKey, mode);
 				}
 
 				nbBatches++;
@@ -137,7 +138,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void ImportBatch(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EChReportedPerson> batch, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
+		private static void ImportBatch(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EChReportedPerson> batch, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<int, EntityKey> zipCodeIdToEntityKey, string mode)
 		{
 			// NOTE This dictionary will store the mapping between the eChpersonIds and the
 			// entities for the entities that have been processed but not yet saved to the
@@ -147,7 +148,14 @@ namespace Epsitec.Aider.Data.ECh
 
 			foreach (var eChReportedPerson in batch)
 			{
-				EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
+				if(mode == "missing")
+                {
+					EChDataImporter.TryImportOrFixHousehold(businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
+				}
+				else
+                {
+					EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
+                }
 			}
 
 			ParishAssigner.AssignToParish (parishRepository, businessContext, eChPersonIdToEntity.Values);
@@ -183,6 +191,79 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				yield return eChReportedPerson[i];
 			}
+		}
+
+		private static eCH_ReportedPersonEntity TryImportOrFixHousehold(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChReportedPerson eChReportedPerson, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
+        {
+			List<EChPerson> missingAdults = new List<EChPerson>();
+			List<EChPerson> missingChilds = new List<EChPerson>();
+			var reportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity(businessContext, eChReportedPerson);
+			if(reportedPersonEntity == null)
+            {
+				Console.WriteLine("Missing eCh_ReportedPersonEntity, not impl.");
+				return null;
+            }
+
+			var adult1 = EChDataHelpers.GetEchPersonEntity(businessContext, eChReportedPerson.Adult1);
+			if(adult1 == null)
+            {
+				missingAdults.Add(eChReportedPerson.Adult1);
+			}
+
+			if (eChReportedPerson.Adult2 != null)
+            {
+				var adult2 = EChDataHelpers.GetEchPersonEntity(businessContext, eChReportedPerson.Adult2);
+				if(adult2 == null)
+                {
+					missingAdults.Add(eChReportedPerson.Adult2);
+				}
+			}
+			
+			if(missingAdults.Count > 0)
+            {
+				missingAdults.ForEach((eChPerson) =>
+				{
+					Console.WriteLine("Missing adult:");
+					Console.WriteLine(eChPerson.ToString());
+				});
+				Console.WriteLine("Missing adults found, not impl.");
+				return null;
+			}
+
+			eChReportedPerson.Children.ForEach((eChChild) =>
+			{
+				var child = EChDataHelpers.GetEchPersonEntity(businessContext, eChChild);
+				if(child != null)
+                {
+					missingChilds.Add(eChChild);
+				}
+			});
+
+			if (missingChilds.Count == 0)
+            {
+				Console.WriteLine("No Missing adults found, no missing childs... nothing to do!");
+				return null;
+			}
+
+			missingChilds.ForEach((eChPerson) =>
+			{
+				Console.WriteLine("Missing child:");
+				Console.WriteLine(eChPerson.ToString());
+				var aiderChild = EChDataHelpers.GetOrCreateAiderPersonEntity(businessContext, eChPerson);
+				
+				var refPerson = EChDataHelpers.GetAiderPersonEntity(businessContext, adult1);
+				var aiderHousehold = EChDataHelpers.GetAiderHousehold(businessContext, refPerson);
+				if(aiderHousehold != null)
+                {
+					EChDataHelpers.SetupHousehold(businessContext, aiderChild, aiderHousehold, reportedPersonEntity, false, false, false);
+                }
+               
+			});
+
+
+
+
+			return null;
 		}
 
 
