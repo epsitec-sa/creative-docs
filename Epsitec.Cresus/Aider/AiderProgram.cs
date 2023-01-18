@@ -562,7 +562,7 @@ namespace Epsitec.Aider
 				var parishRepository = ParishAddressRepository.Current;
 
 				EChDataImporter.Import(coreData, parishRepository, eChReportedPersons, mode);
-				
+				Console.WriteLine("Done!");
 			});
 		}
 

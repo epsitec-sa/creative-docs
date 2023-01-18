@@ -229,6 +229,10 @@ namespace Epsitec.Aider.Data.ECh
 				if (reportedPersonEntity == null)
 				{
 					Console.WriteLine("Missing eCh_ReportedPersonEntity: do full import");
+					foreach (var member in eChReportedPerson.GetMembers())
+					{
+						Console.WriteLine(member.ToString());
+					}
 					EChDataImporter.ImportHousehold(businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
 					return null;
 				}
@@ -254,24 +258,31 @@ namespace Epsitec.Aider.Data.ECh
 			if (reportedPersonEntity == null && aiderHousehold == null)
 			{
 				Console.WriteLine("Missing household: partial import");
+				foreach(var member in eChReportedPerson.GetMembers())
+                {
+					Console.WriteLine(member.ToString());
+				}
 				EChDataImporter.ImportHousehold(businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
 				return null;
 			}
 
-			if (reportedPersonEntity == null && aiderHousehold != null)
-            {
-				reportedPersonEntity = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity>();
-				var eChAddress = eChReportedPerson.Address;
-				var eChAddressEntity = EChDataImporter.ImportEchAddressEntity(businessContext, eChAddress);
-				reportedPersonEntity.Address = eChAddressEntity;
-            }
+			
 			
 			if(missingChilds.Count> 0)
             {
 				Console.WriteLine("Missing childs: setup existing household");
+				if (reportedPersonEntity == null && aiderHousehold != null)
+				{
+					Console.WriteLine("eCH_ReportedPersonEntity created!");
+					reportedPersonEntity = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity>();
+					var eChAddress = eChReportedPerson.Address;
+					var eChAddressEntity = EChDataImporter.ImportEchAddressEntity(businessContext, eChAddress);
+					reportedPersonEntity.Address = eChAddressEntity;
+				}
+
+				
 				missingChilds.ForEach((eChPerson) =>
 				{
-					Console.WriteLine("Missing child:");
 					Console.WriteLine(eChPerson.ToString());
 					var aiderChild = EChDataImporter.ImportPerson(businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChPerson);
 					if (aiderHousehold != null)
