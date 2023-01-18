@@ -112,10 +112,9 @@ namespace Epsitec.Aider.Data.ECh
 			var adult2 = adults.Count > 1 ? adults[1] : null;
 
 			var eChReportedPerson = new EChReportedPerson(adult1, adult2, children, address);
-			if(fixupFamilyKeys.Count > 0)
+			if (fixupFamilyKeys.Count > 0)
 			{
-				string familyKey;
-				if(fixupFamilyKeys.TryGetValue(eChReportedPerson.FamilyKey, out familyKey))
+				if(fixupFamilyKeys.Contains(eChReportedPerson.FamilyKey))
 				{
 					return eChReportedPerson;
                 }

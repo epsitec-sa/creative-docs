@@ -260,8 +260,10 @@ namespace Epsitec.Aider.Data.ECh
 
 			if (reportedPersonEntity == null && aiderHousehold != null)
             {
-				Console.WriteLine("Missing eCH household");
-				return null;
+				reportedPersonEntity = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity>();
+				var eChAddress = eChReportedPerson.Address;
+				var eChAddressEntity = EChDataImporter.ImportEchAddressEntity(businessContext, eChAddress);
+				reportedPersonEntity.Address = eChAddressEntity;
             }
 			
 			if(missingChilds.Count> 0)
@@ -278,8 +280,11 @@ namespace Epsitec.Aider.Data.ECh
 					}
 
 				});
+				return null;
 			}
 
+			Console.WriteLine("Nothing to do:");
+			Console.WriteLine(eChReportedPerson.FamilyKey);
 			return null;
 		}
 
