@@ -206,16 +206,16 @@ namespace Epsitec.Aider.Data.ECh
 			List<EChPerson> missingChilds = new List<EChPerson>();
 
 
-			var adult1 = EChDataHelpers.GetEchPersonEntity(businessContext, eChReportedPerson.Adult1);
-			if(adult1 == null)
+			var adult1 = EChDataHelpers.GetAiderPersonEntity(businessContext, eChReportedPerson.Adult1);
+			if (adult1 == null)
             {
 				missingAdults.Add(eChReportedPerson.Adult1);
 			}
 
 			if (eChReportedPerson.Adult2 != null)
             {
-				var adult2 = EChDataHelpers.GetEchPersonEntity(businessContext, eChReportedPerson.Adult2);
-				if(adult2 == null)
+				var adult2 = EChDataHelpers.GetAiderPersonEntity(businessContext, eChReportedPerson.Adult2);
+				if (adult2 == null)
                 {
 					missingAdults.Add(eChReportedPerson.Adult2);
 				}
@@ -241,16 +241,15 @@ namespace Epsitec.Aider.Data.ECh
 
 			eChReportedPerson.Children.ForEach((eChChild) =>
 			{
-				var child = EChDataHelpers.GetEchPersonEntity(businessContext, eChChild);
-				if(child != null)
+				var child = EChDataHelpers.GetAiderPersonEntity(businessContext, eChChild);
+				if (child == null)
                 {
 					missingChilds.Add(eChChild);
 				}
 			});
 
-			
-			var refPerson = EChDataHelpers.GetAiderPersonEntity(businessContext, adult1);
-			var aiderHousehold = EChDataHelpers.GetAiderHousehold(businessContext, refPerson);
+		
+			var aiderHousehold = EChDataHelpers.GetAiderHousehold(businessContext, adult1);
 
 			if (reportedPersonEntity == null && aiderHousehold == null)
 			{
@@ -264,21 +263,22 @@ namespace Epsitec.Aider.Data.ECh
 				Console.WriteLine("Missing eCH household");
 				return null;
             }
-			Console.WriteLine("Missing childs: setup existing household");
-			missingChilds.ForEach((eChPerson) =>
-			{
-				Console.WriteLine("Missing child:");
-				Console.WriteLine(eChPerson.ToString());
-				var aiderChild = EChDataHelpers.GetOrCreateAiderPersonEntity(businessContext, eChPerson);
-				if (aiderHousehold != null)
-				{
-					EChDataHelpers.SetupHousehold(businessContext, aiderChild, aiderHousehold, reportedPersonEntity, false, false, false);
-				}
-
-			});
-				
-
 			
+			if(missingChilds.Count> 0)
+            {
+				Console.WriteLine("Missing childs: setup existing household");
+				missingChilds.ForEach((eChPerson) =>
+				{
+					Console.WriteLine("Missing child:");
+					Console.WriteLine(eChPerson.ToString());
+					var aiderChild = EChDataImporter.ImportPerson(businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChPerson);
+					if (aiderHousehold != null)
+					{
+						EChDataHelpers.SetupHousehold(businessContext, aiderChild, aiderHousehold, reportedPersonEntity, false, false, false);
+					}
+
+				});
+			}
 
 			return null;
 		}
