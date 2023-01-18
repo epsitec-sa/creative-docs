@@ -142,6 +142,8 @@ namespace Epsitec.Aider.Entities
 
 		public string GetPersonCheckKey()
 		{
+			//avoid using non initialized BirthdayX during imports
+			this.RefreshCache();
 			return new StringBuilder ().Append (this.BirthdayDay.ToString ())
 							 .Append (this.BirthdayMonth.ToString ())
 							 .Append (this.BirthdayYear.ToString ())
