@@ -448,6 +448,10 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetParishLine(AiderEventParticipantEntity person)
 		{
+			if (person.Role == EventParticipantRole.DeceasedPerson)
+			{
+				return "";
+			}
 			var parish = "Paroisse :<tab/>";
 			parish += person.GetParishName ();
 			return parish;
@@ -488,6 +492,10 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetTownLine(AiderEventParticipantEntity person)
 		{
+			if (person.Role == EventParticipantRole.DeceasedPerson)
+			{
+				return "";
+			}
 			var from = "Domicilié à :<tab/>";
 			if (person.GetSex () == PersonSex.Female)
 			{
