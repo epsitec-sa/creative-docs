@@ -554,14 +554,15 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var eChDataFile = AiderProgram.GetFile (args, "-echfile:", true);
+				var fixupDataFile = AiderProgram.GetFile(args, "-fixup:", false);
 				var mode = AiderProgram.GetString (args, "-mode:");
 
 				var maxCount = AiderProgram.GetMaxCount (mode);
-				var eChReportedPersons = EChDataLoader.Load (eChDataFile, maxCount);
-
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile, maxCount, fixupDataFile);
 				var parishRepository = ParishAddressRepository.Current;
 
-				EChDataImporter.Import (coreData, parishRepository, eChReportedPersons);
+				EChDataImporter.Import(coreData, parishRepository, eChReportedPersons, mode);
+				Console.WriteLine("Done!");
 			});
 		}
 
@@ -610,7 +611,7 @@ namespace Epsitec.Aider
 
 		private static int GetMaxCount(string mode)
 		{
-			if (mode == "full" || mode == null)
+			if (mode == "full" || mode == "missing" || mode == null)
 			{
 				return int.MaxValue;
 			}

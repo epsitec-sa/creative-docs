@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Data.Platform;
-
+using Newtonsoft.Json;
 using System;
 
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Data.ECh
 	{
 
 
-		public static IList<EChReportedPerson> Load(FileInfo inputFile, int maxCount = int.MaxValue)
+		public static IList<EChReportedPerson> Load(FileInfo inputFile, int maxCount = int.MaxValue,FileInfo fixupDataFile = null)
 		{
 			var xDocument = EChDataLoader.GetDocument (inputFile);
 
@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Data.ECh
 			// memory as this would enable us to stream the XML file instead of reading it as a
 			// whole. But right now I don't have time to do this.
 
-			return EChDataLoader.GetData (xDocument)
+			return EChDataLoader.GetData (xDocument, fixupDataFile)
 				.Take (maxCount).ToList ();
 		}
 
@@ -78,18 +78,31 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static IEnumerable<EChReportedPerson> GetData(XDocument xDocument)
+		private static IEnumerable<EChReportedPerson> GetData(XDocument xDocument,FileInfo fixupDataFile)
 		{
 			var xRoot = xDocument.Root;
+			var fixupFamilyKeys = new HashSet<string>();
+			if( fixupDataFile != null)
+            {
+				using (StreamReader r = new StreamReader(fixupDataFile.FullName))
+				{
+					var json = r.ReadToEnd();
+					fixupFamilyKeys = JsonConvert.DeserializeObject<HashSet<string>>(json);
+				}
+			}
 
 			foreach (var xReportedPerson in xRoot.Elements (EChXmlTags.EVd0002.ReportedPerson))
 			{
-				yield return EChDataLoader.GetEChReportedPerson (xReportedPerson);
+				var eChReportedPerson = EChDataLoader.GetEChReportedPerson(xReportedPerson, fixupFamilyKeys);
+				if(eChReportedPerson != null)
+                {
+					yield return eChReportedPerson;
+				}
 			}
 		}
 
 
-		private static EChReportedPerson GetEChReportedPerson(XElement xReportedPerson)
+		private static EChReportedPerson GetEChReportedPerson(XElement xReportedPerson, HashSet<string> fixupFamilyKeys)
 		{
 			var address = EChDataLoader.GetAddress (xReportedPerson);
 			var adults = EChDataLoader.GetAdults (xReportedPerson).ToList ();
@@ -98,7 +111,19 @@ namespace Epsitec.Aider.Data.ECh
 			var adult1 = adults.Count > 0 ? adults[0] : null;
 			var adult2 = adults.Count > 1 ? adults[1] : null;
 
-			return new EChReportedPerson (adult1, adult2, children, address);
+			var eChReportedPerson = new EChReportedPerson(adult1, adult2, children, address);
+			if (fixupFamilyKeys.Count > 0)
+			{
+				if(fixupFamilyKeys.Contains(eChReportedPerson.FamilyKey))
+				{
+					return eChReportedPerson;
+                }
+                else 
+				{
+					return null;
+				}
+			}
+			return eChReportedPerson;
 		}
 
 

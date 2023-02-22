@@ -154,3 +154,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+Epsitec.Cresus/App.Dolphin/Resources/Common.Designer
+Epsitec.Cresus/App.Dolphin/Resources/Common.Document

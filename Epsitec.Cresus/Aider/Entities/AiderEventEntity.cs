@@ -506,17 +506,21 @@ namespace Epsitec.Aider.Entities
 				return false;
 			}
 
-			if (participant.GetTown ().IsNullOrWhiteSpace ())
-			{
-				error = main.GetFullName () + " : adresse manquante";
-				return false;
+			if (participant.Role != Enumerations.EventParticipantRole.DeceasedPerson)
+            {
+				if (participant.GetTown().IsNullOrWhiteSpace())
+				{
+					error = main.GetFullName() + " : adresse manquante";
+					return false;
+				}
+
+				if (participant.GetParishName().IsNullOrWhiteSpace())
+				{
+					error = main.GetFullName() + " : paroisse manquante";
+					return false;
+				}
 			}
 
-			if (participant.GetParishName ().IsNullOrWhiteSpace ())
-			{
-				error = main.GetFullName () + " : paroisse manquante";
-				return false;
-			}
 
 			return true;
 		}

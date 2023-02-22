@@ -1,6 +1,6 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="Current">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartWorkingDirectory>S:\git\core\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartArguments>
     </StartArguments>
     <StartAction>Project</StartAction>
