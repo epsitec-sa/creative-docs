@@ -399,6 +399,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains("-mergepersonsfromfixup"))
+				{
+					ConsoleCreator.RunWithConsole(() => AiderProgram.MergePersonFromFixupFile(args));
+					return;
+				}
+
 				if (args.Contains ("-cleardqflags")) //-cleardqflags
 				{
 					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
@@ -413,7 +419,7 @@ namespace Epsitec.Aider
 				if (args.Contains ("-flagduplicatedpersons")) //-flagduplicatedpersons
 				{
 					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
-					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FlagDuplicatedPersons (args));
 					return;
 				}
 
@@ -1129,14 +1135,26 @@ namespace Epsitec.Aider
 			});
 		}
 
-		private static void AutoMergeDuplicatedPersons(string[] args)
+		private static void MergePersonFromFixupFile(string[] args)
 		{
-			AiderProgram.RunWithCoreData (coreData =>
+			AiderProgram.RunWithCoreData(coreData =>
 			{
-				FlagDuplicatedPersons.Run (coreData);
+				var fixupFile = AiderProgram.GetFile(args, "-file:", true);
+				//Not finished, need more work on input file and merge code.
+				//Data.Job.PersonMerger.Run(coreData, fixupFile);
+				System.Console.WriteLine("Press RETURN to quit");
+				System.Console.ReadLine();
+			});
+		}
 
-				System.Console.WriteLine ("Press RETURN to quit");
-				System.Console.ReadLine ();
+		private static void FlagDuplicatedPersons(string[] args)
+		{
+            AiderProgram.RunWithCoreData (coreData =>
+			{
+                Data.Job.FlagDuplicatedPersons.Run (coreData);
+
+                System.Console.WriteLine ("Press RETURN to quit");
+                System.Console.ReadLine ();
 			});
 		}
 

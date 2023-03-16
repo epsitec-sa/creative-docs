@@ -30,7 +30,6 @@ namespace Epsitec.Aider.Data.Job
 
 			var total = addressesToCheckKeys.Count ();
 
-			System.Console.Clear ();
 			var current = 1;
 			foreach (var key in addressesToCheckKeys)
 			{

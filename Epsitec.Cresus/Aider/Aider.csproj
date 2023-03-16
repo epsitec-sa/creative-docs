@@ -363,6 +363,7 @@
     <Compile Include="Data\QualityJob\DataQualityFlagsFixer.cs" />
     <Compile Include="Data\QualityJob\ClearDataQualityFlags.cs" />
     <Compile Include="Data\Job\PersonMrMrsSetter.cs" />
+    <Compile Include="Data\QualityJob\PersonMerger.cs" />
     <Compile Include="Data\QualityJob\MXFlagger.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
     <Compile Include="Data\Job\DerogationHotfix.cs" />

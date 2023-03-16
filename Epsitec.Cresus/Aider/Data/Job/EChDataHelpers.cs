@@ -460,6 +460,23 @@ namespace Epsitec.Aider.Data.Job
 			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
 		}
 
+		public static IList<AiderPersonEntity> GetAllAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
+		{
+			if (person == null)
+			{
+				return null;
+			}
+
+			var personExample = new AiderPersonEntity();
+
+			personExample.eCH_Person = new eCH_PersonEntity()
+			{
+				PersonId = person.PersonId
+			};
+
+			return businessContext.DataContext.GetByExample<AiderPersonEntity>(personExample);
+		}
+
 		public static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold,
 			/**/						  eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool secondaryHousehold = false)
 		{
@@ -535,6 +552,11 @@ namespace Epsitec.Aider.Data.Job
 				eChReportedPerson.Children.Add (eChPerson);
 				eChReportedPerson.RemoveDuplicates ();
 			}
+		}
+
+		public static AiderContactEntity GetAiderContactEntity(BusinessContext businessContext, string id)
+		{
+			return (AiderContactEntity)businessContext.DataContext.GetPersistedEntity(id);
 		}
 
 		public static AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, string eChPersonId)

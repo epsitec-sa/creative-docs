@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Data.ECh;
+using System;
 
 namespace Epsitec.Aider.Entities
 {
@@ -91,9 +92,18 @@ namespace Epsitec.Aider.Entities
 				return a.EntityStatus;
 			}
 		}
-		
-		
-		public string GetDisplayName()
+
+        internal static void Delete(BusinessContext businessContext, eCH_PersonEntity person)
+        {
+			if (person.IsNull())
+			{
+				return;
+			}
+
+			businessContext.DeleteEntity(person);
+		}
+
+        public string GetDisplayName()
 		{
 			var lastname = this.PersonOfficialName;
 			var firstname = this.PersonFirstNames;
