@@ -91,7 +91,7 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
 
-		private string GetBestStreetName(bool forceShortName = false)
+		public string GetBestStreetName(bool forceShortName = false)
 		{
             if (this.StreetUserFriendly == null)
             {

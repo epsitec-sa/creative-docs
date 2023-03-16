@@ -368,7 +368,22 @@ namespace Epsitec.Aider.Data.Subscription
 			string street;
 			string houseNumber;
 
+
+
 			SubscriptionFileWriter.GetAddressData (address, encodingHelper, out addressComplement, out street, out houseNumber);
+
+			//Avoid long address+housenumber lines
+			var addressLineLength = $"{street} {houseNumber}".Length;
+			if (addressLineLength > 30)
+			{
+				street = address.GetBestStreetName(true);
+				addressLineLength = $"{street} {houseNumber}".Length;
+				if(addressLineLength > 30)
+                {
+					var maxLength = 30 - houseNumber.Length - 1;
+					street = street.SubstringEnd(maxLength);
+                }
+			}
 
 			var zipCode     = SubscriptionFileWriter.Format (SubscriptionFileWriter.GetZipCode (town), SubscriptionFileLine.ZipCodeLength, encodingHelper);
 			var townName    = SubscriptionFileWriter.Format (town.Name, SubscriptionFileLine.TownLength, encodingHelper);

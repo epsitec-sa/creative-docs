@@ -320,7 +320,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 		public static readonly int				CopiesCountMin             = 1;
 		public static readonly int				CopiesCountMax             = 99999;
-		public static readonly int				NameLengthMax              = 47;
+		public static readonly int				NameLengthMax              = 30;
 		public static readonly int				SwissZipCodeLength         = 6;
 		public static readonly int				SwissDistrictNumberMin     = 1;
 		public static readonly int				SwissDistrictNumberMax     = 999;
