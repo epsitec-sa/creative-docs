@@ -499,6 +499,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains("-marriages")) //-marriages
+				{
+					ConsoleCreator.RunWithConsole(() => AiderProgram.Marriages(args));
+					return;
+				}
+
 				if (args.Contains ("-updateparishname")) //-updateparishname -current:"Morge" -new:"Morges – Echichens" -pla:false
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.UpdateParish (args));
@@ -689,6 +695,19 @@ namespace Epsitec.Aider
 				UpdateLegalPerson.AdminToMunicipality (coreData);
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
+			});
+		}
+
+		private static void Marriages (string[] args)
+		{
+			AiderProgram.RunWithCoreData(coreData =>
+			{
+				var outputFile = AiderProgram.GetFile(args, "-output:", true);
+				var strictMode = AiderProgram.GetBool(args, "-strict:",false, true);
+				Console.WriteLine($"outputfile: {outputFile.FullName} strictMode: {strictMode}");
+				AiderEvents.ExportMarriagesStats(coreData,  outputFile, strictMode);
+				System.Console.WriteLine("Press RETURN to quit");
+				System.Console.ReadLine();
 			});
 		}
 

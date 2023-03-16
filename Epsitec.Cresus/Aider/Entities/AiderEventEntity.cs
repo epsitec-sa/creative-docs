@@ -552,6 +552,35 @@ namespace Epsitec.Aider.Entities
 			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
 
+		public bool IsSamePersonSexMarriage(bool IsGovernmentDefined)
+        {
+			if(this.Type != Enumerations.EventType.Marriage)
+            {
+				return false;
+            }
+
+			if(IsGovernmentDefined)
+            {
+				if(!this.GetMainActors().All(a => a.Person.IsGovernmentDefined))
+                {
+					return false;
+                }
+			}
+
+			var isSame = false;
+			isSame = this.GetMainActors().All(a => a.Person.eCH_Person.PersonSex == Enumerations.PersonSex.Male);
+            if (isSame)
+            {
+				return true;
+            }
+			isSame = this.GetMainActors().All(a => a.Person.eCH_Person.PersonSex == Enumerations.PersonSex.Female);
+			if (isSame)
+			{
+				return true;
+			}
+			return false;
+		}
+
 		public void BuildMainActorsSummary()
 		{
 			this.MainActorsSummary = this.GetMainActors ().Select (p => p.LastName + ", " + p.FirstName.Split (' ')[0]).Join (" / ");
