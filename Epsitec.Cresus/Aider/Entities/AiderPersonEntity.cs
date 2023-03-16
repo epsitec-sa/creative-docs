@@ -847,6 +847,7 @@ namespace Epsitec.Aider.Entities
 				participation.UpdateActData();
 				otherPerson.Events.Remove(participation.Event);
 				officialPerson.Events.Add(participation.Event);
+				participation.Event.BuildMainActorsSummary();
 			}
 		}
 
