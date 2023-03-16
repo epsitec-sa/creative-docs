@@ -8,6 +8,8 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Aider.Entities
 {
 	public partial class AiderEventParticipantEntity
@@ -270,9 +272,30 @@ namespace Epsitec.Aider.Entities
 			this.Confession = this.GetConfession (true);
 		}
 
+		public void UpdateActData()
+		{
+			this.FirstName = this.GetFirstName(false);
+			this.LastName = this.GetLastName(false);
+			this.Sex = this.GetSex(false);
+			this.BirthDate = this.GetBirthDate(false);
+			this.Town = this.GetTown(false);
+			this.ParishName = this.GetParishName(false);
+			this.Confession = this.GetConfession(false);
+		}
+
 		public string GetRoleCaption()
 		{
 			return Res.Types.Enum.EventParticipantRole.FindValueFromEnumValue (this.Role).Caption.DefaultLabel;
+		}
+
+		public static IEnumerable<AiderEventParticipantEntity> FindParticipations(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			var example = new AiderEventParticipantEntity
+			{
+				Person = person
+			};
+
+			return businessContext.GetByExample(example);
 		}
 
 		public static Enumerations.PersonSex DetermineSexFromRole(Enumerations.EventParticipantRole role, Enumerations.PersonSex defaultValue)

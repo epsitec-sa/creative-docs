@@ -749,6 +749,7 @@ namespace Epsitec.Aider.Entities
 			AiderPersonEntity.MergeSubscriptions (businessContext, officialPerson, otherPerson);
 			AiderPersonEntity.MergeGroupParticipations (businessContext, officialPerson, otherPerson);
 			AiderPersonEntity.MergeContacts (businessContext, officialPerson, otherPerson);
+			AiderPersonEntity.MergeParticipations(businessContext, officialPerson, otherPerson);
 			AiderCommentEntity.CombineComments (officialPerson, otherPerson.Comment.Text.ToSimpleText ());
 			AiderCommentEntity.CombineSystemComments (officialPerson, otherPerson.Comment.SystemText);
 			AiderPersonEntity.AddMergeSystemComment (officialPerson);
@@ -788,7 +789,7 @@ namespace Epsitec.Aider.Entities
 			var baseInfos = officialPerson.Address;
 			var infos     = otherPerson.Address;
 
-			if (baseInfos == null)
+			if (baseInfos == null || infos == null)
 			{
 				return;
 			}
@@ -836,7 +837,19 @@ namespace Epsitec.Aider.Entities
 				AiderSubscriptionEntity.Delete (businessContext, subscription);
 			}
 		}
-		
+
+		private static void MergeParticipations(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		{
+			var participations = AiderEventParticipantEntity.FindParticipations(businessContext, otherPerson);
+			foreach (var participation in participations)
+            {
+				participation.Person = officialPerson;
+				participation.UpdateActData();
+				otherPerson.Events.Remove(participation.Event);
+				officialPerson.Events.Add(participation.Event);
+			}
+		}
+
 		public static void Delete(BusinessContext businessContext, AiderPersonEntity person)
 		{
 			if (person.IsNull ())
