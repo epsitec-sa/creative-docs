@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2023, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -34,10 +34,13 @@ namespace Epsitec.Aider.Rules
                 case Enumerations.EventParticipantRole.GodFather:
                 case Enumerations.EventParticipantRole.GodMother:
                     return true;
-				default:
-					return !(entity.Event.CountRole (entity.Role) > 1);
+                case Enumerations.EventParticipantRole.Husband:
+                case Enumerations.EventParticipantRole.Spouse:
+                    return (entity.Event.CountRole (Enumerations.EventParticipantRole.Husband) + entity.Event.CountRole (Enumerations.EventParticipantRole.Spouse)) <= 2;
+                
+                default:
+					return entity.Event.CountRole (entity.Role) <= 1;
 			}
 		}
 	}
 }
-
