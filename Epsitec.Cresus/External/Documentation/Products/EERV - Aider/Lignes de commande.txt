@@ -2303,6 +2303,107 @@ Lancé le 16.07.2022
 -echupdate -newechfile:S:\eerv\eerv-2022-07-09.xml -oldechfile:S:\eerv\eerv-2022-07-02.xml -output:s:\eerv\ech-diff-2022-07-09.md
 -echupdate -newechfile:S:\eerv\eerv-2022-07-16.xml -oldechfile:S:\eerv\eerv-2022-07-09.xml -output:s:\eerv\ech-diff-2022-07-16.md
 
+Lancé le 14.08.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-07-23.xml -oldechfile:S:\eerv\eerv-2022-07-16.xml -output:s:\eerv\ech-diff-2022-07-23.md
+-echupdate -newechfile:S:\eerv\eerv-2022-07-30.xml -oldechfile:S:\eerv\eerv-2022-07-23.xml -output:s:\eerv\ech-diff-2022-07-30.md
+-echupdate -newechfile:S:\eerv\eerv-2022-08-06.xml -oldechfile:S:\eerv\eerv-2022-07-30.xml -output:s:\eerv\ech-diff-2022-08-06.md
+-echupdate -newechfile:S:\eerv\eerv-2022-08-13.xml -oldechfile:S:\eerv\eerv-2022-08-06.xml -output:s:\eerv\ech-diff-2022-08-13.md
+
+-exportsubscriptions -output:export-2022-08-xx.txt -error:error-2022-08-xx.txt -exclude-district-error:false
+
+Lancé le 11.09.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-08-20.xml -oldechfile:S:\eerv\eerv-2022-08-13.xml -output:s:\eerv\ech-diff-2022-08-20.md
+-echupdate -newechfile:S:\eerv\eerv-2022-08-27.xml -oldechfile:S:\eerv\eerv-2022-08-20.xml -output:s:\eerv\ech-diff-2022-08-27.md
+-echupdate -newechfile:S:\eerv\eerv-2022-09-03.xml -oldechfile:S:\eerv\eerv-2022-08-27.xml -output:s:\eerv\ech-diff-2022-09-03.md
+-echupdate -newechfile:S:\eerv\eerv-2022-09-10.xml -oldechfile:S:\eerv\eerv-2022-09-03.xml -output:s:\eerv\ech-diff-2022-09-10.md
+
+-clearwarnings -beforedate:2021-06-01 -killpersons:true -createsubscriptions:true
+
+Lancé le 11.09.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-09-17.xml -oldechfile:S:\eerv\eerv-2022-09-10.xml -output:s:\eerv\ech-diff-2022-09-17.md
+-exportsubscriptions -output:export-2022-09-xx.txt -error:error-2022-09-xx.txt -exclude-district-error:false
+
+Lancé le 15.10.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-09-24.xml -oldechfile:S:\eerv\eerv-2022-09-17.xml -output:s:\eerv\ech-diff-2022-09-24.md
+-echupdate -newechfile:S:\eerv\eerv-2022-10-01.xml -oldechfile:S:\eerv\eerv-2022-09-24.xml -output:s:\eerv\ech-diff-2022-10-01.md
+-echupdate -newechfile:S:\eerv\eerv-2022-10-08.xml -oldechfile:S:\eerv\eerv-2022-10-01.xml -output:s:\eerv\ech-diff-2022-10-08.md
+-echupdate -newechfile:S:\eerv\eerv-2022-10-15.xml -oldechfile:S:\eerv\eerv-2022-10-08.xml -output:s:\eerv\ech-diff-2022-10-15.md
+-exportsubscriptions -output:export-2022-10-xx.txt -error:error-2022-10-xx.txt -exclude-district-error:false
+
+Lancé le 13.11.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-10-22.xml -oldechfile:S:\eerv\eerv-2022-10-08.xml -output:s:\eerv\ech-diff-2022-10-15.md (!)
+-echupdate -newechfile:S:\eerv\eerv-2022-10-29.xml -oldechfile:S:\eerv\eerv-2022-10-08.xml -output:s:\eerv\ech-diff-2022-10-22.md (!)
+-echupdate -newechfile:S:\eerv\eerv-2022-11-05.xml -oldechfile:S:\eerv\eerv-2022-10-08.xml -output:s:\eerv\ech-diff-2022-10-29.md (!)
+-echupdate -newechfile:S:\eerv\eerv-2022-11-12.xml -oldechfile:S:\eerv\eerv-2022-10-08.xml -output:s:\eerv\ech-diff-2022-11-05.md (!)
+-exportsubscriptions -output:export-2022-11-xx.txt -error:error-2022-11-xx.txt -exclude-district-error:false
+
+Lancé le 13.11.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-11-19.xml -oldechfile:S:\eerv\eerv-2022-11-12.xml -output:s:\eerv\ech-diff-2022-11-12.md
+
+PAS DE LIVRAISON RCH LE 26.11.2022
+
+Lancé le 25.12.2022
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-11-28.xml -oldechfile:S:\eerv\eerv-2022-11-19.xml -output:s:\eerv\ech-diff-2022-11-28.md
+-echupdate -newechfile:S:\eerv\eerv-2022-12-03.xml -oldechfile:S:\eerv\eerv-2022-11-28.xml -output:s:\eerv\ech-diff-2022-12-03.md
+-echupdate -newechfile:S:\eerv\eerv-2022-12-10.xml -oldechfile:S:\eerv\eerv-2022-12-03.xml -output:s:\eerv\ech-diff-2022-12-10.md
+-echupdate -newechfile:S:\eerv\eerv-2022-12-17.xml -oldechfile:S:\eerv\eerv-2022-12-10.xml -output:s:\eerv\ech-diff-2022-12-17.md
+-echupdate -newechfile:S:\eerv\eerv-2022-12-24.xml -oldechfile:S:\eerv\eerv-2022-12-17.xml -output:s:\eerv\ech-diff-2022-12-24.md
+-clearwarnings -beforedate:2021-10-01 -killpersons:true -createsubscriptions:true
+
+Lancé le 08.01.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2022-12-31.xml -oldechfile:S:\eerv\eerv-2022-12-24.xml -output:s:\eerv\ech-diff-2022-12-31.md
+-echupdate -newechfile:S:\eerv\eerv-2023-01-07.xml -oldechfile:S:\eerv\eerv-2022-12-31.xml -output:s:\eerv\ech-diff-2023-01-07.md
+-exportsubscriptions -output:export-2023-01-xx.txt -error:error-2023-01-xx.txt -exclude-district-error:false
+
+Lancé le 15.01.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-01-14.xml -oldechfile:S:\eerv\eerv-2023-01-07.xml -output:s:\eerv\ech-diff-2023-01-14.md
+
+Lancé le 11.02.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-01-21.xml -oldechfile:S:\eerv\eerv-2023-01-14.xml -output:s:\eerv\ech-diff-2023-01-21.md
+-echupdate -newechfile:S:\eerv\eerv-2023-01-28.xml -oldechfile:S:\eerv\eerv-2023-01-21.xml -output:s:\eerv\ech-diff-2023-01-28.md
+-echupdate -newechfile:S:\eerv\eerv-2023-02-04.xml -oldechfile:S:\eerv\eerv-2023-01-28.xml -output:s:\eerv\ech-diff-2023-02-04.md
+-echupdate -newechfile:S:\eerv\eerv-2023-02-11.xml -oldechfile:S:\eerv\eerv-2023-02-04.xml -output:s:\eerv\ech-diff-2023-02-11.md
+
+-clearwarnings -beforedate:2022-12-01 -killpersons:true -createsubscriptions:true
+
+-exportsubscriptions -output:export-2023-02-xx.txt -error:error-2023-02-xx.txt -exclude-district-error:false
+
+Lancé le 19.02.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-02-18.xml -oldechfile:S:\eerv\eerv-2023-02-11.xml -output:s:\eerv\ech-diff-2023-02-18.md
+
+Lancé le 26.02.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-02-25.xml -oldechfile:S:\eerv\eerv-2023-02-18.xml -output:s:\eerv\ech-diff-2023-02-25.md
+
+Lancé le 13.03.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-03-04.xml -oldechfile:S:\eerv\eerv-2023-02-25.xml -output:s:\eerv\ech-diff-2023-03-04.md
+-echupdate -newechfile:S:\eerv\eerv-2023-03-11.xml -oldechfile:S:\eerv\eerv-2023-03-04.xml -output:s:\eerv\ech-diff-2023-03-11.md
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
@@ -2313,6 +2414,7 @@ Supprimer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.meta
 ___________________________________________________________________________________________________________________________________
 
 
+-echimportation -echfile:"S:\eerv\eerv-2023-01-07.xml" -mode:full
 
 
 Opérations de mainteance
