@@ -161,6 +161,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_doc", "_doc", "{47156742-0
 		External\Documentation\Products\EERV - Aider\Lignes de commande.txt = External\Documentation\Products\EERV - Aider\Lignes de commande.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{2A50DB89-D33B-473B-9774-62714BA6549D}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\global.json = ..\global.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
