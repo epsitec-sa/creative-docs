@@ -738,7 +738,7 @@ namespace Epsitec.Aider.Data.Job
 						EChDataHelpers.DeleteAiderHouseholdAndSubscription (businessContext, oldHousehold);
 					}
 				}
-				else
+				else if (aiderPerson.IsAlive)
 				{
 					this.LogToConsole ("Info: No old household detected");
 					this.LogToConsole ("Info: Create contact for the new household");
