@@ -24,10 +24,17 @@ namespace Epsitec.Data.Platform
 		{
 			var currentStreetHouses = SwissPostHouseRepository.Current.FindByStreetCode (this.StreetCode);
 
-			this.HouseNumberFrom = currentStreetHouses.Min (h => h.HouseNumber);
-			this.HouseNumberTo = currentStreetHouses.Max (h => h.HouseNumber);
-			this.HouseNumberFromAlpha = this.HouseNumberFrom + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberFrom).Min (h => h.HouseLetter);
-			this.HouseNumberToAlpha = this.HouseNumberTo + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberTo).Max (h => h.HouseLetter);
+            if (currentStreetHouses.Count > 0)
+            {
+                this.HouseNumberFrom = currentStreetHouses.Min (h => h.HouseNumber);
+                this.HouseNumberTo = currentStreetHouses.Max (h => h.HouseNumber);
+                this.HouseNumberFromAlpha = this.HouseNumberFrom + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberFrom).Min (h => h.HouseLetter);
+                this.HouseNumberToAlpha = this.HouseNumberTo + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberTo).Max (h => h.HouseLetter);
+            }
+            else
+            {
+                System.Diagnostics.Trace.WriteLine ("No house info for " + this.ToString ());
+            }
 		}
 
 		/// <summary>

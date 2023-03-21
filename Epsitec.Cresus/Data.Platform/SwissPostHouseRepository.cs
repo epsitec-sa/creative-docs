@@ -1,8 +1,6 @@
 //	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-using Epsitec.Common.Types.Collections;
-
 using System.Collections.Generic;
 using System.Linq;
 using CsvHelper;
@@ -23,9 +21,7 @@ namespace Epsitec.Data.Platform
 
 				foreach (var house in houses)
 				{
-					List<SwissPostHouseInformation> list;
-
-					if (this.houseByStreetCode.TryGetValue (house.StreetCode, out list) == false)
+					if (this.houseByStreetCode.TryGetValue (house.StreetCode, out var list) == false)
 					{
 						list = new List<SwissPostHouseInformation> ();
 						this.houseByStreetCode[house.StreetCode] = list;
@@ -36,13 +32,16 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public List<SwissPostHouseInformation> FindByStreetCode(int streetCode)
+		public IReadOnlyList<SwissPostHouseInformation> FindByStreetCode(int streetCode)
 		{
-			List<SwissPostHouseInformation> houses;
-
-			this.houseByStreetCode.TryGetValue (streetCode, out houses);
-
-			return houses;
+            if (this.houseByStreetCode.TryGetValue (streetCode, out var houses))
+            {
+                return houses;
+            }
+            else
+            {
+                return System.Array.Empty<SwissPostHouseInformation> ();
+            }
 		}
 
 		public static readonly SwissPostHouseRepository Current = new SwissPostHouseRepository ();
