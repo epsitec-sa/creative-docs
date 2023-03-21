@@ -227,8 +227,8 @@ namespace Epsitec.Aider.Data.Job
 
 			foreach (var reportedPerson in allReportedPersons)
 			{
-	
-				System.Console.SetCursorPosition (0, 2);
+
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 	
 				current++;
@@ -246,7 +246,7 @@ namespace Epsitec.Aider.Data.Job
 
 							if (reportedPersonList.Count > 2)
 							{
-								System.Console.Clear ();
+                                EChWarningsFixer.Clear ();
 								EChWarningsFixer.LogToConsole ("////////////// {0}", member.GetCompactSummary ());
 								EChWarningsFixer.LogToConsole ("RP Count: {0}", member.ReportedPersons.Count ());
 								EChWarningsFixer.LogToConsole ("DS: {0}", member.DeclarationStatus);
@@ -381,12 +381,12 @@ namespace Epsitec.Aider.Data.Job
 					}
 				}
 
-				System.Console.SetCursorPosition (0, 2);
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 				
 			}
-			System.Console.Clear ();
+            EChWarningsFixer.Clear ();
 		}
 
 		private static void ResetEChStatusForProcessDepartureWarnings(BusinessContext businessContext)
@@ -406,11 +406,11 @@ namespace Epsitec.Aider.Data.Job
 			{
 				warning.Person.eCH_Person.DeclarationStatus = PersonDeclarationStatus.Removed;
 				warning.Person.eCH_Person.RemovalReason = RemovalReason.None;
-				System.Console.SetCursorPosition (0, 2);
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
-			System.Console.Clear ();
+            EChWarningsFixer.Clear ();
 		}
 
 		private static void RemoveWarningInTimeMismatch(BusinessContext businessContext)
@@ -475,11 +475,11 @@ namespace Epsitec.Aider.Data.Job
 			foreach (var warn in warningsToDelete)
 			{
 				EChWarningsFixer.ClearWarningAndRefreshCaches (businessContext, warn);
-				System.Console.SetCursorPosition (0, 2);
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
-			System.Console.Clear ();
+            EChWarningsFixer.Clear ();
 		}
 
 		private static void DeleteEChHouseholdMissingWarnings (BusinessContext businessContext)
@@ -498,11 +498,11 @@ namespace Epsitec.Aider.Data.Job
 			foreach (var warn in warningsToDelete)
 			{
 				EChWarningsFixer.ClearWarningAndRefreshCaches (businessContext, warn);
-				System.Console.SetCursorPosition (0, 2);
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
-			System.Console.Clear ();
+            EChWarningsFixer.Clear ();
 		}
 
 		private static void MigrateWarning(BusinessContext businessContext, WarningType initialValue, WarningType migratedValue)
@@ -521,11 +521,11 @@ namespace Epsitec.Aider.Data.Job
 			foreach (var warn in warningsToMigrate)
 			{
 				warn.WarningType = migratedValue;
-				System.Console.SetCursorPosition (0, 2);
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}",current, total);
 				current++;
 			}
-			System.Console.Clear ();
+            EChWarningsFixer.Clear ();
 		}
 
 
@@ -564,11 +564,11 @@ namespace Epsitec.Aider.Data.Job
 
 				}
 
-				System.Console.SetCursorPosition (0, 2);
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
-			System.Console.Clear ();
+			EChWarningsFixer.Clear ();
 		}
 
 		private static void DetectDuplicatedChildForBirths(BusinessContext businessContext)
@@ -614,7 +614,7 @@ namespace Epsitec.Aider.Data.Job
 						var p1 = potentialDuplicateChecker[checkKey];
 						var p2 = person;
 
-						System.Console.Clear ();
+						EChWarningsFixer.Clear ();
 						EChWarningsFixer.LogToConsole ("Family Members:\n");
 						foreach (var p in members)
 						{
@@ -637,11 +637,11 @@ namespace Epsitec.Aider.Data.Job
 					}
 				}
 
-				System.Console.SetCursorPosition (0, 2);
+                EChWarningsFixer.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
-			System.Console.Clear ();
+            EChWarningsFixer.Clear ();
 		}
 
 		private static AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
@@ -684,7 +684,30 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
+        private static void SetCursorPosition(int x, int y)
+        {
+            try
+            {
+                System.Console.SetCursorPosition (x, y);
+            }
+            catch (System.IO.IOException)
+            {
+            }
+        }
+
+        private static void Clear()
+        {
+            try
+            {
+                System.Console.Clear ();
+            }
+            catch (System.IO.IOException)
+            {
+            }
+        }
+
+
+        private static System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
 		{
 			var message = string.Format (format, args);
 
