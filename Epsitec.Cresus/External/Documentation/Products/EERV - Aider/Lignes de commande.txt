@@ -2402,13 +2402,15 @@ Lancé le 13.03.2023
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2023-03-04.xml -oldechfile:S:\eerv\eerv-2023-02-25.xml -output:s:\eerv\ech-diff-2023-03-04.md
--echupdate -newechfile:S:\eerv\eerv-2023-03-11.xml -oldechfile:S:\eerv\eerv-2023-03-04.xml -output:s:\eerv\ech-diff-2023-03-11.md
 
 Lancé le 18.03.2023
 -------------------
 
+-echupdate -newechfile:S:\eerv\eerv-2023-03-11.xml -oldechfile:S:\eerv\eerv-2023-03-04.xml -output:s:\eerv\ech-diff-2023-03-11.md
 -echupdate -newechfile:S:\eerv\eerv-2023-03-18.xml -oldechfile:S:\eerv\eerv-2023-03-11.xml -output:s:\eerv\ech-diff-2023-03-18.md
 -clearwarnings -beforedate:2023-01-01 -killpersons:true -createsubscriptions:true
+-calculateage
+
 -exportsubscriptions -output:export-2023-03-xx.txt -error:error-2023-03-xx.txt -exclude-district-error:false
 
 ___________________________________________________________________________________________________________________________________
