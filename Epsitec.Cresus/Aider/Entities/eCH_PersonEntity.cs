@@ -55,7 +55,11 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.GetDisplayName (), "(~", this.PersonDateOfBirth.Value.ComputeAge (), "~)");
+            int? age = this.PersonDateOfBirth.HasValue
+                ? this.PersonDateOfBirth.Value.ComputeAge ()
+                : null;
+
+            return TextFormatter.FormatText (this.GetDisplayName (), "(~", age, "~)");
 		}
 
 		public override FormattedText GetSummary()
