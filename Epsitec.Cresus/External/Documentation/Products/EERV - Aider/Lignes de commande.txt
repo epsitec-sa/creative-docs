@@ -2413,6 +2413,18 @@ Lancé le 18.03.2023
 
 -exportsubscriptions -output:export-2023-03-xx.txt -error:error-2023-03-xx.txt -exclude-district-error:false
 
+Lancé le 26.03.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-03-25.xml -oldechfile:S:\eerv\eerv-2023-03-18.xml -output:s:\eerv\ech-diff-2023-03-25.md
+
+Lancé le 09.04.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-04-01.xml -oldechfile:S:\eerv\eerv-2023-03-25.xml -output:s:\eerv\ech-diff-2023-04-01.md
+-echupdate -newechfile:S:\eerv\eerv-2023-04-08.xml -oldechfile:S:\eerv\eerv-2023-04-01.xml -output:s:\eerv\ech-diff-2023-04-08.md
+-exportsubscriptions -output:export-2023-04-xx.txt -error:error-2023-04-xx.txt -exclude-district-error:false
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
