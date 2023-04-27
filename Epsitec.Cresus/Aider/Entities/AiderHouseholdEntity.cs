@@ -369,6 +369,20 @@ namespace Epsitec.Aider.Entities
 					}
 					break;
 
+				case HouseholdMrMrs.Monsieur:
+					if (man != null)
+					{
+						result.Add(man);
+					}
+					break;
+
+				case HouseholdMrMrs.Madame:
+					if (woman != null)
+					{
+						result.Add(woman);
+					}
+					break;
+
 				default:
 					throw new NotImplementedException ();
 			}
