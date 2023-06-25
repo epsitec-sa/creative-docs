@@ -1,6 +1,6 @@
 Fichiers présents dans ce dossier, utiles pour le projet :
 
-- 2023-02-xx Clean Parish Info.txt
+- 2023-06-xx Clean Parish Info.txt
 
   Fichier de référence contenant les NPA/rues/numéros associés aux paroisses. Ce
   fichier est consommé par l'utilitaire de conversion. Ce fichier est extrait par
@@ -8,13 +8,13 @@ Fichiers présents dans ce dossier, utiles pour le projet :
   1ère ligne).
 
 
-- 2023-02-xx parish names.txt
+- 2023-06-xx parish names.txt
 
   Fichier de référence avec les noms de paroisses, par régions.
 
 
 
-- 2023-02-xx parishes.txt
+- 2023-06-xx parishes.txt
 
   Fichier produit par l'utilitaire de conversion: mapping NPA/rue/numéro -> paroisse
   Utilisé pour assigner les adresses aux paroisses.

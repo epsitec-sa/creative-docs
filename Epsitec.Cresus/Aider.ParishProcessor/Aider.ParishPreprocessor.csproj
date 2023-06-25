@@ -68,6 +68,8 @@
     <Content Include="Data\2018-11-xx parish names.txt" />
     <Content Include="Data\2018-11-xx parishes.txt" />
     <Content Include="Data\2019-03-xx Clean Parish Info.txt" />
+    <Content Include="Data\2023-06-xx Clean Parish Info.txt" />
+    <Content Include="Data\2023-06-xx parishes.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -81,6 +83,7 @@
     <None Include="Data\2018-01-xx Clean Parish Info.xlsx" />
     <None Include="Data\2018-11-xx Clean Parish Info.xlsx" />
     <None Include="Data\2019-03-xxx Clean Parish Info.xlsx" />
+    <None Include="Data\2023-06-xxx Clean Parish Info.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\2014-02-xx Correspondances adresses et paroisses.xlsx" />
