@@ -18,5 +18,8 @@ namespace Epsitec.Aider.Enumerations
 
 		Messieurs = 20,
 		Mesdames = 21,
+
+		Monsieur = 30,
+		Madame = 31,
 	}
 }

@@ -192,7 +192,7 @@
   <data name="Val.Enum.HousholdMrMrs.MonsieurEtMadame" id="A39">&lt;s:data id="_0" f:Name="MonsieurEtMadame" f:Labels="{Collection {Text 'Monsieur et Madame'}}" /&gt;</data>
   <data name="Val.Enum.HousholdMrMrs.MadameEtMonsieur" id="A49">&lt;s:data id="_0" f:Name="MadameEtMonsieur" f:Labels="{Collection {Text 'Madame et Monsieur'}}" /&gt;</data>
   <data name="Val.Enum.HousholdMrMrs.Famille" id="A59">&lt;s:data id="_0" f:Name="Famille" f:Labels="{Collection {Text 'Famille'}}" /&gt;</data>
-  <data name="Typ.Enum.HousholdMrMrs" id="A09">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.HousholdMrMrs" f:_1.SystemType="E:Epsitec.Aider.Enumerations.HouseholdMrMrs, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA19]'}, {Text '1 [LVA29]'}, {Text '2 [LVA39]'}, {Text '3 [LVA49]'}, {Text '4 [LVA59]'}, {Text '5 [LVASM]'}, {Text '6 [LVATM]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.HouseholdMrMrs, Aider/None" f:Labels="{Collection {Text 'Politesse pour ménages'}}" /&gt;</data>
+  <data name="Typ.Enum.HousholdMrMrs" id="A09">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.HousholdMrMrs" f:_1.SystemType="E:Epsitec.Aider.Enumerations.HouseholdMrMrs, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA19]'}, {Text '1 [LVA29]'}, {Text '2 [LVA39]'}, {Text '3 [LVA49]'}, {Text '4 [LVA59]'}, {Text '5 [LVASM]'}, {Text '6 [LVATM]'}, {Text '7 [LVOO93]'}, {Text '8 [LVOP93]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.HouseholdMrMrs, Aider/None" f:Labels="{Collection {Text 'Politesse pour ménages'}}" /&gt;</data>
   <data name="Fld.SoftwareSession.SessionData" id="AC9">&lt;s:data id="_0" f:Name="SessionData" /&gt;</data>
   <data name="Fld.SoftwareMutationLogEntry.Session" id="AD9">&lt;s:data id="_0" f:Name="Session" /&gt;</data>
   <data name="Fld.SoftwareMutationLogEntry.EntityId" id="AE9">&lt;s:data id="_0" f:Name="EntityId" /&gt;</data>
@@ -903,4 +903,6 @@
   <data name="Val.Enum.SecondFactorMode.PinByMobile" id="A4N">&lt;s:data id="_0" f:Name="PinByMobile" f:Labels="{Collection {Text 'PIN envoyé par SMS'}}" /&gt;</data>
   <data name="Typ.Enum.SecondFactorMode" id="A2N">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.SecondFactorMode" f:_1.SystemType="E:Epsitec.Aider.Enumerations.SecondFactorMode, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA3N]'}, {Text '1 [LVA4N]'}}" f:Labels="{Collection {Text 'Mode d\'authentification à 2 facteurs'}}" /&gt;</data>
   <data name="Fld.AiderUser.SecondFactorMode" id="A5N">&lt;s:data id="_0" f:Name="SecondFactorMode" f:Labels="{Collection {Text 'Mode d\'authentification à 2 facteurs (2FA)'}}" /&gt;</data>
+  <data name="Val.Enum.HousholdMrMrs.Monsieur" id="OO93">&lt;s:data id="_0" f:Name="Monsieur" f:Labels="{Collection {Text 'Monsieur'}}" /&gt;</data>
+  <data name="Val.Enum.HousholdMrMrs.Madame" id="OP93">&lt;s:data id="_0" f:Name="Madame" f:Labels="{Collection {Text 'Madame'}}" /&gt;</data>
 </bundle>

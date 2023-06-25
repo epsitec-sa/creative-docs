@@ -1567,6 +1567,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 293));
 						}
 					}
+					//	designer:cap/LVOP93
+					public static global::Epsitec.Common.Types.Caption Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 313));
+						}
+					}
 					//	designer:cap/LVA49
 					public static global::Epsitec.Common.Types.Caption MadameEtMonsieur
 					{
@@ -1589,6 +1597,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 732));
+						}
+					}
+					//	designer:cap/LVOO93
+					public static global::Epsitec.Common.Types.Caption Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 312));
 						}
 					}
 					//	designer:cap/LVA39
