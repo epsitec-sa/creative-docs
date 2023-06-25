@@ -115,8 +115,21 @@ namespace Epsitec.Aider.Entities
 			// the region id.
 
 			var regionId = this.RegionalEdition.GetRegionId ();
+            var zipCode  = this.GetDisplayZipCode ();
 
-			return "N" + regionId.ToString ("X1");
+            //  As request by Ruth Bourgeois, replace N6 with N7 for Baulmes and Vuiteboeuf
+            //  starting in Summer 2023
+
+            if ((zipCode == "1445") ||
+                (zipCode == "1446"))
+            {
+                if (regionId == 6)
+                {
+                    regionId = 7;
+                }
+            }
+
+            return "N" + regionId.ToString ("X1");
 		}
 
 		public AiderAddressEntity GetAddress()
