@@ -117,7 +117,10 @@ namespace Epsitec.Aider.Data.Subscription
 			);
 
 			var nameLength = SubscriptionFileLine.GetNameLength (firstname, lastname);
-			nameLength.ThrowIf (x => x > SubscriptionFileLine.NameLengthMax, "name too long");
+            if (nameLength > SubscriptionFileLine.NameLengthMax)
+            {
+                nameLength.ThrowIf (x => x > SubscriptionFileLine.NameLengthMax, "name too long");
+            }
 
 			this.CheckString
 			(

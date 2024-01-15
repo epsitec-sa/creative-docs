@@ -216,7 +216,11 @@ namespace Epsitec.Common.Support.Extensions
 				{
 					return value;
 				}
-				else
+				else if (maximumLength <= 0)
+                {
+                    return "";
+                }
+                else
 				{
 					return value.Substring (0, maximumLength);
 				}

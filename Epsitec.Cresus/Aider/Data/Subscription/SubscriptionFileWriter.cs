@@ -676,6 +676,13 @@ namespace Epsitec.Aider.Data.Subscription
 			// max length of the last name are both smaller than the max length of the full name.
 
 			var maxLength = maxFullnameLength - lastname.Length - 1;
+
+            //  Keep at least one character in the first name.
+            if (maxLength < 1)
+            {
+                maxLength = 1;
+            }
+
 			firstname = firstname.Truncate (maxLength);
 
 			if (shortenedFirstname || shortenedLastname)
