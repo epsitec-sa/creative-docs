@@ -61,6 +61,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\packages\BouncyCastle.Cryptography.2.2.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
     <Reference Include="ClosedXML">
       <HintPath>..\External\ClosedXml\ClosedXML.dll</HintPath>
     </Reference>
@@ -68,6 +71,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Open XML SDK\V2.0\lib\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Isopoh.Cryptography.Argon2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ce4f270b5b22aea9, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\packages\Isopoh.Cryptography.Argon2.2.0.0\lib\netstandard2.0\Isopoh.Cryptography.Argon2.dll</HintPath>
+    </Reference>
+    <Reference Include="Isopoh.Cryptography.Blake2b, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ce4f270b5b22aea9, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\packages\Isopoh.Cryptography.Blake2b.2.0.0\lib\netstandard2.0\Isopoh.Cryptography.Blake2b.dll</HintPath>
+    </Reference>
+    <Reference Include="Isopoh.Cryptography.SecureArray, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ce4f270b5b22aea9, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\packages\Isopoh.Cryptography.SecureArray.2.0.0\lib\netstandard2.0\Isopoh.Cryptography.SecureArray.dll</HintPath>
+    </Reference>
+    <Reference Include="KellermanSoftware.NET-SFTP-Library, Version=9.12.0.0, Culture=neutral, PublicKeyToken=dccbd7ce7d6a58c0, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\packages\NetSFTPLibrary.9.12.0.0\lib\net472\KellermanSoftware.NET-SFTP-Library.dll</HintPath>
     </Reference>
     <Reference Include="Nest">
       <HintPath>..\External\Nest\Nest.dll</HintPath>
@@ -653,6 +668,7 @@
     <Compile Include="Tools\NamePatchEngine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Readme\NET-SFTP-Library-Help.txt" />
     <Content Include="Data\Job\SqlQueries-DuplicatedContactInHouseholds.sql" />
     <Content Include="Data\Job\SqlViews-EchPersonWithHouseholds.sql" />
     <Content Include="Data\Job\SqlViews-SubscriptionRefusals.sql" />
@@ -750,6 +766,7 @@
     <EmbeddedResource Include="Images\Data.AiderMailingCategory.icon" />
     <EmbeddedResource Include="Images\Data.AiderGroupExtraction.icon" />
     <EmbeddedResource Include="Images\Base.AiderGroupExtraction.icon" />
+    <None Include="packages.config" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

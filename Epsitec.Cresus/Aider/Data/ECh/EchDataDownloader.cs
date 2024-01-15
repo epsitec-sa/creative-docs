@@ -121,8 +121,23 @@ namespace Epsitec.Aider.Data.ECh
 			return remote;
 		}
 
-		
-		private void FtpListAvailableFiles()
+        private void CreateSFtpClient()
+        {
+            var sftpLicenseName = "Epsitec SA 203043";
+            var sftpLicenseKey = " 2;6516FF1A7A5F266709DF28BB941BA7E8DFB5";
+
+            var sftp = new KellermanSoftware.NetSFtpLibrary.SFTP (sftpLicenseName, sftpLicenseKey);
+/*            sftp.HostAddress = server;
+            sftp.UserName = username;
+            sftp.Password = password;
+            sftp.Port = int.Parse (port, System.Globalization.CultureInfo.InvariantCulture);*/
+            sftp.Connect ();
+
+            //return sftp;
+        }
+
+
+        private void FtpListAvailableFiles()
 		{
 			FtpWebRequest ftpRequest = WebRequest.Create (EchDataDownloader.GetFtpUri ()) as FtpWebRequest;
 			ftpRequest.Credentials = EchDataDownloader.GetCredentials ();
@@ -214,8 +229,8 @@ namespace Epsitec.Aider.Data.ECh
 
 		private static NetworkCredential GetCredentials()
 		{
-			return new NetworkCredential ("zeervftp", "3erVf8tp");
-		}
+			return new NetworkCredential ("zeervftp", "3erVf8tp"); // xchange.vd.ch = "L35.Tm6nv1"
+        }
 
 		
 		private readonly string					repositoryPath;
