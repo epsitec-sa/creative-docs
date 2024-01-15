@@ -2531,6 +2531,40 @@ Lancé le 29.10.2023
 -echupdate -newechfile:S:\eerv\eerv-2023-10-28.xml -oldechfile:S:\eerv\eerv-2023-10-21.xml -output:s:\eerv\ech-diff-2023-10-28.md
 -clearwarnings -beforedate:2023-08-01 -killpersons:true -createsubscriptions:true
 
+Lancé le 13.11.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-11-04.xml -oldechfile:S:\eerv\eerv-2023-10-28.xml -output:s:\eerv\ech-diff-2023-11-04.md
+-echupdate -newechfile:S:\eerv\eerv-2023-11-11.xml -oldechfile:S:\eerv\eerv-2023-11-04.xml -output:s:\eerv\ech-diff-2023-11-11.md
+
+Lancé le 19.11.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-11-18.xml -oldechfile:S:\eerv\eerv-2023-11-11.xml -output:s:\eerv\ech-diff-2023-11-18.md
+-exportsubscriptions -output:export-2023-11-xx.txt -error:error-2023-11-xx.txt -exclude-district-error:false
+
+Lancé le 26.11.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-11-25.xml -oldechfile:S:\eerv\eerv-2023-11-18.xml -output:s:\eerv\ech-diff-2023-11-25.md
+
+Lancé le 04.12.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-12-04.xml -oldechfile:S:\eerv\eerv-2023-11-25.xml -output:s:\eerv\ech-diff-2023-12-04.md
+
+Lancé le 16.12.2023
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2023-12-09.xml -oldechfile:S:\eerv\eerv-2023-12-04.xml -output:s:\eerv\ech-diff-2023-12-09.md
+-echupdate -newechfile:S:\eerv\eerv-2023-12-16.xml -oldechfile:S:\eerv\eerv-2023-12-09.xml -output:s:\eerv\ech-diff-2023-12-16.md
+
+Lancé le 14.01.2024
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2024-01-13.xml -oldechfile:S:\eerv\eerv-2023-12-16.xml -output:s:\eerv\ech-diff-2024-01-13.md
+-updatebirthday
+-exportsubscriptions -output:export-2024-01-xx.txt -error:error-2024-01-xx.txt -exclude-district-error:false
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
