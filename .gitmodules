@@ -1,7 +1,3 @@
-[submodule "Epsitec.Serial"]
-	path = Epsitec.Serial
-	url = ../../cresus-dotnet/serial.git
-	branch = master
 [submodule "Epsitec.TwixClip"]
 	path = Epsitec.TwixClip
 	url = ../../cresus-dotnet/twixclip.git
