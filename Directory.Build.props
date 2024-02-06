@@ -1,9 +1,8 @@
 <Project>
-  <Import Project="zou\Directory.Build.Default.props" />
+  <Import Project="Version.props" />
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
   <PropertyGroup>
-    <!-- Default target framework for core bundle (net452 | net472) -->
-    <TargetFramework>net472</TargetFramework>
     <PackageTags>core</PackageTags>
-    <PackageProjectUrl>https://git.epsitec.ch/core/cresus</PackageProjectUrl>
+    <PackageProjectUrl>https://git.epsitec.ch/core/cresus-core.git</PackageProjectUrl>
   </PropertyGroup>
 </Project>
