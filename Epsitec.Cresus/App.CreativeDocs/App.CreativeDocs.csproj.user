@@ -27,20 +27,4 @@
     <ErrorReportUrlHistory>
     </ErrorReportUrlHistory>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartWorkingDirectory>S:\git\core\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartWithIE>true</StartWithIE>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <StartWorkingDirectory>s:\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartWithIE>true</StartWithIE>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartWithIE>true</StartWithIE>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <StartWorkingDirectory>s:\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartWithIE>true</StartWithIE>
-  </PropertyGroup>
 </Project>
