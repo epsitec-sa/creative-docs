@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.Dolphin.cs" />
     <Compile Include="Components\AbstractProcessor.cs" />
     <Compile Include="Components\TinyProcessor.cs" />
     <Compile Include="Assembler.cs" />
