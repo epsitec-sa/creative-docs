@@ -1,4 +1,0 @@
-[submodule "Epsitec.TwixClip"]
-	path = Epsitec.TwixClip
-	url = ../../cresus-dotnet/twixclip.git
-	branch = master
