@@ -6,7 +6,3 @@
 	path = Epsitec.SwissPost
 	url = ../../cresus-dotnet/swisspost.git
 	branch = master
-[submodule "Epsitec.ShellPE"]
-	path = Epsitec.ShellPE
-	url = ../../cresus-dotnet/shellpe.git
-	branch = master
