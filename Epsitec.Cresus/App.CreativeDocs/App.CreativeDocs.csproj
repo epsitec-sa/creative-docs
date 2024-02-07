@@ -1,20 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
+    <ApplicationIcon>App.ico</ApplicationIcon>
     <RootNamespace>Epsitec.App.CreativeDocs</RootNamespace>
-    <TargetFramework>net472</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-  <PropertyGroup>
+    <AssemblyDescription>Creative Documents .NET Application</AssemblyDescription>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+
   <ItemGroup>
+    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj" />
     <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj" />
     <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="App.ico" />
     <None Include="app.manifest">
@@ -23,24 +22,14 @@
     <None Include="uac.manifest">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
 
-    <EmbeddedResource Include="SplashScreen.png" />
-    
-    <Content Include="Creative Docs.exe.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
-      <Link>AntiGrain.Win32.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\External\Clipboard.Win32.dll">
-      <Link>Clipboard.Win32.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+  <ItemGroup>
     <Content Include="Original Samples\*" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\Solution Items\AssemblyInfo.CrDocVer.cs" Link="Properties\AssemblyInfo.CrDocVer.cs" />
+    <EmbeddedResource Include="SplashScreen.png" />
   </ItemGroup>
 
   <Target Name="UpdateSignedDll" AfterTargets="Build">

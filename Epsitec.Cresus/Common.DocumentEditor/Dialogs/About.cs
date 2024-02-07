@@ -2,6 +2,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
+using System.Reflection;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
@@ -142,19 +143,20 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			return image;
 		}
 
-		public static string GetVersion()
-		{
-			//	Donne le numéro de version.
-			string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
-			int i = version.LastIndexOf('.');
-			if (i != -1)
-			{
-				version = version.Substring(0, i);  // transforme "2.1.9.xxx" en "2.1.9"
-			}
-			return version;
-		}
+        public static string GetVersion()
+        {
+            //	Donne le numéro de version.
+            var assembly = typeof(Document).Assembly;
+            var version  = assembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? assembly.GetName().Version.ToString();
+            int i = version.LastIndexOf('.');
+            if (i != -1)
+            {
+                version = version.Substring(0, i);  // transforme "2.1.9.xxx" en "2.1.9"
+            }
+            return version;
+        }
 
-		protected static string GetKey()
+        protected static string GetKey()
 		{
 			//	Lit la clé d'installation.
 			string key = Common.Support.SerialAlgorithm.ReadCrDocSerial();

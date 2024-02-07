@@ -2,8 +2,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Epsitec.Common.Document.ExportEngine</RootNamespace>
-    <TargetFramework>net472</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyDescription>Creative Documents Export Engine</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />

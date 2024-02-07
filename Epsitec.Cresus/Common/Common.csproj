@@ -1,17 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AssemblyDescription>Common Library for the Epsitec Framework</AssemblyDescription>
     <RootNamespace>Epsitec.Common</RootNamespace>
-    <TargetFramework>net472</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\..\..\serial\CresusSerialAlgorithm.cs" Link="CresusSerialAlgorithm.cs" />
+    <Compile Update="Widgets\Platform\Window.cs" />
+    <Compile Remove="Support\Data\IDisablableChangedSource.cs" />
+    <Compile Remove="Text\Styles\ApplyMode.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <Reference Include="AntiGrain.NET">
       <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Presentation" />
@@ -20,19 +25,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\..\serial\CresusSerialAlgorithm.cs" Link="CresusSerialAlgorithm.cs" />
-    <Compile Update="Widgets\Platform\Window.cs">
-      <SubType>Form</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\external\images\bitmap\binocular-64x48.png">
-      <Link>Dialogs\Images\binocular-64x48.png</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\external\images\bitmap\box-64x48.png">
-      <Link>Dialogs\Images\box-64x48.png</Link>
-    </EmbeddedResource>
     <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -41,168 +35,52 @@
       <Link>Clipboard.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Drawing\IconLib\Resources\EmptyDll.dll" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\paper1.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\metal3.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\metal2.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\metal1.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookRusty.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookRoyale.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookPlastic.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookPastel.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookMetal.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookDraft.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookCeeBot.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookBusiness.png" />
-    <EmbeddedResource Include="Widgets\Adorners\Resources\LookAqua.png" />
+    <Content Include="Drawing\IconLib\Resources\EmptyDll.dll">
+      <Link>EmptyDll.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    
+    <Content Include="Resources\**\*.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\**\*.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Drawing\IconLib\Resource.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\External\images\bitmap\binocular-64x48.png">
+      <Link>Dialogs\Images\binocular-64x48.png</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\External\images\bitmap\box-64x48.png">
+      <Link>Dialogs\Images\box-64x48.png</Link>
+    </EmbeddedResource>
+    
     <EmbeddedResource Include="Support\Resources\ProjectFileTemplate.xml" />
-    <Content Include="Resources\Common.Support\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Widgets\Adorners\Resources\*.png" />
+    <EmbeddedResource Include="Dialogs\Images\*.icon" />
+    <EmbeddedResource Include="Widgets\Images\*.icon" />
     <EmbeddedResource Include="Drawing\Resources\LineBreak.compressed" />
-    <Content Include="Resources\Common.Dialogs\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Dialogs\Strings.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Dialogs\Captions.de.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Dialogs\Captions.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Dialogs\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Resources\Common.Dialogs\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Dialogs\Strings.de.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <EmbeddedResource Include="Dialogs\Images\FavoritesAdd.icon" />
-    <EmbeddedResource Include="Dialogs\Images\FavoritesLarge.icon" />
-    <EmbeddedResource Include="Dialogs\Images\FavoritesRemove.icon" />
-    <EmbeddedResource Include="Dialogs\Images\FileDelete.icon" />
-    <EmbeddedResource Include="Dialogs\Images\FileNewFolder.icon" />
-    <EmbeddedResource Include="Dialogs\Images\FileParentFolder.icon" />
-    <EmbeddedResource Include="Dialogs\Images\FileRefresh.icon" />
-    <EmbeddedResource Include="Dialogs\Images\FileRename.icon" />
-    <EmbeddedResource Include="Dialogs\Images\Information.icon" />
-    <EmbeddedResource Include="Dialogs\Images\MoveDownArrow.icon" />
-    <EmbeddedResource Include="Dialogs\Images\MoveUpArrow.icon" />
-    <EmbeddedResource Include="Dialogs\Images\NavigateNext.icon" />
-    <EmbeddedResource Include="Dialogs\Images\NavigatePrev.icon" />
-    <EmbeddedResource Include="Dialogs\Images\New.icon" />
-    <EmbeddedResource Include="Dialogs\Images\Question.icon" />
-    <EmbeddedResource Include="Dialogs\Images\StartDesigner.icon" />
-    <EmbeddedResource Include="Dialogs\Images\ViewDisposition.icon" />
-    <EmbeddedResource Include="Dialogs\Images\ViewSize.icon" />
-    <EmbeddedResource Include="Dialogs\Images\Warning.icon" />
-    <Content Include="Resources\Common.Support\Captions.de.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support\Captions.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support\Strings.de.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support\Strings.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Types\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Types\Captions.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Types\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Types\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Types\Strings.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Widgets\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Widgets\Strings.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Widgets\Captions.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Widgets\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Widgets\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <EmbeddedResource Include="Widgets\Images\ActiveCurrent.icon" />
-    <EmbeddedResource Include="Widgets\Images\ActiveNo.icon" />
-    <EmbeddedResource Include="Widgets\Images\ActiveYes.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Bold.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Copy.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Cut.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Delete.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.DeselectAll.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Italic.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.MultilingualEdition.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.New.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Open.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Paste.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Print.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Redo.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Save.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.SaveAs.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.SelectAll.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Subscript.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Superscript.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Underline.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.Undo.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cmd.UseDefaultValue.icon" />
-    <EmbeddedResource Include="Widgets\Images\ColorSpaceCMYK.icon" />
-    <EmbeddedResource Include="Widgets\Images\ColorSpaceGray.icon" />
-    <EmbeddedResource Include="Widgets\Images\ColorSpaceRGB.icon" />
-    <EmbeddedResource Include="Widgets\Images\Cursor.Hand.icon" />
-    <EmbeddedResource Include="Widgets\Images\DefaultValue.icon" />
-    <EmbeddedResource Include="Widgets\Images\DeleteCell.icon" />
-    <EmbeddedResource Include="Widgets\Images\Edition.Accept.icon" />
-    <EmbeddedResource Include="Widgets\Images\Edition.Clear.icon" />
-    <EmbeddedResource Include="Widgets\Images\Edition.Reject.icon" />
-    <EmbeddedResource Include="Widgets\Images\Flags.FlagDE.icon" />
-    <EmbeddedResource Include="Widgets\Images\Flags.FlagFR.icon" />
-    <EmbeddedResource Include="Widgets\Images\Flags.FlagGB.icon" />
-    <EmbeddedResource Include="Widgets\Images\Flags.FlagIT.icon" />
-    <EmbeddedResource Include="Widgets\Images\Flags.FlagUS.icon" />
-    <EmbeddedResource Include="Widgets\Images\InsertAfterCell.icon" />
-    <EmbeddedResource Include="Widgets\Images\InsertBeforeCell.icon" />
-    <EmbeddedResource Include="Widgets\Images\Missing.icon" />
-    <EmbeddedResource Include="Widgets\Images\MoveDownCell.icon" />
-    <EmbeddedResource Include="Widgets\Images\MoveUpCell.icon" />
-    <EmbeddedResource Include="Widgets\Images\RulerListFix.icon" />
-    <EmbeddedResource Include="Widgets\Images\RulerListNum.icon" />
-    <EmbeddedResource Include="Widgets\Images\TableEdition.icon" />
-    <EmbeddedResource Include="Widgets\Images\TableReadOnly.icon" />
-    <EmbeddedResource Include="Widgets\Images\TableSearch.icon" />
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Support\Data\IDisablableChangedSource.cs" />
-    <Compile Remove="Text\Styles\ApplyMode.cs" />
-  </ItemGroup>
+
+  <Target Name="AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes" Condition="!$(SignAssembly)">
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+        <_Parameter1>Common.Tests</_Parameter1>
+      </AssemblyAttribute>
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+        <_Parameter1>Common.Tests.Vs</_Parameter1>
+      </AssemblyAttribute>
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+        <_Parameter1>Cresus.DataLayer.Tests.Vs</_Parameter1>
+      </AssemblyAttribute>
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+        <_Parameter1>Cresus.DataLayer</_Parameter1>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
 </Project>

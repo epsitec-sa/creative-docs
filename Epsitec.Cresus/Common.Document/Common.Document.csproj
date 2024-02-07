@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyDescription>Epsitec Document Library</AssemblyDescription>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />

@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Epsitec.Common.DocumentEditor</RootNamespace>
-    <TargetFramework>net472</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyDescription>Creative Documents Application Engine</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj" />
