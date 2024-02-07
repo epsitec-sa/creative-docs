@@ -39,9 +39,9 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartWorkingDirectory>$(SolutionDir)External</StartWorkingDirectory>
-  </PropertyGroup>
+  <!--<PropertyGroup>
+    <StartWorkingDirectory>$(ProjectDir)..\External</StartWorkingDirectory>
+  </PropertyGroup>-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
@@ -208,18 +208,22 @@
     <Exec Command="compile-rc.bat App" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)App.CreativeDocs\compile-rc.bat" App.rc</PreBuildEvent>
-    <PostBuildEvent>del "$(SolutionDir)Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
-del "$(SolutionDir)Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
+    <PreBuildEvent>"$(ProjectDir)compile-rc.bat" App.rc</PreBuildEvent>
+    <PostBuildEvent>@echo off
 
-xcopy "$(TargetDir)App.CreativeDocs.exe" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
-xcopy "$(TargetDir)Common.*.exe" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
-xcopy "$(TargetDir)*.dll" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
-rem xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
+set root=$(ProjectDir)..\
 
-ren "$(SolutionDir)Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs.exe"
+del "$(root)Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
+del "$(root)Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
 
-rem call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\*"
+xcopy "$(TargetDir)App.CreativeDocs.exe" "$(root)Setup.CreativeDocs\SignedDlls\" /y
+xcopy "$(TargetDir)Common.*.exe" "$(root)Setup.CreativeDocs\SignedDlls\" /y
+xcopy "$(TargetDir)*.dll" "$(root)Setup.CreativeDocs\SignedDlls\" /y
+rem xcopy "$(root)External\*.Win32.dll" "$(root)Setup.CreativeDocs\SignedDlls\" /y
+
+ren "$(root)Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs.exe"
+
+rem call "$(root)External\CodeSigning\sign-opac.bat" "$(root)Setup.CreativeDocs\SignedDlls\*"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

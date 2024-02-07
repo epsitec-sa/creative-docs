@@ -16,8 +16,10 @@ namespace Epsitec.Common.Debug
 				unsafe
 				{
 					System.TypedReference tr = __makeref(o);
-					System.IntPtr ptr = **(System.IntPtr**) (&tr);
-					return ptr.ToString ("X");
+#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
+                    System.IntPtr ptr = **(System.IntPtr**) (&tr);
+#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
+                    return ptr.ToString ("X");
 				}
 			}
 		}

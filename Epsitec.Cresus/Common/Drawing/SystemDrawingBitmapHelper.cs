@@ -594,8 +594,8 @@ namespace Epsitec.Common.Drawing.Platform
 			//	TODO: Do we really want to create a 32-bit output file ? Probably not...
 
 			throw new System.NotImplementedException ("Code not ready for use");
-
-			var output  = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Bgra32, null);
+#if false
+            var output  = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Bgra32, null);
 			var palette = bitmap.Palette.Entries;
 			var rect    = new System.Drawing.Rectangle (0, 0, dx, dy);
 			var format  = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
@@ -630,6 +630,7 @@ namespace Epsitec.Common.Drawing.Platform
 			bitmap.UnlockBits (raw);
 
 			return new NativeBitmap (output, colorType: BitmapColorType.RgbAlpha);
+#endif
 		}
 		
 		

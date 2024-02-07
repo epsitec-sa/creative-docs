@@ -781,10 +781,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
-      <Project>{79a62bab-fbdf-444a-8e23-3ad503940a17}</Project>
-      <Name>Epsitec.TwixClip</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>

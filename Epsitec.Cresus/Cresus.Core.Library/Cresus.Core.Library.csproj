@@ -15,7 +15,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
@@ -660,8 +660,8 @@
     <Compile Include="Workflows\WorkflowTransitionType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
-      <Project>{bc0605f1-c986-4b52-ae21-aae545fcb970}</Project>
+    <ProjectReference Include="..\..\..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+      <Project>{915bc8ac-a132-4ec4-a0aa-3122ecfb255f}</Project>
       <Name>Epsitec.CresusToolkit</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">

@@ -53,10 +53,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\App.Dolphin\App.Dolphin.csproj">
-      <Project>{C7F4F507-E056-46CB-B403-9EC194A0AF0F}</Project>
-      <Name>App.Dolphin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Types\Common.Types.csproj">
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>

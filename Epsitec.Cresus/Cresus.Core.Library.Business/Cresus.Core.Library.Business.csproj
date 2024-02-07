@@ -15,7 +15,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
@@ -260,8 +260,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
-      <Project>{79a62bab-fbdf-444a-8e23-3ad503940a17}</Project>
+    <ProjectReference Include="..\..\..\twixclip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
+      <Project>{13f91822-bf70-44d1-a08f-b85cc2df9ee0}</Project>
       <Name>Epsitec.TwixClip</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
