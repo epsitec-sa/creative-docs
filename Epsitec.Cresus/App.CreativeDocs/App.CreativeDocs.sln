@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CreativeDocs", "App.CreativeDocs.csproj", "{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.CreativeDocs", "App.CreativeDocs.csproj", "{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document.ExportEngine", "..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj", "{DBB98025-2979-45C6-AB5E-A36E7015F9EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Document.ExportEngine", "..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj", "{DBB98025-2979-45C6-AB5E-A36E7015F9EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document", "..\Common.Document\Common.Document.csproj", "{B324896E-2CDE-45B8-91CE-B476687EA384}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Document", "..\Common.Document\Common.Document.csproj", "{B324896E-2CDE-45B8-91CE-B476687EA384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DocumentEditor", "..\Common.DocumentEditor\Common.DocumentEditor.csproj", "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.DocumentEditor", "..\Common.DocumentEditor\Common.DocumentEditor.csproj", "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "..\Common\Common.csproj", "{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "..\Common\Common.csproj", "{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{63780F8D-EEF0-40DC-A113-E973834D5C5C}"
 EndProject
@@ -19,6 +19,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cresus-core", "cresus-core"
 	ProjectSection(SolutionItems) = preProject
 		..\..\Directory.Build.props = ..\..\Directory.Build.props
 		..\..\Version.props = ..\..\Version.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zou", "zou", "{BECED41F-17E9-4B78-A643-6ADB54CAC870}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\zou\Directory.Build.Default.props = ..\..\..\zou\Directory.Build.Default.props
+		..\..\..\zou\Directory.Build.Default.targets = ..\..\..\zou\Directory.Build.Default.targets
 	EndProjectSection
 EndProject
 Global
@@ -97,6 +103,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{86B64DEC-DD7B-431B-A5FC-ADF12D099F47} = {63780F8D-EEF0-40DC-A113-E973834D5C5C}
+		{BECED41F-17E9-4B78-A643-6ADB54CAC870} = {63780F8D-EEF0-40DC-A113-E973834D5C5C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FD95B599-0575-49C0-BE73-AAAC9FB9A842}

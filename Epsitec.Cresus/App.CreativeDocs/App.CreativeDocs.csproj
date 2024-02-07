@@ -1,141 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>App.ico</ApplicationIcon>
-    <AssemblyName>App.CreativeDocs</AssemblyName>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>false</SignAssembly>
-    <DelaySign>false</DelaySign>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Epsitec.App.CreativeDocs</RootNamespace>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject />
-    <Win32Resource>
-    </Win32Resource>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <PublishUrl>publish</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <!--<PropertyGroup>
-    <StartWorkingDirectory>$(ProjectDir)..\External</StartWorkingDirectory>
-  </PropertyGroup>-->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <FileAlignment>4096</FileAlignment>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <FileAlignment>4096</FileAlignment>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
+    <TargetFramework>net472</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <FileAlignment>4096</FileAlignment>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <FileAlignment>4096</FileAlignment>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj">
-      <Project>{DBB98025-2979-45C6-AB5E-A36E7015F9EE}</Project>
-      <Name>Common.Document.ExportEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
-      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
-      <Name>Common.Document</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
-      <Name>Common.DocumentEditor</Name>
-      <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
+    <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj" />
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Properties\Epsitec.Cresus.snk</Link>
-    </None>
-    <Content Include="Creative Docs.exe.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <None Include="app.config" />
     <None Include="App.ico" />
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="App.res" />
-    <None Include="App.rc" />
-    <None Include="compile-rc.bat" />
     <None Include="uac.manifest">
       <SubType>Designer</SubType>
     </None>
+
+    <EmbeddedResource Include="SplashScreen.png" />
+    
+    <Content Include="Creative Docs.exe.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -144,86 +37,26 @@
       <Link>Clipboard.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Original Samples\objects.crdoc" />
-    <Content Include="Original Samples\normal.crmod" />
-    <Compile Include="..\Solution Items\AssemblyInfo.CrDocVer.cs">
-      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
-    </Compile>
-    <Compile Include="Application.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="SplashScreen.png" />
-    <Content Include="Original Samples\2005-curve.crdoc" />
-    <Content Include="Original Samples\2005-font.crdoc" />
-    <Content Include="Original Samples\a4-1col.crmod" />
-    <Content Include="Original Samples\a4-2col.crmod" />
-    <Content Include="Original Samples\a4-3col.crmod" />
-    <Content Include="Original Samples\aqua1.crdoc" />
-    <Content Include="Original Samples\blupi.crdoc" />
-    <Content Include="Original Samples\cross1.crdoc" />
-    <Content Include="Original Samples\cross2.crdoc" />
-    <Content Include="Original Samples\flowchart1.crdoc" />
-    <Content Include="Original Samples\illusion1.crdoc" />
-    <Content Include="Original Samples\illusion2.crdoc" />
-    <Content Include="Original Samples\meca1.crdoc" />
-    <Content Include="Original Samples\motor.crdoc" />
-    <Content Include="Original Samples\perpective1.crdoc" />
-    <Content Include="Original Samples\perpective2.crdoc" />
-    <Content Include="Original Samples\smilies.crdoc" />
-    <Content Include="Original Samples\title.crdoc" />
-    <Content Include="Original Samples\transparency.crdoc" />
+    <Content Include="Original Samples\*" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
+    <Compile Include="..\Solution Items\AssemblyInfo.CrDocVer.cs" Link="Properties\AssemblyInfo.CrDocVer.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Target Name="BeforeBuild" Inputs="App.rc" Outputs="App.res">
-    <Exec Command="compile-rc.bat App" />
+
+  <Target Name="UpdateSignedDll" AfterTargets="Build">
+    <PropertyGroup>
+      <SignedDllDir>$([System.IO.Path]::GetFullPath('$(ProjectDir)..\Setup.CreativeDocs\SignedDlls'))\</SignedDllDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <SignedDllClean Include="$(SignedDllDir)*.*" />
+      <SignedDllCopy Include="$(TargetDir)Common.*.exe;$(TargetDir)*.dll" Exclude="$(TargetDir)System.*" />
+    </ItemGroup>
+    <!--<Message Importance="high" Text="ProjectDir   = $(ProjectDir)" />
+    <Message Importance="high" Text="TargetDir    = $(TargetDir)" />
+    <Message Importance="high" Text="TargetPath   = $(TargetPath)" />
+    <Message Importance="high" Text="SignedDllDir = $(SignedDllDir)" />-->
+    <Delete Files="@(SignedDllClean)" />
+    <Copy SourceFiles="@(SignedDllCopy)" DestinationFolder="$(SignedDllDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(SignedDllDir)Creative Docs.exe" />
   </Target>
-  <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)compile-rc.bat" App.rc</PreBuildEvent>
-    <PostBuildEvent>@echo off
-
-set root=$(ProjectDir)..\
-
-del "$(root)Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
-del "$(root)Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
-
-xcopy "$(TargetDir)App.CreativeDocs.exe" "$(root)Setup.CreativeDocs\SignedDlls\" /y
-xcopy "$(TargetDir)Common.*.exe" "$(root)Setup.CreativeDocs\SignedDlls\" /y
-xcopy "$(TargetDir)*.dll" "$(root)Setup.CreativeDocs\SignedDlls\" /y
-rem xcopy "$(root)External\*.Win32.dll" "$(root)Setup.CreativeDocs\SignedDlls\" /y
-
-ren "$(root)Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs.exe"
-
-rem call "$(root)External\CodeSigning\sign-opac.bat" "$(root)Setup.CreativeDocs\SignedDlls\*"
-</PostBuildEvent>
-  </PropertyGroup>
 </Project>
