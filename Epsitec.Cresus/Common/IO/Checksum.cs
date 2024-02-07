@@ -3,6 +3,7 @@
 
 using System.Security.Cryptography;
 using System.Collections.Generic;
+using System;
 
 namespace Epsitec.Common.IO
 {
@@ -99,7 +100,7 @@ namespace Epsitec.Common.IO
 
 		private abstract class ChecksumWrapper : IChecksum
 		{
-			protected ChecksumWrapper(ICSharpCode.SharpZipLib.Checksums.IChecksum checksum)
+			protected ChecksumWrapper(ICSharpCode.SharpZipLib.Checksum.IChecksum checksum)
 			{
 				this.checksum = checksum;
 			}
@@ -143,7 +144,8 @@ namespace Epsitec.Common.IO
 			{
 				if (length > 0)
 				{
-					this.checksum.Update (buffer, offset, length);
+                    var segment = new ArraySegment<byte>(buffer, offset, length);
+					this.checksum.Update (segment);
 				}
 			}
 			
@@ -216,7 +218,7 @@ namespace Epsitec.Common.IO
 			}
 			
 			
-			ICSharpCode.SharpZipLib.Checksums.IChecksum checksum;
+			ICSharpCode.SharpZipLib.Checksum.IChecksum checksum;
 			
 			private double[]					doubles = new double[1];
 			private byte[]						buffer = new byte[32];
@@ -229,7 +231,7 @@ namespace Epsitec.Common.IO
 		private class Crc32Wrapper : ChecksumWrapper
 		{
 			public Crc32Wrapper()
-				: base (new ICSharpCode.SharpZipLib.Checksums.Crc32 ())
+				: base (new ICSharpCode.SharpZipLib.Checksum.Crc32 ())
 			{
 			}
 		}
@@ -241,7 +243,7 @@ namespace Epsitec.Common.IO
 		private class Adler32Wrapper : ChecksumWrapper
 		{
 			public Adler32Wrapper()
-				: base (new ICSharpCode.SharpZipLib.Checksums.Adler32 ())
+				: base (new ICSharpCode.SharpZipLib.Checksum.Adler32 ())
 			{
 			}
 		}

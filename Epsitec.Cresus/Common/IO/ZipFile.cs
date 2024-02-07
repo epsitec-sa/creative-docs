@@ -25,7 +25,7 @@ namespace Epsitec.Common.IO
 
         static ZipFile()
         {
-            ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = 850;
+            ICSharpCode.SharpZipLib.Zip.StringCodec.FromCodePage(850);
         }
 
 
