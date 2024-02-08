@@ -2,12 +2,6 @@
   <PropertyGroup>
     <RootNamespace>Epsitec.Common.DocumentEditor</RootNamespace>
     <AssemblyDescription>Creative Documents Application Engine</AssemblyDescription>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-
-    <!-- NOT RECOMMENDED -->
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj" />

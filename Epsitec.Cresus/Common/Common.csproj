@@ -3,12 +3,6 @@
     <AssemblyDescription>Common Library for the Epsitec Framework</AssemblyDescription>
     <RootNamespace>Epsitec.Common</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-
-    <!-- NOT RECOMMENDED -->
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\..\serial\CresusSerialAlgorithm.cs" Link="CresusSerialAlgorithm.cs" />

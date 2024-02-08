@@ -1,14 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyDescription>Epsitec Document Library</AssemblyDescription>
-    <TargetFramework>net8.0-windows</TargetFramework>
-
-    <!-- NOT RECOMMENDED -->
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <!--<Reference Include="System.Windows.Forms" />-->
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Common.Document\module.info">

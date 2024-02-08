@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredTree</c> class is used to walk through a tree built
 	/// with <c>IStructuredData</c> and <c>IStructuredType</c> objects.
 	/// </summary>
-	[System.Obsolete ("The StructuredTree class should no longer be used. It will be removed.")]
+	//[System.Obsolete ("The StructuredTree class should no longer be used. It will be removed.")]
 	public static class StructuredTree
 	{
 		public static string[] SplitPath(string path)
