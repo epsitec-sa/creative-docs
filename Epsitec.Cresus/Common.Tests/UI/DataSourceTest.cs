@@ -9,6 +9,7 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types.Serialization;
 using Epsitec.Common.Widgets;
+using System;
 
 namespace Epsitec.Common.Tests.UI
 {
@@ -292,7 +293,6 @@ namespace Epsitec.Common.Tests.UI
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckSetValueEx1()
 		{
 			DataSource collection = new DataSource ();
@@ -300,18 +300,17 @@ namespace Epsitec.Common.Tests.UI
 			Visual source1 = new Visual ();
 
 			collection.AddDataSource ("A", source1);
-			StructuredTree.SetValue (collection, "A", source1);
+            Assert.Throws<InvalidOperationException>(() => StructuredTree.SetValue (collection, "A", source1));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckSetValueEx2()
 		{
 			DataSource collection = new DataSource ();
 
 			Visual source1 = new Visual ();
 
-			StructuredTree.SetValue (collection, "A", source1);
+            Assert.Throws<InvalidOperationException>(() => StructuredTree.SetValue (collection, "A", source1));
 		}
 
 		private class MySimpleDataSource : IStructuredData
