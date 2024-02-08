@@ -5,15 +5,17 @@
     <RootNamespace>Epsitec.App.CreativeDocs</RootNamespace>
     <AssemblyDescription>Creative Documents .NET Application</AssemblyDescription>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
 
+    <!-- NOT RECOMMENDED -->
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj" />
     <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj" />
     <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="App.ico" />
     <None Include="app.manifest">
@@ -23,15 +25,12 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Original Samples\*" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="SplashScreen.png" />
   </ItemGroup>
-
   <Target Name="UpdateSignedDll" AfterTargets="Build">
     <PropertyGroup>
       <SignedDllDir>$([System.IO.Path]::GetFullPath('$(ProjectDir)..\Setup.CreativeDocs\SignedDlls'))\</SignedDllDir>

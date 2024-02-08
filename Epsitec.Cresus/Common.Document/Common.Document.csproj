@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyDescription>Epsitec Document Library</AssemblyDescription>
-  </PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
 
+    <!-- NOT RECOMMENDED -->
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Windows.Forms" />
+    <!--<Reference Include="System.Windows.Forms" />-->
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Common.Document\module.info">
@@ -34,5 +36,8 @@
     <Compile Remove="Panels\StyleName.cs" />
     <Compile Remove="PDF\Pattern.cs" />
     <Compile Remove="TextPanels\ParagraphLayout.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SoapFormatter" Version="1.1.9" />
   </ItemGroup>
 </Project>

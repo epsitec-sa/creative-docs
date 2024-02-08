@@ -2,14 +2,17 @@
   <PropertyGroup>
     <RootNamespace>Epsitec.Common.DocumentEditor</RootNamespace>
     <AssemblyDescription>Creative Documents Application Engine</AssemblyDescription>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+
+    <!-- NOT RECOMMENDED -->
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj" />
     <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
-    <Reference Include="System.Configuration.Install" />
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Common.DocumentEditor\module.info">
