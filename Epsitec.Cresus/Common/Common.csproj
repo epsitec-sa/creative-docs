@@ -3,29 +3,27 @@
     <AssemblyDescription>Common Library for the Epsitec Framework</AssemblyDescription>
     <RootNamespace>Epsitec.Common</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+
+    <!-- NOT RECOMMENDED -->
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
-  
   <ItemGroup>
     <Compile Include="..\..\..\serial\CresusSerialAlgorithm.cs" Link="CresusSerialAlgorithm.cs" />
     <Compile Update="Widgets\Platform\Window.cs" />
+    <!--<Compile Remove="IO\Serialization.cs" />-->
+    <Compile Remove="Support\AppDomainStarter.cs" />
     <Compile Remove="Support\Data\IDisablableChangedSource.cs" />
     <Compile Remove="Text\Styles\ApplyMode.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <Reference Include="AntiGrain.NET">
       <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Presentation" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.XML" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
@@ -39,7 +37,6 @@
       <Link>EmptyDll.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    
     <Content Include="Resources\**\*.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -47,7 +44,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="Drawing\IconLib\Resource.resx">
       <SubType>Designer</SubType>
@@ -58,7 +54,6 @@
     <EmbeddedResource Include="..\External\images\bitmap\box-64x48.png">
       <Link>Dialogs\Images\box-64x48.png</Link>
     </EmbeddedResource>
-    
     <EmbeddedResource Include="Support\Resources\ProjectFileTemplate.xml" />
     <EmbeddedResource Include="Widgets\Adorners\Resources\*.png" />
     <EmbeddedResource Include="Dialogs\Images\*.icon" />
@@ -66,7 +61,10 @@
     <EmbeddedResource Include="Drawing\Resources\LineBreak.compressed" />
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="IO\Serialization.cs" />
+    <None Include="Support\AppDomainStarter.cs" />
+  </ItemGroup>
   <Target Name="AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes" Condition="!$(SignAssembly)">
     <ItemGroup>
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
