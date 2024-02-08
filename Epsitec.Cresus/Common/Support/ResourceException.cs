@@ -8,8 +8,6 @@ namespace Epsitec.Common.Support
 	/// l'accès aux ressources.
 	/// </summary>
 	
-	[System.Serializable]
-	
 	public class ResourceException : System.ApplicationException, System.Runtime.Serialization.ISerializable
 	{
 		public ResourceException()
@@ -23,17 +21,5 @@ namespace Epsitec.Common.Support
 		public ResourceException(string message, System.Exception innerException) : base (message, innerException)
 		{
 		}
-		
-		
-		#region ISerializable Members
-		protected ResourceException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
-		{
-		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-		#endregion
 	}
 }

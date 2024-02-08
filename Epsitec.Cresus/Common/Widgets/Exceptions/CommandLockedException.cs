@@ -7,8 +7,6 @@ namespace Epsitec.Common.Widgets.Exceptions
 	/// The <c>CommandLockedException</c> is thrown when an attempt to modify a
 	/// locked command is done.
 	/// </summary>
-	[System.Serializable]
-
 	public class CommandLockedException : System.ApplicationException, System.Runtime.Serialization.ISerializable
 	{
 		public CommandLockedException()
@@ -24,18 +22,5 @@ namespace Epsitec.Common.Widgets.Exceptions
 			: base (message, innerException)
 		{
 		}
-
-
-		#region ISerializable Members
-		protected CommandLockedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-		#endregion
 	}
 }

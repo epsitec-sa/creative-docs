@@ -6,6 +6,7 @@ using Epsitec.Common.Support.CodeGeneration;
 
 using NUnit.Framework;
 
+using System;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.Support
@@ -57,7 +58,6 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="Ending element Namespace, but expected Class")]
 		public void CheckWriteClassEx1Mismatch()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -66,11 +66,10 @@ namespace Epsitec.Common.Tests.Support
 			formatter.WriteBeginNamespace ("Test");
 			formatter.WriteBeginClass (CodeAttributes.Default, "Class1");
 			// formatter.WriteEndClass ();
-			formatter.WriteEndNamespace ();
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace (), "Ending element Namespace, but expected Class");
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="PropertyGetter not defined in a property")]
 		public void CheckWriteClassEx2MisplacedGetter()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -78,15 +77,14 @@ namespace Epsitec.Common.Tests.Support
 
 			formatter.WriteBeginNamespace ("Test");
 			formatter.WriteBeginClass (CodeAttributes.Default, "Class1");
-			formatter.WriteBeginGetter (CodeAttributes.Default);
+            Assert.Throws<InvalidOperationException>(() => formatter.WriteBeginGetter (CodeAttributes.Default), "PropertyGetter not defined in a property");
 			formatter.WriteCodeLine ("return this.value;");
-			formatter.WriteEndGetter ();
-			formatter.WriteEndClass ();
-			formatter.WriteEndNamespace ();
+            Assert.Throws<InvalidOperationException>(() => formatter.WriteEndGetter ());
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndClass());
+            Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace());
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="PropertySetter not defined in a property")]
 		public void CheckWriteClassEx3MisplacedSetter()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -94,15 +92,14 @@ namespace Epsitec.Common.Tests.Support
 
 			formatter.WriteBeginNamespace ("Test");
 			formatter.WriteBeginClass (CodeAttributes.Default, "Class1");
-			formatter.WriteBeginSetter (CodeAttributes.Default);
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteBeginSetter(CodeAttributes.Default), "PropertySetter not defined in a property");
 			formatter.WriteCodeLine ("return this.value;");
-			formatter.WriteEndGetter ();
-			formatter.WriteEndClass ();
-			formatter.WriteEndNamespace ();
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndGetter());
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndClass());
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace());
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="Method not defined in a class or an interface")]
 		public void CheckWriteClassEx4MisplacedMethod()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -114,11 +111,10 @@ namespace Epsitec.Common.Tests.Support
 			formatter.WriteCodeLine ("BlahBlah ();");
 			formatter.WriteEndMethod ();
 			// formatter.WriteEndClass ();
-			formatter.WriteEndNamespace ();
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Method not defined in a class or an interface");
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="Trying to generate code for an abstract item")]
 		public void CheckWriteClassEx5AbstractCode()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -130,7 +126,7 @@ namespace Epsitec.Common.Tests.Support
 			formatter.WriteCodeLine ("BlahBlah ();");
 			formatter.WriteEndMethod ();
 			formatter.WriteEndClass ();
-			formatter.WriteEndNamespace ();
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to generate code for an abstract item");
 		}
 
 		[Test]
@@ -161,7 +157,6 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="Trying to generate code for an abstract item")]
 		public void CheckWriteInterfaceEx1CodeInInterface()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -173,11 +168,10 @@ namespace Epsitec.Common.Tests.Support
 			formatter.WriteCodeLine ("BlahBlah ();");
 			formatter.WriteEndMethod ();
 			formatter.WriteEndInterface ();
-			formatter.WriteEndNamespace ();
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to generate code for an abstract item");
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="Trying to define an instance variable in Interface, not a class")]
 		public void CheckWriteInterfaceEx2InstanceVariable()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -189,13 +183,12 @@ namespace Epsitec.Common.Tests.Support
 			formatter.WriteInstanceVariable (new CodeAttributes (CodeVisibility.Private, CodeAccessibility.Final, CodeAttributes.ReadOnlyAttribute), "int value");
 			formatter.WriteEndInterface ();
 
-			formatter.WriteEndNamespace ();
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to define an instance variable in Interface, not a class");
 
 			System.Console.Out.WriteLine (buffer);
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException), ExpectedMessage="Trying to define an interface in Interface, not a class or a namespace")]
 		public void CheckWriteInterfaceEx3EmbeddedInterface()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -208,7 +201,7 @@ namespace Epsitec.Common.Tests.Support
 			formatter.WriteEndInterface ();
 			formatter.WriteEndInterface ();
 
-			formatter.WriteEndNamespace ();
+			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to define an interface in Interface, not a class or a namespace");
 
 			System.Console.Out.WriteLine (buffer);
 		}

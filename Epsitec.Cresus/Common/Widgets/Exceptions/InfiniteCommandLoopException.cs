@@ -7,8 +7,6 @@ namespace Epsitec.Common.Widgets.Exceptions
 	/// The <c>InfiniteCommandLoopException</c> is thrown when a command loop is
 	/// detected by the command dispatcher.
 	/// </summary>
-	[System.Serializable]
-
 	public class InfiniteCommandLoopException : System.ApplicationException, System.Runtime.Serialization.ISerializable
 	{
 		public InfiniteCommandLoopException()
@@ -24,18 +22,5 @@ namespace Epsitec.Common.Widgets.Exceptions
 			: base (message, innerException)
 		{
 		}
-
-
-		#region ISerializable Members
-		protected InfiniteCommandLoopException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-		#endregion
 	}
 }

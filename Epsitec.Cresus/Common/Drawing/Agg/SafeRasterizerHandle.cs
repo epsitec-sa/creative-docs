@@ -1,18 +1,13 @@
 //	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Runtime.ConstrainedExecution;
-using System.Security.Permissions;
-
 namespace Epsitec.Common.Drawing.Agg
 {
-	/// <summary>
-	/// The <c>SafeRasterizerHandle</c> class implements a wrapper for the
-	/// native AGG rasterizer handle.
-	/// </summary>
-	[SecurityPermission (SecurityAction.InheritanceDemand, UnmanagedCode=true)]
-	[SecurityPermission (SecurityAction.Demand, UnmanagedCode=true)]
-	sealed class SafeRasterizerHandle : Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid
+    /// <summary>
+    /// The <c>SafeRasterizerHandle</c> class implements a wrapper for the
+    /// native AGG rasterizer handle.
+    /// </summary>
+    sealed class SafeRasterizerHandle : Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SafeRasterizerHandle"/> class.
@@ -48,7 +43,6 @@ namespace Epsitec.Common.Drawing.Agg
 		/// the event of a catastrophic failure, <c>false</c>. In this case,
 		/// it generates a <c>ReleaseHandleFailed</c> Managed Debugging Assistant.
 		/// </returns>
-		[ReliabilityContract (Consistency.WillNotCorruptState, Cer.MayFail)]
 		protected override bool ReleaseHandle()
 		{
 			AntiGrain.Rasterizer.Delete (this.handle);

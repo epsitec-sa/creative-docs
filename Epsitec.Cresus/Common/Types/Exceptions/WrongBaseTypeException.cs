@@ -7,8 +7,6 @@ namespace Epsitec.Common.Types.Exceptions
 	/// The <c>WrongBaseTypeException</c> is thrown when a class does not derive
 	/// from <c>DependencyObject</c> and tries to register a <c>DependencyProperty</c>.
 	/// </summary>
-	[System.Serializable]
-
 	public class WrongBaseTypeException : System.ApplicationException, System.Runtime.Serialization.ISerializable
 	{
 		public WrongBaseTypeException()
@@ -28,18 +26,5 @@ namespace Epsitec.Common.Types.Exceptions
 			: base (message, innerException)
 		{
 		}
-
-
-		#region ISerializable Members
-		protected WrongBaseTypeException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-		#endregion
 	}
 }
