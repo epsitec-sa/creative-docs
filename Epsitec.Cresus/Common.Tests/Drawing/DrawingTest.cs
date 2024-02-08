@@ -1,16 +1,14 @@
-using NUnit.Framework;
+using System;
+
 using Epsitec.Common.Drawing;
 
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Drawing
 {
-	[TestFixture]
+    [TestFixture]
 	public class DrawingTest
 	{
-		public DrawingTest()
-		{
-		}
-		
 		[Test] public void CheckPixmap()
 		{
 			Pixmap pixmap = new Pixmap ();
@@ -47,36 +45,36 @@ namespace Epsitec.Common.Tests.Drawing
 			Assert.AreEqual ("10;20", sz1.ToString ());
 		}
 		
-		[Test] [ExpectedException (typeof (System.NullReferenceException))]
+		[Test]
 		public void CheckRendererGradientEx1()
 		{
 			Common.Drawing.Graphics graphics = new Graphics ();
 			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
-			gradient.SetColors (0, 0, 0, 0, 1, 1, 1, 1);
+			Assert.Throws<NullReferenceException>(() => gradient.SetColors (0, 0, 0, 0, 1, 1, 1, 1));
 		}
 		
-		[Test] [ExpectedException (typeof (System.NullReferenceException))]
+		[Test]
 		public void CheckRendererGradientEx2()
 		{
 			Common.Drawing.Graphics graphics = new Graphics ();
 			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
-			gradient.SetParameters (0, 100);
+            Assert.Throws<NullReferenceException>(() => gradient.SetParameters (0, 100));
 		}
 		
-		[Test] [ExpectedException (typeof (System.NullReferenceException))]
+		[Test]
 		public void CheckRendererGradientEx3()
 		{
 			Common.Drawing.Graphics graphics = new Graphics ();
 			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
-			gradient.Fill = Common.Drawing.GradientFill.Conic;
+            Assert.Throws<NullReferenceException>(() => gradient.Fill = Common.Drawing.GradientFill.Conic);
 		}
 		
-		[Test] [ExpectedException (typeof (System.ArgumentOutOfRangeException))]
+		[Test]
 		public void CheckRendererGradientEx4()
 		{
 			Common.Drawing.Graphics graphics = new Graphics ();
 			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
-			gradient.SetColors (new double[100], new double[256], new double[256], new double[256]);
+			Assert.Throws<ArgumentOutOfRangeException>(() => gradient.SetColors(new double[100], new double[256], new double[256], new double[256]));
 		}
 		
 		

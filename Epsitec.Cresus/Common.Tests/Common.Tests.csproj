@@ -1,434 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1E921F71-7F6A-4130-84A6-A0180659F1D9}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Common.Tests</RootNamespace>
-    <AssemblyName>Common.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <AssemblyTitle>Common.Tests</AssemblyTitle>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0"/>
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="Adobe.AcrobatDistiller">
       <HintPath>..\External\Adobe.AcrobatDistiller.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="AntiGrain.NET, Version=2.4.1016.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="AntiGrain.NET">
       <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\External\nunit-2.4.x\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Dialogs\DialogDataTest.cs" />
-    <Compile Include="Dialogs\DialogTest.cs" />
-    <Compile Include="Dialogs\FileDialogTest.cs" />
-    <Compile Include="Dialogs\MessageTest.cs" />
-    <Compile Include="Dialogs\PrintDialogTest.cs" />
-    <Compile Include="Dialogs\Tool.cs" />
-    <Compile Include="Dialogs\WorkInProgressDialogTest.cs" />
-    <Compile Include="Drawing\BitmapTest.cs" />
-    <Compile Include="Drawing\ColorTest.cs" />
-    <Compile Include="Drawing\CompressLineBreakTool.cs" />
-    <Compile Include="Drawing\ConverterTest.cs" />
-    <Compile Include="Drawing\DirtyRegionTest.cs" />
-    <Compile Include="Drawing\DrawingTest.cs" />
-    <Compile Include="Drawing\FontTest.cs" />
-    <Compile Include="Drawing\GraphicsTest.cs" />
-    <Compile Include="Drawing\LibraryTest.cs" />
-    <Compile Include="Drawing\NativeBitmapTest.cs" />
-    <Compile Include="Drawing\OpenTypeTest.cs" />
-    <Compile Include="Drawing\PathTest.cs" />
-    <Compile Include="Drawing\PixmapTest.cs" />
-    <Compile Include="Drawing\PrintPortTest.cs" />
-    <Compile Include="Drawing\SimpleTypesTest.cs" />
-    <Compile Include="Drawing\TextBreakTest.cs" />
-    <Compile Include="Drawing\TextTest.cs" />
-    <Compile Include="Drawing\TransformTest.cs" />
-    <Compile Include="FormEngine\FormEngineTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Cresus.AddressBook\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Cresus.AddressBook\SourceCode\Forms.cs" />
-    <Compile Include="Resources\Cresus.AddressBook\SourceCode\Res.cs" />
-    <Compile Include="Resources\Demo5juin\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Demo5juin\SourceCode\Forms.cs" />
-    <Compile Include="Resources\Demo5juin\SourceCode\Res.cs" />
-    <Compile Include="Support\CaptionCacheTest.cs" />
-    <Compile Include="Support\ClipboardTest.cs" />
-    <Compile Include="Support\CodeCompilerTest.cs" />
-    <Compile Include="Support\CodeFormatterTest.cs" />
-    <Compile Include="Support\CodeGeneratorTest.cs" />
-    <Compile Include="Support\CommandDispatcherTest.cs" />
-    <Compile Include="Support\CommandTest.cs" />
-    <Compile Include="Support\XmlExtractorTest.cs" />
-    <Compile Include="Support\CultureMapListTest.cs" />
-    <Compile Include="Support\DocumentTest.cs" />
-    <Compile Include="Support\DruidTest.cs" />
-    <Compile Include="Support\DynamicCodeTest.cs" />
-    <Compile Include="Support\EntityFieldPathTest.cs" />
-    <Compile Include="Support\EntityTest.cs" />
-    <Compile Include="Support\EventsTest.cs" />
-    <Compile Include="Support\FileInfoTest.cs" />
-    <Compile Include="Support\FileManagerTest.cs" />
-    <Compile Include="Support\GlobalsTest.cs" />
-    <Compile Include="Support\ImageProviderTest.cs" />
-    <Compile Include="Support\IOTest.cs" />
-    <Compile Include="Support\ObjectDictMapperTest.cs" />
-    <Compile Include="Support\OpletTest.cs" />
-    <Compile Include="Support\RegexConstraintTest.cs" />
-    <Compile Include="Support\RegexFactoryTest.cs" />
-    <Compile Include="Support\ResourceAccessorTest.cs" />
-    <Compile Include="Support\ResourceBundleTest.cs" />
-    <Compile Include="Support\ResourceManagerTest.cs" />
-    <Compile Include="Support\ResourceModuleTest.cs" />
-    <Compile Include="Support\ResourcesTest.cs" />
-    <Compile Include="Support\SerializationTest.cs" />
-    <Compile Include="Support\TestRes.cs" />
-    <Compile Include="Support\TextTest.cs" />
-    <Compile Include="Support\UtilitiesTest.cs" />
-    <Compile Include="Support\VersionCheckerTest.cs" />
-    <Compile Include="Support\WeakEventListenersTest.cs" />
-    <Compile Include="Support\WordBreakTest.cs" />
-    <Compile Include="Support\XmlTest.cs" />
-    <Compile Include="Text\Exchange\RosettaTest.cs" />
-    <Compile Include="Types\BasicTypesTest.cs" />
-    <Compile Include="Types\CaptionTest.cs" />
-    <Compile Include="Types\CollectionTest.cs" />
-    <Compile Include="Types\ComparerTest.cs" />
-    <Compile Include="Types\DataGraphTest.cs" />
-    <Compile Include="Types\DecimalRangeTest.cs" />
-    <Compile Include="Types\FormattedTextTest.cs" />
-    <Compile Include="Types\HostedTest.cs" />
-    <Compile Include="Types\InvariantConverterTest.cs" />
-    <Compile Include="Types\MultilingualTextTest.cs" />
-    <Compile Include="Types\ObjectTest.cs" />
-    <Compile Include="Types\SerializationTest.cs" />
-    <Compile Include="Types\StructuredTest.cs" />
-    <Compile Include="Types\TypeRosettaTest.cs" />
-    <Compile Include="UI\DataSourceMetadataTest.cs" />
-    <Compile Include="UI\DataSourceTest.cs" />
-    <Compile Include="UI\ItemPanelTest.cs" />
-    <Compile Include="UI\MetaButtonTest.cs" />
-    <Compile Include="UI\PanelTest.cs" />
-    <Compile Include="UI\PlaceholderTest.cs" />
-    <Compile Include="Resources\Cresus.Tests\SourceCode\Res.cs" />
-    <Compile Include="Widgets\AdornerFactoryTest.cs" />
-    <Compile Include="Widgets\AdornerTest.cs" />
-    <Compile Include="Widgets\ArrayTest.cs" />
-    <Compile Include="Widgets\CommandTest.cs" />
-    <Compile Include="Widgets\CustomWidgetTest.cs" />
-    <Compile Include="Widgets\FeelTest.cs" />
-    <Compile Include="Widgets\FicheTest.cs" />
-    <Compile Include="Widgets\GridTest.cs" />
-    <Compile Include="Widgets\LayoutTest.cs" />
-    <Compile Include="Widgets\MessageTest.cs" />
-    <Compile Include="Widgets\RibbonTest.cs" />
-    <Compile Include="Widgets\ScreenInfoTest.cs" />
-    <Compile Include="Widgets\SystemInformationTest.cs" />
-    <Compile Include="Widgets\TextLayoutTest.cs" />
-    <Compile Include="Widgets\TinyDataBase.cs" />
-    <Compile Include="Widgets\ViewportTest.cs" />
-    <Compile Include="Widgets\VisualTest.cs" />
-    <Compile Include="Widgets\VisualTreeTest.cs" />
-    <Compile Include="Widgets\WidgetTest.cs" />
-    <Compile Include="Widgets\WidgetTransformTest.cs" />
-    <Compile Include="Widgets\WindowTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
-      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
-      <Name>Common.Document</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\cursor.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Notes.txt" />
-    <Content Include="Resources\LineBreak-4.1.0.txt">
+
+    <Content Include="Images\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\LowLevelTest\bitmap.resource.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Properties\Epsitec.Cresus.snk</Link>
-    </None>
-    <Content Include="Images\100-dpi.tif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\200-dpi.tif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\2x2-alpha.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\4x4-alpha.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\cmyk.tif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\cmyka.tif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\image1.tif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\photo.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\picture.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\rgb.tif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\rgba.tif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\test.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.AddressBook\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.AddressBook\Captions.de.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.AddressBook\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.AddressBook\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.AddressBook\_8V1.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.AddressBook\_8V11.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.AddressBook\_8V12.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Demo5juin\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Demo5juin\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Demo5juin\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Demo5juin\_631.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Demo5juin\_6311.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Demo5juin\_6312.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Demo5juin\_6313.00.resource">
+    <Content Include="Resources\**\*" Exclude="Resources\**\*.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\LineBreak-4.1.0.compressed">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\About.icon">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Down.icon">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support.Patch\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support.Patch\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support.Patch\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Common.Support.Patch\Strings.en.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\ab.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\bitmap.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\button.cancel.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\button.cancel.fr.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\complex.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\icon.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\image.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\recursive.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\simple_window.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\LowLevelTest\strings.fr.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\OtherModule\module.info">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\OtherModule\strings.00.resource">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Test\captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Test\captions.fr.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Test\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Test\strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Test\strings.fr.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\OtherModule\captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF01.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF02.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF03.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF04.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF05.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF06.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Tests\_KF07.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\picture.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\Customizations\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

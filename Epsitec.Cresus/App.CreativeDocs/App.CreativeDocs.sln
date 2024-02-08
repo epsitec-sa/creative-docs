@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zou", "zou", "{BECED41F-17E
 		..\..\..\zou\Directory.Build.Default.targets = ..\..\..\zou\Directory.Build.Default.targets
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "..\Common.Tests\Common.Tests.csproj", "{1E921F71-7F6A-4130-84A6-A0180659F1D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Release|x64.Build.0 = Release|x64
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Release|x86.ActiveCfg = Release|x86
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Release|x86.Build.0 = Release|x86
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|x64.ActiveCfg = Debug|x64
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|x64.Build.0 = Debug|x64
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|x86.ActiveCfg = Debug|x86
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|x86.Build.0 = Debug|x86
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|x64.ActiveCfg = Release|x64
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|x64.Build.0 = Release|x64
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|x86.ActiveCfg = Release|x86
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
