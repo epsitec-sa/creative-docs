@@ -184,36 +184,33 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (ResourceException))]
 		public void CheckCompileEx1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<data name='a'>A</data><data name='b'>B</data>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
-			bundle.Compile (test_data);
+			Assert.Throws<ResourceException>(() => bundle.Compile (test_data));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.Xml.XmlException))]
 		public void CheckCompileEx2()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A<data name='b'>B</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
-			bundle.Compile (test_data);
+            Assert.Throws<System.Xml.XmlException>(() => bundle.Compile (test_data));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ResourceException))]
 		public void CheckCompileEx3()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<invalid_root><data name='a'>A</data><data name='b'>B</data></invalid_root>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
-			bundle.Compile (test_data);
+            Assert.Throws<ResourceException>(() => bundle.Compile (test_data));
 		}
 
 		[Test]
@@ -280,7 +277,6 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (ResourceException))]
 		public void CheckCompileRefEx1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
@@ -289,12 +285,15 @@ namespace Epsitec.Common.Tests.Support
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 
-			string value_a = bundle["a"].AsString;
-			string value_b = bundle["b"].AsString;
-		}
+            Assert.Throws<ResourceException>(() => {
+                var a = bundle["a"].AsString;
+                });
+            Assert.Throws<ResourceException>(() => {
+                var b = bundle["b"].AsString;
+              });
+        }
 
 		[Test]
-		[ExpectedException (typeof (ResourceException))]
 		public void CheckCompileRefEx2()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
@@ -303,12 +302,13 @@ namespace Epsitec.Common.Tests.Support
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 
-			string value_a = bundle["a"].AsString;
-			string value_b = bundle["b"].AsString;
-		}
+            Assert.Throws<ResourceException>(() => {
+                var a = bundle["a"].AsString;
+                var b = bundle["b"].AsString;
+            });
+        }
 
 		[Test]
-		[ExpectedException (typeof (ResourceException))]
 		public void CheckCompileRefEx3()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
@@ -317,9 +317,13 @@ namespace Epsitec.Common.Tests.Support
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 
-			string value_a = bundle["a"].AsString;
-			string value_b = bundle["b"].AsString;
-		}
+            Assert.Throws<ResourceException>(() => {
+                var a = bundle["a"].AsString;
+            });
+            Assert.Throws<ResourceException>(() => {
+                var b = bundle["b"].AsString;
+            });
+        }
 
 		private void CompileWithExceptionHandling(string test_string)
 		{

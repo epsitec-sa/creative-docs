@@ -85,39 +85,35 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckDeclarationEx1()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("<?>");
+			Assert.Throws<System.FormatException>(() => extractor.Append ("<?>"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckDeclarationEx2()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("<? -->");
+            Assert.Throws<System.FormatException>(() => extractor.Append ("<? -->"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckDeclarationEx3()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("<? >");
+            Assert.Throws<System.FormatException>(() => extractor.Append ("<? >"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckDeclarationEx4()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("<? < ?>");
+            Assert.Throws<System.FormatException>(() => extractor.Append ("<? < ?>"));
 		}
 
 		[Test]
@@ -147,31 +143,28 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckElementEx1()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("< < > >");
+			Assert.Throws<System.FormatException>(() => extractor.Append("< < > >"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckElementEx2()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append (">");
+			Assert.Throws<System.FormatException>(() => extractor.Append(">"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckElementEx3()
 		{
 			var extractor = new XmlExtractor ();
 
 			extractor.Append ("<foo></foo>");
-			extractor.Append ("<bar></bar>");
+            Assert.Throws<System.InvalidOperationException>(() => extractor.Append ("<bar></bar>"));
 		}
 
 		[Test]
@@ -209,30 +202,27 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckExcessEx1()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("<!-- 1 --> abc");
+            Assert.Throws<System.FormatException>(() => extractor.Append ("<!-- 1 --> abc"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckExcessEx2()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("x");
+            Assert.Throws<System.FormatException>(() => extractor.Append ("x"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckExcessEx3()
 		{
 			var extractor = new XmlExtractor ();
 
-			extractor.Append ("<? xml ?> abc");
+            Assert.Throws<System.FormatException>(() => extractor.Append ("<? xml ?> abc"));
 		}
 
 		[Test]

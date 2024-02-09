@@ -160,22 +160,25 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual ("abc", s6);
 		}
 		
-		[Test] [ExpectedException (typeof (System.Exception))] public void CheckStringSimplifyEx1()
+		[Test]
+        public void CheckStringSimplifyEx1()
 		{
 			string s1 = @"'xy'z'";
-			Utilities.StringSimplify (ref s1);
+			Assert.Throws<System.Exception>(() => Utilities.StringSimplify (ref s1));
 		}
 		
-		[Test] [ExpectedException (typeof (System.Exception))] public void CheckStringSimplifyEx2()
+		[Test]
+        public void CheckStringSimplifyEx2()
 		{
 			string s1 = @"'xyz";
-			Utilities.StringSimplify (ref s1);
+            Assert.Throws<System.Exception>(() => Utilities.StringSimplify (ref s1));
 		}
 		
-		[Test] [ExpectedException (typeof (System.Exception))] public void CheckStringSimplifyEx3()
+		[Test]
+        public void CheckStringSimplifyEx3()
 		{
 			string s1 = @"<xyz<";
-			Utilities.StringSimplify (ref s1, '<', '>');
+            Assert.Throws<System.Exception>(() => Utilities.StringSimplify (ref s1, '<', '>'));
 		}
 		
 		[Test] public void CheckTextToXml()
@@ -198,9 +201,10 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual ("<#'\">\u00A0\u2014x\n", Utilities.XmlBreakToText ("&lt;#&apos;&quot;&gt;&#160;&#8212;x<br/>"));
 		}
 		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckXmlToTextEx1()
+		[Test]
+        public void CheckXmlToTextEx1()
 		{
-			Utilities.XmlToText ("&nbsp;");
+            Assert.Throws<System.FormatException>(() => Utilities.XmlToText ("&nbsp;"));
 		}
 	}
 }
