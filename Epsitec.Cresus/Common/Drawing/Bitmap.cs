@@ -11,11 +11,11 @@ namespace Epsitec.Common.Drawing
 	using BitmapData = System.Drawing.Imaging.BitmapData;
 	using Epsitec.Common.Support.Platform.Win32;
 	using Epsitec.Common.Widgets.Platform;
-	
-	/// <summary>
-	/// La classe Bitmap encapsule une image de type bitmap.
-	/// </summary>
-	public class Bitmap : Image
+
+    /// <summary>
+    /// La classe Bitmap encapsule une image de type bitmap.
+    /// </summary>
+    public class Bitmap : Image
 	{
 		static Bitmap()
 		{

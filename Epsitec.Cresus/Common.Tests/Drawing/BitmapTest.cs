@@ -41,7 +41,7 @@ namespace Epsitec.Common.Tests.Drawing
 		[Test]
 		public void CheckBitmapSave()
 		{
-			Bitmap bitmap = Bitmap.FromFile (@"..\..\Images\picture.png").BitmapImage;
+			Bitmap bitmap = Bitmap.FromFile (@"..\..\..\..\Images\picture.png").BitmapImage;
 
 			byte[] data;
 			System.IO.FileStream stream;
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Tests.Drawing
 			stream.Close ();
 		}
 
-		[Test]
+		[TearDown]
 		public void CheckBitmapSaveCleanup()
 		{
 			System.IO.File.Delete ("picture-24.bmp");

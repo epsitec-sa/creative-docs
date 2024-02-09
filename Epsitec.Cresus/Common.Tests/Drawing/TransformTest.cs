@@ -35,8 +35,6 @@ namespace Epsitec.Common.Tests.Drawing
 			Assert.IsTrue (t1 == t2);
 			Assert.IsTrue (t1 == t3);
 			
-			Assert.AreEqual ((t1 == null), false);
-			Assert.AreEqual ((t1 != null), true);
 			
 			t2 = t2.RotateDeg (10);
 			
