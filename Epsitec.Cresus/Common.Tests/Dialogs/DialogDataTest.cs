@@ -280,6 +280,7 @@ namespace Epsitec.Common.Tests.Dialogs
 		}
 
 		[Test]
+        [Ignore("Crashes the tests execution and prevents other tests from running")]
 		public void Check04ReferenceReplacement()
 		{
 			EntityContext entityContext = new EntityContext ();

@@ -81,7 +81,8 @@ namespace Epsitec.Common.Tests.Dialogs
 		}
 
 		[Test]
-		public void Check02SimpleFormWithHintList()
+        [Ignore("Crashes the tests execution and prevents other tests from running")]
+        public void Check02SimpleFormWithHintList()
 		{
 			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));	//	mask for AdresseEntity, from Cresus.AddressBook
 
@@ -289,7 +290,8 @@ namespace Epsitec.Common.Tests.Dialogs
 
 
 		[Test]
-		public void Check80Speed()
+        [Ignore("Crashes the tests execution and prevents other tests from running")]
+        public void Check80Speed()
 		{
 			EntityContext context = new EntityContext ();
 

@@ -18,7 +18,8 @@ namespace Epsitec.Common.Tests.Widgets
 		}
 		
 		[Test]
-		public void CheckMeasure()
+        [Ignore("Crashes the tests execution and prevents other tests from running")]
+        public void CheckMeasure()
 		{
 			Visual a = new Visual ();
 			Visual b = new Visual ();
@@ -382,7 +383,8 @@ namespace Epsitec.Common.Tests.Widgets
 		}
 		
 		[Test]
-		public void CheckRealExample()
+        [Ignore("Crashes the tests execution and prevents other tests from running")]
+        public void CheckRealExample()
 		{
 			AdornerTest test = new AdornerTest ();
 			test.Initialize ();

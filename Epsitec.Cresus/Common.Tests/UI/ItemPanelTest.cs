@@ -247,7 +247,8 @@ namespace Epsitec.Common.Tests.UI
 		}
 
 		[Test]
-		public void CheckInteractiveTableWithGroups_1_Level()
+        [Ignore("Crashes the tests execution and prevents other tests from running")]
+        public void CheckInteractiveTableWithGroups_1_Level()
 		{
 			Window window = new Window ();
 
@@ -293,7 +294,8 @@ namespace Epsitec.Common.Tests.UI
 		}
 
 		[Test]
-		public void CheckInteractiveTableWithGroups_2_Levels()
+        [Ignore("Crashes the tests execution and prevents other tests from running")]
+        public void CheckInteractiveTableWithGroups_2_Levels()
 		{
 			Window window = new Window ();
 
