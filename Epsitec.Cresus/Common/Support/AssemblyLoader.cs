@@ -232,7 +232,7 @@ namespace Epsitec.Common.Support
 		{
 			string loadPath = Globals.Directories.Executable;
 
-			string loadName = AssemblyLoader.CurrentAssembly.CodeBase;
+			string loadName = AssemblyLoader.CurrentAssembly.Location;
 			string filePrefix = "file:///";
 
 			if (loadName.StartsWith (filePrefix))

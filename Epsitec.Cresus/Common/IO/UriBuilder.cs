@@ -451,13 +451,13 @@ namespace Epsitec.Common.IO
 
 			if (!string.IsNullOrEmpty (this.UserName))
 			{
-				buffer.Append (System.Uri.EscapeUriString (this.UserName));
+				buffer.Append (System.Uri.EscapeDataString (this.UserName));
 				separator = "@";
 			}
 			if (!string.IsNullOrEmpty (this.Password))
 			{
 				buffer.Append (":");
-				buffer.Append (System.Uri.EscapeUriString (this.Password));
+				buffer.Append (System.Uri.EscapeDataString (this.Password));
 				separator = "@";
 			}
 
@@ -465,7 +465,7 @@ namespace Epsitec.Common.IO
 
 			if (!string.IsNullOrEmpty (this.Host))
 			{
-				buffer.Append (System.Uri.EscapeUriString (this.Host));
+				buffer.Append (System.Uri.EscapeDataString (this.Host));
 			}
 			if (this.PortNumber != 0)
 			{
@@ -482,19 +482,19 @@ namespace Epsitec.Common.IO
 
 			if (!string.IsNullOrEmpty (this.Path))
 			{
-				buffer.Append (System.Uri.EscapeUriString (this.Path));
+				buffer.Append (System.Uri.EscapeDataString (this.Path));
 			}
 
 			if (!string.IsNullOrEmpty (this.Query))
 			{
 				buffer.Append ("?");
-				buffer.Append (System.Uri.EscapeUriString (this.Query));
+				buffer.Append (System.Uri.EscapeDataString (this.Query));
 			}
 
 			if (!string.IsNullOrEmpty (this.Fragment))
 			{
 				buffer.Append ("#");
-				buffer.Append (System.Uri.EscapeUriString (this.Fragment));
+				buffer.Append (System.Uri.EscapeDataString (this.Fragment));
 			}
 
 			return buffer.ToString ();

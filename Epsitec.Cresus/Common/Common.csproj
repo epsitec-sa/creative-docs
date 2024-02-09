@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Include="..\..\..\serial\CresusSerialAlgorithm.cs" Link="CresusSerialAlgorithm.cs" />
     <Compile Update="Widgets\Platform\Window.cs" />
+    <Compile Remove="Drawing\FontHelper.cs" />
+    <Compile Remove="IO\Web.cs" />
     <!--<Compile Remove="IO\Serialization.cs" />-->
     <Compile Remove="Support\AppDomainStarter.cs" />
     <Compile Remove="Support\Data\IDisablableChangedSource.cs" />
@@ -56,7 +58,9 @@
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Drawing\FontHelper.cs" />
     <None Include="IO\Serialization.cs" />
+    <None Include="IO\Web.cs" />
     <None Include="Support\AppDomainStarter.cs" />
   </ItemGroup>
   <Target Name="AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes" Condition="!$(SignAssembly)">

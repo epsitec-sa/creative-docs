@@ -34,7 +34,7 @@ namespace Epsitec.Common.Support.Extensions
 		/// <returns>The file path or <c>null</c>.</returns>
 		public static string GetCodeBaseFilePath(this Assembly assembly)
 		{
-			string codeBase = assembly.CodeBase;
+			string codeBase = assembly.Location;
 
 			if (codeBase.StartsWith ("file:///"))
 			{

@@ -1055,7 +1055,7 @@ namespace Epsitec.Common.Widgets
 				//	Effectue une copie du texte et du contexte.
 				this.host = navigator;
 				this.type = type;
-				this.textCopy = string.Copy(this.host.textLayout.InternalText);
+				this.textCopy = this.host.textLayout.InternalText;
 				this.contextCopy = new TextLayoutContext (this.host.context);
 				this.tabs = this.host.textLayout.Style.GetTabs ();
 			}
@@ -1074,8 +1074,8 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Permute le texte et le contexte contenus par l'hôte avec ceux
 				//	contenus dans TextOplet.
-				string undoText = string.Copy(this.textCopy);
-				string redoText = string.Copy(this.host.textLayout.InternalText);
+				string undoText = this.textCopy;
+				string redoText = this.host.textLayout.InternalText;
 				this.host.textLayout.Text = undoText;
 				this.textCopy = redoText;
 

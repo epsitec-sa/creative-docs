@@ -66,7 +66,7 @@ namespace Epsitec.Common.IO
 		{
 			if (Checksum.sharedMd5 == null)
 			{
-				Checksum.sharedMd5 = new MD5CryptoServiceProvider ();
+				Checksum.sharedMd5 = MD5.Create();
 			}
 
 			byte[] hash = Checksum.sharedMd5.ComputeHash (data);
@@ -77,10 +77,10 @@ namespace Epsitec.Common.IO
 		{
 			if (Checksum.sharedMd5 == null)
 			{
-				Checksum.sharedMd5 = new MD5CryptoServiceProvider ();
-			}
+                Checksum.sharedMd5 = MD5.Create();
+            }
 
-			byte[] hash = Checksum.sharedMd5.ComputeHash (stream);
+            byte[] hash = Checksum.sharedMd5.ComputeHash (stream);
 			return Ascii85.Encode (hash, outputMarks: false);
 		}
 		
@@ -258,6 +258,6 @@ namespace Epsitec.Common.IO
 		private static IChecksum sharedAdler32;
 
 		[System.ThreadStatic]
-		private static MD5CryptoServiceProvider sharedMd5;
+		private static MD5 sharedMd5;
 	}
 }
