@@ -1,65 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Cresus.WebCore.Server</RootNamespace>
     <AssemblyName>Cresus.Core.Server</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.SignalR.Client">
@@ -86,291 +29,102 @@
     <Reference Include="Nest">
       <HintPath>..\External\Nest\Nest.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\External\Json\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Katana\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
-      <Link>Properties\AssemblyInfo.Solution.cs</Link>
-    </Compile>
-    <Compile Include="Core\AuthenticationResult.cs" />
-    <Compile Include="Core\BackupManager.cs" />
-    <Compile Include="Core\Caches.cs" />
-    <Compile Include="Core\ConfigurationFileGenerator.cs" />
-    <Compile Include="Core\CoreJob.cs" />
-    <Compile Include="Core\CoreJobStatus.cs" />
-    <Compile Include="Core\CoreWorkerQueue.cs" />
-    <Compile Include="Core\CoreWorkerPool.cs" />
-    <Compile Include="Core\Databases\AbstractContextualMenuItem.cs" />
-    <Compile Include="Core\Databases\AbstractMenuItem.cs" />
-    <Compile Include="Core\Databases\DatabaseMenuItem.cs" />
-    <Compile Include="Core\Databases\DatabaseManager.cs" />
-    <Compile Include="Core\Databases\ReportExportItem.cs" />
-    <Compile Include="Core\Databases\LabelExportItem.cs" />
-    <Compile Include="Core\Databases\SubMenuItem.cs" />
-    <Compile Include="Core\Databases\Sorter.cs" />
-    <Compile Include="Core\Databases\SummaryNavigationContextualMenuItem.cs" />
-    <Compile Include="Core\Extraction\CsvArrayFormat.cs" />
-    <Compile Include="Core\Extraction\ArrayFormat.cs" />
-    <Compile Include="Core\Extraction\PaperSize.cs" />
-    <Compile Include="Core\Extraction\PdfArrayFormat.cs" />
-    <Compile Include="Core\Extraction\LabelLayout.cs" />
-    <Compile Include="Core\Extraction\LabelLayoutExtensions.cs" />
-    <Compile Include="Core\Extraction\LabelWriter.cs" />
-    <Compile Include="Core\Extraction\ReportWriter.cs" />
-    <Compile Include="Core\IconSize.cs" />
-    <Compile Include="Core\CoreWorker.cs" />
-    <Compile Include="Core\IdCache.cs" />
-    <Compile Include="Core\IO\ColumnIO.cs" />
-    <Compile Include="Core\IO\FilterIO.cs" />
-    <Compile Include="Core\IO\SorterIO.cs" />
-    <Compile Include="Core\IO\DataIO.cs" />
-    <Compile Include="Core\IO\EntityIO.cs" />
-    <Compile Include="Core\ItemCache.cs" />
-    <Compile Include="Core\PropertyAccessor\FieldTypeSelector.cs" />
-    <Compile Include="Core\PropertyAccessor\FieldType.cs" />
-    <Compile Include="Core\IO\FieldIO.cs" />
-    <Compile Include="Core\WorkItem.cs" />
-    <Compile Include="Layout\AbstractActionTile.cs" />
-    <Compile Include="Layout\AbstractEntityTile.cs" />
-    <Compile Include="Layout\ActionItem.cs" />
-    <Compile Include="Layout\ActionItemDisplayMode.cs" />
-    <Compile Include="Layout\ActionTile.cs" />
-    <Compile Include="Layout\AbstractField`1.cs" />
-    <Compile Include="Layout\DateTimeField.cs" />
-    <Compile Include="Layout\StringCollectionField.cs" />
-    <Compile Include="Layout\TimeField.cs" />
-    <Compile Include="Layout\EntityActionColumn.cs" />
-    <Compile Include="Layout\DecimalField.cs" />
-    <Compile Include="Layout\GroupedSummaryTileItem.cs" />
-    <Compile Include="Layout\GroupedSummaryTile.cs" />
-    <Compile Include="Layout\IntegerField.cs" />
-    <Compile Include="Layout\SetColumn.cs" />
-    <Compile Include="Layout\SpecialField.cs" />
-    <Compile Include="Layout\TileColumn.cs" />
-    <Compile Include="Layout\TypeActionColumn.cs" />
-    <Compile Include="NancyHosting\CoreResponse.cs" />
-    <Compile Include="Core\AuthenticationManager.cs" />
-    <Compile Include="Core\Databases\Column.cs" />
-    <Compile Include="NancyModules\Constants.cs" />
-    <Compile Include="Core\Databases\Database.cs" />
-    <Compile Include="NancyModules\QueryModule.cs" />
-    <Compile Include="NancyModules\DownloadsModule.cs" />
-    <Compile Include="NancyModules\JobsModule.cs" />
-    <Compile Include="Owin\Hubs\StatusBarClient.cs" />
-    <Compile Include="Owin\Hubs\StatusBarHub.cs" />
-    <Compile Include="Processors\IReportingProcessor.cs" />
-    <Compile Include="NancyModules\ReportingModule.cs" />
-    <Compile Include="NancyModules\FavoritesModule.cs" />
-    <Compile Include="NancyModules\PrintModule.cs" />
-    <Compile Include="NancyModules\ScopeModule.cs" />
-    <Compile Include="NancyModules\SetModule.cs" />
-    <Compile Include="NancyModules\SpecialFieldModule.cs" />
-    <Compile Include="NGinxServer.cs" />
-    <Compile Include="Core\Extraction\EntityExtractor.cs" />
-    <Compile Include="Core\Extraction\EntityWriter.cs" />
-    <Compile Include="Core\Extraction\ArrayWriter.cs" />
-    <Compile Include="Owin\Hubs\ChatHub.cs" />
-    <Compile Include="Chat\ChatMessage.cs" />
-    <Compile Include="Chat\ChatUser.cs" />
-    <Compile Include="Chat\ChatUserStatusType.cs" />
-    <Compile Include="Gravatar\GravatarHelper.cs" />
-    <Compile Include="Gravatar\GravatarImageSize.cs" />
-    <Compile Include="Owin\Hubs\EntityBagClient.cs" />
-    <Compile Include="Owin\Hubs\EntityBagHub.cs" />
-    <Compile Include="Owin\Hubs\ElasticSearchHub.cs" />
-    <Compile Include="Owin\Hubs\NotificationHub.cs" />
-    <Compile Include="Owin\Hubs\NotificationClient.cs" />
-    <Compile Include="Owin\OwinServer.cs" />
-    <Compile Include="Owin\Startup.cs" />
-    <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
-    <Compile Include="Results\QueryResult.cs" />
-    <Compile Include="Tools.cs" />
-    <Compile Include="Core\AbstractLambdaCache`1.cs" />
-    <Compile Include="Core\PropertyAutoCreator\AutoCreator.cs" />
-    <Compile Include="Core\PropertyAutoCreator\AutoCreatorCache.cs" />
-    <Compile Include="Core\PropertyAccessor\EntityCollectionPropertyAccessor.cs" />
-    <Compile Include="Core\PropertyAccessor\EntityReferencePropertyAccessor.cs" />
-    <Compile Include="Core\PropertyAccessor\ValuePropertyAccessor.cs" />
-    <Compile Include="Layout\AbstractEditionTilePart.cs" />
-    <Compile Include="Layout\AbstractTile.cs" />
-    <Compile Include="Layout\Carpenter.cs" />
-    <Compile Include="Layout\BooleanField.cs" />
-    <Compile Include="Layout\EntityCollectionField.cs" />
-    <Compile Include="Layout\CollectionSummaryTile.cs" />
-    <Compile Include="Layout\DateField.cs" />
-    <Compile Include="Layout\EmptyCollectionSummaryTile.cs" />
-    <Compile Include="Layout\Mason.cs" />
-    <Compile Include="Layout\AbstractField.cs" />
-    <Compile Include="Layout\EntityReferenceField.cs" />
-    <Compile Include="Layout\EnumerationField.cs" />
-    <Compile Include="Layout\GlobalWarning.cs" />
-    <Compile Include="Layout\HorizontalGroup.cs" />
-    <Compile Include="Layout\EntityColumn.cs" />
-    <Compile Include="Layout\Separator.cs" />
-    <Compile Include="Layout\SummaryTile.cs" />
-    <Compile Include="Layout\EditionTile.cs" />
-    <Compile Include="Layout\TextAreaField.cs" />
-    <Compile Include="Layout\TextField.cs" />
-    <Compile Include="NancyModules\AbstractAuthenticatedModule.cs" />
-    <Compile Include="Core\IconManager.cs" />
-    <Compile Include="NancyModules\EnumModule.cs" />
-    <Compile Include="NancyModules\PageModule.cs" />
-    <Compile Include="NancyHosting\CoreErrorHandler.cs" />
-    <Compile Include="NancyHosting\CoreServerBootstrapper.cs" />
-    <Compile Include="CoreServerProgram.cs" />
-    <Compile Include="Core\WorkerApp.cs" />
-    <Compile Include="NancyModules\AbstractCoreModule.cs" />
-    <Compile Include="NancyModules\ListModule.cs" />
-    <Compile Include="NancyModules\EntityModule.cs" />
-    <Compile Include="NancyModules\LayoutModule.cs" />
-    <Compile Include="NancyModules\DatabaseModule.cs" />
-    <Compile Include="NancyModules\LoginModule.cs" />
-    <Compile Include="NancyHosting\NancyServer.cs" />
-    <Compile Include="NancyHosting\FileSystemRootPathProvider.cs" />
-    <Compile Include="Core\PropertyAccessor\AbstractPropertyAccessor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\CoreServer.cs" />
-    <Compile Include="Core\PropertyAccessor\PropertyAccessorCache.cs" />
+    <None Update="Nginx\conf\fastcgi.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\fastcgi_params">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\koi-utf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\koi-win">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\mime.types">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\nginx.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\nginx.conf.default">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\scgi_params">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\uwsgi_params">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\conf\win-utf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\contrib\geo2nginx.pl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\contrib\README">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\contrib\unicode2nginx\koi-utf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\contrib\unicode2nginx\unicode-to-nginx.pl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\contrib\unicode2nginx\win-utf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\docs\CHANGES">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\docs\CHANGES.ru">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\docs\LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\docs\OpenSSL.LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\docs\PCRE.LICENCE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\docs\README">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nginx\docs\zlib.LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Cresus.WebCore.Server\Captions.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Cresus.WebCore.Server\module.info">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Cresus.WebCore.Server\Strings.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Cresus.WebCore.Server\Strings.en.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Properties\Epsitec.Cresus.snk</Link>
-    </None>
-    <None Include="Nginx\conf\fastcgi.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\fastcgi_params">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\koi-utf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\koi-win">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\mime.types">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\nginx.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\nginx.conf.default">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\scgi_params">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\uwsgi_params">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\conf\win-utf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\contrib\geo2nginx.pl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\contrib\README">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\contrib\unicode2nginx\koi-utf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\contrib\unicode2nginx\unicode-to-nginx.pl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\contrib\unicode2nginx\win-utf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\docs\CHANGES">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\docs\CHANGES.ru">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\docs\LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\docs\OpenSSL.LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\docs\PCRE.LICENCE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\docs\README">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Nginx\docs\zlib.LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Cresus.WebCore.Server\Captions.00.resource">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Cresus.WebCore.Server\module.info">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Cresus.WebCore.Server\Strings.00.resource">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Cresus.WebCore.Server\Strings.en.resource">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\test-certificate.crt" />
-    <None Include="Resources\test-certificate.key" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
-      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
-      <Name>Common.Document</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Pdf\Common.Pdf.csproj">
-      <Project>{0C93255B-4D0C-4AF6-9244-D835427E42E0}</Project>
-      <Name>Common.Pdf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Bricks\Cresus.Bricks.csproj">
-      <Project>{AE911461-2EFC-435D-B7AD-1F0DE07EE251}</Project>
-      <Name>Cresus.Bricks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
-      <Project>{91da0241-f084-40c5-b76e-0240884d1841}</Project>
-      <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
-      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
-      <Name>Cresus.Database.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
-      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
-      <Name>Cresus.Database</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Name>Cresus.DataLayer</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
+    <ProjectReference Include="..\Common.Pdf\Common.Pdf.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Cresus.Bricks\Cresus.Bricks.csproj" />
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj" />
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj" />
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj" />
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj" />
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Nginx\logs\dummy.txt">
@@ -392,12 +146,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <Compile Remove="Core\CoreWorkerItem.cs" />
+    <Compile Remove="Owin\RawConnection.cs" />
+  </ItemGroup>
 </Project>

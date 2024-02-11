@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -46,7 +47,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		public static CsvConfiguration ConfigureBaseReader()
 		{
-			var config = new CsvConfiguration ();
+			var config = new CsvConfiguration (CultureInfo.CurrentCulture);
 			config.Encoding = System.Text.Encoding.UTF8;
 			config.Delimiter = ";";
 			config.HasHeaderRecord = false;
@@ -60,7 +61,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		public static CsvConfiguration ConfigureSwissPostReader<T>()
 		{
-			var config = new CsvConfiguration ();
+			var config = new CsvConfiguration (CultureInfo.CurrentCulture);
 			config.Delimiter = ";";
 			config.Encoding = System.Text.Encoding.UTF8;
 			config.HasHeaderRecord = false;

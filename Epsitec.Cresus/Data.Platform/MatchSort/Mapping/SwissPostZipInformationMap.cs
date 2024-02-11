@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Data.Platform.MatchSort.Mapping
 {
-	internal class SwissPostZipInformationMap : CsvClassMap<SwissPostZipInformation>
+	internal class SwissPostZipInformationMap : ClassMap<SwissPostZipInformation>
 	{
 		public SwissPostZipInformationMap()
 		{

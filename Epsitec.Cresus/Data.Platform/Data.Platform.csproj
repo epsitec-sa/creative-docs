@@ -1,154 +1,51 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Data.Platform</RootNamespace>
-    <AssemblyName>Data.Platform</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
+    <AssemblyDescription>Epsitec Data Exchange Platform</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\.nuget\packages\CsvHelper.2.11.0\lib\net40-client\CsvHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Text, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\.nuget\packages\ServiceStack.Text.Signed.4.0.38\lib\net40\ServiceStack.Text.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
+    <PackageReference Include="ServiceStack.Text" Version="8.1.2" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.10.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="19.0.0" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="7.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.18.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="UriTemplate" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Data.SQLite">
       <HintPath>..\External\SQLite\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
-      <Link>Properties\AssemblyInfo.Solution.cs</Link>
-    </Compile>
-    <Compile Include="Bings\BingsWebService.cs" />
-    <Compile Include="Directories\DirectoriesSearchServiceQuery.cs" />
-    <Compile Include="Directories\DirectoriesServiceCode.cs" />
-    <Compile Include="Directories\Helpers\DirectoriesValueHelper.cs" />
-    <Compile Include="Directories\Entity\DirectoriesEntry.cs" />
-    <Compile Include="Directories\Entity\DirectoriesEntryAdd.cs" />
-    <Compile Include="Directories\Entity\DirectoriesEntryAddService.cs" />
-    <Compile Include="Directories\DirectoriesPaging.cs" />
-    <Compile Include="Directories\DirectoriesPrecisionCode.cs" />
-    <Compile Include="Directories\DirectoriesQueryParameter.cs" />
-    <Compile Include="Directories\Helpers\DirectoriesResponseChecker.cs" />
-    <Compile Include="Directories\DirectoriesAuthentication.cs" />
-    <Compile Include="Directories\Entity\DirectoriesResultInfo.cs" />
-    <Compile Include="Directories\DirectoriesSearchAddressExecutor.cs" />
-    <Compile Include="Directories\DirectoriesSearchAddressQuery.cs" />
-    <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
-    <Compile Include="Directories\DirectoriesWebService.cs" />
-    <Compile Include="Heuristics.cs" />
-    <Compile Include="MatchSort\Mapping\MatchSortMetaDataMap.cs" />
-    <Compile Include="MatchSort\Mapping\SwissPostHouseInformationMap.cs" />
-    <Compile Include="MatchSort\Mapping\SwissPostStreetInformationMap.cs" />
-    <Compile Include="MatchSort\Mapping\SwissPostZipInformationMap.cs" />
-    <Compile Include="MatchSort\MatchSortEtl.cs" />
-    <Compile Include="GeoNamesCountryInformation.cs" />
-    <Compile Include="Iso3166.cs" />
-    <Compile Include="MatchSort\MatchSortExtractor.cs" />
-    <Compile Include="MatchSort\MatchSortLoader.cs" />
-    <Compile Include="MatchSort\Rows\MatchSortMetaData.cs" />
-    <Compile Include="MatchWebClient\MatchWebClient.cs">
+    <Compile Update="MatchWebClient\MatchWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SwissPostFullZip.cs" />
-    <Compile Include="SwissPostStreetInformation.cs" />
-    <Compile Include="SwissPostHouse.cs" />
-    <Compile Include="SwissPostZipCodeFolding.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Res.cs" />
-    <Compile Include="Service References\ServiceReference.Directories.SearchAddress\Reference.cs">
+    <Compile Update="Service References\ServiceReference.Directories.SearchAddress\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Service References\ServiceReference.Directories.Security\Reference.cs">
+    <Compile Update="Service References\ServiceReference.Directories.Security\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="SwissPost.cs" />
-    <Compile Include="SwissPostDividerCode.cs" />
-    <Compile Include="SwissPostStreet.cs" />
-    <Compile Include="SwissPostStreetRepository.cs" />
-    <Compile Include="SwissPostZip.cs" />
-    <Compile Include="SwissPostZipCodeFoldingRepository.cs" />
-    <Compile Include="SwissPostHouseInformation.cs" />
-    <Compile Include="SwissPostZipInformation.cs" />
-    <Compile Include="SwissPostLanguageCode.cs" />
-    <Compile Include="SwissPostHouseRepository.cs" />
-    <Compile Include="SwissPostZipRepository.cs" />
-    <Compile Include="SwissPostZipType.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DataFiles\MatchStreetZip.zip" />
-    <None Include="packages.config" />
     <None Include="Service References\ServiceReference.Directories.SearchAddress\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -164,9 +61,6 @@
     <None Include="Service References\ServiceReference.Directories.Security\configuration.svcinfo" />
     <None Include="Service References\ServiceReference.Directories.Security\configuration91.svcinfo" />
     <None Include="Service References\ServiceReference.Directories.Security\security.disco" />
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Properties\Epsitec.Cresus.snk</Link>
-    </None>
     <EmbeddedResource Include="DataFiles\alpha2codes.txt" />
     <Content Include="..\External\SQLite\SQLite.Interop.dll">
       <Link>SQLite.Interop.dll</Link>
@@ -184,41 +78,11 @@
     </Content>
     <EmbeddedResource Include="DataFiles\MatchStreetLight.zip" />
     <EmbeddedResource Include="DataFiles\CountryInfo.zip" />
-    <None Include="app.config" />
     <None Include="Service References\ServiceReference.Directories.Security\security.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
-      <Project>{91da0241-f084-40c5-b76e-0240884d1841}</Project>
-      <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Name>Cresus.DataLayer</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj" />
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ServiceReference.Directories.SearchAddress\" />
-    <WCFMetadataStorage Include="Service References\ServiceReference.Directories.Security\" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

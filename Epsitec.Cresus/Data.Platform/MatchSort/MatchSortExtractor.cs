@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,13 +39,13 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		private static CsvConfiguration ConfigureWriter<T>()
 		{
-			var config = new CsvConfiguration ();
+			var config = new CsvConfiguration (CultureInfo.CurrentCulture);
 			config.Encoding = System.Text.Encoding.UTF8;
 			config.Delimiter = ";";
 			config.HasHeaderRecord = false;
 			config.IgnoreQuotes = true;
-			config.IgnorePrivateAccessor = true;
-			config.AutoMap<T> ();
+            config.IncludePrivateMembers = true;
+            config.AutoMap<T> ();
 			return config;
 		}
 	}
