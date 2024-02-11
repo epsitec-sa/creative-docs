@@ -8,8 +8,6 @@ namespace Epsitec.Cresus.Database.Exceptions
 	/// during an update.
 	/// </summary>
 
-	[System.Serializable]
-
 	public sealed class ConflictingException : GenericException
 	{
 		/// <summary>
@@ -58,20 +56,5 @@ namespace Epsitec.Cresus.Database.Exceptions
 			: base (databaseAccess, message, innerException)
 		{
 		}
-
-
-		#region ISerializable Members
-
-		private ConflictingException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-
-		#endregion
 	}
 }

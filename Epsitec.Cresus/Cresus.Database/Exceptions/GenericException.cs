@@ -8,9 +8,6 @@ namespace Epsitec.Cresus.Database.Exceptions
 	/// related exception occurs. This is the base class of other more specific
 	/// exceptions.
 	/// </summary>
-
-	[System.Serializable]
-
 	public class GenericException : System.Exception
 	{
 		/// <summary>
@@ -57,23 +54,6 @@ namespace Epsitec.Cresus.Database.Exceptions
 				return this.dbAccess;
 			}
 		}
-
-
-		#region ISerializable Members
-
-		protected GenericException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-			this.dbAccess = (DbAccess) info.GetValue ("dbAccess", typeof (DbAccess));
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			info.AddValue ("dbAccess", this.dbAccess);
-			base.GetObjectData (info, context);
-		}
-
-		#endregion
 
 		protected DbAccess dbAccess;
 	}

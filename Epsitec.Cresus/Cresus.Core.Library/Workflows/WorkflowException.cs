@@ -10,8 +10,6 @@ namespace Epsitec.Cresus.Core.Workflows
 	/// running workflow. A reason can be provided, so that the user can
 	/// be notified.
 	/// </summary>
-	[System.Serializable]
-
 	public sealed class WorkflowException : System.Exception
 	{
 		public WorkflowException(WorkflowCancellation cancellation)
@@ -41,25 +39,6 @@ namespace Epsitec.Cresus.Core.Workflows
 				return this.reason;
 			}
 		}
-
-		#region ISerializable Members
-
-		private WorkflowException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-			this.cancellation = (WorkflowCancellation) info.GetValue ("cancellation", typeof (WorkflowCancellation));
-			this.reason       = (FormattedText) info.GetValue ("reason", typeof (FormattedText));
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			info.AddValue ("cancellation", this.cancellation);
-			info.AddValue ("reason", this.reason);
-
-			base.GetObjectData (info, context);
-		}
-
-		#endregion
 
 		private readonly WorkflowCancellation	cancellation;
 		private readonly FormattedText			reason;

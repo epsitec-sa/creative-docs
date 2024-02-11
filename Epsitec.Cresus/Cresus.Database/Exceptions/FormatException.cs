@@ -7,9 +7,6 @@ namespace Epsitec.Cresus.Database.Exceptions
 	/// The <c>FormatException</c> represents a format error related to the
 	/// database layer. It is similar to <see cref="System.FormatException"/>.
 	/// </summary>
-	
-	[System.Serializable]
-	
 	public sealed class FormatException : GenericException
 	{
 		/// <summary>
@@ -56,20 +53,5 @@ namespace Epsitec.Cresus.Database.Exceptions
 			: base (databaseAccess, message, innerException)
 		{
 		}
-		
-		
-		#region ISerializable Members
-
-		private FormatException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-		
-		#endregion
 	}
 }
