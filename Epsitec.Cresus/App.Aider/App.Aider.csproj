@@ -2,19 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Epsitec.Aider</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\External\Open XML SDK\V2.0\lib\DocumentFormat.OpenXml.dll</HintPath>
-      <Private>True</Private>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\External\Katana\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\template-letter-derogation-noparish.txt" />
@@ -25,7 +13,6 @@
     <Content Include="Cresus.Core.Library.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="app.manifest" />
     <None Include="build.bat" />
     <Content Include="Aider.Environment.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

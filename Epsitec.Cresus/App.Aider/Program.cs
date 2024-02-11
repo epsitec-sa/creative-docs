@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Text;
+using System.Windows.Forms;
 
 namespace Epsitec.Aider
 {
@@ -13,6 +14,9 @@ namespace Epsitec.Aider
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             // CoreCLR need this to support codepage 850
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
