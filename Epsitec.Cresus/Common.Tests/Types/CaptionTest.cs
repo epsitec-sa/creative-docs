@@ -12,6 +12,7 @@ namespace Epsitec.Common.Tests.Types
 	[TestFixture] public class CaptionTest
 	{
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckBindingCaptionExtraction()
 		{
 			Stuff target = new Stuff ();

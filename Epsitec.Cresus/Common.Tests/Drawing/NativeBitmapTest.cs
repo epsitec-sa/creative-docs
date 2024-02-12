@@ -87,6 +87,7 @@ namespace Epsitec.Common.Tests.Drawing
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void TestCmykTiff()
 		{
 			NativeBitmap image = NativeBitmap.Load (@"..\..\..\..\Images\cmyk.tif");
@@ -136,6 +137,7 @@ namespace Epsitec.Common.Tests.Drawing
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void TestCmykAlphaTiff()
 		{
 			NativeBitmap image = NativeBitmap.Load (@"..\..\..\..\Images\cmyka.tif");

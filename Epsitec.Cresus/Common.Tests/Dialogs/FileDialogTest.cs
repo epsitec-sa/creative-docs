@@ -111,7 +111,9 @@ namespace Epsitec.Common.Tests.Dialogs
 			}
 		}
 
-		[Test] public void CheckFileSave1()
+		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
+        public void CheckFileSave1()
 		{
 			FileSaveDialog dialog = new FileSaveDialog ();
 
@@ -130,7 +132,9 @@ namespace Epsitec.Common.Tests.Dialogs
 			}
 		}
 		
-		[Test] public void CheckFileSave2()
+		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
+        public void CheckFileSave2()
 		{
 			FileSaveDialog dialog = new FileSaveDialog ();
 

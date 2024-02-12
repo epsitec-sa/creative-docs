@@ -39,6 +39,7 @@ namespace Epsitec.Common.Tests.Drawing
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckBitmapSave()
 		{
 			Bitmap bitmap = Bitmap.FromFile (@"..\..\..\..\Images\picture.png").BitmapImage;

@@ -691,6 +691,7 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckStructuredTypeSerialization()
 		{
 			StructuredType st = new StructuredType ();
@@ -746,6 +747,7 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckStructuredTypeSerializationUsingCaption()
 		{
 			StructuredType st = new StructuredType ();

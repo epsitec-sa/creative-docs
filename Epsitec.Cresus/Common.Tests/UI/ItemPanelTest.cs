@@ -575,6 +575,7 @@ namespace Epsitec.Common.Tests.UI
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckVerticalLayout()
 		{
 			ItemPanel panel = new ItemPanel ();

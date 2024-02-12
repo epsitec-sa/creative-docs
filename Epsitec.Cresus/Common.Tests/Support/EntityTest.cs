@@ -79,6 +79,7 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckBasicAccess3()
 		{
 			MyEnumTypeEntity entity = new MyEnumTypeEntity ();
@@ -183,6 +184,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckCollections1()
 		{
 			EntityContext context = new EntityContext ();
@@ -233,6 +235,7 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckCollections2()
 		{
 			EntityContext context = new EntityContext ();

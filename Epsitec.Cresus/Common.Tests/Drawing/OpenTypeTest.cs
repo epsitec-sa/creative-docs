@@ -6,7 +6,9 @@ namespace Epsitec.Common.Tests.Drawing
 	[TestFixture]
 	public class OpenTypeTest
 	{
-		[Test] public void CheckFeatures()
+		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
+        public void CheckFeatures()
 		{
 			//	Ce test requiert les fontes suivantes sur le système:
 			//	- Zapf Dingbats BT

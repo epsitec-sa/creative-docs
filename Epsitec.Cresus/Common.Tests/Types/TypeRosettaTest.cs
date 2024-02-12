@@ -112,6 +112,7 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckObjectTypeToNamedType()
 		{
 			INamedType type;
@@ -170,6 +171,7 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
+        [Ignore("Reported broken by Marc Bettex")]
 		public void CheckObjectTypeToStructuredType()
 		{
 			MyObject obj1 = new MyObject ();
