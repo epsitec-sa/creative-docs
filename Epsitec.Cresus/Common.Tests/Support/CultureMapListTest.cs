@@ -41,18 +41,16 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckItemOperatorEx1()
 		{
 			System.Collections.Generic.IList<CultureMap> list = this.list;
-			list[0] = null;
+			Assert.Throws<System.InvalidOperationException>(() => list[0] = null);
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
 		public void CheckItemOperatorEx2()
 		{
-			CultureMap map = this.list[4];
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => { CultureMap map = this.list[4]; });
 		}
 
 

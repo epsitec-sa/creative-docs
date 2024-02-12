@@ -148,7 +148,6 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckBasicAccessEx1()
 		{
 			MyEnumTypeEntity entity = new MyEnumTypeEntity ();
@@ -180,8 +179,8 @@ namespace Epsitec.Common.Tests.Support
 
 			//	We may no longer modify the original list here :
 			
-			list0.Add (new MyEnumValueEntity ());
-		}
+            Assert.Throws<System.InvalidOperationException>(() => list0.Add(new MyEnumValueEntity()));
+        }
 
 		[Test]
 		public void CheckCollections1()

@@ -112,6 +112,7 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
+        [Ignore("Checks for absolute path + has no assert -> should probably be deleted")]
 		public void CheckGetFolderItemsFromFolder()
 		{
 			string path = @"S:\Epsitec.Cresus\External";

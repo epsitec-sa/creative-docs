@@ -17,6 +17,7 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckGetImage()
 		{
+            // See comment in ImageProvider for the issue
 			Image im1 = ImageProvider.Instance.GetImage ("file:images/open.png", Resources.DefaultManager);
 			Image im2 = ImageProvider.Instance.GetImage ("file:images/open.icon", Resources.DefaultManager);
 			Image im3 = ImageProvider.Instance.GetImage ("file:images/non-existing-image.png", Resources.DefaultManager);
@@ -56,24 +57,37 @@ namespace Epsitec.Common.Tests.Support
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx1()
+		[Test] public void CheckGetImageEx1()
 		{
-			Image im1 = ImageProvider.Instance.GetImage ("file:../open.png", Resources.DefaultManager);
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                Image im1 = ImageProvider.Instance.GetImage ("file:../open.png", Resources.DefaultManager);
+            });
+            
 		}
 		
-		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx2()
+		[Test] public void CheckGetImageEx2()
 		{
-			Image im1 = ImageProvider.Instance.GetImage ("file:/open.png", Resources.DefaultManager);
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                Image im1 = ImageProvider.Instance.GetImage("file:../open.png", Resources.DefaultManager);
+            });
 		}
 		
-		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx3()
+		[Test] public void CheckGetImageEx3()
 		{
-			Image im1 = ImageProvider.Instance.GetImage ("file:C:/open.png", Resources.DefaultManager);
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                Image im1 = ImageProvider.Instance.GetImage("file:C:/open.png", Resources.DefaultManager);
+            });
 		}
 		
-		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx4()
+		[Test] public void CheckGetImageEx4()
 		{
-			Image im1 = ImageProvider.Instance.GetImage ("file:\\open.png", Resources.DefaultManager);
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                Image im1 = ImageProvider.Instance.GetImage("file:\\open.png", Resources.DefaultManager);
+            });
 		}
 	}
 }

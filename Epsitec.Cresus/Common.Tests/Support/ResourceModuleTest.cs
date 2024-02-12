@@ -272,7 +272,6 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckPoolGetRootAbsolutePathEx()
 		{
 			ResourceManagerPool pool = new ResourceManagerPool ();
@@ -283,8 +282,9 @@ namespace Epsitec.Common.Tests.Support
 
 			//	Resolution not possible, throws an exception as %foo% cannot
 			//	be resolved, given that the underlying folder does not exist.
-			pool.GetRootAbsolutePath (@"%foo%\bar");
-		}
+			
+            Assert.Throws<System.ArgumentException>(() => pool.GetRootAbsolutePath(@"%foo%\bar"));
+        }
 
 
 		private static string GetText(Epsitec.Common.Support.ResourceAccessors.StringResourceAccessor accessor, int index, string culture)

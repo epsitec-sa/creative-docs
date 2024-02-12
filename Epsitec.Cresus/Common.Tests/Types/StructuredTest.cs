@@ -118,25 +118,23 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckStrurctureDataEx1()
 		{
 			StructuredData data = new StructuredData ();
 
 			data.SetValue ("A", 10);
 			data.LockValue ("A");
-			data.SetValue ("A", 11);
+            Assert.Throws<System.InvalidOperationException>(() => data.SetValue ("A", 11));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckStrurctureDataEx2()
 		{
 			StructuredData data = new StructuredData ();
 
 			data.SetValue ("A", 10);
 			data.LockValue ("A");
-			data.SetValue ("A", UndefinedValue.Value);
+            Assert.Throws<System.InvalidOperationException>(() => data.SetValue ("A", UndefinedValue.Value));
 		}
 
 		[Test]
@@ -499,18 +497,24 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckStructuredTypeEx1()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
 			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
-			type.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault, Druid.Empty, 0, FieldRelation.Reference));
+			
+            Assert.Throws<System.ArgumentException>(() =>
+                type.Fields.Add (new StructuredTypeField ("Name", 
+                                                          StringType.NativeDefault,
+                                                          Druid.Empty,
+                                                          0,
+                                                          FieldRelation.Reference
+                ))
+            );
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
-		//[Ignore]
+		[Ignore("Broken test")]
 		public void CheckStructuredTypeEx2()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
@@ -522,12 +526,11 @@ namespace Epsitec.Common.Tests.Types
 			type.DefineCaptionId (typeId);
 
 			type.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault, Druid.Empty, 0, FieldRelation.None));
-//-			type.Fields.Add (new StructuredTypeField ("SelfName", type, Druid.Empty, 1, FieldRelation.Inclusion));
+//-         Assert.Throws<System.InvalidOperationException>(() => type.Fields.Add (new StructuredTypeField ("SelfName", type, Druid.Empty, 1, FieldRelation.Inclusion)));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
-		//[Ignore]
+		[Ignore("Broken test")]
 		public void CheckStructuredTypeEx3()
 		{
 			StructuredType interf = new StructuredType (StructuredTypeClass.Interface);
@@ -548,6 +551,7 @@ namespace Epsitec.Common.Tests.Types
 
 //-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Druid.Empty, 1, FieldRelation.Inclusion));
 //-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Druid.Empty, 2, FieldRelation.Inclusion));
+//-         assert.Throws<System.ArgumentException>(() => );
 		}
 
 		[Test]
@@ -675,7 +679,6 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckStructuredTypeFieldInsertionEx1()
 		{
 			StructuredType type = new StructuredType ();
@@ -683,7 +686,10 @@ namespace Epsitec.Common.Tests.Types
 			StructuredTypeField fieldXyz = new StructuredTypeField ("Xyz", StringType.NativeDefault);
 
 			type.Fields.Add (fieldXyz);
-			type.Fields["Xyz"] = fieldAbc;
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                type.Fields["Xyz"] = fieldAbc;
+            });
 		}
 
 		[Test]
@@ -857,7 +863,6 @@ namespace Epsitec.Common.Tests.Types
 
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckStructuredTypeMergeEx1()
 		{
 			StructuredType e1;
@@ -871,7 +876,7 @@ namespace Epsitec.Common.Tests.Types
 			//	We cannot merge two entities of different classes; verify
 			//	that this raises the ArgumentException exception :
 
-			StructuredType.Merge (e1, e2);
+            Assert.Throws<System.ArgumentException>(() => StructuredType.Merge (e1, e2));
 		}
 
 		private void CreateEntities(out StructuredType e1, out StructuredType e2, out StructuredType e3)

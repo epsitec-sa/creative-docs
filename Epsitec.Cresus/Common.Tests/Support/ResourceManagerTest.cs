@@ -129,17 +129,15 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (ResourceException))]
 		public void CheckGetBundleEx1()
 		{
-			this.manager.GetBundle ("file:Strings#Text1");
+            Assert.Throws<ResourceException>(() => this.manager.GetBundle("file:Strings#Text1"));            
 		}
 
 		[Test]
-		[ExpectedException (typeof (ResourceException))]
 		public void CheckGetBundleEx2()
-		{
-			this.manager.GetBundle ("[4]");
+        {
+            Assert.Throws<ResourceException>(() => this.manager.GetBundle("[4]"));            
 		}
 
 		[Test]

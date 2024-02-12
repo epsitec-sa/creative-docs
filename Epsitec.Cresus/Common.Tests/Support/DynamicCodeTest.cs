@@ -160,11 +160,13 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckValueTypePropertyAccessEx1()
 		{
-			PropertySetter articleSetter = DynamicCodeFactory.CreatePropertySetter (typeof (Record), "Article");
-		}
+            Assert.Throws<System.InvalidOperationException>(() =>
+            {
+                PropertySetter articleSetter = DynamicCodeFactory.CreatePropertySetter(typeof(Record), "Article");
+            });
+        }
 
 		[Test]
 		public void CheckPropertyGet()

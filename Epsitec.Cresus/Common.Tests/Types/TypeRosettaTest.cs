@@ -137,12 +137,14 @@ namespace Epsitec.Common.Tests.Types
 		}
 		
 		[Test]
-		[ExpectedException (typeof (InvalidTypeObjectException))]
 		public void CheckObjectTypeToNamedTypeEx1()
 		{
 			INamedType type;
 
-			type = TypeRosetta.GetNamedTypeFromTypeObject (15.0);
+            Assert.Throws<InvalidTypeObjectException>(() =>
+            {
+                type = TypeRosetta.GetNamedTypeFromTypeObject(15.0);
+            });
 		}
 
 		[Test]

@@ -96,19 +96,17 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckToDecimalEx1()
 		{
 			decimal result;
-			InvariantConverter.Convert ("X", out result);
+            Assert.Throws<System.FormatException>(() => InvariantConverter.Convert ("X", out result));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.NotSupportedException))]
 		public void CheckToDecimalEx2()
 		{
 			decimal result;
-			InvariantConverter.Convert (new Rectangle (10, 20, 30, 40), out result);
+            Assert.Throws<System.NotSupportedException>(() => InvariantConverter.Convert (new Rectangle (10, 20, 30, 40), out result));
 		}
 
 		[Test]
@@ -229,33 +227,33 @@ namespace Epsitec.Common.Tests.Types
 
 		[Test]
 		public void CheckAutomaticValueConverter()
-		{
-			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
+        {
+            System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
-			Assert.AreEqual ("Abc", AutomaticValueConverter.Instance.Convert (new FormattedText ("Abc"), typeof (string), null, culture));
-			Assert.AreEqual (new FormattedText ("B&amp;B"), AutomaticValueConverter.Instance.Convert ("B&amp;B", typeof (FormattedText), null, culture));
-			
-			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert ("abc", typeof (int), null, culture));
-			Assert.AreEqual (10, AutomaticValueConverter.Instance.Convert ("10", typeof (int), null, culture));
-			Assert.AreEqual ("10", AutomaticValueConverter.Instance.ConvertBack (10, typeof (string), null, culture));
+            Assert.AreEqual("Abc", AutomaticValueConverter.Instance.Convert(new FormattedText("Abc"), typeof(string), null, culture));
+            Assert.AreEqual(new FormattedText("B&amp;B"), AutomaticValueConverter.Instance.Convert("B&amp;B", typeof(FormattedText), null, culture));
 
-			Assert.AreEqual ("First", AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (string), null, culture));
-			Assert.AreEqual (MyEnum.First, AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (MyEnum), null, culture));
-			Assert.AreEqual (MyEnum.First, AutomaticValueConverter.Instance.Convert ("First", typeof (MyEnum), null, culture));
-			Assert.AreEqual (MyEnum.First, AutomaticValueConverter.Instance.Convert (1, typeof (MyEnum), null, culture));
-			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert ("XXX", typeof (MyEnum), null, culture));
-			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert (MyFlags.Flag1, typeof (MyEnum), null, culture));
-			Assert.AreEqual (1.0, AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (double), null, culture));
-			Assert.AreEqual (3, AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (int), null, culture));
-			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, AutomaticValueConverter.Instance.Convert (3, typeof (MyFlags), null, culture));
-			Assert.AreEqual ("Flag1, Flag2", AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (string), null, culture));
-			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, AutomaticValueConverter.Instance.Convert ("Flag2, Flag1", typeof (MyFlags), null, culture));
-			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert (1025, typeof (MyFlags), null, culture));
-			Assert.AreEqual ("", AutomaticValueConverter.Instance.Convert ("", typeof (string), null, culture));
-			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert ("", typeof (int), null, culture));
-		}
+            Assert.AreEqual(InvalidValue.Value, AutomaticValueConverter.Instance.Convert("abc", typeof(int), null, culture));
+            Assert.AreEqual(10, AutomaticValueConverter.Instance.Convert("10", typeof(int), null, culture));
+            Assert.AreEqual("10", AutomaticValueConverter.Instance.ConvertBack(10, typeof(string), null, culture));
 
-		[Test]
+            Assert.AreEqual("First", AutomaticValueConverter.Instance.Convert(MyEnum.First, typeof(string), null, culture));
+            Assert.AreEqual(MyEnum.First, AutomaticValueConverter.Instance.Convert(MyEnum.First, typeof(MyEnum), null, culture));
+            Assert.AreEqual(MyEnum.First, AutomaticValueConverter.Instance.Convert("First", typeof(MyEnum), null, culture));
+            Assert.AreEqual(MyEnum.First, AutomaticValueConverter.Instance.Convert(1, typeof(MyEnum), null, culture));
+            Assert.AreEqual(InvalidValue.Value, AutomaticValueConverter.Instance.Convert("XXX", typeof(MyEnum), null, culture));
+            Assert.AreEqual(InvalidValue.Value, AutomaticValueConverter.Instance.Convert(MyFlags.Flag1, typeof(MyEnum), null, culture));
+            Assert.AreEqual(1.0, AutomaticValueConverter.Instance.Convert(MyEnum.First, typeof(double), null, culture));
+            Assert.AreEqual(3, AutomaticValueConverter.Instance.Convert(MyFlags.Flag1 | MyFlags.Flag2, typeof(int), null, culture));
+            Assert.AreEqual(MyFlags.Flag1 | MyFlags.Flag2, AutomaticValueConverter.Instance.Convert(3, typeof(MyFlags), null, culture));
+            Assert.AreEqual("Flag1, Flag2", AutomaticValueConverter.Instance.Convert(MyFlags.Flag1 | MyFlags.Flag2, typeof(string), null, culture));
+            Assert.AreEqual(MyFlags.Flag1 | MyFlags.Flag2, AutomaticValueConverter.Instance.Convert("Flag2, Flag1", typeof(MyFlags), null, culture));
+            Assert.AreEqual(InvalidValue.Value, AutomaticValueConverter.Instance.Convert(1025, typeof(MyFlags), null, culture));
+            Assert.AreEqual("", AutomaticValueConverter.Instance.Convert("", typeof(string), null, culture));
+            Assert.AreEqual(InvalidValue.Value, AutomaticValueConverter.Instance.Convert("", typeof(int), null, culture));
+        }
+
+        [Test]
 		public void CheckTemplatizedStringConverter()
 		{
 			Assert.AreEqual ("test", InvariantConverter.ConvertToString ("test"));

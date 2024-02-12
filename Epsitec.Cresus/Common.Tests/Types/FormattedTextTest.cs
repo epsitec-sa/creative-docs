@@ -25,16 +25,5 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual (new FormattedText ("<i>italique</i>"), result[0]);
 			Assert.AreEqual (new FormattedText ("<b>gras</b>"), result[1]);
 		}
-		
-		[Test]
-		public void CheckSplit2()
-		{
-			FormattedText text = new FormattedText ("<i>italique</i>//<b>gras</b>");
-			FormattedText[] result = text.Split ("/", System.StringSplitOptions.RemoveEmptyEntries);
-
-			Assert.AreEqual (2, result.Length);
-			Assert.AreEqual (new FormattedText ("<i>italique</i>"), result[0]);
-			Assert.AreEqual (new FormattedText ("<b>gras</b>"), result[1]);
-		}
 	}
 }

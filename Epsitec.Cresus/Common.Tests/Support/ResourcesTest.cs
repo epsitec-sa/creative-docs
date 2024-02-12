@@ -253,11 +253,13 @@ namespace Epsitec.Common.Tests.Support
 		}
 #endif
 
-		[Test] [ExpectedException (typeof (ResourceException))] public void CheckGetBundleRecursive()
+		[Test] public void CheckGetBundleRecursive()
 		{
 			ResourceBundle bundle = Resources.DefaultManager.GetBundle ("file:recursive");
-			
-			string data = bundle["loop"].AsString;
+            Assert.Throws<ResourceException>(() =>
+            {
+                string data = bundle["loop"].AsString;
+            });
 		}
 		
 		[Test] public void CheckGetComplexBundle()

@@ -179,17 +179,21 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckFromSimpleJokerEx1()
 		{
-			Regex r = RegexFactory.FromSimpleJoker (null);
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                Regex r = RegexFactory.FromSimpleJoker(null);
+            });
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckFromSimpleJokerEx2()
 		{
-			Regex r = RegexFactory.FromSimpleJoker ("  ");
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                Regex r = RegexFactory.FromSimpleJoker("  ");
+            });
 		}
 
 

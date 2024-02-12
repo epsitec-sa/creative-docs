@@ -236,12 +236,11 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
 		public void CheckMapIdEx1()
 		{
 			MapId<DependencyObject> map = new MapId<DependencyObject> ();
 			
-			map.GetValue (1);
+            Assert.Throws<System.Collections.Generic.KeyNotFoundException>(() => map.GetValue (1));
 		}
 
 		[Test]
@@ -315,7 +314,6 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckMapTagEx1()
 		{
 			MapTag<DependencyObject> map = new MapTag<DependencyObject> ();
@@ -324,11 +322,10 @@ namespace Epsitec.Common.Tests.Types
 			MyItem b = new MyItem ();
 
 			map.Record ("x", a);
-			map.Record ("x", b);
+            Assert.Throws<System.ArgumentException>(() => map.Record ("x", b));
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckMapTagEx2()
 		{
 			MapTag<DependencyObject> map = new MapTag<DependencyObject> ();
@@ -336,7 +333,7 @@ namespace Epsitec.Common.Tests.Types
 			MyItem x = new MyItem ();
 			
 			map.Record ("a", x);
-			map.Record ("b", x);
+            Assert.Throws<System.ArgumentException>(() => map.Record ("b", x));
 		}
 
 		[Test]

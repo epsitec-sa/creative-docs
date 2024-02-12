@@ -26,7 +26,10 @@ namespace Epsitec.Common.Support
 		{
 			string   path   = System.IO.Directory.GetCurrentDirectory ();
 			string   other  = null;
-			string[] strips = new string[] { @"\bin\Debug", @"\bin\Release" };
+            string[] strips = new string[] { @"\bin\Debug", @"\bin\Release" };
+
+            // TODO: better strip filter
+            // instead of removing some suffix, discard everything after 'Common.Tests'
 			
 			for (int i = 0; i < strips.Length; i++)
 			{

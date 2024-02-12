@@ -49,7 +49,7 @@ namespace Epsitec.Common.Tests.Drawing
 		[Test]
 		public void CheckAllocatePixmapFromImageClient()
 		{
-			string path = @"..\..\Images\picture.png";
+			string path = @"..\..\..\..\Images\picture.png";
 
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 			Pixmap pixmap0;
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Tests.Drawing
 			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
 			watch.Reset ();
 
-			path = @"..\..\Images\photo.jpg";
+			path = @"..\..\..\..\Images\photo.jpg";
 
 			watch.Start ();
 			pixmap2 = PixmapTest.CreatePixmapUsingImageClient (path, 200, false);

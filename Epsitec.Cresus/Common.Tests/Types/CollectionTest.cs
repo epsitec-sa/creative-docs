@@ -213,7 +213,6 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
 		public void CheckCollectionViewCurrentItemEx1()
 		{
 			List<Record> source = new List<Record> ();
@@ -227,11 +226,10 @@ namespace Epsitec.Common.Tests.Types
 			Assert.IsFalse (view.IsCurrentBeforeFirst);
 			Assert.IsFalse (view.IsCurrentAfterLast);
 
-			Assert.IsFalse (view.MoveCurrentToPosition (7));
+			Assert.Throws<System.ArgumentOutOfRangeException>(() => view.MoveCurrentToPosition (7));
 		}
 		
 		[Test]
-		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
 		public void CheckCollectionViewCurrentItemEx2()
 		{
 			List<Record> source = new List<Record> ();
@@ -245,7 +243,7 @@ namespace Epsitec.Common.Tests.Types
 			Assert.IsFalse (view.IsCurrentBeforeFirst);
 			Assert.IsFalse (view.IsCurrentAfterLast);
 
-			Assert.IsFalse (view.MoveCurrentToPosition (-2));
+			Assert.Throws<System.ArgumentOutOfRangeException>(() => view.MoveCurrentToPosition (-2));
 		}
 
 		[Test]

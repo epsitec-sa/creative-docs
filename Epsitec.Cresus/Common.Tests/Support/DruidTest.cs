@@ -149,11 +149,10 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.FormatException))]
 		public void CheckParseEx1()
 		{
-			Druid.Parse ("$23000000008");
-		}
+            Assert.Throws<System.FormatException>(() => Druid.Parse("$23000000008"));
+        }
 
 		[Test]
 		public void CheckTemporaryDruids()

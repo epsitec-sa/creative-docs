@@ -102,32 +102,42 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckWriteClassEx4MisplacedMethod()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			CodeFormatter formatter = new CodeFormatter (buffer);
+            Assert.Throws<InvalidOperationException>(() =>
+                {
+                    System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+                    CodeFormatter formatter = new CodeFormatter(buffer);
 
-			formatter.WriteBeginNamespace ("Test");
-			// formatter.WriteBeginClass (CodeAttributes.Default, "Class1");
-			formatter.WriteBeginMethod (CodeAttributes.Default, "Foo");
-			formatter.WriteCodeLine ("BlahBlah ();");
-			formatter.WriteEndMethod ();
-			// formatter.WriteEndClass ();
-			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Method not defined in a class or an interface");
+                    formatter.WriteBeginNamespace("Test");
+                    // formatter.WriteBeginClass (CodeAttributes.Default, "Class1");
+                    formatter.WriteBeginMethod(CodeAttributes.Default, "Foo");
+                    formatter.WriteCodeLine("BlahBlah ();");
+                    formatter.WriteEndMethod();
+                    // formatter.WriteEndClass ();
+                    formatter.WriteEndNamespace();
+                },                
+                "Method not defined in a class or an interface"
+            );
 		}
 
 		[Test]
 		public void CheckWriteClassEx5AbstractCode()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			CodeFormatter formatter = new CodeFormatter (buffer);
+            Assert.Throws<InvalidOperationException>(() =>
+                {
+                    System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			        CodeFormatter formatter = new CodeFormatter (buffer);
 
-			formatter.WriteBeginNamespace ("Test");
-			formatter.WriteBeginClass (CodeAttributes.Default, "Class1");
-			formatter.WriteBeginMethod (new CodeAttributes (CodeAccessibility.Abstract), "void Foo()");
-			formatter.WriteCodeLine ("BlahBlah ();");
-			formatter.WriteEndMethod ();
-			formatter.WriteEndClass ();
-			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to generate code for an abstract item");
-		}
+			        formatter.WriteBeginNamespace ("Test");
+			        formatter.WriteBeginClass (CodeAttributes.Default, "Class1");
+			        formatter.WriteBeginMethod (new CodeAttributes (CodeAccessibility.Abstract), "void Foo()");
+			        formatter.WriteCodeLine ("BlahBlah ();");
+			        formatter.WriteEndMethod ();
+			        formatter.WriteEndClass ();
+			        formatter.WriteEndNamespace();
+                },
+               "Trying to generate code for an abstract item"
+            );
+        }
 
 		[Test]
 		public void CheckWriteInterface()
@@ -159,51 +169,69 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckWriteInterfaceEx1CodeInInterface()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			CodeFormatter formatter = new CodeFormatter (buffer);
+            Assert.Throws<InvalidOperationException>(() =>
+                {
+                    System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+                    CodeFormatter formatter = new CodeFormatter(buffer);
 
-			formatter.WriteBeginNamespace ("Test");
-			formatter.WriteBeginInterface (CodeAttributes.Default, "Interface1");
-			formatter.WriteBeginMethod (new CodeAttributes (CodeAccessibility.Final), "void Foo()");
-			formatter.WriteCodeLine ("BlahBlah ();");
-			formatter.WriteEndMethod ();
-			formatter.WriteEndInterface ();
-			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to generate code for an abstract item");
+                    formatter.WriteBeginNamespace("Test");
+                    formatter.WriteBeginInterface(CodeAttributes.Default, "Interface1");
+                    formatter.WriteBeginMethod(new CodeAttributes(CodeAccessibility.Final), "void Foo()");
+                    formatter.WriteCodeLine("BlahBlah ();");
+                    formatter.WriteEndMethod();
+                    formatter.WriteEndInterface();
+                    formatter.WriteEndNamespace();
+                },
+                "Trying to generate code for an abstract item"
+            );
+            
 		}
 
 		[Test]
 		public void CheckWriteInterfaceEx2InstanceVariable()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			CodeFormatter formatter = new CodeFormatter (buffer);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+                CodeFormatter formatter = new CodeFormatter(buffer);
 
-			formatter.WriteBeginNamespace ("Test");
+                formatter.WriteBeginNamespace("Test");
 
-			formatter.WriteBeginInterface (CodeAttributes.Default, "Interface1");
-			formatter.WriteInstanceVariable (new CodeAttributes (CodeVisibility.Private, CodeAccessibility.Final, CodeAttributes.ReadOnlyAttribute), "int value");
-			formatter.WriteEndInterface ();
+                formatter.WriteBeginInterface(CodeAttributes.Default, "Interface1");
+                formatter.WriteInstanceVariable(new CodeAttributes(CodeVisibility.Private, CodeAccessibility.Final, CodeAttributes.ReadOnlyAttribute), "int value");
+                formatter.WriteEndInterface();
 
-			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to define an instance variable in Interface, not a class");
+                formatter.WriteEndNamespace();
 
-			System.Console.Out.WriteLine (buffer);
+                System.Console.Out.WriteLine(buffer);
+            },
+            "Trying to define an instance variable in Interface, not a class"
+            );
+           
 		}
 
 		[Test]
 		public void CheckWriteInterfaceEx3EmbeddedInterface()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			CodeFormatter formatter = new CodeFormatter (buffer);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+                CodeFormatter formatter = new CodeFormatter(buffer);
 
-			formatter.WriteBeginNamespace ("Test");
+                formatter.WriteBeginNamespace("Test");
 
-			formatter.WriteBeginInterface (CodeAttributes.Default, "Interface1");
-			formatter.WriteBeginInterface (CodeAttributes.Default, "EmbeddedInterface");
-			formatter.WriteEndInterface ();
-			formatter.WriteEndInterface ();
+                formatter.WriteBeginInterface(CodeAttributes.Default, "Interface1");
+                formatter.WriteBeginInterface(CodeAttributes.Default, "EmbeddedInterface");
+                formatter.WriteEndInterface();
+                formatter.WriteEndInterface();
 
-			Assert.Throws<InvalidOperationException>(() => formatter.WriteEndNamespace(), "Trying to define an interface in Interface, not a class or a namespace");
+                formatter.WriteEndNamespace();
 
-			System.Console.Out.WriteLine (buffer);
+                System.Console.Out.WriteLine(buffer);
+            },
+            "Trying to define an interface in Interface, not a class or a namespace"
+            );
+            
 		}
 
 	}

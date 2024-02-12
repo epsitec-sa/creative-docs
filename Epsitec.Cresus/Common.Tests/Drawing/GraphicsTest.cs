@@ -1472,8 +1472,8 @@ namespace Epsitec.Common.Tests.Drawing
 			
 			//	L'image fait 200 x 200 pixels
 			
-			Bitmap bitmap_1 = Bitmap.FromFile ("..\\..\\Images\\100-dpi.tif").BitmapImage;
-			Bitmap bitmap_2 = Bitmap.FromFile ("..\\..\\Images\\200-dpi.tif").BitmapImage;
+			Bitmap bitmap_1 = ImageProvider.Instance.GetImage(@"file:Images/100-dpi.tif", Resources.DefaultManager).BitmapImage;
+			Bitmap bitmap_2 = ImageProvider.Instance.GetImage(@"file:Images/200-dpi.tif", Resources.DefaultManager).BitmapImage;
 			
 			Font font = Font.GetFont ("Tahoma", "Regular");
 			

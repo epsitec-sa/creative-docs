@@ -419,13 +419,13 @@ namespace Epsitec.Common.Tests.Support
 		}
 		
 		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx1()
+		[Test] public void CheckInsertUndoRedoEx1()
 		{
 			OpletQueue queue = new OpletQueue ();
-			queue.Insert (this.CreateOplet ("test"));
+            Assert.Throws<System.InvalidOperationException>(() => queue.Insert(this.CreateOplet("test")));
 		}
 		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx2()
+		[Test] public void CheckInsertUndoRedoEx2()
 		{
 			OpletQueue queue = new OpletQueue ();
 			
@@ -434,47 +434,47 @@ namespace Epsitec.Common.Tests.Support
 				queue.Insert (new BadOplet (queue));
 				queue.ValidateAction ();
 			}
-			
-			queue.UndoAction ();
+
+            Assert.Throws<System.InvalidOperationException>(() => queue.UndoAction());
 		}
 		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx3()
+		[Test] public void CheckInsertUndoRedoEx3()
 		{
 			OpletQueue queue = new OpletQueue ();
 			
 			using (queue.BeginAction ())
-			{
-				queue.PurgeUndo ();
+            {
+                Assert.Throws<System.InvalidOperationException>(() => queue.PurgeUndo());
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx4()
+		[Test] public void CheckInsertUndoRedoEx4()
 		{
 			OpletQueue queue = new OpletQueue ();
 			
 			using (queue.BeginAction ())
-			{
-				queue.PurgeRedo ();
+            {
+                Assert.Throws<System.InvalidOperationException>(() => queue.PurgeRedo());
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx5()
+		[Test] public void CheckInsertUndoRedoEx5()
 		{
 			OpletQueue queue = new OpletQueue ();
 			
 			using (queue.BeginAction ())
-			{
-				queue.UndoAction ();
+            {
+                Assert.Throws<System.InvalidOperationException>(() => queue.UndoAction());
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx6()
+		[Test] public void CheckInsertUndoRedoEx6()
 		{
 			OpletQueue queue = new OpletQueue ();
 			
 			using (queue.BeginAction ())
-			{
-				queue.RedoAction ();
+            {
+                Assert.Throws<System.InvalidOperationException>(() => queue.RedoAction());
 			}
 		}
 		

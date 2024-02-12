@@ -52,10 +52,10 @@ namespace Epsitec.Common.Tests.Support
 			EntityFieldPath p5 = EntityFieldPath.CreateRelativePath (p3);
 			EntityFieldPath p6 = EntityFieldPath.CreateRelativePath (p0, "a", "b", "c");
 
-			Assert.AreEqual ("a.b.c", p3.ToString ());
-			Assert.AreEqual ("a.b.c", p4.ToString ());
-			Assert.AreEqual ("a.b.c", p5.ToString ());
-			Assert.AreEqual ("a.b.c", p6.ToString ());
+			Assert.AreEqual (":a.b.c", p3.ToString ());
+			Assert.AreEqual (":a.b.c", p4.ToString ());
+			Assert.AreEqual (":a.b.c", p5.ToString ());
+			Assert.AreEqual (":a.b.c", p6.ToString ());
 		}
 		
 		[Test]

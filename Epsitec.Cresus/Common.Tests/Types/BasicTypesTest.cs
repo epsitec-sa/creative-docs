@@ -22,12 +22,10 @@ namespace Epsitec.Common.Tests.Types
 		}
 		
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckBinaryTypeEx1()
 		{
 			BinaryType type = new BinaryType ();
-
-			type.DefineMimeType ("; ;");
+            Assert.Throws<System.ArgumentException>(() => type.DefineMimeType("; ;"));
 		}
 
 		[Test]
@@ -315,17 +313,15 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
 		public void CheckDateInvalid1()
 		{
-			Date date = new Date (2010, 9, 31);
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => { Date date = new Date(2010, 9, 31); });
 		}
 
-		[Test]
-		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
-		public void CheckDateInvalid2()
-		{
-			Date date = new Date (2010, 13, 1);
+        [Test]
+        public void CheckDateInvalid2()
+        {
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => {Date date = new Date(2010, 13, 1); });
 		}
 
 		[Test]

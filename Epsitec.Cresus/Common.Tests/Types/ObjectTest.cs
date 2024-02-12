@@ -748,10 +748,9 @@ namespace Epsitec.Common.Tests.Types
 			Assert.IsTrue (ObjectX.AProperty.IsReferencedBy (typeof (ObjectY)));
 		}
 		[Test]
-		[ExpectedException (typeof (WrongBaseTypeException))]
 		public void CheckObjectTypeEx1()
 		{
-			DependencyObjectType.FromSystemType (typeof (ObjectTest));
+            Assert.Throws<WrongBaseTypeException>(() => DependencyObjectType.FromSystemType (typeof (ObjectTest)));
 		}
 
 		[Test]
@@ -786,10 +785,12 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckPropertiesEx1()
 		{
-			DependencyProperty p = Test2b.StandardProperty;
+            Assert.Throws<System.TypeInitializationException>(() =>
+            {
+                DependencyProperty p = Test2b.StandardProperty;
+            });
 		}
 
 		[Test]
@@ -802,24 +803,30 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckPropertiesEx3()
 		{
-			DependencyProperty p = Test3a.InvalidProperty;
+            Assert.Throws<System.TypeInitializationException>(() =>
+            {
+                DependencyProperty p = Test3a.InvalidProperty;
+            });
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckPropertiesEx4()
 		{
-			DependencyProperty p = Test3b.InvalidProperty;
+            Assert.Throws<System.TypeInitializationException>(() =>
+            {
+                DependencyProperty p = Test3b.InvalidProperty;
+            });
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckPropertiesEx5()
 		{
-			DependencyProperty p = Test3c.InvalidProperty;
+            Assert.Throws<System.TypeInitializationException>(() =>
+            {
+                DependencyProperty p = Test3c.InvalidProperty;
+            });
 		}
 
 		[Test]
@@ -1135,20 +1142,22 @@ namespace Epsitec.Common.Tests.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckWrongParentClass()
 		{
 			MyObject obj = new MyObject ();
 
-			try
-			{
-				TestWrongParentClass.Test (obj);
-			}
-			catch (System.Exception ex)
-			{
-				Assert.AreEqual (typeof (WrongBaseTypeException), ex.InnerException.GetType ());
-				throw;
-			}
+            Assert.Throws<System.TypeInitializationException>(() =>
+            {
+                try
+                {
+                    TestWrongParentClass.Test (obj);
+                }
+                catch (System.Exception ex)
+                {
+                    Assert.AreEqual (typeof (WrongBaseTypeException), ex.InnerException.GetType ());
+                    throw;
+                }
+            });
 		}
 		
 		private static class TestWrongParentClass
