@@ -373,7 +373,7 @@ namespace Epsitec.Aider.Entities
 				return false;
 			}
 
-			if (this.Date.Value == null)
+			if (this.Date == null)
 			{
 				error = "La date de célébration n'est pas renseignée";
 				return false;

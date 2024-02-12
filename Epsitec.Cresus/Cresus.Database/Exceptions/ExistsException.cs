@@ -7,9 +7,6 @@ namespace Epsitec.Cresus.Database.Exceptions
 	/// The <c>ExistsException</c> exception is raised when a database or an object already
 	/// exists.
 	/// </summary>
-	
-	[System.Serializable]
-	
 	public sealed class ExistsException : GenericException
 	{
 		/// <summary>
@@ -56,20 +53,5 @@ namespace Epsitec.Cresus.Database.Exceptions
 			: base (databaseAccess, message, innerException)
 		{
 		}
-		
-		
-		#region ISerializable Members
-
-		private ExistsException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-		
-		#endregion
 	}
 }

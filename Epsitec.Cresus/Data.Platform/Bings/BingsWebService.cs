@@ -28,7 +28,7 @@ namespace Epsitec.Data.Platform.Bings
 
 		public Tuple<double,double> GetCoordinatesBySwissZip(string Zip)
 		{
-			UriTemplate Template = new UriTemplate ("Locations?countryRegion={cnty}&postalCode={zip}&maxResults={nb}&key={key}");
+			UriTemplate.UriTemplate Template = new UriTemplate.UriTemplate ("Locations?countryRegion={cnty}&postalCode={zip}&maxResults={nb}&key={key}");
 			Uri Prefix = new Uri ("http://dev.virtualearth.net/REST/v1/");
 			NameValueCollection Parameters = new NameValueCollection ();
 			Parameters.Add ("cnty", "CH");

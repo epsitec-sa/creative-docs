@@ -1,103 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1FC8B84D-BE6E-4723-90BD-4D124E005DE5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Aider</RootNamespace>
-    <AssemblyName>App.Aider</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Aider\Properties\Epsitec.Aider.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Open XML SDK\V2.0\lib\DocumentFormat.OpenXml.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\External\Katana\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
-      <Link>Properties\AssemblyInfo.Solution.cs</Link>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="..\Aider\Properties\Epsitec.Aider.snk">
-      <Link>Properties\Epsitec.Aider.snk</Link>
-    </None>
     <Content Include="Assets\template-letter-derogation-noparish.txt" />
     <Content Include="Assets\template-group-report.txt" />
     <Content Include="Assets\logo-eerv.png" />
     <Content Include="Assets\template-letter-derogation.txt" />
+    
     <Content Include="Cresus.Core.Library.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="app.config" />
-    <None Include="app.manifest" />
     <None Include="build.bat" />
     <Content Include="Aider.Environment.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -114,85 +29,30 @@
     <Content Include="ServerConfigProduction\Aider.Environment.crconfig" />
     <Content Include="ServerConfigProduction\Aider.Features.crconfig" />
     <None Include="build2019.bat" />
-    <None Include="packages.config" />
-    <None Include="ServerConfigProduction\app.config" />
     <None Include="ServerConfigProduction\certificate.key" />
     <None Include="ServerConfigProduction\certificate.pem" />
     <None Include="ServerConfigProduction\nginx-maintenance.conf" />
     <None Include="ServerConfigProduction\nginx-server.conf" />
     <Content Include="ServerConfigTest\Aider.Environment.crconfig" />
     <Content Include="ServerConfigTest\Aider.Features.crconfig" />
-    <None Include="ServerConfigTest\app.config" />
     <None Include="ServerConfigTest\certificate.key" />
     <None Include="ServerConfigTest\certificate.pem" />
     <None Include="ServerConfigTest\nginx-maintenance.conf" />
     <None Include="ServerConfigTest\nginx-server.conf" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Aider.Processors\Aider.Processors.csproj">
-      <Project>{8de96414-e7b3-42b6-831a-2c92e924e121}</Project>
-      <Name>Aider.Processors</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Aider\Aider.csproj">
-      <Project>{0F0E9452-EFE5-4007-B634-B0198E13E3DA}</Project>
-      <Name>Aider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
-      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
-      <Name>Common.Document</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
-      <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
-      <Name>Cresus.Core.Library.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Maintenance\Cresus.Core.Maintenance.csproj">
-      <Project>{917EB960-42F9-48DF-A649-69A0065AA07C}</Project>
-      <Name>Cresus.Core.Maintenance</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.WebCore.Server\Cresus.WebCore.Server.csproj">
-      <Project>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</Project>
-      <Name>Cresus.WebCore.Server</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
-      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
-      <Name>Cresus.Database.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
-      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
-      <Name>Cresus.Database</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Name>Cresus.DataLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Data.Platform\Data.Platform.csproj">
-      <Project>{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}</Project>
-      <Name>Data.Platform</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Aider.Processors\Aider.Processors.csproj" />
+    <ProjectReference Include="..\Aider\Aider.csproj" />
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj" />
+    <ProjectReference Include="..\Cresus.Core.Maintenance\Cresus.Core.Maintenance.csproj" />
+    <ProjectReference Include="..\Cresus.WebCore.Server\Cresus.WebCore.Server.csproj" />
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj" />
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj" />
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj" />
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj" />
+    <ProjectReference Include="..\Data.Platform\Data.Platform.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AllowedReferenceRelatedFileExtensions>
-      .pdb
-    </AllowedReferenceRelatedFileExtensions>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

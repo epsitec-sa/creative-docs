@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -37,7 +38,7 @@ namespace Epsitec.Data.Platform
         public static void GenerateCresusNupoFile(string outputFile)
 		{
 			var encoding     = System.Text.Encoding.GetEncoding ("Windows-1252");
-			var cresusConfig = new CsvConfiguration ();
+			var cresusConfig = new CsvConfiguration (CultureInfo.CurrentCulture);
 			cresusConfig.Encoding = encoding;
 			cresusConfig.Delimiter = "  ";
 			cresusConfig.HasHeaderRecord = false;

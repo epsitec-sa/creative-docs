@@ -8,8 +8,6 @@
     <Compile Include="..\..\..\serial\CresusSerialAlgorithm.cs" Link="CresusSerialAlgorithm.cs" />
     <Compile Update="Widgets\Platform\Window.cs" />
     <Compile Remove="Drawing\FontHelper.cs" />
-    <Compile Remove="IO\Web.cs" />
-    <!--<Compile Remove="IO\Serialization.cs" />-->
     <Compile Remove="Support\AppDomainStarter.cs" />
     <Compile Remove="Support\Data\IDisablableChangedSource.cs" />
     <Compile Remove="Text\Styles\ApplyMode.cs" />
@@ -60,10 +58,10 @@
   <ItemGroup>
     <None Include="Drawing\FontHelper.cs" />
     <None Include="IO\Serialization.cs" />
-    <None Include="IO\Web.cs" />
     <None Include="Support\AppDomainStarter.cs" />
   </ItemGroup>
-  <Target Name="AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes" Condition="!$(SignAssembly)">
+
+  <Target Name="CresusCore_Common_AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes">
     <ItemGroup>
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
         <_Parameter1>Common.Tests</_Parameter1>

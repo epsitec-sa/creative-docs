@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 
 			//	TODO: implement browser using BigList...
 			
-//#			this.browser = new BrowserScrollListController (this.businessContext.Data, this.search.ScrollList, typeof (T));
+			//this.browser = new BrowserScrollListController (this.businessContext.Data, this.search.ScrollList, typeof (T));
 			this.search.State = SearchPickerState.Empty;
 
 			builder.Add (container, search);

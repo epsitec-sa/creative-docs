@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		partial void OnCustomerChanged(CustomerEntity oldEntity, CustomerEntity newEntity)
+		partial void OnCustomerChanged(CustomerEntity oldValue, CustomerEntity newValue)
 		{
 			if (Logic.IsAvailable)
 			{

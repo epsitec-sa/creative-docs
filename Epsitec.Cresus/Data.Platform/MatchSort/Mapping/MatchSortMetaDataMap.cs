@@ -7,7 +7,7 @@ using Epsitec.Data.Platform.MatchSort.Rows;
 
 namespace Epsitec.Data.Platform.MatchSort.Mapping
 {
-	internal class MatchSortMetaDataMap : CsvClassMap<MatchSortMetaData>
+	internal class MatchSortMetaDataMap : ClassMap<MatchSortMetaData>
 	{
 		public MatchSortMetaDataMap()
 		{

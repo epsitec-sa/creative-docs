@@ -121,20 +121,20 @@ namespace Epsitec.Aider.Data.ECh
 			return remote;
 		}
 
-        private void CreateSFtpClient()
-        {
-            var sftpLicenseName = "Epsitec SA 203043";
-            var sftpLicenseKey = " 2;6516FF1A7A5F266709DF28BB941BA7E8DFB5";
+//        private void CreateSFtpClient()
+//        {
+//            var sftpLicenseName = "Epsitec SA 203043";
+//            var sftpLicenseKey = " 2;6516FF1A7A5F266709DF28BB941BA7E8DFB5";
 
-            var sftp = new KellermanSoftware.NetSFtpLibrary.SFTP (sftpLicenseName, sftpLicenseKey);
-/*            sftp.HostAddress = server;
-            sftp.UserName = username;
-            sftp.Password = password;
-            sftp.Port = int.Parse (port, System.Globalization.CultureInfo.InvariantCulture);*/
-            sftp.Connect ();
+//            var sftp = new KellermanSoftware.NetSFtpLibrary.SFTP (sftpLicenseName, sftpLicenseKey);
+///*            sftp.HostAddress = server;
+//            sftp.UserName = username;
+//            sftp.Password = password;
+//            sftp.Port = int.Parse (port, System.Globalization.CultureInfo.InvariantCulture);*/
+//            sftp.Connect ();
 
-            //return sftp;
-        }
+//            //return sftp;
+//        }
 
 
         private void FtpListAvailableFiles()

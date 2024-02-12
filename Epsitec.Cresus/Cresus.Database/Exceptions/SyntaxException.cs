@@ -8,9 +8,6 @@ namespace Epsitec.Cresus.Database.Exceptions
 	/// detected (invalid connection string, ill formed SQL request, wrong table
 	/// description, etc.)
 	/// </summary>
-
-	[System.Serializable]
-
 	public sealed class SyntaxException : GenericException
 	{
 		/// <summary>
@@ -42,20 +39,5 @@ namespace Epsitec.Cresus.Database.Exceptions
 			: base (databaseAccess, message, innerException)
 		{
 		}
-
-
-		#region ISerializable Members
-
-		private SyntaxException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-
-		#endregion
 	}
 }

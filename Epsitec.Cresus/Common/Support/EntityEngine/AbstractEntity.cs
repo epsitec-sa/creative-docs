@@ -1395,7 +1395,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 
 			System.Diagnostics.Debug.Assert (field != null);
-            System.Diagnostics.Debug.Assert(field.Relation != null);
             System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
 		}
 

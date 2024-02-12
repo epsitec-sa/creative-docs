@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 				Name = "DebugService",
 			};
 			
-			System.Diagnostics.Debug.Listeners.Insert (0, this.listener);
+			System.Diagnostics.Trace.Listeners.Insert (0, this.listener);
 		}
 		
 		private void StartDebugMonitor()

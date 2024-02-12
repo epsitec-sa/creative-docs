@@ -1,132 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0C93255B-4D0C-4AF6-9244-D835427E42E0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Common.Pdf</RootNamespace>
-    <AssemblyName>Common.Pdf</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
-      <Link>Properties\AssemblyInfo.Solution.cs</Link>
-    </Compile>
-    <Compile Include="Array\Array.cs" />
-    <Compile Include="Array\ArraySetup.cs" />
-    <Compile Include="Array\CellContent.cs" />
-    <Compile Include="Array\ColumnDefinition.cs" />
-    <Compile Include="Array\ColumnType.cs" />
-    <Compile Include="Common\CommonPdf.cs" />
-    <Compile Include="Common\CommonSetup.cs" />
-    <Compile Include="Common\Layer.cs" />
-    <Compile Include="Engine\CharacterHash.cs" />
-    <Compile Include="Engine\CharacterList.cs" />
-    <Compile Include="Engine\ColorConversion.cs" />
-    <Compile Include="Engine\ColorForce.cs" />
-    <Compile Include="Engine\ComplexSurface.cs" />
-    <Compile Include="Engine\ComplexSurfaceType.cs" />
-    <Compile Include="Engine\Export.cs" />
-    <Compile Include="Engine\ExportPdfInfo.cs" />
-    <Compile Include="Engine\FontHash.cs" />
-    <Compile Include="Engine\FontList.cs" />
-    <Compile Include="Engine\ImageCompression.cs" />
-    <Compile Include="Engine\ImageSurface.cs" />
-    <Compile Include="Engine\PdfComplexSurfaceType.cs" />
-    <Compile Include="Engine\PdfExportException.cs" />
-    <Compile Include="Engine\PdfExportPageOffset.cs" />
-    <Compile Include="Engine\PdfFontType.cs" />
-    <Compile Include="Engine\PdfFunctionType.cs" />
-    <Compile Include="Engine\PdfImageStream.cs" />
-    <Compile Include="Engine\Port.cs" />
-    <Compile Include="Labels\LabelRendererSheetA4.cs" />
-    <Compile Include="Labels\LabelRendererSheetAx.cs" />
-    <Compile Include="Labels\LabelRenderer.cs" />
-    <Compile Include="Labels\LabelRendererSheetA5.cs" />
-    <Compile Include="LetterDocument\LetterDocument.cs" />
-    <Compile Include="LetterDocument\LetterDocumentSetup.cs" />
-    <Compile Include="ListingDocument\ListingDocument.cs" />
-    <Compile Include="ListingDocument\ListingDocumentSetup.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engine\StringBuffer.cs" />
-    <Compile Include="Engine\Writer.cs" />
-    <Compile Include="Labels\LabelGenerator.cs" />
-    <Compile Include="Labels\LabelPageLayout.cs" />
-    <Compile Include="TextDocument\TextDocumentSetup.cs" />
-    <Compile Include="TextDocument\TextDocument.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Properties\Epsitec.Cresus.snk</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
@@ -134,12 +12,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

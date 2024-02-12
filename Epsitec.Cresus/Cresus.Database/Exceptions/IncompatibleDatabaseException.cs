@@ -7,7 +7,6 @@ namespace Epsitec.Cresus.Database.Exceptions
 	/// The <c>IncompatibleDatabaseException</c> exception is raised when an empty database
 	/// is being opened.
 	/// </summary>
-	[System.Serializable]
 	public sealed class IncompatibleDatabaseException : GenericException
 	{
 		/// <summary>
@@ -56,20 +55,5 @@ namespace Epsitec.Cresus.Database.Exceptions
 			: base (databaseAccess, message, innerException)
 		{
 		}
-
-
-		#region ISerializable Members
-
-		private IncompatibleDatabaseException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-
-		#endregion
 	}
 }
