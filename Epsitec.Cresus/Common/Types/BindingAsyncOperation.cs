@@ -5,196 +5,195 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>BindingAsyncOperation</c> class manages the asynchronous update
-	/// of a target based on a slow data source.
-	/// </summary>
-	public sealed class BindingAsyncOperation
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="BindingAsyncOperation"/> class.
-		/// </summary>
-		/// <param name="bindingExpression">The binding that is using this instance.</param>
-		public BindingAsyncOperation(BindingExpression bindingExpression)
-		{
-			this.bindingExpression = bindingExpression;
-			this.binding = this.bindingExpression.ParentBinding;
-		}
+    /// <summary>
+    /// The <c>BindingAsyncOperation</c> class manages the asynchronous update
+    /// of a target based on a slow data source.
+    /// </summary>
+    public sealed class BindingAsyncOperation
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BindingAsyncOperation"/> class.
+        /// </summary>
+        /// <param name="bindingExpression">The binding that is using this instance.</param>
+        public BindingAsyncOperation(BindingExpression bindingExpression)
+        {
+            this.bindingExpression = bindingExpression;
+            this.binding = this.bindingExpression.ParentBinding;
+        }
 
-		public BindingAsyncOperation(Binding binding, BindingExpression[] expressions)
-		{
-			this.binding = binding;
-			this.expressions = expressions;
-		}
+        public BindingAsyncOperation(Binding binding, BindingExpression[] expressions)
+        {
+            this.binding = binding;
+            this.expressions = expressions;
+        }
 
-		/// <summary>
-		/// Asynchronously queries the source value and then updates the target.
-		/// This method call returns immediately.
-		/// </summary>
-		public void QuerySourceValueAndUpdateTarget()
-		{
-			lock (this.exclusion)
-			{
-				if (this.asyncWork == null)
-				{
-					this.asyncWork = this.AsyncUpdate;
-				}
-				
-				if (this.asyncResult == null)
-				{
-					this.asyncResult = this.asyncWork.BeginInvoke (null, null);
-				}
-				else if (this.cleanupPending)
-				{
-					//	We can't simply overwrite the IAsyncResult value since this
-					//	could lead to uncollected garbage, it seems. So we make sure
-					//	we follow the recommendations and call EndInvoke.
-					
-					this.asyncWork.EndInvoke (this.asyncResult);
-					
-					this.cleanupPending = false;
-					this.asyncResult    = this.asyncWork.BeginInvoke (null, null);
-				}
-				else
-				{
-					//	The asynchronous thread is still working, just tell it to
-					//	restart before it returns.
-					
-					this.restartRequested = true;
-				}
-			}
-		}
+        /// <summary>
+        /// Asynchronously queries the source value and then updates the target.
+        /// This method call returns immediately.
+        /// </summary>
+        public void QuerySourceValueAndUpdateTarget()
+        {
+            lock (this.exclusion)
+            {
+                if (this.asyncWork == null)
+                {
+                    this.asyncWork = this.AsyncUpdate;
+                }
 
-		/// <summary>
-		/// Asynchronously attaches to the source and updates all targets. This
-		/// method call returns immediately.
-		/// </summary>
-		public void AttachToSourceAndUpdateTargets()
-		{
-			System.Diagnostics.Debug.Assert (this.bindingExpression == null);
-			System.Diagnostics.Debug.Assert (this.asyncWork == null);
-			System.Diagnostics.Debug.Assert (this.asyncResult == null);
+                if (this.asyncResult == null)
+                {
+                    this.asyncResult = this.asyncWork.BeginInvoke(null, null);
+                }
+                else if (this.cleanupPending)
+                {
+                    //	We can't simply overwrite the IAsyncResult value since this
+                    //	could lead to uncollected garbage, it seems. So we make sure
+                    //	we follow the recommendations and call EndInvoke.
 
-			lock (this.exclusion)
-			{
-				this.asyncWork   = this.AsyncAttach;
-				this.asyncResult = this.asyncWork.BeginInvoke (this.NotifyAsyncAttachDone, null);
-			}
-		}
+                    this.asyncWork.EndInvoke(this.asyncResult);
 
-		/// <summary>
-		/// Defines the application thread invoker required to excute methods
-		/// on the UI main thread.
-		/// </summary>
-		/// <param name="value">The application thread invoker.</param>
-		public static void DefineApplicationThreadInvoker(IApplicationThreadInvoker value)
-		{
-			BindingAsyncOperation.applicationThreadInvoker = value;
-		}
+                    this.cleanupPending = false;
+                    this.asyncResult = this.asyncWork.BeginInvoke(null, null);
+                }
+                else
+                {
+                    //	The asynchronous thread is still working, just tell it to
+                    //	restart before it returns.
 
-		#region IApplicationThreadInvoker Interface
+                    this.restartRequested = true;
+                }
+            }
+        }
 
-		public interface IApplicationThreadInvoker
-		{
-			void Invoke(Support.SimpleCallback method);
-		}
+        /// <summary>
+        /// Asynchronously attaches to the source and updates all targets. This
+        /// method call returns immediately.
+        /// </summary>
+        public void AttachToSourceAndUpdateTargets()
+        {
+            System.Diagnostics.Debug.Assert(this.bindingExpression == null);
+            System.Diagnostics.Debug.Assert(this.asyncWork == null);
+            System.Diagnostics.Debug.Assert(this.asyncResult == null);
 
-		#endregion
+            lock (this.exclusion)
+            {
+                this.asyncWork = this.AsyncAttach;
+                this.asyncResult = this.asyncWork.BeginInvoke(this.NotifyAsyncAttachDone, null);
+            }
+        }
 
-		private void AsyncUpdate()
-		{
-			bool work = true;
+        /// <summary>
+        /// Defines the application thread invoker required to excute methods
+        /// on the UI main thread.
+        /// </summary>
+        /// <param name="value">The application thread invoker.</param>
+        public static void DefineApplicationThreadInvoker(IApplicationThreadInvoker value)
+        {
+            BindingAsyncOperation.applicationThreadInvoker = value;
+        }
 
-			while (work)
-			{
-				lock (this.exclusion)
-				{
-					this.restartRequested = false;
-				}
+        #region IApplicationThreadInvoker Interface
 
-				BindingAsyncOperation.GetSourceAndUpdateTarget (this.bindingExpression);
+        public interface IApplicationThreadInvoker
+        {
+            void Invoke(Support.SimpleCallback method);
+        }
 
-				//	We are done, but maybe someone already asked us for a new
-				//	update of the value in the meantime. Just restart the loop
-				//	in that case.
+        #endregion
 
-				lock (this.exclusion)
-				{
-					if (this.restartRequested == false)
-					{
-						work = false;
-						this.cleanupPending = true;
-					}
-				}
-			}
-		}
+        private void AsyncUpdate()
+        {
+            bool work = true;
 
-		private void AsyncAttach()
-		{
-			foreach (BindingExpression expression in this.expressions)
-			{
-				BindingAsyncOperation.AttachToSource (expression);
-				BindingAsyncOperation.GetSourceAndUpdateTarget (expression);
-			}
+            while (work)
+            {
+                lock (this.exclusion)
+                {
+                    this.restartRequested = false;
+                }
 
-			this.binding.NotifyAttachCompleted ();
-		}
+                BindingAsyncOperation.GetSourceAndUpdateTarget(this.bindingExpression);
 
-		private void NotifyAsyncAttachDone(System.IAsyncResult result)
-		{
-			lock (this.exclusion)
-			{
-				this.asyncWork.EndInvoke (result);
+                //	We are done, but maybe someone already asked us for a new
+                //	update of the value in the meantime. Just restart the loop
+                //	in that case.
 
-				this.asyncWork   = null;
-				this.asyncResult = null;
-			}
-		}
+                lock (this.exclusion)
+                {
+                    if (this.restartRequested == false)
+                    {
+                        work = false;
+                        this.cleanupPending = true;
+                    }
+                }
+            }
+        }
 
-		private static void AttachToSource(BindingExpression expression)
-		{
-			expression.AttachToSource ();
-		}
+        private void AsyncAttach()
+        {
+            foreach (BindingExpression expression in this.expressions)
+            {
+                BindingAsyncOperation.AttachToSource(expression);
+                BindingAsyncOperation.GetSourceAndUpdateTarget(expression);
+            }
 
-		private static void GetSourceAndUpdateTarget(BindingExpression expression)
-		{
-			//	The slow operation is here: query the binding expression
-			//	to get the source value.
-			if (expression.DataSourceType != DataSourceType.None)
-			{
-				object value = expression.GetSourceValue ();
+            this.binding.NotifyAttachCompleted();
+        }
 
-				//	Update the target value; this must be done on the same thread
-				//	than that of the UI of the application, or else WinForms won't
-				//	be happy.
+        private void NotifyAsyncAttachDone(System.IAsyncResult result)
+        {
+            lock (this.exclusion)
+            {
+                this.asyncWork.EndInvoke(result);
 
-				if (BindingAsyncOperation.applicationThreadInvoker == null)
-				{
-					expression.InternalUpdateTarget (value);
-				}
-				else
-				{
-					BindingAsyncOperation.applicationThreadInvoker.Invoke
-					(
-						delegate ()
-						{
-							expression.InternalUpdateTarget (value);
-						}
-					);
-				}
-			}
-		}
+                this.asyncWork = null;
+                this.asyncResult = null;
+            }
+        }
 
-		private static IApplicationThreadInvoker	applicationThreadInvoker;
-		
-		private BindingExpression				bindingExpression;
-		private Binding							binding;
-		private BindingExpression[]				expressions;
-		
-		private Support.SimpleCallback			asyncWork;
-		private System.IAsyncResult				asyncResult;
-		private object							exclusion = new object ();
-		private volatile bool					restartRequested;
-		private volatile bool					cleanupPending;
-	}
+        private static void AttachToSource(BindingExpression expression)
+        {
+            expression.AttachToSource();
+        }
+
+        private static void GetSourceAndUpdateTarget(BindingExpression expression)
+        {
+            //	The slow operation is here: query the binding expression
+            //	to get the source value.
+            if (expression.DataSourceType != DataSourceType.None)
+            {
+                object value = expression.GetSourceValue();
+
+                //	Update the target value; this must be done on the same thread
+                //	than that of the UI of the application, or else WinForms won't
+                //	be happy.
+
+                if (BindingAsyncOperation.applicationThreadInvoker == null)
+                {
+                    expression.InternalUpdateTarget(value);
+                }
+                else
+                {
+                    BindingAsyncOperation.applicationThreadInvoker.Invoke(
+                        delegate()
+                        {
+                            expression.InternalUpdateTarget(value);
+                        }
+                    );
+                }
+            }
+        }
+
+        private static IApplicationThreadInvoker applicationThreadInvoker;
+
+        private BindingExpression bindingExpression;
+        private Binding binding;
+        private BindingExpression[] expressions;
+
+        private Support.SimpleCallback asyncWork;
+        private System.IAsyncResult asyncResult;
+        private object exclusion = new object();
+        private volatile bool restartRequested;
+        private volatile bool cleanupPending;
+    }
 }

@@ -5,155 +5,169 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The Storage class is used to serialize and deserialize DependencyObject
-	/// graphs.
-	/// </summary>
-	public static class Storage
-	{
-		public static void Serialize(DependencyObject root, Serialization.Context context)
-		{
-			context.ExternalMap.ClearUseCount ();
-			
-			Serialization.Generic.MapId<DependencyObject> map = context.ObjectMap;
-			
-			int oldTypeCount = map.TypeCount;
-			int oldObjCount = map.ValueCount;
+    /// <summary>
+    /// The Storage class is used to serialize and deserialize DependencyObject
+    /// graphs.
+    /// </summary>
+    public static class Storage
+    {
+        public static void Serialize(DependencyObject root, Serialization.Context context)
+        {
+            context.ExternalMap.ClearUseCount();
 
-			Serialization.GraphVisitor.VisitSerializableNodes (root, context);
+            Serialization.Generic.MapId<DependencyObject> map = context.ObjectMap;
 
-			int newTypeCount = map.TypeCount;
-			int newObjCount = map.ValueCount;
+            int oldTypeCount = map.TypeCount;
+            int oldObjCount = map.ValueCount;
 
-			int objectCount   = newObjCount - oldObjCount;
-			int typeCount     = newTypeCount - oldTypeCount;
-			int externalCount = context.ExternalMap.TagCount;
+            Serialization.GraphVisitor.VisitSerializableNodes(root, context);
 
-			context.ActiveWriter.BeginStorageBundle (map.GetId (root), externalCount, typeCount, objectCount);
+            int newTypeCount = map.TypeCount;
+            int newObjCount = map.ValueCount;
 
-			if (newObjCount > oldObjCount)
-			{
-				foreach (string tag in context.ExternalMap.RecordedTags)
-				{
-					context.StoreExternalDefinition (tag);
-				}
+            int objectCount = newObjCount - oldObjCount;
+            int typeCount = newTypeCount - oldTypeCount;
+            int externalCount = context.ExternalMap.TagCount;
 
-				for (int id = oldTypeCount; id < newTypeCount; id++)
-				{
-					context.StoreTypeDefinition (id, map.GetType (id));
-				}
-				for (int id = oldObjCount; id < newObjCount; id++)
-				{
-					context.StoreObjectDefinition (id, map.GetValue (id));
-				}
-				for (int id = oldObjCount; id < newObjCount; id++)
-				{
-					context.StoreObjectData (id, map.GetValue (id));
-				}
-			}
+            context.ActiveWriter.BeginStorageBundle(
+                map.GetId(root),
+                externalCount,
+                typeCount,
+                objectCount
+            );
 
-			context.NotifySerializationCompleted ();
-			context.ActiveWriter.EndStorageBundle ();
-		}
+            if (newObjCount > oldObjCount)
+            {
+                foreach (string tag in context.ExternalMap.RecordedTags)
+                {
+                    context.StoreExternalDefinition(tag);
+                }
 
-		public static Serialization.Context CurrentDeserializationContext
-		{
-			get
-			{
-				if ((Storage.serializationnContextStack != null) &&
-					(Storage.serializationnContextStack.Count > 0))
-				{
-					return Storage.serializationnContextStack.Peek ();
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
-		
-		public static DependencyObject Deserialize(Serialization.Context context)
-		{
-			int rootId;
-			
-			int externalCount;
-			int typeCount;
-			int objectCount;
-			
-			DependencyObject root;
+                for (int id = oldTypeCount; id < newTypeCount; id++)
+                {
+                    context.StoreTypeDefinition(id, map.GetType(id));
+                }
+                for (int id = oldObjCount; id < newObjCount; id++)
+                {
+                    context.StoreObjectDefinition(id, map.GetValue(id));
+                }
+                for (int id = oldObjCount; id < newObjCount; id++)
+                {
+                    context.StoreObjectData(id, map.GetValue(id));
+                }
+            }
 
-			if (Storage.serializationnContextStack == null)
-			{
-				Storage.serializationnContextStack = new Stack<Serialization.Context> ();
-			}
+            context.NotifySerializationCompleted();
+            context.ActiveWriter.EndStorageBundle();
+        }
 
-			Storage.serializationnContextStack.Push (context);
+        public static Serialization.Context CurrentDeserializationContext
+        {
+            get
+            {
+                if (
+                    (Storage.serializationnContextStack != null)
+                    && (Storage.serializationnContextStack.Count > 0)
+                )
+                {
+                    return Storage.serializationnContextStack.Peek();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
-			try
-			{
-				context.ActiveReader.BeginStorageBundle (out rootId, out externalCount, out typeCount, out objectCount);
+        public static DependencyObject Deserialize(Serialization.Context context)
+        {
+            int rootId;
 
-				if (context.ObjectMap.IsIdDefined (rootId))
-				{
-					root = context.ObjectMap.GetValue (rootId);
-				}
-				else
-				{
-					List<DependencyObject> list = new List<DependencyObject> ();
+            int externalCount;
+            int typeCount;
+            int objectCount;
 
-					for (int i = 0; i < externalCount; i++)
-					{
-						context.RestoreExternalDefinition ();
-					}
+            DependencyObject root;
 
-					for (int i = 0; i < typeCount; i++)
-					{
-						context.RestoreTypeDefinition ();
-					}
+            if (Storage.serializationnContextStack == null)
+            {
+                Storage.serializationnContextStack = new Stack<Serialization.Context>();
+            }
 
-					for (int i = 0; i < objectCount; i++)
-					{
-						list.Add (context.RestoreObjectDefinition ());
-					}
+            Storage.serializationnContextStack.Push(context);
 
-					List<Serialization.IDeserialization> deserialized = new List<Serialization.IDeserialization> ();
+            try
+            {
+                context.ActiveReader.BeginStorageBundle(
+                    out rootId,
+                    out externalCount,
+                    out typeCount,
+                    out objectCount
+                );
 
-					foreach (DependencyObject obj in list)
-					{
-						Serialization.IDeserialization deserialization = obj as Serialization.IDeserialization;
+                if (context.ObjectMap.IsIdDefined(rootId))
+                {
+                    root = context.ObjectMap.GetValue(rootId);
+                }
+                else
+                {
+                    List<DependencyObject> list = new List<DependencyObject>();
 
-						if (deserialization != null)
-						{
-							if (deserialization.NotifyDeserializationStarted (context))
-							{
-								deserialized.Add (deserialization);
-							}
-						}
-					}
+                    for (int i = 0; i < externalCount; i++)
+                    {
+                        context.RestoreExternalDefinition();
+                    }
 
-					foreach (DependencyObject obj in list)
-					{
-						context.RestoreObjectData (context.ObjectMap.GetId (obj), obj);
-					}
+                    for (int i = 0; i < typeCount; i++)
+                    {
+                        context.RestoreTypeDefinition();
+                    }
 
-					foreach (Serialization.IDeserialization deserialization in deserialized)
-					{
-						deserialization.NotifyDeserializationCompleted (context);
-					}
+                    for (int i = 0; i < objectCount; i++)
+                    {
+                        list.Add(context.RestoreObjectDefinition());
+                    }
 
-					root = context.ObjectMap.GetValue (rootId);
-				}
+                    List<Serialization.IDeserialization> deserialized =
+                        new List<Serialization.IDeserialization>();
 
-				context.ActiveReader.EndStorageBundle ();
-			}
-			finally
-			{
-				Storage.serializationnContextStack.Pop ();
-			}
-			return root;
-		}
+                    foreach (DependencyObject obj in list)
+                    {
+                        Serialization.IDeserialization deserialization =
+                            obj as Serialization.IDeserialization;
 
-		[System.ThreadStatic]
-		private static Stack<Serialization.Context> serializationnContextStack;
-	}
+                        if (deserialization != null)
+                        {
+                            if (deserialization.NotifyDeserializationStarted(context))
+                            {
+                                deserialized.Add(deserialization);
+                            }
+                        }
+                    }
+
+                    foreach (DependencyObject obj in list)
+                    {
+                        context.RestoreObjectData(context.ObjectMap.GetId(obj), obj);
+                    }
+
+                    foreach (Serialization.IDeserialization deserialization in deserialized)
+                    {
+                        deserialization.NotifyDeserializationCompleted(context);
+                    }
+
+                    root = context.ObjectMap.GetValue(rootId);
+                }
+
+                context.ActiveReader.EndStorageBundle();
+            }
+            finally
+            {
+                Storage.serializationnContextStack.Pop();
+            }
+            return root;
+        }
+
+        [System.ThreadStatic]
+        private static Stack<Serialization.Context> serializationnContextStack;
+    }
 }

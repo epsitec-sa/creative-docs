@@ -3,260 +3,273 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>TextFieldMulti</c> class implements a multiline text field with
-	/// an optional vertical scroller.
-	/// </summary>
-	public sealed class TextFieldMulti : AbstractTextField
-	{
-		public TextFieldMulti()
-			: base (TextFieldStyle.Multiline)
-		{
-			this.TextLayout.BreakMode &= ~Drawing.TextBreakMode.SingleLine;
-			this.TextLayout.BreakMode |=  Drawing.TextBreakMode.Hyphenate;
+    /// <summary>
+    /// The <c>TextFieldMulti</c> class implements a multiline text field with
+    /// an optional vertical scroller.
+    /// </summary>
+    public sealed class TextFieldMulti : AbstractTextField
+    {
+        public TextFieldMulti()
+            : base(TextFieldStyle.Multiline)
+        {
+            this.TextLayout.BreakMode &= ~Drawing.TextBreakMode.SingleLine;
+            this.TextLayout.BreakMode |= Drawing.TextBreakMode.Hyphenate;
 
-			this.scroller = new VScroller (this);
+            this.scroller = new VScroller(this);
 
-			this.margins.Right = this.scroller.PreferredWidth;
+            this.margins.Right = this.scroller.PreferredWidth;
 
-			this.scroller.Enable = false;
-			this.scroller.ValueChanged += this.HandleScrollerValueChanged;
-			this.scroller.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
-			this.scroller.Margins = this.GetScrollerMargins ();
-		}
+            this.scroller.Enable = false;
+            this.scroller.ValueChanged += this.HandleScrollerValueChanged;
+            this.scroller.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
+            this.scroller.Margins = this.GetScrollerMargins();
+        }
 
-		public TextFieldMulti(Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
+        public TextFieldMulti(Widget embedder)
+            : this()
+        {
+            this.SetEmbedder(embedder);
+        }
 
-		public bool ScrollerVisibility
-		{
-			get
-			{
-				return this.scroller.Visibility;
-			}
-			set
-			{
-				if (this.scroller.Visibility != value)
-				{
-					this.scroller.Visibility = value;
+        public bool ScrollerVisibility
+        {
+            get { return this.scroller.Visibility; }
+            set
+            {
+                if (this.scroller.Visibility != value)
+                {
+                    this.scroller.Visibility = value;
 
-					if (value)
-					{
-						this.margins.Right = this.scroller.PreferredWidth;
-					}
-					else
-					{
-						this.margins.Right = 0;
-					}
-				}
-			}
-		}
+                    if (value)
+                    {
+                        this.margins.Right = this.scroller.PreferredWidth;
+                    }
+                    else
+                    {
+                        this.margins.Right = 0;
+                    }
+                }
+            }
+        }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.scroller.ValueChanged -= this.HandleScrollerValueChanged;
-				this.scroller.Dispose ();
-			}
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.scroller.ValueChanged -= this.HandleScrollerValueChanged;
+                this.scroller.Dispose();
+            }
 
-			base.Dispose (disposing);
-		}
-		
-		protected override void OnAdornerChanged()
-		{
-			this.scroller.Margins = this.GetScrollerMargins ();
-			base.OnAdornerChanged();
-		}
+            base.Dispose(disposing);
+        }
 
-		protected override void CursorScrollText(Drawing.Rectangle cursor, bool force)
-		{
-			Drawing.Point end = this.GetTextEndPosition ();
+        protected override void OnAdornerChanged()
+        {
+            this.scroller.Margins = this.GetScrollerMargins();
+            base.OnAdornerChanged();
+        }
 
-			if (force)
-			{
-				double offset = cursor.Bottom;
-				offset -= this.realSize.Height/2;
-				offset  = System.Math.Max (offset, end.Y);
-				offset += this.realSize.Height;
-				offset  = System.Math.Min (offset, AbstractTextField.Infinity);
-				this.scrollOffset.Y = offset-this.realSize.Height;
-			}
-			else
-			{
-				double ratioBottom = (cursor.Bottom-this.scrollOffset.Y)/this.realSize.Height;  // 0..1
-				double ratioTop    = (cursor.Top   -this.scrollOffset.Y)/this.realSize.Height;  // 0..1
-				double scrollZone  = this.ScrollZone * 0.5;
+        protected override void CursorScrollText(Drawing.Rectangle cursor, bool force)
+        {
+            Drawing.Point end = this.GetTextEndPosition();
 
-				double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
-				
-				if (h <= this.realSize.Height || this.realSize.Height < 0)
-				{
-					this.scrollOffset.Y = AbstractTextField.Infinity-this.realSize.Height;
-				}
-				else
-				{
-					if (ratioBottom <= scrollZone)  // curseur trop bas ?
-					{
-						this.scrollOffset.Y -= (scrollZone-ratioBottom)*this.realSize.Height;
-						double min = System.Math.Min (end.Y, AbstractTextField.Infinity-this.realSize.Height);
-						this.scrollOffset.Y = System.Math.Max (this.scrollOffset.Y, min);
-					}
+            if (force)
+            {
+                double offset = cursor.Bottom;
+                offset -= this.realSize.Height / 2;
+                offset = System.Math.Max(offset, end.Y);
+                offset += this.realSize.Height;
+                offset = System.Math.Min(offset, AbstractTextField.Infinity);
+                this.scrollOffset.Y = offset - this.realSize.Height;
+            }
+            else
+            {
+                double ratioBottom = (cursor.Bottom - this.scrollOffset.Y) / this.realSize.Height; // 0..1
+                double ratioTop = (cursor.Top - this.scrollOffset.Y) / this.realSize.Height; // 0..1
+                double scrollZone = this.ScrollZone * 0.5;
 
-					if (ratioTop >= 1.0-scrollZone)  // curseur trop haut ?
-					{
-						this.scrollOffset.Y += (ratioTop-(1.0-scrollZone))*this.realSize.Height;
-						this.scrollOffset.Y = System.Math.Min (this.scrollOffset.Y, AbstractTextField.Infinity-this.realSize.Height);
-					}
-				}
-			}
+                double h = AbstractTextField.Infinity - end.Y; // hauteur de tout le texte
 
-			this.scrollOffset.X = 0;
-			this.UpdateScroller ();
-		}
+                if (h <= this.realSize.Height || this.realSize.Height < 0)
+                {
+                    this.scrollOffset.Y = AbstractTextField.Infinity - this.realSize.Height;
+                }
+                else
+                {
+                    if (ratioBottom <= scrollZone) // curseur trop bas ?
+                    {
+                        this.scrollOffset.Y -= (scrollZone - ratioBottom) * this.realSize.Height;
+                        double min = System.Math.Min(
+                            end.Y,
+                            AbstractTextField.Infinity - this.realSize.Height
+                        );
+                        this.scrollOffset.Y = System.Math.Max(this.scrollOffset.Y, min);
+                    }
 
-		protected override void ScrollVertical(double dist)
-		{
-			//	Décale le texte vers le haut (+) ou le bas (-), lorsque la
-			//	souris dépasse pendant une sélection.
-			this.scrollOffset.Y += dist;
-			Drawing.Point end = this.GetTextEndPosition ();
-			double min = System.Math.Min (end.Y, AbstractTextField.Infinity-this.realSize.Height);
-			double max = AbstractTextField.Infinity-this.realSize.Height;
-			this.scrollOffset.Y = System.Math.Max (this.scrollOffset.Y, min);
-			this.scrollOffset.Y = System.Math.Min (this.scrollOffset.Y, max);
-			this.Invalidate ();
-			this.UpdateScroller ();
+                    if (ratioTop >= 1.0 - scrollZone) // curseur trop haut ?
+                    {
+                        this.scrollOffset.Y +=
+                            (ratioTop - (1.0 - scrollZone)) * this.realSize.Height;
+                        this.scrollOffset.Y = System.Math.Min(
+                            this.scrollOffset.Y,
+                            AbstractTextField.Infinity - this.realSize.Height
+                        );
+                    }
+                }
+            }
 
-			Drawing.Point pos = this.LastMousePosition;
-			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
-			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
-			pos = this.Client.Bounds.Constrain (pos);
-			pos += this.scrollOffset;
-			this.TextNavigator.MouseMoveMessage (pos);
-		}
+            this.scrollOffset.X = 0;
+            this.UpdateScroller();
+        }
 
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
-		{
-			decimal value = this.scroller.Value;
+        protected override void ScrollVertical(double dist)
+        {
+            //	Décale le texte vers le haut (+) ou le bas (-), lorsque la
+            //	souris dépasse pendant une sélection.
+            this.scrollOffset.Y += dist;
+            Drawing.Point end = this.GetTextEndPosition();
+            double min = System.Math.Min(end.Y, AbstractTextField.Infinity - this.realSize.Height);
+            double max = AbstractTextField.Infinity - this.realSize.Height;
+            this.scrollOffset.Y = System.Math.Max(this.scrollOffset.Y, min);
+            this.scrollOffset.Y = System.Math.Min(this.scrollOffset.Y, max);
+            this.Invalidate();
+            this.UpdateScroller();
 
-			switch (message.MessageType)
-			{
-				case MessageType.KeyDown:
-					if (message.IsControlPressed)
-					{
-						if (message.KeyCode == KeyCode.ArrowUp)
-						{
-							value = System.Math.Min (value+this.scroller.SmallChange*0.5m, this.scroller.Range);
-							this.scroller.Value = value;
-							message.Consumer = this;
-							return;
-						}
-						if (message.KeyCode == KeyCode.ArrowDown)
-						{
-							value = System.Math.Max (value-this.scroller.SmallChange*0.5m, 0);
-							this.scroller.Value = value;
-							message.Consumer = this;
-							return;
-						}
-					}
-					break;
+            Drawing.Point pos = this.LastMousePosition;
+            pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+            pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+            pos = this.Client.Bounds.Constrain(pos);
+            pos += this.scrollOffset;
+            this.TextNavigator.MouseMoveMessage(pos);
+        }
 
-				case MessageType.MouseWheel:
-					if (message.Wheel > 0)
-					{
-						value = System.Math.Min (value+this.scroller.SmallChange, this.scroller.Range);
-					}
-					else if (message.Wheel < 0)
-					{
-						value = System.Math.Max (value-this.scroller.SmallChange, 0);
-					}
+        protected override void ProcessMessage(Message message, Drawing.Point pos)
+        {
+            decimal value = this.scroller.Value;
 
-					this.scroller.Value = value;
-					message.Consumer = this;
-					return;
-			}
+            switch (message.MessageType)
+            {
+                case MessageType.KeyDown:
+                    if (message.IsControlPressed)
+                    {
+                        if (message.KeyCode == KeyCode.ArrowUp)
+                        {
+                            value = System.Math.Min(
+                                value + this.scroller.SmallChange * 0.5m,
+                                this.scroller.Range
+                            );
+                            this.scroller.Value = value;
+                            message.Consumer = this;
+                            return;
+                        }
+                        if (message.KeyCode == KeyCode.ArrowDown)
+                        {
+                            value = System.Math.Max(value - this.scroller.SmallChange * 0.5m, 0);
+                            this.scroller.Value = value;
+                            message.Consumer = this;
+                            return;
+                        }
+                    }
+                    break;
 
-			base.ProcessMessage (message, pos);
-		}
+                case MessageType.MouseWheel:
+                    if (message.Wheel > 0)
+                    {
+                        value = System.Math.Min(
+                            value + this.scroller.SmallChange,
+                            this.scroller.Range
+                        );
+                    }
+                    else if (message.Wheel < 0)
+                    {
+                        value = System.Math.Max(value - this.scroller.SmallChange, 0);
+                    }
 
-		protected override Drawing.Size GetTextLayoutSize()
-		{
-			return new Drawing.Size(this.realSize.Width, AbstractTextField.Infinity);
-		}
+                    this.scroller.Value = value;
+                    message.Consumer = this;
+                    return;
+            }
 
-		private Drawing.Margins GetScrollerMargins()
-		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
+            base.ProcessMessage(message, pos);
+        }
 
-			Drawing.Margins padding = this.GetInternalPadding ();
+        protected override Drawing.Size GetTextLayoutSize()
+        {
+            return new Drawing.Size(this.realSize.Width, AbstractTextField.Infinity);
+        }
 
-			return new Drawing.Margins ()
-			{
-				Right  = adorner.GeometryScrollerRightMargin-padding.Right,
-				Top    = adorner.GeometryScrollerTopMargin-padding.Top,
-				Bottom = adorner.GeometryScrollerBottomMargin-padding.Bottom
-			};
-		}
+        private Drawing.Margins GetScrollerMargins()
+        {
+            IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-		private Drawing.Point GetTextEndPosition()
-		{
-			TextLayout layout = this.GetPaintTextLayout ();
-			return layout.FindTextEnd ();
-		}
+            Drawing.Margins padding = this.GetInternalPadding();
 
-		private void UpdateScroller()
-		{
-			//	Met à jour l'asceuseur en fonction de this.scrollOffset.
-			if (this.scroller == null)
-			{
-				return;
-			}
+            return new Drawing.Margins()
+            {
+                Right = adorner.GeometryScrollerRightMargin - padding.Right,
+                Top = adorner.GeometryScrollerTopMargin - padding.Top,
+                Bottom = adorner.GeometryScrollerBottomMargin - padding.Bottom
+            };
+        }
 
-			Drawing.Point end = this.GetTextEndPosition ();
-			double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
-			if ((h <= this.realSize.Height) || 
-				(this.realSize.Height < 0))
-			{
-				this.scroller.Enable            = false;
-				this.scroller.MaxValue          = 0;
-				this.scroller.VisibleRangeRatio = 0;
-				this.scroller.Value             = 0;
-			}
-			else
-			{
-				this.scroller.Enable            = true;
-				this.scroller.MaxValue          = (decimal) (h-this.realSize.Height);
-				this.scroller.VisibleRangeRatio = (decimal) (this.realSize.Height/h);
+        private Drawing.Point GetTextEndPosition()
+        {
+            TextLayout layout = this.GetPaintTextLayout();
+            return layout.FindTextEnd();
+        }
 
-				double offset = this.scrollOffset.Y+this.realSize.Height;
-				decimal value = this.scroller.Range - (decimal) (AbstractTextField.Infinity-offset);
+        private void UpdateScroller()
+        {
+            //	Met à jour l'asceuseur en fonction de this.scrollOffset.
+            if (this.scroller == null)
+            {
+                return;
+            }
 
-				if (value > this.scroller.Range)
-				{
-					value = this.scroller.Range;
-				}
-				else if (value < 0)
-				{
-					value = 0;
-				}
+            Drawing.Point end = this.GetTextEndPosition();
+            double h = AbstractTextField.Infinity - end.Y; // hauteur de tout le texte
+            if ((h <= this.realSize.Height) || (this.realSize.Height < 0))
+            {
+                this.scroller.Enable = false;
+                this.scroller.MaxValue = 0;
+                this.scroller.VisibleRangeRatio = 0;
+                this.scroller.Value = 0;
+            }
+            else
+            {
+                this.scroller.Enable = true;
+                this.scroller.MaxValue = (decimal)(h - this.realSize.Height);
+                this.scroller.VisibleRangeRatio = (decimal)(this.realSize.Height / h);
 
-				this.scroller.Value       = value;
-				this.scroller.SmallChange = 20;
-				this.scroller.LargeChange = (decimal) (this.realSize.Height/2.0);
-			}
-		}
+                double offset = this.scrollOffset.Y + this.realSize.Height;
+                decimal value =
+                    this.scroller.Range - (decimal)(AbstractTextField.Infinity - offset);
 
-		private void HandleScrollerValueChanged(object sender)
-		{
-			this.scrollOffset.Y = this.scroller.DoubleValue-this.scroller.DoubleRange+AbstractTextField.Infinity-this.realSize.Height;
-			this.Invalidate();
-		}
-		
-		
-		private readonly VScroller				scroller;
-	}
+                if (value > this.scroller.Range)
+                {
+                    value = this.scroller.Range;
+                }
+                else if (value < 0)
+                {
+                    value = 0;
+                }
+
+                this.scroller.Value = value;
+                this.scroller.SmallChange = 20;
+                this.scroller.LargeChange = (decimal)(this.realSize.Height / 2.0);
+            }
+        }
+
+        private void HandleScrollerValueChanged(object sender)
+        {
+            this.scrollOffset.Y =
+                this.scroller.DoubleValue
+                - this.scroller.DoubleRange
+                + AbstractTextField.Infinity
+                - this.realSize.Height;
+            this.Invalidate();
+        }
+
+        private readonly VScroller scroller;
+    }
 }

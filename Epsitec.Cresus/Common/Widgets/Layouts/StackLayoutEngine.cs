@@ -5,276 +5,305 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
-	/// <summary>
-	/// StackLayout.
-	/// </summary>
-	public sealed class StackLayoutEngine : ILayoutEngine
-	{
-		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
-		{
-			Drawing.Rectangle client = rect;
-			ContainerLayoutMode mode = container.ContainerLayoutMode;
-			
-			double h1 = 0;
-			double h2 = 0;
+    /// <summary>
+    /// StackLayout.
+    /// </summary>
+    public sealed class StackLayoutEngine : ILayoutEngine
+    {
+        public void UpdateLayout(
+            Visual container,
+            Drawing.Rectangle rect,
+            IEnumerable<Visual> children
+        )
+        {
+            Drawing.Rectangle client = rect;
+            ContainerLayoutMode mode = container.ContainerLayoutMode;
 
-			LayoutContext.GetMeasuredBaseLine (container, out h1, out h2);
-			
-			double baseLine = (client.Height - (h1+h2)) / 2 + h2;
+            double h1 = 0;
+            double h2 = 0;
 
-			List<Visual> fill = new List<Visual> ();
-			double fillLength = 0;
+            LayoutContext.GetMeasuredBaseLine(container, out h1, out h2);
 
-			foreach (Visual child in children)
-			{
-				if (( (child.Dock != DockStyle.Stacked) &&
-					  (child.Dock != DockStyle.StackBegin) &&
-					  (child.Dock != DockStyle.StackFill) &&
-					  (child.Dock != DockStyle.StackEnd) ) ||
-					(child.Visibility == false))
-				{
-					//	Saute les widgets qui ne sont pas "stacked", car ils doivent être
-					//	positionnés par d'autres moyens.
-					
-					continue;
-				}
+            double baseLine = (client.Height - (h1 + h2)) / 2 + h2;
 
-				Drawing.Rectangle bounds  = client;
-				Drawing.Margins   margins = child.Margins;
-				Drawing.Size      size    = LayoutContext.GetResultingMeasuredSize (child);
+            List<Visual> fill = new List<Visual>();
+            double fillLength = 0;
 
-				if (size == Drawing.Size.NegativeInfinity)
-				{
-					return;
-				}
-				
-				double dx = size.Width;
-				double dy = size.Height;
+            foreach (Visual child in children)
+            {
+                if (
+                    (
+                        (child.Dock != DockStyle.Stacked)
+                        && (child.Dock != DockStyle.StackBegin)
+                        && (child.Dock != DockStyle.StackFill)
+                        && (child.Dock != DockStyle.StackEnd)
+                    ) || (child.Visibility == false)
+                )
+                {
+                    //	Saute les widgets qui ne sont pas "stacked", car ils doivent être
+                    //	positionnés par d'autres moyens.
 
-				if (dx.IsSafeNaN ())
-				{
-					dx = child.GetCurrentBounds ().Width;		//	TODO: améliorer
-				}
-				if (dy.IsSafeNaN ())
-				{
-					dy = child.GetCurrentBounds ().Height;		//	TODO: améliorer
-				}
+                    continue;
+                }
 
-				dx += margins.Width;
-				dy += margins.Height;
+                Drawing.Rectangle bounds = client;
+                Drawing.Margins margins = child.Margins;
+                Drawing.Size size = LayoutContext.GetResultingMeasuredSize(child);
 
-				switch (mode)
-				{
-					case ContainerLayoutMode.HorizontalFlow:
-						switch (child.Dock)
-						{
-							case DockStyle.Stacked:
-							case DockStyle.StackBegin:
-								bounds.Width = dx;
-								client.Left  = bounds.Right;
-								break;
-							case DockStyle.StackEnd:
-								bounds.Left  = bounds.Right - dx;
-								client.Right = bounds.Left;
-								break;
-							case DockStyle.StackFill:
-								fill.Add (child);
-								fillLength += Layouts.LayoutMeasure.GetWidth (child).Min;
-								continue;
-						}
-						break;
-					
-					case ContainerLayoutMode.VerticalFlow:
-						switch (child.Dock)
-						{
-							case DockStyle.Stacked:
-							case DockStyle.StackBegin:
-								bounds.Bottom = bounds.Top - dy;
-								client.Top    = bounds.Bottom;
-								break;
-							case DockStyle.StackEnd:
-								bounds.Height = dy;
-								client.Bottom = bounds.Top;
-								break;
-							case DockStyle.StackFill:
-								fill.Add (child);
-								fillLength += Layouts.LayoutMeasure.GetHeight (child).Min;
-								continue;
-						}
-						break;
-				}
+                if (size == Drawing.Size.NegativeInfinity)
+                {
+                    return;
+                }
 
-				bounds.Deflate (margins);
-				DockLayoutEngine.SetChildBounds (child, bounds, baseLine - margins.Bottom);
-			}
+                double dx = size.Width;
+                double dy = size.Height;
 
-			if (fill.Count > 0)
-			{
-				switch (mode)
-				{
-					case ContainerLayoutMode.HorizontalFlow:
-						{
-							double dw = (client.Width - fillLength) / fill.Count;
-							double ow = client.Left;
-							
-							foreach (Visual child in fill)
-							{
-								Drawing.Margins margins = child.Margins;
-								Drawing.Rectangle bounds = client;
+                if (dx.IsSafeNaN())
+                {
+                    dx = child.GetCurrentBounds().Width; //	TODO: améliorer
+                }
+                if (dy.IsSafeNaN())
+                {
+                    dy = child.GetCurrentBounds().Height; //	TODO: améliorer
+                }
 
-								ow += dw + Layouts.LayoutMeasure.GetWidth (child).Min;
-								bounds.Right = ow;
-								client.Left  = bounds.Right;
-								
-								bounds.Deflate (margins);
-								DockLayoutEngine.SetChildBounds (child, bounds, baseLine - margins.Bottom);
-							}
-						}
-						break;
-					
-					case ContainerLayoutMode.VerticalFlow:
-						{
-							double dh = (client.Height - fillLength) / fill.Count;
-							double oh = client.Top;
+                dx += margins.Width;
+                dy += margins.Height;
 
-							foreach (Visual child in fill)
-							{
-								Drawing.Margins margins = child.Margins;
-								Drawing.Rectangle bounds = client;
+                switch (mode)
+                {
+                    case ContainerLayoutMode.HorizontalFlow:
+                        switch (child.Dock)
+                        {
+                            case DockStyle.Stacked:
+                            case DockStyle.StackBegin:
+                                bounds.Width = dx;
+                                client.Left = bounds.Right;
+                                break;
+                            case DockStyle.StackEnd:
+                                bounds.Left = bounds.Right - dx;
+                                client.Right = bounds.Left;
+                                break;
+                            case DockStyle.StackFill:
+                                fill.Add(child);
+                                fillLength += Layouts.LayoutMeasure.GetWidth(child).Min;
+                                continue;
+                        }
+                        break;
 
-								oh -= dh + Layouts.LayoutMeasure.GetHeight (child).Min;
-								bounds.Bottom = oh;
-								client.Top    = bounds.Bottom;
+                    case ContainerLayoutMode.VerticalFlow:
+                        switch (child.Dock)
+                        {
+                            case DockStyle.Stacked:
+                            case DockStyle.StackBegin:
+                                bounds.Bottom = bounds.Top - dy;
+                                client.Top = bounds.Bottom;
+                                break;
+                            case DockStyle.StackEnd:
+                                bounds.Height = dy;
+                                client.Bottom = bounds.Top;
+                                break;
+                            case DockStyle.StackFill:
+                                fill.Add(child);
+                                fillLength += Layouts.LayoutMeasure.GetHeight(child).Min;
+                                continue;
+                        }
+                        break;
+                }
 
-								bounds.Deflate (margins);
-								DockLayoutEngine.SetChildBounds (child, bounds, baseLine - margins.Bottom);
-							}
-						}
-						break;
-				}
-			}
-		}
+                bounds.Deflate(margins);
+                DockLayoutEngine.SetChildBounds(child, bounds, baseLine - margins.Bottom);
+            }
 
-		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
-		{
-			ContainerLayoutMode mode = container.ContainerLayoutMode;
+            if (fill.Count > 0)
+            {
+                switch (mode)
+                {
+                    case ContainerLayoutMode.HorizontalFlow:
 
-			double currentMinDx = 0;
-			double currentMinDy = 0;
-			double currentMinH1 = 0;
-			double currentMinH2 = 0;
-			double currentMaxDx = double.PositiveInfinity;
-			double currentMaxDy = double.PositiveInfinity;
-			
-			foreach (Visual child in children)
-			{
-				if (((child.Dock != DockStyle.Stacked) &&
-					  (child.Dock != DockStyle.StackBegin) &&
-					  (child.Dock != DockStyle.StackFill) &&
-					  (child.Dock != DockStyle.StackEnd)) ||
-					(child.Visibility == false))
-				{
-					//	Saute les widgets qui ne sont pas "stacked", car leur taille n'est pas prise
-					//	en compte dans le calcul des minima/maxima.
-					
-					continue;
-				}
+                        {
+                            double dw = (client.Width - fillLength) / fill.Count;
+                            double ow = client.Left;
 
-				if (LayoutEngine.GetIgnoreMeasure (child))
-				{
-					continue;
-				}
+                            foreach (Visual child in fill)
+                            {
+                                Drawing.Margins margins = child.Margins;
+                                Drawing.Rectangle bounds = client;
 
-				Drawing.Margins margins = child.Margins;
+                                ow += dw + Layouts.LayoutMeasure.GetWidth(child).Min;
+                                bounds.Right = ow;
+                                client.Left = bounds.Right;
 
-				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
-				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
+                                bounds.Deflate(margins);
+                                DockLayoutEngine.SetChildBounds(
+                                    child,
+                                    bounds,
+                                    baseLine - margins.Bottom
+                                );
+                            }
+                        }
+                        break;
 
-				Drawing.Size clientMin = new Drawing.Size (measureDx.Desired + margins.Width, measureDy.Desired + margins.Height);
-				Drawing.Size clientMax = new Drawing.Size (measureDx.Max     + margins.Width, measureDy.Max     + margins.Width);
+                    case ContainerLayoutMode.VerticalFlow:
 
-				double clientDx = measureDx.Desired + margins.Width;
-				double clientDy = measureDy.Desired + margins.Height;
+                        {
+                            double dh = (client.Height - fillLength) / fill.Count;
+                            double oh = client.Top;
 
-				switch (mode)
-				{
-					case ContainerLayoutMode.HorizontalFlow:
-						switch (child.Dock)
-						{
-							case DockStyle.Stacked:
-							case DockStyle.StackBegin:
-							case DockStyle.StackEnd:
-								currentMinDx += clientDx;
-								currentMaxDx += clientDx;
-								break;
-							
-							case DockStyle.StackFill:
-								currentMinDx += clientMin.Width;
-								currentMaxDx += clientMax.Width;
-								break;
-						}
+                            foreach (Visual child in fill)
+                            {
+                                Drawing.Margins margins = child.Margins;
+                                Drawing.Rectangle bounds = client;
 
-						if (child.VerticalAlignment == VerticalAlignment.BaseLine)
-						{
-							double h1;
-							double h2;
-							
-							LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
+                                oh -= dh + Layouts.LayoutMeasure.GetHeight(child).Min;
+                                bounds.Bottom = oh;
+                                client.Top = bounds.Bottom;
 
-							currentMinH1 = System.Math.Max (currentMinH1, h1 + margins.Top);
-							currentMinH2 = System.Math.Max (currentMinH2, h2 + margins.Bottom);
-						}
-						else
-						{
-							currentMinDy = System.Math.Max (currentMinDy, clientMin.Height);
-							currentMaxDy = System.Math.Min (currentMaxDy, clientMax.Height);
-						}
-						break;
-					
-					case ContainerLayoutMode.VerticalFlow:
-						switch (child.Dock)
-						{
-							case DockStyle.Stacked:
-							case DockStyle.StackBegin:
-							case DockStyle.StackEnd:
-								currentMinDy += clientDy;
-								currentMaxDy += clientDy;
-								break;
-							
-							case DockStyle.StackFill:
-								currentMinDy += clientMin.Height;
-								currentMaxDy += clientMax.Height;
-								break;
-						}
-						
-						currentMinDx  = System.Math.Max (currentMinDx, clientMin.Width);
-						currentMaxDx  = System.Math.Min (currentMaxDx, clientMax.Width);
-						break;
-				}
-			}
+                                bounds.Deflate(margins);
+                                DockLayoutEngine.SetChildBounds(
+                                    child,
+                                    bounds,
+                                    baseLine - margins.Bottom
+                                );
+                            }
+                        }
+                        break;
+                }
+            }
+        }
 
-			currentMinDy = System.Math.Max (currentMinDy, currentMinH1 + currentMinH2);
+        public void UpdateMinMax(
+            Visual container,
+            LayoutContext context,
+            IEnumerable<Visual> children,
+            ref Drawing.Size minSize,
+            ref Drawing.Size maxSize
+        )
+        {
+            ContainerLayoutMode mode = container.ContainerLayoutMode;
 
-			double minWidth  = System.Math.Max (minSize.Width,  currentMinDx);
-			double minHeight = System.Math.Max (minSize.Height, currentMinDy);
-			double maxWidth  = System.Math.Min (maxSize.Width,  currentMaxDx);
-			double maxHeight = System.Math.Min (maxSize.Height, currentMaxDy);
+            double currentMinDx = 0;
+            double currentMinDy = 0;
+            double currentMinH1 = 0;
+            double currentMinH2 = 0;
+            double currentMaxDx = double.PositiveInfinity;
+            double currentMaxDy = double.PositiveInfinity;
 
-			minSize = new Drawing.Size (minWidth, minHeight);
-			maxSize = new Drawing.Size (maxWidth, maxHeight);
+            foreach (Visual child in children)
+            {
+                if (
+                    (
+                        (child.Dock != DockStyle.Stacked)
+                        && (child.Dock != DockStyle.StackBegin)
+                        && (child.Dock != DockStyle.StackFill)
+                        && (child.Dock != DockStyle.StackEnd)
+                    ) || (child.Visibility == false)
+                )
+                {
+                    //	Saute les widgets qui ne sont pas "stacked", car leur taille n'est pas prise
+                    //	en compte dans le calcul des minima/maxima.
 
-			if (context != null)
-			{
-				context.DefineBaseLine (container, currentMinH1, currentMinH2);
-			}
-		}
-		
-		public LayoutMode LayoutMode
-		{
-			get
-			{
-				return LayoutMode.Stacked;
-			}
-		}
-	}
+                    continue;
+                }
+
+                if (LayoutEngine.GetIgnoreMeasure(child))
+                {
+                    continue;
+                }
+
+                Drawing.Margins margins = child.Margins;
+
+                Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth(child);
+                Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight(child);
+
+                Drawing.Size clientMin = new Drawing.Size(
+                    measureDx.Desired + margins.Width,
+                    measureDy.Desired + margins.Height
+                );
+                Drawing.Size clientMax = new Drawing.Size(
+                    measureDx.Max + margins.Width,
+                    measureDy.Max + margins.Width
+                );
+
+                double clientDx = measureDx.Desired + margins.Width;
+                double clientDy = measureDy.Desired + margins.Height;
+
+                switch (mode)
+                {
+                    case ContainerLayoutMode.HorizontalFlow:
+                        switch (child.Dock)
+                        {
+                            case DockStyle.Stacked:
+                            case DockStyle.StackBegin:
+                            case DockStyle.StackEnd:
+                                currentMinDx += clientDx;
+                                currentMaxDx += clientDx;
+                                break;
+
+                            case DockStyle.StackFill:
+                                currentMinDx += clientMin.Width;
+                                currentMaxDx += clientMax.Width;
+                                break;
+                        }
+
+                        if (child.VerticalAlignment == VerticalAlignment.BaseLine)
+                        {
+                            double h1;
+                            double h2;
+
+                            LayoutContext.GetMeasuredBaseLine(child, out h1, out h2);
+
+                            currentMinH1 = System.Math.Max(currentMinH1, h1 + margins.Top);
+                            currentMinH2 = System.Math.Max(currentMinH2, h2 + margins.Bottom);
+                        }
+                        else
+                        {
+                            currentMinDy = System.Math.Max(currentMinDy, clientMin.Height);
+                            currentMaxDy = System.Math.Min(currentMaxDy, clientMax.Height);
+                        }
+                        break;
+
+                    case ContainerLayoutMode.VerticalFlow:
+                        switch (child.Dock)
+                        {
+                            case DockStyle.Stacked:
+                            case DockStyle.StackBegin:
+                            case DockStyle.StackEnd:
+                                currentMinDy += clientDy;
+                                currentMaxDy += clientDy;
+                                break;
+
+                            case DockStyle.StackFill:
+                                currentMinDy += clientMin.Height;
+                                currentMaxDy += clientMax.Height;
+                                break;
+                        }
+
+                        currentMinDx = System.Math.Max(currentMinDx, clientMin.Width);
+                        currentMaxDx = System.Math.Min(currentMaxDx, clientMax.Width);
+                        break;
+                }
+            }
+
+            currentMinDy = System.Math.Max(currentMinDy, currentMinH1 + currentMinH2);
+
+            double minWidth = System.Math.Max(minSize.Width, currentMinDx);
+            double minHeight = System.Math.Max(minSize.Height, currentMinDy);
+            double maxWidth = System.Math.Min(maxSize.Width, currentMaxDx);
+            double maxHeight = System.Math.Min(maxSize.Height, currentMaxDy);
+
+            minSize = new Drawing.Size(minWidth, minHeight);
+            maxSize = new Drawing.Size(maxWidth, maxHeight);
+
+            if (context != null)
+            {
+                context.DefineBaseLine(container, currentMinH1, currentMinH2);
+            }
+        }
+
+        public LayoutMode LayoutMode
+        {
+            get { return LayoutMode.Stacked; }
+        }
+    }
 }

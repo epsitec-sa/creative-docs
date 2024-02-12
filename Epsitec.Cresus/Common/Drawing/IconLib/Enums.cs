@@ -2,19 +2,19 @@
 //  Email:  gustavo_franco@hotmail.com
 //  All rights reserved.
 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
 
-//  Redistributions of source code must retain the above copyright notice, 
-//  this list of conditions and the following disclaimer. 
-//  Redistributions in binary form must reproduce the above copyright notice, 
-//  this list of conditions and the following disclaimer in the documentation 
-//  and/or other materials provided with the distribution. 
+//  Redistributions of source code must retain the above copyright notice,
+//  this list of conditions and the following disclaimer.
+//  Redistributions in binary form must reproduce the above copyright notice,
+//  this list of conditions and the following disclaimer in the documentation
+//  and/or other materials provided with the distribution.
 
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
+//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
 using System;
 using System.Collections.Generic;
@@ -27,14 +27,15 @@ namespace System.Drawing.IconLib
     public enum MultiIconFormat
     {
         // Read-Write
-        Ico   = 1,
-        Icl   = 2,
-        Dll   = 3,
+        Ico = 1,
+        Icl = 2,
+        Dll = 3,
+
         // Read-Only
-        Exe   = 4,
-        Ocx   = 5,
-        Cpl   = 6,
-        Src   = 7
+        Exe = 4,
+        Ocx = 5,
+        Cpl = 6,
+        Src = 7
     }
     #endregion
 
@@ -42,47 +43,47 @@ namespace System.Drawing.IconLib
     [Author("Franco, Gustavo")]
     internal enum HeaderSignatures
     {
-        IMAGE_DOS_SIGNATURE = 0x5A4D,      // MZ
-        IMAGE_OS2_SIGNATURE = 0x454E,      // NE
-        IMAGE_NT_SIGNATURE  = 0x00004550   // PE00
+        IMAGE_DOS_SIGNATURE = 0x5A4D, // MZ
+        IMAGE_OS2_SIGNATURE = 0x454E, // NE
+        IMAGE_NT_SIGNATURE = 0x00004550 // PE00
     }
     #endregion
 
-	#region LoadLibraryFlags
+    #region LoadLibraryFlags
     [Author("Franco, Gustavo")]
-	internal enum LoadLibraryFlags
-	{
-		DONT_RESOLVE_DLL_REFERENCES    =  0x00000001,
-		LOAD_LIBRARY_AS_DATAFILE       =  0x00000002,
-		LOAD_WITH_ALTERED_SEARCH_PATH  =  0x00000008,
-		LOAD_IGNORE_CODE_AUTHZ_LEVEL   =  0x00000010
-	}
-	#endregion
+    internal enum LoadLibraryFlags
+    {
+        DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
+        LOAD_LIBRARY_AS_DATAFILE = 0x00000002,
+        LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008,
+        LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010
+    }
+    #endregion
 
     #region ResourceType
     [Author("Franco, Gustavo")]
     internal enum ResourceType : uint
     {
-        RT_CURSOR           = 1,
-        RT_BITMAP           = 2,
-        RT_ICON             = 3,
-        RT_MENU             = 4,
-        RT_DIALOG           = 5,
-        RT_STRING           = 6,
-        RT_FONTDIR          = 7,
-        RT_FONT             = 8,
-        RT_ACCELERATOR      = 9,
-        RT_RCDATA           = 10,
-        RT_MESSAGETABLE     = 11,
-        RT_GROUP_CURSOR     = 12,
-        RT_GROUP_ICON       = 14,
-        RT_VERSION          = 16,
-        RT_DLGINCLUDE       = 17,
-        RT_PLUGPLAY         = 19,
-        RT_VXD              = 20,
-        RT_ANICURSOR        = 21,
-        RT_ANIICON          = 22,
-        RT_HTML             = 23
+        RT_CURSOR = 1,
+        RT_BITMAP = 2,
+        RT_ICON = 3,
+        RT_MENU = 4,
+        RT_DIALOG = 5,
+        RT_STRING = 6,
+        RT_FONTDIR = 7,
+        RT_FONT = 8,
+        RT_ACCELERATOR = 9,
+        RT_RCDATA = 10,
+        RT_MESSAGETABLE = 11,
+        RT_GROUP_CURSOR = 12,
+        RT_GROUP_ICON = 14,
+        RT_VERSION = 16,
+        RT_DLGINCLUDE = 17,
+        RT_PLUGPLAY = 19,
+        RT_VXD = 20,
+        RT_ANICURSOR = 21,
+        RT_ANIICON = 22,
+        RT_HTML = 23
     }
     #endregion
 
@@ -91,11 +92,11 @@ namespace System.Drawing.IconLib
     [Author("Franco, Gustavo")]
     internal enum ResourceMemoryType : ushort
     {
-        None        = 0,
-        Moveable    = 0x10, 
-        Pure        = 0x20,
-        PreLoad     = 0x40,
-        Unknown     = 7168
+        None = 0,
+        Moveable = 0x10,
+        Pure = 0x20,
+        PreLoad = 0x40,
+        Unknown = 7168
     }
     #endregion
 
@@ -103,36 +104,36 @@ namespace System.Drawing.IconLib
     [Author("Franco, Gustavo")]
     public enum IconImageFormat : int
     {
-	    //BI_RGB        = 0,
-	    //BI_RLE8       = 1,
-	    //BI_RLE4       = 2,
-	    //BI_BITFIELDS  = 3,
-	    //BI_JPEG       = 4,
-        Bmp         = 0,
-	    Png         = 5,
-        Unknown     = 255
+        //BI_RGB        = 0,
+        //BI_RLE8       = 1,
+        //BI_RLE4       = 2,
+        //BI_BITFIELDS  = 3,
+        //BI_JPEG       = 4,
+        Bmp = 0,
+        Png = 5,
+        Unknown = 255
     }
     #endregion
 
-	#region PatBltTypes
+    #region PatBltTypes
     [Author("Franco, Gustavo")]
-	internal enum PatBltTypes
-	{
-		SRCCOPY          =   0x00CC0020,
-		SRCPAINT         =   0x00EE0086,
-		SRCAND           =   0x008800C6,
-		SRCINVERT        =   0x00660046,
-		SRCERASE         =   0x00440328,
-		NOTSRCCOPY       =   0x00330008,
-		NOTSRCERASE      =   0x001100A6,
-		MERGECOPY        =   0x00C000CA,
-		MERGEPAINT       =   0x00BB0226,
-		PATCOPY          =   0x00F00021,
-		PATPAINT         =   0x00FB0A09,
-		PATINVERT        =   0x005A0049,
-		DSTINVERT        =   0x00550009,
-		BLACKNESS        =   0x00000042,
-		WHITENESS        =   0x00FF0062
-	}
-	#endregion
+    internal enum PatBltTypes
+    {
+        SRCCOPY = 0x00CC0020,
+        SRCPAINT = 0x00EE0086,
+        SRCAND = 0x008800C6,
+        SRCINVERT = 0x00660046,
+        SRCERASE = 0x00440328,
+        NOTSRCCOPY = 0x00330008,
+        NOTSRCERASE = 0x001100A6,
+        MERGECOPY = 0x00C000CA,
+        MERGEPAINT = 0x00BB0226,
+        PATCOPY = 0x00F00021,
+        PATPAINT = 0x00FB0A09,
+        PATINVERT = 0x005A0049,
+        DSTINVERT = 0x00550009,
+        BLACKNESS = 0x00000042,
+        WHITENESS = 0x00FF0062
+    }
+    #endregion
 }

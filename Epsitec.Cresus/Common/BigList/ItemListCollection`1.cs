@@ -6,11 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public class ItemListCollection<TData> : ItemListCollection<TData, ItemState>
-	{
-		public ItemListCollection(ItemCache<TData, ItemState> cache, IList<ItemListMark> marks, ItemListSelection selection)
-			: base (cache, marks, selection)
-		{
-		}
-	}
+    public class ItemListCollection<TData> : ItemListCollection<TData, ItemState>
+    {
+        public ItemListCollection(
+            ItemCache<TData, ItemState> cache,
+            IList<ItemListMark> marks,
+            ItemListSelection selection
+        )
+            : base(cache, marks, selection) { }
+    }
 }

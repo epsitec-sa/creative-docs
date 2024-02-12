@@ -3,16 +3,16 @@
 
 namespace Epsitec.Common.IO
 {
-	/// <summary>
-	/// Summary description for Compressor.
-	/// </summary>
-	public enum Compressor
-	{
-		None,
-		BZip2,
-		Zip,
-		DeflateQuick,
-		DeflateCompact,
-		GZip
-	}
+    /// <summary>
+    /// Summary description for Compressor.
+    /// </summary>
+    public enum Compressor
+    {
+        None,
+        BZip2,
+        Zip,
+        DeflateQuick,
+        DeflateCompact,
+        GZip
+    }
 }

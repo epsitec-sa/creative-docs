@@ -7,104 +7,103 @@ using System.Linq;
 
 namespace Epsitec.Common.Debug
 {
-	public static class Profiler
-	{
-		public static T ElapsedMilliseconds<T>(System.Func<T> func, out long time)
-		{
-			long microseconds;
-			var result = Profiler.ElapsedMicroseconds (func, out microseconds);
-			time = microseconds / 1000;
-			return result;
-		}
+    public static class Profiler
+    {
+        public static T ElapsedMilliseconds<T>(System.Func<T> func, out long time)
+        {
+            long microseconds;
+            var result = Profiler.ElapsedMicroseconds(func, out microseconds);
+            time = microseconds / 1000;
+            return result;
+        }
 
-		public static T ElapsedMicroseconds<T>(System.Func<T> func, out long time)
-		{
-			T result = default (T);
+        public static T ElapsedMicroseconds<T>(System.Func<T> func, out long time)
+        {
+            T result = default(T);
 
-			time = Profiler.ElapsedMicroseconds (() => result = func ());
+            time = Profiler.ElapsedMicroseconds(() => result = func());
 
-			return result;
-		}
+            return result;
+        }
 
-		public static long ElapsedMilliseconds(System.Action action)
-		{
-			return Profiler.ElapsedMicroseconds (action) / 1000;
-		}
+        public static long ElapsedMilliseconds(System.Action action)
+        {
+            return Profiler.ElapsedMicroseconds(action) / 1000;
+        }
 
-		public static long ElapsedMicroseconds(System.Action action)
-		{
-			var watch = new Stopwatch ();
+        public static long ElapsedMicroseconds(System.Action action)
+        {
+            var watch = new Stopwatch();
 
-			watch.Start ();
-			action ();
-			watch.Stop ();
+            watch.Start();
+            action();
+            watch.Stop();
 
-			return watch.ElapsedTicks * 1000L * 1000L / Stopwatch.Frequency;
-		}
+            return watch.ElapsedTicks * 1000L * 1000L / Stopwatch.Frequency;
+        }
 
-		
-		public static System.IDisposable MeasureMicroseconds(string debugOutputText)
-		{
-			return new MeasureTime (debugOutputText, 1000L*1000L, "µs");
-		}
+        public static System.IDisposable MeasureMicroseconds(string debugOutputText)
+        {
+            return new MeasureTime(debugOutputText, 1000L * 1000L, "µs");
+        }
 
-		public static System.IDisposable MeasureMilliseconds(string debugOutputText)
-		{
-			return new MeasureTime (debugOutputText, 1000L, "ms");
-		}
+        public static System.IDisposable MeasureMilliseconds(string debugOutputText)
+        {
+            return new MeasureTime(debugOutputText, 1000L, "ms");
+        }
 
+        private class MeasureTime : System.IDisposable
+        {
+            public MeasureTime(string outputFormat, long multiplier, string suffix)
+            {
+                this.watch = new Stopwatch();
+                this.format = (outputFormat ?? "").Replace("{0}", "{0}" + (suffix ?? ""));
+                this.multiplier = multiplier;
 
+                this.watch.Start();
+            }
 
-		private class MeasureTime : System.IDisposable
-		{
-			public MeasureTime(string outputFormat, long multiplier, string suffix)
-			{
-				this.watch      = new Stopwatch ();
-				this.format     = (outputFormat ?? "").Replace ("{0}", "{0}" + (suffix ?? ""));
-				this.multiplier = multiplier;
+            #region IDisposable Members
 
-				this.watch.Start ();
-			}
+            public void Dispose()
+            {
+                this.watch.Stop();
 
-			#region IDisposable Members
+                if (string.IsNullOrEmpty(this.format))
+                {
+                    return;
+                }
 
-			public void Dispose()
-			{
-				this.watch.Stop ();
+                long ticks = this.watch.ElapsedTicks - MeasureTime.offset;
 
-				if (string.IsNullOrEmpty (this.format))
-				{
-					return;
-				}
+                System.Diagnostics.Debug.WriteLine(
+                    string.Format(this.format, ticks * this.multiplier / Stopwatch.Frequency)
+                );
+            }
 
-				long ticks = this.watch.ElapsedTicks - MeasureTime.offset;
+            #endregion
 
-				System.Diagnostics.Debug.WriteLine (string.Format (this.format, ticks * this.multiplier / Stopwatch.Frequency));
-			}
+            static MeasureTime()
+            {
+                MeasureTime measure = null;
 
-			#endregion
+                for (int i = 0; i < 10; i++)
+                {
+                    using (measure = new MeasureTime(null, 1L, null))
+                    {
+                        //	Warm-up and then a few real measurements. Probably, this will result
+                        //	in a zero tick count with the watch resolution (as of June 2012).
+                    }
+                }
 
-			static MeasureTime()
-			{
-				MeasureTime measure = null;
+                MeasureTime.offset = measure.watch.ElapsedTicks;
+            }
 
-				for (int i = 0; i < 10; i++)
-				{
-					using (measure = new MeasureTime (null, 1L, null))
-					{
-						//	Warm-up and then a few real measurements. Probably, this will result
-						//	in a zero tick count with the watch resolution (as of June 2012).
-					}
-				}
+            private static readonly long offset;
 
-				MeasureTime.offset = measure.watch.ElapsedTicks;
-			}
-
-			private static readonly long		offset;
-
-			private readonly Stopwatch			watch;
-			private readonly long				multiplier;
-			private readonly string				format;
-		}
-	}
+            private readonly Stopwatch watch;
+            private readonly long multiplier;
+            private readonly string format;
+        }
+    }
 }

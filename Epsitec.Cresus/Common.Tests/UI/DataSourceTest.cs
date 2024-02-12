@@ -1,362 +1,426 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using NUnit.Framework;
-
-using System.Collections.Generic;
-using Epsitec.Common.Types;
-using Epsitec.Common.UI;
-using Epsitec.Common.Support;
-using Epsitec.Common.Types.Serialization;
-using Epsitec.Common.Widgets;
 using System;
+using System.Collections.Generic;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Serialization;
+using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.UI
 {
-	[TestFixture]
-	public class DataSourceTest
-	{
-		[SetUp]
-		public void Initialize()
-		{
-			Widget.Initialize ();
-		}
+    [TestFixture]
+    public class DataSourceTest
+    {
+        [SetUp]
+        public void Initialize()
+        {
+            Widget.Initialize();
+        }
+
+        [Test]
+        public void CheckCreation()
+        {
+            DataSource collection = new DataSource();
+
+            Visual source1 = new Visual();
+            MySimpleDataSource source2 = new MySimpleDataSource();
+
+            collection.AddDataSource("A", source1);
+            collection.AddDataSource("B", source2);
+
+            StructuredTree.SetValue(collection, "A.Name", "Source1");
+            StructuredTree.SetValue(collection, "B.x", 1);
+            StructuredTree.SetValue(collection, "B.y", "foo");
+
+            Assert.AreEqual("Source1", StructuredTree.GetValue(collection, "A.Name"));
+            Assert.AreEqual(-1, StructuredTree.GetValue(collection, "A.Index"));
+            Assert.AreEqual(1, StructuredTree.GetValue(collection, "B.x"));
+            Assert.AreEqual("foo", StructuredTree.GetValue(collection, "B.y"));
+
+            IStructuredType structuredType = collection as IStructuredType;
+
+            Assert.IsNotNull(structuredType);
+            Assert.AreEqual(
+                source1.ObjectType.SystemType,
+                structuredType.GetField("A").Type.SystemType
+            );
 
-		[Test]
-		public void CheckCreation()
-		{
-			DataSource collection = new DataSource ();
-
-			Visual source1 = new Visual ();
-			MySimpleDataSource source2 = new MySimpleDataSource ();
-
-			collection.AddDataSource ("A", source1);
-			collection.AddDataSource ("B", source2);
-
-			StructuredTree.SetValue (collection, "A.Name", "Source1");
-			StructuredTree.SetValue (collection, "B.x", 1);
-			StructuredTree.SetValue (collection, "B.y", "foo");
+            foreach (string name in collection.GetFieldIds())
+            {
+                System.Console.Out.WriteLine("Name: {0}", name);
 
-			Assert.AreEqual ("Source1", StructuredTree.GetValue (collection, "A.Name"));
-			Assert.AreEqual (-1, StructuredTree.GetValue (collection, "A.Index"));
-			Assert.AreEqual (1, StructuredTree.GetValue (collection, "B.x"));
-			Assert.AreEqual ("foo", StructuredTree.GetValue (collection, "B.y"));
+                IStructuredData data = collection.GetDataSource(name);
+                object type = TypeRosetta.GetTypeObjectFromValue(data);
+                IStructuredType tree = TypeRosetta.GetStructuredTypeFromTypeObject(type);
 
-			IStructuredType structuredType = collection as IStructuredType;
+                Assert.IsNotNull(data);
+                Assert.IsNotNull(tree);
+
+                System.Text.StringBuilder buffer1 = new System.Text.StringBuilder();
+                System.Text.StringBuilder buffer2 = new System.Text.StringBuilder();
+
+                foreach (string subPath in StructuredTree.GetFieldPaths(collection, name))
+                {
+                    buffer1.Append(subPath);
+                    buffer1.Append(" ");
+
+                    System.Console.Out.WriteLine("  {0}", subPath);
+                }
+
+                foreach (string subPath in tree.GetFieldIds())
+                {
+                    buffer2.Append(name);
+                    buffer2.Append(".");
+                    buffer2.Append(subPath);
+                    buffer2.Append(" ");
+                }
+
+                Assert.AreEqual(buffer1.ToString(), buffer2.ToString());
+            }
+        }
+
+        [Test]
+        public void CheckGetValue()
+        {
+            StringType strType = new StringType();
+            DataSource source = new DataSource();
+            StructuredType recType = new StructuredType();
+            StructuredData rec = new StructuredData(recType);
 
-			Assert.IsNotNull (structuredType);
-			Assert.AreEqual (source1.ObjectType.SystemType, structuredType.GetField ("A").Type.SystemType);
+            strType.DefineDefaultValue("");
+            strType.DefineSampleValue("Abc");
 
-			foreach (string name in collection.GetFieldIds ())
-			{
-				System.Console.Out.WriteLine ("Name: {0}", name);
+            recType.Fields.Add("A", strType);
+            recType.Fields.Add("B", strType);
+            recType.Fields.Add("R", recType);
+
+            rec.SetValue("A", "a");
+
+            source.AddDataSource("X", rec);
+
+            IStructuredData data = source;
+
+            Assert.AreEqual(rec, data.GetValue("X"));
+            Assert.AreEqual(UnknownValue.Value, data.GetValue("Y"));
 
-				IStructuredData data = collection.GetDataSource (name);
-				object type = TypeRosetta.GetTypeObjectFromValue (data);
-				IStructuredType tree = TypeRosetta.GetStructuredTypeFromTypeObject (type);
+            Assert.AreEqual(rec, StructuredTree.GetValue(data, "X"));
+            Assert.AreEqual("a", StructuredTree.GetValue(data, "X.A"));
+            Assert.AreEqual(UndefinedValue.Value, StructuredTree.GetValue(data, "X.R.R.R.A"));
+            Assert.AreEqual(UndefinedValue.Value, StructuredTree.GetValue(data, "X.B"));
+            Assert.AreEqual(UnknownValue.Value, StructuredTree.GetValue(data, "X.C"));
 
-				Assert.IsNotNull (data);
-				Assert.IsNotNull (tree);
+            rec.UndefinedValueMode = UndefinedValueMode.Default;
 
-				System.Text.StringBuilder buffer1 = new System.Text.StringBuilder ();
-				System.Text.StringBuilder buffer2 = new System.Text.StringBuilder ();
+            Assert.AreEqual("", StructuredTree.GetValue(data, "X.B"));
+            Assert.AreEqual("", StructuredTree.GetValue(data, "X.R.R.R.A"));
+            Assert.AreEqual(UnknownValue.Value, StructuredTree.GetValue(data, "X.C"));
 
-				foreach (string subPath in StructuredTree.GetFieldPaths (collection, name))
-				{
-					buffer1.Append (subPath);
-					buffer1.Append (" ");
+            rec.UndefinedValueMode = UndefinedValueMode.Sample;
 
-					System.Console.Out.WriteLine ("  {0}", subPath);
-				}
+            Assert.AreEqual("Abc", StructuredTree.GetValue(data, "X.B"));
+            Assert.AreEqual("Abc", StructuredTree.GetValue(data, "X.R.R.R.A"));
+            Assert.AreEqual(UnknownValue.Value, StructuredTree.GetValue(data, "X.C"));
+        }
 
-				foreach (string subPath in tree.GetFieldIds ())
-				{
-					buffer2.Append (name);
-					buffer2.Append (".");
-					buffer2.Append (subPath);
-					buffer2.Append (" ");
-				}
+        [Test]
+        public void CheckPanelSerializationContext()
+        {
+            ResourceManager manager = new ResourceManager();
+            Panel panel = new Panel();
+            DataSource collection = new DataSource();
 
-				Assert.AreEqual (buffer1.ToString (), buffer2.ToString ());
-			}
-		}
+            panel.DataSource = collection;
 
-		[Test]
-		public void CheckGetValue()
-		{
-			StringType strType = new StringType ();
-			DataSource source = new DataSource ();
-			StructuredType recType = new StructuredType ();
-			StructuredData rec = new StructuredData (recType);
+            Visual source1 = new Visual();
+            Visual source2 = new Visual();
 
-			strType.DefineDefaultValue ("");
-			strType.DefineSampleValue ("Abc");
+            source1.Name = "Source1";
+            source2.Name = "Source2";
 
-			recType.Fields.Add ("A", strType);
-			recType.Fields.Add ("B", strType);
-			recType.Fields.Add ("R", recType);
+            collection.AddDataSource("B", source2);
+            collection.AddDataSource("A", source1);
 
-			rec.SetValue ("A", "a");
+            Assert.AreEqual(source1, StructuredTree.GetValue(collection, "A"));
+            Assert.AreEqual(source2, StructuredTree.GetValue(collection, "B"));
 
-			source.AddDataSource ("X", rec);
+            Context context = new Context();
 
-			IStructuredData data = source;
+            Panel.FillSerializationContext(context, collection, manager);
 
-			Assert.AreEqual (rec, data.GetValue ("X"));
-			Assert.AreEqual (UnknownValue.Value, data.GetValue ("Y"));
+            Assert.AreEqual(2, context.ExternalMap.TagCount);
+            Assert.AreEqual(
+                "_DataSource",
+                Collection.ToArray<string>(context.ExternalMap.RecordedTags)[0]
+            );
+            Assert.AreEqual(
+                "_ResourceManager",
+                Collection.ToArray<string>(context.ExternalMap.RecordedTags)[1]
+            );
+            Assert.AreEqual(collection, context.ExternalMap.GetValue("_DataSource"));
+            Assert.AreEqual(manager, context.ExternalMap.GetValue("_ResourceManager"));
 
-			Assert.AreEqual (rec, StructuredTree.GetValue (data, "X"));
-			Assert.AreEqual ("a", StructuredTree.GetValue (data, "X.A"));
-			Assert.AreEqual (UndefinedValue.Value, StructuredTree.GetValue (data, "X.R.R.R.A"));
-			Assert.AreEqual (UndefinedValue.Value, StructuredTree.GetValue (data, "X.B"));
-			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (data, "X.C"));
+            Button b1 = new Button();
+            Binding binding = new Binding(BindingMode.OneWay, null, "A.Name");
 
-			rec.UndefinedValueMode = UndefinedValueMode.Default;
+            b1.Dock = DockStyle.Top;
+            b1.SetBinding(Visual.NameProperty, binding);
 
-			Assert.AreEqual ("", StructuredTree.GetValue (data, "X.B"));
-			Assert.AreEqual ("", StructuredTree.GetValue (data, "X.R.R.R.A"));
-			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (data, "X.C"));
+            Assert.AreEqual(
+                DataSourceType.None,
+                b1.GetBindingExpression(Visual.NameProperty).DataSourceType
+            );
 
-			rec.UndefinedValueMode = UndefinedValueMode.Sample;
+            panel.Children.Add(b1);
 
-			Assert.AreEqual ("Abc", StructuredTree.GetValue (data, "X.B"));
-			Assert.AreEqual ("Abc", StructuredTree.GetValue (data, "X.R.R.R.A"));
-			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (data, "X.C"));
-		}
+            Assert.AreEqual(
+                DataSourceType.PropertyObject,
+                b1.GetBindingExpression(Visual.NameProperty).DataSourceType
+            );
+            Assert.AreEqual(source1.Name, b1.Name);
 
-		[Test]
-		public void CheckPanelSerializationContext()
-		{
-			ResourceManager manager = new ResourceManager ();
-			Panel panel = new Panel ();
-			DataSource collection = new DataSource ();
+            source1.Name = "X";
 
-			panel.DataSource = collection;
+            Assert.AreEqual("X", source1.Name);
+            Assert.AreEqual("X", b1.Name);
 
-			Visual source1 = new Visual ();
-			Visual source2 = new Visual ();
+            b1.Name = "Y";
 
-			source1.Name = "Source1";
-			source2.Name = "Source2";
+            Assert.AreEqual("X", source1.Name);
+            Assert.AreEqual("Y", b1.Name);
+        }
 
-			collection.AddDataSource ("B", source2);
-			collection.AddDataSource ("A", source1);
+        [Test]
+        public void CheckPanelDataSourceBinding1()
+        {
+            Panel panel = new Panel();
+            DataSource collection = new DataSource();
+            StructuredType type = new StructuredType();
+            StructuredData data = new StructuredData(type);
 
-			Assert.AreEqual (source1, StructuredTree.GetValue (collection, "A"));
-			Assert.AreEqual (source2, StructuredTree.GetValue (collection, "B"));
+            type.Fields.Add("Label", StringType.NativeDefault);
+            data.SetValue("Label", "Hello");
 
-			Context context = new Context ();
+            panel.DataSource = collection;
 
-			Panel.FillSerializationContext (context, collection, manager);
+            collection.AddDataSource("A", data);
 
-			Assert.AreEqual (2, context.ExternalMap.TagCount);
-			Assert.AreEqual ("_DataSource", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
-			Assert.AreEqual ("_ResourceManager", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[1]);
-			Assert.AreEqual (collection, context.ExternalMap.GetValue ("_DataSource"));
-			Assert.AreEqual (manager, context.ExternalMap.GetValue ("_ResourceManager"));
+            Button b1 = new Button();
 
-			Button b1 = new Button ();
-			Binding binding = new Binding (BindingMode.OneWay, null, "A.Name");
+            panel.Children.Add(b1);
 
-			b1.Dock = DockStyle.Top;
-			b1.SetBinding (Visual.NameProperty, binding);
+            b1.SetBinding(Visual.NameProperty, new Binding(BindingMode.OneWay, null, "A.Label"));
 
-			Assert.AreEqual (DataSourceType.None, b1.GetBindingExpression (Visual.NameProperty).DataSourceType);
+            Assert.AreEqual(
+                DataSourceType.StructuredData,
+                b1.GetBindingExpression(Visual.NameProperty).DataSourceType
+            );
+            Assert.AreEqual(
+                typeof(StringType),
+                b1.GetBindingExpression(Visual.NameProperty).GetSourceTypeObject().GetType()
+            );
+            Assert.AreEqual("Hello", b1.Name);
 
-			panel.Children.Add (b1);
+            data.SetValue("Label", "Good bye");
 
-			Assert.AreEqual (DataSourceType.PropertyObject, b1.GetBindingExpression (Visual.NameProperty).DataSourceType);
-			Assert.AreEqual (source1.Name, b1.Name);
+            Assert.AreEqual("Good bye", b1.Name);
+        }
 
-			source1.Name = "X";
+        [Test]
+        public void CheckPanelDataSourceBinding2()
+        {
+            Panel panel = new Panel();
+            DataSource source = new DataSource();
 
-			Assert.AreEqual ("X", source1.Name);
-			Assert.AreEqual ("X", b1.Name);
+            StructuredType type1 = new StructuredType();
+            StructuredType type2 = new StructuredType();
 
-			b1.Name = "Y";
+            StructuredData data1 = new StructuredData(type1);
+            StructuredData data2 = new StructuredData(type2);
 
-			Assert.AreEqual ("X", source1.Name);
-			Assert.AreEqual ("Y", b1.Name);
-		}
+            type1.Fields.Add("A", StringType.NativeDefault);
+            type1.Fields.Add("R", type2);
 
-		[Test]
-		public void CheckPanelDataSourceBinding1()
-		{
-			Panel panel = new Panel ();
-			DataSource collection = new DataSource ();
-			StructuredType type = new StructuredType ();
-			StructuredData data = new StructuredData (type);
+            type2.Fields.Add("B", StringType.NativeDefault);
 
-			type.Fields.Add ("Label", StringType.NativeDefault);
-			data.SetValue ("Label", "Hello");
+            data1.SetValue("A", "a");
+            data1.SetValue("R", data2);
 
-			panel.DataSource = collection;
+            data2.SetValue("B", "b");
 
-			collection.AddDataSource ("A", data);
+            panel.DataSource = source;
 
-			Button b1 = new Button ();
+            source.AddDataSource("*", data1);
 
-			panel.Children.Add (b1);
+            Button b1 = new Button();
+            Button b2 = new Button();
 
-			b1.SetBinding (Visual.NameProperty, new Binding (BindingMode.OneWay, null, "A.Label"));
+            panel.Children.Add(b1);
 
-			Assert.AreEqual (DataSourceType.StructuredData, b1.GetBindingExpression (Visual.NameProperty).DataSourceType);
-			Assert.AreEqual (typeof (StringType), b1.GetBindingExpression (Visual.NameProperty).GetSourceTypeObject ().GetType ());
-			Assert.AreEqual ("Hello", b1.Name);
+            b1.SetBinding(Visual.NameProperty, new Binding(BindingMode.OneWay, null, "*.A"));
+            b2.SetBinding(Visual.NameProperty, new Binding(BindingMode.OneWay, null, "*.B"));
 
-			data.SetValue ("Label", "Good bye");
+            Assert.AreEqual("a", b1.Name);
+            Assert.AreEqual(null, b2.Name);
+
+            PanelPlaceholder placeholder = new PanelPlaceholder();
+            Panel subPanel = new Panel();
 
-			Assert.AreEqual ("Good bye", b1.Name);
-		}
+            subPanel.Children.Add(b2);
 
-		[Test]
-		public void CheckPanelDataSourceBinding2()
-		{
-			Panel panel = new Panel ();
-			DataSource source = new DataSource ();
-			
-			StructuredType type1 = new StructuredType ();
-			StructuredType type2 = new StructuredType ();
-			
-			StructuredData data1 = new StructuredData (type1);
-			StructuredData data2 = new StructuredData (type2);
+            placeholder.DefinePanel(subPanel);
 
-			type1.Fields.Add ("A", StringType.NativeDefault);
-			type1.Fields.Add ("R", type2);
+            placeholder.SetBinding(
+                Placeholder.ValueProperty,
+                new Binding(BindingMode.OneWay, null, "*.R")
+            );
 
-			type2.Fields.Add ("B", StringType.NativeDefault);
-			
-			data1.SetValue ("A", "a");
-			data1.SetValue ("R", data2);
+            panel.Children.Add(placeholder);
 
-			data2.SetValue ("B", "b");
+            Assert.AreEqual("a", b1.Name);
+            Assert.AreEqual("b", b2.Name);
+        }
 
-			panel.DataSource = source;
+        [Test]
+        public void CheckGetFieldTypeObject()
+        {
+            DataSource collection = new DataSource();
 
-			source.AddDataSource ("*", data1);
-
-			Button b1 = new Button ();
-			Button b2 = new Button ();
-
-			panel.Children.Add (b1);
-
-			b1.SetBinding (Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.A"));
-			b2.SetBinding (Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.B"));
-
-			Assert.AreEqual ("a", b1.Name);
-			Assert.AreEqual (null, b2.Name);
-
-			PanelPlaceholder placeholder = new PanelPlaceholder ();
-			Panel subPanel = new Panel ();
-
-			subPanel.Children.Add (b2);
-
-			placeholder.DefinePanel (subPanel);
-			
-			placeholder.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, null, "*.R"));
-
-			panel.Children.Add (placeholder);
-
-			Assert.AreEqual ("a", b1.Name);
-			Assert.AreEqual ("b", b2.Name);
-		}
-
-		[Test]
-		public void CheckGetFieldTypeObject()
-		{
-			DataSource collection = new DataSource ();
-
-			Visual source1 = new Visual ();
-			MySimpleDataSource source2 = new MySimpleDataSource ();
-
-			source2.SetValue ("Name", "Petrus");
-			source2.SetValue ("BirthDateYear", 1972);
-
-			collection.AddDataSource ("B", source2);
-			collection.AddDataSource ("A", source1);
-
-			IStructuredType type = collection as IStructuredType;
-
-			Assert.IsNotNull (type);
-
-			Assert.AreEqual (typeof (Visual), StructuredTree.GetField (type, "A").Type.SystemType);
-			Assert.AreEqual (typeof (DynamicStructuredType), StructuredTree.GetField (type, "B").Type.GetType ());
-			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "A.Name").Type.GetType ());
-			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "B.Name").Type.GetType ());
-			Assert.AreEqual (typeof (IntegerType), StructuredTree.GetField (type, "B.BirthDateYear").Type.GetType ());
-
-			Assert.AreEqual (typeof (Visual), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A").Type));
-			Assert.AreEqual (null, TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B").Type));
-			Assert.AreEqual (typeof (string), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A.Name").Type));
-			Assert.AreEqual (typeof (string), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B.Name").Type));
-			Assert.AreEqual (typeof (int), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B.BirthDateYear").Type));
-		}
-
-		[Test]
-		public void CheckSetValueEx1()
-		{
-			DataSource collection = new DataSource ();
-
-			Visual source1 = new Visual ();
-
-			collection.AddDataSource ("A", source1);
-            Assert.Throws<InvalidOperationException>(() => StructuredTree.SetValue (collection, "A", source1));
-		}
-
-		[Test]
-		public void CheckSetValueEx2()
-		{
-			DataSource collection = new DataSource ();
-
-			Visual source1 = new Visual ();
-
-            Assert.Throws<InvalidOperationException>(() => StructuredTree.SetValue (collection, "A", source1));
-		}
-
-		private class MySimpleDataSource : IStructuredData
-		{
-			public MySimpleDataSource()
-			{
-			}
-
-			#region IStructuredData Members
-
-			public void AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
-			{
-				throw new System.Exception ("The method or operation is not implemented.");
-			}
-
-			public void DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
-			{
-				throw new System.Exception ("The method or operation is not implemented.");
-			}
-
-			public void SetValue(string name, object value)
-			{
-				this.data[name] = value;
-			}
-
-			public IEnumerable<string> GetValueIds()
-			{
-				string[] names = new string[this.data.Keys.Count];
-				this.data.Keys.CopyTo (names, 0);
-				System.Array.Sort (names);
-				return names;
-			}
-
-			public object GetValue(string name)
-			{
-				return this.data[name];
-			}
-
-			public void SetValue(string name, object value, ValueStoreSetMode mode)
-			{
-				this.data[name] = value;
-			}
-
-			#endregion
-
-			Dictionary<string, object> data = new Dictionary<string, object> ();
-		}
-	}
+            Visual source1 = new Visual();
+            MySimpleDataSource source2 = new MySimpleDataSource();
+
+            source2.SetValue("Name", "Petrus");
+            source2.SetValue("BirthDateYear", 1972);
+
+            collection.AddDataSource("B", source2);
+            collection.AddDataSource("A", source1);
+
+            IStructuredType type = collection as IStructuredType;
+
+            Assert.IsNotNull(type);
+
+            Assert.AreEqual(typeof(Visual), StructuredTree.GetField(type, "A").Type.SystemType);
+            Assert.AreEqual(
+                typeof(DynamicStructuredType),
+                StructuredTree.GetField(type, "B").Type.GetType()
+            );
+            Assert.AreEqual(
+                typeof(StringType),
+                StructuredTree.GetField(type, "A.Name").Type.GetType()
+            );
+            Assert.AreEqual(
+                typeof(StringType),
+                StructuredTree.GetField(type, "B.Name").Type.GetType()
+            );
+            Assert.AreEqual(
+                typeof(IntegerType),
+                StructuredTree.GetField(type, "B.BirthDateYear").Type.GetType()
+            );
+
+            Assert.AreEqual(
+                typeof(Visual),
+                TypeRosetta.GetSystemTypeFromTypeObject(StructuredTree.GetField(type, "A").Type)
+            );
+            Assert.AreEqual(
+                null,
+                TypeRosetta.GetSystemTypeFromTypeObject(StructuredTree.GetField(type, "B").Type)
+            );
+            Assert.AreEqual(
+                typeof(string),
+                TypeRosetta.GetSystemTypeFromTypeObject(
+                    StructuredTree.GetField(type, "A.Name").Type
+                )
+            );
+            Assert.AreEqual(
+                typeof(string),
+                TypeRosetta.GetSystemTypeFromTypeObject(
+                    StructuredTree.GetField(type, "B.Name").Type
+                )
+            );
+            Assert.AreEqual(
+                typeof(int),
+                TypeRosetta.GetSystemTypeFromTypeObject(
+                    StructuredTree.GetField(type, "B.BirthDateYear").Type
+                )
+            );
+        }
+
+        [Test]
+        public void CheckSetValueEx1()
+        {
+            DataSource collection = new DataSource();
+
+            Visual source1 = new Visual();
+
+            collection.AddDataSource("A", source1);
+            Assert.Throws<InvalidOperationException>(
+                () => StructuredTree.SetValue(collection, "A", source1)
+            );
+        }
+
+        [Test]
+        public void CheckSetValueEx2()
+        {
+            DataSource collection = new DataSource();
+
+            Visual source1 = new Visual();
+
+            Assert.Throws<InvalidOperationException>(
+                () => StructuredTree.SetValue(collection, "A", source1)
+            );
+        }
+
+        private class MySimpleDataSource : IStructuredData
+        {
+            public MySimpleDataSource() { }
+
+            #region IStructuredData Members
+
+            public void AttachListener(
+                string name,
+                Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler
+            )
+            {
+                throw new System.Exception("The method or operation is not implemented.");
+            }
+
+            public void DetachListener(
+                string name,
+                Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler
+            )
+            {
+                throw new System.Exception("The method or operation is not implemented.");
+            }
+
+            public void SetValue(string name, object value)
+            {
+                this.data[name] = value;
+            }
+
+            public IEnumerable<string> GetValueIds()
+            {
+                string[] names = new string[this.data.Keys.Count];
+                this.data.Keys.CopyTo(names, 0);
+                System.Array.Sort(names);
+                return names;
+            }
+
+            public object GetValue(string name)
+            {
+                return this.data[name];
+            }
+
+            public void SetValue(string name, object value, ValueStoreSetMode mode)
+            {
+                this.data[name] = value;
+            }
+
+            #endregion
+
+            Dictionary<string, object> data = new Dictionary<string, object>();
+        }
+    }
 }

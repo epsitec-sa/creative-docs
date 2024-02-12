@@ -3,14 +3,12 @@
 
 namespace Epsitec.Common.Types.Collections
 {
-	/// <summary>
-	/// The <c>EnumValueCollection</c> represents a collection of <see cref="EnumValue"/> items.
-	/// </summary>
-	public class EnumValueCollection : HostedList<EnumValue>, IReadOnlyLock
-	{
-		public EnumValueCollection()
-			: base (null)
-		{
-		}
-	}
+    /// <summary>
+    /// The <c>EnumValueCollection</c> represents a collection of <see cref="EnumValue"/> items.
+    /// </summary>
+    public class EnumValueCollection : HostedList<EnumValue>, IReadOnlyLock
+    {
+        public EnumValueCollection()
+            : base(null) { }
+    }
 }

@@ -6,144 +6,199 @@ using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
-	public class DeserializerContext : Context
-	{
-		public DeserializerContext(IO.AbstractReader reader)
-		{
-			this.reader = reader;
-		}
+    public class DeserializerContext : Context
+    {
+        public DeserializerContext(IO.AbstractReader reader)
+        {
+            this.reader = reader;
+        }
 
-		public override void RestoreObjectData(int id, DependencyObject obj)
-		{
-			this.AssertReadable ();
+        public override void RestoreObjectData(int id, DependencyObject obj)
+        {
+            this.AssertReadable();
 
-			this.reader.BeginObject (id, obj);
+            this.reader.BeginObject(id, obj);
 
-			string field;
-			string value;
+            string field;
+            string value;
 
-			while (this.reader.ReadObjectFieldValue (obj, out field, out value))
-			{
-				this.RestoreObjectField (obj, field, value);
-			}
-			
-			this.reader.EndObject (id, obj);
-		}
+            while (this.reader.ReadObjectFieldValue(obj, out field, out value))
+            {
+                this.RestoreObjectField(obj, field, value);
+            }
 
-		private void RestoreObjectField(DependencyObject obj, string field, string value)
-		{
-			DependencyProperty property = null;
+            this.reader.EndObject(id, obj);
+        }
 
-			if (field.IndexOf ('.') < 0)
-			{
-				//	This is a standard, simple field.
+        private void RestoreObjectField(DependencyObject obj, string field, string value)
+        {
+            DependencyProperty property = null;
 
-				property = obj.ObjectType.GetProperty (field);
-			}
-			else
-			{
-				string[] args = field.Split ('.');
-				
-				string typeTag = args[0];
-				string name    = args[1];
+            if (field.IndexOf('.') < 0)
+            {
+                //	This is a standard, simple field.
 
-				DependencyObjectType type = DependencyObjectType.FromSystemType (this.ObjectMap.GetType (Context.ParseId (typeTag)));
+                property = obj.ObjectType.GetProperty(field);
+            }
+            else
+            {
+                string[] args = field.Split('.');
 
-				property = type.GetProperty (name);
-			}
+                string typeTag = args[0];
+                string name = args[1];
 
-			if (property == null)
-			{
-				throw new System.ArgumentException (string.Format ("Property {0} could not be resolved", field));
-			}
+                DependencyObjectType type = DependencyObjectType.FromSystemType(
+                    this.ObjectMap.GetType(Context.ParseId(typeTag))
+                );
 
-			if (MarkupExtension.IsMarkupExtension (value))
-			{
-				//	This is a markup extension
-				
-				object data = this.ResolveFromMarkup (value, property.PropertyType);
-				System.Type dataType = data == null ? typeof (object) : data.GetType ();
+                property = type.GetProperty(name);
+            }
 
-				if ((TypeRosetta.DoesTypeImplementInterface (dataType, typeof (IEnumerable<DependencyObject>))) &&
-					(property.IsPropertyTypeAnICollectionOfDependencyObject))
-				{
-					//	Assign a collection of DependencyObject to a property which implements
-					//	such a collection.
+            if (property == null)
+            {
+                throw new System.ArgumentException(
+                    string.Format("Property {0} could not be resolved", field)
+                );
+            }
 
-					DeserializerContext.RestoreCollection<DependencyObject> (obj, field, property, data);
-				}
-				else if ((TypeRosetta.DoesTypeImplementInterface (dataType, typeof (IEnumerable<string>))) &&
-					     (property.IsPropertyTypeAnICollectionOfString))
-				{
-					DeserializerContext.RestoreCollection<string> (obj, field, property, data);
-				}
-				else if ((TypeRosetta.DoesTypeImplementInterface (dataType, typeof (System.Collections.IEnumerable))) &&
-					     (property.IsPropertyTypeAnICollectionOfAny))
-				{
-					DeserializerContext.RestoreEnumerable (obj, field, property, data);
-				}
-				else if (data is Binding)
-				{
-					//	Rebind property if it was a binding...
-					
-					obj.SetBinding (property, data as Binding);
-				}
-				else
-				{
-					obj.SetValue (property, data);
-				}
-			}
-			else
-			{
-				object data = property.ConvertFromString (MarkupExtension.Unescape (value), this);
-				obj.SetValue (property, data);
-			}
-		}
+            if (MarkupExtension.IsMarkupExtension(value))
+            {
+                //	This is a markup extension
 
-		private static void RestoreCollection<T>(DependencyObject obj, string field, DependencyProperty property, object data)
-		{
-			ICollection<T> collection = obj.GetValue (property) as ICollection<T>;
-			IEnumerable<T> dataSource = data as IEnumerable<T>;
+                object data = this.ResolveFromMarkup(value, property.PropertyType);
+                System.Type dataType = data == null ? typeof(object) : data.GetType();
 
-			if (collection == null)
-			{
-				throw new System.ArgumentException (string.Format ("Property {0} does not follow Collection semantics", field));
-			}
-			if (dataSource == null)
-			{
-				throw new System.ArgumentException (string.Format ("Property {0} cannot be restored", field));
-			}
+                if (
+                    (
+                        TypeRosetta.DoesTypeImplementInterface(
+                            dataType,
+                            typeof(IEnumerable<DependencyObject>)
+                        )
+                    ) && (property.IsPropertyTypeAnICollectionOfDependencyObject)
+                )
+                {
+                    //	Assign a collection of DependencyObject to a property which implements
+                    //	such a collection.
 
-			collection.Clear ();
+                    DeserializerContext.RestoreCollection<DependencyObject>(
+                        obj,
+                        field,
+                        property,
+                        data
+                    );
+                }
+                else if (
+                    (TypeRosetta.DoesTypeImplementInterface(dataType, typeof(IEnumerable<string>)))
+                    && (property.IsPropertyTypeAnICollectionOfString)
+                )
+                {
+                    DeserializerContext.RestoreCollection<string>(obj, field, property, data);
+                }
+                else if (
+                    (
+                        TypeRosetta.DoesTypeImplementInterface(
+                            dataType,
+                            typeof(System.Collections.IEnumerable)
+                        )
+                    ) && (property.IsPropertyTypeAnICollectionOfAny)
+                )
+                {
+                    DeserializerContext.RestoreEnumerable(obj, field, property, data);
+                }
+                else if (data is Binding)
+                {
+                    //	Rebind property if it was a binding...
 
-			foreach (T item in dataSource)
-			{
-				collection.Add (item);
-			}
-		}
+                    obj.SetBinding(property, data as Binding);
+                }
+                else
+                {
+                    obj.SetValue(property, data);
+                }
+            }
+            else
+            {
+                object data = property.ConvertFromString(MarkupExtension.Unescape(value), this);
+                obj.SetValue(property, data);
+            }
+        }
 
-		private static void RestoreEnumerable(DependencyObject obj, string field, DependencyProperty property, object data)
-		{
-			System.Type                    collectionType;
-			object                         collection = obj.GetValue (property);
-			ISerializationConverter        converter  = Context.GetActiveContext ().FindConverterForCollection (property.PropertyType, out collectionType);
-			System.Collections.IEnumerable dataSource = data as System.Collections.IEnumerable;
+        private static void RestoreCollection<T>(
+            DependencyObject obj,
+            string field,
+            DependencyProperty property,
+            object data
+        )
+        {
+            ICollection<T> collection = obj.GetValue(property) as ICollection<T>;
+            IEnumerable<T> dataSource = data as IEnumerable<T>;
 
-			if (collectionType == null)
-			{
-				throw new System.ArgumentException (string.Format ("Property {0} does not follow Collection semantics", field));
-			}
-			if (dataSource == null)
-			{
-				throw new System.ArgumentException (string.Format ("Property {0} cannot be restored", field));
-			}
+            if (collection == null)
+            {
+                throw new System.ArgumentException(
+                    string.Format("Property {0} does not follow Collection semantics", field)
+                );
+            }
+            if (dataSource == null)
+            {
+                throw new System.ArgumentException(
+                    string.Format("Property {0} cannot be restored", field)
+                );
+            }
 
-			collectionType.InvokeMember ("Clear", System.Reflection.BindingFlags.InvokeMethod, null, collection, new object[0]);
+            collection.Clear();
 
-			foreach (object item in dataSource)
-			{
-				collectionType.InvokeMember ("Add", System.Reflection.BindingFlags.InvokeMethod, null, collection, new object[] { item });
-			}
-		}
-	}
+            foreach (T item in dataSource)
+            {
+                collection.Add(item);
+            }
+        }
+
+        private static void RestoreEnumerable(
+            DependencyObject obj,
+            string field,
+            DependencyProperty property,
+            object data
+        )
+        {
+            System.Type collectionType;
+            object collection = obj.GetValue(property);
+            ISerializationConverter converter = Context
+                .GetActiveContext()
+                .FindConverterForCollection(property.PropertyType, out collectionType);
+            System.Collections.IEnumerable dataSource = data as System.Collections.IEnumerable;
+
+            if (collectionType == null)
+            {
+                throw new System.ArgumentException(
+                    string.Format("Property {0} does not follow Collection semantics", field)
+                );
+            }
+            if (dataSource == null)
+            {
+                throw new System.ArgumentException(
+                    string.Format("Property {0} cannot be restored", field)
+                );
+            }
+
+            collectionType.InvokeMember(
+                "Clear",
+                System.Reflection.BindingFlags.InvokeMethod,
+                null,
+                collection,
+                new object[0]
+            );
+
+            foreach (object item in dataSource)
+            {
+                collectionType.InvokeMember(
+                    "Add",
+                    System.Reflection.BindingFlags.InvokeMethod,
+                    null,
+                    collection,
+                    new object[] { item }
+                );
+            }
+        }
+    }
 }

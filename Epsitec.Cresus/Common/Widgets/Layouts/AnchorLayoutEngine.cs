@@ -5,187 +5,213 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
-	/// <summary>
-	/// AnchorLayoutEngine.
-	/// </summary>
-	public sealed class AnchorLayoutEngine : ILayoutEngine
-	{
-		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
-		{
-			foreach (Visual child in children)
-			{
-				if ((child.Dock != DockStyle.None) ||
-					(child.Anchor == AnchorStyles.None))
-				{
-					//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
-					//	positionnés. Ceux qui ne sont pas ancrés ne bougent pas non plus.
-					
-					continue;
-				}
-				
-				AnchorStyles anchorX = child.Anchor & AnchorStyles.LeftAndRight;
-				AnchorStyles anchorY = child.Anchor & AnchorStyles.TopAndBottom;
-				
-				Drawing.Rectangle client  = rect;
-				Drawing.Margins   margins = child.Margins;
+    /// <summary>
+    /// AnchorLayoutEngine.
+    /// </summary>
+    public sealed class AnchorLayoutEngine : ILayoutEngine
+    {
+        public void UpdateLayout(
+            Visual container,
+            Drawing.Rectangle rect,
+            IEnumerable<Visual> children
+        )
+        {
+            foreach (Visual child in children)
+            {
+                if ((child.Dock != DockStyle.None) || (child.Anchor == AnchorStyles.None))
+                {
+                    //	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
+                    //	positionnés. Ceux qui ne sont pas ancrés ne bougent pas non plus.
 
-				double x1, x2, y1, y2;
+                    continue;
+                }
 
-				Drawing.Size size = LayoutContext.GetResultingMeasuredSize (child);
+                AnchorStyles anchorX = child.Anchor & AnchorStyles.LeftAndRight;
+                AnchorStyles anchorY = child.Anchor & AnchorStyles.TopAndBottom;
 
-				if (size == Drawing.Size.NegativeInfinity)
-				{
-					return;
-				}
+                Drawing.Rectangle client = rect;
+                Drawing.Margins margins = child.Margins;
 
-				double dx = size.Width;
-				double dy = size.Height;
+                double x1,
+                    x2,
+                    y1,
+                    y2;
 
-				if (dx.IsSafeNaN ())
-				{
-					dx = child.ActualWidth;		//	TODO: améliorer
-				}
-				if (dy.IsSafeNaN ())
-				{
-					dy = child.ActualHeight;		//	TODO: améliorer
-				}
-				
-				switch (anchorX)
-				{
-					case AnchorStyles.Left:							//	[x1] fixe à gauche
-						x1 = client.Left + margins.Left;
-						x2 = x1 + dx;
-						break;
-					case AnchorStyles.Right:						//	[x2] fixe à droite
-						x2 = client.Right - margins.Right;
-						x1 = x2 - dx;
-						break;
-					case AnchorStyles.None:							//	ne touche à rien...
-						x1 = child.ActualBounds.Left;
-						x2 = child.ActualBounds.Right;
-						break;
-					case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
-						x1 = client.Left + margins.Left;
-						x2 = client.Right - margins.Right;
-						break;
-					default:
-						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchorX));
-				}
-				
-				switch (anchorY)
-				{
-					case AnchorStyles.Bottom:						//	[y1] fixe en bas
-						y1 = client.Bottom + margins.Bottom;
-						y2 = y1 + dy;
-						break;
-					case AnchorStyles.Top:							//	[y2] fixe en haut
-						y2 = client.Top - margins.Top;
-						y1 = y2 - dy;
-						break;
-					case AnchorStyles.None:							//	ne touche à rien...
-						y1 = child.ActualBounds.Bottom;
-						y2 = child.ActualBounds.Top;
-						break;
-					case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
-						y1 = client.Bottom + margins.Bottom;
-						y2 = client.Top - margins.Top;
-						break;
-					default:
-						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchorY));
-				}
+                Drawing.Size size = LayoutContext.GetResultingMeasuredSize(child);
 
-				DockLayoutEngine.SetChildBounds (child, Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
-			}
-		}
+                if (size == Drawing.Size.NegativeInfinity)
+                {
+                    return;
+                }
 
-		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
-		{
-			double minDx = minSize.Width;
-			double minDy = minSize.Height;
-			double maxDx = maxSize.Width;
-			double maxDy = maxSize.Height;
+                double dx = size.Width;
+                double dy = size.Height;
 
-			foreach (Visual child in children)
-			{
-				if ((child.Dock != DockStyle.None) ||
-					(child.Anchor == AnchorStyles.None))
-				{
-					//	Saute les widgets qui sont "docked" dans le parent, car ils sont traités
-					//	ailleurs. Ceux qui ne sont pas ancrés ne contribuent pas non plus.
+                if (dx.IsSafeNaN())
+                {
+                    dx = child.ActualWidth; //	TODO: améliorer
+                }
+                if (dy.IsSafeNaN())
+                {
+                    dy = child.ActualHeight; //	TODO: améliorer
+                }
 
-					continue;
-				}
+                switch (anchorX)
+                {
+                    case AnchorStyles.Left: //	[x1] fixe à gauche
+                        x1 = client.Left + margins.Left;
+                        x2 = x1 + dx;
+                        break;
+                    case AnchorStyles.Right: //	[x2] fixe à droite
+                        x2 = client.Right - margins.Right;
+                        x1 = x2 - dx;
+                        break;
+                    case AnchorStyles.None: //	ne touche à rien...
+                        x1 = child.ActualBounds.Left;
+                        x2 = child.ActualBounds.Right;
+                        break;
+                    case AnchorStyles.LeftAndRight: //	[x1] fixe à gauche, [x2] fixe à droite
+                        x1 = client.Left + margins.Left;
+                        x2 = client.Right - margins.Right;
+                        break;
+                    default:
+                        throw new System.NotSupportedException(
+                            string.Format("AnchorStyle {0} not supported", anchorX)
+                        );
+                }
 
-				if (child.Visibility == false)
-				{
-					continue;
-				}
+                switch (anchorY)
+                {
+                    case AnchorStyles.Bottom: //	[y1] fixe en bas
+                        y1 = client.Bottom + margins.Bottom;
+                        y2 = y1 + dy;
+                        break;
+                    case AnchorStyles.Top: //	[y2] fixe en haut
+                        y2 = client.Top - margins.Top;
+                        y1 = y2 - dy;
+                        break;
+                    case AnchorStyles.None: //	ne touche à rien...
+                        y1 = child.ActualBounds.Bottom;
+                        y2 = child.ActualBounds.Top;
+                        break;
+                    case AnchorStyles.TopAndBottom: //	[y1] fixe en bas, [y2] fixe en haut
+                        y1 = client.Bottom + margins.Bottom;
+                        y2 = client.Top - margins.Top;
+                        break;
+                    default:
+                        throw new System.NotSupportedException(
+                            string.Format("AnchorStyle {0} not supported", anchorY)
+                        );
+                }
 
-				if (LayoutEngine.GetIgnoreMeasure (child))
-				{
-					continue;
-				}
+                DockLayoutEngine.SetChildBounds(
+                    child,
+                    Drawing.Rectangle.FromPoints(x1, y1, x2, y2)
+                );
+            }
+        }
 
-				Drawing.Margins margins = child.Margins;
+        public void UpdateMinMax(
+            Visual container,
+            LayoutContext context,
+            IEnumerable<Visual> children,
+            ref Drawing.Size minSize,
+            ref Drawing.Size maxSize
+        )
+        {
+            double minDx = minSize.Width;
+            double minDy = minSize.Height;
+            double maxDx = maxSize.Width;
+            double maxDy = maxSize.Height;
 
-				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
-				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
+            foreach (Visual child in children)
+            {
+                if ((child.Dock != DockStyle.None) || (child.Anchor == AnchorStyles.None))
+                {
+                    //	Saute les widgets qui sont "docked" dans le parent, car ils sont traités
+                    //	ailleurs. Ceux qui ne sont pas ancrés ne contribuent pas non plus.
 
-				if ((measureDx == null) ||
-					(measureDy == null))
-				{
-					throw new System.InvalidOperationException ();
-				}
+                    continue;
+                }
 
-				AnchorStyles anchor = child.Anchor;
+                if (child.Visibility == false)
+                {
+                    continue;
+                }
 
-				switch (anchor & AnchorStyles.LeftAndRight)
-				{
-					case AnchorStyles.Left:
-						minDx = System.Math.Max (minDx, margins.Left + System.Math.Max (measureDx.Min, measureDx.Desired));
-						maxDx = System.Math.Min (maxDx, margins.Left + measureDx.Max);
-						break;
+                if (LayoutEngine.GetIgnoreMeasure(child))
+                {
+                    continue;
+                }
 
-					case AnchorStyles.Right:
-						minDx = System.Math.Max (minDx, margins.Right + System.Math.Max (measureDx.Min, measureDx.Desired));
-						maxDx = System.Math.Min (maxDx, margins.Right + measureDx.Max);
-						break;
+                Drawing.Margins margins = child.Margins;
 
-					case AnchorStyles.LeftAndRight:
-						minDx = System.Math.Max (minDx, margins.Width + measureDx.Min);
-						maxDx = System.Math.Min (maxDx, margins.Width + measureDx.Max);
-						break;
-				}
+                Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth(child);
+                Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight(child);
 
-				switch (anchor & AnchorStyles.TopAndBottom)
-				{
-					case AnchorStyles.Bottom:
-						minDy = System.Math.Max (minDy, margins.Bottom + System.Math.Max (measureDy.Min, measureDy.Desired));
-						maxDy = System.Math.Min (maxDy, margins.Bottom + measureDy.Max);
-						break;
+                if ((measureDx == null) || (measureDy == null))
+                {
+                    throw new System.InvalidOperationException();
+                }
 
-					case AnchorStyles.Top:
-						minDy = System.Math.Max (minDy, margins.Top + System.Math.Max (measureDy.Min, measureDy.Desired));
-						maxDy = System.Math.Min (maxDy, margins.Top + measureDy.Max);
-						break;
+                AnchorStyles anchor = child.Anchor;
 
-					case AnchorStyles.TopAndBottom:
-						minDy = System.Math.Max (minDy, margins.Height + measureDy.Min);
-						maxDy = System.Math.Min (maxDy, margins.Height + measureDy.Max);
-						break;
-				}
-			}
+                switch (anchor & AnchorStyles.LeftAndRight)
+                {
+                    case AnchorStyles.Left:
+                        minDx = System.Math.Max(
+                            minDx,
+                            margins.Left + System.Math.Max(measureDx.Min, measureDx.Desired)
+                        );
+                        maxDx = System.Math.Min(maxDx, margins.Left + measureDx.Max);
+                        break;
 
-			minSize = new Drawing.Size (minDx, minDy);
-			maxSize = new Drawing.Size (maxDx, maxDy);
-		}
-		
-		public LayoutMode LayoutMode
-		{
-			get
-			{
-				return LayoutMode.Anchored;
-			}
-		}
-	}
+                    case AnchorStyles.Right:
+                        minDx = System.Math.Max(
+                            minDx,
+                            margins.Right + System.Math.Max(measureDx.Min, measureDx.Desired)
+                        );
+                        maxDx = System.Math.Min(maxDx, margins.Right + measureDx.Max);
+                        break;
+
+                    case AnchorStyles.LeftAndRight:
+                        minDx = System.Math.Max(minDx, margins.Width + measureDx.Min);
+                        maxDx = System.Math.Min(maxDx, margins.Width + measureDx.Max);
+                        break;
+                }
+
+                switch (anchor & AnchorStyles.TopAndBottom)
+                {
+                    case AnchorStyles.Bottom:
+                        minDy = System.Math.Max(
+                            minDy,
+                            margins.Bottom + System.Math.Max(measureDy.Min, measureDy.Desired)
+                        );
+                        maxDy = System.Math.Min(maxDy, margins.Bottom + measureDy.Max);
+                        break;
+
+                    case AnchorStyles.Top:
+                        minDy = System.Math.Max(
+                            minDy,
+                            margins.Top + System.Math.Max(measureDy.Min, measureDy.Desired)
+                        );
+                        maxDy = System.Math.Min(maxDy, margins.Top + measureDy.Max);
+                        break;
+
+                    case AnchorStyles.TopAndBottom:
+                        minDy = System.Math.Max(minDy, margins.Height + measureDy.Min);
+                        maxDy = System.Math.Min(maxDy, margins.Height + measureDy.Max);
+                        break;
+                }
+            }
+
+            minSize = new Drawing.Size(minDx, minDy);
+            maxSize = new Drawing.Size(maxDx, maxDy);
+        }
+
+        public LayoutMode LayoutMode
+        {
+            get { return LayoutMode.Anchored; }
+        }
+    }
 }

@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Drawing
 {
-	internal enum QueueStatus
-	{
-		Inactive,
+    internal enum QueueStatus
+    {
+        Inactive,
 
-		Pending,
-		Working,
+        Pending,
+        Working,
 
-		Discarded
-	}
+        Discarded
+    }
 }

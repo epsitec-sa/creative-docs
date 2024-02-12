@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public enum ScrollUnit
-	{
-		Pixel,
-		Line,
-		Page,
-		Document,
-	}
+    public enum ScrollUnit
+    {
+        Pixel,
+        Line,
+        Page,
+        Document,
+    }
 }

@@ -5,20 +5,19 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
+    [System.Flags]
+    [DesignerVisible]
+    public enum FrameEdges : uint
+    {
+        [Hidden]
+        None = 0,
 
-	[System.Flags]
-	[DesignerVisible]
-	public enum FrameEdges : uint
-	{
-		[Hidden]
-		None	= 0,
-		
-		Left	= 0x00000001,
-		Right	= 0x00000002,
-		Top		= 0x00000004,
-		Bottom	= 0x00000008,
-		
-		[Hidden]
-		All		= 0x0000000F,
-	}
+        Left = 0x00000001,
+        Right = 0x00000002,
+        Top = 0x00000004,
+        Bottom = 0x00000008,
+
+        [Hidden]
+        All = 0x0000000F,
+    }
 }

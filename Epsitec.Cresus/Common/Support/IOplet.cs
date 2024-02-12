@@ -3,17 +3,16 @@
 
 namespace Epsitec.Common.Support
 {
-	/// <summary>
-	/// L'interface IOplet définit les méthodes pour implémenter le UNDO/REDO
-	/// avec une granulosité plus fine que l'action.
-	/// </summary>
-	public interface IOplet : System.IDisposable
-	{
-		IOplet Undo();
-		IOplet Redo();
-		
-		bool	IsFence		{ get; }
-//		void Dispose();
-		
-	}
+    /// <summary>
+    /// L'interface IOplet définit les méthodes pour implémenter le UNDO/REDO
+    /// avec une granulosité plus fine que l'action.
+    /// </summary>
+    public interface IOplet : System.IDisposable
+    {
+        IOplet Undo();
+        IOplet Redo();
+
+        bool IsFence { get; }
+        //		void Dispose();
+    }
 }

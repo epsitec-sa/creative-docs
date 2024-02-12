@@ -3,14 +3,12 @@
 
 namespace Epsitec.Common.Text.Cursors
 {
-	/// <summary>
-	/// La classe SelectionCursor décrit un curseur tout simple (il ne stocke que
-	/// l'identificateur interne du curseur utilisé dans TextStory).
-	/// </summary>
-	public class SelectionCursor : TempCursorDir
-	{
-		public SelectionCursor()
-		{
-		}
-	}
+    /// <summary>
+    /// La classe SelectionCursor décrit un curseur tout simple (il ne stocke que
+    /// l'identificateur interne du curseur utilisé dans TextStory).
+    /// </summary>
+    public class SelectionCursor : TempCursorDir
+    {
+        public SelectionCursor() { }
+    }
 }

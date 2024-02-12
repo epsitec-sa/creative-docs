@@ -6,275 +6,357 @@ using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
-	public class SerializerContext : Context
-	{
-		public SerializerContext(IO.AbstractWriter writer)
-		{
-			this.writer = writer;
-		}
-		
-		public override void StoreObjectData(int id, DependencyObject obj)
-		{
-			//	Dump the contents of the object to the writer. This will record
-			//	all defined read/write fields and binding settings.
-			
-			this.AssertWritable ();
+    public class SerializerContext : Context
+    {
+        public SerializerContext(IO.AbstractWriter writer)
+        {
+            this.writer = writer;
+        }
 
-			ISerialization serialization = obj as ISerialization;
+        public override void StoreObjectData(int id, DependencyObject obj)
+        {
+            //	Dump the contents of the object to the writer. This will record
+            //	all defined read/write fields and binding settings.
 
-			if (serialization != null)
-			{
-				if (serialization.NotifySerializationStarted (this))
-				{
-					this.serializedObjects.Add (serialization);
-				}
-			}
+            this.AssertWritable();
 
-			this.writer.BeginObject (id, obj);
+            ISerialization serialization = obj as ISerialization;
 
-			this.StoreObjectBindings (obj);
-			this.StoreObjectFields (obj);
-//			this.StoreObjectChildren (obj);
-			
-			this.writer.EndObject (id, obj);
-		}
+            if (serialization != null)
+            {
+                if (serialization.NotifySerializationStarted(this))
+                {
+                    this.serializedObjects.Add(serialization);
+                }
+            }
 
-		public override void NotifySerializationCompleted()
-		{
-			foreach (ISerialization serialization in this.serializedObjects)
-			{
-				serialization.NotifySerializationCompleted (this);
-			}
-		}
+            this.writer.BeginObject(id, obj);
 
-		private void StoreObjectBindings(DependencyObject obj)
-		{
-			foreach (KeyValuePair<DependencyProperty, Binding> entry in obj.GetAllBindings ())
-			{
-				string markup = MarkupExtension.BindingToString (this, entry.Value);
+            this.StoreObjectBindings(obj);
+            this.StoreObjectFields(obj);
+            //			this.StoreObjectChildren (obj);
 
-				this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Key), markup);
-			}
-		}
-		
-		private void StoreObjectFields(DependencyObject obj)
-		{
-			foreach (PropertyValuePair entry in obj.GetSerializableDefinedValues ())
-			{
-				DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);
+            this.writer.EndObject(id, obj);
+        }
 
-				if (obj.GetBinding (entry.Property) == null)
-				{
-					if (entry.Value == null)
-					{
-						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), MarkupExtension.NullToString ());
-						continue;
-					}
-					
-					if (this.ExternalMap.IsValueDefined (entry.Value))
-					{
-						//	This is an external reference. Record it as {External xxx}.
+        public override void NotifySerializationCompleted()
+        {
+            foreach (ISerialization serialization in this.serializedObjects)
+            {
+                serialization.NotifySerializationCompleted(this);
+            }
+        }
 
-						string markup = MarkupExtension.ExtRefToString (entry.Value, this);
+        private void StoreObjectBindings(DependencyObject obj)
+        {
+            foreach (KeyValuePair<DependencyProperty, Binding> entry in obj.GetAllBindings())
+            {
+                string markup = MarkupExtension.BindingToString(this, entry.Value);
 
-						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-						continue;
-					}
+                this.writer.WriteObjectFieldValue(obj, this.GetPropertyName(entry.Key), markup);
+            }
+        }
 
-					if (entry.Property.HasTypeConverter)
-					{
-						//	The property has a specific converter attached to it.
-						//	Use it instead of the standard object serialization.
-						
-						//	Caution: This means that such objects won't be shared when
-						//			 they get deserialized, unless the converter handles
-						//			 this issue
-						
-						goto stringify;
-					}
-					
-					DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+        private void StoreObjectFields(DependencyObject obj)
+        {
+            foreach (PropertyValuePair entry in obj.GetSerializableDefinedValues())
+            {
+                DependencyPropertyMetadata metadata = entry.Property.GetMetadata(obj);
 
-					if (dependencyObjectValue != null)
-					{
-						//	This is an internal reference. Record it as {Object _nnn}.
+                if (obj.GetBinding(entry.Property) == null)
+                {
+                    if (entry.Value == null)
+                    {
+                        this.writer.WriteObjectFieldValue(
+                            obj,
+                            this.GetPropertyName(entry.Property),
+                            MarkupExtension.NullToString()
+                        );
+                        continue;
+                    }
 
-						if ((metadata.HasSerializationFilter == false) ||
-							(metadata.FilterSerializableItem (dependencyObjectValue)))
-						{
-							string markup = MarkupExtension.ObjRefToString (dependencyObjectValue, this);
-							this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-						}
-						
-						continue;
-					}
+                    if (this.ExternalMap.IsValueDefined(entry.Value))
+                    {
+                        //	This is an external reference. Record it as {External xxx}.
 
-					if (this.StoreFieldAsDependencyObjectCollection (obj, entry, metadata))
-					{
-						continue;
-					}
-					if (this.StoreFieldAsStringCollection (obj, entry, metadata))
-					{
-						continue;
-					}
-					if (this.StoreFieldAsStringifyableCollection (obj, entry, metadata))
-					{
-						continue;
-					}
-				
-				stringify:
-					
-					string value = entry.Property.ConvertToString (entry.Value, this);
+                        string markup = MarkupExtension.ExtRefToString(entry.Value, this);
 
-					if (value != null)
-					{
-						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), MarkupExtension.Escape (value));
-						continue;
-					}
-				}
-			}
-		}
+                        this.writer.WriteObjectFieldValue(
+                            obj,
+                            this.GetPropertyName(entry.Property),
+                            markup
+                        );
+                        continue;
+                    }
 
-		private bool StoreFieldAsDependencyObjectCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
-		{
-			ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
+                    if (entry.Property.HasTypeConverter)
+                    {
+                        //	The property has a specific converter attached to it.
+                        //	Use it instead of the standard object serialization.
 
-			if ((dependencyObjectCollection == null) &&
-				(TypeRosetta.DoesTypeImplementCollectionOfCompatibleObjects (entry.Value.GetType (), typeof (DependencyObject))))
-			{
-				dependencyObjectCollection = new List<DependencyObject> ();
-				
-				foreach (DependencyObject node in entry.Value as System.Collections.IEnumerable)
-				{
-					dependencyObjectCollection .Add (node);
-				}
-			}
+                        //	Caution: This means that such objects won't be shared when
+                        //			 they get deserialized, unless the converter handles
+                        //			 this issue
 
-			if (dependencyObjectCollection != null)
-			{
-				//	This is a collection. Record it as {Collection xxx, xxx, xxx}
+                        goto stringify;
+                    }
 
-				if (dependencyObjectCollection.Count > 0)
-				{
-					string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection), this);
+                    DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
-					if (!string.IsNullOrEmpty (markup))
-					{
-						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-					}
-				}
+                    if (dependencyObjectValue != null)
+                    {
+                        //	This is an internal reference. Record it as {Object _nnn}.
 
-				return true;
-			}
-			
-			return false;
-		}
+                        if (
+                            (metadata.HasSerializationFilter == false)
+                            || (metadata.FilterSerializableItem(dependencyObjectValue))
+                        )
+                        {
+                            string markup = MarkupExtension.ObjRefToString(
+                                dependencyObjectValue,
+                                this
+                            );
+                            this.writer.WriteObjectFieldValue(
+                                obj,
+                                this.GetPropertyName(entry.Property),
+                                markup
+                            );
+                        }
 
-		private bool StoreFieldAsStringCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
-		{
-			ICollection<string> stringCollection = entry.Value as ICollection<string>;
+                        continue;
+                    }
 
-			if (stringCollection != null)
-			{
-				//	This is a collection. Record it as {Collection xxx, xxx, xxx}
+                    if (this.StoreFieldAsDependencyObjectCollection(obj, entry, metadata))
+                    {
+                        continue;
+                    }
+                    if (this.StoreFieldAsStringCollection(obj, entry, metadata))
+                    {
+                        continue;
+                    }
+                    if (this.StoreFieldAsStringifyableCollection(obj, entry, metadata))
+                    {
+                        continue;
+                    }
 
-				if (stringCollection.Count > 0)
-				{
-					string markup;
+                    stringify:
 
-					if (metadata.HasSerializationFilter)
-					{
-						markup = MarkupExtension.CollectionToString (Collection.Filter<string> (stringCollection,
-							/* */																delegate (string item)
-							/* */																{
-							/* */																	return metadata.FilterSerializableItem (item);
-							/* */																}), this);
-					}
-					else
-					{
-						markup = MarkupExtension.CollectionToString (stringCollection, this);
-					}
+                    string value = entry.Property.ConvertToString(entry.Value, this);
 
-					if (!string.IsNullOrEmpty (markup))
-					{
-						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-					}
-				}
+                    if (value != null)
+                    {
+                        this.writer.WriteObjectFieldValue(
+                            obj,
+                            this.GetPropertyName(entry.Property),
+                            MarkupExtension.Escape(value)
+                        );
+                        continue;
+                    }
+                }
+            }
+        }
 
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+        private bool StoreFieldAsDependencyObjectCollection(
+            DependencyObject obj,
+            PropertyValuePair entry,
+            DependencyPropertyMetadata metadata
+        )
+        {
+            ICollection<DependencyObject> dependencyObjectCollection =
+                entry.Value as ICollection<DependencyObject>;
 
-		private bool StoreFieldAsStringifyableCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
-		{
-			System.Collections.IEnumerable enumerableOfAnything = entry.Value as System.Collections.IEnumerable;
+            if (
+                (dependencyObjectCollection == null)
+                && (
+                    TypeRosetta.DoesTypeImplementCollectionOfCompatibleObjects(
+                        entry.Value.GetType(),
+                        typeof(DependencyObject)
+                    )
+                )
+            )
+            {
+                dependencyObjectCollection = new List<DependencyObject>();
 
-			if (enumerableOfAnything == null)
-			{
-				return false;
-			}
+                foreach (DependencyObject node in entry.Value as System.Collections.IEnumerable)
+                {
+                    dependencyObjectCollection.Add(node);
+                }
+            }
 
-			IEnumerable<object> enumerable = Collection.EnumerateObjects (enumerableOfAnything);
+            if (dependencyObjectCollection != null)
+            {
+                //	This is a collection. Record it as {Collection xxx, xxx, xxx}
 
-			object collection = entry.Value;
-			System.Type type;
-			ISerializationConverter converter = this.FindConverterForCollection (collection.GetType (), out type);
+                if (dependencyObjectCollection.Count > 0)
+                {
+                    string markup = MarkupExtension.CollectionToString(
+                        metadata.FilterSerializableCollection(dependencyObjectCollection),
+                        this
+                    );
 
-			if (converter != null)
-			{
-				int count = (int) type.InvokeMember ("Count", System.Reflection.BindingFlags.GetProperty, null, collection, new object[0]);
+                    if (!string.IsNullOrEmpty(markup))
+                    {
+                        this.writer.WriteObjectFieldValue(
+                            obj,
+                            this.GetPropertyName(entry.Property),
+                            markup
+                        );
+                    }
+                }
 
-				if (count > 0)
-				{
-					string markup;
-					if (metadata.HasSerializationFilter)
-					{
-						markup = MarkupExtension.EnumerableToString (Collection.Filter<object> (enumerable,
-							/* */																delegate (object item)
-							/* */																{
-							/* */																	return metadata.FilterSerializableItem (item);
-							/* */																}), this, converter);
-					}
-					else
-					{
-						markup = MarkupExtension.EnumerableToString (enumerable, this, converter);
-					}
+                return true;
+            }
 
-					if (!string.IsNullOrEmpty (markup))
-					{
-						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-					}
-					
-				}
+            return false;
+        }
 
-				return true;
-			}
-			
-			return false;
-		}
+        private bool StoreFieldAsStringCollection(
+            DependencyObject obj,
+            PropertyValuePair entry,
+            DependencyPropertyMetadata metadata
+        )
+        {
+            ICollection<string> stringCollection = entry.Value as ICollection<string>;
 
-		private void StoreObjectChildren(DependencyObject obj)
-		{
-			if (DependencyObjectTree.GetHasChildren (obj))
-			{
-				DependencyProperty property = DependencyObjectTree.ChildrenProperty;
-				DependencyPropertyMetadata metadata = property.GetMetadata (obj);
-				ICollection<DependencyObject> dependencyObjectCollection = DependencyObjectTree.GetChildren (obj);
+            if (stringCollection != null)
+            {
+                //	This is a collection. Record it as {Collection xxx, xxx, xxx}
 
-				string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection), this);
-				
-				if (!string.IsNullOrEmpty (markup))
-				{
-					this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (property), markup);
-				}
-			}
+                if (stringCollection.Count > 0)
+                {
+                    string markup;
 
-		}
+                    if (metadata.HasSerializationFilter)
+                    {
+                        markup = MarkupExtension.CollectionToString(
+                            Collection.Filter<string>(
+                                stringCollection,
+                                /* */delegate(string item)
+                                /* */{
+                                    /* */return metadata.FilterSerializableItem(item);
+                                    /* */
+                                }
+                            ),
+                            this
+                        );
+                    }
+                    else
+                    {
+                        markup = MarkupExtension.CollectionToString(stringCollection, this);
+                    }
 
-		private List<ISerialization> serializedObjects = new List<ISerialization> ();
-	}
+                    if (!string.IsNullOrEmpty(markup))
+                    {
+                        this.writer.WriteObjectFieldValue(
+                            obj,
+                            this.GetPropertyName(entry.Property),
+                            markup
+                        );
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool StoreFieldAsStringifyableCollection(
+            DependencyObject obj,
+            PropertyValuePair entry,
+            DependencyPropertyMetadata metadata
+        )
+        {
+            System.Collections.IEnumerable enumerableOfAnything =
+                entry.Value as System.Collections.IEnumerable;
+
+            if (enumerableOfAnything == null)
+            {
+                return false;
+            }
+
+            IEnumerable<object> enumerable = Collection.EnumerateObjects(enumerableOfAnything);
+
+            object collection = entry.Value;
+            System.Type type;
+            ISerializationConverter converter = this.FindConverterForCollection(
+                collection.GetType(),
+                out type
+            );
+
+            if (converter != null)
+            {
+                int count = (int)
+                    type.InvokeMember(
+                        "Count",
+                        System.Reflection.BindingFlags.GetProperty,
+                        null,
+                        collection,
+                        new object[0]
+                    );
+
+                if (count > 0)
+                {
+                    string markup;
+                    if (metadata.HasSerializationFilter)
+                    {
+                        markup = MarkupExtension.EnumerableToString(
+                            Collection.Filter<object>(
+                                enumerable,
+                                /* */delegate(object item)
+                                /* */{
+                                    /* */return metadata.FilterSerializableItem(item);
+                                    /* */
+                                }
+                            ),
+                            this,
+                            converter
+                        );
+                    }
+                    else
+                    {
+                        markup = MarkupExtension.EnumerableToString(enumerable, this, converter);
+                    }
+
+                    if (!string.IsNullOrEmpty(markup))
+                    {
+                        this.writer.WriteObjectFieldValue(
+                            obj,
+                            this.GetPropertyName(entry.Property),
+                            markup
+                        );
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private void StoreObjectChildren(DependencyObject obj)
+        {
+            if (DependencyObjectTree.GetHasChildren(obj))
+            {
+                DependencyProperty property = DependencyObjectTree.ChildrenProperty;
+                DependencyPropertyMetadata metadata = property.GetMetadata(obj);
+                ICollection<DependencyObject> dependencyObjectCollection =
+                    DependencyObjectTree.GetChildren(obj);
+
+                string markup = MarkupExtension.CollectionToString(
+                    metadata.FilterSerializableCollection(dependencyObjectCollection),
+                    this
+                );
+
+                if (!string.IsNullOrEmpty(markup))
+                {
+                    this.writer.WriteObjectFieldValue(obj, this.GetPropertyName(property), markup);
+                }
+            }
+        }
+
+        private List<ISerialization> serializedObjects = new List<ISerialization>();
+    }
 }

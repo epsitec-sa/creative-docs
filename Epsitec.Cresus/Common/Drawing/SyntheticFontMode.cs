@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
-	public enum SyntheticFontMode
-	{
-		None,
-		Oblique
-	}
+    public enum SyntheticFontMode
+    {
+        None,
+        Oblique
+    }
 }

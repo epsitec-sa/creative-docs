@@ -1,375 +1,408 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using NUnit.Framework;
+using System.Collections.Generic;
+using Demo.Demo5juin.Entities;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-
-using System.Collections.Generic;
-
-using Demo.Demo5juin.Entities;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Dialogs
 {
-	[TestFixture]
-	public class DialogDataTest
-	{
-		[SetUp]
-		public void Initialize()
-		{
-			Epsitec.Common.Document.Engine.Initialize ();
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
-		}
+    [TestFixture]
+    public class DialogDataTest
+    {
+        [SetUp]
+        public void Initialize()
+        {
+            Epsitec.Common.Document.Engine.Initialize();
+            Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
+        }
 
-		[Test]
-		public void Check01DialogModeIsolated()
-		{
-			EntityContext context = new EntityContext ();
-			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
-			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
-			prix1.Ht = 10.0M;
-			prix1.Monnaie.Désignation = "CHF";
-			prix1.Monnaie.TauxChangeVersChf = 1.00M;
-			
-			DialogData data = new DialogData (prix1, DialogDataMode.Isolated);
+        [Test]
+        public void Check01DialogModeIsolated()
+        {
+            EntityContext context = new EntityContext();
+            PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity>();
+            prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity>();
+            prix1.Ht = 10.0M;
+            prix1.Monnaie.Désignation = "CHF";
+            prix1.Monnaie.TauxChangeVersChf = 1.00M;
 
-			PrixEntity prix2 = data.Data as PrixEntity;
+            DialogData data = new DialogData(prix1, DialogDataMode.Isolated);
 
-			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+            PrixEntity prix2 = data.Data as PrixEntity;
 
-			prix2.Ht = 15.0M;
-			prix2.Monnaie.Désignation = "EUR";
-			
-			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
-			Assert.AreEqual (15.0M, prix2.Ht);
-			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
+            Assert.AreEqual(10.0M, prix2.Ht);
+            Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
 
-			List<string> results = new List<string> ();
+            prix2.Ht = 15.0M;
+            prix2.Monnaie.Désignation = "EUR";
 
-			data.ForEachChange (change =>
-				{
-					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
-					return true;
-				});
+            Assert.AreEqual(10.0M, prix1.Ht);
+            Assert.AreEqual("CHF", prix1.Monnaie.Désignation);
+            Assert.AreEqual(15.0M, prix2.Ht);
+            Assert.AreEqual("EUR", prix2.Monnaie.Désignation);
 
-			Collection.CompareEqual (results,
-				new string[]
-				{
-					"Change [630G].[630A] from CHF to EUR",
-					"Change [630H] from 10.0 to 15.0"
-				});
+            List<string> results = new List<string>();
 
-			Assert.AreEqual (3, Collection.Count (data.Changes));
-			data.RevertChanges ();
-			Assert.AreEqual (3, Collection.Count (data.Changes));
+            data.ForEachChange(change =>
+            {
+                results.Add(
+                    string.Format(
+                        "Change {0} from {1} to {2}",
+                        change.Path,
+                        change.OldValue,
+                        change.NewValue
+                    )
+                );
+                return true;
+            });
 
-			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
-			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
-			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
-			Assert.AreEqual (3, Collection.Count (data.Changes));
-//-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);	//	read access => snapshot
-//-			Assert.AreEqual (4, Collection.Count (data.Changes));
+            Collection.CompareEqual(
+                results,
+                new string[]
+                {
+                    "Change [630G].[630A] from CHF to EUR",
+                    "Change [630H] from 10.0 to 15.0"
+                }
+            );
 
-			MonnaieEntity monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
-			monnaie.Désignation = "USD";
-			monnaie.TauxChangeVersChf = 1.08M;
+            Assert.AreEqual(3, Collection.Count(data.Changes));
+            data.RevertChanges();
+            Assert.AreEqual(3, Collection.Count(data.Changes));
 
-			prix2.Monnaie.TauxChangeVersChf = 2.00M;
-			Assert.AreEqual (4, Collection.Count (data.Changes));
-			
-			prix2.Monnaie = monnaie;
-			prix2.Monnaie.TauxChangeVersChf = 1.06M;
+            Assert.AreEqual(10.0M, prix1.Ht);
+            Assert.AreEqual("CHF", prix1.Monnaie.Désignation);
+            Assert.AreEqual(1.00M, prix1.Monnaie.TauxChangeVersChf);
+            Assert.AreEqual(10.0M, prix2.Ht);
+            Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
+            Assert.AreEqual(3, Collection.Count(data.Changes));
+            //-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);	//	read access => snapshot
+            //-			Assert.AreEqual (4, Collection.Count (data.Changes));
 
-			Assert.AreEqual (4, Collection.Count (data.Changes));
+            MonnaieEntity monnaie = context.CreateEmptyEntity<MonnaieEntity>();
+            monnaie.Désignation = "USD";
+            monnaie.TauxChangeVersChf = 1.08M;
 
-			Assert.AreNotEqual (monnaie, prix1.Monnaie);
-			Assert.AreEqual (monnaie, prix2.Monnaie);
-			
-			results.Clear ();
-			data.ForEachChange (change =>
-				{
-					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
-					return true;
-				});
+            prix2.Monnaie.TauxChangeVersChf = 2.00M;
+            Assert.AreEqual(4, Collection.Count(data.Changes));
 
-			Assert.AreEqual (1, results.Count);
-			Assert.IsTrue (results[0].StartsWith ("Change [630G] from "));
-			
-			data.RevertChanges ();
+            prix2.Monnaie = monnaie;
+            prix2.Monnaie.TauxChangeVersChf = 1.06M;
 
-			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
-			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
-			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);
+            Assert.AreEqual(4, Collection.Count(data.Changes));
 
-			Assert.AreEqual ("USD", monnaie.Désignation);
-			Assert.AreEqual (1.06M, monnaie.TauxChangeVersChf);
-			
-			Assert.AreEqual (4, Collection.Count (data.Changes));
+            Assert.AreNotEqual(monnaie, prix1.Monnaie);
+            Assert.AreEqual(monnaie, prix2.Monnaie);
 
-			prix2.Monnaie = null;
+            results.Clear();
+            data.ForEachChange(change =>
+            {
+                results.Add(
+                    string.Format(
+                        "Change {0} from {1} to {2}",
+                        change.Path,
+                        change.OldValue,
+                        change.NewValue
+                    )
+                );
+                return true;
+            });
 
-			Assert.IsNull (prix2.Monnaie);
-			data.RevertChanges ();
-			Assert.IsNotNull (prix2.Monnaie);
-		}
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results[0].StartsWith("Change [630G] from "));
 
-		[Test]
-		public void Check02DialogModeRealTime()
-		{
-			EntityContext context = new EntityContext ();
-			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
-			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
-			prix1.Ht = 10.0M;
-			prix1.Monnaie.Désignation = "CHF";
-			prix1.Monnaie.TauxChangeVersChf = 1.00M;
+            data.RevertChanges();
 
-			DialogData data = new DialogData (prix1, DialogDataMode.RealTime);
+            Assert.AreEqual(10.0M, prix1.Ht);
+            Assert.AreEqual("CHF", prix1.Monnaie.Désignation);
+            Assert.AreEqual(1.00M, prix1.Monnaie.TauxChangeVersChf);
+            Assert.AreEqual(10.0M, prix2.Ht);
+            Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
+            Assert.AreEqual(1.00M, prix2.Monnaie.TauxChangeVersChf);
 
-			PrixEntity prix2 = data.Data as PrixEntity;
-			MonnaieEntity monnaiePrix1 = prix1.Monnaie;
-			MonnaieEntity monnaiePrix2 = prix2.Monnaie;
+            Assert.AreEqual("USD", monnaie.Désignation);
+            Assert.AreEqual(1.06M, monnaie.TauxChangeVersChf);
 
-			Assert.AreNotEqual (monnaiePrix1, monnaiePrix2);
+            Assert.AreEqual(4, Collection.Count(data.Changes));
 
-			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+            prix2.Monnaie = null;
 
-			prix2.Ht = 15.0M;
-			prix2.Monnaie.Désignation = "EUR";
+            Assert.IsNull(prix2.Monnaie);
+            data.RevertChanges();
+            Assert.IsNotNull(prix2.Monnaie);
+        }
 
-			Assert.AreEqual (15.0M, prix1.Ht);
-			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
-			Assert.AreEqual (monnaiePrix1, prix1.Monnaie);
-			Assert.AreEqual (15.0M, prix2.Ht);
-			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
-			Assert.AreEqual (monnaiePrix2, prix2.Monnaie);
+        [Test]
+        public void Check02DialogModeRealTime()
+        {
+            EntityContext context = new EntityContext();
+            PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity>();
+            prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity>();
+            prix1.Ht = 10.0M;
+            prix1.Monnaie.Désignation = "CHF";
+            prix1.Monnaie.TauxChangeVersChf = 1.00M;
 
-			List<string> results = new List<string> ();
+            DialogData data = new DialogData(prix1, DialogDataMode.RealTime);
 
-			data.ForEachChange (change =>
-				{
-					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
-					return true;
-				});
+            PrixEntity prix2 = data.Data as PrixEntity;
+            MonnaieEntity monnaiePrix1 = prix1.Monnaie;
+            MonnaieEntity monnaiePrix2 = prix2.Monnaie;
 
-			Collection.CompareEqual (results,
-				new string[]
-				{
-					"Change [630G].[630A] from CHF to EUR",
-					"Change [630H] from 10.0 to 15.0"
-				});
+            Assert.AreNotEqual(monnaiePrix1, monnaiePrix2);
 
-			Assert.AreEqual (3, Collection.Count (data.Changes));
-			data.RevertChanges ();
-			Assert.AreEqual (3, Collection.Count (data.Changes));
+            Assert.AreEqual(10.0M, prix2.Ht);
+            Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
 
-			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
-			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
-			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
-			Assert.AreEqual (3, Collection.Count (data.Changes));
-//-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);	//	read access => snapshot
-//-			Assert.AreEqual (4, Collection.Count (data.Changes));
+            prix2.Ht = 15.0M;
+            prix2.Monnaie.Désignation = "EUR";
 
-			MonnaieEntity monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
-			monnaie.Désignation = "USD";
-			monnaie.TauxChangeVersChf = 1.08M;
+            Assert.AreEqual(15.0M, prix1.Ht);
+            Assert.AreEqual("EUR", prix1.Monnaie.Désignation);
+            Assert.AreEqual(monnaiePrix1, prix1.Monnaie);
+            Assert.AreEqual(15.0M, prix2.Ht);
+            Assert.AreEqual("EUR", prix2.Monnaie.Désignation);
+            Assert.AreEqual(monnaiePrix2, prix2.Monnaie);
 
-			prix2.Monnaie.TauxChangeVersChf = 2.00M;
-			Assert.AreEqual (4, Collection.Count (data.Changes));
+            List<string> results = new List<string>();
 
-			prix2.Monnaie = monnaie;
-			prix2.Monnaie.TauxChangeVersChf = 1.06M;
+            data.ForEachChange(change =>
+            {
+                results.Add(
+                    string.Format(
+                        "Change {0} from {1} to {2}",
+                        change.Path,
+                        change.OldValue,
+                        change.NewValue
+                    )
+                );
+                return true;
+            });
 
-			Assert.AreEqual (4, Collection.Count (data.Changes));
+            Collection.CompareEqual(
+                results,
+                new string[]
+                {
+                    "Change [630G].[630A] from CHF to EUR",
+                    "Change [630H] from 10.0 to 15.0"
+                }
+            );
 
-			Assert.AreEqual (monnaie, prix1.Monnaie);
-			Assert.AreNotEqual (monnaie, prix2.Monnaie);				//	because of the proxy
-			Assert.IsNotNull ((prix2.Monnaie as IEntityProxyProvider).GetEntityProxy ());
+            Assert.AreEqual(3, Collection.Count(data.Changes));
+            data.RevertChanges();
+            Assert.AreEqual(3, Collection.Count(data.Changes));
 
-			results.Clear ();
-			data.ForEachChange (change =>
-				{
-					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
-					return true;
-				});
+            Assert.AreEqual(10.0M, prix1.Ht);
+            Assert.AreEqual("CHF", prix1.Monnaie.Désignation);
+            Assert.AreEqual(1.00M, prix1.Monnaie.TauxChangeVersChf);
+            Assert.AreEqual(10.0M, prix2.Ht);
+            Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
+            Assert.AreEqual(3, Collection.Count(data.Changes));
+            //-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);	//	read access => snapshot
+            //-			Assert.AreEqual (4, Collection.Count (data.Changes));
 
-			Assert.AreEqual (1, results.Count);
-			Assert.IsTrue (results[0].StartsWith ("Change [630G] from "));
+            MonnaieEntity monnaie = context.CreateEmptyEntity<MonnaieEntity>();
+            monnaie.Désignation = "USD";
+            monnaie.TauxChangeVersChf = 1.08M;
 
-			data.RevertChanges ();
+            prix2.Monnaie.TauxChangeVersChf = 2.00M;
+            Assert.AreEqual(4, Collection.Count(data.Changes));
 
-			Assert.AreEqual (monnaiePrix1, prix1.Monnaie);
-			Assert.AreEqual (monnaiePrix2, prix2.Monnaie);
+            prix2.Monnaie = monnaie;
+            prix2.Monnaie.TauxChangeVersChf = 1.06M;
 
-			Assert.AreEqual (10.0M, prix1.Ht);
-			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
-			Assert.AreEqual (1.00M, prix1.Monnaie.TauxChangeVersChf);
-			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
-			Assert.AreEqual (1.00M, prix2.Monnaie.TauxChangeVersChf);
+            Assert.AreEqual(4, Collection.Count(data.Changes));
 
-			Assert.AreEqual ("USD", monnaie.Désignation);
-			Assert.AreEqual (1.06M, monnaie.TauxChangeVersChf);
+            Assert.AreEqual(monnaie, prix1.Monnaie);
+            Assert.AreNotEqual(monnaie, prix2.Monnaie); //	because of the proxy
+            Assert.IsNotNull((prix2.Monnaie as IEntityProxyProvider).GetEntityProxy());
 
-			Assert.AreEqual (4, Collection.Count (data.Changes));
+            results.Clear();
+            data.ForEachChange(change =>
+            {
+                results.Add(
+                    string.Format(
+                        "Change {0} from {1} to {2}",
+                        change.Path,
+                        change.OldValue,
+                        change.NewValue
+                    )
+                );
+                return true;
+            });
 
-			prix2.Monnaie = null;
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results[0].StartsWith("Change [630G] from "));
 
-			Assert.IsNull (prix1.Monnaie);
-			Assert.IsNull (prix2.Monnaie);
+            data.RevertChanges();
 
-			prix2.Monnaie = monnaie;
+            Assert.AreEqual(monnaiePrix1, prix1.Monnaie);
+            Assert.AreEqual(monnaiePrix2, prix2.Monnaie);
 
-			Assert.IsNotNull (prix1.Monnaie);
-			Assert.IsNotNull (prix2.Monnaie);
-			Assert.AreEqual (1.06M, prix1.Monnaie.TauxChangeVersChf);
-			Assert.AreEqual (1.06M, prix2.Monnaie.TauxChangeVersChf);
-		}
-		
-		[Test]
-		public void Check03DialogModeTransparent()
-		{
-			EntityContext context = new EntityContext ();
-			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
-			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
-			prix1.Ht = 10.0M;
-			prix1.Monnaie.Désignation = "CHF";
+            Assert.AreEqual(10.0M, prix1.Ht);
+            Assert.AreEqual("CHF", prix1.Monnaie.Désignation);
+            Assert.AreEqual(1.00M, prix1.Monnaie.TauxChangeVersChf);
+            Assert.AreEqual(10.0M, prix2.Ht);
+            Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
+            Assert.AreEqual(1.00M, prix2.Monnaie.TauxChangeVersChf);
 
-			DialogData data = new DialogData (prix1, DialogDataMode.Transparent);
+            Assert.AreEqual("USD", monnaie.Désignation);
+            Assert.AreEqual(1.06M, monnaie.TauxChangeVersChf);
 
-			PrixEntity prix2 = data.Data as PrixEntity;
+            Assert.AreEqual(4, Collection.Count(data.Changes));
 
-			Assert.AreEqual (10.0M, prix2.Ht);
-			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+            prix2.Monnaie = null;
 
-			MonnaieEntity monnaie = prix2.Monnaie;
+            Assert.IsNull(prix1.Monnaie);
+            Assert.IsNull(prix2.Monnaie);
 
-			prix2.Ht = 15.0M;
-			prix2.Monnaie.Désignation = "EUR";
+            prix2.Monnaie = monnaie;
 
-			Assert.AreEqual (15.0M, prix1.Ht);
-			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
+            Assert.IsNotNull(prix1.Monnaie);
+            Assert.IsNotNull(prix2.Monnaie);
+            Assert.AreEqual(1.06M, prix1.Monnaie.TauxChangeVersChf);
+            Assert.AreEqual(1.06M, prix2.Monnaie.TauxChangeVersChf);
+        }
 
-			Assert.AreEqual (prix1, prix2);
-			Assert.AreEqual (0, Collection.Count (data.Changes));
-			
-			prix2.Monnaie = null;
+        [Test]
+        public void Check03DialogModeTransparent()
+        {
+            EntityContext context = new EntityContext();
+            PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity>();
+            prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity>();
+            prix1.Ht = 10.0M;
+            prix1.Monnaie.Désignation = "CHF";
 
-			Assert.IsNull (prix1.Monnaie);
-			Assert.IsNull (prix2.Monnaie);
+            DialogData data = new DialogData(prix1, DialogDataMode.Transparent);
 
-			prix2.Monnaie = monnaie;
+            PrixEntity prix2 = data.Data as PrixEntity;
 
-			Assert.IsNotNull (prix1.Monnaie);
-			Assert.IsNotNull (prix2.Monnaie);
-			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
-			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
-		}
+            Assert.AreEqual(10.0M, prix2.Ht);
+            Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
 
-		[Test]
+            MonnaieEntity monnaie = prix2.Monnaie;
+
+            prix2.Ht = 15.0M;
+            prix2.Monnaie.Désignation = "EUR";
+
+            Assert.AreEqual(15.0M, prix1.Ht);
+            Assert.AreEqual("EUR", prix1.Monnaie.Désignation);
+
+            Assert.AreEqual(prix1, prix2);
+            Assert.AreEqual(0, Collection.Count(data.Changes));
+
+            prix2.Monnaie = null;
+
+            Assert.IsNull(prix1.Monnaie);
+            Assert.IsNull(prix2.Monnaie);
+
+            prix2.Monnaie = monnaie;
+
+            Assert.IsNotNull(prix1.Monnaie);
+            Assert.IsNotNull(prix2.Monnaie);
+            Assert.AreEqual("EUR", prix1.Monnaie.Désignation);
+            Assert.AreEqual("EUR", prix2.Monnaie.Désignation);
+        }
+
+        [Test]
         [Ignore("Crashes the tests execution and prevents other tests from running")]
-		public void Check04ReferenceReplacement()
-		{
-			EntityContext entityContext = new EntityContext ();
+        public void Check04ReferenceReplacement()
+        {
+            EntityContext entityContext = new EntityContext();
 
-			Epsitec.Cresus.AddressBook.Entities.AdresseEntity originalAdr = DialogTest.CreateDefaultAdresseEntity (entityContext);
-			Epsitec.Cresus.AddressBook.Entities.LocalitéEntity loc = entityContext.CreateEmptyEntity<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
-			
-			DialogData data = new DialogData (originalAdr, DialogDataMode.Isolated);
+            Epsitec.Cresus.AddressBook.Entities.AdresseEntity originalAdr =
+                DialogTest.CreateDefaultAdresseEntity(entityContext);
+            Epsitec.Cresus.AddressBook.Entities.LocalitéEntity loc =
+                entityContext.CreateEmptyEntity<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity>();
 
-			Epsitec.Cresus.AddressBook.Entities.AdresseEntity dialogAdr = data.Data as Epsitec.Cresus.AddressBook.Entities.AdresseEntity;
+            DialogData data = new DialogData(originalAdr, DialogDataMode.Isolated);
 
-			Assert.IsNotNull (originalAdr);
-			Assert.IsNotNull (originalAdr.Localité);
-			Assert.IsNotNull (originalAdr.Localité.Pays);
-			Assert.AreEqual (0, Collection.Count (data.Changes));
+            Epsitec.Cresus.AddressBook.Entities.AdresseEntity dialogAdr =
+                data.Data as Epsitec.Cresus.AddressBook.Entities.AdresseEntity;
 
-			Assert.IsNotNull (dialogAdr);
-			Assert.AreEqual (0, Collection.Count (data.Changes));
-			Assert.IsNotNull (dialogAdr.Localité);
-			Assert.AreEqual (1, Collection.Count (data.Changes));
-			Assert.IsNotNull (dialogAdr.Localité.Pays);
-			Assert.AreEqual (2, Collection.Count (data.Changes));
+            Assert.IsNotNull(originalAdr);
+            Assert.IsNotNull(originalAdr.Localité);
+            Assert.IsNotNull(originalAdr.Localité.Pays);
+            Assert.AreEqual(0, Collection.Count(data.Changes));
 
-			int count = 0;
+            Assert.IsNotNull(dialogAdr);
+            Assert.AreEqual(0, Collection.Count(data.Changes));
+            Assert.IsNotNull(dialogAdr.Localité);
+            Assert.AreEqual(1, Collection.Count(data.Changes));
+            Assert.IsNotNull(dialogAdr.Localité.Pays);
+            Assert.AreEqual(2, Collection.Count(data.Changes));
 
-			data.ForEachChange (change =>
-			{
-				count++;
-				return true;
-			});
+            int count = 0;
 
-			Assert.AreEqual (0, count);
+            data.ForEachChange(change =>
+            {
+                count++;
+                return true;
+            });
 
-			loc.Pays = originalAdr.Localité.Pays;
-			loc.Nom = "Lausanne";
-			loc.Numéro = "1007";
+            Assert.AreEqual(0, count);
 
-			dialogAdr.Localité.Nom = "Yverdon";
-			
-			count = 0;
+            loc.Pays = originalAdr.Localité.Pays;
+            loc.Nom = "Lausanne";
+            loc.Numéro = "1007";
 
-			data.ForEachChange (change =>
-				{
-					count++;
-					return true;
-				});
+            dialogAdr.Localité.Nom = "Yverdon";
 
-			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon-les-Bains", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
+            count = 0;
 
-			data.ApplyChanges ();
-			
-			count = 0;
+            data.ForEachChange(change =>
+            {
+                count++;
+                return true;
+            });
 
-			data.ForEachChange (change =>
-			{
-				count++;
-				return true;
-			});
+            Assert.AreEqual(1, count);
+            Assert.AreEqual("Yverdon-les-Bains", originalAdr.Localité.Nom);
+            Assert.AreEqual("Yverdon", dialogAdr.Localité.Nom);
 
-			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
+            data.ApplyChanges();
 
-			data.SetReferenceReplacement (EntityFieldPath.CreateRelativePath ("[8V15]"), loc);
-			
-			count = 0;
+            count = 0;
 
-			data.ForEachChange (change =>
-			{
-				count++;
-				return true;
-			});
+            data.ForEachChange(change =>
+            {
+                count++;
+                return true;
+            });
 
-			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
+            Assert.AreEqual(1, count);
+            Assert.AreEqual("Yverdon", originalAdr.Localité.Nom);
+            Assert.AreEqual("Yverdon", dialogAdr.Localité.Nom);
 
-			data.ApplyChanges ();
+            data.SetReferenceReplacement(EntityFieldPath.CreateRelativePath("[8V15]"), loc);
 
-			Assert.AreEqual ("Lausanne", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);	//	!
+            count = 0;
 
-			data.RevertChanges ();
-			
-			Assert.AreEqual ("Lausanne", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon-les-Bains", dialogAdr.Localité.Nom);	//	!
-			Assert.AreEqual ("Lausanne", loc.Nom);
-		}
-	}
+            data.ForEachChange(change =>
+            {
+                count++;
+                return true;
+            });
+
+            Assert.AreEqual(1, count);
+            Assert.AreEqual("Yverdon", originalAdr.Localité.Nom);
+            Assert.AreEqual("Yverdon", dialogAdr.Localité.Nom);
+
+            data.ApplyChanges();
+
+            Assert.AreEqual("Lausanne", originalAdr.Localité.Nom);
+            Assert.AreEqual("Yverdon", dialogAdr.Localité.Nom); //	!
+
+            data.RevertChanges();
+
+            Assert.AreEqual("Lausanne", originalAdr.Localité.Nom);
+            Assert.AreEqual("Yverdon-les-Bains", dialogAdr.Localité.Nom); //	!
+            Assert.AreEqual("Lausanne", loc.Nom);
+        }
+    }
 }

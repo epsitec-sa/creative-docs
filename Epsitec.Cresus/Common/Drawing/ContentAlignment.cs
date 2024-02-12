@@ -3,80 +3,80 @@
 
 namespace Epsitec.Common.Drawing
 {
-	/// <summary>
-	/// The <c>ContentAlignment</c> enumeration defines how content should be
-	/// aligned in a 2 dimension space.
-	/// </summary>
-	public enum ContentAlignment : byte
-	{
-		/// <summary>
-		/// No alignment.
-		/// </summary>
-		None,
+    /// <summary>
+    /// The <c>ContentAlignment</c> enumeration defines how content should be
+    /// aligned in a 2 dimension space.
+    /// </summary>
+    public enum ContentAlignment : byte
+    {
+        /// <summary>
+        /// No alignment.
+        /// </summary>
+        None,
 
-		/// <summary>
-		/// Bottom left alignment.
-		/// </summary>
-		BottomLeft,
-		
-		/// <summary>
-		/// Bottom center alignment.
-		/// </summary>
-		BottomCenter,
-		
-		/// <summary>
-		/// Bottom right alignment.
-		/// </summary>
-		BottomRight,
+        /// <summary>
+        /// Bottom left alignment.
+        /// </summary>
+        BottomLeft,
 
-		/// <summary>
-		/// Middle left alignment.
-		/// </summary>
-		MiddleLeft,
+        /// <summary>
+        /// Bottom center alignment.
+        /// </summary>
+        BottomCenter,
 
-		/// <summary>
-		/// Middle center alignment.
-		/// </summary>
-		MiddleCenter,
+        /// <summary>
+        /// Bottom right alignment.
+        /// </summary>
+        BottomRight,
 
-		/// <summary>
-		/// Middle right alignment.
-		/// </summary>
-		MiddleRight,
+        /// <summary>
+        /// Middle left alignment.
+        /// </summary>
+        MiddleLeft,
 
-		/// <summary>
-		/// Top left alignment.
-		/// </summary>
-		TopLeft,
+        /// <summary>
+        /// Middle center alignment.
+        /// </summary>
+        MiddleCenter,
 
-		/// <summary>
-		/// Top center alignment.
-		/// </summary>
-		TopCenter,
+        /// <summary>
+        /// Middle right alignment.
+        /// </summary>
+        MiddleRight,
 
-		/// <summary>
-		/// Top right alignment.
-		/// </summary>
-		TopRight,
+        /// <summary>
+        /// Top left alignment.
+        /// </summary>
+        TopLeft,
 
-		/// <summary>
-		/// Baseline left alignment.
-		/// </summary>
-		BaselineLeft,
+        /// <summary>
+        /// Top center alignment.
+        /// </summary>
+        TopCenter,
 
-		/// <summary>
-		/// Baseline center aliment.
-		/// </summary>
-		BaselineCenter,
+        /// <summary>
+        /// Top right alignment.
+        /// </summary>
+        TopRight,
 
-		/// <summary>
-		/// Baseline right alignment,
-		/// </summary>
-		BaselineRight,
+        /// <summary>
+        /// Baseline left alignment.
+        /// </summary>
+        BaselineLeft,
 
-		/// <summary>
-		/// Undefined alignment.
-		/// </summary>
-		Undefined=0xff,
-	}
+        /// <summary>
+        /// Baseline center aliment.
+        /// </summary>
+        BaselineCenter,
+
+        /// <summary>
+        /// Baseline right alignment,
+        /// </summary>
+        BaselineRight,
+
+        /// <summary>
+        /// Undefined alignment.
+        /// </summary>
+        Undefined = 0xff,
+    }
 }

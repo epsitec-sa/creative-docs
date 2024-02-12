@@ -5,24 +5,19 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	[System.AttributeUsage (System.AttributeTargets.Assembly, AllowMultiple=false)]
-	public class NamespaceAttribute : System.Attribute
-	{
-		public NamespaceAttribute(string assemblyNamespace)
-		{
-			this.assemblyNamespace = assemblyNamespace;
-		}
+    [System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple = false)]
+    public class NamespaceAttribute : System.Attribute
+    {
+        public NamespaceAttribute(string assemblyNamespace)
+        {
+            this.assemblyNamespace = assemblyNamespace;
+        }
 
+        public string AssemblyNamespace
+        {
+            get { return this.assemblyNamespace; }
+        }
 
-		public string							AssemblyNamespace
-		{
-			get
-			{
-				return this.assemblyNamespace;
-			}
-		}
-
-
-		private readonly string					assemblyNamespace;
-	}
+        private readonly string assemblyNamespace;
+    }
 }

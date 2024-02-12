@@ -6,15 +6,15 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>INotifyCollectionChanged</c> interface defines a <c>CollectionChanged</c> event.
-	/// </summary>
-	public interface INotifyCollectionChanged
-	{
-		/// <summary>
-		/// Occurs when the collection changes, either by adding, replacing or
-		/// removing items.
-		/// </summary>
-		event EventHandler<CollectionChangedEventArgs> CollectionChanged;
-	}
+    /// <summary>
+    /// The <c>INotifyCollectionChanged</c> interface defines a <c>CollectionChanged</c> event.
+    /// </summary>
+    public interface INotifyCollectionChanged
+    {
+        /// <summary>
+        /// Occurs when the collection changes, either by adding, replacing or
+        /// removing items.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs> CollectionChanged;
+    }
 }

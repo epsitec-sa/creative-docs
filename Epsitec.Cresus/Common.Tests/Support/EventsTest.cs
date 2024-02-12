@@ -1,140 +1,134 @@
-using NUnit.Framework;
 using Epsitec.Common.Support;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Support
 {
-	[TestFixture] public class EventsTest
-	{
-		[Test]
-		public void CheckWeakDelegateReclaimSource()
-		{
-			Source s = new Source ();
-			Target t = new Target ();
+    [TestFixture]
+    public class EventsTest
+    {
+        [Test]
+        public void CheckWeakDelegateReclaimSource()
+        {
+            Source s = new Source();
+            Target t = new Target();
 
-			s.Event += new EventHandler<EventArgs> (t.Handler);
+            s.Event += new EventHandler<EventArgs>(t.Handler);
 
-			System.GC.Collect ();
-			
-			s.Send (EventArgs.Empty);
+            System.GC.Collect();
 
-			Assert.AreEqual (1, t.Count);
-			
-			System.WeakReference weakT = new System.WeakReference (t);
-			System.WeakReference weakS = new System.WeakReference (s);
+            s.Send(EventArgs.Empty);
 
-			s = null;
+            Assert.AreEqual(1, t.Count);
 
-			System.GC.Collect ();
+            System.WeakReference weakT = new System.WeakReference(t);
+            System.WeakReference weakS = new System.WeakReference(s);
 
-			Assert.IsFalse (weakS.IsAlive);
-			Assert.IsTrue (weakT.IsAlive);
-		}
+            s = null;
 
-		[Test]
-		public void CheckWeakDelegateReclaimTarget()
-		{
-			Source s = new Source ();
-			Target t = new Target ();
+            System.GC.Collect();
 
-			s.Event += new EventHandler<EventArgs> (t.Handler);
+            Assert.IsFalse(weakS.IsAlive);
+            Assert.IsTrue(weakT.IsAlive);
+        }
 
-			System.GC.Collect ();
+        [Test]
+        public void CheckWeakDelegateReclaimTarget()
+        {
+            Source s = new Source();
+            Target t = new Target();
 
-			s.Send (EventArgs.Empty);
+            s.Event += new EventHandler<EventArgs>(t.Handler);
 
-			Assert.AreEqual (1, t.Count);
+            System.GC.Collect();
 
-			System.WeakReference weakT = new System.WeakReference (t);
-			System.WeakReference weakS = new System.WeakReference (s);
+            s.Send(EventArgs.Empty);
 
-			t = null;
+            Assert.AreEqual(1, t.Count);
 
-			System.GC.Collect ();
+            System.WeakReference weakT = new System.WeakReference(t);
+            System.WeakReference weakS = new System.WeakReference(s);
 
-			Assert.IsTrue (weakS.IsAlive);
-			Assert.IsFalse (weakT.IsAlive);
-		}
+            t = null;
 
-		[Test]
-		public void CheckWeakDelegateReclaimTargetAndSource()
-		{
-			Source s = new Source ();
-			Target t = new Target ();
+            System.GC.Collect();
 
-			s.Event += new EventHandler<EventArgs> (t.Handler);
-			s.Event += new EventHandler<EventArgs> (t.Handler);
+            Assert.IsTrue(weakS.IsAlive);
+            Assert.IsFalse(weakT.IsAlive);
+        }
 
-			s.Send (EventArgs.Empty);
+        [Test]
+        public void CheckWeakDelegateReclaimTargetAndSource()
+        {
+            Source s = new Source();
+            Target t = new Target();
 
-			Assert.AreEqual (2, t.Count);
-			
-			System.WeakReference weakT = new System.WeakReference (t);
-			System.WeakReference weakS = new System.WeakReference (s);
+            s.Event += new EventHandler<EventArgs>(t.Handler);
+            s.Event += new EventHandler<EventArgs>(t.Handler);
 
-			s = null;
-			t = null;
+            s.Send(EventArgs.Empty);
 
-			System.GC.Collect ();
+            Assert.AreEqual(2, t.Count);
 
-			Assert.IsFalse (weakS.IsAlive);
-			Assert.IsFalse (weakT.IsAlive);
-		}
+            System.WeakReference weakT = new System.WeakReference(t);
+            System.WeakReference weakS = new System.WeakReference(s);
 
-		private class Source
-		{
-			public Source()
-			{
-			}
+            s = null;
+            t = null;
 
-			public void Send(EventArgs e)
-			{
-				this.Event.Invoke (this, e);
-			}
+            System.GC.Collect();
 
-			public WeakDelegate<EventArgs> Event = new WeakDelegate<EventArgs> ();
-		}
-		
-		private class Target : IWeakDelegateTarget
-		{
-			public Target()
-			{
-			}
+            Assert.IsFalse(weakS.IsAlive);
+            Assert.IsFalse(weakT.IsAlive);
+        }
 
-			public int Count
-			{
-				get
-				{
-					return this.count;
-				}
-			}
-			
-			public void Handler(object sender, EventArgs args)
-			{
-				System.Console.Out.WriteLine ("Target.Handler executed");
-				this.count++;
-			}
+        private class Source
+        {
+            public Source() { }
 
-			#region IWeakDelegateTarget Members
-			void IWeakDelegateTarget.AddTrampoline(object t)
-			{
-				if (this.list == null)
-				{
-					this.list = new System.Collections.ArrayList ();
-				}
-				this.list.Add (t);
-			}
+            public void Send(EventArgs e)
+            {
+                this.Event.Invoke(this, e);
+            }
 
-			void IWeakDelegateTarget.RemoveTrampoline(object t)
-			{
-				if (this.list != null)
-				{
-					this.list.Remove (t);
-				}
-			}
-			#endregion
+            public WeakDelegate<EventArgs> Event = new WeakDelegate<EventArgs>();
+        }
 
-			System.Collections.ArrayList list;
-			int count;
-		}
-	}
+        private class Target : IWeakDelegateTarget
+        {
+            public Target() { }
+
+            public int Count
+            {
+                get { return this.count; }
+            }
+
+            public void Handler(object sender, EventArgs args)
+            {
+                System.Console.Out.WriteLine("Target.Handler executed");
+                this.count++;
+            }
+
+            #region IWeakDelegateTarget Members
+            void IWeakDelegateTarget.AddTrampoline(object t)
+            {
+                if (this.list == null)
+                {
+                    this.list = new System.Collections.ArrayList();
+                }
+                this.list.Add(t);
+            }
+
+            void IWeakDelegateTarget.RemoveTrampoline(object t)
+            {
+                if (this.list != null)
+                {
+                    this.list.Remove(t);
+                }
+            }
+            #endregion
+
+            System.Collections.ArrayList list;
+            int count;
+        }
+    }
 }

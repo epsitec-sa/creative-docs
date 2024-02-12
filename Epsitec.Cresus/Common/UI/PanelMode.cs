@@ -3,15 +3,15 @@
 
 namespace Epsitec.Common.UI
 {
-	/// <summary>
-	/// The <c>PanelMode</c> enumeration defines the supported panel modes.
-	/// </summary>
-	public enum PanelMode
-	{
-		None,
-		
-		Default,
-		Edition,
-		Search,
-	}
+    /// <summary>
+    /// The <c>PanelMode</c> enumeration defines the supported panel modes.
+    /// </summary>
+    public enum PanelMode
+    {
+        None,
+
+        Default,
+        Edition,
+        Search,
+    }
 }

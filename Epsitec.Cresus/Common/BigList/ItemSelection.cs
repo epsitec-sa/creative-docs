@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public enum ItemSelection
-	{
-		Select,
-		Deselect,
-		Toggle,
-		Activate,
-		Focus,
-	}
+    public enum ItemSelection
+    {
+        Select,
+        Deselect,
+        Toggle,
+        Activate,
+        Focus,
+    }
 }

@@ -5,41 +5,36 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	public class NativeTextOut
-	{
-		public NativeTextOut()
-		{
-			this.Initialize() ;
-		}
+    public class NativeTextOut
+    {
+        public NativeTextOut()
+        {
+            this.Initialize();
+        }
 
-		private void Initialize()
-		{
-		}
+        private void Initialize() { }
 
-		public void AppendTextLine(string text)
-		{
-			this.output.AppendLine (text);
-		}
+        public void AppendTextLine(string text)
+        {
+            this.output.AppendLine(text);
+        }
 
-		public void AppendStyleLine(string text)
-		{
-			this.styles.AppendLine (text);
-		}
+        public void AppendStyleLine(string text)
+        {
+            this.styles.AppendLine(text);
+        }
 
-		internal Internal.FormattedText FormattedText
-		{
-			get
-			{
-				return new Internal.FormattedText (this.ToString ());
-			}
-		}
+        internal Internal.FormattedText FormattedText
+        {
+            get { return new Internal.FormattedText(this.ToString()); }
+        }
 
-		public override string ToString()
-		{
-			return this.styles.ToString () + this.output.ToString ();
-		}
+        public override string ToString()
+        {
+            return this.styles.ToString() + this.output.ToString();
+        }
 
-		private System.Text.StringBuilder output = new System.Text.StringBuilder ();
-		private System.Text.StringBuilder styles = new System.Text.StringBuilder ();
-	}
+        private System.Text.StringBuilder output = new System.Text.StringBuilder();
+        private System.Text.StringBuilder styles = new System.Text.StringBuilder();
+    }
 }

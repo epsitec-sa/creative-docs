@@ -1,384 +1,403 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
 
-using System.Collections.Generic;
-
-[assembly: DependencyClass (typeof (ItemPanelGroup))]
+[assembly: DependencyClass(typeof(ItemPanelGroup))]
 
 namespace Epsitec.Common.UI
 {
-	/// <summary>
-	/// The <c>ItemPanelGroup</c> class represents a specialized <see cref="ItemPanel"/>
-	/// which represents a group of items.
-	/// </summary>
-	public class ItemPanelGroup : ItemViewWidget
-	{
-		public ItemPanelGroup(ItemView view)
-			: base (view)
-		{
-			view.DefineGroup (this);
-			
-			this.panel = new ItemPanel (this);
-			this.panel.Dock = Widgets.DockStyle.Fill;
+    /// <summary>
+    /// The <c>ItemPanelGroup</c> class represents a specialized <see cref="ItemPanel"/>
+    /// which represents a group of items.
+    /// </summary>
+    public class ItemPanelGroup : ItemViewWidget
+    {
+        public ItemPanelGroup(ItemView view)
+            : base(view)
+        {
+            view.DefineGroup(this);
 
-			this.panel.DefineParentGroup (this);
-			this.panel.ItemViewDefaultSize = this.ParentPanel.ItemViewDefaultSize;
-			
-			this.SetPanelIsExpanded (view.IsExpanded);
+            this.panel = new ItemPanel(this);
+            this.panel.Dock = Widgets.DockStyle.Fill;
 
-			this.ParentPanel.AddPanelGroup (this);
+            this.panel.DefineParentGroup(this);
+            this.panel.ItemViewDefaultSize = this.ParentPanel.ItemViewDefaultSize;
 
-			this.hasClearedUserInterface = true;
-		}
+            this.SetPanelIsExpanded(view.IsExpanded);
 
-		public ItemPanel ChildPanel
-		{
-			get
-			{
-				return this.panel;
-			}
-		}
+            this.ParentPanel.AddPanelGroup(this);
 
-		public bool HasValidUserInterface
-		{
-			get
-			{
-				return !this.hasClearedUserInterface && !this.hasClearedWidgets;
-			}
-		}
+            this.hasClearedUserInterface = true;
+        }
 
-		public Drawing.Rectangle FocusBounds
-		{
-			get
-			{
-				double dx = this.ActualWidth;
-				double dy = this.ActualHeight;
+        public ItemPanel ChildPanel
+        {
+            get { return this.panel; }
+        }
 
-				return new Drawing.Rectangle (0, dy - 20, dx, 20);
-			}
-		}
+        public bool HasValidUserInterface
+        {
+            get { return !this.hasClearedUserInterface && !this.hasClearedWidgets; }
+        }
 
-		public CollectionViewGroup CollectionViewGroup
-		{
-			get
-			{
-				return this.ItemView.Item as CollectionViewGroup;
-			}
-		}
+        public Drawing.Rectangle FocusBounds
+        {
+            get
+            {
+                double dx = this.ActualWidth;
+                double dy = this.ActualHeight;
 
-		internal void SetPanelIsExpanded(bool expanded)
-		{
-			if (!expanded)
-			{
-				this.ItemView.ClearUserInterface ();
-			}
-		}
+                return new Drawing.Rectangle(0, dy - 20, dx, 20);
+            }
+        }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.ParentPanel != null)
-				{
-					this.ParentPanel.RemovePanelGroup (this);
-				}
-			}
-			
-			base.Dispose (disposing);
-		}
+        public CollectionViewGroup CollectionViewGroup
+        {
+            get { return this.ItemView.Item as CollectionViewGroup; }
+        }
 
-		internal void RefreshAperture(Drawing.Rectangle aperture)
-		{
-			System.Diagnostics.Debug.Assert (this.ItemView != null);
-			System.Diagnostics.Debug.Assert (this.ParentPanel != null);
-			
-			Drawing.Rectangle bounds = this.ItemView.Bounds;
+        internal void SetPanelIsExpanded(bool expanded)
+        {
+            if (!expanded)
+            {
+                this.ItemView.ClearUserInterface();
+            }
+        }
 
-			bounds.Deflate (this.Padding);
-			bounds.Deflate (this.GetInternalPadding ());
-			bounds.Deflate (this.panel.Margins);
-			
-			aperture = Drawing.Rectangle.Intersection (aperture, bounds);
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.ParentPanel != null)
+                {
+                    this.ParentPanel.RemovePanelGroup(this);
+                }
+            }
 
-			if (aperture.IsSurfaceZero)
-			{
-				this.panel.Aperture = Drawing.Rectangle.Empty;
-			}
-			else
-			{
-				this.panel.Aperture = Drawing.Rectangle.Offset (aperture, -bounds.Left, -bounds.Bottom);
-			}
-		}
+            base.Dispose(disposing);
+        }
 
-		internal void NotifyItemViewChanged(ItemView view)
-		{
-			System.Diagnostics.Debug.Assert (this.ItemView == view);
-			System.Diagnostics.Debug.Assert (this.ParentPanel != null);
+        internal void RefreshAperture(Drawing.Rectangle aperture)
+        {
+            System.Diagnostics.Debug.Assert(this.ItemView != null);
+            System.Diagnostics.Debug.Assert(this.ParentPanel != null);
 
-			this.UpdateItemViewSize ();
-			this.Invalidate ();
-		}
-		
-		/// <summary>
-		/// Clears information related to the user interface. This is a softer
-		/// version of a dispose where the object can be turned alive again by
-		/// calling <see cref="RefreshUserInterface"/>.
-		/// </summary>
-		internal void ClearUserInterface()
-		{
-			if (this.hasClearedUserInterface)
-			{
-				//	Nothing to do.
-			}
-			else
-			{
-				this.panel.ClearUserInterface ();
-				this.hasClearedUserInterface = true;
-			}
-		}
+            Drawing.Rectangle bounds = this.ItemView.Bounds;
 
-		internal void RefreshUserInterface()
-		{
-			if (this.hasClearedUserInterface)
-			{
-				this.hasClearedUserInterface = false;
-				this.hasClearedWidgets = !this.panel.Aperture.IsValid;
-				
-				this.panel.RefreshUserInterface ();
-			}
-			else if (this.hasClearedWidgets)
-			{
-				this.RefreshAperture (this.ParentPanel.Aperture);
+            bounds.Deflate(this.Padding);
+            bounds.Deflate(this.GetInternalPadding());
+            bounds.Deflate(this.panel.Margins);
 
-				if (this.panel.Aperture.IsValid)
-				{
-					this.hasClearedWidgets = false;
-					this.panel.RecreateUserInterface ();
-				}
-			}
-		}
+            aperture = Drawing.Rectangle.Intersection(aperture, bounds);
 
-		/// <summary>
-		/// Gets the first sibling group in the next parent.
-		/// </summary>
-		/// <param name="group">The current group.</param>
-		/// <returns>The first sibling group in the next parent, or <c>null</c>.</returns>
-		internal static ItemPanelGroup GetFirstSiblingInNextParent(ItemPanelGroup group)
-		{
-			int index;
-			int count = 0;
+            if (aperture.IsSurfaceZero)
+            {
+                this.panel.Aperture = Drawing.Rectangle.Empty;
+            }
+            else
+            {
+                this.panel.Aperture = Drawing.Rectangle.Offset(
+                    aperture,
+                    -bounds.Left,
+                    -bounds.Bottom
+                );
+            }
+        }
 
-			ItemPanel panel = group.ParentPanel;
-			ItemView  view  = group.ItemView;
+        internal void NotifyItemViewChanged(ItemView view)
+        {
+            System.Diagnostics.Debug.Assert(this.ItemView == view);
+            System.Diagnostics.Debug.Assert(this.ParentPanel != null);
 
-			group = panel.ParentGroup;
+            this.UpdateItemViewSize();
+            this.Invalidate();
+        }
 
-			while (count == 0)
-			{
-				if (group == null)
-				{
-					return null;
-				}
+        /// <summary>
+        /// Clears information related to the user interface. This is a softer
+        /// version of a dispose where the object can be turned alive again by
+        /// calling <see cref="RefreshUserInterface"/>.
+        /// </summary>
+        internal void ClearUserInterface()
+        {
+            if (this.hasClearedUserInterface)
+            {
+                //	Nothing to do.
+            }
+            else
+            {
+                this.panel.ClearUserInterface();
+                this.hasClearedUserInterface = true;
+            }
+        }
 
-				panel = group.ParentPanel;
-				index = group.ItemView.Index+1;
-				count = panel.GetItemViewCount ();
+        internal void RefreshUserInterface()
+        {
+            if (this.hasClearedUserInterface)
+            {
+                this.hasClearedUserInterface = false;
+                this.hasClearedWidgets = !this.panel.Aperture.IsValid;
 
-				while (index >= count)
-				{
-					index = 0;
-					group = ItemPanelGroup.GetFirstSiblingInNextParent (group);
+                this.panel.RefreshUserInterface();
+            }
+            else if (this.hasClearedWidgets)
+            {
+                this.RefreshAperture(this.ParentPanel.Aperture);
 
-					if (group == null)
-					{
-						return null;
-					}
+                if (this.panel.Aperture.IsValid)
+                {
+                    this.hasClearedWidgets = false;
+                    this.panel.RecreateUserInterface();
+                }
+            }
+        }
 
-					panel = group.ParentPanel;
-					count = panel.GetItemViewCount ();
-				}
+        /// <summary>
+        /// Gets the first sibling group in the next parent.
+        /// </summary>
+        /// <param name="group">The current group.</param>
+        /// <returns>The first sibling group in the next parent, or <c>null</c>.</returns>
+        internal static ItemPanelGroup GetFirstSiblingInNextParent(ItemPanelGroup group)
+        {
+            int index;
+            int count = 0;
 
-				view  = panel.GetItemView (index);
-				group = view.Group;
-				panel = group.ChildPanel;
-				count = panel.GetItemViewCount ();
-			}
+            ItemPanel panel = group.ParentPanel;
+            ItemView view = group.ItemView;
 
-			view  = panel.GetItemView (0);
-			group = view.Group;
+            group = panel.ParentGroup;
 
-			return group;
-		}
+            while (count == 0)
+            {
+                if (group == null)
+                {
+                    return null;
+                }
 
-		/// <summary>
-		/// Gets the last sibling group in the previous parent.
-		/// </summary>
-		/// <param name="group">The current group.</param>
-		/// <returns>The last sibling group in the previous parent, or <c>null</c>.</returns>
-		internal static ItemPanelGroup GetLastSiblingInPreviousParent(ItemPanelGroup group)
-		{
-			int index;
-			int count = 0;
+                panel = group.ParentPanel;
+                index = group.ItemView.Index + 1;
+                count = panel.GetItemViewCount();
 
-			ItemPanel panel = group.ParentPanel;
-			ItemView  view  = group.ItemView;
+                while (index >= count)
+                {
+                    index = 0;
+                    group = ItemPanelGroup.GetFirstSiblingInNextParent(group);
 
-			group = panel.ParentGroup;
+                    if (group == null)
+                    {
+                        return null;
+                    }
 
-			while (count == 0)
-			{
-				if (group == null)
-				{
-					return null;
-				}
+                    panel = group.ParentPanel;
+                    count = panel.GetItemViewCount();
+                }
 
-				panel = group.ParentPanel;
-				index = group.ItemView.Index-1;
-				count = panel.GetItemViewCount ();
+                view = panel.GetItemView(index);
+                group = view.Group;
+                panel = group.ChildPanel;
+                count = panel.GetItemViewCount();
+            }
 
-				while (index < 0)
-				{
-					group = ItemPanelGroup.GetLastSiblingInPreviousParent (group);
+            view = panel.GetItemView(0);
+            group = view.Group;
 
-					if (group == null)
-					{
-						return null;
-					}
+            return group;
+        }
 
-					panel = group.ParentPanel;
-					count = panel.GetItemViewCount ();
-					index = count-1;
-				}
+        /// <summary>
+        /// Gets the last sibling group in the previous parent.
+        /// </summary>
+        /// <param name="group">The current group.</param>
+        /// <returns>The last sibling group in the previous parent, or <c>null</c>.</returns>
+        internal static ItemPanelGroup GetLastSiblingInPreviousParent(ItemPanelGroup group)
+        {
+            int index;
+            int count = 0;
 
-				view  = panel.GetItemView (index);
-				group = view.Group;
-				panel = group.ChildPanel;
-				count = panel.GetItemViewCount ();
-			}
+            ItemPanel panel = group.ParentPanel;
+            ItemView view = group.ItemView;
 
-			view  = panel.GetItemView (count-1);
-			group = view.Group;
+            group = panel.ParentGroup;
 
-			return group;
-		}
+            while (count == 0)
+            {
+                if (group == null)
+                {
+                    return null;
+                }
 
-		public override Drawing.Margins GetInternalPadding()
-		{
-			return new Drawing.Margins (0, 0, 20, 0);
-		}
+                panel = group.ParentPanel;
+                index = group.ItemView.Index - 1;
+                count = panel.GetItemViewCount();
 
-		public override Drawing.Size GetBestFitSize()
-		{
-			Drawing.Size size;
+                while (index < 0)
+                {
+                    group = ItemPanelGroup.GetLastSiblingInPreviousParent(group);
 
-			if (this.ItemView.IsExpanded)
-			{
-				if (this.hasClearedUserInterface)
-				{
-					this.RefreshUserInterface ();
-				}
-				else
-				{
-					this.panel.RefreshLayoutIfNeeded ();
-				}
+                    if (group == null)
+                    {
+                        return null;
+                    }
 
-				size  = this.panel.GetContentsSize ();
-				size += this.Padding.Size;
-				size += this.GetInternalPadding ().Size;
-				size += this.panel.Margins.Size;
-			}
-			else
-			{
-				double width  = this.ParentPanel.ItemViewDefaultSize.Width;
-				double height = this.GetInternalPadding ().Height;
+                    panel = group.ParentPanel;
+                    count = panel.GetItemViewCount();
+                    index = count - 1;
+                }
 
-				size = new Drawing.Size (width, height);
-			}
+                view = panel.GetItemView(index);
+                group = view.Group;
+                panel = group.ChildPanel;
+                count = panel.GetItemViewCount();
+            }
 
-			return size;
-		}
+            view = panel.GetItemView(count - 1);
+            group = view.Group;
 
-		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
-		{
-			base.SetBoundsOverride (oldRect, newRect);
-			this.RefreshAperture (this.ParentPanel.Aperture);
-		}
+            return group;
+        }
 
-		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
-		{
-			base.PaintBackgroundImplementation (graphics, clipRect);
+        public override Drawing.Margins GetInternalPadding()
+        {
+            return new Drawing.Margins(0, 0, 20, 0);
+        }
 
-			CollectionViewGroup group = this.CollectionViewGroup;
-			Drawing.Rectangle bounds = this.FocusBounds;
+        public override Drawing.Size GetBestFitSize()
+        {
+            Drawing.Size size;
 
-			double dx = bounds.Width;
-			double dy = bounds.Height;
-			double y  = bounds.Bottom;
+            if (this.ItemView.IsExpanded)
+            {
+                if (this.hasClearedUserInterface)
+                {
+                    this.RefreshUserInterface();
+                }
+                else
+                {
+                    this.panel.RefreshLayoutIfNeeded();
+                }
 
-			Drawing.TextStyle style = this.TextLayout.Style;
-			
+                size = this.panel.GetContentsSize();
+                size += this.Padding.Size;
+                size += this.GetInternalPadding().Size;
+                size += this.panel.Margins.Size;
+            }
+            else
+            {
+                double width = this.ParentPanel.ItemViewDefaultSize.Width;
+                double height = this.GetInternalPadding().Height;
 
-			if (group != null)
-			{
-				graphics.AddText (dy, y, dx-dy, dy, group.Name, style.Font, style.FontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleLeft);
-				graphics.RenderSolid (style.FontColor);
-			}
+                size = new Drawing.Size(width, height);
+            }
 
-			string text = this.ItemView.IsExpanded ? "-" : "+";
+            return size;
+        }
 
-			double r = 9;
+        protected override void SetBoundsOverride(
+            Drawing.Rectangle oldRect,
+            Drawing.Rectangle newRect
+        )
+        {
+            base.SetBoundsOverride(oldRect, newRect);
+            this.RefreshAperture(this.ParentPanel.Aperture);
+        }
 
-			graphics.AddFilledRectangle ((dy-r)/2, y+(dy-r)/2-1, r, r);
-			graphics.RenderSolid (Drawing.Color.FromBrightness (1));
-			graphics.AddRectangle ((dy-r)/2, y+(dy-r)/2-1, r, r);
-			graphics.AddText (0, y, dy, dy, text, style.Font, style.FontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleCenter);
-			graphics.RenderSolid (style.FontColor);
-		}
+        protected override void PaintBackgroundImplementation(
+            Epsitec.Common.Drawing.Graphics graphics,
+            Epsitec.Common.Drawing.Rectangle clipRect
+        )
+        {
+            base.PaintBackgroundImplementation(graphics, clipRect);
 
-		protected override void OnClicked(Epsitec.Common.Widgets.MessageEventArgs e)
-		{
-			base.OnClicked (e);
+            CollectionViewGroup group = this.CollectionViewGroup;
+            Drawing.Rectangle bounds = this.FocusBounds;
 
-			if ((e.Message.Button == Widgets.MouseButtons.Left) &&
-				(this.ItemView != null) &&
-				(this.ParentPanel != null))
-			{
-				this.ParentPanel.ExpandItemView (this.ItemView, !this.ItemView.IsExpanded);
-				e.Message.Consumer = this;
-			}
-		}
+            double dx = bounds.Width;
+            double dy = bounds.Height;
+            double y = bounds.Bottom;
 
-		private void UpdateItemViewSize()
-		{
-			System.Diagnostics.Debug.Assert (this.ItemView != null);
+            Drawing.TextStyle style = this.TextLayout.Style;
 
-			Drawing.Size oldSize = this.ItemView.Size;
-			Drawing.Size newSize = this.GetBestFitSize ();
+            if (group != null)
+            {
+                graphics.AddText(
+                    dy,
+                    y,
+                    dx - dy,
+                    dy,
+                    group.Name,
+                    style.Font,
+                    style.FontSize,
+                    Epsitec.Common.Drawing.ContentAlignment.MiddleLeft
+                );
+                graphics.RenderSolid(style.FontColor);
+            }
 
-			if (this.ItemView.IsExpanded)
-			{
-				this.RefreshUserInterface ();
-			}
-			else
-			{
-				this.ClearUserInterface ();
-			}
+            string text = this.ItemView.IsExpanded ? "-" : "+";
 
-			if (oldSize != newSize)
-			{
-				this.ItemView.DefineSize (newSize);
-				this.ParentPanel.NotifyItemViewSizeChanged (this.ItemView, oldSize, newSize);
-			}
-		}
+            double r = 9;
 
-		private ItemPanel panel;
-		
-		private readonly object exclusion = new object ();
-		private bool hasClearedUserInterface;
-		private bool hasClearedWidgets;
-	}
+            graphics.AddFilledRectangle((dy - r) / 2, y + (dy - r) / 2 - 1, r, r);
+            graphics.RenderSolid(Drawing.Color.FromBrightness(1));
+            graphics.AddRectangle((dy - r) / 2, y + (dy - r) / 2 - 1, r, r);
+            graphics.AddText(
+                0,
+                y,
+                dy,
+                dy,
+                text,
+                style.Font,
+                style.FontSize,
+                Epsitec.Common.Drawing.ContentAlignment.MiddleCenter
+            );
+            graphics.RenderSolid(style.FontColor);
+        }
+
+        protected override void OnClicked(Epsitec.Common.Widgets.MessageEventArgs e)
+        {
+            base.OnClicked(e);
+
+            if (
+                (e.Message.Button == Widgets.MouseButtons.Left)
+                && (this.ItemView != null)
+                && (this.ParentPanel != null)
+            )
+            {
+                this.ParentPanel.ExpandItemView(this.ItemView, !this.ItemView.IsExpanded);
+                e.Message.Consumer = this;
+            }
+        }
+
+        private void UpdateItemViewSize()
+        {
+            System.Diagnostics.Debug.Assert(this.ItemView != null);
+
+            Drawing.Size oldSize = this.ItemView.Size;
+            Drawing.Size newSize = this.GetBestFitSize();
+
+            if (this.ItemView.IsExpanded)
+            {
+                this.RefreshUserInterface();
+            }
+            else
+            {
+                this.ClearUserInterface();
+            }
+
+            if (oldSize != newSize)
+            {
+                this.ItemView.DefineSize(newSize);
+                this.ParentPanel.NotifyItemViewSizeChanged(this.ItemView, oldSize, newSize);
+            }
+        }
+
+        private ItemPanel panel;
+
+        private readonly object exclusion = new object();
+        private bool hasClearedUserInterface;
+        private bool hasClearedWidgets;
+    }
 }

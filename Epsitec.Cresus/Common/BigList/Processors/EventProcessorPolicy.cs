@@ -6,7 +6,5 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public abstract class EventProcessorPolicy
-	{
-	}
+    public abstract class EventProcessorPolicy { }
 }

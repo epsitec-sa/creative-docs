@@ -3,11 +3,11 @@
 
 namespace Epsitec.Common.Support
 {
-	public class LockTimeoutException : System.ApplicationException, System.Runtime.Serialization.ISerializable
-	{
-		public LockTimeoutException()
-			: base ("Timed out waiting for lock.")
-		{
-		}
-	}
+    public class LockTimeoutException
+        : System.ApplicationException,
+            System.Runtime.Serialization.ISerializable
+    {
+        public LockTimeoutException()
+            : base("Timed out waiting for lock.") { }
+    }
 }

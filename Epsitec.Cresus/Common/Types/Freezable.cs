@@ -1,44 +1,27 @@
 namespace Epsitec.Common.Types
 {
+    public abstract class Freezable : IReadOnly
+    {
+        public Freezable()
+        {
+            this.IsReadOnly = false;
+        }
+
+        #region IReadOnly Members
 
 
-	public abstract class Freezable : IReadOnly
-	{
+        public bool IsReadOnly { get; private set; }
+
+        #endregion
 
 
-		public Freezable()
-		{
-			this.IsReadOnly = false;
-		}
+        public void Freeze()
+        {
+            this.IsReadOnly = true;
 
+            this.HandleFreeze();
+        }
 
-		#region IReadOnly Members
-
-
-		public bool IsReadOnly
-		{
-			get;
-			private set;
-		}
-
-
-		#endregion
-
-
-		public void Freeze()
-		{
-			this.IsReadOnly = true;
-
-			this.HandleFreeze ();
-		}
-
-
-		protected virtual void HandleFreeze()
-		{
-		}
-
-
-	}
-
-
+        protected virtual void HandleFreeze() { }
+    }
 }

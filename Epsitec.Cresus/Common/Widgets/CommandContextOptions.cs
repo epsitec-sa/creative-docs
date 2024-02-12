@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
-	[System.Flags]
-	public enum CommandContextOptions
-	{
-		None = 0,
-		
-		Fence					= 0x0001,
-		ActivateWithoutFocus	= 0x0002,
-	}
+    [System.Flags]
+    public enum CommandContextOptions
+    {
+        None = 0,
+
+        Fence = 0x0001,
+        ActivateWithoutFocus = 0x0002,
+    }
 }

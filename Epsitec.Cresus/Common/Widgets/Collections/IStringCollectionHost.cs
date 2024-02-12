@@ -3,17 +3,14 @@
 
 namespace Epsitec.Common.Widgets.Collections
 {
-	/// <summary>
-	/// The <c>IStringCollectionHost</c> interface must be implemented by users
-	/// of the <see cref="StringCollection"/> class.
-	/// </summary>
-	public interface IStringCollectionHost
-	{
-		void NotifyStringCollectionChanged();
+    /// <summary>
+    /// The <c>IStringCollectionHost</c> interface must be implemented by users
+    /// of the <see cref="StringCollection"/> class.
+    /// </summary>
+    public interface IStringCollectionHost
+    {
+        void NotifyStringCollectionChanged();
 
-		StringCollection Items
-		{
-			get;
-		}
-	}
+        StringCollection Items { get; }
+    }
 }

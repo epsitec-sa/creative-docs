@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum SearchPickerState
-	{
-		Undefined,
+    public enum SearchPickerState
+    {
+        Undefined,
 
-		Empty,
-		Ready,
-		Busy,
-		Error,
-	}
+        Empty,
+        Ready,
+        Busy,
+        Error,
+    }
 }

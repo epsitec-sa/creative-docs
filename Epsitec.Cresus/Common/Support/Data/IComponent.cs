@@ -3,7 +3,5 @@
 
 namespace Epsitec.Common.Support.Data
 {
-	public interface IComponent : IDisposed
-	{
-	}
+    public interface IComponent : IDisposed { }
 }

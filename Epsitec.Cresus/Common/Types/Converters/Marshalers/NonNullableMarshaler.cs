@@ -7,43 +7,45 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Common.Types.Converters.Marshalers
 {
-	public sealed class NonNullableMarshaler<T> : GenericMarshaler<T, T>
-	{
-		public NonNullableMarshaler()
-		{
-		}
+    public sealed class NonNullableMarshaler<T> : GenericMarshaler<T, T>
+    {
+        public NonNullableMarshaler() { }
 
-		public NonNullableMarshaler(System.Func<T> getter, System.Action<T> setter, Expression expression)
-		{
-			this.ValueGetter = getter;
-			this.ValueSetter = setter;
-			this.InitialValue = getter ();
-			this.ValueGetterExpression = expression;
-		}
+        public NonNullableMarshaler(
+            System.Func<T> getter,
+            System.Action<T> setter,
+            Expression expression
+        )
+        {
+            this.ValueGetter = getter;
+            this.ValueSetter = setter;
+            this.InitialValue = getter();
+            this.ValueGetterExpression = expression;
+        }
 
-		public override string GetStringValue()
-		{
-			var value = this.GetValue ();
-			return this.Converter.ConvertToString (value);
-		}
+        public override string GetStringValue()
+        {
+            var value = this.GetValue();
+            return this.Converter.ConvertToString(value);
+        }
 
-		public override void SetStringValue(string text)
-		{
-			var value = this.Converter.ConvertFromString (text);
+        public override void SetStringValue(string text)
+        {
+            var value = this.Converter.ConvertFromString(text);
 
-			if (value.HasValue)
-			{
-				this.SetValue (value.Value);
-			}
-			else
-			{
-				this.SetValue (this.InitialValue);
-			}
-		}
+            if (value.HasValue)
+            {
+                this.SetValue(value.Value);
+            }
+            else
+            {
+                this.SetValue(this.InitialValue);
+            }
+        }
 
-		public override bool CanConvert(string text)
-		{
-			return this.Converter.CanConvertFromString (text);
-		}
-	}
+        public override bool CanConvert(string text)
+        {
+            return this.Converter.CanConvertFromString(text);
+        }
+    }
 }

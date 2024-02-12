@@ -3,19 +3,19 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum PaintTextStyle
-	{
-		StaticText,
-		TextField,
-		Group,
-		Status,
-		Button,
-		CheckButton,
-		RadioButton,
-		List,
-		Array,
-		Header,
-		HMenu,
-		VMenu,
-	}
+    public enum PaintTextStyle
+    {
+        StaticText,
+        TextField,
+        Group,
+        Status,
+        Button,
+        CheckButton,
+        RadioButton,
+        List,
+        Array,
+        Header,
+        HMenu,
+        VMenu,
+    }
 }

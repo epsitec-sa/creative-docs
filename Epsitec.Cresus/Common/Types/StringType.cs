@@ -4,373 +4,368 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
-[assembly: DependencyClass (typeof (StringType))]
+[assembly: DependencyClass(typeof(StringType))]
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// La classe StringType décrit des valeurs de type System.String.
-	/// </summary>
-	public class StringType : AbstractType, IStringType
-	{
-		public StringType()
-			: base ("String", "String", null)
-		{
-		}
+    /// <summary>
+    /// La classe StringType décrit des valeurs de type System.String.
+    /// </summary>
+    public class StringType : AbstractType, IStringType
+    {
+        public StringType()
+            : base("String", "String", null) { }
 
-		public StringType(int minimumLength)
-			: this ()
-		{
-			this.DefineMinimumLength (minimumLength);
-		}
+        public StringType(int minimumLength)
+            : this()
+        {
+            this.DefineMinimumLength(minimumLength);
+        }
 
-		public StringType(int minimumLength, int maximumLength)
-			: this ()
-		{
-			this.DefineMinimumLength (minimumLength);
-			this.DefineMaximumLength (maximumLength);
-		}
+        public StringType(int minimumLength, int maximumLength)
+            : this()
+        {
+            this.DefineMinimumLength(minimumLength);
+            this.DefineMaximumLength(maximumLength);
+        }
 
-		public StringType(Caption caption)
-			: base (caption)
-		{
-		}
+        public StringType(Caption caption)
+            : base(caption) { }
 
-		/// <summary>
-		/// Gets the type code for the type.
-		/// </summary>
-		/// <value>The type code.</value>
-		public override TypeCode TypeCode
-		{
-			get
-			{
-				return TypeCode.String;
-			}
-		}
+        /// <summary>
+        /// Gets the type code for the type.
+        /// </summary>
+        /// <value>The type code.</value>
+        public override TypeCode TypeCode
+        {
+            get { return TypeCode.String; }
+        }
 
-		#region ISystemType Members
-		public override System.Type				SystemType
-		{
-			get
-			{
-				if (this.UseFormattedText)
-				{
-					return typeof (FormattedText);
-				}
-				else
-				{
-					return typeof (string);
-				}
-			}
-		}
-		#endregion
-		
-		#region IStringType Members
+        #region ISystemType Members
+        public override System.Type SystemType
+        {
+            get
+            {
+                if (this.UseFormattedText)
+                {
+                    return typeof(FormattedText);
+                }
+                else
+                {
+                    return typeof(string);
+                }
+            }
+        }
+        #endregion
 
-		public int								MinimumLength
-		{
-			get
-			{
-				return (int) this.Caption.GetValue (StringType.MinimumLengthProperty);
-			}
-		}
+        #region IStringType Members
 
-		public int								MaximumLength
-		{
-			get
-			{
-				return (int) this.Caption.GetValue (StringType.MaximumLengthProperty);
-			}
-		}
+        public int MinimumLength
+        {
+            get { return (int)this.Caption.GetValue(StringType.MinimumLengthProperty); }
+        }
 
-		public bool								UseFixedLengthStorage
-		{
-			get
-			{
-				return (bool) this.Caption.GetValue (StringType.UseFixedLengthStorageProperty);
-			}
-		}
+        public int MaximumLength
+        {
+            get { return (int)this.Caption.GetValue(StringType.MaximumLengthProperty); }
+        }
 
-		public bool								UseMultilingualStorage
-		{
-			get
-			{
-				return (bool) this.Caption.GetValue (StringType.UseMultilingualStorageProperty);
-			}
-		}
+        public bool UseFixedLengthStorage
+        {
+            get { return (bool)this.Caption.GetValue(StringType.UseFixedLengthStorageProperty); }
+        }
 
-		public bool								UseFormattedText
-		{
-			get
-			{
-				return (bool) this.Caption.GetValue (StringType.UseFormattedTextProperty);
-			}
-		}
+        public bool UseMultilingualStorage
+        {
+            get { return (bool)this.Caption.GetValue(StringType.UseMultilingualStorageProperty); }
+        }
 
-		public StringSearchBehavior				DefaultSearchBehavior
-		{
-			get
-			{
-				return StringType.GetDefaultSearchBehavior (this.Caption);
-			}
-		}
+        public bool UseFormattedText
+        {
+            get { return (bool)this.Caption.GetValue(StringType.UseFormattedTextProperty); }
+        }
 
-		public StringComparisonBehavior			DefaultComparisonBehavior
-		{
-			get
-			{
-				return StringType.GetDefaultComparisonBehavior (this.Caption);
-			}
-		}
+        public StringSearchBehavior DefaultSearchBehavior
+        {
+            get { return StringType.GetDefaultSearchBehavior(this.Caption); }
+        }
 
-		#endregion
+        public StringComparisonBehavior DefaultComparisonBehavior
+        {
+            get { return StringType.GetDefaultComparisonBehavior(this.Caption); }
+        }
 
-		#region IDataConstraint Members
+        #endregion
 
-		public override bool IsValidValue(object value)
-		{
-			if (this.IsNullValue (value))
-			{
-				return this.IsNullable;
-			}
+        #region IDataConstraint Members
 
-			string text = value as string;
+        public override bool IsValidValue(object value)
+        {
+            if (this.IsNullValue(value))
+            {
+                return this.IsNullable;
+            }
 
-			if (text != null)
-			{
-				if (this.UseFormattedText)
-				{
-					return false;
-				}
-			}
+            string text = value as string;
 
-			if (value is FormattedText)
-			{
-				if (!this.UseFormattedText)
-				{
-					return false;
-				}
+            if (text != null)
+            {
+                if (this.UseFormattedText)
+                {
+                    return false;
+                }
+            }
 
-				FormattedText formattedText = (FormattedText) value;
-				text = formattedText.ToString ();
-			}
+            if (value is FormattedText)
+            {
+                if (!this.UseFormattedText)
+                {
+                    return false;
+                }
 
-			if (text != null)
-			{
-				int length = text.Length;
+                FormattedText formattedText = (FormattedText)value;
+                text = formattedText.ToString();
+            }
 
-				if ((length == 0) &&
-					(this.IsNullable))
-				{
-					return true;
-				}
+            if (text != null)
+            {
+                int length = text.Length;
 
-				if ((length >= this.MinimumLength) &&
-					(length <= this.MaximumLength))
-				{
-					return true;
-				}
+                if ((length == 0) && (this.IsNullable))
+                {
+                    return true;
+                }
 
-//-				System.Diagnostics.Debug.Fail (string.Format ("String length {0} not between {1} and {2}", length, this.MinimumLength, this.MaximumLength));
-			}
-			
-			return false;
-		}
+                if ((length >= this.MinimumLength) && (length <= this.MaximumLength))
+                {
+                    return true;
+                }
 
-		#endregion
+                //-				System.Diagnostics.Debug.Fail (string.Format ("String length {0} not between {1} and {2}", length, this.MinimumLength, this.MaximumLength));
+            }
 
-		public override bool IsNullValue(object value)
-		{
-			if (base.IsNullValue (value))
-			{
-				return true;
-			}
+            return false;
+        }
 
-			if (value is FormattedText)
-			{
-				FormattedText text = (FormattedText) value;
-				return text.IsNull ();
-			}
+        #endregion
 
-			return false;
-		}
+        public override bool IsNullValue(object value)
+        {
+            if (base.IsNullValue(value))
+            {
+                return true;
+            }
 
-		public override object DefaultValue
-		{
-			get
-			{
-				object value = base.DefaultValue;
-				
-				if ((value == null) &&
-					(this.IsNullable == false))
-				{
-					return "";
-				}
+            if (value is FormattedText)
+            {
+                FormattedText text = (FormattedText)value;
+                return text.IsNull();
+            }
 
-				return value;
-			}
-		}
+            return false;
+        }
 
+        public override object DefaultValue
+        {
+            get
+            {
+                object value = base.DefaultValue;
 
-		public void DefineMinimumLength(int value)
-		{
-			if (value > 0)
-			{
-				this.Caption.SetValue (StringType.MinimumLengthProperty, value);
-			}
-			else
-			{
-				this.Caption.ClearValue (StringType.MinimumLengthProperty);
-			}
-		}
+                if ((value == null) && (this.IsNullable == false))
+                {
+                    return "";
+                }
 
-		public void DefineMaximumLength(int value)
-		{
-			this.Caption.SetValue (StringType.MaximumLengthProperty, value);
-		}
+                return value;
+            }
+        }
 
-		public void DefineUseFixedLengthStorage(bool value)
-		{
-			if (value)
-			{
-				this.Caption.SetValue (StringType.UseFixedLengthStorageProperty, value);
-			}
-			else
-			{
-				this.Caption.ClearValue (StringType.UseFixedLengthStorageProperty);
-			}
-		}
+        public void DefineMinimumLength(int value)
+        {
+            if (value > 0)
+            {
+                this.Caption.SetValue(StringType.MinimumLengthProperty, value);
+            }
+            else
+            {
+                this.Caption.ClearValue(StringType.MinimumLengthProperty);
+            }
+        }
 
-		public void DefineUseMultilingualStorage(bool value)
-		{
-			if (value)
-			{
-				this.Caption.SetValue (StringType.UseMultilingualStorageProperty, value);
-			}
-			else
-			{
-				this.Caption.ClearValue (StringType.UseMultilingualStorageProperty);
-			}
-		}
+        public void DefineMaximumLength(int value)
+        {
+            this.Caption.SetValue(StringType.MaximumLengthProperty, value);
+        }
 
-		public void DefineUseFormattedText(bool value)
-		{
-			if (value)
-			{
-				this.Caption.SetValue (StringType.UseFormattedTextProperty, value);
-			}
-			else
-			{
-				this.Caption.ClearValue (StringType.UseFormattedTextProperty);
-			}
-		}
+        public void DefineUseFixedLengthStorage(bool value)
+        {
+            if (value)
+            {
+                this.Caption.SetValue(StringType.UseFixedLengthStorageProperty, value);
+            }
+            else
+            {
+                this.Caption.ClearValue(StringType.UseFixedLengthStorageProperty);
+            }
+        }
 
-		public void DefineDefaultSearchBehavior(StringSearchBehavior value)
-		{
-			StringType.SetDefaultSearchBehavior (this.Caption, value);
-		}
+        public void DefineUseMultilingualStorage(bool value)
+        {
+            if (value)
+            {
+                this.Caption.SetValue(StringType.UseMultilingualStorageProperty, value);
+            }
+            else
+            {
+                this.Caption.ClearValue(StringType.UseMultilingualStorageProperty);
+            }
+        }
 
-		public void DefineDefaultComparisonBehavior(StringComparisonBehavior value)
-		{
-			StringType.SetDefaultComparisonBehavior (this.Caption, value);
-		}
+        public void DefineUseFormattedText(bool value)
+        {
+            if (value)
+            {
+                this.Caption.SetValue(StringType.UseFormattedTextProperty, value);
+            }
+            else
+            {
+                this.Caption.ClearValue(StringType.UseFormattedTextProperty);
+            }
+        }
 
-	
-		public static StringSearchBehavior GetDefaultSearchBehavior(DependencyObject obj)
-		{
-			return (StringSearchBehavior) obj.GetValue (StringType.DefaultSearchBehaviorProperty);
-		}
+        public void DefineDefaultSearchBehavior(StringSearchBehavior value)
+        {
+            StringType.SetDefaultSearchBehavior(this.Caption, value);
+        }
 
-		public static void SetDefaultSearchBehavior(DependencyObject obj, StringSearchBehavior value)
-		{
-			if (value == StringSearchBehavior.ExactMatch)
-			{
-				obj.ClearValue (StringType.DefaultSearchBehaviorProperty);
-			}
-			else
-			{
-				obj.SetValue (StringType.DefaultSearchBehaviorProperty, value);
-			}
-		}
-		
-		public static StringComparisonBehavior GetDefaultComparisonBehavior(DependencyObject obj)
-		{
-			return (StringComparisonBehavior) obj.GetValue (StringType.DefaultComparisonBehaviorProperty);
-		}
+        public void DefineDefaultComparisonBehavior(StringComparisonBehavior value)
+        {
+            StringType.SetDefaultComparisonBehavior(this.Caption, value);
+        }
 
-		public static void SetDefaultComparisonBehavior(DependencyObject obj, StringComparisonBehavior value)
-		{
-			if (value == StringComparisonBehavior.Ordinal)
-			{
-				obj.ClearValue (StringType.DefaultComparisonBehaviorProperty);
-			}
-			else
-			{
-				obj.SetValue (StringType.DefaultComparisonBehaviorProperty, value);
-			}
-		}
+        public static StringSearchBehavior GetDefaultSearchBehavior(DependencyObject obj)
+        {
+            return (StringSearchBehavior)obj.GetValue(StringType.DefaultSearchBehaviorProperty);
+        }
 
-		public static bool IsMultilineText(INamedType type)
-		{
-			var stringType = type as StringType;
+        public static void SetDefaultSearchBehavior(
+            DependencyObject obj,
+            StringSearchBehavior value
+        )
+        {
+            if (value == StringSearchBehavior.ExactMatch)
+            {
+                obj.ClearValue(StringType.DefaultSearchBehaviorProperty);
+            }
+            else
+            {
+                obj.SetValue(StringType.DefaultSearchBehaviorProperty, value);
+            }
+        }
 
-			var isMultiline = false;
+        public static StringComparisonBehavior GetDefaultComparisonBehavior(DependencyObject obj)
+        {
+            return (StringComparisonBehavior)
+                obj.GetValue(StringType.DefaultComparisonBehaviorProperty);
+        }
 
-			if (stringType != null)
-			{
-				// NOTE The multi lined text types are the following ones :
-				// [10AH] => Default.TextMultiline
-				// [1016] => Default.StringMultiline
+        public static void SetDefaultComparisonBehavior(
+            DependencyObject obj,
+            StringComparisonBehavior value
+        )
+        {
+            if (value == StringComparisonBehavior.Ordinal)
+            {
+                obj.ClearValue(StringType.DefaultComparisonBehaviorProperty);
+            }
+            else
+            {
+                obj.SetValue(StringType.DefaultComparisonBehaviorProperty, value);
+            }
+        }
 
-				isMultiline = stringType.CaptionId == Druid.Parse ("[10AH]")
-						   || stringType.CaptionId == Druid.Parse ("[1016]");
-			}
+        public static bool IsMultilineText(INamedType type)
+        {
+            var stringType = type as StringType;
 
-			return isMultiline;
-		}
-		
-		public static StringType					Default
-		{
-			get
-			{
-				TypeRosetta.InitializeKnownTypes ();
+            var isMultiline = false;
 
-				if (StringType.defaultValue == null)
-				{
-					StringType.defaultValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1008]"));	//	Default.String
-				}
+            if (stringType != null)
+            {
+                // NOTE The multi lined text types are the following ones :
+                // [10AH] => Default.TextMultiline
+                // [1016] => Default.StringMultiline
 
-				return StringType.defaultValue;
-			}
-		}
+                isMultiline =
+                    stringType.CaptionId == Druid.Parse("[10AH]")
+                    || stringType.CaptionId == Druid.Parse("[1016]");
+            }
 
-		public static StringType					NativeDefault
-		{
-			get
-			{
-				TypeRosetta.InitializeKnownTypes ();
+            return isMultiline;
+        }
 
-				if (StringType.defaultNativeValue == null)
-				{
-					StringType.defaultNativeValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[10AJ]"));			//	Default.StringNative
-				}
-				
-				return StringType.defaultNativeValue;
-			}
-		}
+        public static StringType Default
+        {
+            get
+            {
+                TypeRosetta.InitializeKnownTypes();
 
-		
-		public static readonly DependencyProperty	MinimumLengthProperty = DependencyProperty<StringType>.RegisterAttached<int> ("MinLength", new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty	MaximumLengthProperty = DependencyProperty<StringType>.RegisterAttached<int> ("MaxLength", new DependencyPropertyMetadata (1000000));
+                if (StringType.defaultValue == null)
+                {
+                    StringType.defaultValue = (StringType)
+                        TypeRosetta.CreateTypeObject(Support.Druid.Parse("[1008]")); //	Default.String
+                }
 
-		public static readonly DependencyProperty	UseFixedLengthStorageProperty  = DependencyProperty<StringType>.RegisterAttached<bool> ("UseFixedLengthStorage");
-		public static readonly DependencyProperty	UseMultilingualStorageProperty = DependencyProperty<StringType>.RegisterAttached<bool> ("UseMultilingualStorage");
-		public static readonly DependencyProperty	UseFormattedTextProperty       = DependencyProperty<StringType>.RegisterAttached<bool> ("UseFormattedText");
+                return StringType.defaultValue;
+            }
+        }
 
-		public static readonly DependencyProperty	DefaultSearchBehaviorProperty     = DependencyProperty<StringType>.RegisterAttached<StringSearchBehavior> ("DefaultSearchBehavior", new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
-		public static readonly DependencyProperty	DefaultComparisonBehaviorProperty = DependencyProperty<StringType>.RegisterAttached<StringComparisonBehavior> ("DefaultComparisonBehavior", new DependencyPropertyMetadata (StringComparisonBehavior.Ordinal));
+        public static StringType NativeDefault
+        {
+            get
+            {
+                TypeRosetta.InitializeKnownTypes();
 
-		private static StringType					defaultNativeValue;
-		private static StringType					defaultValue;
-	}
+                if (StringType.defaultNativeValue == null)
+                {
+                    StringType.defaultNativeValue = (StringType)
+                        TypeRosetta.CreateTypeObject(Support.Druid.Parse("[10AJ]")); //	Default.StringNative
+                }
+
+                return StringType.defaultNativeValue;
+            }
+        }
+
+        public static readonly DependencyProperty MinimumLengthProperty =
+            DependencyProperty<StringType>.RegisterAttached<int>(
+                "MinLength",
+                new DependencyPropertyMetadata(0)
+            );
+        public static readonly DependencyProperty MaximumLengthProperty =
+            DependencyProperty<StringType>.RegisterAttached<int>(
+                "MaxLength",
+                new DependencyPropertyMetadata(1000000)
+            );
+
+        public static readonly DependencyProperty UseFixedLengthStorageProperty =
+            DependencyProperty<StringType>.RegisterAttached<bool>("UseFixedLengthStorage");
+        public static readonly DependencyProperty UseMultilingualStorageProperty =
+            DependencyProperty<StringType>.RegisterAttached<bool>("UseMultilingualStorage");
+        public static readonly DependencyProperty UseFormattedTextProperty =
+            DependencyProperty<StringType>.RegisterAttached<bool>("UseFormattedText");
+
+        public static readonly DependencyProperty DefaultSearchBehaviorProperty =
+            DependencyProperty<StringType>.RegisterAttached<StringSearchBehavior>(
+                "DefaultSearchBehavior",
+                new DependencyPropertyMetadata(StringSearchBehavior.ExactMatch)
+            );
+        public static readonly DependencyProperty DefaultComparisonBehaviorProperty =
+            DependencyProperty<StringType>.RegisterAttached<StringComparisonBehavior>(
+                "DefaultComparisonBehavior",
+                new DependencyPropertyMetadata(StringComparisonBehavior.Ordinal)
+            );
+
+        private static StringType defaultNativeValue;
+        private static StringType defaultValue;
+    }
 }

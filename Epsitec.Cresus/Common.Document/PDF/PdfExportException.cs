@@ -3,21 +3,18 @@
 
 namespace Epsitec.Common.Document.PDF
 {
-	class PdfExportException : System.Exception
-	{
-		public PdfExportException(string message)
-		{
-			this.message = message;
-		}
-		
-		public override string					Message
-		{
-			get
-			{
-				return this.message;
-			}
-		}
-		
-		private readonly string					message;
-	}
+    class PdfExportException : System.Exception
+    {
+        public PdfExportException(string message)
+        {
+            this.message = message;
+        }
+
+        public override string Message
+        {
+            get { return this.message; }
+        }
+
+        private readonly string message;
+    }
 }

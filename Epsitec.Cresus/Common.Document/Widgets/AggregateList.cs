@@ -1,98 +1,88 @@
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Widgets
 {
-	/// <summary>
-	/// AggregateList représente la liste des styles graphiques.
-	/// </summary>
-	public class AggregateList : AbstractStyleList
-	{
-		public AggregateList() : base()
-		{
-		}
+    /// <summary>
+    /// AggregateList représente la liste des styles graphiques.
+    /// </summary>
+    public class AggregateList : AbstractStyleList
+    {
+        public AggregateList()
+            : base() { }
 
+        public UndoableList List
+        {
+            //	Liste des aggrégats représentés dans la liste.
+            get { return this.list; }
+            set { this.list = value; }
+        }
 
-		public UndoableList List
-		{
-			//	Liste des aggrégats représentés dans la liste.
-			get
-			{
-				return this.list;
-			}
+        protected override int ListCount
+        {
+            //	Nombre de lignes de la liste.
+            get
+            {
+                int count = 0;
 
-			set
-			{
-				this.list = value;
-			}
-		}
+                if (this.list != null)
+                {
+                    count = this.list.Count;
+                    ;
+                }
 
+                if (this.excludeRank != -1)
+                {
+                    count--;
+                }
 
-		protected override int ListCount
-		{
-			//	Nombre de lignes de la liste.
-			get
-			{
-				int count = 0;
+                if (this.isNoneLine)
+                {
+                    count++;
+                }
 
-				if ( this.list != null )
-				{
-					count = this.list.Count;;
-				}
+                return count;
+            }
+        }
 
-				if ( this.excludeRank != -1 )
-				{
-					count --;
-				}
+        protected override string ListName(int rank)
+        {
+            //	Nom d'une ligne de la liste.
+            if (rank == -1 || this.list == null)
+            {
+                return Res.Strings.Aggregates.NoneLine;
+            }
+            else
+            {
+                Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
+                return agg.AggregateName;
+            }
+        }
 
-				if ( this.isNoneLine )
-				{
-					count ++;
-				}
+        protected override AbstractSample CreateSample()
+        {
+            //	Crée un échantillon.
+            return new Sample();
+        }
 
-				return count;
-			}
-		}
+        protected override void ListSample(AbstractSample sample, int rank)
+        {
+            //	 Met à jour l'échantillon d'une ligne de la liste.
+            Sample sm = sample as Sample;
 
-		protected override string ListName(int rank)
-		{
-			//	Nom d'une ligne de la liste.
-			if ( rank == -1 || this.list == null )
-			{
-				return Res.Strings.Aggregates.NoneLine;
-			}
-			else
-			{
-				Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
-				return agg.AggregateName;
-			}
-		}
+            if (rank == -1 || this.list == null)
+            {
+                sm.Aggregate = null;
+            }
+            else
+            {
+                sm.Aggregate = this.list[rank] as Properties.Aggregate;
+            }
 
-		protected override AbstractSample CreateSample()
-		{
-			//	Crée un échantillon.
-			return new Sample();
-		}
+            sm.Invalidate();
+        }
 
-		protected override void ListSample(AbstractSample sample, int rank)
-		{
-			//	 Met à jour l'échantillon d'une ligne de la liste.
-			Sample sm = sample as Sample;
-
-			if ( rank == -1 || this.list == null )
-			{
-				sm.Aggregate = null;
-			}
-			else
-			{
-				sm.Aggregate = this.list[rank] as Properties.Aggregate;
-			}
-
-			sm.Invalidate();
-		}
-
-
-		protected UndoableList					list;
-	}
+        protected UndoableList list;
+    }
 }

@@ -6,32 +6,26 @@ using System.Linq;
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>Accessor</c> class wraps a getter function.
-	/// </summary>
-	public class Accessor<TResult> : Accessor
-	{
-		public Accessor(System.Func<TResult> getter)
-		{
-			this.getter = getter;
-		}
+    /// <summary>
+    /// The <c>Accessor</c> class wraps a getter function.
+    /// </summary>
+    public class Accessor<TResult> : Accessor
+    {
+        public Accessor(System.Func<TResult> getter)
+        {
+            this.getter = getter;
+        }
 
-		
-		public System.Func<TResult>				Getter
-		{
-			get
-			{
-				return this.getter;
-			}
-		}
+        public System.Func<TResult> Getter
+        {
+            get { return this.getter; }
+        }
 
-		
-		public virtual TResult ExecuteGetter()
-		{
-			return this.getter ();
-		}
+        public virtual TResult ExecuteGetter()
+        {
+            return this.getter();
+        }
 
-		
-		private readonly System.Func<TResult> getter;
-	}
+        private readonly System.Func<TResult> getter;
+    }
 }

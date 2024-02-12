@@ -572,7 +572,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region EditWidget Class
+#region EditWidget Class
 		/// <summary>
 		/// La classe EditWidget est utilisée comme conteneur pour les widgets en cours
 		/// d'édition. C'est elle qui gère la navigation au moyen de TAB.
@@ -1092,9 +1092,9 @@ namespace Epsitec.Common.Widgets
 			protected StaticText				caption;
 
 		}
-		#endregion
+#endregion
 		
-		#region Header Class
+#region Header Class
 		public class Header : Widget
 		{
 			public Header(EditArray host)
@@ -1215,9 +1215,9 @@ namespace Epsitec.Common.Widgets
 			protected bool						isToolbarOk;
 			protected bool						isCaptionOk;
 		}
-		#endregion
+#endregion
 		
-		#region Controller Class
+#region Controller Class
 		public class Controller : System.IDisposable
 		{
 			public Controller(EditArray host, string name)
@@ -1485,15 +1485,15 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			#region IDisposable Members
+#region IDisposable Members
 			public void Dispose()
 			{
 				this.Dispose (true);
 				System.GC.SuppressFinalize (this);
 			}
-			#endregion
+#endregion
 			
-			#region Commands...
+#region Commands...
 			private void CommandStartReadOnly(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.StartReadOnly ();
@@ -1533,7 +1533,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.MoveDown ();
 			}
-			#endregion
+#endregion
 			
 			private void HandleHostInteractionModeChanged(object sender)
 			{
@@ -1614,9 +1614,9 @@ namespace Epsitec.Common.Widgets
 			protected ToolTip					tips;
 			Support.Data.ITextArrayStore		store;
 		}
-		#endregion
+#endregion
 		
-		#region SelfStore Class
+#region SelfStore Class
 		public class SelfStore : Support.Data.ITextArrayStore
 		{
 			public SelfStore(ScrollArray host)
@@ -1625,7 +1625,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			#region ITextArrayStore Members
+#region ITextArrayStore Members
 			public int GetRowCount()
 			{
 				return this.host.RowCount;
@@ -1711,7 +1711,7 @@ namespace Epsitec.Common.Widgets
 			
 			
 			public event Support.EventHandler	StoreContentsChanged;
-			#endregion
+#endregion
 			
 			protected virtual void OnStoreContentsChanged()
 			{
@@ -1723,9 +1723,9 @@ namespace Epsitec.Common.Widgets
 			
 			protected ScrollArray				host;
 		}
-		#endregion
+#endregion
 		
-		#region UniqueValueValidator Class
+#region UniqueValueValidator Class
 		public class UniqueValueValidator : Common.Widgets.Validators.AbstractTextValidator
 		{
 			public UniqueValueValidator() : base (null)
@@ -1789,7 +1789,7 @@ namespace Epsitec.Common.Widgets
 			
 			protected int						column;
 		}
-		#endregion
+#endregion
 		
 		
 		public event Support.EventHandler		EditTextChanged;

@@ -5,12 +5,12 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	public enum MenuType
-	{
-		Undefined		= 0,
-		
-		Popup			= 1,
-		Submenu			= 2,
-		ComboList		= 3,
-	}
+    public enum MenuType
+    {
+        Undefined = 0,
+
+        Popup = 1,
+        Submenu = 2,
+        ComboList = 3,
+    }
 }

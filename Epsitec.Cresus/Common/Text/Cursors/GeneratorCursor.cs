@@ -3,14 +3,12 @@
 
 namespace Epsitec.Common.Text.Cursors
 {
-	/// <summary>
-	/// La classe GeneratorCursor décrit un curseur temporaire utilisé par les
-	/// générateurs (début d'un texte marqué par Properties.GeneratorProperty).
-	/// </summary>
-	public class GeneratorCursor : TempCursor
-	{
-		public GeneratorCursor()
-		{
-		}
-	}
+    /// <summary>
+    /// La classe GeneratorCursor décrit un curseur temporaire utilisé par les
+    /// générateurs (début d'un texte marqué par Properties.GeneratorProperty).
+    /// </summary>
+    public class GeneratorCursor : TempCursor
+    {
+        public GeneratorCursor() { }
+    }
 }

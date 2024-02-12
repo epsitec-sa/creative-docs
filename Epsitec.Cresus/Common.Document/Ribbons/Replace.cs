@@ -1,53 +1,50 @@
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Ribbons
 {
-	/// <summary>
-	/// La classe Replace gère les commandes chercher/remplacer.
-	/// </summary>
-	public class Replace : Abstract
-	{
+    /// <summary>
+    /// La classe Replace gère les commandes chercher/remplacer.
+    /// </summary>
+    public class Replace : Abstract
+    {
         public Replace(DocumentType type, InstallType install, DebugMode debugMode)
             : base(type, install, debugMode)
-		{
-			this.Title = Res.Strings.Action.ReplaceMain;
-			this.PreferredWidth = 8 + 22*1.5*2;
+        {
+            this.Title = Res.Strings.Action.ReplaceMain;
+            this.PreferredWidth = 8 + 22 * 1.5 * 2;
 
-			this.buttonReplace = this.CreateIconButton("Replace", "Large");
-			
-//			this.UpdateClientGeometry();
-		}
-		
-		protected override void Dispose(bool disposing)
-		{
-			if ( disposing )
-			{
-			}
-			
-			base.Dispose(disposing);
-		}
+            this.buttonReplace = this.CreateIconButton("Replace", "Large");
 
+            //			this.UpdateClientGeometry();
+        }
 
-		protected override void UpdateClientGeometry()
-		{
-			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) { }
 
-			if ( this.buttonReplace == null )  return;
+            base.Dispose(disposing);
+        }
 
-			double dx = this.buttonReplace.PreferredWidth;
-			double dy = this.buttonReplace.PreferredHeight;
+        protected override void UpdateClientGeometry()
+        {
+            //	Met à jour la géométrie.
+            base.UpdateClientGeometry();
 
-			Rectangle rect = this.UsefulZone;
-			rect.Width  = dx*1.5;
-			rect.Height = dy*1.5;
-			rect.Offset(0, dy*0.5);
-			this.buttonReplace.SetManualBounds(rect);
-		}
+            if (this.buttonReplace == null)
+                return;
 
+            double dx = this.buttonReplace.PreferredWidth;
+            double dy = this.buttonReplace.PreferredHeight;
 
-		protected IconButton				buttonReplace;
-	}
+            Rectangle rect = this.UsefulZone;
+            rect.Width = dx * 1.5;
+            rect.Height = dy * 1.5;
+            rect.Offset(0, dy * 0.5);
+            this.buttonReplace.SetManualBounds(rect);
+        }
+
+        protected IconButton buttonReplace;
+    }
 }

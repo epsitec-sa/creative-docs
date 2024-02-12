@@ -3,21 +3,18 @@
 
 namespace Epsitec.Common.Types
 {
-	public class BindingChangedEventArgs : System.EventArgs
-	{
-		public BindingChangedEventArgs(DependencyProperty property)
-		{
-			this.property = property;
-		}
-		
-		public DependencyProperty				Property
-		{
-			get
-			{
-				return this.property;
-			}
-		}
-		
-		private DependencyProperty				property;
-	}
+    public class BindingChangedEventArgs : System.EventArgs
+    {
+        public BindingChangedEventArgs(DependencyProperty property)
+        {
+            this.property = property;
+        }
+
+        public DependencyProperty Property
+        {
+            get { return this.property; }
+        }
+
+        private DependencyProperty property;
+    }
 }

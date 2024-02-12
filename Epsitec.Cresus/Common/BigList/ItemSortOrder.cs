@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	/// <summary>
-	/// The <c>ItemSortOrder</c> enumeration defines how items should be sorted for
-	/// a given column.
-	/// </summary>
-	public enum ItemSortOrder
-	{
-		None,
-		Ascending,
-		Descending,
-	}
+    /// <summary>
+    /// The <c>ItemSortOrder</c> enumeration defines how items should be sorted for
+    /// a given column.
+    /// </summary>
+    public enum ItemSortOrder
+    {
+        None,
+        Ascending,
+        Descending,
+    }
 }

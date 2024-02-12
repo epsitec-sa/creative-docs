@@ -5,51 +5,59 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.IO
 {
-	public static class StringLineExtractor
-	{
-		public static IEnumerable<string> GetLines(string buffer)
-		{
-			int pos = 0;
+    public static class StringLineExtractor
+    {
+        public static IEnumerable<string> GetLines(string buffer)
+        {
+            int pos = 0;
 
-			while (pos < buffer.Length)
-			{
-				int end = buffer.IndexOf ('\n', pos);
+            while (pos < buffer.Length)
+            {
+                int end = buffer.IndexOf('\n', pos);
 
-				if (end < 0)
-				{
-					end = buffer.Length;
-				}
+                if (end < 0)
+                {
+                    end = buffer.Length;
+                }
 
-				if (pos < end)
-				{
-					int trim;
-					if (buffer[end-1] == '\r')
-					{
-						trim = 1;
-					}
-					else
-					{
-						trim = 0;
-					}
+                if (pos < end)
+                {
+                    int trim;
+                    if (buffer[end - 1] == '\r')
+                    {
+                        trim = 1;
+                    }
+                    else
+                    {
+                        trim = 0;
+                    }
 
-					string line = buffer.Substring (pos, end-pos-trim);
+                    string line = buffer.Substring(pos, end - pos - trim);
 
-					yield return line;
-				}
+                    yield return line;
+                }
 
-				pos = end+1;
-			}
-		}
-		
-		public static IEnumerable<string> GetLines(System.IO.Stream stream, System.Text.Encoding encoding = null)
-		{
-			using (var reader = new System.IO.StreamReader (stream, encoding ?? System.Text.Encoding.Default))
-			{
-				while (reader.EndOfStream == false)
-				{
-					yield return reader.ReadLine ();
-				}
-			}
-		}
-	}
+                pos = end + 1;
+            }
+        }
+
+        public static IEnumerable<string> GetLines(
+            System.IO.Stream stream,
+            System.Text.Encoding encoding = null
+        )
+        {
+            using (
+                var reader = new System.IO.StreamReader(
+                    stream,
+                    encoding ?? System.Text.Encoding.Default
+                )
+            )
+            {
+                while (reader.EndOfStream == false)
+                {
+                    yield return reader.ReadLine();
+                }
+            }
+        }
+    }
 }

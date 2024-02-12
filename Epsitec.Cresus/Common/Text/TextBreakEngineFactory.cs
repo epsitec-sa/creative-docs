@@ -5,19 +5,17 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Text
 {
-	public class TextBreakEngineFactory : Drawing.ITextBreakEngineFactory
-	{
-		public TextBreakEngineFactory()
-		{
-		}
+    public class TextBreakEngineFactory : Drawing.ITextBreakEngineFactory
+    {
+        public TextBreakEngineFactory() { }
 
-		#region ITextBreakEngineFactory Members
+        #region ITextBreakEngineFactory Members
 
-		public Epsitec.Common.Drawing.ITextBreakEngine Create()
-		{
-			return new TextBreakEngine ();
-		}
+        public Epsitec.Common.Drawing.ITextBreakEngine Create()
+        {
+            return new TextBreakEngine();
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -1,255 +1,234 @@
 //	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets.Helpers;
 
-using System.Collections.Generic;
-
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>RadioIconGrid</c> class represents and manages a grid of icons
-	/// where only one item can be selected at a given time.
-	/// </summary>
-	public class RadioIconGrid : AbstractGroup
-	{
-		public RadioIconGrid()
-		{
-			this.list = new List<RadioIcon> ();
-			this.selectedValue = -1;
-			this.enableEndOfLine = true;
+    /// <summary>
+    /// The <c>RadioIconGrid</c> class represents and manages a grid of icons
+    /// where only one item can be selected at a given time.
+    /// </summary>
+    public class RadioIconGrid : AbstractGroup
+    {
+        public RadioIconGrid()
+        {
+            this.list = new List<RadioIcon>();
+            this.selectedValue = -1;
+            this.enableEndOfLine = true;
 
-			this.SetupController ();
+            this.SetupController();
 
-			if (this.controller != null)
-			{
-				this.controller.Changed += this.HandleRadioChanged;
-			}
-		}
+            if (this.controller != null)
+            {
+                this.controller.Changed += this.HandleRadioChanged;
+            }
+        }
 
-		public RadioIconGrid(Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
+        public RadioIconGrid(Widget embedder)
+            : this()
+        {
+            this.SetEmbedder(embedder);
+        }
 
-		protected virtual void SetupController()
-		{
-			this.controller = GroupController.GetGroupController (this, "GridGroup");
-		}
+        protected virtual void SetupController()
+        {
+            this.controller = GroupController.GetGroupController(this, "GridGroup");
+        }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (RadioIcon icon in this.list)
+                {
+                    this.DetachRadioIcon(icon);
+                }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				foreach (RadioIcon icon in this.list)
-				{
-					this.DetachRadioIcon (icon);
-				}
-				
-				this.list.Clear ();
+                this.list.Clear();
 
-				if (this.controller != null)
-				{
-					this.controller.Changed -= this.HandleRadioChanged;
-					this.controller = null;
-				}
-			}
+                if (this.controller != null)
+                {
+                    this.controller.Changed -= this.HandleRadioChanged;
+                    this.controller = null;
+                }
+            }
 
-			base.Dispose (disposing);
-		}
+            base.Dispose(disposing);
+        }
 
-		public void AddRadioIcon(string iconUri, string tooltip, int enumValue, bool endOfLine)
-		{
-			RadioIcon icon = new RadioIcon (this);
-			
-			icon.IconUri          = iconUri;
-			icon.EnumValue         = enumValue;
-			icon.EndOfLine         = endOfLine;
-			icon.TabIndex          = this.list.Count + 1;
-			icon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			icon.Group             = this.controller == null ? null : this.controller.Group;
-			
-			ToolTip.Default.SetToolTip (icon, tooltip);
-			
-			this.list.Add (icon);
+        public void AddRadioIcon(string iconUri, string tooltip, int enumValue, bool endOfLine)
+        {
+            RadioIcon icon = new RadioIcon(this);
 
-			this.AttachRadioIcon (icon);
-		}
+            icon.IconUri = iconUri;
+            icon.EnumValue = enumValue;
+            icon.EndOfLine = endOfLine;
+            icon.TabIndex = this.list.Count + 1;
+            icon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+            icon.Group = this.controller == null ? null : this.controller.Group;
 
-		protected virtual void AttachRadioIcon(RadioIcon icon)
-		{
-		}
-		
-		protected virtual void DetachRadioIcon(RadioIcon icon)
-		{
-		}
+            ToolTip.Default.SetToolTip(icon, tooltip);
 
+            this.list.Add(icon);
 
-		public RadioIcon SelectedRadioIcon
-		{
-			get
-			{
-				foreach (RadioIcon icon in this.list)
-				{
-					if (this.IsIconSelected (icon))
-					{
-						return icon;
-					}
-				}
+            this.AttachRadioIcon(icon);
+        }
 
-				return null;
-			}
-		}
+        protected virtual void AttachRadioIcon(RadioIcon icon) { }
 
-		protected virtual bool IsIconSelected(RadioIcon icon)
-		{
-			if (icon.EnumValue == this.selectedValue)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+        protected virtual void DetachRadioIcon(RadioIcon icon) { }
 
-		public virtual int SelectedValue
-		{
-			get
-			{
-				return this.selectedValue;
-			}
+        public RadioIcon SelectedRadioIcon
+        {
+            get
+            {
+                foreach (RadioIcon icon in this.list)
+                {
+                    if (this.IsIconSelected(icon))
+                    {
+                        return icon;
+                    }
+                }
 
-			set
-			{
-				if (this.selectedValue != value)
-				{
-					this.selectedValue = value;
+                return null;
+            }
+        }
 
-					foreach (RadioIcon icon in this.list)
-					{
-						if (this.IsIconSelected (icon))
-						{
-							icon.ActiveState = ActiveState.Yes;
-						}
-						else
-						{
-							icon.ActiveState = ActiveState.No;
-						}
-					}
+        protected virtual bool IsIconSelected(RadioIcon icon)
+        {
+            if (icon.EnumValue == this.selectedValue)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-					this.OnSelectionChanged ();
-				}
-			}
-		}
+        public virtual int SelectedValue
+        {
+            get { return this.selectedValue; }
+            set
+            {
+                if (this.selectedValue != value)
+                {
+                    this.selectedValue = value;
 
-		public bool EnableEndOfLine
-		{
-			get
-			{
-				return this.enableEndOfLine;
-			}
+                    foreach (RadioIcon icon in this.list)
+                    {
+                        if (this.IsIconSelected(icon))
+                        {
+                            icon.ActiveState = ActiveState.Yes;
+                        }
+                        else
+                        {
+                            icon.ActiveState = ActiveState.No;
+                        }
+                    }
 
-			set
-			{
-				this.enableEndOfLine = value;
-			}
-		}
+                    this.OnSelectionChanged();
+                }
+            }
+        }
 
-		public override Drawing.Size GetBestFitSize()
-		{
-			if (this.list == null || this.list.Count == 0)
-			{
-				return Drawing.Size.Zero;
-			}
-			else
-			{
-				double dx = this.list[0].PreferredWidth;
-				double dy = this.list[0].PreferredHeight;
-				return new Drawing.Size(dx*this.list.Count, dy);
-			}
-		}
+        public bool EnableEndOfLine
+        {
+            get { return this.enableEndOfLine; }
+            set { this.enableEndOfLine = value; }
+        }
 
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry ();
+        public override Drawing.Size GetBestFitSize()
+        {
+            if (this.list == null || this.list.Count == 0)
+            {
+                return Drawing.Size.Zero;
+            }
+            else
+            {
+                double dx = this.list[0].PreferredWidth;
+                double dy = this.list[0].PreferredHeight;
+                return new Drawing.Size(dx * this.list.Count, dy);
+            }
+        }
 
-			Rectangle bounds = this.Client.Bounds;
-			Point     corner = this.Client.Bounds.TopLeft;
-			int       column = 0;
-			int       row    = 0;
+        protected override void UpdateClientGeometry()
+        {
+            base.UpdateClientGeometry();
 
-			foreach (RadioIcon icon in this.list)
-			{
-				System.Diagnostics.Debug.Assert (icon != null);
+            Rectangle bounds = this.Client.Bounds;
+            Point corner = this.Client.Bounds.TopLeft;
+            int column = 0;
+            int row = 0;
 
-				Rectangle rect = new Rectangle (corner.X, corner.Y-icon.PreferredHeight, icon.PreferredWidth, icon.PreferredHeight);
-				icon.SetManualBounds (rect);
-				icon.Column = column;
-				icon.Row    = row;
-				icon.Index  = row * 1000 + column;
-				icon.Visibility = bounds.Contains (rect);
+            foreach (RadioIcon icon in this.list)
+            {
+                System.Diagnostics.Debug.Assert(icon != null);
 
-				corner.X += icon.PreferredWidth;
-				column++;
+                Rectangle rect = new Rectangle(
+                    corner.X,
+                    corner.Y - icon.PreferredHeight,
+                    icon.PreferredWidth,
+                    icon.PreferredHeight
+                );
+                icon.SetManualBounds(rect);
+                icon.Column = column;
+                icon.Row = row;
+                icon.Index = row * 1000 + column;
+                icon.Visibility = bounds.Contains(rect);
 
-				if ((corner.X > this.Client.Bounds.Right-icon.PreferredWidth) ||
-					(icon.EndOfLine && this.enableEndOfLine))
-				{
-					corner.X  = this.Client.Bounds.Left;
-					corner.Y -= icon.PreferredHeight;
-					column    = 0;
-					row++;
-				}
-			}
-		}
+                corner.X += icon.PreferredWidth;
+                column++;
 
+                if (
+                    (corner.X > this.Client.Bounds.Right - icon.PreferredWidth)
+                    || (icon.EndOfLine && this.enableEndOfLine)
+                )
+                {
+                    corner.X = this.Client.Bounds.Left;
+                    corner.Y -= icon.PreferredHeight;
+                    column = 0;
+                    row++;
+                }
+            }
+        }
 
-		private void HandleRadioChanged(object sender)
-		{
-			System.Diagnostics.Debug.Assert (this.controller == sender);
+        private void HandleRadioChanged(object sender)
+        {
+            System.Diagnostics.Debug.Assert(this.controller == sender);
 
-			RadioIcon icon = this.controller.FindActiveWidget () as RadioIcon;
+            RadioIcon icon = this.controller.FindActiveWidget() as RadioIcon;
 
-			if ((icon != null) &&
-				(!this.IsIconSelected (icon)))
-			{
-				this.selectedValue = icon.EnumValue;
-				this.OnSelectionChanged ();
-			}
-		}
+            if ((icon != null) && (!this.IsIconSelected(icon)))
+            {
+                this.selectedValue = icon.EnumValue;
+                this.OnSelectionChanged();
+            }
+        }
 
-		protected virtual void OnSelectionChanged()
-		{
-			var handler = this.GetUserEventHandler ("SelectionChanged");
-			
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
+        protected virtual void OnSelectionChanged()
+        {
+            var handler = this.GetUserEventHandler("SelectionChanged");
 
+            if (handler != null)
+            {
+                handler(this);
+            }
+        }
 
-		public event EventHandler SelectionChanged
-		{
-			add
-			{
-				this.AddUserEventHandler ("SelectionChanged", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler ("SelectionChanged", value);
-			}
-		}
+        public event EventHandler SelectionChanged
+        {
+            add { this.AddUserEventHandler("SelectionChanged", value); }
+            remove { this.RemoveUserEventHandler("SelectionChanged", value); }
+        }
 
-
-		protected readonly List<RadioIcon>		list;
-		protected GroupController				controller;
-		private int								selectedValue;
-		private bool							enableEndOfLine;
-	}
+        protected readonly List<RadioIcon> list;
+        protected GroupController controller;
+        private int selectedValue;
+        private bool enableEndOfLine;
+    }
 }

@@ -6,17 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public interface IEventProcessorHost
-	{
-		void Add(IEventProcessor processor);
-		void Remove(IEventProcessor processor);
+    public interface IEventProcessorHost
+    {
+        void Add(IEventProcessor processor);
+        void Remove(IEventProcessor processor);
 
-		IEnumerable<IEventProcessor> EventProcessors
-		{
-			get;
-		}
+        IEnumerable<IEventProcessor> EventProcessors { get; }
 
-		TPolicy GetPolicy<TPolicy>()
-			where TPolicy : EventProcessorPolicy, new ();
-	}
+        TPolicy GetPolicy<TPolicy>()
+            where TPolicy : EventProcessorPolicy, new();
+    }
 }

@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -557,7 +557,7 @@ namespace Epsitec.Common.Tests.Support
 		}
 
 
-		#region Test Properties used by ExtractAndParseCommandArgs
+    #region Test Properties used by ExtractAndParseCommandArgs
 		public string Name
 		{
 			get
@@ -580,10 +580,10 @@ namespace Epsitec.Common.Tests.Support
 			Funny,
 			Strange
 		}
-		#endregion
+    #endregion
 
 #if false
-		#region MyCommandState Class
+    #region MyCommandState Class
 		class MyCommandState : CommandState
 		{
 			public MyCommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
@@ -608,10 +608,10 @@ namespace Epsitec.Common.Tests.Support
 			}
 
 		}
-		#endregion
+    #endregion
 #endif
 
-		#region XyzTestController classes
+    #region XyzTestController classes
 		public class BaseTestController
 		{
 			public BaseTestController()
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Tests.Support
 			{
 			}
 		}
-		#endregion
+    #endregion
 
 #if false
 		[Test] public void CheckValidators()

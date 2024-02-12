@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
-	[System.Flags]
-	public enum GridSnapping
-	{
-		None = 0x00,
-		X = 0x01,
-		Y = 0x02,
-		Both = 0x03,
-	}
+    [System.Flags]
+    public enum GridSnapping
+    {
+        None = 0x00,
+        X = 0x01,
+        Y = 0x02,
+        Both = 0x03,
+    }
 }

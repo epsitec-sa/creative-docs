@@ -3,30 +3,18 @@
 
 namespace Epsitec.Common.Widgets.Helpers
 {
-	/// <summary>
-	/// L'interface <c>IClientInfo</c> renseigne sur les dimensions internes (dites "client")
-	/// d'un widget.
-	/// </summary>
-	public interface IClientInfo
-	{
-		Drawing.Rectangle Bounds
-		{
-			get;
-		}
-		
-		Drawing.Size Size
-		{
-			get;
-		}
+    /// <summary>
+    /// L'interface <c>IClientInfo</c> renseigne sur les dimensions internes (dites "client")
+    /// d'un widget.
+    /// </summary>
+    public interface IClientInfo
+    {
+        Drawing.Rectangle Bounds { get; }
 
-		double Height
-		{
-			get;
-		}
+        Drawing.Size Size { get; }
 
-		double Width
-		{
-			get;
-		}
-	}
+        double Height { get; }
+
+        double Width { get; }
+    }
 }

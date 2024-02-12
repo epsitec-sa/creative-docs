@@ -1,9 +1,8 @@
 ﻿//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using NUnit.Framework;
-
 using System;
+using NUnit.Framework;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 [Obsolete("Use Assert.Throw")]
@@ -26,10 +25,7 @@ public class ExpectedExceptionAttribute : Attribute
     //     Gets or sets the expected exception type
     public Type ExpectedException
     {
-        get
-        {
-            return expectedException;
-        }
+        get { return expectedException; }
         set
         {
             expectedException = value;
@@ -42,14 +38,8 @@ public class ExpectedExceptionAttribute : Attribute
     //     Gets or sets the full Type name of the expected exception
     public string ExpectedExceptionName
     {
-        get
-        {
-            return expectedExceptionName;
-        }
-        set
-        {
-            expectedExceptionName = value;
-        }
+        get { return expectedExceptionName; }
+        set { expectedExceptionName = value; }
     }
 
     //
@@ -57,14 +47,8 @@ public class ExpectedExceptionAttribute : Attribute
     //     Gets or sets the expected message text
     public string ExpectedMessage
     {
-        get
-        {
-            return expectedMessage;
-        }
-        set
-        {
-            expectedMessage = value;
-        }
+        get { return expectedMessage; }
+        set { expectedMessage = value; }
     }
 
     //
@@ -72,14 +56,8 @@ public class ExpectedExceptionAttribute : Attribute
     //     Gets or sets the user message displayed in case of failure
     public string UserMessage
     {
-        get
-        {
-            return userMessage;
-        }
-        set
-        {
-            userMessage = value;
-        }
+        get { return userMessage; }
+        set { userMessage = value; }
     }
 
     //
@@ -102,22 +80,14 @@ public class ExpectedExceptionAttribute : Attribute
     //     Gets the name of a method to be used as an exception handler
     public string Handler
     {
-        get
-        {
-            return handler;
-        }
-        set
-        {
-            handler = value;
-        }
+        get { return handler; }
+        set { handler = value; }
     }
 
     //
     // Summary:
     //     Constructor for a non-specific exception
-    public ExpectedExceptionAttribute()
-    {
-    }
+    public ExpectedExceptionAttribute() { }
 
     //
     // Summary:

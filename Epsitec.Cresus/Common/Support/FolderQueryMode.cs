@@ -3,91 +3,73 @@
 
 namespace Epsitec.Common.Support
 {
-	public struct FolderQueryMode
-	{
-		public FileInfoIconSelection IconSelection
-		{
-			get
-			{
-				return this.iconSelection;
-			}
-			set
-			{
-				this.iconSelection = value;
-			}
-		}
+    public struct FolderQueryMode
+    {
+        public FileInfoIconSelection IconSelection
+        {
+            get { return this.iconSelection; }
+            set { this.iconSelection = value; }
+        }
 
-		public FileInfoIconSize IconSize
-		{
-			get
-			{
-				return this.iconSize;
-			}
-			set
-			{
-				this.iconSize = value;
-			}
-		}
+        public FileInfoIconSize IconSize
+        {
+            get { return this.iconSize; }
+            set { this.iconSize = value; }
+        }
 
-		public bool AsOpenFolder
-		{
-			get
-			{
-				return this.asOpenFolder;
-			}
-			set
-			{
-				this.asOpenFolder = value;
-			}
-		}
+        public bool AsOpenFolder
+        {
+            get { return this.asOpenFolder; }
+            set { this.asOpenFolder = value; }
+        }
 
-		public static FolderQueryMode LargeIcons
-		{
-			get
-			{
-				FolderQueryMode mode = new FolderQueryMode ();
-				
-				mode.IconSelection = FileInfoIconSelection.Normal;
-				mode.IconSize = FileInfoIconSize.Large;
-				
-				return mode;
-			}
-		}
+        public static FolderQueryMode LargeIcons
+        {
+            get
+            {
+                FolderQueryMode mode = new FolderQueryMode();
 
-		public static FolderQueryMode SmallIcons
-		{
-			get
-			{
-				FolderQueryMode mode = new FolderQueryMode ();
+                mode.IconSelection = FileInfoIconSelection.Normal;
+                mode.IconSize = FileInfoIconSize.Large;
 
-				mode.IconSelection = FileInfoIconSelection.Normal;
-				mode.IconSize = FileInfoIconSize.Small;
+                return mode;
+            }
+        }
 
-				return mode;
-			}
-		}
+        public static FolderQueryMode SmallIcons
+        {
+            get
+            {
+                FolderQueryMode mode = new FolderQueryMode();
 
-		public static FolderQueryMode NoIcons
-		{
-			get
-			{
-				FolderQueryMode mode = new FolderQueryMode ();
+                mode.IconSelection = FileInfoIconSelection.Normal;
+                mode.IconSize = FileInfoIconSize.Small;
 
-				mode.IconSelection = FileInfoIconSelection.Normal;
-				mode.IconSize = FileInfoIconSize.None;
+                return mode;
+            }
+        }
 
-				return mode;
-			}
-		}
+        public static FolderQueryMode NoIcons
+        {
+            get
+            {
+                FolderQueryMode mode = new FolderQueryMode();
 
-		public FolderQueryMode Open()
-		{
-			this.asOpenFolder = true;
-			return this;
-		}
-		
-		private FileInfoIconSize iconSize;
-		private bool asOpenFolder;
-		private FileInfoIconSelection iconSelection;
-	}
+                mode.IconSelection = FileInfoIconSelection.Normal;
+                mode.IconSize = FileInfoIconSize.None;
+
+                return mode;
+            }
+        }
+
+        public FolderQueryMode Open()
+        {
+            this.asOpenFolder = true;
+            return this;
+        }
+
+        private FileInfoIconSize iconSize;
+        private bool asOpenFolder;
+        private FileInfoIconSelection iconSelection;
+    }
 }

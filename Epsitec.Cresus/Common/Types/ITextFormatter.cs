@@ -3,13 +3,16 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>ITextFormatter</c> interface can be used to prepare a human readable
-	/// representation of the instance, by calling its <see cref="ToFormattedText"/>
-	/// method.
-	/// </summary>
-	public interface ITextFormatter
-	{
-		FormattedText ToFormattedText(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel);
-	}
+    /// <summary>
+    /// The <c>ITextFormatter</c> interface can be used to prepare a human readable
+    /// representation of the instance, by calling its <see cref="ToFormattedText"/>
+    /// method.
+    /// </summary>
+    public interface ITextFormatter
+    {
+        FormattedText ToFormattedText(
+            System.Globalization.CultureInfo culture,
+            TextFormatterDetailLevel detailLevel
+        );
+    }
 }

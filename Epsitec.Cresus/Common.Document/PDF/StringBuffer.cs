@@ -3,188 +3,173 @@
 
 namespace Epsitec.Common.Document.PDF
 {
-	/// <summary>
-	/// The <c>StringBuffer</c> class is used as a replacement of <see cref="System.StringBuilder"/>
-	/// where the amount of memory used might be high; if the threshold is exceeded, the string
-	/// will be stored in a backing file.
-	/// </summary>
-	public sealed class StringBuffer : System.IDisposable
-	{
-		public StringBuffer()
-		{
-			this.buffer = new System.Text.StringBuilder ();
-		}
+    /// <summary>
+    /// The <c>StringBuffer</c> class is used as a replacement of <see cref="System.StringBuilder"/>
+    /// where the amount of memory used might be high; if the threshold is exceeded, the string
+    /// will be stored in a backing file.
+    /// </summary>
+    public sealed class StringBuffer : System.IDisposable
+    {
+        public StringBuffer()
+        {
+            this.buffer = new System.Text.StringBuilder();
+        }
 
-		~StringBuffer()
-		{
-			this.Dispose (false);
-		}
-		
-		
-		public bool							InMemory
-		{
-			get
-			{
-				return this.path == null;
-			}
-		}
+        ~StringBuffer()
+        {
+            this.Dispose(false);
+        }
 
-		public int							Length
-		{
-			get
-			{
-				return this.length;
-			}
-		}
+        public bool InMemory
+        {
+            get { return this.path == null; }
+        }
 
-		public bool							EndsWithWhitespace
-		{
-			get
-			{
-				return this.endsWithWhitespace;
-			}
-		}
+        public int Length
+        {
+            get { return this.length; }
+        }
 
-		
-		public void Append(string text)
-		{
-			if (this.length < 0)
-			{
-				throw new System.ObjectDisposedException ("StringBuffer");
-			}
+        public bool EndsWithWhitespace
+        {
+            get { return this.endsWithWhitespace; }
+        }
 
-			if (string.IsNullOrEmpty (text))
-			{
-				return;
-			}
+        public void Append(string text)
+        {
+            if (this.length < 0)
+            {
+                throw new System.ObjectDisposedException("StringBuffer");
+            }
 
-			this.length += text.Length;
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
 
-			if (text.Length > StringBuffer.Threshold)
-			{
-				this.FlushBuffer ();
-				this.Emit (text);
+            this.length += text.Length;
 
-				this.endsWithWhitespace = char.IsWhiteSpace (text[text.Length-1]);
-			}
-			else
-			{
-				this.buffer.Append (text);
+            if (text.Length > StringBuffer.Threshold)
+            {
+                this.FlushBuffer();
+                this.Emit(text);
 
-				this.endsWithWhitespace = char.IsWhiteSpace (text[text.Length-1]);
+                this.endsWithWhitespace = char.IsWhiteSpace(text[text.Length - 1]);
+            }
+            else
+            {
+                this.buffer.Append(text);
 
-				if (this.length > StringBuffer.Threshold)
-				{
-					this.FlushBuffer ();
-				}
-			}
-		}
+                this.endsWithWhitespace = char.IsWhiteSpace(text[text.Length - 1]);
 
-		public void AppendNewLine()
-		{
-			this.Append ("\r\n");
-		}
+                if (this.length > StringBuffer.Threshold)
+                {
+                    this.FlushBuffer();
+                }
+            }
+        }
 
-		
-		public override string ToString()
-		{
-			if (this.path != null)
-			{
-				this.FlushBuffer ();
+        public void AppendNewLine()
+        {
+            this.Append("\r\n");
+        }
 
-				int count = this.length;
-				byte[] buffer = new byte[count];
+        public override string ToString()
+        {
+            if (this.path != null)
+            {
+                this.FlushBuffer();
 
-				this.stream.Seek (0, System.IO.SeekOrigin.Begin);
-				this.stream.Read (buffer, 0, count);
+                int count = this.length;
+                byte[] buffer = new byte[count];
 
-				return System.Text.Encoding.Default.GetString (buffer);
-			}
-			else
-			{
-				return this.buffer.ToString ();
-			}
-		}
+                this.stream.Seek(0, System.IO.SeekOrigin.Begin);
+                this.stream.Read(buffer, 0, count);
 
-		
-		public System.IO.Stream GetStream()
-		{
-			this.FlushBuffer ();
-			this.stream.Seek (0, System.IO.SeekOrigin.Begin);
+                return System.Text.Encoding.Default.GetString(buffer);
+            }
+            else
+            {
+                return this.buffer.ToString();
+            }
+        }
 
-			return this.stream;
-		}
+        public System.IO.Stream GetStream()
+        {
+            this.FlushBuffer();
+            this.stream.Seek(0, System.IO.SeekOrigin.Begin);
 
-		public void CloseStream(System.IO.Stream stream)
-		{
-			System.Diagnostics.Debug.Assert (this.stream == stream);
+            return this.stream;
+        }
 
-			//	Dispose the string buffer; we won't use it anymore after this point.
+        public void CloseStream(System.IO.Stream stream)
+        {
+            System.Diagnostics.Debug.Assert(this.stream == stream);
 
-			this.Dispose ();
-		}
+            //	Dispose the string buffer; we won't use it anymore after this point.
 
-		#region IDisposable Members
+            this.Dispose();
+        }
 
-		public void Dispose()
-		{
-			System.GC.SuppressFinalize (this);
-			this.Dispose (true);
-		}
+        #region IDisposable Members
 
-		#endregion
+        public void Dispose()
+        {
+            System.GC.SuppressFinalize(this);
+            this.Dispose(true);
+        }
 
-		private void Dispose(bool disposing)
-		{
-			if ((this.path != null) &&
-				(System.IO.File.Exists (this.path)))
-			{
-				if (this.stream != null)
-				{
-					this.stream.Close ();
-				}
+        #endregion
 
-				System.IO.File.Delete (this.path);
-				
-				this.path = null;
-				this.stream = null;
-			}
-			
-			this.length = -1;
-		}
+        private void Dispose(bool disposing)
+        {
+            if ((this.path != null) && (System.IO.File.Exists(this.path)))
+            {
+                if (this.stream != null)
+                {
+                    this.stream.Close();
+                }
 
-		private void FlushBuffer()
-		{
-			if (this.path == null)
-			{
-				this.path = System.IO.Path.GetTempFileName ();
-				this.stream = System.IO.File.Open (this.path, System.IO.FileMode.Open);
-			}
+                System.IO.File.Delete(this.path);
 
-			if (this.buffer.Length > 0)
-			{
-				this.stream.Seek (0, System.IO.SeekOrigin.End);
-				this.Emit (this.buffer.ToString ());
-			}
-			
-			this.stream.Flush ();
-		}
+                this.path = null;
+                this.stream = null;
+            }
 
-		private void Emit(string text)
-		{
-			byte[] data = System.Text.Encoding.Default.GetBytes (text);
-			this.stream.Write (data, 0, data.Length);
-			this.buffer.Length = 0;
-		}
+            this.length = -1;
+        }
 
-		
-		private const int Threshold = 1024*4;
+        private void FlushBuffer()
+        {
+            if (this.path == null)
+            {
+                this.path = System.IO.Path.GetTempFileName();
+                this.stream = System.IO.File.Open(this.path, System.IO.FileMode.Open);
+            }
 
-		private readonly System.Text.StringBuilder buffer;
-		
-		private System.IO.Stream			stream;
-		private int							length;
-		private string						path;
-		private bool						endsWithWhitespace;
-	}
+            if (this.buffer.Length > 0)
+            {
+                this.stream.Seek(0, System.IO.SeekOrigin.End);
+                this.Emit(this.buffer.ToString());
+            }
+
+            this.stream.Flush();
+        }
+
+        private void Emit(string text)
+        {
+            byte[] data = System.Text.Encoding.Default.GetBytes(text);
+            this.stream.Write(data, 0, data.Length);
+            this.buffer.Length = 0;
+        }
+
+        private const int Threshold = 1024 * 4;
+
+        private readonly System.Text.StringBuilder buffer;
+
+        private System.IO.Stream stream;
+        private int length;
+        private string path;
+        private bool endsWithWhitespace;
+    }
 }

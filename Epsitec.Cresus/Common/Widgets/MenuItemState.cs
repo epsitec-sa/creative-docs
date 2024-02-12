@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>MenuItemState</c> specifies the state of a menu item.
-	/// </summary>
-	public enum MenuItemState
-	{
-		Default,					//	case de menu inactive
-		Selected,					//	case de menu sélectionnée
-		SubmenuOpen					//	case de menu sélectionnée, sous-menu affiché
-	}
+    /// <summary>
+    /// The <c>MenuItemState</c> specifies the state of a menu item.
+    /// </summary>
+    public enum MenuItemState
+    {
+        Default, //	case de menu inactive
+        Selected, //	case de menu sélectionnée
+        SubmenuOpen //	case de menu sélectionnée, sous-menu affiché
+    }
 }

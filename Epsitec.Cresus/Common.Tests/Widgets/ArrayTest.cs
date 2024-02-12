@@ -1,64 +1,70 @@
-using NUnit.Framework;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Drawing;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Widgets
 {
-	[TestFixture] public class ArrayTest
-	{
-		[SetUp] public void SetUp()
-		{
-			Widget.Initialize ();
-			Document.Engine.Initialize ();
-			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
-		}
-		
-		[Test] public void AutomatedTestEnvironment()
-		{
-			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
-		}
-		
-		[Test] public void CheckInteractive()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckInteractive / ScrollArray";
-			window.Root.Padding = new Margins (5, 5, 5, 5);
-			
-			ScrollArray table = new ScrollArray();
-			
-			table.SetParent (window.Root);
-			table.Dock              = DockStyle.Fill;
-			table.ColumnCount       = 5;
-			table.RowCount          = 100;
-			table.SelectedItemIndex = 0;
-			table.TitleHeight       = 32;
-			table.SelectedItemChanged  += this.HandleSelectedItemChanged;
-			table.Clicked              += this.HandleClicked;
-			table.DoubleClicked        += this.HandleDoubleClicked;
-			table.PaintForeground      += this.HandlePaintForeground;
-			table.TitleWidget       = new StaticText (@"<font size=""160%"">ScrollArray test.</font> Double-click to start edition.");
-			table.TagWidget			= new Tag ();
-			
-			for (int x = 0 ; x < table.ColumnCount; x++)
-			{
-				table.SetHeaderText (x, string.Format ("C{0}", x));
-				table.SetColumnWidth (x, 80);
-			}
-			for (int y = 0; y < 100; y++)
-			{
-				for (int x = 0 ; x < table.ColumnCount; x++)
-				{
-					table[y,x] = string.Format ("Val {0}.{1}", y, x);
-				}
-			}
-			
-			window.Show();
-			Window.RunInTestEnvironment (window);
-		}
-		
+    [TestFixture]
+    public class ArrayTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            Widget.Initialize();
+            Document.Engine.Initialize();
+            Common.Widgets.Adorners.Factory.SetActive("LookMetal");
+        }
+
+        [Test]
+        public void AutomatedTestEnvironment()
+        {
+            Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+        }
+
+        [Test]
+        public void CheckInteractive()
+        {
+            Window window = new Window();
+
+            window.ClientSize = new Size(400, 300);
+            window.Text = "CheckInteractive / ScrollArray";
+            window.Root.Padding = new Margins(5, 5, 5, 5);
+
+            ScrollArray table = new ScrollArray();
+
+            table.SetParent(window.Root);
+            table.Dock = DockStyle.Fill;
+            table.ColumnCount = 5;
+            table.RowCount = 100;
+            table.SelectedItemIndex = 0;
+            table.TitleHeight = 32;
+            table.SelectedItemChanged += this.HandleSelectedItemChanged;
+            table.Clicked += this.HandleClicked;
+            table.DoubleClicked += this.HandleDoubleClicked;
+            table.PaintForeground += this.HandlePaintForeground;
+            table.TitleWidget = new StaticText(
+                @"<font size=""160%"">ScrollArray test.</font> Double-click to start edition."
+            );
+            table.TagWidget = new Tag();
+
+            for (int x = 0; x < table.ColumnCount; x++)
+            {
+                table.SetHeaderText(x, string.Format("C{0}", x));
+                table.SetColumnWidth(x, 80);
+            }
+            for (int y = 0; y < 100; y++)
+            {
+                for (int x = 0; x < table.ColumnCount; x++)
+                {
+                    table[y, x] = string.Format("Val {0}.{1}", y, x);
+                }
+            }
+
+            window.Show();
+            Window.RunInTestEnvironment(window);
+        }
+
 #if false
 		[Test] public void CheckEditArray()
 		{
@@ -329,29 +335,32 @@ namespace Epsitec.Common.Tests.Widgets
 		}
 #endif
 
-		private void HandleSelectedItemChanged(object sender)
-		{
-			ScrollArray table = sender as ScrollArray;
-			System.Diagnostics.Debug.WriteLine ("Selected : " + table.SelectedItemIndex);
-		}
+        private void HandleSelectedItemChanged(object sender)
+        {
+            ScrollArray table = sender as ScrollArray;
+            System.Diagnostics.Debug.WriteLine("Selected : " + table.SelectedItemIndex);
+        }
 
-		private void HandleClicked(object sender, MessageEventArgs e)
-		{
-			ScrollArray table = sender as ScrollArray;
-			int row, column;
-			table.HitTestTable (e.Point, out row, out column);
-			System.Diagnostics.Debug.WriteLine ("Clicked : " + row + "," + column);
-		}
-		
-		private void HandleDoubleClicked(object sender, MessageEventArgs e)
-		{
-			ScrollArray table = sender as ScrollArray;
-			table.HitTestTable (e.Point, out this.hilite_row, out this.hilite_column);
-			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + this.hilite_row + "," + this.hilite_column);
-			table.SelectedItemIndex = this.hilite_row;
-			table.ShowEdition (ScrollShowMode.Extremity);
-			table.Invalidate ();
-		}
+        private void HandleClicked(object sender, MessageEventArgs e)
+        {
+            ScrollArray table = sender as ScrollArray;
+            int row,
+                column;
+            table.HitTestTable(e.Point, out row, out column);
+            System.Diagnostics.Debug.WriteLine("Clicked : " + row + "," + column);
+        }
+
+        private void HandleDoubleClicked(object sender, MessageEventArgs e)
+        {
+            ScrollArray table = sender as ScrollArray;
+            table.HitTestTable(e.Point, out this.hilite_row, out this.hilite_column);
+            System.Diagnostics.Debug.WriteLine(
+                "Double-clicked : " + this.hilite_row + "," + this.hilite_column
+            );
+            table.SelectedItemIndex = this.hilite_row;
+            table.ShowEdition(ScrollShowMode.Extremity);
+            table.Invalidate();
+        }
 
 #if false
 		private void HandleEditDoubleClicked(object sender, MessageEventArgs e)
@@ -366,18 +375,18 @@ namespace Epsitec.Common.Tests.Widgets
 		}
 #endif
 
-		private void HandlePaintForeground(object sender, PaintEventArgs e)
-		{
-			ScrollArray table = sender as ScrollArray;
-			Rectangle hilite = table.GetCellBounds (this.hilite_row, this.hilite_column);
-			
-			if (hilite.IsValid)
-			{
-				e.Graphics.AddFilledRectangle (hilite);
-				e.Graphics.RenderSolid (Color.FromAlphaRgb (0.25, 0, 0, 1));
-			}
-		}
-		
+        private void HandlePaintForeground(object sender, PaintEventArgs e)
+        {
+            ScrollArray table = sender as ScrollArray;
+            Rectangle hilite = table.GetCellBounds(this.hilite_row, this.hilite_column);
+
+            if (hilite.IsValid)
+            {
+                e.Graphics.AddFilledRectangle(hilite);
+                e.Graphics.RenderSolid(Color.FromAlphaRgb(0.25, 0, 0, 1));
+            }
+        }
+
 #if false
 		private void HandleTableEditTextChanged(object sender)
 		{
@@ -405,20 +414,19 @@ namespace Epsitec.Common.Tests.Widgets
 			}
 		}
 #endif
-		
-		private void HandleColumnZeroEditionAccepted(object sender)
-		{
-			TextFieldEx text = sender as TextFieldEx;
-			System.Diagnostics.Debug.WriteLine (string.Format ("Edition accepted: {0}", text.Text));
-		}
-		
-		private void HandleColumnZeroEditionRejected(object sender)
-		{
-			TextFieldEx text = sender as TextFieldEx;
-			System.Diagnostics.Debug.WriteLine (string.Format ("Edition rejected: {0}", text.Text));
-		}
-		
-		private int			hilite_row		= -1;
-		private int			hilite_column	= -1;
-	}
+        private void HandleColumnZeroEditionAccepted(object sender)
+        {
+            TextFieldEx text = sender as TextFieldEx;
+            System.Diagnostics.Debug.WriteLine(string.Format("Edition accepted: {0}", text.Text));
+        }
+
+        private void HandleColumnZeroEditionRejected(object sender)
+        {
+            TextFieldEx text = sender as TextFieldEx;
+            System.Diagnostics.Debug.WriteLine(string.Format("Edition rejected: {0}", text.Text));
+        }
+
+        private int hilite_row = -1;
+        private int hilite_column = -1;
+    }
 }

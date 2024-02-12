@@ -3,11 +3,9 @@
 
 namespace Epsitec.Common.Support
 {
-	public sealed class WorkerThreadException : System.Exception
-	{
-		public WorkerThreadException(string message, System.Exception innerException)
-			: base (message, innerException)
-		{
-		}
-	}
+    public sealed class WorkerThreadException : System.Exception
+    {
+        public WorkerThreadException(string message, System.Exception innerException)
+            : base(message, innerException) { }
+    }
 }

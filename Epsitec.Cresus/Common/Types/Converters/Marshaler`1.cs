@@ -6,43 +6,26 @@ using System.Linq;
 
 namespace Epsitec.Common.Types.Converters
 {
-	public abstract class Marshaler<T> : Marshaler
-	{
-		public System.Func<T>					ValueGetter
-		{
-			get;
-			internal set;
-		}
+    public abstract class Marshaler<T> : Marshaler
+    {
+        public System.Func<T> ValueGetter { get; internal set; }
 
-		public System.Action<T>					ValueSetter
-		{
-			get;
-			internal set;
-		}
+        public System.Action<T> ValueSetter { get; internal set; }
 
-		public T								InitialValue
-		{
-			get;
-			internal set;
-		}
+        public T InitialValue { get; internal set; }
 
-		public sealed override System.Type		MarshaledType
-		{
-			get
-			{
-				return typeof (T);
-			}
-		}
+        public sealed override System.Type MarshaledType
+        {
+            get { return typeof(T); }
+        }
 
-		
-		public abstract void SetValue(T value);
+        public abstract void SetValue(T value);
 
-		public abstract T GetValue();
+        public abstract T GetValue();
 
-		
-		protected sealed override object GetObjectValue()
-		{
-			return this.GetValue ();
-		}
-	}
+        protected sealed override object GetObjectValue()
+        {
+            return this.GetValue();
+        }
+    }
 }

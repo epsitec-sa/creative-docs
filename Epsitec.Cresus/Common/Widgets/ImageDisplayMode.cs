@@ -3,17 +3,16 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>ImageDisplayMode</c> enumeration defines all possible image
-	/// display modes.
-	/// </summary>
+    /// <summary>
+    /// The <c>ImageDisplayMode</c> enumeration defines all possible image
+    /// display modes.
+    /// </summary>
 
-	public enum ImageDisplayMode
-	{
-		None,
+    public enum ImageDisplayMode
+    {
+        None,
 
-		Center,
-		Stretch
-	}
+        Center,
+        Stretch
+    }
 }
-

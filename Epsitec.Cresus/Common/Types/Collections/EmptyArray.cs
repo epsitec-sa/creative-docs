@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Collections
 {
-	/// <summary>
-	/// The <c>EmptyArray</c> class provides a singleton of an empty array of
-	/// type <typeparamref name="T"/>.
-	/// </summary>
-	/// <typeparam name="T">The type of the array.</typeparam>
-	public static class EmptyArray<T>
-	{
-		public static readonly T[] Instance = new T[0];
-	}
+    /// <summary>
+    /// The <c>EmptyArray</c> class provides a singleton of an empty array of
+    /// type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the array.</typeparam>
+    public static class EmptyArray<T>
+    {
+        public static readonly T[] Instance = new T[0];
+    }
 }

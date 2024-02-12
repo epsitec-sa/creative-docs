@@ -3,17 +3,17 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public enum PlatformSystemIcon
-	{
-		Application,
-		Asterisk,
-		Error,
-		Exclamation,
-		Hand,
-		Information,
-		Question,
-		Shield,
-		Warning,
-		WinLogo,
-	}
+    public enum PlatformSystemIcon
+    {
+        Application,
+        Asterisk,
+        Error,
+        Exclamation,
+        Hand,
+        Information,
+        Question,
+        Shield,
+        Warning,
+        WinLogo,
+    }
 }

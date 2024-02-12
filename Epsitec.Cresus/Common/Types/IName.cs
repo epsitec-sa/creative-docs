@@ -3,18 +3,15 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>IName</c> interface returns the name of an object.
-	/// </summary>
-	public interface IName
-	{
-		/// <summary>
-		/// Gets the name of the object.
-		/// </summary>
-		/// <value>The name of the object.</value>
-		string Name
-		{
-			get;
-		}
-	}
+    /// <summary>
+    /// The <c>IName</c> interface returns the name of an object.
+    /// </summary>
+    public interface IName
+    {
+        /// <summary>
+        /// Gets the name of the object.
+        /// </summary>
+        /// <value>The name of the object.</value>
+        string Name { get; }
+    }
 }

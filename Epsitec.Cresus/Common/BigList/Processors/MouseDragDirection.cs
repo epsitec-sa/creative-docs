@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public enum MouseDragDirection
-	{
-		None,
-		Horizontal,
-		Vertical,
-	}
+    public enum MouseDragDirection
+    {
+        None,
+        Horizontal,
+        Vertical,
+    }
 }

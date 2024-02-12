@@ -3,35 +3,35 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>Direction</c> enumeration defines one of the relative
-	/// directions on a 2D surface.
-	/// </summary>
-	public enum Direction
-	{
-		/// <summary>
-		/// No direction.
-		/// </summary>
-		None,
+    /// <summary>
+    /// The <c>Direction</c> enumeration defines one of the relative
+    /// directions on a 2D surface.
+    /// </summary>
+    public enum Direction
+    {
+        /// <summary>
+        /// No direction.
+        /// </summary>
+        None,
 
-		/// <summary>
-		/// To the left.
-		/// </summary>
-		Left,
+        /// <summary>
+        /// To the left.
+        /// </summary>
+        Left,
 
-		/// <summary>
-		/// To the right.
-		/// </summary>
-		Right,
+        /// <summary>
+        /// To the right.
+        /// </summary>
+        Right,
 
-		/// <summary>
-		/// To the top.
-		/// </summary>
-		Up,
+        /// <summary>
+        /// To the top.
+        /// </summary>
+        Up,
 
-		/// <summary>
-		/// To the bottom.
-		/// </summary>
-		Down,
-	}
+        /// <summary>
+        /// To the bottom.
+        /// </summary>
+        Down,
+    }
 }

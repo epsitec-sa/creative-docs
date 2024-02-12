@@ -5,72 +5,63 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Helpers
 {
-	public sealed class HypertextInfo : System.ICloneable, System.IComparable
-	{
-		internal HypertextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
-		{
-			this.layout = layout;
-			this.bounds = bounds;
-			this.index  = index;
-		}
+    public sealed class HypertextInfo : System.ICloneable, System.IComparable
+    {
+        internal HypertextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
+        {
+            this.layout = layout;
+            this.bounds = bounds;
+            this.index = index;
+        }
 
+        #region ICloneable Members
+        public object Clone()
+        {
+            return new HypertextInfo(this.layout, this.bounds, this.index);
+        }
+        #endregion
 
-		#region ICloneable Members
-		public object Clone()
-		{
-			return new HypertextInfo (this.layout, this.bounds, this.index);
-		}
-		#endregion
+        #region IComparable Members
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+            {
+                return 1;
+            }
 
-		#region IComparable Members
-		public int CompareTo(object obj)
-		{
-			if (obj == null)
-			{
-				return 1;
-			}
+            HypertextInfo that = obj as HypertextInfo;
 
-			HypertextInfo that = obj as HypertextInfo;
+            if ((that == null) || (that.layout != this.layout))
+            {
+                throw new System.ArgumentException("Invalid argument");
+            }
 
-			if ((that == null) || (that.layout != this.layout))
-			{
-				throw new System.ArgumentException ("Invalid argument");
-			}
+            return this.index.CompareTo(that.index);
+        }
+        #endregion
 
-			return this.index.CompareTo (that.index);
-		}
-		#endregion
+        public override bool Equals(object obj)
+        {
+            return this.CompareTo(obj) == 0;
+        }
 
-		public override bool Equals(object obj)
-		{
-			return this.CompareTo (obj) == 0;
-		}
+        public override int GetHashCode()
+        {
+            return this.index;
+        }
 
-		public override int GetHashCode()
-		{
-			return this.index;
-		}
+        public Drawing.Rectangle Bounds
+        {
+            get { return this.bounds; }
+        }
 
+        public string Anchor
+        {
+            get { return this.layout.FindAnchor(this.index); }
+        }
 
-		public Drawing.Rectangle Bounds
-		{
-			get
-			{
-				return this.bounds;
-			}
-		}
-
-		public string Anchor
-		{
-			get
-			{
-				return this.layout.FindAnchor (this.index);
-			}
-		}
-
-
-		private TextLayout				layout;
-		private Drawing.Rectangle		bounds;
-		private int						index;
-	}
+        private TextLayout layout;
+        private Drawing.Rectangle bounds;
+        private int index;
+    }
 }

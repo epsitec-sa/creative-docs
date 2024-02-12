@@ -6,19 +6,19 @@ using System.Linq;
 
 namespace Epsitec.Common.Support
 {
-	public static class ListEqualityComparer
-	{
-		public static IEqualityComparer<IList<T>> GetComparer<T>()
-			where T : class
-		{
-			return Cache<T>.Comparer;
-		}
+    public static class ListEqualityComparer
+    {
+        public static IEqualityComparer<IList<T>> GetComparer<T>()
+            where T : class
+        {
+            return Cache<T>.Comparer;
+        }
 
-
-		private static class Cache<T>
-			where T : class
-		{
-			public static readonly IEqualityComparer<IList<T>> Comparer = new ListEqualityComparer<IList<T>, T> ();
-		}
-	}
+        private static class Cache<T>
+            where T : class
+        {
+            public static readonly IEqualityComparer<IList<T>> Comparer =
+                new ListEqualityComparer<IList<T>, T>();
+        }
+    }
 }

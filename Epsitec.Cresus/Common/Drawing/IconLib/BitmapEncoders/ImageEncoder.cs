@@ -2,43 +2,43 @@
 //  Email:  gustavo_franco@hotmail.com
 //  All rights reserved.
 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
 
-//  Redistributions of source code must retain the above copyright notice, 
-//  this list of conditions and the following disclaimer. 
-//  Redistributions in binary form must reproduce the above copyright notice, 
-//  this list of conditions and the following disclaimer in the documentation 
-//  and/or other materials provided with the distribution. 
+//  Redistributions of source code must retain the above copyright notice,
+//  this list of conditions and the following disclaimer.
+//  Redistributions in binary form must reproduce the above copyright notice,
+//  this list of conditions and the following disclaimer in the documentation
+//  and/or other materials provided with the distribution.
 
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
+//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
 //  Copyright (c) 2006, Gustavo Franco
 //  Email:  gustavo_franco@hotmail.com
 //  All rights reserved.
 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
 
-//  Redistributions of source code must retain the above copyright notice, 
-//  this list of conditions and the following disclaimer. 
-//  Redistributions in binary form must reproduce the above copyright notice, 
-//  this list of conditions and the following disclaimer in the documentation 
-//  and/or other materials provided with the distribution. 
+//  Redistributions of source code must retain the above copyright notice,
+//  this list of conditions and the following disclaimer.
+//  Redistributions in binary form must reproduce the above copyright notice,
+//  this list of conditions and the following disclaimer in the documentation
+//  and/or other materials provided with the distribution.
 
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
+//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
 using System;
-using System.IO;
-using System.Text;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace System.Drawing.IconLib.BitmapEncoders
 {
@@ -46,16 +46,14 @@ namespace System.Drawing.IconLib.BitmapEncoders
     internal abstract class ImageEncoder
     {
         #region Variables Declaration
-        protected BITMAPINFOHEADER  mHeader;
-        protected RGBQUAD[]         mColors;
-        protected byte[]            mXOR;
-        protected byte[]            mAND;
+        protected BITMAPINFOHEADER mHeader;
+        protected RGBQUAD[] mColors;
+        protected byte[] mXOR;
+        protected byte[] mAND;
         #endregion
 
         #region Constructors
-        protected ImageEncoder()
-        {
-        }
+        protected ImageEncoder() { }
         #endregion
 
         #region Properties
@@ -70,18 +68,21 @@ namespace System.Drawing.IconLib.BitmapEncoders
                 iconDir.idCount = 1;
                 iconDir.Write(ms);
 
-                // ICONDIRENTRY 
+                // ICONDIRENTRY
                 ICONDIRENTRY iconEntry = new ICONDIRENTRY();
-                iconEntry.bColorCount   = (byte) mHeader.biClrUsed;
-                iconEntry.bHeight       = (byte) (mHeader.biHeight / 2);
-                iconEntry.bReserved     = 0;
-                iconEntry.bWidth        = (byte) mHeader.biWidth;
-                iconEntry.dwBytesInRes  = (uint) (sizeof(BITMAPINFOHEADER) + 
-                                            sizeof(RGBQUAD) * ColorsInPalette + 
-                                            mXOR.Length + mAND.Length);
-                iconEntry.dwImageOffset = (uint) (sizeof(ICONDIR) + sizeof(ICONDIRENTRY));
-                iconEntry.wBitCount     = mHeader.biBitCount;
-                iconEntry.wPlanes       = mHeader.biPlanes;
+                iconEntry.bColorCount = (byte)mHeader.biClrUsed;
+                iconEntry.bHeight = (byte)(mHeader.biHeight / 2);
+                iconEntry.bReserved = 0;
+                iconEntry.bWidth = (byte)mHeader.biWidth;
+                iconEntry.dwBytesInRes = (uint)(
+                    sizeof(BITMAPINFOHEADER)
+                    + sizeof(RGBQUAD) * ColorsInPalette
+                    + mXOR.Length
+                    + mAND.Length
+                );
+                iconEntry.dwImageOffset = (uint)(sizeof(ICONDIR) + sizeof(ICONDIRENTRY));
+                iconEntry.wBitCount = mHeader.biBitCount;
+                iconEntry.wPlanes = mHeader.biPlanes;
                 iconEntry.Write(ms);
 
                 // Image Info Header
@@ -111,52 +112,58 @@ namespace System.Drawing.IconLib.BitmapEncoders
 
         public virtual BITMAPINFOHEADER Header
         {
-            get {return mHeader;}
-            set {mHeader = value;}
+            get { return mHeader; }
+            set { mHeader = value; }
         }
 
         public virtual RGBQUAD[] Colors
         {
-            get {return mColors;}
-            set {mColors = value;}
+            get { return mColors; }
+            set { mColors = value; }
         }
 
         public virtual byte[] XOR
         {
-            get {return mXOR;}
-            set 
+            get { return mXOR; }
+            set
             {
-                mHeader.biSizeImage = (uint) value.Length;
+                mHeader.biSizeImage = (uint)value.Length;
                 mXOR = value;
             }
         }
 
         public virtual byte[] AND
         {
-            get {return mAND;}
-            set {mAND = value;}
+            get { return mAND; }
+            set { mAND = value; }
         }
 
-        public unsafe virtual int ColorsInPalette
+        public virtual unsafe int ColorsInPalette
         {
             get
             {
-                return (int) (mHeader.biClrUsed != 0 ? 
-                                    mHeader.biClrUsed : 
-                                    mHeader.biBitCount <=8 ? 
-                                        (uint) (1 << mHeader.biBitCount) : 0);
+                return (int)(
+                    mHeader.biClrUsed != 0
+                        ? mHeader.biClrUsed
+                        : mHeader.biBitCount <= 8
+                            ? (uint)(1 << mHeader.biBitCount)
+                            : 0
+                );
             }
         }
 
-        public unsafe virtual int ImageSize
+        public virtual unsafe int ImageSize
         {
-            get{return sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * ColorsInPalette + mXOR.Length + mAND.Length;}
+            get
+            {
+                return sizeof(BITMAPINFOHEADER)
+                    + sizeof(RGBQUAD) * ColorsInPalette
+                    + mXOR.Length
+                    + mAND.Length;
+            }
         }
 
-        public abstract IconImageFormat IconImageFormat
-        {
-            get;
-        }
+        public abstract IconImageFormat IconImageFormat { get; }
         #endregion
 
         #region Abstract Methods
@@ -167,10 +174,10 @@ namespace System.Drawing.IconLib.BitmapEncoders
         #region Methods
         public void CopyFrom(ImageEncoder encoder)
         {
-            this.mHeader    = encoder.mHeader;
-            this.mColors    = encoder.mColors;
-            this.mXOR       = encoder.mXOR;
-            this.mAND       = encoder.mAND;
+            this.mHeader = encoder.mHeader;
+            this.mColors = encoder.mColors;
+            this.mXOR = encoder.mXOR;
+            this.mAND = encoder.mAND;
         }
         #endregion
     }

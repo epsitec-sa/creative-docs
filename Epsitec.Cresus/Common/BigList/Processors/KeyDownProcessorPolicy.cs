@@ -6,18 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public class KeyDownProcessorPolicy : EventProcessorPolicy
-	{
-		public KeyDownProcessorPolicy()
-		{
-			this.PassiveScrollMode = ScrollMode.MoveVisible;
-		}
+    public class KeyDownProcessorPolicy : EventProcessorPolicy
+    {
+        public KeyDownProcessorPolicy()
+        {
+            this.PassiveScrollMode = ScrollMode.MoveVisible;
+        }
 
-		
-		public ScrollMode						PassiveScrollMode
-		{
-			get;
-			set;
-		}
-	}
+        public ScrollMode PassiveScrollMode { get; set; }
+    }
 }

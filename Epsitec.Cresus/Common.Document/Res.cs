@@ -3954,7 +3954,7 @@ namespace Epsitec.Common.Document
 				return _stringsBundle[field].AsString;
 			}
 			
-			#region Internal Support Code
+#region Internal Support Code
 			private static string GetText(string bundle, params string[] path)
 			{
 				string field = string.Join (".", path);
@@ -3965,7 +3965,7 @@ namespace Epsitec.Common.Document
 				return _stringsBundle[druid].AsString;
 			}
 			private static global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
-			#endregion
+#endregion
 		}
 		
 		static Res()

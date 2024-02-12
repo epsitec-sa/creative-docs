@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public interface IItemDataProvider<T> : IItemDataProvider
-	{
-		bool Resolve(int index, out T value);
-	}
+    public interface IItemDataProvider<T> : IItemDataProvider
+    {
+        bool Resolve(int index, out T value);
+    }
 }

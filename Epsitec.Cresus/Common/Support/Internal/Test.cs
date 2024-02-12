@@ -3,11 +3,15 @@
 
 namespace Epsitec.Common.Support.Internal
 {
-	public static class Test
-	{
-		public static CultureMap CreateCultureMap(IResourceAccessor owner, Druid id, CultureMapSource source)
-		{
-			return new CultureMap (owner, id, source);
-		}
-	}
+    public static class Test
+    {
+        public static CultureMap CreateCultureMap(
+            IResourceAccessor owner,
+            Druid id,
+            CultureMapSource source
+        )
+        {
+            return new CultureMap(owner, id, source);
+        }
+    }
 }

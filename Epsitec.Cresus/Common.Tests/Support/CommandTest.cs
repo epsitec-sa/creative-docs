@@ -1,106 +1,110 @@
-using NUnit.Framework;
-
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Support
 {
-	[TestFixture]
-	public class CommandTest
-	{
-		[SetUp]
-		public void Initialize()
-		{
-			Epsitec.Common.Widgets.Widget.Initialize ();
-		}
-		
-		[Test]
-		public void CheckCommandContext()
-		{
-			Command command = Command.Get ("TestSave");
+    [TestFixture]
+    public class CommandTest
+    {
+        [SetUp]
+        public void Initialize()
+        {
+            Epsitec.Common.Widgets.Widget.Initialize();
+        }
 
-			command.ManuallyDefineCommand ("Enregistre le document ouvert", "save.icon", null, false);
-			command.Shortcuts.Add (new Shortcut ('S', ModifierKeys.Control));
+        [Test]
+        public void CheckCommandContext()
+        {
+            Command command = Command.Get("TestSave");
 
-			Assert.AreEqual ("TestSave", command.CommandId);
-			Assert.IsTrue (command.IsReadWrite);
-			Assert.IsFalse (command.IsReadOnly);
+            command.ManuallyDefineCommand(
+                "Enregistre le document ouvert",
+                "save.icon",
+                null,
+                false
+            );
+            command.Shortcuts.Add(new Shortcut('S', ModifierKeys.Control));
 
-			CommandContext contextA = new CommandContext ();
-			CommandContext contextB = new CommandContext ();
+            Assert.AreEqual("TestSave", command.CommandId);
+            Assert.IsTrue(command.IsReadWrite);
+            Assert.IsFalse(command.IsReadOnly);
 
-			Visual v1 = new Visual ();
-			Visual v2 = new Visual ();
-			Visual v3 = new Visual ();
+            CommandContext contextA = new CommandContext();
+            CommandContext contextB = new CommandContext();
 
-			v1.Children.Add (v2);
-			v2.Children.Add (v3);
+            Visual v1 = new Visual();
+            Visual v2 = new Visual();
+            Visual v3 = new Visual();
 
-			CommandContext.SetContext (v1, contextA);
-			CommandContext.SetContext (v2, contextB);
+            v1.Children.Add(v2);
+            v2.Children.Add(v3);
 
-			CommandContextChain chain;
+            CommandContext.SetContext(v1, contextA);
+            CommandContext.SetContext(v2, contextB);
 
-			chain = CommandContextChain.BuildChain (v1);
+            CommandContextChain chain;
 
-			Assert.AreEqual (1, Collection.Count (chain.Contexts));
-			Assert.AreEqual (contextA, Collection.ToArray (chain.Contexts)[0]);
+            chain = CommandContextChain.BuildChain(v1);
 
-			chain = CommandContextChain.BuildChain (v2);
+            Assert.AreEqual(1, Collection.Count(chain.Contexts));
+            Assert.AreEqual(contextA, Collection.ToArray(chain.Contexts)[0]);
 
-			Assert.AreEqual (2, Collection.Count (chain.Contexts));
-			Assert.AreEqual (contextB, Collection.ToArray (chain.Contexts)[0]);
-			Assert.AreEqual (contextA, Collection.ToArray (chain.Contexts)[1]);
+            chain = CommandContextChain.BuildChain(v2);
 
-			chain = CommandContextChain.BuildChain (v3);
+            Assert.AreEqual(2, Collection.Count(chain.Contexts));
+            Assert.AreEqual(contextB, Collection.ToArray(chain.Contexts)[0]);
+            Assert.AreEqual(contextA, Collection.ToArray(chain.Contexts)[1]);
 
-			Assert.AreEqual (2, Collection.Count (chain.Contexts));
-			Assert.AreEqual (contextB, Collection.ToArray (chain.Contexts)[0]);
-			Assert.AreEqual (contextA, Collection.ToArray (chain.Contexts)[1]);
+            chain = CommandContextChain.BuildChain(v3);
 
-			v3.CommandObject = command;
+            Assert.AreEqual(2, Collection.Count(chain.Contexts));
+            Assert.AreEqual(contextB, Collection.ToArray(chain.Contexts)[0]);
+            Assert.AreEqual(contextA, Collection.ToArray(chain.Contexts)[1]);
 
-			Assert.AreEqual ("TestSave", v3.CommandName);
+            v3.CommandObject = command;
 
-			CommandCache.Instance.Synchronize ();
+            Assert.AreEqual("TestSave", v3.CommandName);
 
-			Assert.IsTrue (v3.Enable);
+            CommandCache.Instance.Synchronize();
 
-			CommandState stateA;
-			CommandState stateB;
+            Assert.IsTrue(v3.Enable);
 
-			stateA = contextA.GetCommandState (command);
+            CommandState stateA;
+            CommandState stateB;
 
-			Assert.IsNotNull (stateA);
-			Assert.AreEqual ("SimpleState", stateA.GetType ().Name);
+            stateA = contextA.GetCommandState(command);
 
-			stateA.Enable = false;
+            Assert.IsNotNull(stateA);
+            Assert.AreEqual("SimpleState", stateA.GetType().Name);
 
-			Assert.IsTrue (v3.Enable);
-			CommandCache.Instance.Synchronize ();
-			Assert.IsFalse (v3.Enable);
-			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
+            stateA.Enable = false;
 
-			//	En créant un stateB dans contextB, on va se trouver plus près de v3
-			//	dans la chaîne des contextes des commandes. Du coup, c'est l'état de
-			//	stateB (enabled) qui l'emportera sur stateA (disabled) :
+            Assert.IsTrue(v3.Enable);
+            CommandCache.Instance.Synchronize();
+            Assert.IsFalse(v3.Enable);
+            Assert.AreEqual(stateA, chain.GetCommandState(command.CommandId));
 
-			stateB = contextB.GetCommandState (command);
+            //	En créant un stateB dans contextB, on va se trouver plus près de v3
+            //	dans la chaîne des contextes des commandes. Du coup, c'est l'état de
+            //	stateB (enabled) qui l'emportera sur stateA (disabled) :
 
-			Assert.AreNotEqual (stateA, stateB);
+            stateB = contextB.GetCommandState(command);
 
-			Assert.IsFalse (v3.Enable);
-			CommandCache.Instance.Synchronize ();
-			Assert.IsTrue (v3.Enable);
-			Assert.AreEqual (stateB, chain.GetCommandState (command.CommandId));
+            Assert.AreNotEqual(stateA, stateB);
 
-			contextB.ClearCommandState (command);
+            Assert.IsFalse(v3.Enable);
+            CommandCache.Instance.Synchronize();
+            Assert.IsTrue(v3.Enable);
+            Assert.AreEqual(stateB, chain.GetCommandState(command.CommandId));
 
-			Assert.IsTrue (v3.Enable);
-			CommandCache.Instance.Synchronize ();
-			Assert.IsFalse (v3.Enable);
-			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
-		}
-	}
+            contextB.ClearCommandState(command);
+
+            Assert.IsTrue(v3.Enable);
+            CommandCache.Instance.Synchronize();
+            Assert.IsFalse(v3.Enable);
+            Assert.AreEqual(stateA, chain.GetCommandState(command.CommandId));
+        }
+    }
 }

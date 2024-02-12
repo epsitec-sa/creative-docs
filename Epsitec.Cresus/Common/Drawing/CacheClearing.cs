@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public enum CacheClearing
-	{
-		Default,
+    public enum CacheClearing
+    {
+        Default,
 
-		ReleaseLargeBuffers,
-		ReleaseMediumBuffers,
-		ReleaseSmallBuffers,
-		ReleaseEverything,
-	}
+        ReleaseLargeBuffers,
+        ReleaseMediumBuffers,
+        ReleaseSmallBuffers,
+        ReleaseEverything,
+    }
 }

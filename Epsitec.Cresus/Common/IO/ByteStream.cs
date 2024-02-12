@@ -5,106 +5,83 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.IO
 {
-	public sealed class ByteStream : System.IO.Stream
-	{
-		public ByteStream(long length, IEnumerable<byte> source)
-		{
-			this.length = length;
-			this.source = source;
-			
-			this.enumerator = this.source.GetEnumerator ();
-		}
+    public sealed class ByteStream : System.IO.Stream
+    {
+        public ByteStream(long length, IEnumerable<byte> source)
+        {
+            this.length = length;
+            this.source = source;
 
-		public override bool					CanRead
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override bool					CanSeek
-		{
-			get
-			{
-				return false;
-			}
-		}
-		public override bool					CanTimeout
-		{
-			get
-			{
-				return false;
-			}
-		}
-		public override bool					CanWrite
-		{
-			get
-			{
-				return false;
-			}
-		}
-		public override long					Length
-		{
-			get
-			{
-				return this.length;
-			}
-		}
-		public override long					Position
-		{
-			get
-			{
-				return this.pos;
-			}
-			set
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-		
-		public override void Flush()
-		{
-		}
+            this.enumerator = this.source.GetEnumerator();
+        }
 
-		public override long Seek(long offset, System.IO.SeekOrigin origin)
-		{
-			throw new System.NotImplementedException ();
-		}
+        public override bool CanRead
+        {
+            get { return true; }
+        }
+        public override bool CanSeek
+        {
+            get { return false; }
+        }
+        public override bool CanTimeout
+        {
+            get { return false; }
+        }
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
+        public override long Length
+        {
+            get { return this.length; }
+        }
+        public override long Position
+        {
+            get { return this.pos; }
+            set { throw new System.NotImplementedException(); }
+        }
 
-		public override void SetLength(long value)
-		{
-			throw new System.NotImplementedException ();
-		}
+        public override void Flush() { }
 
-		public override void Write(byte[] buffer, int offset, int count)
-		{
-			throw new System.NotImplementedException ();
-		}
+        public override long Seek(long offset, System.IO.SeekOrigin origin)
+        {
+            throw new System.NotImplementedException();
+        }
 
-		public override int Read(byte[] buffer, int offset, int count)
-		{
-			int read = 0;
+        public override void SetLength(long value)
+        {
+            throw new System.NotImplementedException();
+        }
 
-			while ((count > 0) && (this.enumerator.MoveNext ()))
-			{
-				buffer[offset++] = this.enumerator.Current;
-				this.pos++;
-				count--;
-				read++;
-			}
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            throw new System.NotImplementedException();
+        }
 
-			return read;
-		}
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int read = 0;
 
-		public override void Close()
-		{
-			base.Close ();
-			this.enumerator.Dispose ();
-		}
+            while ((count > 0) && (this.enumerator.MoveNext()))
+            {
+                buffer[offset++] = this.enumerator.Current;
+                this.pos++;
+                count--;
+                read++;
+            }
 
-		private readonly long					length;
-		private long							pos;
-		private readonly IEnumerable<byte>		source;
-		private readonly IEnumerator<byte>		enumerator;
-	}
+            return read;
+        }
+
+        public override void Close()
+        {
+            base.Close();
+            this.enumerator.Dispose();
+        }
+
+        private readonly long length;
+        private long pos;
+        private readonly IEnumerable<byte> source;
+        private readonly IEnumerator<byte> enumerator;
+    }
 }

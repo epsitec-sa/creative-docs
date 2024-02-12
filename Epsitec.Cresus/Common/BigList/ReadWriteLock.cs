@@ -6,11 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	internal class ReadWriteLock : System.Threading.ReaderWriterLockSlim
-	{
-		public ReadWriteLock()
-			: base (System.Threading.LockRecursionPolicy.NoRecursion)
-		{
-		}
-	};
+    internal class ReadWriteLock : System.Threading.ReaderWriterLockSlim
+    {
+        public ReadWriteLock()
+            : base(System.Threading.LockRecursionPolicy.NoRecursion) { }
+    };
 }

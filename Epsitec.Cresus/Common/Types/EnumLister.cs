@@ -6,141 +6,151 @@ using System.Linq;
 
 namespace Epsitec.Common.Types
 {
-	using Assembly=System.Reflection.Assembly;
-	using Epsitec.Common.Support;
-	
-	/// <summary>
-	/// 
-	/// </summary>
-	public static class EnumLister
-	{
-		public static void Setup()
-		{
-		}
+    using Epsitec.Common.Support;
+    using Assembly = System.Reflection.Assembly;
 
-		public static IEnumerable<System.Type> GetPublicEnums()
-		{
-			if ((EnumLister.publicEnumCache == null) ||
-				(EnumLister.publicEnumCacheGeneration != EnumLister.generation))
-			{
-				EnumLister.publicEnumCache = new System.Type[EnumLister.types.Count];
-				string[] names = new string[EnumLister.types.Count];
+    /// <summary>
+    ///
+    /// </summary>
+    public static class EnumLister
+    {
+        public static void Setup() { }
 
-				EnumLister.types.Keys.CopyTo (names, 0);
-				System.Array.Sort (names);
+        public static IEnumerable<System.Type> GetPublicEnums()
+        {
+            if (
+                (EnumLister.publicEnumCache == null)
+                || (EnumLister.publicEnumCacheGeneration != EnumLister.generation)
+            )
+            {
+                EnumLister.publicEnumCache = new System.Type[EnumLister.types.Count];
+                string[] names = new string[EnumLister.types.Count];
 
-				for (int i = 0; i < names.Length; i++)
-				{
-					EnumLister.publicEnumCache[i] = EnumLister.types[names[i]].Type;
-				}
+                EnumLister.types.Keys.CopyTo(names, 0);
+                System.Array.Sort(names);
 
-				EnumLister.publicEnumCacheGeneration = EnumLister.generation;
-			}
+                for (int i = 0; i < names.Length; i++)
+                {
+                    EnumLister.publicEnumCache[i] = EnumLister.types[names[i]].Type;
+                }
 
-			return EnumLister.publicEnumCache;
-		}
+                EnumLister.publicEnumCacheGeneration = EnumLister.generation;
+            }
 
-		public static IEnumerable<System.Type> GetDesignerVisibleEnums()
-		{
-			if ((EnumLister.designerVisibleEnumCache == null) ||
-				(EnumLister.designerVisibleEnumCacheGeneration != EnumLister.generation))
-			{
-				var types           = new List<System.Type> ();
-				var designerVisible = typeof (DesignerVisibleAttribute).FullName;
+            return EnumLister.publicEnumCache;
+        }
 
-				foreach (System.Type type in EnumLister.GetPublicEnums ())
-				{
-					if (type.GetCustomAttributes (false).Any (x => x.GetType ().FullName == designerVisible))
-					{
-						types.Add (type);
-					}
-				}
+        public static IEnumerable<System.Type> GetDesignerVisibleEnums()
+        {
+            if (
+                (EnumLister.designerVisibleEnumCache == null)
+                || (EnumLister.designerVisibleEnumCacheGeneration != EnumLister.generation)
+            )
+            {
+                var types = new List<System.Type>();
+                var designerVisible = typeof(DesignerVisibleAttribute).FullName;
 
-				EnumLister.designerVisibleEnumCache = types.ToArray ();
-				EnumLister.designerVisibleEnumCacheGeneration = EnumLister.generation;
-			}
+                foreach (System.Type type in EnumLister.GetPublicEnums())
+                {
+                    if (
+                        type.GetCustomAttributes(false)
+                            .Any(x => x.GetType().FullName == designerVisible)
+                    )
+                    {
+                        types.Add(type);
+                    }
+                }
 
-			return EnumLister.designerVisibleEnumCache;
-		}
+                EnumLister.designerVisibleEnumCache = types.ToArray();
+                EnumLister.designerVisibleEnumCacheGeneration = EnumLister.generation;
+            }
 
-		#region Setup and Run-Time Analysis Methods
+            return EnumLister.designerVisibleEnumCache;
+        }
 
-		static EnumLister()
-		{
-			EnumLister.types = new Dictionary<string, Record> ();
+        #region Setup and Run-Time Analysis Methods
 
-			Assembly[] assemblies = TypeEnumerator.Instance.GetLoadedAssemblies ().ToArray ();
+        static EnumLister()
+        {
+            EnumLister.types = new Dictionary<string, Record>();
 
-			AssemblyLoader.AssemblyLoaded += EnumLister.HandleDomainAssemblyLoaded;
+            Assembly[] assemblies = TypeEnumerator.Instance.GetLoadedAssemblies().ToArray();
 
-			foreach (Assembly assembly in assemblies)
-			{
-				EnumLister.Analyze (assembly);
-			}
-		}
+            AssemblyLoader.AssemblyLoaded += EnumLister.HandleDomainAssemblyLoaded;
 
-		private static void Analyze(Assembly assembly)
-		{
-			foreach (System.Type type in assembly.GetTypes ())
-			{
-				if (type.IsEnum)
-				{
-					object[] hiddenAttributes = type.GetCustomAttributes (typeof (HiddenAttribute), false);
+            foreach (Assembly assembly in assemblies)
+            {
+                EnumLister.Analyze(assembly);
+            }
+        }
 
-					if (hiddenAttributes.Length == 0)
-					{
-						string name = type.FullName;
-						Record record = new Record (type);
-						EnumLister.types[name] = record;
-						EnumLister.generation++;
-					}
-				}
-			}
-		}
+        private static void Analyze(Assembly assembly)
+        {
+            foreach (System.Type type in assembly.GetTypes())
+            {
+                if (type.IsEnum)
+                {
+                    object[] hiddenAttributes = type.GetCustomAttributes(
+                        typeof(HiddenAttribute),
+                        false
+                    );
 
-		private static void HandleDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
-		{
-			if (!args.LoadedAssembly.ReflectionOnly)
-			{
-				EnumLister.Analyze (args.LoadedAssembly);
-			}
-		}
+                    if (hiddenAttributes.Length == 0)
+                    {
+                        string name = type.FullName;
+                        Record record = new Record(type);
+                        EnumLister.types[name] = record;
+                        EnumLister.generation++;
+                    }
+                }
+            }
+        }
 
-		#endregion
+        private static void HandleDomainAssemblyLoaded(
+            object sender,
+            System.AssemblyLoadEventArgs args
+        )
+        {
+            if (!args.LoadedAssembly.ReflectionOnly)
+            {
+                EnumLister.Analyze(args.LoadedAssembly);
+            }
+        }
 
-		#region Private Record Structure
+        #endregion
 
-		private struct Record
-		{
-			public Record(System.Type type)
-			{
-				this.type = type;
-			}
+        #region Private Record Structure
 
-			public System.Type Type
-			{
-				get
-				{
-					return this.type;
-				}
-			}
-			
-			private System.Type type;
-		}
+        private struct Record
+        {
+            public Record(System.Type type)
+            {
+                this.type = type;
+            }
 
-		#endregion
+            public System.Type Type
+            {
+                get { return this.type; }
+            }
 
-		private static readonly Dictionary<string, Record> types;
-		private static int generation;
+            private System.Type type;
+        }
 
-		[System.ThreadStatic]
-		private static System.Type[]			publicEnumCache;
-		[System.ThreadStatic]
-		private static int						publicEnumCacheGeneration;
-		
-		[System.ThreadStatic]
-		private static System.Type[]			designerVisibleEnumCache;
-		[System.ThreadStatic]
-		private static int						designerVisibleEnumCacheGeneration;
-	}
+        #endregion
+
+        private static readonly Dictionary<string, Record> types;
+        private static int generation;
+
+        [System.ThreadStatic]
+        private static System.Type[] publicEnumCache;
+
+        [System.ThreadStatic]
+        private static int publicEnumCacheGeneration;
+
+        [System.ThreadStatic]
+        private static System.Type[] designerVisibleEnumCache;
+
+        [System.ThreadStatic]
+        private static int designerVisibleEnumCacheGeneration;
+    }
 }

@@ -7,49 +7,49 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange.HtmlParser
 {
-	class SpanStyleElements
-	{
-		/// <summary>
-		/// La classe SpanStyleElements s'occupe de décoder une chaine du type 
-		/// "FONT-SIZE: 9pt; FONT-FAMILY: 'Times Roman' ..."
-		/// </summary>
+    class SpanStyleElements
+    {
+        /// <summary>
+        /// La classe SpanStyleElements s'occupe de décoder une chaine du type
+        /// "FONT-SIZE: 9pt; FONT-FAMILY: 'Times Roman' ..."
+        /// </summary>
 
-		System.Collections.Generic.Dictionary<string, string> dict = new System.Collections.Generic.Dictionary<string, string> ();
+        System.Collections.Generic.Dictionary<string, string> dict =
+            new System.Collections.Generic.Dictionary<string, string>();
 
-		public SpanStyleElements(string spanstylestring)
-		{
-			string[] sp = spanstylestring.Split (semicolonseparators);
+        public SpanStyleElements(string spanstylestring)
+        {
+            string[] sp = spanstylestring.Split(semicolonseparators);
 
-			foreach (string element in sp)
-			{
-				string[] pair = element.Split (SpanStyleElements.colonseparators);
-				pair[0] = pair[0].Trim ().ToLower();
-				pair[1] = pair[1].Trim (SpanStyleElements.quotestotrim);
-				dict[pair[0]] = pair[1];
-			}
-		}
+            foreach (string element in sp)
+            {
+                string[] pair = element.Split(SpanStyleElements.colonseparators);
+                pair[0] = pair[0].Trim().ToLower();
+                pair[1] = pair[1].Trim(SpanStyleElements.quotestotrim);
+                dict[pair[0]] = pair[1];
+            }
+        }
 
-		public IEnumerator<string> GetEnumerator()
-		{
-			foreach (KeyValuePair<string, string> kv in this.dict)
-			{
-				yield return kv.Key;
-			}
-		}
+        public IEnumerator<string> GetEnumerator()
+        {
+            foreach (KeyValuePair<string, string> kv in this.dict)
+            {
+                yield return kv.Key;
+            }
+        }
 
-		public string this[string index]
-		{
-			get
-			{
-				string output = null;
-				this.dict.TryGetValue (index, out output);
-				return output;
-			}
-		}
+        public string this[string index]
+        {
+            get
+            {
+                string output = null;
+                this.dict.TryGetValue(index, out output);
+                return output;
+            }
+        }
 
-		private static char[] semicolonseparators = ";".ToCharArray ();
-		private static char[] colonseparators = ":".ToCharArray ();
-		private static char[] quotestotrim = " '\"\r\n".ToCharArray ();
-
-	}
+        private static char[] semicolonseparators = ";".ToCharArray();
+        private static char[] colonseparators = ":".ToCharArray();
+        private static char[] quotestotrim = " '\"\r\n".ToCharArray();
+    }
 }

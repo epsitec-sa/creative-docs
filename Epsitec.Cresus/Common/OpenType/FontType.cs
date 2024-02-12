@@ -3,15 +3,15 @@
 
 namespace Epsitec.Common.OpenType
 {
-	/// <summary>
-	/// The <c>FontType</c> enumeration describes the font type (TrueType or
-	/// PostScript).
-	/// </summary>
-	public enum FontType
-	{
-		Unsupported,
+    /// <summary>
+    /// The <c>FontType</c> enumeration describes the font type (TrueType or
+    /// PostScript).
+    /// </summary>
+    public enum FontType
+    {
+        Unsupported,
 
-		TrueType,
-		PostScript,
-	}
+        TrueType,
+        PostScript,
+    }
 }

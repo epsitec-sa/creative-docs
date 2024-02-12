@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Printing
 {
-	/// <summary>
-	/// L'énumération PrintRange définit ce qui doit être imprimé.
-	/// </summary>
-	public enum PrintRange
-	{
-		AllPages,
-		FromPageToPage,
-		SelectedPages,
-	}
+    /// <summary>
+    /// L'énumération PrintRange définit ce qui doit être imprimé.
+    /// </summary>
+    public enum PrintRange
+    {
+        AllPages,
+        FromPageToPage,
+        SelectedPages,
+    }
 }

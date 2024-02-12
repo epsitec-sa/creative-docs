@@ -3,11 +3,11 @@
 
 namespace Epsitec.Common.Drawing
 {
-	//	Points de suite d'un tabulateur.
-	public enum TextTabLine
-	{
-		None,
-		Dot,
-		Full,
-	}
+    //	Points de suite d'un tabulateur.
+    public enum TextTabLine
+    {
+        None,
+        Dot,
+        Full,
+    }
 }

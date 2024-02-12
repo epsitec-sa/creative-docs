@@ -3,12 +3,12 @@
 
 namespace Epsitec.Common.Widgets
 {
-	[System.Flags]
-	public enum ClippingMode
-	{
-		AutoSize = 0,
-		ClipWidth = 0x1,
-		ClipHeight = 0x2,
-		ClipAll = ClipWidth | ClipHeight
-	}
+    [System.Flags]
+    public enum ClippingMode
+    {
+        AutoSize = 0,
+        ClipWidth = 0x1,
+        ClipHeight = 0x2,
+        ClipAll = ClipWidth | ClipHeight
+    }
 }

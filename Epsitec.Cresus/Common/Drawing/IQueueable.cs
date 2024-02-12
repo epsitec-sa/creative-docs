@@ -3,14 +3,11 @@
 
 namespace Epsitec.Common.Drawing
 {
-	internal interface IQueueable
-	{
-		QueueStatus QueueStatus
-		{
-			get;
-		}
+    internal interface IQueueable
+    {
+        QueueStatus QueueStatus { get; }
 
-		void ChangePendingCounter(int change);
-		void ChangeWorkingCounter(int change);
-	}
+        void ChangePendingCounter(int change);
+        void ChangeWorkingCounter(int change);
+    }
 }

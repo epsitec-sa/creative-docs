@@ -3,11 +3,11 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>INotifyChanged</c> interface defines a <c>Changed</c> event.
-	/// </summary>
-	public interface INotifyChanged
-	{
-		event Support.EventHandler	Changed;
-	}
+    /// <summary>
+    /// The <c>INotifyChanged</c> interface defines a <c>Changed</c> event.
+    /// </summary>
+    public interface INotifyChanged
+    {
+        event Support.EventHandler Changed;
+    }
 }

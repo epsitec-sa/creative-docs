@@ -1,144 +1,132 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
-
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.Types.Formatters
 {
-	/// <summary>
-	/// The <c>FormatterHelper</c> class gets instantiated by the <see cref="FormattedIdGenerator"/>
-	/// when it needs to assign a new set of IDs for a given entity.
-	/// </summary>
-	public class FormatterHelper
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="FormatterHelper"/> class.
-		/// </summary>
-		public FormatterHelper()
-		{
-			this.localDate = System.DateTime.Now;
-		}
+    /// <summary>
+    /// The <c>FormatterHelper</c> class gets instantiated by the <see cref="FormattedIdGenerator"/>
+    /// when it needs to assign a new set of IDs for a given entity.
+    /// </summary>
+    public class FormatterHelper
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormatterHelper"/> class.
+        /// </summary>
+        public FormatterHelper()
+        {
+            this.localDate = System.DateTime.Now;
+        }
 
+        /// <summary>
+        /// Gets the formatting context (see <see cref="FormattingContext"/>)
+        /// used internally by the token classes.
+        /// </summary>
+        public FormattingContext FormattingContext
+        {
+            get { return this.formatContext; }
+            protected set { this.formatContext = value; }
+        }
 
-		/// <summary>
-		/// Gets the formatting context (see <see cref="FormattingContext"/>)
-		/// used internally by the token classes.
-		/// </summary>
-		public FormattingContext				FormattingContext
-		{
-			get
-			{
-				return this.formatContext;
-			}
-			protected set
-			{
-				this.formatContext = value;
-			}
-		}
+        /// <summary>
+        /// Gets the specified component. This method is overridden by the specialized
+        /// formatter helpers, in order to provide access to <c>IBusinessContext</c>,
+        /// for instance.
+        /// </summary>
+        /// <typeparam name="T">The type of the component.</typeparam>
+        /// <returns>The specified component, or <c>null</c>.</returns>
+        public virtual T GetComponent<T>()
+            where T : class
+        {
+            return null;
+        }
 
+        internal static IEnumerable<FormatToken> GetTokens()
+        {
+            var simple = FormatterHelper.GetSimpleTokens();
+            var argument = FormatterHelper.GetArgumentTokens();
 
-		/// <summary>
-		/// Gets the specified component. This method is overridden by the specialized
-		/// formatter helpers, in order to provide access to <c>IBusinessContext</c>,
-		/// for instance.
-		/// </summary>
-		/// <typeparam name="T">The type of the component.</typeparam>
-		/// <returns>The specified component, or <c>null</c>.</returns>
-		public virtual T GetComponent<T>()
-			where T : class
-		{
-			return null;
-		}
+            return Enumerable.Concat(simple, argument);
+        }
 
-		
-		internal static IEnumerable<FormatToken> GetTokens()
-		{
-			var simple   = FormatterHelper.GetSimpleTokens ();
-			var argument = FormatterHelper.GetArgumentTokens ();
+        internal string Format(string format, object value)
+        {
+            if (string.IsNullOrEmpty(format))
+            {
+                return "";
+            }
 
-			return Enumerable.Concat (simple, argument);
-		}
+            System.Diagnostics.Debug.Assert(this.FormattingContext == null);
 
-		internal string Format(string format, object value)
-		{
-			if (string.IsNullOrEmpty (format))
-			{
-				return "";
-			}
+            this.FormattingContext = new FormattingContext(value);
 
-			System.Diagnostics.Debug.Assert (this.FormattingContext == null);
+            var buffer = new System.Text.StringBuilder();
+            int pos = 0;
 
-			this.FormattingContext = new FormattingContext (value);
+            while (pos < format.Length)
+            {
+                foreach (var token in FormatTokenRepository.Items)
+                {
+                    if (token.Matches(this, format, pos))
+                    {
+                        pos += token.Format(this, buffer);
+                        goto next;
+                    }
+                }
 
-			var buffer = new System.Text.StringBuilder ();
-			int pos    = 0;
+                buffer.Append(format[pos++]);
+                next:
+                ;
+            }
 
-			while (pos < format.Length)
-			{
-				foreach (var token in FormatTokenRepository.Items)
-				{
-					if (token.Matches (this, format, pos))
-					{
-						pos += token.Format (this, buffer);
-						goto next;
-					}
-				}
+            this.FormattingContext = null;
 
-				buffer.Append (format[pos++]);
-			next:
-				;
-			}
+            return buffer.ToString();
+        }
 
-			this.FormattingContext = null;
+        private string FormatShortYear()
+        {
+            return this.localDate.ToString("yy");
+        }
 
-			return buffer.ToString ();
-		}
-		
+        private string FormatLongYear()
+        {
+            return this.localDate.ToString("yyyy");
+        }
 
-		private string FormatShortYear()
-		{
-			return this.localDate.ToString ("yy");
-		}
+        private string FormatId(string numberFormat)
+        {
+            return string.Format(numberFormat, this.formatContext.Id);
+        }
 
-		private string FormatLongYear()
-		{
-			return this.localDate.ToString ("yyyy");
-		}
+        private static IEnumerable<FormatToken> GetSimpleTokens()
+        {
+            //	Tokens such as '#ref(x)' are processed by class ArgumentFormatToken, which takes
+            //	apart the provided format string in order to extract the argument (here, 'x').
 
-		private string FormatId(string numberFormat)
-		{
-			return string.Format (numberFormat, this.formatContext.Id);
-		}
+            yield return new SimpleFormatToken("yy", x => x.FormatShortYear());
+            yield return new SimpleFormatToken("yyyy", x => x.FormatLongYear());
+            yield return new SimpleFormatToken("##", x => "#");
+            yield return new SimpleFormatToken("n", x => x.FormatId("{0:0}"));
+            yield return new SimpleFormatToken("nn", x => x.FormatId("{0:00}"));
+            yield return new SimpleFormatToken("nnn", x => x.FormatId("{0:000}"));
+            yield return new SimpleFormatToken("nnnn", x => x.FormatId("{0:0000}"));
+            yield return new SimpleFormatToken("nnnnn", x => x.FormatId("{0:00000}"));
+            yield return new SimpleFormatToken("nnnnnn", x => x.FormatId("{0:000000}"));
+        }
 
-		private static IEnumerable<FormatToken> GetSimpleTokens()
-		{
-			//	Tokens such as '#ref(x)' are processed by class ArgumentFormatToken, which takes
-			//	apart the provided format string in order to extract the argument (here, 'x').
-			
-			yield return new SimpleFormatToken ("yy",     x => x.FormatShortYear ());
-			yield return new SimpleFormatToken ("yyyy",   x => x.FormatLongYear ());
-			yield return new SimpleFormatToken ("##",     x => "#");
-			yield return new SimpleFormatToken ("n",      x => x.FormatId ("{0:0}"));
-			yield return new SimpleFormatToken ("nn",     x => x.FormatId ("{0:00}"));
-			yield return new SimpleFormatToken ("nnn",    x => x.FormatId ("{0:000}"));
-			yield return new SimpleFormatToken ("nnnn",   x => x.FormatId ("{0:0000}"));
-			yield return new SimpleFormatToken ("nnnnn",  x => x.FormatId ("{0:00000}"));
-			yield return new SimpleFormatToken ("nnnnnn", x => x.FormatId ("{0:000000}"));
-		}
+        private static IEnumerable<FormatToken> GetArgumentTokens()
+        {
+            return FormatTokenFormatterResolver.GetFormatTokens();
+        }
 
-		private static IEnumerable<FormatToken> GetArgumentTokens()
-		{
-			return FormatTokenFormatterResolver.GetFormatTokens ();
-		}
-		
-		
-		private readonly System.DateTime		localDate;
+        private readonly System.DateTime localDate;
 
-		private FormattingContext				formatContext;
-	}
+        private FormattingContext formatContext;
+    }
 }

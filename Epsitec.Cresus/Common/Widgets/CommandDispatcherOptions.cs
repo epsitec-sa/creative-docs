@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	[System.Flags]
-	public enum CommandDispatcherOptions
-	{
-		None,
-		AutoForwardCommands		= 0x0001,
-		ActivateWithoutFocus	= 0x0002,
-	}
+    [System.Flags]
+    public enum CommandDispatcherOptions
+    {
+        None,
+        AutoForwardCommands = 0x0001,
+        ActivateWithoutFocus = 0x0002,
+    }
 }

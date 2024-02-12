@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public enum SelectionPolicy
-	{
-		OnMouseDown,
-		OnMouseUp,
-	}
+    public enum SelectionPolicy
+    {
+        OnMouseDown,
+        OnMouseUp,
+    }
 }

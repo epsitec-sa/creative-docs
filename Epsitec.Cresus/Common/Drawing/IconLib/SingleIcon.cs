@@ -2,29 +2,29 @@
 //  Email:  gustavo_franco@hotmail.com
 //  All rights reserved.
 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
 
-//  Redistributions of source code must retain the above copyright notice, 
-//  this list of conditions and the following disclaimer. 
-//  Redistributions in binary form must reproduce the above copyright notice, 
-//  this list of conditions and the following disclaimer in the documentation 
-//  and/or other materials provided with the distribution. 
+//  Redistributions of source code must retain the above copyright notice,
+//  this list of conditions and the following disclaimer.
+//  Redistributions in binary form must reproduce the above copyright notice,
+//  this list of conditions and the following disclaimer in the documentation
+//  and/or other materials provided with the distribution.
 
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
+//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
 using System;
-using System.IO;
-using System.Text;
 using System.Collections;
-using System.Drawing.Imaging;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Drawing.IconLib.Exceptions;
 using System.Drawing.IconLib.EncodingFormats;
+using System.Drawing.IconLib.Exceptions;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace System.Drawing.IconLib
 {
@@ -32,27 +32,27 @@ namespace System.Drawing.IconLib
     public class SingleIcon : IEnumerable<IconImage>
     {
         #region Variables Declaration
-        private string          mName       = "";
+        private string mName = "";
         private List<IconImage> mIconImages = new List<IconImage>();
         #endregion
 
         #region Constructors
         internal SingleIcon(string name)
         {
-            mName       = name;
+            mName = name;
         }
         #endregion
 
         #region Properties
         public int Count
         {
-            get {return mIconImages.Count;}
+            get { return mIconImages.Count; }
         }
 
         public string Name
         {
-            get {return mName;}
-            set {mName = value != null ? value : string.Empty;}
+            get { return mName; }
+            set { mName = value != null ? value : string.Empty; }
         }
 
         public Icon Icon
@@ -79,7 +79,7 @@ namespace System.Drawing.IconLib
 
         public void RemoveAt(int index)
         {
-            if (index<0 || index>=mIconImages.Count)
+            if (index < 0 || index >= mIconImages.Count)
                 return;
 
             mIconImages.RemoveAt(index);
@@ -135,13 +135,13 @@ namespace System.Drawing.IconLib
         {
             new IconFormat().Save(new MultiIcon(this), stream);
         }
-        
+
         public IconImage Add(Bitmap bitmap)
         {
             if (bitmap == null)
                 throw new ArgumentNullException("bitmap");
 
-            return Add(bitmap, null, bitmap.GetPixel(0,0));
+            return Add(bitmap, null, bitmap.GetPixel(0, 0));
         }
 
         public IconImage Add(Bitmap bitmap, Color transparentColor)
@@ -177,17 +177,17 @@ namespace System.Drawing.IconLib
 
                 // Bitmap.FromHbitmap will give a DDB and not a DIB, if the screen is 16 bits Icon with 16bits are not supported
                 // then make them XP format Icons
-				if (Tools.BitsFromPixelFormat (XORImage.PixelFormat) == 16)
-				{
-					XORImage.Dispose ();
-					ANDImage.Dispose ();
+                if (Tools.BitsFromPixelFormat(XORImage.PixelFormat) == 16)
+                {
+                    XORImage.Dispose();
+                    ANDImage.Dispose();
 
-					return Add (icon.ToBitmap (), Color.Transparent);
-				}
-				else
-				{
-					return Add (XORImage, ANDImage, Color.Empty);
-				}
+                    return Add(icon.ToBitmap(), Color.Transparent);
+                }
+                else
+                {
+                    return Add(XORImage, ANDImage, Color.Empty);
+                }
             }
             finally
             {
@@ -205,7 +205,7 @@ namespace System.Drawing.IconLib
 
         internal void CopyFrom(SingleIcon singleIcon)
         {
-            mName       = singleIcon.mName;
+            mName = singleIcon.mName;
             mIconImages = singleIcon.mIconImages;
         }
         #endregion
@@ -225,13 +225,16 @@ namespace System.Drawing.IconLib
             IconImage iconImage = new IconImage();
             iconImage.Set(bitmap, bitmapMask, transparentColor);
             mIconImages.Add(iconImage);
-			return iconImage;
+            return iconImage;
         }
 
         private int IndexOf(Size size, int bitCount)
         {
-            for(int i=0; i<Count; i++)
-                if (this[i].Size == size && Tools.BitsFromPixelFormat(this[i].PixelFormat) == bitCount)
+            for (int i = 0; i < Count; i++)
+                if (
+                    this[i].Size == size
+                    && Tools.BitsFromPixelFormat(this[i].PixelFormat) == bitCount
+                )
                     return i;
             return -1;
         }
@@ -252,7 +255,7 @@ namespace System.Drawing.IconLib
         #region Indexers
         public IconImage this[int index]
         {
-            get {return mIconImages[index];}
+            get { return mIconImages[index]; }
         }
         #endregion
 
@@ -261,31 +264,30 @@ namespace System.Drawing.IconLib
         public struct Enumerator : IEnumerator<IconImage>, IDisposable, IEnumerator
         {
             #region Variables Declaration
-            private SingleIcon  mList;
-            private int         mIndex;
-            private IconImage   mCurrent;
+            private SingleIcon mList;
+            private int mIndex;
+            private IconImage mCurrent;
             #endregion
 
             #region Constructors
             internal Enumerator(SingleIcon list)
             {
-                mList   = list;
-                mIndex  = 0;
-                mCurrent= null;;
+                mList = list;
+                mIndex = 0;
+                mCurrent = null;
+                ;
             }
             #endregion
 
             #region Properties
             public IconImage Current
             {
-                get {return mCurrent;}
+                get { return mCurrent; }
             }
             #endregion
 
             #region Methods
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
 
             public bool MoveNext()
             {
@@ -295,20 +297,20 @@ namespace System.Drawing.IconLib
                     mIndex++;
                     return true;
                 }
-                mIndex      = mList.Count + 1;
-                mCurrent    = null;
+                mIndex = mList.Count + 1;
+                mCurrent = null;
                 return false;
             }
 
             object IEnumerator.Current
             {
-                get {return Current;}
+                get { return Current; }
             }
 
             void IEnumerator.Reset()
             {
-                mIndex      = 0;
-                mCurrent    = null;
+                mIndex = 0;
+                mCurrent = null;
             }
             #endregion
         }

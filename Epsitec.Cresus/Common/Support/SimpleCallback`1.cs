@@ -3,5 +3,5 @@
 
 namespace Epsitec.Common.Support
 {
-	public delegate void SimpleCallback<T>(T item);
+    public delegate void SimpleCallback<T>(T item);
 }

@@ -5,200 +5,197 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
-	
-	internal sealed class BindingBreadcrumbs : System.IDisposable
-	{
-		public BindingBreadcrumbs(PropertyChangedEventHandler handler)
-		{
-			this.handler = handler;
-		}
+    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 
-		public void AddNode(DependencyObject source, DependencyProperty property)
-		{
-			if ((source != null) &&
-				(source != Binding.DoNothing))
-			{
-				Node node = new Node (source, property);
-				
-				node.Attach (this.handler);
-				
-				this.nodes.Add (node);
-			}
-		}
+    internal sealed class BindingBreadcrumbs : System.IDisposable
+    {
+        public BindingBreadcrumbs(PropertyChangedEventHandler handler)
+        {
+            this.handler = handler;
+        }
 
-		public void AddNode(IStructuredData source, string name)
-		{
-			if ((source != null) &&
-				(source != Binding.DoNothing))
-			{
-				Node node = new Node (source, name);
+        public void AddNode(DependencyObject source, DependencyProperty property)
+        {
+            if ((source != null) && (source != Binding.DoNothing))
+            {
+                Node node = new Node(source, property);
 
-				node.Attach (this.handler);
+                node.Attach(this.handler);
 
-				this.nodes.Add (node);
-			}
-		}
-		
-		public void AddNode(ICollectionView source)
-		{
-			if (source != null)
-			{
-				Node node = new Node (source);
+                this.nodes.Add(node);
+            }
+        }
 
-				node.Attach (this.handler);
+        public void AddNode(IStructuredData source, string name)
+        {
+            if ((source != null) && (source != Binding.DoNothing))
+            {
+                Node node = new Node(source, name);
 
-				this.nodes.Add (node);
-			}
-		}
+                node.Attach(this.handler);
 
-		#region IDisposable Members
+                this.nodes.Add(node);
+            }
+        }
 
-		public void Dispose()
-		{
-			foreach (Node item in this.nodes)
-			{
-				item.Detach (this.handler);
-			}
+        public void AddNode(ICollectionView source)
+        {
+            if (source != null)
+            {
+                Node node = new Node(source);
 
-			this.nodes.Clear ();
-		}
+                node.Attach(this.handler);
 
-		#endregion
+                this.nodes.Add(node);
+            }
+        }
 
-		private struct Node
-		{
-			public Node(DependencyObject source, DependencyProperty property)
-			{
-				this.type     = NodeType.DependencyObject;
-				this.source   = source;
-				this.property = property;
-				
-				this.handlerRelay = null;
-			}
+        #region IDisposable Members
 
-			public Node(IStructuredData source, string name)
-			{
-				this.type     = NodeType.StructuredData;
-				this.source   = source;
-				this.property = name;
-				
-				this.handlerRelay = null;
-			}
+        public void Dispose()
+        {
+            foreach (Node item in this.nodes)
+            {
+                item.Detach(this.handler);
+            }
 
-			public Node(ICollectionView source)
-			{
-				this.type     = NodeType.CollectionView;
-				this.source   = source;
-				this.property = null;
-				
-				this.handlerRelay = null;
-			}
+            this.nodes.Clear();
+        }
 
-			public void Attach(PropertyChangedEventHandler handler)
-			{
-				switch (this.type)
-				{
-					case NodeType.DependencyObject:
-						this.AttachDependencyObject (handler);
-						break;
-					case NodeType.StructuredData:
-						this.AttachStructuredData (handler);
-						break;
-					case NodeType.CollectionView:
-						this.AttachCollectionView (handler);
-						break;
-				}
-			}
+        #endregion
 
-			public void Detach(PropertyChangedEventHandler handler)
-			{
-				switch (this.type)
-				{
-					case NodeType.DependencyObject:
-						this.DetachDependencyObject (handler);
-						break;
-					case NodeType.StructuredData:
-						this.DetachStructuredData (handler);
-						break;
-					case NodeType.CollectionView:
-						this.DetachCollectionView (handler);
-						break;
-				}
-			}
+        private struct Node
+        {
+            public Node(DependencyObject source, DependencyProperty property)
+            {
+                this.type = NodeType.DependencyObject;
+                this.source = source;
+                this.property = property;
 
-			private void AttachDependencyObject(PropertyChangedEventHandler handler)
-			{
-				DependencyObject   source   = (DependencyObject) this.source;
-				DependencyProperty property = (DependencyProperty) this.property;
+                this.handlerRelay = null;
+            }
 
-				source.AddEventHandler (property, handler);
-			}
+            public Node(IStructuredData source, string name)
+            {
+                this.type = NodeType.StructuredData;
+                this.source = source;
+                this.property = name;
 
-			private void AttachStructuredData(PropertyChangedEventHandler handler)
-			{
-				IStructuredData source = (IStructuredData) this.source;
-				string          name   = (string) this.property;
+                this.handlerRelay = null;
+            }
 
-				source.AttachListener (name, handler);
-			}
+            public Node(ICollectionView source)
+            {
+                this.type = NodeType.CollectionView;
+                this.source = source;
+                this.property = null;
 
-			private void AttachCollectionView(PropertyChangedEventHandler handler)
-			{
-				ICollectionView source = (ICollectionView) this.source;
+                this.handlerRelay = null;
+            }
 
-				System.Diagnostics.Debug.Assert (this.handlerRelay == null);
+            public void Attach(PropertyChangedEventHandler handler)
+            {
+                switch (this.type)
+                {
+                    case NodeType.DependencyObject:
+                        this.AttachDependencyObject(handler);
+                        break;
+                    case NodeType.StructuredData:
+                        this.AttachStructuredData(handler);
+                        break;
+                    case NodeType.CollectionView:
+                        this.AttachCollectionView(handler);
+                        break;
+                }
+            }
 
-				this.handlerRelay =
-					delegate (object sender)
-					{
-						handler (sender, new DependencyPropertyChangedEventArgs ("CurrentItem"));
-					};
+            public void Detach(PropertyChangedEventHandler handler)
+            {
+                switch (this.type)
+                {
+                    case NodeType.DependencyObject:
+                        this.DetachDependencyObject(handler);
+                        break;
+                    case NodeType.StructuredData:
+                        this.DetachStructuredData(handler);
+                        break;
+                    case NodeType.CollectionView:
+                        this.DetachCollectionView(handler);
+                        break;
+                }
+            }
 
-				source.CurrentChanged += this.handlerRelay;
-			}
+            private void AttachDependencyObject(PropertyChangedEventHandler handler)
+            {
+                DependencyObject source = (DependencyObject)this.source;
+                DependencyProperty property = (DependencyProperty)this.property;
 
-			private void DetachDependencyObject(PropertyChangedEventHandler handler)
-			{
-				DependencyObject source   = (DependencyObject) this.source;
-				DependencyProperty property = (DependencyProperty) this.property;
+                source.AddEventHandler(property, handler);
+            }
 
-				source.RemoveEventHandler (property, handler);
-			}
+            private void AttachStructuredData(PropertyChangedEventHandler handler)
+            {
+                IStructuredData source = (IStructuredData)this.source;
+                string name = (string)this.property;
 
-			private void DetachStructuredData(PropertyChangedEventHandler handler)
-			{
-				IStructuredData source = (IStructuredData) this.source;
-				string name   = (string) this.property;
+                source.AttachListener(name, handler);
+            }
 
-				source.DetachListener (name, handler);
-			}
+            private void AttachCollectionView(PropertyChangedEventHandler handler)
+            {
+                ICollectionView source = (ICollectionView)this.source;
 
-			private void DetachCollectionView(PropertyChangedEventHandler handler)
-			{
-				ICollectionView source = (ICollectionView) this.source;
+                System.Diagnostics.Debug.Assert(this.handlerRelay == null);
 
-				System.Diagnostics.Debug.Assert (this.handlerRelay != null);
+                this.handlerRelay = delegate(object sender)
+                {
+                    handler(sender, new DependencyPropertyChangedEventArgs("CurrentItem"));
+                };
 
-				source.CurrentChanged -= this.handlerRelay;
-				this.handlerRelay = null;
-			}
+                source.CurrentChanged += this.handlerRelay;
+            }
 
-			private NodeType type;
-			private object source;
-			private object property;
-			private Support.EventHandler handlerRelay;
-		}
+            private void DetachDependencyObject(PropertyChangedEventHandler handler)
+            {
+                DependencyObject source = (DependencyObject)this.source;
+                DependencyProperty property = (DependencyProperty)this.property;
 
-		private enum NodeType
-		{
-			None,
-			DependencyObject,
-			StructuredData,
-			CollectionView,
-		}
+                source.RemoveEventHandler(property, handler);
+            }
 
-		private List<Node> nodes = new List<Node> ();
-		private PropertyChangedEventHandler handler;
-	}
+            private void DetachStructuredData(PropertyChangedEventHandler handler)
+            {
+                IStructuredData source = (IStructuredData)this.source;
+                string name = (string)this.property;
+
+                source.DetachListener(name, handler);
+            }
+
+            private void DetachCollectionView(PropertyChangedEventHandler handler)
+            {
+                ICollectionView source = (ICollectionView)this.source;
+
+                System.Diagnostics.Debug.Assert(this.handlerRelay != null);
+
+                source.CurrentChanged -= this.handlerRelay;
+                this.handlerRelay = null;
+            }
+
+            private NodeType type;
+            private object source;
+            private object property;
+            private Support.EventHandler handlerRelay;
+        }
+
+        private enum NodeType
+        {
+            None,
+            DependencyObject,
+            StructuredData,
+            CollectionView,
+        }
+
+        private List<Node> nodes = new List<Node>();
+        private PropertyChangedEventHandler handler;
+    }
 }

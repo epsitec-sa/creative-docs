@@ -2,26 +2,26 @@
 //  Email:  gustavo_franco@hotmail.com
 //  All rights reserved.
 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
 
-//  Redistributions of source code must retain the above copyright notice, 
-//  this list of conditions and the following disclaimer. 
-//  Redistributions in binary form must reproduce the above copyright notice, 
-//  this list of conditions and the following disclaimer in the documentation 
-//  and/or other materials provided with the distribution. 
+//  Redistributions of source code must retain the above copyright notice,
+//  this list of conditions and the following disclaimer.
+//  Redistributions in binary form must reproduce the above copyright notice,
+//  this list of conditions and the following disclaimer in the documentation
+//  and/or other materials provided with the distribution.
 
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
+//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
 using System;
-using System.Text;
+using System.Collections.Generic;
 using System.Drawing.IconLib;
 using System.Drawing.Imaging;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace System.Drawing.IconLib
 {
@@ -31,7 +31,9 @@ namespace System.Drawing.IconLib
         #region Methods
         public static bool CompareRGBQUADToColor(RGBQUAD rgbQuad, Color color)
         {
-            return rgbQuad.rgbRed == color.R && rgbQuad.rgbGreen == color.G && rgbQuad.rgbBlue == color.B;
+            return rgbQuad.rgbRed == color.R
+                && rgbQuad.rgbGreen == color.G
+                && rgbQuad.rgbBlue == color.B;
         }
 
         public static unsafe void FlipYBitmap(Bitmap bitmap)
@@ -40,29 +42,44 @@ namespace System.Drawing.IconLib
                 return;
 
             // .Net bug.. it can't flip in the Y axis a 1bpp properly
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0,0,bitmap.Width, bitmap.Height) , ImageLockMode.ReadWrite, PixelFormat.Format1bppIndexed);
+            BitmapData bitmapData = bitmap.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadWrite,
+                PixelFormat.Format1bppIndexed
+            );
 
-			byte* pixelPtr = (byte*)bitmapData.Scan0.ToPointer();
-			byte[] tmpbuffer = new byte[bitmapData.Stride];
+            byte* pixelPtr = (byte*)bitmapData.Scan0.ToPointer();
+            byte[] tmpbuffer = new byte[bitmapData.Stride];
 
-			fixed (byte* lptmpbuffer = tmpbuffer)
-			{
-				for (int i=0; i<bitmap.Height / 2; i++)
-				{
-					Win32.CopyMemory(lptmpbuffer, pixelPtr + (i * bitmapData.Stride), bitmapData.Stride);
-					Win32.CopyMemory(pixelPtr + (i * bitmapData.Stride), pixelPtr + (((bitmap.Height - 1) - i) * bitmapData.Stride), bitmapData.Stride);
-					Win32.CopyMemory(pixelPtr + (((bitmap.Height - 1) - i) * bitmapData.Stride), lptmpbuffer, bitmapData.Stride);
+            fixed (byte* lptmpbuffer = tmpbuffer)
+            {
+                for (int i = 0; i < bitmap.Height / 2; i++)
+                {
+                    Win32.CopyMemory(
+                        lptmpbuffer,
+                        pixelPtr + (i * bitmapData.Stride),
+                        bitmapData.Stride
+                    );
+                    Win32.CopyMemory(
+                        pixelPtr + (i * bitmapData.Stride),
+                        pixelPtr + (((bitmap.Height - 1) - i) * bitmapData.Stride),
+                        bitmapData.Stride
+                    );
+                    Win32.CopyMemory(
+                        pixelPtr + (((bitmap.Height - 1) - i) * bitmapData.Stride),
+                        lptmpbuffer,
+                        bitmapData.Stride
+                    );
+                }
+            }
 
-				}
-			}
-
-			bitmap.UnlockBits(bitmapData);
+            bitmap.UnlockBits(bitmapData);
         }
 
         public static RGBQUAD[] StandarizePalette(RGBQUAD[] palette)
         {
             RGBQUAD[] newPalette = new RGBQUAD[256];
-            for(int i=0; i<palette.Length; i++)
+            for (int i = 0; i < palette.Length; i++)
                 newPalette[i] = palette[i];
 
             return newPalette;
@@ -73,10 +90,10 @@ namespace System.Drawing.IconLib
             // Some programs as Axialis have problems with a reduced palette, so lets create a full palette
             int bits = Tools.BitsFromPixelFormat(bmp.PixelFormat);
             RGBQUAD[] rgbArray = new RGBQUAD[bits <= 8 ? (1 << bits) : 0];
-            for(int i=0; i<bmp.Palette.Entries.Length; i++)
+            for (int i = 0; i < bmp.Palette.Entries.Length; i++)
             {
-                rgbArray[i].rgbRed  = bmp.Palette.Entries[i].R;
-                rgbArray[i].rgbGreen= bmp.Palette.Entries[i].G;
+                rgbArray[i].rgbRed = bmp.Palette.Entries[i].R;
+                rgbArray[i].rgbGreen = bmp.Palette.Entries[i].G;
                 rgbArray[i].rgbBlue = bmp.Palette.Entries[i].B;
             }
             return rgbArray;

@@ -3,6 +3,6 @@
 
 namespace Epsitec.Common.Support
 {
-	public delegate void EventHandler<TSender, TEventArgs>(TSender sender, TEventArgs e)
-		where TEventArgs : System.EventArgs;
+    public delegate void EventHandler<TSender, TEventArgs>(TSender sender, TEventArgs e)
+        where TEventArgs : System.EventArgs;
 }

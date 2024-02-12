@@ -3,11 +3,11 @@
 
 namespace Epsitec.Common.OpenType.Platform
 {
-	/// <summary>
-	/// Summary description for IFontHandle.
-	/// </summary>
-	public interface IFontHandle : System.IDisposable
-	{
-		System.IntPtr Handle { get; }
-	}
+    /// <summary>
+    /// Summary description for IFontHandle.
+    /// </summary>
+    public interface IFontHandle : System.IDisposable
+    {
+        System.IntPtr Handle { get; }
+    }
 }

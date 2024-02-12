@@ -3,15 +3,15 @@
 
 namespace Epsitec.Common.Dialogs
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public enum OperationResult
-	{
-		None,
-		Pending,
-		Canceled,
-		Error,
-		Done
-	}
+    /// <summary>
+    ///
+    /// </summary>
+    public enum OperationResult
+    {
+        None,
+        Pending,
+        Canceled,
+        Error,
+        Done
+    }
 }

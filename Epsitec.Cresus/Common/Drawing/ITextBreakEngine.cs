@@ -5,12 +5,17 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
-	public interface ITextBreakEngine
-	{
-		void SetText(string text, TextBreakMode mode);
-		void SetRuns(ICollection<TextBreakRun> runs);
-		void Rewind();
-		bool GetNextBreak(double maxWidth, out string text, out double textWidth, out int textLength);
-//		short[] GetHyphenationPositions(string text);
-	}
+    public interface ITextBreakEngine
+    {
+        void SetText(string text, TextBreakMode mode);
+        void SetRuns(ICollection<TextBreakRun> runs);
+        void Rewind();
+        bool GetNextBreak(
+            double maxWidth,
+            out string text,
+            out double textWidth,
+            out int textLength
+        );
+        //		short[] GetHyphenationPositions(string text);
+    }
 }

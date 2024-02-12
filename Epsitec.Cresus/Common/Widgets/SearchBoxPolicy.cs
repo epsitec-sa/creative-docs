@@ -3,29 +3,14 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public sealed class SearchBoxPolicy
-	{
-		public SearchBoxPolicy()
-		{
-		}
-		
-		
-		public bool DisplaySearchButton
-		{
-			get;
-			set;
-		}
+    public sealed class SearchBoxPolicy
+    {
+        public SearchBoxPolicy() { }
 
-		public bool DisplayNavigationButtons
-		{
-			get;
-			set;
-		}
+        public bool DisplaySearchButton { get; set; }
 
-		public bool DisplayRank
-		{
-			get;
-			set;
-		}
-	}
+        public bool DisplayNavigationButtons { get; set; }
+
+        public bool DisplayRank { get; set; }
+    }
 }

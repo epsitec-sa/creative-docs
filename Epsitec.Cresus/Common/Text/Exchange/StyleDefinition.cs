@@ -4,78 +4,65 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	class StyleDefinition
-	{
-		public StyleDefinition(string caption, int ident, TextStyleClass textStyleClass, string[] baseStyleCaptions, string serialized, bool isDefaultStyle)
-		{
-			this.caption = caption;
-			this.ident = ident;
-			this.textStyleClass = textStyleClass;
-			this.baseStyleCaptions = baseStyleCaptions;
-			this.serialized = serialized;
-			this.isDefaultStyle = isDefaultStyle;
-		}
+    class StyleDefinition
+    {
+        public StyleDefinition(
+            string caption,
+            int ident,
+            TextStyleClass textStyleClass,
+            string[] baseStyleCaptions,
+            string serialized,
+            bool isDefaultStyle
+        )
+        {
+            this.caption = caption;
+            this.ident = ident;
+            this.textStyleClass = textStyleClass;
+            this.baseStyleCaptions = baseStyleCaptions;
+            this.serialized = serialized;
+            this.isDefaultStyle = isDefaultStyle;
+        }
 
-		private TextStyleClass textStyleClass;
+        private TextStyleClass textStyleClass;
 
-		public TextStyleClass TextStyleClass
-		{
-			get
-			{
-				return textStyleClass;
-			}
-		}
+        public TextStyleClass TextStyleClass
+        {
+            get { return textStyleClass; }
+        }
 
-		private string caption;
+        private string caption;
 
-		public string Caption
-		{
-			get
-			{
-				return caption;
-			}
-		}
+        public string Caption
+        {
+            get { return caption; }
+        }
 
+        private string serialized;
 
-		private string serialized;
+        public string Serialized
+        {
+            get { return serialized; }
+        }
 
-		public string Serialized
-		{
-			get
-			{
-				return serialized;
-			}
-		}
+        private string[] baseStyleCaptions;
 
+        public string[] BaseStyleCaptions
+        {
+            get { return baseStyleCaptions; }
+        }
 
-		private string[] baseStyleCaptions;
+        private bool isDefaultStyle;
 
-		public string[] BaseStyleCaptions
-		{
-			get
-			{
-				return baseStyleCaptions;
-			}
-		}
+        public bool IsDefaultStyle
+        {
+            get { return isDefaultStyle; }
+        }
 
-		private bool isDefaultStyle;
+        private int ident;
 
-		public bool IsDefaultStyle
-		{
-			get
-			{
-				return isDefaultStyle;
-			}
-		}
-
-		private int ident;
-
-		public int Ident
-		{
-			get
-			{
-				return ident;
-			}
-		}
-	}
+        public int Ident
+        {
+            get { return ident; }
+        }
+    }
 }

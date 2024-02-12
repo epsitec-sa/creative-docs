@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Common.Types
 {
-	public enum MimeType
-	{
-		Unknown,
+    public enum MimeType
+    {
+        Unknown,
 
-		ImageGif,
-		ImageJpeg,
-		ImagePng,
-		ImageTiff,
-	}
+        ImageGif,
+        ImageJpeg,
+        ImagePng,
+        ImageTiff,
+    }
 }

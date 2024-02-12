@@ -1,379 +1,371 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Common.Widgets.Behaviors
 {
-	public class SlimFieldTextBehavior : SlimFieldBehavior, System.IDisposable
-	{
-		public SlimFieldTextBehavior(SlimField host)
-			: base (host)
-		{
-			this.host.Entered   += this.HandleHostEntered;
-			this.host.Exited    += this.HandleHostExited;
-			this.host.IsFocusedChanged += this.HandleHostIsFocusedChanged;
-		}
+    public class SlimFieldTextBehavior : SlimFieldBehavior, System.IDisposable
+    {
+        public SlimFieldTextBehavior(SlimField host)
+            : base(host)
+        {
+            this.host.Entered += this.HandleHostEntered;
+            this.host.Exited += this.HandleHostExited;
+            this.host.IsFocusedChanged += this.HandleHostIsFocusedChanged;
+        }
+
+        public bool HasFocus
+        {
+            get
+            {
+                if (this.textField == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.textField.IsFocused;
+                }
+            }
+        }
+
+        public bool HasButtons
+        {
+            get
+            {
+                if (this.textField == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.textField.ComputeButtonVisibility();
+                }
+            }
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            this.DisposeTextField();
+
+            this.host.Entered -= this.HandleHostEntered;
+            this.host.Exited -= this.HandleHostExited;
+        }
+
+        #endregion
 
 
-		public bool								HasFocus
-		{
-			get
-			{
-				if (this.textField == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.textField.IsFocused;
-				}
-			}
-		}
+        public AbstractTextField GetTextField()
+        {
+            return this.textField;
+        }
 
-		public bool								HasButtons
-		{
-			get
-			{
-				if (this.textField == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.textField.ComputeButtonVisibility ();
-				}
-			}
-		}
+        public void UpdatePreferredSize()
+        {
+            this.AdjustGeometry();
+        }
 
-		#region IDisposable Members
+        private void HandleHostEntered(object sender, MessageEventArgs e)
+        {
+            if (this.HasFocus || this.HasButtons)
+            {
+                return;
+            }
 
-		public void Dispose()
-		{
-			this.DisposeTextField ();
+            if (this.host.IsReadOnly)
+            {
+                return;
+            }
 
-			this.host.Entered   -= this.HandleHostEntered;
-			this.host.Exited    -= this.HandleHostExited;
-		}
+            this.DisposeTextField();
+            this.CreateTextField();
+        }
 
-		#endregion
+        private void HandleHostExited(object sender, MessageEventArgs e)
+        {
+            if (this.HasFocus || this.HasButtons)
+            {
+                return;
+            }
 
+            this.DisposeTextField();
+        }
 
-		public AbstractTextField GetTextField()
-		{
-			return this.textField;
-		}
+        private void HandleHostIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue == true)
+            {
+                this.DisposeTextField();
+                this.CreateTextField();
+                this.textField.Focus();
+            }
+        }
 
-		public void UpdatePreferredSize()
-		{
-			this.AdjustGeometry ();
-		}
+        private void HandleTextIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue == true)
+            {
+                this.StartTextFieldEdition();
+            }
+            else
+            {
+                this.StopTextFieldEdition();
+            }
+        }
 
+        private void HandleTextEditionStarting(object sender, CancelEventArgs e)
+        {
+            this.textBeforeEdition = this.host.FieldText;
+            this.OnTextEditionStarting(e);
+        }
 
-		private void HandleHostEntered(object sender, MessageEventArgs e)
-		{
-			if (this.HasFocus || this.HasButtons)
-			{
-				return;
-			}
+        private void HandleTextEditionStarted(object sender)
+        {
+            this.StartTextFieldEdition();
+            this.TransitionToState(EditionState.Started);
+        }
 
-			if (this.host.IsReadOnly)
-			{
-				return;
-			}
-			
-			this.DisposeTextField ();
-			this.CreateTextField ();
-		}
+        private void HandleTextEditionAccepted(object sender)
+        {
+            this.host.FieldText = this.textField.FormattedText.ToSimpleText();
+            this.StopTextFieldEdition();
+        }
 
-		private void HandleHostExited(object sender, MessageEventArgs e)
-		{
-			if (this.HasFocus || this.HasButtons)
-			{
-				return;
-			}
-			
-			this.DisposeTextField ();
-		}
+        private void HandleTextEditionRejected(object sender)
+        {
+            this.host.FieldText = this.textBeforeEdition;
+            this.StopTextFieldEdition();
+        }
 
-		private void HandleHostIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			if ((bool) e.NewValue == true)
-			{
-				this.DisposeTextField ();
-				this.CreateTextField ();
-				this.textField.Focus ();
-			}
-		}
+        private void HandleTextTextEdited(object sender)
+        {
+            var text = this.textField.FormattedText.ToSimpleText();
 
-		private void HandleTextIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			if ((bool)e.NewValue == true)
-			{
-				this.StartTextFieldEdition ();
-			}
-			else
-			{
-				this.StopTextFieldEdition ();
-			}
-		}
+            if ((text.Length == 0) && (this.HasButtons))
+            {
+                //	Cheat: we don't want the default label to show up once we have started
+                //	editing the text value, so we replace the empty text with an almost empty
+                //	one...
 
-		private void HandleTextEditionStarting(object sender, CancelEventArgs e)
-		{
-			this.textBeforeEdition = this.host.FieldText;
-			this.OnTextEditionStarting (e);
-		}
+                text = " ";
+            }
 
-		private void HandleTextEditionStarted(object sender)
-		{
-			this.StartTextFieldEdition ();
-			this.TransitionToState (EditionState.Started);
-		}
+            this.host.FieldText = text;
 
-		private void HandleTextEditionAccepted(object sender)
-		{
-			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
-			this.StopTextFieldEdition ();
-		}
+            this.TransitionToState(EditionState.Edited);
+            this.AdjustGeometry();
+        }
 
-		private void HandleTextEditionRejected(object sender)
-		{
-			this.host.FieldText = this.textBeforeEdition;
-			this.StopTextFieldEdition ();
-		}
+        private void CreateTextField()
+        {
+            this.textField = new TextFieldEx(TextFieldStyle.Flat)
+            {
+                Parent = this.host,
+                Dock = DockStyle.Fill,
+                FormattedText = FormattedText.FromSimpleText(this.host.FieldText),
+                DefocusAction = DefocusAction.Modal,
+                SwallowEscapeOnRejectEdition = true,
+                SwallowReturnOnAcceptEdition = true,
+                IsReadOnly = this.host.IsReadOnly,
+            };
 
-		private void HandleTextTextEdited(object sender)
-		{
-			var text = this.textField.FormattedText.ToSimpleText ();
+            this.textField.SelectAll();
 
-			if ((text.Length == 0) &&
-				(this.HasButtons))
-			{
-				//	Cheat: we don't want the default label to show up once we have started
-				//	editing the text value, so we replace the empty text with an almost empty
-				//	one...
+            this.textField.IsFocusedChanged += this.HandleTextIsFocusedChanged;
+            this.textField.EditionStarted += this.HandleTextEditionStarted;
+            this.textField.EditionStarting += this.HandleTextEditionStarting;
+            this.textField.EditionAccepted += this.HandleTextEditionAccepted;
+            this.textField.EditionRejected += this.HandleTextEditionRejected;
+            this.textField.TextEdited += this.HandleTextTextEdited;
 
-				text = " ";
-			}
+            switch (this.host.DisplayMode)
+            {
+                case SlimFieldDisplayMode.Label:
+                    this.host.DisplayMode = SlimFieldDisplayMode.LabelEdition;
+                    break;
 
-			this.host.FieldText = text;
+                case SlimFieldDisplayMode.Text:
+                    this.host.DisplayMode = SlimFieldDisplayMode.TextEdition;
+                    break;
+            }
 
-			this.TransitionToState (EditionState.Edited);
-			this.AdjustGeometry ();
-		}
+            this.AdjustGeometry();
+        }
 
-		
-		private void CreateTextField()
-		{
-			this.textField = new TextFieldEx (TextFieldStyle.Flat)
-			{
-				Parent = this.host,
-				Dock = DockStyle.Fill,
-				FormattedText = FormattedText.FromSimpleText (this.host.FieldText),
-				DefocusAction = DefocusAction.Modal,
-				SwallowEscapeOnRejectEdition = true,
-				SwallowReturnOnAcceptEdition = true,
-				IsReadOnly = this.host.IsReadOnly,
-			};
+        private void DisposeTextField()
+        {
+            if (this.textField != null)
+            {
+                this.textField.IsFocusedChanged -= this.HandleTextIsFocusedChanged;
+                this.textField.EditionStarted -= this.HandleTextEditionStarted;
+                this.textField.EditionStarting -= this.HandleTextEditionStarting;
+                this.textField.EditionAccepted -= this.HandleTextEditionAccepted;
+                this.textField.EditionRejected -= this.HandleTextEditionRejected;
+                this.textField.TextEdited -= this.HandleTextTextEdited;
 
-			this.textField.SelectAll ();
-			
-			this.textField.IsFocusedChanged += this.HandleTextIsFocusedChanged;
-			this.textField.EditionStarted   += this.HandleTextEditionStarted;
-			this.textField.EditionStarting  += this.HandleTextEditionStarting;
-			this.textField.EditionAccepted  += this.HandleTextEditionAccepted;
-			this.textField.EditionRejected  += this.HandleTextEditionRejected;
-			this.textField.TextEdited       += this.HandleTextTextEdited;
+                this.textField.Dispose();
+                this.textField = null;
 
-			switch (this.host.DisplayMode)
-			{
-				case SlimFieldDisplayMode.Label:
-					this.host.DisplayMode = SlimFieldDisplayMode.LabelEdition;
-					break;
+                switch (this.host.DisplayMode)
+                {
+                    case SlimFieldDisplayMode.LabelEdition:
+                        this.host.DisplayMode = SlimFieldDisplayMode.Label;
+                        break;
 
-				case SlimFieldDisplayMode.Text:
-					this.host.DisplayMode = SlimFieldDisplayMode.TextEdition;
-					break;
-			}
+                    case SlimFieldDisplayMode.TextEdition:
+                        this.host.DisplayMode = SlimFieldDisplayMode.Text;
+                        break;
+                }
 
-			this.AdjustGeometry ();
-		}
-		
-		private void DisposeTextField()
-		{
-			if (this.textField != null)
-			{
-				this.textField.IsFocusedChanged -= this.HandleTextIsFocusedChanged;
-				this.textField.EditionStarted   -= this.HandleTextEditionStarted;
-				this.textField.EditionStarting  -= this.HandleTextEditionStarting;
-				this.textField.EditionAccepted  -= this.HandleTextEditionAccepted;
-				this.textField.EditionRejected  -= this.HandleTextEditionRejected;
-				this.textField.TextEdited       -= this.HandleTextTextEdited;
-				
-				this.textField.Dispose ();
-				this.textField = null;
+                this.AdjustGeometry();
+            }
+        }
 
-				switch (this.host.DisplayMode)
-				{
-					case SlimFieldDisplayMode.LabelEdition:
-						this.host.DisplayMode = SlimFieldDisplayMode.Label;
-						break;
+        private void StartTextFieldEdition()
+        {
+            System.Diagnostics.Debug.Assert(this.textField != null);
 
-					case SlimFieldDisplayMode.TextEdition:
-						this.host.DisplayMode = SlimFieldDisplayMode.Text;
-						break;
-				}
+            this.AdjustGeometry();
+        }
 
-				this.AdjustGeometry ();
-			}
-		}
+        private void StopTextFieldEdition()
+        {
+            if (this.textField == null)
+            {
+                return;
+            }
 
-		
-		private void StartTextFieldEdition()
-		{
-			System.Diagnostics.Debug.Assert (this.textField != null);
+            this.TransitionToState(EditionState.Inactive);
 
-			this.AdjustGeometry ();
-		}
+            if (this.HasFocus || this.HasButtons)
+            {
+                this.textField.SelectAll();
+            }
+            else
+            {
+                this.DisposeTextField();
+            }
 
-		private void StopTextFieldEdition()
-		{
-			if (this.textField == null)
-			{
-				return;
-			}
+            this.AdjustGeometry();
+        }
 
-			this.TransitionToState (EditionState.Inactive);
+        private void AdjustGeometry()
+        {
+            var mode = this.host.GetActiveDisplayMode();
 
-			if (this.HasFocus || this.HasButtons)
-			{
-				this.textField.SelectAll ();
-			}
-			else
-			{
-				this.DisposeTextField ();
-			}
+            if (this.textField != null)
+            {
+                //-				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
 
-			this.AdjustGeometry ();
-		}
+                if (mode == SlimFieldDisplayMode.Label)
+                {
+                    this.textField.TextDisplayMode = TextFieldDisplayMode.Transparent;
+                }
+                else
+                {
+                    this.textField.TextDisplayMode = TextFieldDisplayMode.Default;
+                }
+            }
 
+            var width = this.host.MeasureWidth(SlimFieldDisplayMode.MeasureTextOnly);
+            var total = this.host.MeasureWidth(mode);
 
-		private void AdjustGeometry()
-		{
-			var mode = this.host.GetActiveDisplayMode ();
+            if (this.HasFocus && (mode == SlimFieldDisplayMode.Text))
+            {
+                total += System.Math.Max(20, width) - width;
+            }
 
-			if (this.textField != null)
-			{
-//-				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
+            this.AdjustHostPreferredWidth(total);
+            this.AdjustTextFieldMargins();
 
-				if (mode == SlimFieldDisplayMode.Label)
-				{
-					this.textField.TextDisplayMode = TextFieldDisplayMode.Transparent;
-				}
-				else
-				{
-					this.textField.TextDisplayMode = TextFieldDisplayMode.Default;
-				}
-			}
+            this.host.Invalidate();
+        }
 
-			var width = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextOnly);
-			var total = this.host.MeasureWidth (mode);
+        private void AdjustHostPreferredWidth(double total)
+        {
+            if (this.HasButtons)
+            {
+                var padding = this.textField.GetInternalPadding();
+                var width = total + padding.Width - 1;
 
-			if (this.HasFocus && (mode == SlimFieldDisplayMode.Text))
-			{
-				total += System.Math.Max (20, width) - width;
-			}
+                this.host.PreferredWidth = System.Math.Ceiling(width);
+            }
+            else
+            {
+                this.host.PreferredWidth = System.Math.Ceiling(total);
+            }
+        }
 
-			this.AdjustHostPreferredWidth (total);
-			this.AdjustTextFieldMargins ();
+        private void AdjustTextFieldMargins()
+        {
+            if (this.textField == null)
+            {
+                return;
+            }
 
-			this.host.Invalidate ();
-		}
+            var prefix = this.host.MeasureWidth(SlimFieldDisplayMode.MeasureTextPrefix) + 1;
+            var suffix = this.host.MeasureWidth(SlimFieldDisplayMode.MeasureTextSuffix);
 
-		private void AdjustHostPreferredWidth(double total)
-		{
-			if (this.HasButtons)
-			{
-				var padding = this.textField.GetInternalPadding ();
-				var width   = total + padding.Width - 1;
+            //	We do not want to round the position, or else we would see the text move
+            //	a little bit horizontally whenever the slim field is being hovered:
 
-				this.host.PreferredWidth = System.Math.Ceiling (width);
-			}
-			else
-			{
-				this.host.PreferredWidth = System.Math.Ceiling (total);
-			}
-		}
-		
-		private void AdjustTextFieldMargins()
-		{
-			if (this.textField == null)
-			{
-				return;
-			}
+            double left = prefix;
+            double right = suffix;
 
-			var prefix = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextPrefix) + 1;
-			var suffix = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextSuffix);
-			
-			//	We do not want to round the position, or else we would see the text move
-			//	a little bit horizontally whenever the slim field is being hovered:
+            this.textField.Margins = new Margins(left, right, 0, 0);
+        }
 
-			double left  = prefix;
-			double right = suffix;
+        private void TransitionToState(EditionState newState)
+        {
+            var oldState = this.textFieldEditionState;
 
-			this.textField.Margins = new Margins (left, right, 0, 0);
-		}
+            if (newState == oldState)
+            {
+                return;
+            }
 
-		private void TransitionToState(EditionState newState)
-		{
-			var oldState = this.textFieldEditionState;
+            this.textFieldEditionState = newState;
 
-			if (newState == oldState)
-			{
-				return;
-			}
+            switch (newState)
+            {
+                case EditionState.Inactive:
+                    this.OnTextEditionEnded();
+                    break;
 
-			this.textFieldEditionState = newState;
+                case EditionState.Started:
+                    this.OnTextEditionStarted();
+                    break;
 
-			switch (newState)
-			{
-				case EditionState.Inactive:
-					this.OnTextEditionEnded ();
-					break;
-				
-				case EditionState.Started:
-					this.OnTextEditionStarted ();
-					break;
+                case EditionState.Edited:
+                    if (oldState != EditionState.Started)
+                    {
+                        this.OnTextEditionStarted();
+                    }
+                    break;
+            }
+        }
 
-				case EditionState.Edited:
-					if (oldState != EditionState.Started)
-					{
-						this.OnTextEditionStarted ();
-					}
-					break;
-			}
-		}
+        #region EditionState Enum
+
+        private enum EditionState
+        {
+            Inactive,
+            Started,
+            Edited,
+        }
+
+        #endregion
 
 
-		#region EditionState Enum
-
-		private enum EditionState
-		{
-			Inactive,
-			Started,
-			Edited,
-		}
-
-		#endregion
-		
-		
-		private TextFieldEx						textField;
-		private EditionState					textFieldEditionState;
-		private string							textBeforeEdition;
-	}
+        private TextFieldEx textField;
+        private EditionState textFieldEditionState;
+        private string textBeforeEdition;
+    }
 }

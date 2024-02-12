@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public delegate void Callback();
-	public delegate bool ConditionCallback();
-	public delegate byte[] ByteReaderCallback(string path);
+    public delegate void Callback();
+    public delegate bool ConditionCallback();
+    public delegate byte[] ByteReaderCallback(string path);
 }

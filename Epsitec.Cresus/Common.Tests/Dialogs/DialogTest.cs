@@ -1,250 +1,251 @@
-using NUnit.Framework;
-
-using Epsitec.Common.Drawing;
+using System.Collections.Generic;
 using Epsitec.Common.Dialogs;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Cresus.AddressBook.Entities;
-
-using System.Collections.Generic;
-
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Dialogs
 {
-	[TestFixture]
-	public class DialogTest
-	{
-		public DialogTest()
-		{
-			this.resourceManager = new ResourceManager ();
-		}
-		
-		[SetUp]
-		public void SetUp()
-		{
-			Epsitec.Common.Document.Engine.Initialize ();
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
-			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
-		}
-		
-		[Test]
-		public void AutomatedTestEnvironment()
-		{
-			Window.RunningInAutomatedTestEnvironment = true;
-		}
+    [TestFixture]
+    public class DialogTest
+    {
+        public DialogTest()
+        {
+            this.resourceManager = new ResourceManager();
+        }
 
+        [SetUp]
+        public void SetUp()
+        {
+            Epsitec.Common.Document.Engine.Initialize();
+            Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookRoyale");
+            Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache();
+        }
 
-		[Test]
-		public void Check01SimpleForm()
-		{
-			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_631"));	//	mask for AdresseEntity, from Demo5juin
+        [Test]
+        public void AutomatedTestEnvironment()
+        {
+            Window.RunningInAutomatedTestEnvironment = true;
+        }
 
-			dialog.DialogWindowCreated +=
-				delegate
-				{
-					Button buttonCancel = new Button ();
-					Button buttonOk     = new Button ();
-					
-					buttonCancel.CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Cancel;
-					buttonOk.CommandObject     = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Ok;
+        [Test]
+        public void Check01SimpleForm()
+        {
+            Dialog dialog = Dialog.Load(this.resourceManager, Druid.Parse("_631")); //	mask for AdresseEntity, from Demo5juin
 
-					buttonCancel.Dock = DockStyle.Stacked;
-					buttonOk.Dock     = DockStyle.Stacked;
+            dialog.DialogWindowCreated += delegate
+            {
+                Button buttonCancel = new Button();
+                Button buttonOk = new Button();
 
-					FrameBox frame = new FrameBox ();
+                buttonCancel.CommandObject = Epsitec
+                    .Common
+                    .Dialogs
+                    .Res
+                    .Commands
+                    .Dialog
+                    .Generic
+                    .Cancel;
+                buttonOk.CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Ok;
 
-					frame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+                buttonCancel.Dock = DockStyle.Stacked;
+                buttonOk.Dock = DockStyle.Stacked;
 
-					frame.Children.Add (buttonOk);
-					frame.Children.Add (buttonCancel);
-					frame.PreferredHeight = 30;
-					frame.Dock = DockStyle.Bottom;
+                FrameBox frame = new FrameBox();
 
-					dialog.DialogWindow.Root.Children.Add (frame);
-				};
+                frame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			Assert.IsNotNull (dialog);
-			Assert.IsFalse (dialog.HasWindow);
+                frame.Children.Add(buttonOk);
+                frame.Children.Add(buttonCancel);
+                frame.PreferredHeight = 30;
+                frame.Dock = DockStyle.Bottom;
 
-			Window window = dialog.DialogWindow;
+                dialog.DialogWindow.Root.Children.Add(frame);
+            };
 
-			Assert.IsNotNull (window);
-			Assert.IsTrue (dialog.HasWindow);
+            Assert.IsNotNull(dialog);
+            Assert.IsFalse(dialog.HasWindow);
 
-			dialog.IsModal = false;
-			dialog.OpenDialog ();
-			Window.RunInTestEnvironment (window);
-		}
+            Window window = dialog.DialogWindow;
 
-		[Test]
+            Assert.IsNotNull(window);
+            Assert.IsTrue(dialog.HasWindow);
+
+            dialog.IsModal = false;
+            dialog.OpenDialog();
+            Window.RunInTestEnvironment(window);
+        }
+
+        [Test]
         [Ignore("Crashes the tests execution and prevents other tests from running")]
         public void Check02SimpleFormWithHintList()
-		{
-			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));	//	mask for AdresseEntity, from Cresus.AddressBook
+        {
+            Dialog dialog = Dialog.Load(this.resourceManager, Druid.Parse("_8V1")); //	mask for AdresseEntity, from Cresus.AddressBook
 
-			StringType.NativeDefault.DefineMaximumLength (40);
+            StringType.NativeDefault.DefineMaximumLength(40);
 
-			//	Mask with :
-			//	- Rue
-			//	- CasePostale
-			//	- Localité.Résumé
+            //	Mask with :
+            //	- Rue
+            //	- CasePostale
+            //	- Localité.Résumé
 
-			HintListController     hintListController = new HintListController ();
-			DialogSearchController searchController   = hintListController.SearchController;
+            HintListController hintListController = new HintListController();
+            DialogSearchController searchController = hintListController.SearchController;
 
-			hintListController.Visibility = HintListVisibilityMode.AutoHide;
-			hintListController.ContentType = HintListContentType.Suggestions;
+            hintListController.Visibility = HintListVisibilityMode.AutoHide;
+            hintListController.ContentType = HintListContentType.Suggestions;
 
-			TestResolver resolver = DialogTest.CreateSuggestions ();
-			
-			searchController.Resolver = resolver;
-			
-			LocalitéEntity yverdon = null;
+            TestResolver resolver = DialogTest.CreateSuggestions();
 
-			foreach (LocalitéEntity loc in resolver.LocalitéSuggestions)
-			{
-				if (loc.Résumé == "CH 1400 Yverdon-les-Bains")
-				{
-					yverdon = loc;
-					break;
-				}
-			}
+            searchController.Resolver = resolver;
 
-			Assert.IsNotNull (yverdon, "Could not resolve YVERDON-LES-BAINS");
+            LocalitéEntity yverdon = null;
 
-			dialog.DialogWindowCreated +=
-				delegate
-				{
-					FrameBox frame = new FrameBox ();
+            foreach (LocalitéEntity loc in resolver.LocalitéSuggestions)
+            {
+                if (loc.Résumé == "CH 1400 Yverdon-les-Bains")
+                {
+                    yverdon = loc;
+                    break;
+                }
+            }
 
-					Button buttonOk     = new Button (frame);
-					Button buttonCancel = new Button (frame);
-					Button buttonClear  = new Button (frame);
-					Button buttonDump   = new Button (frame);
+            Assert.IsNotNull(yverdon, "Could not resolve YVERDON-LES-BAINS");
 
-					buttonOk.CommandObject     = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Ok;
-					buttonCancel.CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Cancel;
-					
-					buttonClear.Text = "Clear";
-					buttonClear.Clicked +=
-						delegate
-						{
-							searchController.ResetSuggestions ();
-						};
+            dialog.DialogWindowCreated += delegate
+            {
+                FrameBox frame = new FrameBox();
 
-					buttonDump.Text = "Dump";
-					buttonDump.Clicked +=
-						delegate
-						{
-							System.Console.Out.WriteLine (dialog.Data.Data.Dump ());
-						};
+                Button buttonOk = new Button(frame);
+                Button buttonCancel = new Button(frame);
+                Button buttonClear = new Button(frame);
+                Button buttonDump = new Button(frame);
 
-					buttonOk.Dock     = DockStyle.Stacked;
-					buttonCancel.Dock = DockStyle.Stacked;
-					buttonClear.Dock  = DockStyle.Stacked;
-					buttonDump.Dock   = DockStyle.Stacked;
+                buttonOk.CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Ok;
+                buttonCancel.CommandObject = Epsitec
+                    .Common
+                    .Dialogs
+                    .Res
+                    .Commands
+                    .Dialog
+                    .Generic
+                    .Cancel;
 
-					frame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+                buttonClear.Text = "Clear";
+                buttonClear.Clicked += delegate
+                {
+                    searchController.ResetSuggestions();
+                };
 
-					frame.PreferredHeight = 30;
-					frame.Dock = DockStyle.Bottom;
+                buttonDump.Text = "Dump";
+                buttonDump.Clicked += delegate
+                {
+                    System.Console.Out.WriteLine(dialog.Data.Data.Dump());
+                };
 
-					dialog.DialogWindow.Root.Children.Add (frame);
-					dialog.DialogWindow.Root.Padding = new Margins (8, 8, 4, 4);
-				};
+                buttonOk.Dock = DockStyle.Stacked;
+                buttonCancel.Dock = DockStyle.Stacked;
+                buttonClear.Dock = DockStyle.Stacked;
+                buttonDump.Dock = DockStyle.Stacked;
 
-			Assert.IsNotNull (dialog);
-			Assert.IsFalse (dialog.HasWindow);
+                frame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			Window window = dialog.DialogWindow;
+                frame.PreferredHeight = 30;
+                frame.Dock = DockStyle.Bottom;
 
-			Assert.IsNotNull (window);
-			Assert.IsTrue (dialog.HasWindow);
+                dialog.DialogWindow.Root.Children.Add(frame);
+                dialog.DialogWindow.Root.Padding = new Margins(8, 8, 4, 4);
+            };
 
-			dialog.IsModal = false;
-			dialog.Data = DialogTest.CreateDefaultDialogData (new EntityContext (), yverdon);
-			dialog.SearchController = searchController;
-			dialog.OpenDialog ();
-			Window.RunInTestEnvironment (window);
+            Assert.IsNotNull(dialog);
+            Assert.IsFalse(dialog.HasWindow);
 
-			System.Console.Out.WriteLine ("Raw dialog data:");
-			System.Console.Out.WriteLine (dialog.Data.Data.Dump ());
+            Window window = dialog.DialogWindow;
 
-			switch (dialog.Result)
-			{
-				case DialogResult.Accept:
-					dialog.Data.ApplyChanges ();
-					break;
+            Assert.IsNotNull(window);
+            Assert.IsTrue(dialog.HasWindow);
 
-				case DialogResult.Cancel:
-					dialog.Data.RevertChanges ();
-					break;
-			}
+            dialog.IsModal = false;
+            dialog.Data = DialogTest.CreateDefaultDialogData(new EntityContext(), yverdon);
+            dialog.SearchController = searchController;
+            dialog.OpenDialog();
+            Window.RunInTestEnvironment(window);
 
-			System.Console.Out.WriteLine ("Resulting dialog data:");
-			System.Console.Out.WriteLine (dialog.Data.ExternalData.Dump ());
+            System.Console.Out.WriteLine("Raw dialog data:");
+            System.Console.Out.WriteLine(dialog.Data.Data.Dump());
 
-			hintListController.Dispose ();
-		}
+            switch (dialog.Result)
+            {
+                case DialogResult.Accept:
+                    dialog.Data.ApplyChanges();
+                    break;
 
+                case DialogResult.Cancel:
+                    dialog.Data.RevertChanges();
+                    break;
+            }
 
-		internal static AdresseEntity CreateDefaultAdresseEntity(EntityContext entityContext)
-		{
-			AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity> ();
+            System.Console.Out.WriteLine("Resulting dialog data:");
+            System.Console.Out.WriteLine(dialog.Data.ExternalData.Dump());
 
-			adresse.Rue = "Ch. du Fontenay 6";
-			adresse.Localité.Nom = "Yverdon-les-Bains";
-			adresse.Localité.Numéro = "1400";
-			adresse.Localité.Pays.Code = "CH";
-			adresse.Localité.Pays.Nom = "Suisse";
+            hintListController.Dispose();
+        }
 
-			return adresse;
-		}
+        internal static AdresseEntity CreateDefaultAdresseEntity(EntityContext entityContext)
+        {
+            AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity>();
 
-		internal static AdresseEntity CreateDefaultAdresseEntity(EntityContext entityContext, LocalitéEntity loc)
-		{
-			AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity> ();
+            adresse.Rue = "Ch. du Fontenay 6";
+            adresse.Localité.Nom = "Yverdon-les-Bains";
+            adresse.Localité.Numéro = "1400";
+            adresse.Localité.Pays.Code = "CH";
+            adresse.Localité.Pays.Nom = "Suisse";
 
-			adresse.Rue = "Ch. du Fontenay 6";
-			adresse.Localité = loc;
+            return adresse;
+        }
 
-			return adresse;
-		}
+        internal static AdresseEntity CreateDefaultAdresseEntity(
+            EntityContext entityContext,
+            LocalitéEntity loc
+        )
+        {
+            AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity>();
 
-		internal static DialogData CreateDefaultDialogData(EntityContext entityContext, LocalitéEntity loc)
-		{
-			return new DialogData (DialogTest.CreateDefaultAdresseEntity (entityContext, loc), DialogDataMode.Isolated);
-		}
+            adresse.Rue = "Ch. du Fontenay 6";
+            adresse.Localité = loc;
 
-		private static TestResolver CreateSuggestions()
-		{
-			TestResolver resolver = new TestResolver ();
+            return adresse;
+        }
 
-			PaysEntity countryCh = new PaysEntity ()
-			{
-				Code = "CH",
-				Nom = "Suisse"
-			};
+        internal static DialogData CreateDefaultDialogData(
+            EntityContext entityContext,
+            LocalitéEntity loc
+        )
+        {
+            return new DialogData(
+                DialogTest.CreateDefaultAdresseEntity(entityContext, loc),
+                DialogDataMode.Isolated
+            );
+        }
 
-			PaysEntity countryF = new PaysEntity ()
-			{
-				Code = "F",
-				Nom = "France"
-			};
+        private static TestResolver CreateSuggestions()
+        {
+            TestResolver resolver = new TestResolver();
 
-			PaysEntity countryDe = new PaysEntity ()
-			{
-				Code = "DE",
-				Nom = "Deutschland"
-			};
+            PaysEntity countryCh = new PaysEntity() { Code = "CH", Nom = "Suisse" };
 
-			resolver.PaysSuggestions.Add (countryCh);
-			resolver.PaysSuggestions.Add (countryF);
-			resolver.PaysSuggestions.Add (countryDe);
+            PaysEntity countryF = new PaysEntity() { Code = "F", Nom = "France" };
+
+            PaysEntity countryDe = new PaysEntity() { Code = "DE", Nom = "Deutschland" };
+
+            resolver.PaysSuggestions.Add(countryCh);
+            resolver.PaysSuggestions.Add(countryF);
+            resolver.PaysSuggestions.Add(countryDe);
 
 #if false
 			resolver.LocalitéSuggestions.Add (new LocalitéEntity ()
@@ -275,183 +276,186 @@ namespace Epsitec.Common.Tests.Dialogs
 				Pays = countryCh
 			});
 #else
-			List<LocalitéEntity> locs = new List<LocalitéEntity> (DialogTest.ReadNuPost ());
+            List<LocalitéEntity> locs = new List<LocalitéEntity>(DialogTest.ReadNuPost());
 
-			locs.Sort ((a, b) => string.Compare (a.Nom, b.Nom));
-			
-			foreach (LocalitéEntity loc in locs)
-			{
-				resolver.LocalitéSuggestions.Add (loc);
-			}
+            locs.Sort((a, b) => string.Compare(a.Nom, b.Nom));
+
+            foreach (LocalitéEntity loc in locs)
+            {
+                resolver.LocalitéSuggestions.Add(loc);
+            }
 #endif
-			
-			return resolver;
-		}
+            return resolver;
+        }
 
-
-		[Test]
+        [Test]
         [Ignore("Crashes the tests execution and prevents other tests from running")]
         public void Check80Speed()
-		{
-			EntityContext context = new EntityContext ();
+        {
+            EntityContext context = new EntityContext();
 
-			PaysEntity pays = context.CreateEmptyEntity<PaysEntity> ();
-			pays.Code = "CH";
-			pays.Nom = "Suisse";
+            PaysEntity pays = context.CreateEmptyEntity<PaysEntity>();
+            pays.Code = "CH";
+            pays.Nom = "Suisse";
 
-			LocalitéEntity localité = context.CreateEmptyEntity<LocalitéEntity> ();
+            LocalitéEntity localité = context.CreateEmptyEntity<LocalitéEntity>();
 
-			localité.Numéro = "1400";
-			localité.Nom = "Yverdon-les-Bains";
-			localité.Pays = pays;
+            localité.Numéro = "1400";
+            localité.Nom = "Yverdon-les-Bains";
+            localité.Pays = pays;
 
-			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+            System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
 
-			int n = 1000*1000;
-			string result = localité.Résumé;
+            int n = 1000 * 1000;
+            string result = localité.Résumé;
 
-			watch.Start ();
+            watch.Start();
 
-			for (int i = 0; i < n; i++)
-			{
-				if (localité.Résumé != result)
-				{
-					break;
-				}
-			}
+            for (int i = 0; i < n; i++)
+            {
+                if (localité.Résumé != result)
+                {
+                    break;
+                }
+            }
 
-			watch.Stop ();
+            watch.Stop();
 
-			System.Console.WriteLine ("{1} iterations: {0} ms --> {2}", watch.ElapsedMilliseconds, n, result);
-			watch.Reset ();
-			
-			result = localité.Nom;
+            System.Console.WriteLine(
+                "{1} iterations: {0} ms --> {2}",
+                watch.ElapsedMilliseconds,
+                n,
+                result
+            );
+            watch.Reset();
 
-			watch.Start ();
+            result = localité.Nom;
 
-			for (int i = 0; i < n; i++)
-			{
-				if (localité.Nom != result)
-				{
-					break;
-				}
-			}
+            watch.Start();
 
-			watch.Stop ();
+            for (int i = 0; i < n; i++)
+            {
+                if (localité.Nom != result)
+                {
+                    break;
+                }
+            }
 
-			System.Console.WriteLine ("{1} iterations: {0} ms --> {2}", watch.ElapsedMilliseconds, n, result);
-		}
+            watch.Stop();
 
+            System.Console.WriteLine(
+                "{1} iterations: {0} ms --> {2}",
+                watch.ElapsedMilliseconds,
+                n,
+                result
+            );
+        }
 
-		private class TestResolver : IEntityResolver
-		{
-			public TestResolver()
-			{
-				this.localitéSuggestions = new List<LocalitéEntity> ();
-				this.paysSuggestions = new List<PaysEntity> ();
-			}
+        private class TestResolver : IEntityResolver
+        {
+            public TestResolver()
+            {
+                this.localitéSuggestions = new List<LocalitéEntity>();
+                this.paysSuggestions = new List<PaysEntity>();
+            }
 
-			public IList<LocalitéEntity> LocalitéSuggestions
-			{
-				get
-				{
-					return this.localitéSuggestions;
-				}
-			}
+            public IList<LocalitéEntity> LocalitéSuggestions
+            {
+                get { return this.localitéSuggestions; }
+            }
 
-			public IList<PaysEntity> PaysSuggestions
-			{
-				get
-				{
-					return this.paysSuggestions;
-				}
-			}
+            public IList<PaysEntity> PaysSuggestions
+            {
+                get { return this.paysSuggestions; }
+            }
 
-			#region IEntityResolver Members
+            #region IEntityResolver Members
 
-			public IEnumerable<AbstractEntity> Resolve(Druid entityId, string criteria)
-			{
-				yield break;
-			}
-			
-			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
-			{
-				LocalitéEntity loc  = AbstractEntity.Resolve<LocalitéEntity> (template);
-				PaysEntity     pays = AbstractEntity.Resolve<PaysEntity> (template);
+            public IEnumerable<AbstractEntity> Resolve(Druid entityId, string criteria)
+            {
+                yield break;
+            }
 
-				if (loc != null)
-				{
-					System.Diagnostics.Debug.WriteLine ("Search for Localité :\n" + loc.Dump ());
-					
-					foreach (LocalitéEntity item in this.localitéSuggestions)
-					{
-						if ((TestResolver.Match (item.Numéro, loc.Numéro)) &&
-							(TestResolver.Match (item.Nom, loc.Nom)) &&
-							(TestResolver.Match (item.Résumé, loc.Résumé)))
-						{
-							yield return item;
-						}
-					}
-				}
+            public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
+            {
+                LocalitéEntity loc = AbstractEntity.Resolve<LocalitéEntity>(template);
+                PaysEntity pays = AbstractEntity.Resolve<PaysEntity>(template);
 
-				if (pays != null)
-				{
-					System.Diagnostics.Debug.WriteLine ("Search for Pays :\n" + pays.Dump ());
+                if (loc != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Search for Localité :\n" + loc.Dump());
 
-					foreach (PaysEntity item in this.paysSuggestions)
-					{
-						if (item.Nom.Contains (pays.Nom))
-						{
-							yield return item;
-						}
-					}
-				}
-			}
+                    foreach (LocalitéEntity item in this.localitéSuggestions)
+                    {
+                        if (
+                            (TestResolver.Match(item.Numéro, loc.Numéro))
+                            && (TestResolver.Match(item.Nom, loc.Nom))
+                            && (TestResolver.Match(item.Résumé, loc.Résumé))
+                        )
+                        {
+                            yield return item;
+                        }
+                    }
+                }
 
-			private static bool Match(string a, string b)
-			{
-				if (string.IsNullOrEmpty (b))
-				{
-					return true;
-				}
-				else
-				{
-					return a.Contains (b);
-				}
-			}
+                if (pays != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Search for Pays :\n" + pays.Dump());
 
-			#endregion
+                    foreach (PaysEntity item in this.paysSuggestions)
+                    {
+                        if (item.Nom.Contains(pays.Nom))
+                        {
+                            yield return item;
+                        }
+                    }
+                }
+            }
 
-			private readonly List<LocalitéEntity> localitéSuggestions;
-			private readonly List<PaysEntity> paysSuggestions;
-		}
+            private static bool Match(string a, string b)
+            {
+                if (string.IsNullOrEmpty(b))
+                {
+                    return true;
+                }
+                else
+                {
+                    return a.Contains(b);
+                }
+            }
 
-		public static IEnumerable<LocalitéEntity> ReadNuPost()
-		{
-			PaysEntity countryCh = new PaysEntity ()
-			{
-				Code = "CH",
-				Nom = "Suisse"
-			};
-			
-			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\NUPOST.TXT", System.Text.Encoding.Default))
-			{
-				string[] values = line.Split ('\t');
+            #endregion
 
-				LocalitéEntity loc = new LocalitéEntity ();
+            private readonly List<LocalitéEntity> localitéSuggestions;
+            private readonly List<PaysEntity> paysSuggestions;
+        }
 
-				using (loc.DefineOriginalValues ())
-				{
-					loc.Numéro = values[2];
-					loc.Nom = values[5];
-					loc.Pays = countryCh;
-				}
+        public static IEnumerable<LocalitéEntity> ReadNuPost()
+        {
+            PaysEntity countryCh = new PaysEntity() { Code = "CH", Nom = "Suisse" };
 
-				yield return loc;
-			}
-		}
+            foreach (
+                string line in System.IO.File.ReadAllLines(
+                    @"S:\Epsitec.Cresus\External\NUPOST.TXT",
+                    System.Text.Encoding.Default
+                )
+            )
+            {
+                string[] values = line.Split('\t');
 
+                LocalitéEntity loc = new LocalitéEntity();
 
-		ResourceManager resourceManager;
-	}
+                using (loc.DefineOriginalValues())
+                {
+                    loc.Numéro = values[2];
+                    loc.Nom = values[5];
+                    loc.Pays = countryCh;
+                }
+
+                yield return loc;
+            }
+        }
+
+        ResourceManager resourceManager;
+    }
 }

@@ -3,17 +3,17 @@
 
 namespace Epsitec.Common.Drawing.Platform
 {
-	public enum BitmapColorChannel
-	{
-		None,
-		Alpha,
-		Grayscale,
-		Red,
-		Green,
-		Blue,
-		Cyan,
-		Magenta,
-		Yellow,
-		Black,
-	}
+    public enum BitmapColorChannel
+    {
+        None,
+        Alpha,
+        Grayscale,
+        Red,
+        Green,
+        Blue,
+        Cyan,
+        Magenta,
+        Yellow,
+        Black,
+    }
 }

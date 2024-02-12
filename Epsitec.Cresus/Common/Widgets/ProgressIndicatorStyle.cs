@@ -3,10 +3,10 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum ProgressIndicatorStyle
-	{
-		Default,
-		
-		UnknownDuration,
-	}
+    public enum ProgressIndicatorStyle
+    {
+        Default,
+
+        UnknownDuration,
+    }
 }

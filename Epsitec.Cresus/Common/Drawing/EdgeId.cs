@@ -3,18 +3,18 @@
 
 namespace Epsitec.Common.Drawing
 {
-	/// <summary>
-	/// Définition des côtés d'un rectangle. Plusieurs côtés peuvent être
-	/// combinés, c'est donc un bitset.
-	/// </summary>
-	[System.Flags]
-	public enum EdgeId : byte
-	{
-		None = 0,
+    /// <summary>
+    /// Définition des côtés d'un rectangle. Plusieurs côtés peuvent être
+    /// combinés, c'est donc un bitset.
+    /// </summary>
+    [System.Flags]
+    public enum EdgeId : byte
+    {
+        None = 0,
 
-		Bottom	= 1,
-		Top		= 2,
-		Left	= 4,
-		Right	= 8,
-	}
+        Bottom = 1,
+        Top = 2,
+        Left = 4,
+        Right = 8,
+    }
 }

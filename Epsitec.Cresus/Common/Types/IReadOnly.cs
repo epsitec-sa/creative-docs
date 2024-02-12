@@ -3,16 +3,13 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>IReadOnly</c> interface is used to check if an object is read
-	/// only or not. See also <see cref="IReadOnlyExtensions"/> for extension
-	/// methods.
-	/// </summary>
-	public interface IReadOnly
-	{
-		bool IsReadOnly
-		{
-			get;
-		}
-	}
+    /// <summary>
+    /// The <c>IReadOnly</c> interface is used to check if an object is read
+    /// only or not. See also <see cref="IReadOnlyExtensions"/> for extension
+    /// methods.
+    /// </summary>
+    public interface IReadOnly
+    {
+        bool IsReadOnly { get; }
+    }
 }

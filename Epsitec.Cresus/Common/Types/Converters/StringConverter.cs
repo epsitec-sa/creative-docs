@@ -6,44 +6,36 @@ using System.Linq;
 
 namespace Epsitec.Common.Types.Converters
 {
-	/// <summary>
-	/// The <c>StringConverter</c> class does a transparent conversion;
-	/// it is required so that the <see cref="Marshaler"/> can work with
-	/// <c>string</c> values.
-	/// </summary>
-	public class StringConverter : GenericConverter<string, StringConverter>
-	{
-		public StringConverter()
-			: base (System.Globalization.CultureInfo.InvariantCulture)
-		{
-		}
+    /// <summary>
+    /// The <c>StringConverter</c> class does a transparent conversion;
+    /// it is required so that the <see cref="Marshaler"/> can work with
+    /// <c>string</c> values.
+    /// </summary>
+    public class StringConverter : GenericConverter<string, StringConverter>
+    {
+        public StringConverter()
+            : base(System.Globalization.CultureInfo.InvariantCulture) { }
 
-		public override string ConvertToString(string text)
-		{
-			return text;
-		}
+        public override string ConvertToString(string text)
+        {
+            return text;
+        }
 
-		public override ConversionResult<string> ConvertFromString(string text)
-		{
-			if (text == null)
-			{
-				return new ConversionResult<string>
-				{
-					IsNull = true,
-				};
-			}
-			else
-			{
-				return new ConversionResult<string>
-				{
-					Value = text,
-				};
-			}
-		}
+        public override ConversionResult<string> ConvertFromString(string text)
+        {
+            if (text == null)
+            {
+                return new ConversionResult<string> { IsNull = true, };
+            }
+            else
+            {
+                return new ConversionResult<string> { Value = text, };
+            }
+        }
 
-		public override bool CanConvertFromString(string text)
-		{
-			return true;
-		}
-	}
+        public override bool CanConvertFromString(string text)
+        {
+            return true;
+        }
+    }
 }

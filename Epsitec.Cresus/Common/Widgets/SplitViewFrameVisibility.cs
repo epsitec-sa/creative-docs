@@ -3,73 +3,64 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>SplitViewFrameVisibility</c> structure defines the visibility of its frames.
-	/// </summary>
-	public struct SplitViewFrameVisibility : System.IEquatable<SplitViewFrameVisibility>
-	{
-		public SplitViewFrameVisibility(bool frame1, bool frame2)
-		{
-			this.frame1 = frame1;
-			this.frame2 = frame2;
-		}
+    /// <summary>
+    /// The <c>SplitViewFrameVisibility</c> structure defines the visibility of its frames.
+    /// </summary>
+    public struct SplitViewFrameVisibility : System.IEquatable<SplitViewFrameVisibility>
+    {
+        public SplitViewFrameVisibility(bool frame1, bool frame2)
+        {
+            this.frame1 = frame1;
+            this.frame2 = frame2;
+        }
 
-		public bool								Frame1
-		{
-			get
-			{
-				return this.frame1;
-			}
-		}
+        public bool Frame1
+        {
+            get { return this.frame1; }
+        }
 
-		public bool								Frame2
-		{
-			get
-			{
-				return this.frame2;
-			}
-		}
+        public bool Frame2
+        {
+            get { return this.frame2; }
+        }
 
+        public static bool operator ==(SplitViewFrameVisibility a, SplitViewFrameVisibility b)
+        {
+            return a.Equals(b);
+        }
 
-		public static bool operator ==(SplitViewFrameVisibility a, SplitViewFrameVisibility b)
-		{
-			return a.Equals (b);
-		}
+        public static bool operator !=(SplitViewFrameVisibility a, SplitViewFrameVisibility b)
+        {
+            return !a.Equals(b);
+        }
 
-		public static bool operator !=(SplitViewFrameVisibility a, SplitViewFrameVisibility b)
-		{
-			return ! a.Equals (b);
-		}
+        public override bool Equals(object obj)
+        {
+            if (obj is SplitViewFrameVisibility)
+            {
+                return this.Equals((SplitViewFrameVisibility)obj);
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		public override bool Equals(object obj)
-		{
-			if (obj is SplitViewFrameVisibility)
-			{
-				return this.Equals ((SplitViewFrameVisibility) obj);
-			}
-			else
-			{
-				return false;
-			}
-		}
+        public override int GetHashCode()
+        {
+            return (this.frame1 ? 0 : 0x01) + (this.frame2 ? 0 : 0x02);
+        }
 
-		public override int GetHashCode()
-		{
-			return (this.frame1 ? 0 : 0x01)
-				+  (this.frame2 ? 0 : 0x02);
-		}
+        #region IEquatable<SplitViewFrameVisibility> Members
 
-		#region IEquatable<SplitViewFrameVisibility> Members
+        public bool Equals(SplitViewFrameVisibility other)
+        {
+            return this.frame1 == other.frame1 && this.frame2 == other.frame2;
+        }
 
-		public bool Equals(SplitViewFrameVisibility other)
-		{
-			return this.frame1 == other.frame1
-				&& this.frame2 == other.frame2;
-		}
+        #endregion
 
-		#endregion
-
-		private readonly bool frame1;
-		private readonly bool frame2;
-	}
+        private readonly bool frame1;
+        private readonly bool frame2;
+    }
 }

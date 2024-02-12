@@ -3,9 +3,9 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum SlimFieldMenuItemHilite
-	{
-		None,
-		Underline,
-	}
+    public enum SlimFieldMenuItemHilite
+    {
+        None,
+        Underline,
+    }
 }

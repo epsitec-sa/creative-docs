@@ -5,20 +5,15 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class Weak<T> : System.WeakReference
-		where T : class
-	{
-		public Weak(T target)
-			: base (target)
-		{
-		}
+    public class Weak<T> : System.WeakReference
+        where T : class
+    {
+        public Weak(T target)
+            : base(target) { }
 
-		public new T Target
-		{
-			get
-			{
-				return base.Target as T;
-			}
-		}
-	}
+        public new T Target
+        {
+            get { return base.Target as T; }
+        }
+    }
 }

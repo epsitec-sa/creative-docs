@@ -3,14 +3,14 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum DefocusAction
-	{
-		None,
-		
-		AcceptEdition,
-		RejectEdition,
-		
-		Modal,
-		AutoAcceptOrRejectEdition
-	}
+    public enum DefocusAction
+    {
+        None,
+
+        AcceptEdition,
+        RejectEdition,
+
+        Modal,
+        AutoAcceptOrRejectEdition
+    }
 }

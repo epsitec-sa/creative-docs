@@ -3,5 +3,5 @@
 
 namespace Epsitec.Common.Support
 {
-	public delegate void OpletEventHandler(object sender, OpletEventArgs e);
+    public delegate void OpletEventHandler(object sender, OpletEventArgs e);
 }

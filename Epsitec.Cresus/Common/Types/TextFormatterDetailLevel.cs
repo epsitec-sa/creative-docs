@@ -3,16 +3,16 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>TextFormatterLevel</c> enumeration can be used with <see cref="ITextFormatter"/>
-	/// to specify the level of detail requested.
-	/// </summary>
-	public enum TextFormatterDetailLevel
-	{
-		Default,
+    /// <summary>
+    /// The <c>TextFormatterLevel</c> enumeration can be used with <see cref="ITextFormatter"/>
+    /// to specify the level of detail requested.
+    /// </summary>
+    public enum TextFormatterDetailLevel
+    {
+        Default,
 
-		Compact,
-		Full,
-		Title,
-	}
+        Compact,
+        Full,
+        Title,
+    }
 }

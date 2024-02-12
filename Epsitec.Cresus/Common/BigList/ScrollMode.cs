@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public enum ScrollMode
-	{
-		MoveVisible,
-		MoveFocus,
-		MoveActive,
-		MoveActiveAndSelect,
-	}
+    public enum ScrollMode
+    {
+        MoveVisible,
+        MoveFocus,
+        MoveActive,
+        MoveActiveAndSelect,
+    }
 }

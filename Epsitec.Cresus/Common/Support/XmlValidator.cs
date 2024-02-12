@@ -8,118 +8,108 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using Epsitec.Common.Support.Extensions;
 
-
 namespace Epsitec.Common.Support
 {
-	public sealed class XmlValidator
-	{
-		public static XmlValidator Create(FileInfo xsdFile)
-		{
-			var xsdFiles = new List<FileInfo> () { xsdFile };
+    public sealed class XmlValidator
+    {
+        public static XmlValidator Create(FileInfo xsdFile)
+        {
+            var xsdFiles = new List<FileInfo>() { xsdFile };
 
-			return XmlValidator.Create (xsdFiles);
-		}
+            return XmlValidator.Create(xsdFiles);
+        }
 
-		public static XmlValidator Create(IEnumerable<FileInfo> xsdFiles)
-		{
-			var xsdContents = from xsdFile in xsdFiles
-							  select File.ReadAllText (xsdFile.FullName);
+        public static XmlValidator Create(IEnumerable<FileInfo> xsdFiles)
+        {
+            var xsdContents = from xsdFile in xsdFiles select File.ReadAllText(xsdFile.FullName);
 
-			return new XmlValidator (xsdContents);
-		}
+            return new XmlValidator(xsdContents);
+        }
 
-		public static XmlValidator Create(Assembly assembly, string xsdResourceName)
-		{
-			var xsdResourceNames = new List<string> () { xsdResourceName };
+        public static XmlValidator Create(Assembly assembly, string xsdResourceName)
+        {
+            var xsdResourceNames = new List<string>() { xsdResourceName };
 
-			return XmlValidator.Create (assembly, xsdResourceNames);
-		}
+            return XmlValidator.Create(assembly, xsdResourceNames);
+        }
 
-		public static XmlValidator Create(Assembly assembly, IEnumerable<string> xsdResourceNames)
-		{
-			var xsdContents = from xsdResourceName in xsdResourceNames
-							  select assembly.GetResourceText (xsdResourceName);
+        public static XmlValidator Create(Assembly assembly, IEnumerable<string> xsdResourceNames)
+        {
+            var xsdContents =
+                from xsdResourceName in xsdResourceNames
+                select assembly.GetResourceText(xsdResourceName);
 
-			return new XmlValidator (xsdContents);
-		}
+            return new XmlValidator(xsdContents);
+        }
 
+        public void Validate(XmlDocument document)
+        {
+            var rootNamespace = document.DocumentElement.NamespaceURI;
 
-		public void Validate(XmlDocument document)
-		{
-			var rootNamespace = document.DocumentElement.NamespaceURI;
+            this.CheckRootNamespace(rootNamespace);
 
-			this.CheckRootNamespace (rootNamespace);
+            XmlReaderSettings settings = new XmlReaderSettings()
+            {
+                ValidationType = ValidationType.Schema
+            };
 
-			XmlReaderSettings settings = new XmlReaderSettings ()
-			{
-				ValidationType = ValidationType.Schema
-			};
+            settings.Schemas.Add(this.xmlSchemaSet);
 
-			settings.Schemas.Add (this.xmlSchemaSet);
+            using (XmlNodeReader xmlNodeReader = new XmlNodeReader(document))
+            {
+                using (XmlReader r = XmlReader.Create(xmlNodeReader, settings))
+                {
+                    while (r.Read()) { }
+                }
+            }
+        }
 
-			using (XmlNodeReader xmlNodeReader = new XmlNodeReader (document))
-			{
-				using (XmlReader r = XmlReader.Create (xmlNodeReader, settings))
-				{
-					while (r.Read ())
-					{
-					}
-				}
-			}
-		}
+        public void Validate(XDocument document)
+        {
+            var rootNamespace = document.Root.Name.Namespace.NamespaceName;
 
-		public void Validate(XDocument document)
-		{
-			var rootNamespace = document.Root.Name.Namespace.NamespaceName;
+            this.CheckRootNamespace(rootNamespace);
 
-			this.CheckRootNamespace (rootNamespace);
+            document.Validate(this.xmlSchemaSet, null);
+        }
 
-			document.Validate (this.xmlSchemaSet, null);
-		}
+        public void Validate(XElement element)
+        {
+            this.Validate(new XDocument(element));
+        }
 
-		public void Validate(XElement element)
-		{
-			this.Validate (new XDocument (element));
-		}
+        private static XmlSchemaSet BuildXmlSchemaSet(IEnumerable<string> xsdContents)
+        {
+            var xmlSchemaSet = new XmlSchemaSet() { XmlResolver = null, };
 
+            foreach (var xsdContent in xsdContents)
+            {
+                var stringReader = new StringReader(xsdContent);
+                var schema = XmlSchema.Read(stringReader, null);
 
-		private static XmlSchemaSet BuildXmlSchemaSet(IEnumerable<string> xsdContents)
-		{
-			var xmlSchemaSet = new XmlSchemaSet ()
-			{
-				XmlResolver = null,
-			};
+                xmlSchemaSet.Add(schema);
+            }
 
-			foreach (var xsdContent in xsdContents)
-			{
-				var stringReader = new StringReader (xsdContent);
-				var schema = XmlSchema.Read (stringReader, null);
+            xmlSchemaSet.Compile();
 
-				xmlSchemaSet.Add (schema);
-			}
+            return xmlSchemaSet;
+        }
 
-			xmlSchemaSet.Compile ();
+        private XmlValidator(IEnumerable<string> xsdContents)
+        {
+            this.xmlSchemaSet = XmlValidator.BuildXmlSchemaSet(xsdContents);
+        }
 
-			return xmlSchemaSet;
-		}
+        private void CheckRootNamespace(string rootNamespace)
+        {
+            if (!this.xmlSchemaSet.Contains(rootNamespace))
+            {
+                var message = "Invalid namespace for root element";
 
+                throw new XmlSchemaValidationException(message);
+            }
+        }
 
-		private XmlValidator(IEnumerable<string> xsdContents)
-		{
-			this.xmlSchemaSet = XmlValidator.BuildXmlSchemaSet (xsdContents);
-		}
-
-		private void CheckRootNamespace(string rootNamespace)
-		{
-			if (!this.xmlSchemaSet.Contains (rootNamespace))
-			{
-				var message = "Invalid namespace for root element";
-
-				throw new XmlSchemaValidationException (message);
-			}
-		}
-
-
-		private readonly XmlSchemaSet xmlSchemaSet;
-	}
+        private readonly XmlSchemaSet xmlSchemaSet;
+    }
 }

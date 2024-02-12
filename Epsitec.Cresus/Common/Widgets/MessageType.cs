@@ -3,26 +3,26 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// L'énumération MessageType définit les divers types de messages qui
-	/// peuvent survenir dans une application.
-	/// </summary>
-	public enum MessageType
-	{
-		None,
-		
-		MouseEnter,
-		MouseLeave,
-		MouseMove,
-		MouseHover,
-		MouseDown,
-		MouseUp,
-		MouseWheel,
-		
-		KeyDown,
-		KeyUp,
-		KeyPress,
+    /// <summary>
+    /// L'énumération MessageType définit les divers types de messages qui
+    /// peuvent survenir dans une application.
+    /// </summary>
+    public enum MessageType
+    {
+        None,
 
-		ApplicationCommand
-	}
+        MouseEnter,
+        MouseLeave,
+        MouseMove,
+        MouseHover,
+        MouseDown,
+        MouseUp,
+        MouseWheel,
+
+        KeyDown,
+        KeyUp,
+        KeyPress,
+
+        ApplicationCommand
+    }
 }

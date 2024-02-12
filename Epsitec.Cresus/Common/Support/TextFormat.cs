@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.Support
 {
-	public enum TextFormat
-	{
-		None = 0,
-		Simple = 1,
-		Formatted = 2,
-	}
+    public enum TextFormat
+    {
+        None = 0,
+        Simple = 1,
+        Formatted = 2,
+    }
 }

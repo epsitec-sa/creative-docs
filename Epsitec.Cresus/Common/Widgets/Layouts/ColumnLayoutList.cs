@@ -6,128 +6,121 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
-	/// <summary>
-	/// The <c>ColumnLayoutList</c> class is a specialized list of <see cref="ColumnLayoutInfo"/>
-	/// records. It is responsible for the global layout of the individual columns, based on the
-	/// available size.
-	/// </summary>
-	public sealed class ColumnLayoutList : List<ColumnLayoutInfo>
-	{
-		public ColumnLayoutList()
-		{
-		}
+    /// <summary>
+    /// The <c>ColumnLayoutList</c> class is a specialized list of <see cref="ColumnLayoutInfo"/>
+    /// records. It is responsible for the global layout of the individual columns, based on the
+    /// available size.
+    /// </summary>
+    public sealed class ColumnLayoutList : List<ColumnLayoutInfo>
+    {
+        public ColumnLayoutList() { }
 
+        public void Add(ColumnDefinition definition)
+        {
+            this.Add(new ColumnLayoutInfo(definition));
+        }
 
-		public void Add(ColumnDefinition definition)
-		{
-			this.Add (new ColumnLayoutInfo (definition));
-		}
+        public void AddRange(IEnumerable<ColumnDefinition> collection)
+        {
+            this.AddRange(collection.Select(x => new ColumnLayoutInfo(x)));
+        }
 
-		public void AddRange(IEnumerable<ColumnDefinition> collection)
-		{
-			this.AddRange (collection.Select (x => new ColumnLayoutInfo (x)));
-		}
+        public double Fit(double availableSpace)
+        {
+            this.ResetMeasures();
+            this.ConstrainColumns();
+            return this.GenerateOffsets(availableSpace);
+        }
 
-		public double Fit(double availableSpace)
-		{
-			this.ResetMeasures ();
-			this.ConstrainColumns ();
-			return this.GenerateOffsets (availableSpace);
-		}
+        public static double Fit(IEnumerable<ColumnLayoutInfo> collection, double availableSpace)
+        {
+            var list = new ColumnLayoutList();
+            list.AddRange(collection);
+            return list.Fit(availableSpace);
+        }
 
+        private void ResetMeasures()
+        {
+            this.passId = 1;
 
-		public static double Fit(IEnumerable<ColumnLayoutInfo> collection, double availableSpace)
-		{
-			var list = new ColumnLayoutList ();
-			list.AddRange (collection);
-			return list.Fit (availableSpace);
-		}
+            foreach (var item in this)
+            {
+                item.Measure.Reset(0);
+            }
+        }
 
+        private void ConstrainColumns()
+        {
+            for (int index = 0; index < this.Count; index++)
+            {
+                var def = this[index].Definition;
+                var measure = this[index].Measure;
+                var length = def.Width;
 
-		private void ResetMeasures()
-		{
-			this.passId = 1;
+                measure.UpdateMin(this.passId, def.MinWidth);
+                measure.UpdateMax(this.passId, def.MaxWidth);
+                measure.UpdateDesired(length.IsAbsolute ? length.Value : 0);
+                measure.UpdatePassId(this.passId);
+            }
+        }
 
-			foreach (var item in this)
-			{
-				item.Measure.Reset (0);
-			}
-		}
+        private double GenerateOffsets(double availableSpace)
+        {
+            double total = 0;
+            double flex = 0;
 
-		private void ConstrainColumns()
-		{
-			for (int index = 0; index < this.Count; index++)
-			{
-				var def     = this[index].Definition;
-				var measure = this[index].Measure;
-				var length  = def.Width;
+            foreach (var item in this)
+            {
+                var def = item.Definition;
+                var length = def.Width;
+                var width = length.IsAbsolute ? length.Value : 0;
+                var pos = total + def.LeftBorder;
 
-				measure.UpdateMin (this.passId, def.MinWidth);
-				measure.UpdateMax (this.passId, def.MaxWidth);
-				measure.UpdateDesired (length.IsAbsolute ? length.Value : 0);
-				measure.UpdatePassId (this.passId);
-			}
-		}
+                item.Measure.UpdateDesired(width);
 
-		private double GenerateOffsets(double availableSpace)
-		{
-			double total = 0;
-			double flex  = 0;
+                width = item.Measure.Desired;
+                total = pos + width + def.RightBorder;
 
-			foreach (var item in this)
-			{
-				var def = item.Definition;
-				var length = def.Width;
-				var width = length.IsAbsolute ? length.Value : 0;
-				var pos = total + def.LeftBorder;
+                def.DefineActualOffset(pos);
+                def.DefineActualWidth(width);
 
-				item.Measure.UpdateDesired (width);
+                if (def.Width.IsProportional)
+                {
+                    flex += def.Width.Value;
+                }
+            }
 
-				width = item.Measure.Desired;
-				total = pos + width + def.RightBorder;
-				
-				def.DefineActualOffset (pos);
-				def.DefineActualWidth (width);
+            double space = availableSpace - total;
 
-				if (def.Width.IsProportional)
-				{
-					flex += def.Width.Value;
-				}
-			}
+            if ((space > 0) && (flex > 0))
+            {
+                double move = 0;
 
-			double space = availableSpace - total;
+                foreach (var item in this)
+                {
+                    var def = item.Definition;
+                    var pos = def.ActualOffset + move;
 
-			if ((space > 0) &&
-				(flex > 0))
-			{
-				double move = 0;
+                    def.DefineActualOffset(pos);
 
-				foreach (var item in this)
-				{
-					var def = item.Definition;
-					var pos = def.ActualOffset + move;
+                    if (def.Width.IsProportional)
+                    {
+                        double d = def.Width.Value * space / flex;
+                        double w = def.ActualWidth + d;
 
-					def.DefineActualOffset (pos);
+                        item.Measure.UpdateDesired(w);
+                        def.DefineActualWidth(w);
 
-					if (def.Width.IsProportional)
-					{
-						double d = def.Width.Value * space / flex;
-						double w = def.ActualWidth + d;
+                        move += d;
+                    }
+                }
 
-						item.Measure.UpdateDesired (w);
-						def.DefineActualWidth (w);
+                total += move;
+            }
 
-						move += d;
-					}
-				}
+            return total;
+        }
 
-				total += move;
-			}
-
-			return total;
-		}
-
-		
-		private int								passId;
-	}
+        private int passId;
+    }
 }

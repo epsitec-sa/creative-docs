@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public enum ResizePolicy
-	{
-		None,
-		Independent,
-		Coupled,
-	}
+    public enum ResizePolicy
+    {
+        None,
+        Independent,
+        Coupled,
+    }
 }

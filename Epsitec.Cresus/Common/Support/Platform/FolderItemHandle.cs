@@ -5,57 +5,57 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.Platform
 {
-	internal abstract class FolderItemHandle : System.IDisposable, System.IEquatable<FolderItemHandle>
-	{
-		public FolderItemHandle()
-		{
-		}
+    internal abstract class FolderItemHandle
+        : System.IDisposable,
+            System.IEquatable<FolderItemHandle>
+    {
+        public FolderItemHandle() { }
 
-		~FolderItemHandle()
-		{
-			this.Dispose (false);
-		}
+        ~FolderItemHandle()
+        {
+            this.Dispose(false);
+        }
 
-		#region IDisposable Members
+        #region IDisposable Members
 
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
+        public void Dispose()
+        {
+            this.Dispose(true);
+            System.GC.SuppressFinalize(this);
+        }
 
-		#endregion
+        #endregion
 
-		#region IEquatable<FolderItemHandle> Members
+        #region IEquatable<FolderItemHandle> Members
 
-		public bool Equals(FolderItemHandle other)
-		{
-			if (System.Object.ReferenceEquals (other, null))
-			{
-				return false;
-			}
-			if (System.Object.ReferenceEquals (other, this))
-			{
-				return true;
-			}
+        public bool Equals(FolderItemHandle other)
+        {
+            if (System.Object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            if (System.Object.ReferenceEquals(other, this))
+            {
+                return true;
+            }
 
-			return this.InternalEquals (other);
-		}
+            return this.InternalEquals(other);
+        }
 
-		#endregion
+        #endregion
 
-		public override bool Equals(object obj)
-		{
-			FolderItemHandle other = obj as FolderItemHandle;
-			return this.Equals (other);
-		}
+        public override bool Equals(object obj)
+        {
+            FolderItemHandle other = obj as FolderItemHandle;
+            return this.Equals(other);
+        }
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode ();
-		}
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
-		protected abstract void Dispose(bool disposing);
-		protected abstract bool InternalEquals(FolderItemHandle other);
-	}
+        protected abstract void Dispose(bool disposing);
+        protected abstract bool InternalEquals(FolderItemHandle other);
+    }
 }

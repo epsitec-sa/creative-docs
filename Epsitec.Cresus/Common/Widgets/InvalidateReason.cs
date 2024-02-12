@@ -3,14 +3,15 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum InvalidateReason
-	{
-		ActiveStateChanged,
-		ColorChanged,
-//-		EnabledChanged,
-		EngagedChanged,
-		FocusedChanged,
-		FrozenChanged,
-		SelectedChanged,
-	}
+    public enum InvalidateReason
+    {
+        ActiveStateChanged,
+        ColorChanged,
+
+        //-		EnabledChanged,
+        EngagedChanged,
+        FocusedChanged,
+        FrozenChanged,
+        SelectedChanged,
+    }
 }

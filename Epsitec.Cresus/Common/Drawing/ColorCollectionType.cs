@@ -3,15 +3,15 @@
 
 namespace Epsitec.Common.Drawing
 {
-	/// <summary>
-	///	The <c>ColorCollectionType</c> specifies a predefined color palette.
-	/// </summary>
-	public enum ColorCollectionType
-	{
-		Default,			//	palette standard
-		Rainbow,			//	palette arc-en-ciel
-		Light,				//	palette pastel
-		Dark,				//	palette foncée
-		Gray,				//	palette monochrome
-	}
+    /// <summary>
+    ///	The <c>ColorCollectionType</c> specifies a predefined color palette.
+    /// </summary>
+    public enum ColorCollectionType
+    {
+        Default, //	palette standard
+        Rainbow, //	palette arc-en-ciel
+        Light, //	palette pastel
+        Dark, //	palette foncée
+        Gray, //	palette monochrome
+    }
 }

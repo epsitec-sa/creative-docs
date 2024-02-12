@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Types.Serialization
 {
-	/// <summary>
-	/// The <c>IDeserialization</c> interface is used to call objects after
-	/// a deserialization.
-	/// </summary>
-	public interface IDeserialization
-	{
-		bool NotifyDeserializationStarted(Serialization.Context context);
-		void NotifyDeserializationCompleted(Serialization.Context context);
-	}
+    /// <summary>
+    /// The <c>IDeserialization</c> interface is used to call objects after
+    /// a deserialization.
+    /// </summary>
+    public interface IDeserialization
+    {
+        bool NotifyDeserializationStarted(Serialization.Context context);
+        void NotifyDeserializationCompleted(Serialization.Context context);
+    }
 }

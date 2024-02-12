@@ -5,37 +5,37 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// GlyphShape détermine l'aspect d'un "glyph" représenté par la classe
-	/// GlyphButton.
-	/// </summary>
-	public enum GlyphShape
-	{
-		None,
-		ArrowUp,
-		ArrowDown,
-		ArrowLeft,
-		ArrowRight,
-		TriangleUp,
-		TriangleDown,
-		TriangleLeft,
-		TriangleRight,
-		Menu,
-		Close,
-		Dots,
-		Accept,
-		Reject,
-		TabLeft,
-		TabRight,
-		TabCenter,
-		TabDecimal,
-		TabIndent,
-		ResizeKnob,
-		Plus,
-		Minus,
-		HorizontalMove,
-		VerticalMove,
-		Lock,
-		Search
-	}
+    /// <summary>
+    /// GlyphShape détermine l'aspect d'un "glyph" représenté par la classe
+    /// GlyphButton.
+    /// </summary>
+    public enum GlyphShape
+    {
+        None,
+        ArrowUp,
+        ArrowDown,
+        ArrowLeft,
+        ArrowRight,
+        TriangleUp,
+        TriangleDown,
+        TriangleLeft,
+        TriangleRight,
+        Menu,
+        Close,
+        Dots,
+        Accept,
+        Reject,
+        TabLeft,
+        TabRight,
+        TabCenter,
+        TabDecimal,
+        TabIndent,
+        ResizeKnob,
+        Plus,
+        Minus,
+        HorizontalMove,
+        VerticalMove,
+        Lock,
+        Search
+    }
 }

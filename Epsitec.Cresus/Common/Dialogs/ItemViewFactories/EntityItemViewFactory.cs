@@ -8,42 +8,42 @@ using Epsitec.Common.UI;
 using Epsitec.Common.UI.ItemViewFactories;
 using Epsitec.Common.Widgets;
 
-[assembly: ItemViewFactory (typeof (EntityItemViewFactory), ItemType=typeof (AbstractEntity))]
+[assembly: ItemViewFactory(typeof(EntityItemViewFactory), ItemType = typeof(AbstractEntity))]
 
 namespace Epsitec.Common.Dialogs.ItemViewFactories
 {
-	internal sealed class EntityItemViewFactory : IItemViewFactory
-	{
-		public EntityItemViewFactory()
-		{
-			this.textTemplate = new StaticText ();
-		}
+    internal sealed class EntityItemViewFactory : IItemViewFactory
+    {
+        public EntityItemViewFactory()
+        {
+            this.textTemplate = new StaticText();
+        }
 
-		#region IItemViewFactory Members
+        #region IItemViewFactory Members
 
-		public ItemViewWidget CreateUserInterface(ItemView itemView)
-		{
-			ItemViewWidget container  = new ItemViewWidget (itemView);
-			
-			StaticText widget = new StaticText ()
-			{
-				Embedder = container,
-				Text = EntityItemViewFactory.GetText (itemView),
-				Dock = DockStyle.Fill
-			};
+        public ItemViewWidget CreateUserInterface(ItemView itemView)
+        {
+            ItemViewWidget container = new ItemViewWidget(itemView);
 
-			return container;
-		}
+            StaticText widget = new StaticText()
+            {
+                Embedder = container,
+                Text = EntityItemViewFactory.GetText(itemView),
+                Dock = DockStyle.Fill
+            };
 
-		public void DisposeUserInterface(ItemViewWidget widget)
-		{
-			widget.Dispose ();
-		}
+            return container;
+        }
 
-		public Drawing.Size GetPreferredSize(ItemView itemView)
-		{
+        public void DisposeUserInterface(ItemViewWidget widget)
+        {
+            widget.Dispose();
+        }
+
+        public Drawing.Size GetPreferredSize(ItemView itemView)
+        {
 #if true
-			return new Drawing.Size (200, 16);
+            return new Drawing.Size(200, 16);
 #else
 			this.textTemplate.Text = EntityItemViewFactory.GetText (itemView);
 			Drawing.Size size = this.textTemplate.GetBestFitSize ();
@@ -53,29 +53,29 @@ namespace Epsitec.Common.Dialogs.ItemViewFactories
 
 			return new Drawing.Size (dx, dy);
 #endif
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private static string GetText(ItemView itemView)
-		{
-			AbstractEntity data = itemView.Item as AbstractEntity;
-			Entities.ISearchable searchable = data as Entities.ISearchable;
+        private static string GetText(ItemView itemView)
+        {
+            AbstractEntity data = itemView.Item as AbstractEntity;
+            Entities.ISearchable searchable = data as Entities.ISearchable;
 
-			string text;
+            string text;
 
-			if (searchable == null)
-			{
-				text = data == null ? "" : data.Dump ();
-			}
-			else
-			{
-				text = searchable.SearchValue ?? "";
-			}
+            if (searchable == null)
+            {
+                text = data == null ? "" : data.Dump();
+            }
+            else
+            {
+                text = searchable.SearchValue ?? "";
+            }
 
-			return TextLayout.ConvertToTaggedText (text);
-		}
+            return TextLayout.ConvertToTaggedText(text);
+        }
 
-		private StaticText textTemplate;
-	}
+        private StaticText textTemplate;
+    }
 }

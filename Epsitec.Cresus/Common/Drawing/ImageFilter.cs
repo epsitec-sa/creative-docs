@@ -3,114 +3,106 @@
 
 namespace Epsitec.Common.Drawing
 {
-	[System.Serializable]
+    [System.Serializable]
+    /// <summary>
+    /// The <c>ImageFilter</c> structure defines the image filtering setting.
+    /// </summary>
+    public struct ImageFilter : System.IEquatable<ImageFilter>
+    {
+        public ImageFilter(ImageFilteringMode mode)
+        {
+            this.mode = mode;
+            this.radius = 1.0;
+        }
 
-	/// <summary>
-	/// The <c>ImageFilter</c> structure defines the image filtering setting.
-	/// </summary>
-	public struct ImageFilter : System.IEquatable<ImageFilter>
-	{
-		public ImageFilter(ImageFilteringMode mode)
-		{
-			this.mode = mode;
-			this.radius = 1.0;
-		}
+        public ImageFilter(ImageFilteringMode mode, double radius)
+        {
+            this.mode = mode;
+            this.radius = radius;
+        }
 
-		public ImageFilter(ImageFilteringMode mode, double radius)
-		{
-			this.mode = mode;
-			this.radius = radius;
-		}
+        public ImageFilteringMode Mode
+        {
+            get { return this.mode; }
+        }
 
-		public ImageFilteringMode Mode
-		{
-			get
-			{
-				return this.mode;
-			}
-		}
+        /// <summary>
+        /// Gets the radius for the <c>Sinc</c>, <c>Lanczos</c> and <c>Blackman</c> filtering
+        /// modes.
+        /// </summary>
+        /// <value>The radius.</value>
+        public double Radius
+        {
+            //	Le rayon est effectif pour les modes Sinc (c'est la fonction "sin(x)/x"), Lanczos et Blackman.
+            get { return this.radius; }
+        }
 
-		/// <summary>
-		/// Gets the radius for the <c>Sinc</c>, <c>Lanczos</c> and <c>Blackman</c> filtering
-		/// modes.
-		/// </summary>
-		/// <value>The radius.</value>
-		public double Radius
-		{
-			//	Le rayon est effectif pour les modes Sinc (c'est la fonction "sin(x)/x"), Lanczos et Blackman.
-			get
-			{
-				return this.radius;
-			}
-		}
+        public bool Active
+        {
+            get { return this.mode != ImageFilteringMode.None; }
+        }
 
-		public bool Active
-		{
-			get
-			{
-				return this.mode != ImageFilteringMode.None;
-			}
-		}
+        public override bool Equals(object obj)
+        {
+            if (obj is ImageFilter)
+            {
+                return this == (ImageFilter)obj;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		public override bool Equals(object obj)
-		{
-			if (obj is ImageFilter)
-			{
-				return this == (ImageFilter) obj;
-			}
-			else
-			{
-				return false;
-			}
-		}
+        public override int GetHashCode()
+        {
+            return this.mode.GetHashCode() ^ this.radius.GetHashCode();
+        }
 
-		public override int GetHashCode()
-		{
-			return this.mode.GetHashCode () ^ this.radius.GetHashCode ();
-		}
+        public override string ToString()
+        {
+            return string.Concat(
+                this.mode.ToString(),
+                ":",
+                this.radius.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            );
+        }
 
+        public static ImageFilter Parse(string text)
+        {
+            string[] args = text.Split(':');
 
-		public override string ToString()
-		{
-			return string.Concat (this.mode.ToString (), ":", this.radius.ToString (System.Globalization.CultureInfo.InvariantCulture));
-		}
+            if (args.Length != 2)
+            {
+                throw new System.FormatException("Invalid format");
+            }
 
-		public static ImageFilter Parse(string text)
-		{
-			string[] args = text.Split (':');
+            var mode = Epsitec.Common.Types.InvariantConverter.ToEnum<ImageFilteringMode>(args[0]);
+            var radius = Epsitec.Common.Types.InvariantConverter.ToDouble(args[1]);
 
-			if (args.Length != 2)
-			{
-				throw new System.FormatException ("Invalid format");
-			}
+            return new ImageFilter(mode, radius);
+        }
 
-			var mode   = Epsitec.Common.Types.InvariantConverter.ToEnum<ImageFilteringMode> (args[0]);
-			var radius = Epsitec.Common.Types.InvariantConverter.ToDouble (args[1]);
+        #region IEquatable<ImageFilter> Members
 
-			return new ImageFilter (mode, radius);
-		}
+        public bool Equals(ImageFilter other)
+        {
+            return this == other;
+        }
 
+        #endregion
 
-		#region IEquatable<ImageFilter> Members
+        public static bool operator ==(ImageFilter a, ImageFilter b)
+        {
+            return (a.mode == b.mode) && (a.radius == b.radius);
+        }
 
-		public bool Equals(ImageFilter other)
-		{
-			return this == other;
-		}
+        public static bool operator !=(ImageFilter a, ImageFilter b)
+        {
+            return (a.mode != b.mode) || (a.radius != b.radius);
+        }
 
-		#endregion
-
-		public static bool operator==(ImageFilter a, ImageFilter b)
-		{
-			return (a.mode == b.mode) && (a.radius == b.radius);
-		}
-
-		public static bool operator!=(ImageFilter a, ImageFilter b)
-		{
-			return (a.mode != b.mode) || (a.radius != b.radius);
-		}
-
-		private ImageFilteringMode mode;
-		private double radius;
-	}
+        private ImageFilteringMode mode;
+        private double radius;
+    }
 }

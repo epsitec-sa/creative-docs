@@ -3,22 +3,16 @@
 
 namespace Epsitec.Common.Support.Platform
 {
-	internal static class StockIcons
-	{
-		public static System.Drawing.Icon ShieldIcon
-		{
-			get
-			{
-				return Win32.StockIcons.ShieldIcon;
-			}
-		}
-		
-		public static System.Drawing.Icon SmallShieldIcon
-		{
-			get
-			{
-				return Win32.StockIcons.SmallShieldIcon;
-			}
-		}
-	}
+    internal static class StockIcons
+    {
+        public static System.Drawing.Icon ShieldIcon
+        {
+            get { return Win32.StockIcons.ShieldIcon; }
+        }
+
+        public static System.Drawing.Icon SmallShieldIcon
+        {
+            get { return Win32.StockIcons.SmallShieldIcon; }
+        }
+    }
 }

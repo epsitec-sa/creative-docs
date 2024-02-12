@@ -5,34 +5,26 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	[System.AttributeUsage (System.AttributeTargets.Assembly, AllowMultiple=true)]
-	public class NamespaceShortcutAttribute : System.Attribute
-	{
-		public NamespaceShortcutAttribute(string fullName, string shortName)
-		{
-			this.fullName = fullName;
-			this.shortName = shortName;
-		}
+    [System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple = true)]
+    public class NamespaceShortcutAttribute : System.Attribute
+    {
+        public NamespaceShortcutAttribute(string fullName, string shortName)
+        {
+            this.fullName = fullName;
+            this.shortName = shortName;
+        }
 
+        public string FullName
+        {
+            get { return this.fullName; }
+        }
 
-		public string							FullName
-		{
-			get
-			{
-				return this.fullName;
-			}
-		}
+        public string ShortName
+        {
+            get { return this.shortName; }
+        }
 
-		public string							ShortName
-		{
-			get
-			{
-				return this.shortName;
-			}
-		}
-
-		
-		private readonly string					fullName;
-		private readonly string					shortName;
-	}
+        private readonly string fullName;
+        private readonly string shortName;
+    }
 }

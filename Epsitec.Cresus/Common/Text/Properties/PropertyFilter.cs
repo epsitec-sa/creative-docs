@@ -3,15 +3,15 @@
 
 namespace Epsitec.Common.Text.Properties
 {
-	/// <summary>
-	/// L'énumération PropertyFilter permet de déterminer quelles propriétés
-	/// doivent être retournées.
-	/// </summary>
-	public enum PropertyFilter
-	{
-		All,
-		
-		UniformOnly,
-		NonUniformOnly,
-	}
+    /// <summary>
+    /// L'énumération PropertyFilter permet de déterminer quelles propriétés
+    /// doivent être retournées.
+    /// </summary>
+    public enum PropertyFilter
+    {
+        All,
+
+        UniformOnly,
+        NonUniformOnly,
+    }
 }

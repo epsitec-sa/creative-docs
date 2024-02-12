@@ -5,13 +5,13 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Types
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
-	
-	/// <summary>
-	/// The <c>INotifyPropertyChanged</c> interface defines a <c>PropertyChanged</c> event.
-	/// </summary>
-	public interface INotifyPropertyChanged
-	{
-		event PropertyChangedEventHandler PropertyChanged;
-	}
+    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
+
+    /// <summary>
+    /// The <c>INotifyPropertyChanged</c> interface defines a <c>PropertyChanged</c> event.
+    /// </summary>
+    public interface INotifyPropertyChanged
+    {
+        event PropertyChangedEventHandler PropertyChanged;
+    }
 }

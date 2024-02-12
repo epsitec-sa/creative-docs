@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>ICommandHandler</c> interface is used to identify classes which
-	/// implement command handlers (see <see cref="CommandContext.GetCommandHandler"/>).
-	/// </summary>
-	public interface ICommandHandler
-	{
-		void UpdateCommandStates(object sender);
-	}
+    /// <summary>
+    /// The <c>ICommandHandler</c> interface is used to identify classes which
+    /// implement command handlers (see <see cref="CommandContext.GetCommandHandler"/>).
+    /// </summary>
+    public interface ICommandHandler
+    {
+        void UpdateCommandStates(object sender);
+    }
 }

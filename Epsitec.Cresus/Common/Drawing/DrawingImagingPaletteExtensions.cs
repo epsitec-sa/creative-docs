@@ -6,12 +6,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Drawing
 {
-	public static class DrawingImagingPaletteExtensions
-	{
-		public static bool IsGray(this System.Drawing.Imaging.ColorPalette palette)
-		{
-			return palette.Entries.All (x => x.IsGray ());
-		}
-	}
+    public static class DrawingImagingPaletteExtensions
+    {
+        public static bool IsGray(this System.Drawing.Imaging.ColorPalette palette)
+        {
+            return palette.Entries.All(x => x.IsGray());
+        }
+    }
 }
-

@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>SystemTypeFamily</c> enumeration classifies the <c>System.Type</c> types
-	/// into families: classes, value types, enumerations and interfaces.
-	/// </summary>
-	public enum SystemTypeFamily
-	{
-		Unknown,
+    /// <summary>
+    /// The <c>SystemTypeFamily</c> enumeration classifies the <c>System.Type</c> types
+    /// into families: classes, value types, enumerations and interfaces.
+    /// </summary>
+    public enum SystemTypeFamily
+    {
+        Unknown,
 
-		Class,
-		ValueType,
-		Enum,
-		Interface
-	}
+        Class,
+        ValueType,
+        Enum,
+        Interface
+    }
 }

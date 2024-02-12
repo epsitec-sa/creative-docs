@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
-	public enum AnimatorMode
-	{
-		OneShot,
-		AutoRestart,
-	}
+    public enum AnimatorMode
+    {
+        OneShot,
+        AutoRestart,
+    }
 }

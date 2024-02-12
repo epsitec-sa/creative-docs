@@ -3,11 +3,11 @@
 
 namespace Epsitec.Common.Drawing.Protocols
 {
-	internal static class FileProtocol
-	{
-		public static byte[] ReadBytes(string name)
-		{
-			return System.IO.File.ReadAllBytes (name);
-		}
-	}
+    internal static class FileProtocol
+    {
+        public static byte[] ReadBytes(string name)
+        {
+            return System.IO.File.ReadAllBytes(name);
+        }
+    }
 }

@@ -5,94 +5,123 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Tests.Dialogs
 {
-	class Tool
-	{
-		public static System.IDisposable InjectKey(System.Windows.Forms.Keys key)
-		{
-			return Tool.InjectKey (key, 1000);
-		}
-		
-		public static System.IDisposable InjectKey(System.Windows.Forms.Keys key, int delay)
-		{
-			DoneNotifier notifier = new DoneNotifier ();
+    class Tool
+    {
+        public static System.IDisposable InjectKey(System.Windows.Forms.Keys key)
+        {
+            return Tool.InjectKey(key, 1000);
+        }
 
-			if (Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment)
-			{
-				int pid = Win32Api.GetCurrentThreadId ();
+        public static System.IDisposable InjectKey(System.Windows.Forms.Keys key, int delay)
+        {
+            DoneNotifier notifier = new DoneNotifier();
 
-				System.Diagnostics.Debug.WriteLine ("InjectKey starts a new thread.");
+            if (Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment)
+            {
+                int pid = Win32Api.GetCurrentThreadId();
 
-				System.Threading.Thread thread = new System.Threading.Thread (
-					delegate ()
-					{
-						for (int i = 0; i < 10; i++)
-						{
-							System.Threading.Thread.Sleep (delay);
-							System.IntPtr handle = Epsitec.Common.Widgets.Platform.Win32Api.FindThreadActiveWindowHandle (pid);
+                System.Diagnostics.Debug.WriteLine("InjectKey starts a new thread.");
 
-							if (notifier.Done)
-							{
-								break;
-							}
+                System.Threading.Thread thread = new System.Threading.Thread(
+                    delegate()
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            System.Threading.Thread.Sleep(delay);
+                            System.IntPtr handle =
+                                Epsitec.Common.Widgets.Platform.Win32Api.FindThreadActiveWindowHandle(
+                                    pid
+                                );
 
-							if (handle != System.IntPtr.Zero)
-							{
-								System.Diagnostics.Debug.WriteLine ("Posting key " + key.ToString () + " hexa " + ((int) key).ToString ("x") + " to PID " + pid.ToString ("x") + " on handle " + handle.ToString ());
+                            if (notifier.Done)
+                            {
+                                break;
+                            }
 
-								try
-								{
-									Win32Api.PostMessage (handle, 0x0100, (System.IntPtr) key, (System.IntPtr) 0x00010001);
-									Win32Api.PostMessage (handle, 0x0102, (System.IntPtr) key, (System.IntPtr) 0x00010001);
-									Win32Api.PostMessage (handle, 0x0101, (System.IntPtr) key, (System.IntPtr) (0xC001 << 16 | 0001));
-								}
-								catch (System.Exception ex)
-								{
-									System.Diagnostics.Debug.WriteLine ("Exception : " + ex.Message);
-								}
+                            if (handle != System.IntPtr.Zero)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    "Posting key "
+                                        + key.ToString()
+                                        + " hexa "
+                                        + ((int)key).ToString("x")
+                                        + " to PID "
+                                        + pid.ToString("x")
+                                        + " on handle "
+                                        + handle.ToString()
+                                );
 
-								delay = 100;
+                                try
+                                {
+                                    Win32Api.PostMessage(
+                                        handle,
+                                        0x0100,
+                                        (System.IntPtr)key,
+                                        (System.IntPtr)0x00010001
+                                    );
+                                    Win32Api.PostMessage(
+                                        handle,
+                                        0x0102,
+                                        (System.IntPtr)key,
+                                        (System.IntPtr)0x00010001
+                                    );
+                                    Win32Api.PostMessage(
+                                        handle,
+                                        0x0101,
+                                        (System.IntPtr)key,
+                                        (System.IntPtr)(0xC001 << 16 | 0001)
+                                    );
+                                }
+                                catch (System.Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Exception : " + ex.Message);
+                                }
 
-								break;
-							}
-						}
-					});
+                                delay = 100;
 
-				thread.Start ();
-			}
+                                break;
+                            }
+                        }
+                    }
+                );
 
-			return notifier;
-		}
+                thread.Start();
+            }
 
-		private class DoneNotifier : System.IDisposable
-		{
-			public bool Done
-			{
-				get
-				{
-					return this.done;
-				}
-			}
+            return notifier;
+        }
 
+        private class DoneNotifier : System.IDisposable
+        {
+            public bool Done
+            {
+                get { return this.done; }
+            }
 
+            #region IDisposable Members
 
-			#region IDisposable Members
+            public void Dispose()
+            {
+                this.done = true;
+            }
 
-			public void Dispose()
-			{
-				this.done = true;
-			}
+            #endregion
 
-			#endregion
+            private bool done = false;
+        }
 
-			private bool done = false;
-		}
+        private static class Win32Api
+        {
+            [DllImport("User32.dll")]
+            internal static extern bool PostMessage(
+                System.IntPtr handle,
+                uint msg,
+                System.IntPtr wParam,
+                System.IntPtr lParam
+            );
 
-		private static class Win32Api
-		{
-			[DllImport ("User32.dll")]
-			internal extern static bool PostMessage(System.IntPtr handle, uint msg, System.IntPtr wParam, System.IntPtr lParam);
-			[DllImport ("Kernel32.dll")]
-			internal extern static int GetCurrentThreadId();
-		}
-	}
+            [DllImport("Kernel32.dll")]
+            internal static extern int GetCurrentThreadId();
+        }
+    }
 }

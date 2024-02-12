@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
-	public interface ITextBreakEngineFactory
-	{
-		ITextBreakEngine Create();
-	}
+    public interface ITextBreakEngineFactory
+    {
+        ITextBreakEngine Create();
+    }
 }

@@ -3,5 +3,5 @@
 
 namespace Epsitec.Common.Support
 {
-	public delegate T TransformCallback<T>(T item);
+    public delegate T TransformCallback<T>(T item);
 }

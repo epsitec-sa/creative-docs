@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.Extensions
 {
-	public static class StackExtensions
-	{
-		public static void PushRange<T>(this Stack<T> stack, IEnumerable<T> collection)
-		{
-			foreach (var item in collection)
-			{
-				stack.Push (item);
-			}
-		}
-	}
+    public static class StackExtensions
+    {
+        public static void PushRange<T>(this Stack<T> stack, IEnumerable<T> collection)
+        {
+            foreach (var item in collection)
+            {
+                stack.Push(item);
+            }
+        }
+    }
 }

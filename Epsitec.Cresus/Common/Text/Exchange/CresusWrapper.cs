@@ -7,41 +7,34 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	class CresusWrapper : IDisposable
-	{
-		public CresusWrapper(HtmlToTextWriter writer)
-		{
-			this.writer = writer ;
-			this.writer.TextWrapper.SuspendSynchronizations ();
-		}
+    class CresusWrapper : IDisposable
+    {
+        public CresusWrapper(HtmlToTextWriter writer)
+        {
+            this.writer = writer;
+            this.writer.TextWrapper.SuspendSynchronizations();
+        }
 
-		void ClearInvertItalic ()
-		{
-			this.writer.TextWrapper.Defined.ClearInvertItalic() ;
-		}
+        void ClearInvertItalic()
+        {
+            this.writer.TextWrapper.Defined.ClearInvertItalic();
+        }
 
-		public bool InvertItalic
-		{
-			set
-			{
-				writer.TextWrapper.Defined.InvertItalic = value;
-			}
-		}
+        public bool InvertItalic
+        {
+            set { writer.TextWrapper.Defined.InvertItalic = value; }
+        }
 
-		public bool InvertBold
-		{
-			set
-			{
-				writer.TextWrapper.Defined.InvertBold = value;
-			}
-		}
+        public bool InvertBold
+        {
+            set { writer.TextWrapper.Defined.InvertBold = value; }
+        }
 
-		public void Dispose()
-		{
-			this.writer.TextWrapper.ResumeSynchronizations ();
-		}
+        public void Dispose()
+        {
+            this.writer.TextWrapper.ResumeSynchronizations();
+        }
 
-		private HtmlToTextWriter writer;
-	}
-
+        private HtmlToTextWriter writer;
+    }
 }

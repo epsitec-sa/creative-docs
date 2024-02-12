@@ -3,12 +3,12 @@
 
 namespace Epsitec.Common.Support
 {
-	/// <summary>
-	/// The <c>IDisposed</c> interface provides the <see cref="Disposed"/> event, used to
-	/// notify the users that the object was disposed.
-	/// </summary>
-	public interface IDisposed : System.IDisposable
-	{
-		event EventHandler Disposed;
-	}
+    /// <summary>
+    /// The <c>IDisposed</c> interface provides the <see cref="Disposed"/> event, used to
+    /// notify the users that the object was disposed.
+    /// </summary>
+    public interface IDisposed : System.IDisposable
+    {
+        event EventHandler Disposed;
+    }
 }

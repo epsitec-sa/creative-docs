@@ -3,33 +3,29 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public class HSplitter : AbstractSplitter
-	{
-		public HSplitter()
-		{
-		}
+    public class HSplitter : AbstractSplitter
+    {
+        public HSplitter() { }
 
-		public HSplitter(Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
+        public HSplitter(Widget embedder)
+            : this()
+        {
+            this.SetEmbedder(embedder);
+        }
 
-		static HSplitter()
-		{
-			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+        static HSplitter()
+        {
+            Types.DependencyPropertyMetadata metadataDy =
+                Visual.PreferredHeightProperty.DefaultMetadata.Clone();
 
-			metadataDy.DefineDefaultValue (4.0);
-			
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(HSplitter), metadataDy);
-		}
+            metadataDy.DefineDefaultValue(4.0);
 
-		public override bool IsVertical
-		{
-			get
-			{
-				return false;
-			}
-		}
-	}
+            Visual.PreferredHeightProperty.OverrideMetadata(typeof(HSplitter), metadataDy);
+        }
+
+        public override bool IsVertical
+        {
+            get { return false; }
+        }
+    }
 }

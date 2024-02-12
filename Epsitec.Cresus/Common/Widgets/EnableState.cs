@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>EnableState</c> enumeration defines the possible enable states.
-	/// </summary>
-	public enum EnableState : byte
-	{
-		Undefined=0,
-		Enabled=1,
-		Disabled=2,
-	}
+    /// <summary>
+    /// The <c>EnableState</c> enumeration defines the possible enable states.
+    /// </summary>
+    public enum EnableState : byte
+    {
+        Undefined = 0,
+        Enabled = 1,
+        Disabled = 2,
+    }
 }

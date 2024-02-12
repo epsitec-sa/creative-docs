@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	/// <summary>
-	/// The <c>ItemListMarkAttachment</c> enumeration specifies how an <see cref="ItemListMark"/>
-	/// is attached to an item.
-	/// </summary>
-	public enum ItemListMarkAttachment
-	{
-		Before,
-		After,
-	}
+    /// <summary>
+    /// The <c>ItemListMarkAttachment</c> enumeration specifies how an <see cref="ItemListMark"/>
+    /// is attached to an item.
+    /// </summary>
+    public enum ItemListMarkAttachment
+    {
+        Before,
+        After,
+    }
 }

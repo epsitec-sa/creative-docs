@@ -3,18 +3,18 @@
 
 namespace Epsitec.Common.UI
 {
-	/// <summary>
-	/// The <c>ItemPanelSelectionMode</c> enumeration lists all supported selection
-	/// modes for the items represented by an <see cref="ItemPanel"/>.
-	/// </summary>
-	public enum ItemPanelSelectionMode : byte
-	{
-		None,
+    /// <summary>
+    /// The <c>ItemPanelSelectionMode</c> enumeration lists all supported selection
+    /// modes for the items represented by an <see cref="ItemPanel"/>.
+    /// </summary>
+    public enum ItemPanelSelectionMode : byte
+    {
+        None,
 
-		ZeroOrOne,
-		ExactlyOne,
+        ZeroOrOne,
+        ExactlyOne,
 
-		Multiple,
-		OneOrMore,
-	}
+        Multiple,
+        OneOrMore,
+    }
 }

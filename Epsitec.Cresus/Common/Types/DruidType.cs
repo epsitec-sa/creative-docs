@@ -3,26 +3,27 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public static class DruidType
-	{
-		public static OtherType Default
-		{
-			get
-			{
-				TypeRosetta.InitializeKnownTypes ();
+    /// <summary>
+    ///
+    /// </summary>
+    public static class DruidType
+    {
+        public static OtherType Default
+        {
+            get
+            {
+                TypeRosetta.InitializeKnownTypes();
 
-				if (DruidType.defaultValue == null)
-				{
-					DruidType.defaultValue = (OtherType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[100K]"));
-				}
+                if (DruidType.defaultValue == null)
+                {
+                    DruidType.defaultValue = (OtherType)
+                        TypeRosetta.CreateTypeObject(Support.Druid.Parse("[100K]"));
+                }
 
-				return DruidType.defaultValue;
-			}
-		}
+                return DruidType.defaultValue;
+            }
+        }
 
-		private static OtherType defaultValue;
-	}
+        private static OtherType defaultValue;
+    }
 }

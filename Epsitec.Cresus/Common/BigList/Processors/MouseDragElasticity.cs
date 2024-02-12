@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public enum MouseDragElasticity
-	{
-		None,
-		Stretch,
-	}
+    public enum MouseDragElasticity
+    {
+        None,
+        Stretch,
+    }
 }

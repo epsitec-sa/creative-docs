@@ -6,24 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
-	public abstract class AnimatorValue
-	{
-		protected AnimatorValue()
-		{
-		}
+    public abstract class AnimatorValue
+    {
+        protected AnimatorValue() { }
 
+        public abstract object BeginValue { get; }
 
-		public abstract object BeginValue
-		{
-			get;
-		}
+        public abstract object EndValue { get; }
 
-		public abstract object EndValue
-		{
-			get;
-		}
-
-
-		public abstract object Interpolate(double ratio);
-	}
+        public abstract object Interpolate(double ratio);
+    }
 }

@@ -3,17 +3,17 @@
 
 namespace Epsitec.Common.Drawing.Platform
 {
-	public enum BitmapColorType
-	{
-		Unsupported,
+    public enum BitmapColorType
+    {
+        Unsupported,
 
-		MinIsBlack,
-		MinIsWhite,
+        MinIsBlack,
+        MinIsWhite,
 
-		Rgb,
-		RgbAlpha,
-		Palette,
+        Rgb,
+        RgbAlpha,
+        Palette,
 
-		Cmyk,
-	}
+        Cmyk,
+    }
 }

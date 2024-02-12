@@ -1,81 +1,77 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets.Layouts;
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Common.BigList
 {
-	public sealed class ItemListColumnCollection : ObservableList<ItemListColumn>
-	{
-		public ItemListColumnCollection()
-		{
-		}
+    public sealed class ItemListColumnCollection : ObservableList<ItemListColumn>
+    {
+        public ItemListColumnCollection() { }
 
+        public IEnumerable<ItemListColumn> BySortOrder
+        {
+            get { return this.list.OrderBy(x => x.SortIndex); }
+        }
 
-		public IEnumerable<ItemListColumn> BySortOrder
-		{
-			get
-			{
-				return this.list.OrderBy (x => x.SortIndex);
-			}
-		}
+        public ItemListColumn GetColumn(int index)
+        {
+            return this.FirstOrDefault(x => x.Index == index);
+        }
 
+        public ItemListColumn DetectColumn(Point pos)
+        {
+            return this.FirstOrDefault(x => x.Contains(pos));
+        }
 
-		public ItemListColumn GetColumn(int index)
-		{
-			return this.FirstOrDefault (x => x.Index == index);
-		}
+        public void SpecifySort(ItemListColumn column, ItemSortOrder sortOrder)
+        {
+            if (column.CanSort == false)
+            {
+                return;
+            }
 
-		public ItemListColumn DetectColumn(Point pos)
-		{
-			return this.FirstOrDefault (x => x.Contains (pos));
-		}
+            System.Diagnostics.Debug.Assert(this.Contains(column));
 
-		public void SpecifySort(ItemListColumn column, ItemSortOrder sortOrder)
-		{
-			if (column.CanSort == false)
-			{
-				return;
-			}
+            column.SortOrder = sortOrder;
 
-			System.Diagnostics.Debug.Assert (this.Contains (column));
+            var sorted = this
+                .list.Where(x => x.CanSort && x != column)
+                .OrderBy(x => x.SortIndex)
+                .ThenBy(x => x.Index);
+            var unsorted = this.list.Where(x => !x.CanSort).OrderBy(x => x.Index);
 
-			column.SortOrder = sortOrder;
+            int index = 0;
 
-			var sorted   = this.list.Where (x => x.CanSort && x != column).OrderBy (x => x.SortIndex).ThenBy (x => x.Index);
-			var unsorted = this.list.Where (x => !x.CanSort).OrderBy (x => x.Index);
+            if (sortOrder == ItemSortOrder.None)
+            {
+                //	The column should no longer participate in the sort. Place it at its
+                //	natural position in the list, with respect to all other unsorted columns.
+            }
+            else
+            {
+                //	The newly sorted column will be the main sort column; assign it the index
+                //	zero. Then assign the other columns 1, 2, 3, ...
 
-			int index = 0;
+                column.SortIndex = index++;
+            }
 
-			if (sortOrder == ItemSortOrder.None)
-			{
-				//	The column should no longer participate in the sort. Place it at its
-				//	natural position in the list, with respect to all other unsorted columns.
-			}
-			else
-			{
-				//	The newly sorted column will be the main sort column; assign it the index
-				//	zero. Then assign the other columns 1, 2, 3, ...
+            foreach (var x in sorted.Concat(unsorted).ToArray())
+            {
+                x.SortIndex = index++;
+            }
+        }
 
-				column.SortIndex = index++;
-			}
-			
-			foreach (var x in sorted.Concat (unsorted).ToArray ())
-			{
-				x.SortIndex = index++;
-			}
-		}
-		
-		
-		
-		public double Layout(double availableSpace)
-		{
-			return ColumnLayoutList.Fit (this.OrderBy (x => x.Index).Select (x => x.Layout), availableSpace);
-		}
-	}
+        public double Layout(double availableSpace)
+        {
+            return ColumnLayoutList.Fit(
+                this.OrderBy(x => x.Index).Select(x => x.Layout),
+                availableSpace
+            );
+        }
+    }
 }

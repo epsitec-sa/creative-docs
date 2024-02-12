@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.BigList;
 using Epsitec.Common.BigList.Processors;
 using Epsitec.Common.BigList.Renderers;
@@ -10,225 +12,249 @@ using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
 
-using System.Collections.Generic;
-using System.Linq;
-
-[assembly: DependencyClass (typeof (ItemListColumnHeaderView))]
+[assembly: DependencyClass(typeof(ItemListColumnHeaderView))]
 
 namespace Epsitec.Common.BigList
 {
-	public partial class ItemListColumnHeaderView
-	{
-		private class ViewEventProcessor : IEventProcessorHost, IDetectionProcessor, ISelectionProcessor, IDraggingProcessor
-		{
-			public ViewEventProcessor(ItemListColumnHeaderView view)
-			{
-				this.view = view;
-			}
+    public partial class ItemListColumnHeaderView
+    {
+        private class ViewEventProcessor
+            : IEventProcessorHost,
+                IDetectionProcessor,
+                ISelectionProcessor,
+                IDraggingProcessor
+        {
+            public ViewEventProcessor(ItemListColumnHeaderView view)
+            {
+                this.view = view;
+            }
 
+            public bool ProcessMessage(Message message, Point pos)
+            {
+                if (this.view.Columns.Any() == false)
+                {
+                    return false;
+                }
 
-			public bool ProcessMessage(Message message, Point pos)
-			{
-				if (this.view.Columns.Any () == false)
-				{
-					return false;
-				}
+                if (this.processor != null)
+                {
+                    if (this.processor.ProcessMessage(message, pos))
+                    {
+                        return true;
+                    }
+                }
 
-				if (this.processor != null)
-				{
-					if (this.processor.ProcessMessage (message, pos))
-					{
-						return true;
-					}
-				}
+                switch (message.MessageType)
+                {
+                    case MessageType.MouseEnter:
+                    case MessageType.MouseHover:
+                    case MessageType.MouseLeave:
+                        break;
 
-				switch (message.MessageType)
-				{
-					case MessageType.MouseEnter:
-					case MessageType.MouseHover:
-					case MessageType.MouseLeave:
-						break;
+                    case MessageType.MouseDown:
+                        return this.ProcessMouseDown(message, pos);
 
-					case MessageType.MouseDown:
-						return this.ProcessMouseDown (message, pos);
+                    case MessageType.MouseUp:
+                        break;
 
-					case MessageType.MouseUp:
-						break;
+                    case MessageType.MouseMove:
+                        this.ProcessMouseMove(message, pos);
+                        break;
+                }
 
-					case MessageType.MouseMove:
-						this.ProcessMouseMove (message, pos);
-						break;
-				}
+                return false;
+            }
 
-				return false;
-			}
+            public void PaintOverlay(Graphics graphics, Rectangle clipRect)
+            {
+                if (this.processor != null)
+                {
+                    this.processor.PaintOverlay(graphics, clipRect);
+                }
+            }
 
-			public void PaintOverlay(Graphics graphics, Rectangle clipRect)
-			{
-				if (this.processor != null)
-				{
-					this.processor.PaintOverlay (graphics, clipRect);
-				}
-			}
+            private void ProcessMouseMove(Message message, Point pos)
+            {
+                var policy = this.view.GetPolicy<MouseDragProcessorPolicy>();
 
-			private void ProcessMouseMove(Message message, Point pos)
-			{
-				var policy = this.view.GetPolicy<MouseDragProcessorPolicy> ();
+                if (policy.Filter(this.DetectDrag(pos)).Any())
+                {
+                    this.view.MouseCursor = MouseCursor.AsVSplit;
+                }
+                else
+                {
+                    this.view.MouseCursor = MouseCursor.Default;
+                }
+            }
 
-				if (policy.Filter (this.DetectDrag (pos)).Any ())
-				{
-					this.view.MouseCursor = MouseCursor.AsVSplit;
-				}
-				else
-				{
-					this.view.MouseCursor = MouseCursor.Default;
-				}
-			}
+            private bool ProcessMouseDown(Message message, Point pos)
+            {
+                var drag = this.DetectDrag(pos).ToArray();
 
-			private bool ProcessMouseDown(Message message, Point pos)
-			{
-				var drag = this.DetectDrag (pos).ToArray ();
+                return MouseDragProcessor.Attach(this, message, pos, drag)
+                    || MouseDownProcessor.Attach(this, this.view.Client.Bounds, message, pos);
+            }
 
-				return MouseDragProcessor.Attach (this, message, pos, drag)
-					|| MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);
-			}
+            #region IEventProcessorHost Members
 
+            IEnumerable<IEventProcessor> IEventProcessorHost.EventProcessors
+            {
+                get
+                {
+                    if (this.processor != null)
+                    {
+                        yield return this.processor;
+                    }
+                }
+            }
 
-			#region IEventProcessorHost Members
+            void IEventProcessorHost.Add(IEventProcessor processor)
+            {
+                this.processor = processor;
+            }
 
-			IEnumerable<IEventProcessor> IEventProcessorHost.EventProcessors
-			{
-				get
-				{
-					if (this.processor != null)
-					{
-						yield return this.processor;
-					}
-				}
-			}
+            void IEventProcessorHost.Remove(IEventProcessor processor)
+            {
+                if (this.processor == processor)
+                {
+                    this.processor = null;
+                }
+            }
 
-			void IEventProcessorHost.Add(IEventProcessor processor)
-			{
-				this.processor = processor;
-			}
+            TPolicy IEventProcessorHost.GetPolicy<TPolicy>()
+            {
+                return this.view.GetPolicy<TPolicy>();
+            }
 
-			void IEventProcessorHost.Remove(IEventProcessor processor)
-			{
-				if (this.processor == processor)
-				{
-					this.processor = null;
-				}
-			}
+            #endregion
 
-			TPolicy IEventProcessorHost.GetPolicy<TPolicy>()
-			{
-				return this.view.GetPolicy<TPolicy> ();
-			}
+            #region IDetectionProcessor Members
 
-			#endregion
+            public int Detect(Point pos)
+            {
+                var column = this.view.Columns.DetectColumn(pos);
 
-			#region IDetectionProcessor Members
+                if (column == null)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return column.Index;
+                }
+            }
 
-			public int Detect(Point pos)
-			{
-				var column = this.view.Columns.DetectColumn (pos);
+            #endregion
 
-				if (column == null)
-				{
-					return -1;
-				}
-				else
-				{
-					return column.Index;
-				}
-			}
+            #region ISelectionProcessor Members
 
-			#endregion
+            public bool IsSelected(int index)
+            {
+                return false;
+            }
 
-			#region ISelectionProcessor Members
+            public void Select(int index, ItemSelection selection)
+            {
+                var column = this.view.Columns.GetColumn(index);
 
-			public bool IsSelected(int index)
-			{
-				return false;
-			}
+                if (column == null)
+                {
+                    return;
+                }
 
-			public void Select(int index, ItemSelection selection)
-			{
-				var column = this.view.Columns.GetColumn (index);
+                switch (selection)
+                {
+                    case ItemSelection.Activate:
+                        break;
 
-				if (column == null)
-				{
-					return;
-				}
+                    case ItemSelection.Focus:
+                        break;
 
-				switch (selection)
-				{
-					case ItemSelection.Activate:
-						break;
+                    case ItemSelection.Select:
+                    case ItemSelection.Deselect:
+                        break;
 
-					case ItemSelection.Focus:
-						break;
+                    case ItemSelection.Toggle:
+                        this.view.SelectSortColumn(column);
+                        this.view.Invalidate();
+                        break;
+                }
+            }
 
-					case ItemSelection.Select:
-					case ItemSelection.Deselect:
-						break;
-					
-					case ItemSelection.Toggle:
-						this.view.SelectSortColumn (column);
-						this.view.Invalidate ();
-						break;
-				}
-			}
+            #endregion
 
-			#endregion
+            #region IDraggingProcessor Members
 
-			#region IDraggingProcessor Members
+            public IEnumerable<MouseDragFrame> DetectDrag(Point pos)
+            {
+                foreach (var column in this.view.Columns)
+                {
+                    var det = 2.0;
+                    var def = column.Layout.Definition;
+                    var left = def.ActualOffset;
+                    var right = left + def.ActualWidth;
+                    var rect = this.view.GetColumnBounds(column);
 
-			public IEnumerable<MouseDragFrame> DetectDrag(Point pos)
-			{
-				foreach (var column in this.view.Columns)
-				{
-					var det   = 2.0;
-					var def   = column.Layout.Definition;
-					var left  = def.ActualOffset;
-					var right = left + def.ActualWidth;
-					var rect  = this.view.GetColumnBounds (column);
+                    var elasticity = def.Width.IsAbsolute
+                        ? MouseDragElasticity.None
+                        : MouseDragElasticity.Stretch;
 
-					var elasticity = def.Width.IsAbsolute ? MouseDragElasticity.None : MouseDragElasticity.Stretch;
+                    if ((pos.X >= left - det) && (pos.X <= left + det))
+                    {
+                        yield return new MouseDragFrame(
+                            column.Index,
+                            GripId.EdgeLeft,
+                            rect,
+                            MouseDragDirection.Horizontal,
+                            Rectangle.FromPoints(0, rect.Bottom, rect.Right, rect.Top),
+                            elasticity
+                        );
+                    }
 
-					if ((pos.X >= left-det) &&
-						(pos.X <= left+det))
-					{
-						yield return new MouseDragFrame (column.Index, GripId.EdgeLeft, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (0, rect.Bottom, rect.Right, rect.Top), elasticity);
-					}
+                    if ((pos.X >= right - det) && (pos.X <= right + det))
+                    {
+                        var minWidth = def.MinWidth;
+                        var maxWidth = def.MaxWidth;
 
-					if ((pos.X >= right-det) &&
-						(pos.X <= right+det))
-					{
-						var minWidth = def.MinWidth;
-						var maxWidth = def.MaxWidth;
+                        yield return new MouseDragFrame(
+                            column.Index,
+                            GripId.EdgeRight,
+                            rect,
+                            MouseDragDirection.Horizontal,
+                            Rectangle.FromPoints(
+                                rect.Left + minWidth,
+                                rect.Bottom,
+                                System.Math.Min(this.view.Client.Width, rect.Left + maxWidth),
+                                rect.Top
+                            ),
+                            elasticity
+                        );
+                    }
+                }
+            }
 
-						yield return new MouseDragFrame (column.Index, GripId.EdgeRight, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (rect.Left + minWidth, rect.Bottom, System.Math.Min (this.view.Client.Width, rect.Left + maxWidth), rect.Top), elasticity);
-					}
-				}
-			}
+            void IDraggingProcessor.ApplyDrag(
+                MouseDragFrame originalFrame,
+                MouseDragFrame currentFrame
+            )
+            {
+                if (originalFrame.Grip == GripId.EdgeRight)
+                {
+                    var column = this.view.Columns.GetColumn(originalFrame.Index);
 
-			void IDraggingProcessor.ApplyDrag(MouseDragFrame originalFrame, MouseDragFrame currentFrame)
-			{
-				if (originalFrame.Grip == GripId.EdgeRight)
-				{
-					var column = this.view.Columns.GetColumn (originalFrame.Index);
+                    column.Layout.Definition.Width = new GridLength(
+                        currentFrame.Bounds.Width,
+                        GridUnitType.Absolute
+                    );
 
-					column.Layout.Definition.Width = new GridLength (currentFrame.Bounds.Width, GridUnitType.Absolute);
-					
-					this.view.RefreshColumnLayout ();
-				}
-			}
+                    this.view.RefreshColumnLayout();
+                }
+            }
 
-			#endregion
+            #endregion
 
-			private readonly ItemListColumnHeaderView view;
-			private IEventProcessor				processor;
-		}
-	}
+            private readonly ItemListColumnHeaderView view;
+            private IEventProcessor processor;
+        }
+    }
 }

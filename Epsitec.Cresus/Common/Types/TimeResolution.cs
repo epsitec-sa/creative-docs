@@ -3,23 +3,23 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>TimeResolution</c> enumeration defines the resolution of a time
-	/// or a date (seconds, milliseconds, days, weeks, etc.)
-	/// </summary>
-	[DesignerVisible]
-	public enum TimeResolution : byte
-	{
-		Default,
-		
-		Milliseconds,
-		Seconds,
-		Minutes,
-		Hours,
-		
-		Days,
-		Weeks,
-		Months,
-		Years
-	}
+    /// <summary>
+    /// The <c>TimeResolution</c> enumeration defines the resolution of a time
+    /// or a date (seconds, milliseconds, days, weeks, etc.)
+    /// </summary>
+    [DesignerVisible]
+    public enum TimeResolution : byte
+    {
+        Default,
+
+        Milliseconds,
+        Seconds,
+        Minutes,
+        Hours,
+
+        Days,
+        Weeks,
+        Months,
+        Years
+    }
 }

@@ -3,16 +3,12 @@
 
 namespace Epsitec.Common.Support.Data
 {
-	/// <summary>
-	/// The <c>IKeyedStringSelection</c> interface provides the basic mechanism used
-	/// to select an item in a list, using either its key or its index.
-	/// </summary>
-	public interface IKeyedStringSelection : IStringSelection
-	{
-		string SelectedKey
-		{
-			get;
-			set;
-		}
-	}
+    /// <summary>
+    /// The <c>IKeyedStringSelection</c> interface provides the basic mechanism used
+    /// to select an item in a list, using either its key or its index.
+    /// </summary>
+    public interface IKeyedStringSelection : IStringSelection
+    {
+        string SelectedKey { get; set; }
+    }
 }

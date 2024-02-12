@@ -6,38 +6,43 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	public static class NativeHtmlClipboardReader
-	{
-		public static string Read()
-		{
-			byte[] clipboardBytes = Epsitec.Common.Support.Platform.Win32.Clipboard.ReadHtmlFormat ();
+    public static class NativeHtmlClipboardReader
+    {
+        public static string Read()
+        {
+            byte[] clipboardBytes =
+                Epsitec.Common.Support.Platform.Win32.Clipboard.ReadHtmlFormat();
 
-			if (clipboardBytes == null)
-			{
-				return string.Empty;
-			}
+            if (clipboardBytes == null)
+            {
+                return string.Empty;
+            }
 
-			System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-			for (int i = 0; i < 200; i++)
-			{
-				sb.Append ((char) clipboardBytes[i]);
-			}
+            for (int i = 0; i < 200; i++)
+            {
+                sb.Append((char)clipboardBytes[i]);
+            }
 
-			string startText = sb.ToString ();
+            string startText = sb.ToString();
 
-			const string startHtml = "StartHTML:";
-			int startHtmlIndex = startText.IndexOf (startHtml);
-			int index = 0;
+            const string startHtml = "StartHTML:";
+            int startHtmlIndex = startText.IndexOf(startHtml);
+            int index = 0;
 
-			if (startHtmlIndex > 0)
-			{
-				startHtmlIndex += startHtml.Length;
-				string htmlIndexValue = startText.Substring (startHtmlIndex, 15);		// 15 == bonne reserve pour la longueur de l'offset
-				index = Misc.ParseInt (htmlIndexValue);
-			}
+            if (startHtmlIndex > 0)
+            {
+                startHtmlIndex += startHtml.Length;
+                string htmlIndexValue = startText.Substring(startHtmlIndex, 15); // 15 == bonne reserve pour la longueur de l'offset
+                index = Misc.ParseInt(htmlIndexValue);
+            }
 
-			return System.Text.Encoding.UTF8.GetString (clipboardBytes, index, clipboardBytes.Length - index);
-		}
-	}
+            return System.Text.Encoding.UTF8.GetString(
+                clipboardBytes,
+                index,
+                clipboardBytes.Length - index
+            );
+        }
+    }
 }

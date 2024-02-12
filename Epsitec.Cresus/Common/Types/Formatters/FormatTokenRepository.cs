@@ -6,37 +6,33 @@ using System.Linq;
 
 namespace Epsitec.Common.Types.Formatters
 {
-	public static class FormatTokenRepository
-	{
-		/// <summary>
-		/// Gets all known <see cref="FormatToken"/> instances. This is thread-safe.
-		/// </summary>
-		public static IEnumerable<FormatToken>	Items
-		{
-			get
-			{
-				return FormatTokenRepository.items;
-			}
-		}
+    public static class FormatTokenRepository
+    {
+        /// <summary>
+        /// Gets all known <see cref="FormatToken"/> instances. This is thread-safe.
+        /// </summary>
+        public static IEnumerable<FormatToken> Items
+        {
+            get { return FormatTokenRepository.items; }
+        }
 
+        /// <summary>
+        /// Initializes the <see cref="FormatTokenRepository"/> class and fills the collection
+        /// of the sorted <see cref="FormatToken"/> instances.
+        /// </summary>
+        static FormatTokenRepository()
+        {
+            //	Tokens will be sorted from longest to shortest ("yyyy", then "yy") so that
+            //	they can be evaluated one after the other in order to find the proper match:
 
-		/// <summary>
-		/// Initializes the <see cref="FormatTokenRepository"/> class and fills the collection
-		/// of the sorted <see cref="FormatToken"/> instances.
-		/// </summary>
-		static FormatTokenRepository()
-		{
-			//	Tokens will be sorted from longest to shortest ("yyyy", then "yy") so that
-			//	they can be evaluated one after the other in order to find the proper match:
+            var sortedTokens = FormatterHelper
+                .GetTokens()
+                .OrderByDescending(x => x.FormatString.Length)
+                .ThenBy(x => x.FormatString);
 
-			var sortedTokens = FormatterHelper.GetTokens ()
-				.OrderByDescending (x => x.FormatString.Length)
-				.ThenBy (x => x.FormatString);
+            FormatTokenRepository.items = new List<FormatToken>(sortedTokens);
+        }
 
-			FormatTokenRepository.items = new List<FormatToken> (sortedTokens);
-		}
-
-
-		private readonly static List<FormatToken> items;
-	}
+        private static readonly List<FormatToken> items;
+    }
 }

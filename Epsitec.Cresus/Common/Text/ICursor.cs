@@ -3,15 +3,15 @@
 
 namespace Epsitec.Common.Text
 {
-	/// <summary>
-	/// L'interface ICursor permet de décrire un curseur.
-	/// </summary>
-	public interface ICursor
-	{
-		int					CursorId			{ get; set; }
-		CursorAttachment	Attachment			{ get; }
-		int					Direction			{ get; set; }
-		
-		void Clear();
-	}
+    /// <summary>
+    /// L'interface ICursor permet de décrire un curseur.
+    /// </summary>
+    public interface ICursor
+    {
+        int CursorId { get; set; }
+        CursorAttachment Attachment { get; }
+        int Direction { get; set; }
+
+        void Clear();
+    }
 }

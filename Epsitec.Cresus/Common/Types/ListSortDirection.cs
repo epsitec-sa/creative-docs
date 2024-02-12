@@ -3,25 +3,25 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>ListSortDirection</c> enumeration specified the direction of a
-	/// sort operation.
-	/// </summary>
-	public enum ListSortDirection : byte
-	{
-		/// <summary>
-		/// Sort in ascending order.
-		/// </summary>
-		Ascending,
+    /// <summary>
+    /// The <c>ListSortDirection</c> enumeration specified the direction of a
+    /// sort operation.
+    /// </summary>
+    public enum ListSortDirection : byte
+    {
+        /// <summary>
+        /// Sort in ascending order.
+        /// </summary>
+        Ascending,
 
-		/// <summary>
-		/// Sort in descending order.
-		/// </summary>
-		Descending,
+        /// <summary>
+        /// Sort in descending order.
+        /// </summary>
+        Descending,
 
-		/// <summary>
-		/// Don't sort.
-		/// </summary>
-		None,
-	}
+        /// <summary>
+        /// Don't sort.
+        /// </summary>
+        None,
+    }
 }

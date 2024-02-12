@@ -1,212 +1,268 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using NUnit.Framework;
 using System.Collections.Generic;
-
-using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Support
 {
-	[TestFixture]
-	public class CaptionCacheTest
-	{
-		[SetUp]
-		public void SetUp()
-		{
-			Epsitec.Common.Widgets.Widget.Initialize ();
-			
-			this.manager_en = new ResourceManager (@"S:\Epsitec.Cresus\Common.Tests");
-			this.manager_en.DefineDefaultModuleName ("Test");
-			this.manager_en.ActivePrefix = "file";
-			this.manager_en.ActiveCulture = Epsitec.Common.Support.Resources.FindSpecificCultureInfo ("en");
+    [TestFixture]
+    public class CaptionCacheTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            Epsitec.Common.Widgets.Widget.Initialize();
 
-			this.manager_fr = new ResourceManager (@"S:\Epsitec.Cresus\Common.Tests");
-			this.manager_fr.DefineDefaultModuleName ("Test");
-			this.manager_fr.ActivePrefix = "file";
-			this.manager_fr.ActiveCulture = Epsitec.Common.Support.Resources.FindSpecificCultureInfo ("fr");
-		}
+            this.manager_en = new ResourceManager(@"S:\Epsitec.Cresus\Common.Tests");
+            this.manager_en.DefineDefaultModuleName("Test");
+            this.manager_en.ActivePrefix = "file";
+            this.manager_en.ActiveCulture =
+                Epsitec.Common.Support.Resources.FindSpecificCultureInfo("en");
 
-		[Test]
-		public void CheckEmptyCaptions()
-		{
-			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, -1));
-			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, Druid.Empty));
+            this.manager_fr = new ResourceManager(@"S:\Epsitec.Cresus\Common.Tests");
+            this.manager_fr.DefineDefaultModuleName("Test");
+            this.manager_fr.ActivePrefix = "file";
+            this.manager_fr.ActiveCulture =
+                Epsitec.Common.Support.Resources.FindSpecificCultureInfo("fr");
+        }
 
-			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, "$02"));
-			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, new Druid (0, 2)));
-		}
+        [Test]
+        public void CheckEmptyCaptions()
+        {
+            Assert.IsNull(CaptionCache.Instance.GetCaption(this.manager_en, -1));
+            Assert.IsNull(CaptionCache.Instance.GetCaption(this.manager_en, Druid.Empty));
 
-		[Test]
-		public void CheckFillCache()
-		{
-			Druid idA = Druid.Parse ("[4002]");
-			Druid idQ = Druid.Parse ("[4003]");
+            Assert.IsNull(CaptionCache.Instance.GetCaption(this.manager_en, "$02"));
+            Assert.IsNull(CaptionCache.Instance.GetCaption(this.manager_en, new Druid(0, 2)));
+        }
 
-			Caption captionA_en;
-			Caption captionQ_en;
-			Caption captionA_fr;
-			Caption captionQ_fr;
+        [Test]
+        public void CheckFillCache()
+        {
+            Druid idA = Druid.Parse("[4002]");
+            Druid idQ = Druid.Parse("[4003]");
 
-			captionA_en = CaptionCache.Instance.GetCaption (this.manager_en, idA);
-			captionQ_en = CaptionCache.Instance.GetCaption (this.manager_en, idQ);
-			
-			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA_en.Description);
-			Assert.AreEqual ("Quality coefficient.", captionQ_en.Description);
-			Assert.AreEqual ("A", Collection.Extract (captionA_en.SortedLabels, 0));
-			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA_en.SortedLabels, 2));
-			Assert.AreEqual ("Q", Collection.Extract (captionQ_en.SortedLabels, 0));
+            Caption captionA_en;
+            Caption captionQ_en;
+            Caption captionA_fr;
+            Caption captionQ_fr;
 
-			captionA_fr = CaptionCache.Instance.GetCaption (this.manager_fr, idA);
-			captionQ_fr = CaptionCache.Instance.GetCaption (this.manager_fr, idQ);
+            captionA_en = CaptionCache.Instance.GetCaption(this.manager_en, idA);
+            captionQ_en = CaptionCache.Instance.GetCaption(this.manager_en, idQ);
 
-			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA_fr.Description);
-			Assert.AreEqual ("Coefficient de Qualité.", captionQ_fr.Description);
-			Assert.AreEqual ("A", Collection.Extract (captionA_fr.SortedLabels, 0));
-			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA_fr.SortedLabels, 2));
-			Assert.AreEqual ("Q", Collection.Extract (captionQ_fr.SortedLabels, 0));
+            Assert.AreEqual("Pattern angle expressed in degrees.", captionA_en.Description);
+            Assert.AreEqual("Quality coefficient.", captionQ_en.Description);
+            Assert.AreEqual("A", Collection.Extract(captionA_en.SortedLabels, 0));
+            Assert.AreEqual("Pattern angle", Collection.Extract(captionA_en.SortedLabels, 2));
+            Assert.AreEqual("Q", Collection.Extract(captionQ_en.SortedLabels, 0));
 
-			Assert.AreEqual (captionA_en, CaptionCache.Instance.GetCaption (this.manager_en, idA));
-			Assert.AreEqual (captionA_en, CaptionCache.Instance.GetCaption (this.manager_en, idA.ToLong ()));
-			Assert.AreEqual (captionQ_en, CaptionCache.Instance.GetCaption (this.manager_en, idQ));
-			Assert.AreEqual (captionQ_en, CaptionCache.Instance.GetCaption (this.manager_en, idQ.ToLong ()));
+            captionA_fr = CaptionCache.Instance.GetCaption(this.manager_fr, idA);
+            captionQ_fr = CaptionCache.Instance.GetCaption(this.manager_fr, idQ);
 
-			Assert.AreEqual (captionA_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idA));
-			Assert.AreEqual (captionA_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idA.ToLong ()));
-			Assert.AreEqual (captionA_fr, CaptionCache.Instance.GetCaption (this.manager_fr, "[4002]"));
-			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idQ));
-			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idQ.ToLong ()));
-			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, "[4003]"));
+            Assert.AreEqual(
+                "Angle de rotation de la trame, exprimé en degrés.",
+                captionA_fr.Description
+            );
+            Assert.AreEqual("Coefficient de Qualité.", captionQ_fr.Description);
+            Assert.AreEqual("A", Collection.Extract(captionA_fr.SortedLabels, 0));
+            Assert.AreEqual("Angle de la trame", Collection.Extract(captionA_fr.SortedLabels, 2));
+            Assert.AreEqual("Q", Collection.Extract(captionQ_fr.SortedLabels, 0));
 
-			Assert.AreEqual (4, CaptionCache.Instance.DebugGetLiveCaptionsCount ());
+            Assert.AreEqual(captionA_en, CaptionCache.Instance.GetCaption(this.manager_en, idA));
+            Assert.AreEqual(
+                captionA_en,
+                CaptionCache.Instance.GetCaption(this.manager_en, idA.ToLong())
+            );
+            Assert.AreEqual(captionQ_en, CaptionCache.Instance.GetCaption(this.manager_en, idQ));
+            Assert.AreEqual(
+                captionQ_en,
+                CaptionCache.Instance.GetCaption(this.manager_en, idQ.ToLong())
+            );
 
-			System.GC.Collect ();
-			CaptionCache.Instance.TrimCache ();
+            Assert.AreEqual(captionA_fr, CaptionCache.Instance.GetCaption(this.manager_fr, idA));
+            Assert.AreEqual(
+                captionA_fr,
+                CaptionCache.Instance.GetCaption(this.manager_fr, idA.ToLong())
+            );
+            Assert.AreEqual(
+                captionA_fr,
+                CaptionCache.Instance.GetCaption(this.manager_fr, "[4002]")
+            );
+            Assert.AreEqual(captionQ_fr, CaptionCache.Instance.GetCaption(this.manager_fr, idQ));
+            Assert.AreEqual(
+                captionQ_fr,
+                CaptionCache.Instance.GetCaption(this.manager_fr, idQ.ToLong())
+            );
+            Assert.AreEqual(
+                captionQ_fr,
+                CaptionCache.Instance.GetCaption(this.manager_fr, "[4003]")
+            );
 
-			Assert.AreEqual (4, CaptionCache.Instance.DebugGetLiveCaptionsCount ());
+            Assert.AreEqual(4, CaptionCache.Instance.DebugGetLiveCaptionsCount());
 
-			Assert.AreEqual ("A", Collection.Extract (captionA_en.SortedLabels, 0));
-			Assert.AreEqual ("Q", Collection.Extract (captionQ_en.SortedLabels, 0));
-			
-			captionA_en = null;
-			captionQ_en = null;
+            System.GC.Collect();
+            CaptionCache.Instance.TrimCache();
 
-			System.GC.Collect ();
-			CaptionCache.Instance.TrimCache ();
+            Assert.AreEqual(4, CaptionCache.Instance.DebugGetLiveCaptionsCount());
 
-			Assert.AreEqual (2, CaptionCache.Instance.DebugGetLiveCaptionsCount ());
-		}
+            Assert.AreEqual("A", Collection.Extract(captionA_en.SortedLabels, 0));
+            Assert.AreEqual("Q", Collection.Extract(captionQ_en.SortedLabels, 0));
 
-		[Test]
-		public void CheckProperties()
-		{
-			Assert.AreEqual (MyItem.TextProperty, MyItemX.TextProperty);
-			
-			Caption caption;
-			
-			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, MyItem.TextProperty);
+            captionA_en = null;
+            captionQ_en = null;
 
-			Assert.IsNotNull (caption);
-			Assert.AreEqual ("Text Property", caption.Description);
-			Assert.AreEqual ("[4004]", caption.Id.ToResourceId ());
+            System.GC.Collect();
+            CaptionCache.Instance.TrimCache();
 
-			caption = CaptionCache.Instance.GetTypeCaption (this.manager_en, MyItem.EnumProperty);
+            Assert.AreEqual(2, CaptionCache.Instance.DebugGetLiveCaptionsCount());
+        }
 
-			Assert.IsNotNull (caption);
-			Assert.AreEqual ("One of Three", caption.Description);
+        [Test]
+        public void CheckProperties()
+        {
+            Assert.AreEqual(MyItem.TextProperty, MyItemX.TextProperty);
 
-			INamedType type1 = MyItem.EnumProperty.DefaultMetadata.NamedType;
-			INamedType type2 = MyItem.EnumProperty.GetMetadata (typeof (MyItem)).NamedType;
+            Caption caption;
 
-			Assert.AreEqual ("One of Three", CaptionCache.Instance.GetTypeCaption (this.manager_en, MyItem.EnumProperty).Description);
-			Assert.AreEqual ("One of Three", CaptionCache.Instance.GetTypeCaption (this.manager_en, type2).Description);
-			Assert.AreEqual ("One of Three", CaptionCache.Instance.GetTypeCaption (this.manager_en, type1).Description);
+            caption = CaptionCache.Instance.GetPropertyCaption(
+                this.manager_en,
+                MyItem.TextProperty
+            );
 
-			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, MyItemX.TextProperty);
+            Assert.IsNotNull(caption);
+            Assert.AreEqual("Text Property", caption.Description);
+            Assert.AreEqual("[4004]", caption.Id.ToResourceId());
 
-			Assert.AreEqual ("Text Property", caption.Description);
-			Assert.AreEqual ("[4004]", caption.Id.ToResourceId ());
+            caption = CaptionCache.Instance.GetTypeCaption(this.manager_en, MyItem.EnumProperty);
 
-			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, typeof (MyItemX), MyItemX.TextProperty);
+            Assert.IsNotNull(caption);
+            Assert.AreEqual("One of Three", caption.Description);
 
-			Assert.AreEqual ("Borrowed Text", caption.Description);
-			Assert.AreEqual ("[400A]", caption.Id.ToResourceId ());
-			
-			INamedType type3 = MyItem.EnumProperty.GetMetadata (typeof (MyItemX)).NamedType;
+            INamedType type1 = MyItem.EnumProperty.DefaultMetadata.NamedType;
+            INamedType type2 = MyItem.EnumProperty.GetMetadata(typeof(MyItem)).NamedType;
 
-			Assert.AreEqual (type1, type2);
-			Assert.AreNotEqual (type1, type3);
-		}
+            Assert.AreEqual(
+                "One of Three",
+                CaptionCache
+                    .Instance.GetTypeCaption(this.manager_en, MyItem.EnumProperty)
+                    .Description
+            );
+            Assert.AreEqual(
+                "One of Three",
+                CaptionCache.Instance.GetTypeCaption(this.manager_en, type2).Description
+            );
+            Assert.AreEqual(
+                "One of Three",
+                CaptionCache.Instance.GetTypeCaption(this.manager_en, type1).Description
+            );
 
+            caption = CaptionCache.Instance.GetPropertyCaption(
+                this.manager_en,
+                MyItemX.TextProperty
+            );
 
-		private class MyItem : DependencyObject
-		{
-			public MyItem()
-			{
-			}
+            Assert.AreEqual("Text Property", caption.Description);
+            Assert.AreEqual("[4004]", caption.Id.ToResourceId());
 
-			static MyItem()
-			{
-				DependencyPropertyMetadata metadataText = MyItem.TextProperty.GetMetadata (typeof (MyItem));
-				DependencyPropertyMetadata metadataEnum = MyItem.EnumProperty.GetMetadata (typeof (MyItem));
+            caption = CaptionCache.Instance.GetPropertyCaption(
+                this.manager_en,
+                typeof(MyItemX),
+                MyItemX.TextProperty
+            );
 
-				EnumType enumType = new EnumType (typeof (MyEnum));
+            Assert.AreEqual("Borrowed Text", caption.Description);
+            Assert.AreEqual("[400A]", caption.Id.ToResourceId());
 
-				enumType.DefineCaptionId (new Druid ("[4005]"));
-				enumType[MyEnum.None].DefineCaptionId (new Druid ("[4006]"));
-				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]"));
-				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]"));
-				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]"));
+            INamedType type3 = MyItem.EnumProperty.GetMetadata(typeof(MyItemX)).NamedType;
 
-				metadataText.DefineCaptionId (new Druid ("[4004]"));
-				metadataEnum.DefineNamedType (enumType);
-			}
+            Assert.AreEqual(type1, type2);
+            Assert.AreNotEqual(type1, type3);
+        }
 
+        private class MyItem : DependencyObject
+        {
+            public MyItem() { }
 
-			public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (MyItem), new DependencyPropertyMetadata ());
-			public static readonly DependencyProperty EnumProperty = DependencyProperty.Register ("Enum", typeof (MyEnum), typeof (MyItem), new DependencyPropertyMetadata (MyEnum.None));
-		}
+            static MyItem()
+            {
+                DependencyPropertyMetadata metadataText = MyItem.TextProperty.GetMetadata(
+                    typeof(MyItem)
+                );
+                DependencyPropertyMetadata metadataEnum = MyItem.EnumProperty.GetMetadata(
+                    typeof(MyItem)
+                );
 
-		private class MyItemX : DependencyObject
-		{
-			public MyItemX()
-			{
-			}
+                EnumType enumType = new EnumType(typeof(MyEnum));
 
-			static MyItemX()
-			{
-				DependencyPropertyMetadata metadataText = new DependencyPropertyMetadata ();
-				DependencyPropertyMetadata metadataEnum = new DependencyPropertyMetadata (MyEnum.First);
+                enumType.DefineCaptionId(new Druid("[4005]"));
+                enumType[MyEnum.None].DefineCaptionId(new Druid("[4006]"));
+                enumType[MyEnum.First].DefineCaptionId(new Druid("[4007]"));
+                enumType[MyEnum.Second].DefineCaptionId(new Druid("[4008]"));
+                enumType[MyEnum.Third].DefineCaptionId(new Druid("[4009]"));
 
-				EnumType enumType = new EnumType (typeof (MyEnum));
+                metadataText.DefineCaptionId(new Druid("[4004]"));
+                metadataEnum.DefineNamedType(enumType);
+            }
 
-				enumType.DefineCaptionId (new Druid ("[4005]"));
-				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]"));
-				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]"));
-				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]"));
+            public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+                "Text",
+                typeof(string),
+                typeof(MyItem),
+                new DependencyPropertyMetadata()
+            );
+            public static readonly DependencyProperty EnumProperty = DependencyProperty.Register(
+                "Enum",
+                typeof(MyEnum),
+                typeof(MyItem),
+                new DependencyPropertyMetadata(MyEnum.None)
+            );
+        }
 
-				metadataText.DefineCaptionId (new Druid ("[400A]"));
-				metadataEnum.DefineNamedType (enumType);
+        private class MyItemX : DependencyObject
+        {
+            public MyItemX() { }
 
-				MyItemX.TextProperty.OverrideMetadata (typeof (MyItemX), metadataText);
-				MyItemX.EnumProperty.OverrideMetadata (typeof (MyItemX), metadataEnum);
-			}
+            static MyItemX()
+            {
+                DependencyPropertyMetadata metadataText = new DependencyPropertyMetadata();
+                DependencyPropertyMetadata metadataEnum = new DependencyPropertyMetadata(
+                    MyEnum.First
+                );
 
+                EnumType enumType = new EnumType(typeof(MyEnum));
 
-			public static readonly DependencyProperty TextProperty = MyItem.TextProperty.AddOwner (typeof (MyItemX));
-			public static readonly DependencyProperty EnumProperty = MyItem.EnumProperty.AddOwner (typeof (MyItemX));
-		}
+                enumType.DefineCaptionId(new Druid("[4005]"));
+                enumType[MyEnum.First].DefineCaptionId(new Druid("[4007]"));
+                enumType[MyEnum.Second].DefineCaptionId(new Druid("[4008]"));
+                enumType[MyEnum.Third].DefineCaptionId(new Druid("[4009]"));
 
-		private enum MyEnum
-		{
-			None,
-			First,
-			Second,
-			Third
-		}
-		
-		ResourceManager manager_en;
-		ResourceManager manager_fr;
-	}
+                metadataText.DefineCaptionId(new Druid("[400A]"));
+                metadataEnum.DefineNamedType(enumType);
+
+                MyItemX.TextProperty.OverrideMetadata(typeof(MyItemX), metadataText);
+                MyItemX.EnumProperty.OverrideMetadata(typeof(MyItemX), metadataEnum);
+            }
+
+            public static readonly DependencyProperty TextProperty = MyItem.TextProperty.AddOwner(
+                typeof(MyItemX)
+            );
+            public static readonly DependencyProperty EnumProperty = MyItem.EnumProperty.AddOwner(
+                typeof(MyItemX)
+            );
+        }
+
+        private enum MyEnum
+        {
+            None,
+            First,
+            Second,
+            Third
+        }
+
+        ResourceManager manager_en;
+        ResourceManager manager_fr;
+    }
 }

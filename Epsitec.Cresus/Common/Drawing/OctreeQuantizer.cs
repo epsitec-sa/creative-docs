@@ -2,103 +2,99 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Epsitec.Common.Drawing.Platform
 {
-	public class OctreeQuantizer
-	{
-		public static BitmapSource Quantize(BitmapSource source, int maxColors, int maxColorBits)
-		{
-			if (source.Format.BitsPerPixel != 32)
-			{
-				throw new System.ArgumentException ("Invalid source: must be in 32-bit/pixel format");
-			}
-			
-			OctreeQuantizer quantizer = new OctreeQuantizer (maxColors, maxColorBits);
+    public class OctreeQuantizer
+    {
+        public static BitmapSource Quantize(BitmapSource source, int maxColors, int maxColorBits)
+        {
+            if (source.Format.BitsPerPixel != 32)
+            {
+                throw new System.ArgumentException(
+                    "Invalid source: must be in 32-bit/pixel format"
+                );
+            }
 
-			return quantizer.Quantize (source);
-		}
+            OctreeQuantizer quantizer = new OctreeQuantizer(maxColors, maxColorBits);
 
-		
-		private OctreeQuantizer(int maxColors, int maxColorBits)
-		{
-			if ((maxColors < 1) ||
-				(maxColors > 255) ||
-				(maxColorBits < 1) ||
-				(maxColorBits > 8))
-			{
-				throw new System.ArgumentException ("Invalid number of colors");
-			}
+            return quantizer.Quantize(source);
+        }
 
-			this.octree       = new Octree (maxColorBits);
-			this.maxColors    = maxColors;
-			this.bitsPerPixel = maxColorBits;
-		}
+        private OctreeQuantizer(int maxColors, int maxColorBits)
+        {
+            if ((maxColors < 1) || (maxColors > 255) || (maxColorBits < 1) || (maxColorBits > 8))
+            {
+                throw new System.ArgumentException("Invalid number of colors");
+            }
 
-		private BitmapSource Quantize(BitmapSource source)
-		{
-			this.QuantizeUsingOctree (source);
-			
-			PixelFormat   format  = this.GetPixelFormat ();
-			BitmapPalette palette = this.GetPalette ();
-			
-			return new FormatConvertedBitmap (source, format, palette, 10);
-		}
+            this.octree = new Octree(maxColorBits);
+            this.maxColors = maxColors;
+            this.bitsPerPixel = maxColorBits;
+        }
 
-		private PixelFormat GetPixelFormat()
-		{
-			switch (this.bitsPerPixel)
-			{
-				case 1:
-					return PixelFormats.Indexed1;
-				
-				case 2:
-					return PixelFormats.Indexed2;
-				
-				case 3:
-				case 4:
-					return PixelFormats.Indexed4;
-				
-				case 5:
-				case 6:
-				case 7:
-				case 8:
-					return PixelFormats.Indexed8;
-			}
+        private BitmapSource Quantize(BitmapSource source)
+        {
+            this.QuantizeUsingOctree(source);
 
-			throw new System.InvalidOperationException ();
-		}
+            PixelFormat format = this.GetPixelFormat();
+            BitmapPalette palette = this.GetPalette();
 
-		private void QuantizeUsingOctree(BitmapSource source)
-		{
-			int dx    = source.PixelWidth;
-			int dy    = source.PixelHeight;
-			int pitch = dx * 4;
-			
-			byte[] row   = new byte[pitch];
+            return new FormatConvertedBitmap(source, format, palette, 10);
+        }
 
-			for (int y = 0; y < dy; y++)
-			{
-				source.CopyPixels (new System.Windows.Int32Rect (0, y, dx, 1), row, pitch, 0);
+        private PixelFormat GetPixelFormat()
+        {
+            switch (this.bitsPerPixel)
+            {
+                case 1:
+                    return PixelFormats.Indexed1;
 
-				for (int x = 0; x < dx; x++)
-				{
-					this.octree.AddColor (new Color32 (row, x*4));
-				}
-			}
-		}
+                case 2:
+                    return PixelFormats.Indexed2;
 
-		private BitmapPalette GetPalette()
-		{
-			return new BitmapPalette (this.octree.GeneratePaletteColors (this.maxColors));
-		}
+                case 3:
+                case 4:
+                    return PixelFormats.Indexed4;
 
-		
-		private	readonly Octree					octree;
-		private readonly int					maxColors;
-		private readonly int					bitsPerPixel;
-	}
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    return PixelFormats.Indexed8;
+            }
+
+            throw new System.InvalidOperationException();
+        }
+
+        private void QuantizeUsingOctree(BitmapSource source)
+        {
+            int dx = source.PixelWidth;
+            int dy = source.PixelHeight;
+            int pitch = dx * 4;
+
+            byte[] row = new byte[pitch];
+
+            for (int y = 0; y < dy; y++)
+            {
+                source.CopyPixels(new System.Windows.Int32Rect(0, y, dx, 1), row, pitch, 0);
+
+                for (int x = 0; x < dx; x++)
+                {
+                    this.octree.AddColor(new Color32(row, x * 4));
+                }
+            }
+        }
+
+        private BitmapPalette GetPalette()
+        {
+            return new BitmapPalette(this.octree.GeneratePaletteColors(this.maxColors));
+        }
+
+        private readonly Octree octree;
+        private readonly int maxColors;
+        private readonly int bitsPerPixel;
+    }
 }

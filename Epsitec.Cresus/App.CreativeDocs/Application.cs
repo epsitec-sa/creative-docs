@@ -3,13 +3,13 @@
 
 namespace Epsitec.App.CreativeDocs
 {
-	public class Application
-	{
-		[System.STAThread]
-		public static void Main() 
-		{
-			Epsitec.Common.Support.Resources.OverrideDefaultTwoLetterISOLanguageName ("en");
-			Epsitec.Common.DocumentEditor.Application.Start ("F");
-		}
-	}
+    public class Application
+    {
+        [System.STAThread]
+        public static void Main()
+        {
+            Epsitec.Common.Support.Resources.OverrideDefaultTwoLetterISOLanguageName("en");
+            Epsitec.Common.DocumentEditor.Application.Start("F");
+        }
+    }
 }

@@ -3,12 +3,12 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum HorizontalAlignment
-	{
-		Stretch		= 0,
+    public enum HorizontalAlignment
+    {
+        Stretch = 0,
 
-		Left		= 1,
-		Center		= 2,
-		Right		= 3
-	}
+        Left = 1,
+        Center = 2,
+        Right = 3
+    }
 }

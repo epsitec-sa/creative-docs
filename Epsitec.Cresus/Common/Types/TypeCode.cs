@@ -3,92 +3,92 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>TypeCode</c> enumeration lists all well known types, for which
-	/// there is an <see cref="AbstractType"/> derived class.
-	/// </summary>
-	[DesignerVisible]
-	public enum TypeCode
-	{
-		/// <summary>
-		/// Invalid or unsupported type.
-		/// </summary>
-		Invalid=0,
+    /// <summary>
+    /// The <c>TypeCode</c> enumeration lists all well known types, for which
+    /// there is an <see cref="AbstractType"/> derived class.
+    /// </summary>
+    [DesignerVisible]
+    public enum TypeCode
+    {
+        /// <summary>
+        /// Invalid or unsupported type.
+        /// </summary>
+        Invalid = 0,
 
-		/// <summary>
-		/// Boolean type, defined by <see cref="BooleanType"/>.
-		/// </summary>
-		Boolean=10,
-		
-		/// <summary>
-		/// Integer type, defined by <see cref="IntegerType"/>.
-		/// </summary>
-		Integer,
+        /// <summary>
+        /// Boolean type, defined by <see cref="BooleanType"/>.
+        /// </summary>
+        Boolean = 10,
 
-		/// <summary>
-		/// Long integer type, defined by <see cref="LongIntegerType"/>.
-		/// </summary>
-		LongInteger,
+        /// <summary>
+        /// Integer type, defined by <see cref="IntegerType"/>.
+        /// </summary>
+        Integer,
 
-		/// <summary>
-		/// Decimal type, defined by <see cref="DecimalType"/>.
-		/// </summary>
-		Decimal,
+        /// <summary>
+        /// Long integer type, defined by <see cref="LongIntegerType"/>.
+        /// </summary>
+        LongInteger,
 
-		/// <summary>
-		/// Double type, defined by <see cref="DoubleType"/>.
-		/// </summary>
-		Double,
+        /// <summary>
+        /// Decimal type, defined by <see cref="DecimalType"/>.
+        /// </summary>
+        Decimal,
 
-		/// <summary>
-		/// Date and time type, defined by <see cref="DateTimeType"/>.
-		/// </summary>
-		DateTime=20,
+        /// <summary>
+        /// Double type, defined by <see cref="DoubleType"/>.
+        /// </summary>
+        Double,
 
-		/// <summary>
-		/// Date type, defined by <see cref="DateType"/>.
-		/// </summary>
-		Date,
+        /// <summary>
+        /// Date and time type, defined by <see cref="DateTimeType"/>.
+        /// </summary>
+        DateTime = 20,
 
-		/// <summary>
-		/// Time type, defined by <see cref="TimeType"/>.
-		/// </summary>
-		Time,
+        /// <summary>
+        /// Date type, defined by <see cref="DateType"/>.
+        /// </summary>
+        Date,
 
-		/// <summary>
-		/// Binary type, defined by <see cref="BinaryType"/>.
-		/// </summary>
-		Binary=30,
+        /// <summary>
+        /// Time type, defined by <see cref="TimeType"/>.
+        /// </summary>
+        Time,
 
-		/// <summary>
-		/// String type, defined by <see cref="StringType"/>.
-		/// </summary>
-		String,
+        /// <summary>
+        /// Binary type, defined by <see cref="BinaryType"/>.
+        /// </summary>
+        Binary = 30,
 
-		/// <summary>
-		/// Enumeration type, defined by <see cref="EnumType"/>.
-		/// </summary>
-		Enum,
+        /// <summary>
+        /// String type, defined by <see cref="StringType"/>.
+        /// </summary>
+        String,
 
-		/// <summary>
-		/// Structured type, defined by <see cref="StructuredType"/>.
-		/// </summary>
-		Structured,
+        /// <summary>
+        /// Enumeration type, defined by <see cref="EnumType"/>.
+        /// </summary>
+        Enum,
 
-		/// <summary>
-		/// Dynamic structured type, defined by <see cref="DynamicStructuredType"/>.
-		/// </summary>
-		Dynamic,
+        /// <summary>
+        /// Structured type, defined by <see cref="StructuredType"/>.
+        /// </summary>
+        Structured,
 
-		/// <summary>
-		/// Collection type, defined by <see cref="CollectionType"/>.
-		/// </summary>
-		Collection=40,
+        /// <summary>
+        /// Dynamic structured type, defined by <see cref="DynamicStructuredType"/>.
+        /// </summary>
+        Dynamic,
 
-		/// <summary>
-		/// Other type, not directly supported by a specific type class, defined
-		/// by <see cref="OtherType"/>.
-		/// </summary>
-		Other = 100,
-	}
+        /// <summary>
+        /// Collection type, defined by <see cref="CollectionType"/>.
+        /// </summary>
+        Collection = 40,
+
+        /// <summary>
+        /// Other type, not directly supported by a specific type class, defined
+        /// by <see cref="OtherType"/>.
+        /// </summary>
+        Other = 100,
+    }
 }

@@ -6,11 +6,11 @@ using System.Xml.Linq;
 
 namespace Epsitec.Common.Support
 {
-	/// <summary>
-	/// The <c>IXmlNodeClass</c> interface 
-	/// </summary>
-	public interface IXmlNodeClass
-	{
-		XElement Save(string xmlNodeName);
-	}
+    /// <summary>
+    /// The <c>IXmlNodeClass</c> interface
+    /// </summary>
+    public interface IXmlNodeClass
+    {
+        XElement Save(string xmlNodeName);
+    }
 }

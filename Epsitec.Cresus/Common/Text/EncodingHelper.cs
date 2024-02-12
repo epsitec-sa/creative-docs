@@ -1,71 +1,56 @@
-using Epsitec.Common.Support;
-
 using System.Text;
-
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Text
 {
+    public sealed class EncodingHelper
+    {
+        public EncodingHelper(Encoding encoding)
+        {
+            this.encoding = Encoding.GetEncoding(
+                encoding.CodePage,
+                new EncoderReplacementFallback(EncodingHelper.replacement),
+                new DecoderReplacementFallback(EncodingHelper.replacement)
+            );
+        }
 
+        public string ConvertToEncoding(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
 
-	public sealed class EncodingHelper
-	{
+            var builder = new StringBuilder(value.Length);
 
+            foreach (var c in value)
+            {
+                var s = c.ToString();
 
-		public EncodingHelper(Encoding encoding)
-		{
-			this.encoding = Encoding.GetEncoding
-			(
-				encoding.CodePage,
-				new EncoderReplacementFallback (EncodingHelper.replacement),
-				new DecoderReplacementFallback (EncodingHelper.replacement)
-			);
-		}
+                if (!this.IsWithinEncoding(s))
+                {
+                    s = StringUtils.RemoveDiacritics(s);
+                }
 
+                if (this.IsWithinEncoding(s))
+                {
+                    builder.Append(s);
+                }
+            }
 
-		public string ConvertToEncoding(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return value;
-			}
+            return builder.ToString();
+        }
 
-			var builder = new StringBuilder (value.Length);
+        public bool IsWithinEncoding(string value)
+        {
+            var convertedBytes = this.encoding.GetBytes(value);
+            var convertedValue = this.encoding.GetString(convertedBytes);
 
-			foreach (var c in value)
-			{
-				var s = c.ToString ();
+            return value == convertedValue;
+        }
 
-				if (!this.IsWithinEncoding (s))
-				{
-					s = StringUtils.RemoveDiacritics (s);
-				}
+        private readonly Encoding encoding;
 
-				if (this.IsWithinEncoding (s))
-				{
-					builder.Append (s);
-				}
-			}
-
-			return builder.ToString ();
-		}
-
-
-		public bool IsWithinEncoding(string value)
-		{
-			var convertedBytes = this.encoding.GetBytes (value);
-			var convertedValue = this.encoding.GetString (convertedBytes);
-
-			return value == convertedValue;
-		}
-
-
-		private readonly Encoding encoding;
-
-
-		private static readonly string replacement = "";
-
-
-	}
-
-
+        private static readonly string replacement = "";
+    }
 }

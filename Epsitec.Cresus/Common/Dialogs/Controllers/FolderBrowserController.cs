@@ -1,202 +1,224 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using System.Collections.Generic;
-
 namespace Epsitec.Common.Dialogs.Controllers
 {
-	public class FolderBrowserController
-	{
-		public FolderBrowserController(FileNavigationController navigationController)
-		{
-			this.navigationController = navigationController;
-			this.navigationController.ActiveDirectoryChanged += this.HandleNavigationControllerActiveDirectoryChanged;
-		}
+    public class FolderBrowserController
+    {
+        public FolderBrowserController(FileNavigationController navigationController)
+        {
+            this.navigationController = navigationController;
+            this.navigationController.ActiveDirectoryChanged +=
+                this.HandleNavigationControllerActiveDirectoryChanged;
+        }
 
+        public TextFieldCombo BrowserWidget
+        {
+            get
+            {
+                if (this.browser == null)
+                {
+                    this.CreateUserInterface();
+                }
 
-		public TextFieldCombo				BrowserWidget
-		{
-			get
-			{
-				if (this.browser == null)
-				{
-					this.CreateUserInterface ();
-				}
+                return this.browser;
+            }
+        }
 
-				return this.browser;
-			}
-		}
+        private void CreateUserInterface()
+        {
+            this.browser = new TextFieldCombo();
+            this.browser.IsReadOnly = true;
 
-		private void CreateUserInterface()
-		{
-			this.browser = new TextFieldCombo ();
-			this.browser.IsReadOnly = true;
-			
-			this.browser.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleBrowserComboOpening);
-			this.browser.ComboClosed  += this.HandleBrowserComboClosed;
-			
-			this.browser.ItemTextConverter =
-				delegate (string itemText)
-				{
-					return itemText.Trim ();
-				};
+            this.browser.ComboOpening += new EventHandler<CancelEventArgs>(
+                this.HandleBrowserComboOpening
+            );
+            this.browser.ComboClosed += this.HandleBrowserComboClosed;
 
-			this.SyncBrowserText ();
-		}
+            this.browser.ItemTextConverter = delegate(string itemText)
+            {
+                return itemText.Trim();
+            };
 
-		private void HandleNavigationControllerActiveDirectoryChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			if (this.browser != null)
-			{
-				this.SyncBrowserText ();
-			}
-		}
+            this.SyncBrowserText();
+        }
 
-		private void SyncBrowserText()
-		{
-			FolderItemIcon folderIcon = this.navigationController.ActiveSmallIcon;
-			string folderName = this.navigationController.ActiveDirectoryDisplayName;
+        private void HandleNavigationControllerActiveDirectoryChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e
+        )
+        {
+            if (this.browser != null)
+            {
+                this.SyncBrowserText();
+            }
+        }
 
-			this.browser.Text = FolderBrowserController.CreateIconAndLabel (folderIcon, folderName);
-		}
+        private void SyncBrowserText()
+        {
+            FolderItemIcon folderIcon = this.navigationController.ActiveSmallIcon;
+            string folderName = this.navigationController.ActiveDirectoryDisplayName;
 
-		private void HandleBrowserComboOpening(object sender, CancelEventArgs e)
-		{
-			this.comboFolders = new List<FileListItem> ();
+            this.browser.Text = FolderBrowserController.CreateIconAndLabel(folderIcon, folderName);
+        }
 
-			//	Add all desktop and computer nodes
-			
-			FolderItem desktop  = FileManager.GetFolderItem (FolderId.VirtualDesktop, FolderQueryMode.SmallIcons);
-			FolderItem computer = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.SmallIcons);
-			
-			bool includeHidden = FolderItem.ShowHiddenFiles;
+        private void HandleBrowserComboOpening(object sender, CancelEventArgs e)
+        {
+            this.comboFolders = new List<FileListItem>();
 
-			this.comboFolders.Add (FolderBrowserController.CreateFileListItem (desktop, null));
+            //	Add all desktop and computer nodes
 
-			System.Diagnostics.Debug.Assert (this.comboFolders.Count == 1);
-			
-			FileListItem root = this.comboFolders[0];
+            FolderItem desktop = FileManager.GetFolderItem(
+                FolderId.VirtualDesktop,
+                FolderQueryMode.SmallIcons
+            );
+            FolderItem computer = FileManager.GetFolderItem(
+                FolderId.VirtualMyComputer,
+                FolderQueryMode.SmallIcons
+            );
 
-			foreach (FolderItem item in FileManager.GetFolderItems (desktop, FolderQueryMode.SmallIcons))
-			{
-				if ((!item.IsFileSystemNode) ||
-					(!item.IsFolder))
-				{
-					continue;
-				}
+            bool includeHidden = FolderItem.ShowHiddenFiles;
 
-				if ((!includeHidden) &&
-					(item.IsDrive == false) &&
-					(item.IsHidden))
-				{
-					continue;
-				}
+            this.comboFolders.Add(FolderBrowserController.CreateFileListItem(desktop, null));
 
-				FileListItem parent = FolderBrowserController.CreateFileListItem (item, root);
+            System.Diagnostics.Debug.Assert(this.comboFolders.Count == 1);
 
-				this.comboFolders.Add (parent);
-				
-				if (item.DisplayName == computer.DisplayName)
-				{
-					foreach (FolderItem subItem in FileManager.GetFolderItems (item, FolderQueryMode.SmallIcons))
-					{
-						if ((!subItem.IsFileSystemNode) ||
-							(!subItem.IsFolder))
-						{
-							continue;
-						}
+            FileListItem root = this.comboFolders[0];
 
-						if ((!includeHidden) &&
-							(subItem.IsDrive == false) &&
-							(subItem.IsHidden))
-						{
-							continue;
-						}
+            foreach (
+                FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.SmallIcons)
+            )
+            {
+                if ((!item.IsFileSystemNode) || (!item.IsFolder))
+                {
+                    continue;
+                }
 
-						this.comboFolders.Add (FolderBrowserController.CreateFileListItem (subItem, parent));
-					}
-				}
-			}
+                if ((!includeHidden) && (item.IsDrive == false) && (item.IsHidden))
+                {
+                    continue;
+                }
 
-			//	Recursively add all parents.
-			
-			FolderItem currentFolder = this.navigationController.ActiveDirectory;
-			int depth = 0;
-			
-			while (!currentFolder.IsEmpty)
-			{
-				this.comboFolders.Add (FolderBrowserController.CreateFileListItem (currentFolder, null));
-				currentFolder = FileManager.GetParentFolderItem (currentFolder, FolderQueryMode.SmallIcons);
-				depth++;
-			}
+                FileListItem parent = FolderBrowserController.CreateFileListItem(item, root);
 
-			//	Link the parents together :
-			
-			int count = this.comboFolders.Count;
-			
-			for (int i = count-depth; i < count-1; i++)
-			{
-				this.comboFolders[i].Parent = this.comboFolders[i+1];
-			}
+                this.comboFolders.Add(parent);
 
-			this.comboFolders.Sort ();
+                if (item.DisplayName == computer.DisplayName)
+                {
+                    foreach (
+                        FolderItem subItem in FileManager.GetFolderItems(
+                            item,
+                            FolderQueryMode.SmallIcons
+                        )
+                    )
+                    {
+                        if ((!subItem.IsFileSystemNode) || (!subItem.IsFolder))
+                        {
+                            continue;
+                        }
 
-			Types.Collection.RemoveDuplicatesInSortedList (this.comboFolders);
-			
-			this.browser.Items.Clear ();
-			
-			foreach (FileListItem folder in this.comboFolders)
-			{
-				FolderItemIcon folderImage = folder.GetSmallIcon ();
-				string         folderName  = folder.ShortFileName;
-				
-				string text;
-				
-				text = FolderBrowserController.CreateIconAndLabel (folderImage, folderName);
-				text = string.Concat (new string (' ', 3 * folder.Depth), text);
+                        if ((!includeHidden) && (subItem.IsDrive == false) && (subItem.IsHidden))
+                        {
+                            continue;
+                        }
 
-				this.browser.Items.Add (text);
-			}
-		}
+                        this.comboFolders.Add(
+                            FolderBrowserController.CreateFileListItem(subItem, parent)
+                        );
+                    }
+                }
+            }
 
-		private static string CreateIconAndLabel(FolderItemIcon folderIcon, string folderName)
-		{
-			if ((folderIcon != null) &&
-				(!string.IsNullOrEmpty (folderIcon.ImageName)))
-			{
-				return string.Concat (@"<img src=""", folderIcon.ImageName, @"""/> ", TextLayout.ConvertToTaggedText (folderName));
-			}
-			else
-			{
-				return TextLayout.ConvertToTaggedText (folderName);
-			}
-		}
+            //	Recursively add all parents.
 
-		private static FileListItem CreateFileListItem(FolderItem folderItem, FileListItem parent)
-		{
-			FileListItem item = new FileListItem (folderItem);
+            FolderItem currentFolder = this.navigationController.ActiveDirectory;
+            int depth = 0;
 
-			item.Parent = parent;
-			item.SortAccordingToLevel = true;
+            while (!currentFolder.IsEmpty)
+            {
+                this.comboFolders.Add(
+                    FolderBrowserController.CreateFileListItem(currentFolder, null)
+                );
+                currentFolder = FileManager.GetParentFolderItem(
+                    currentFolder,
+                    FolderQueryMode.SmallIcons
+                );
+                depth++;
+            }
 
-			return item;
-		}
+            //	Link the parents together :
 
-		private void HandleBrowserComboClosed(object sender)
-		{
-			if (this.browser.SelectedItemIndex != -1)
-			{
-				this.navigationController.ActiveDirectory = this.comboFolders[this.browser.SelectedItemIndex].FolderItem;
-			}
-		}
+            int count = this.comboFolders.Count;
 
+            for (int i = count - depth; i < count - 1; i++)
+            {
+                this.comboFolders[i].Parent = this.comboFolders[i + 1];
+            }
 
-		private FileNavigationController	navigationController;
-		private TextFieldCombo				browser;
-		private List<FileListItem>			comboFolders;
-	}
+            this.comboFolders.Sort();
+
+            Types.Collection.RemoveDuplicatesInSortedList(this.comboFolders);
+
+            this.browser.Items.Clear();
+
+            foreach (FileListItem folder in this.comboFolders)
+            {
+                FolderItemIcon folderImage = folder.GetSmallIcon();
+                string folderName = folder.ShortFileName;
+
+                string text;
+
+                text = FolderBrowserController.CreateIconAndLabel(folderImage, folderName);
+                text = string.Concat(new string(' ', 3 * folder.Depth), text);
+
+                this.browser.Items.Add(text);
+            }
+        }
+
+        private static string CreateIconAndLabel(FolderItemIcon folderIcon, string folderName)
+        {
+            if ((folderIcon != null) && (!string.IsNullOrEmpty(folderIcon.ImageName)))
+            {
+                return string.Concat(
+                    @"<img src=""",
+                    folderIcon.ImageName,
+                    @"""/> ",
+                    TextLayout.ConvertToTaggedText(folderName)
+                );
+            }
+            else
+            {
+                return TextLayout.ConvertToTaggedText(folderName);
+            }
+        }
+
+        private static FileListItem CreateFileListItem(FolderItem folderItem, FileListItem parent)
+        {
+            FileListItem item = new FileListItem(folderItem);
+
+            item.Parent = parent;
+            item.SortAccordingToLevel = true;
+
+            return item;
+        }
+
+        private void HandleBrowserComboClosed(object sender)
+        {
+            if (this.browser.SelectedItemIndex != -1)
+            {
+                this.navigationController.ActiveDirectory = this.comboFolders[
+                    this.browser.SelectedItemIndex
+                ].FolderItem;
+            }
+        }
+
+        private FileNavigationController navigationController;
+        private TextFieldCombo browser;
+        private List<FileListItem> comboFolders;
+    }
 }

@@ -1,301 +1,313 @@
 //	Copyright © 2006-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// The <c>CommandDispatcherChain</c> class represents a chain of
-	/// <see cref="CommandDispatcher"/>, which are visible from a given starting
-	/// point in the visual tree (for instance).
-	/// </summary>
-	public sealed class CommandDispatcherChain
-	{
-		public CommandDispatcherChain()
-		{
-			this.dispatchers = new List<Weak<CommandDispatcher>> ();
-		}
+    /// <summary>
+    /// The <c>CommandDispatcherChain</c> class represents a chain of
+    /// <see cref="CommandDispatcher"/>, which are visible from a given starting
+    /// point in the visual tree (for instance).
+    /// </summary>
+    public sealed class CommandDispatcherChain
+    {
+        public CommandDispatcherChain()
+        {
+            this.dispatchers = new List<Weak<CommandDispatcher>>();
+        }
 
-		/// <summary>
-		/// Gets a value indicating whether this chain is empty.
-		/// </summary>
-		/// <value><c>true</c> if this chain is empty; otherwise, <c>false</c>.</value>
-		public bool								IsEmpty
-		{
-			get
-			{
-				for (int i = 0; i < this.dispatchers.Count; i++)
-				{
-					if (this.dispatchers[i].IsAlive)
-					{
-						return false;
-					}
-				}
-				
-				return true;
-			}
-		}
+        /// <summary>
+        /// Gets a value indicating whether this chain is empty.
+        /// </summary>
+        /// <value><c>true</c> if this chain is empty; otherwise, <c>false</c>.</value>
+        public bool IsEmpty
+        {
+            get
+            {
+                for (int i = 0; i < this.dispatchers.Count; i++)
+                {
+                    if (this.dispatchers[i].IsAlive)
+                    {
+                        return false;
+                    }
+                }
 
-		/// <summary>
-		/// Enumerates the dispatchers found in the chain.
-		/// </summary>
-		/// <value>The dispatchers.</value>
-		public IEnumerable<CommandDispatcher>	Dispatchers
-		{
-			get
-			{
-				Weak<CommandDispatcher>[] chain = this.dispatchers.ToArray ();
-				bool enableForwarding = true;
+                return true;
+            }
+        }
 
-				for (int i = 0; i < chain.Length; i++)
-				{
-					CommandDispatcher dispatcher = chain[i].Target;
+        /// <summary>
+        /// Enumerates the dispatchers found in the chain.
+        /// </summary>
+        /// <value>The dispatchers.</value>
+        public IEnumerable<CommandDispatcher> Dispatchers
+        {
+            get
+            {
+                Weak<CommandDispatcher>[] chain = this.dispatchers.ToArray();
+                bool enableForwarding = true;
 
-					if (dispatcher == null)
-					{
-						this.dispatchers.Remove (chain[i]);
-					}
-					else if (enableForwarding)
-					{
-						yield return dispatcher;
+                for (int i = 0; i < chain.Length; i++)
+                {
+                    CommandDispatcher dispatcher = chain[i].Target;
 
-						//	Stop forwarding as soon as the command dispatcher says so or we
-						//	have reached an application level dispatcher; we don't bubble
-						//	the commands from one application to another.
-						
-						enableForwarding = dispatcher.AutoForwardCommands && (dispatcher.Level != CommandDispatcherLevel.Root);
-					}
-				}
-			}
-		}
+                    if (dispatcher == null)
+                    {
+                        this.dispatchers.Remove(chain[i]);
+                    }
+                    else if (enableForwarding)
+                    {
+                        yield return dispatcher;
 
-		/// <summary>
-		/// Checks if a command is known by some dispatcher in the command chain.
-		/// </summary>
-		/// <param name="command">The command.</param>
-		/// <param name="depth">The depth at which the dispatcher was found.</param>
-		/// <returns><c>true</c> if the chain contains a handler for the command;
-		/// <c>false</c> otherwise.</returns>
-		public bool Contains(Command command, out int depth)
-		{
-			depth = 0;
-			
-			foreach (CommandDispatcher dispatcher in this.Dispatchers)
-			{
-				if (dispatcher.Contains (command))
-				{
-					return true;
-				}
-				
-				depth++;
-			}
-			
-			return false;
-		}
+                        //	Stop forwarding as soon as the command dispatcher says so or we
+                        //	have reached an application level dispatcher; we don't bubble
+                        //	the commands from one application to another.
 
-		/// <summary>
-		/// Gets the best command in an enumeration. In this case, best means
-		/// the command which is topmost in the chain. This is used by the
-		/// <see cref="WindowRoot"/> class to decide which command to map to a
-		/// multiply assigned keyboard shortcut, for instance.
-		/// </summary>
-		/// <param name="commands">The commands.</param>
-		/// <returns>The best command found or <c>null</c>.</returns>
-		public Command GetBestCommand(IEnumerable<Command> commands)
-		{
-			int     nearest  = int.MaxValue;
-			Command selected = null;
+                        enableForwarding =
+                            dispatcher.AutoForwardCommands
+                            && (dispatcher.Level != CommandDispatcherLevel.Root);
+                    }
+                }
+            }
+        }
 
-			foreach (Command command in commands)
-			{
-				int depth;
-				
-				if ((this.Contains (command, out depth)) &&
-					(depth < nearest))
-				{
-					nearest  = depth;
-					selected = command;
-				}
-			}
-			
-			return selected;
-		}
+        /// <summary>
+        /// Checks if a command is known by some dispatcher in the command chain.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="depth">The depth at which the dispatcher was found.</param>
+        /// <returns><c>true</c> if the chain contains a handler for the command;
+        /// <c>false</c> otherwise.</returns>
+        public bool Contains(Command command, out int depth)
+        {
+            depth = 0;
 
+            foreach (CommandDispatcher dispatcher in this.Dispatchers)
+            {
+                if (dispatcher.Contains(command))
+                {
+                    return true;
+                }
 
-		/// <summary>
-		/// Builds the dispatcher chain starting from the specified visual.
-		/// </summary>
-		/// <param name="visual">The visual.</param>
-		/// <returns>The dispatcher chain or <c>null</c>.</returns>
-		public static CommandDispatcherChain BuildChain(Visual visual)
-		{
-			CommandDispatcherChain chain = new CommandDispatcherChain ();
+                depth++;
+            }
 
-			var window = visual.Window;
+            return false;
+        }
 
-			if (window != null)
-			{
-				chain.BuildPartialChain (window.FocusedWidget);
-				chain.BuildPartialChainBasedOnChildren (window.Root, c => c.ActiveWithoutFocus);
-			}
+        /// <summary>
+        /// Gets the best command in an enumeration. In this case, best means
+        /// the command which is topmost in the chain. This is used by the
+        /// <see cref="WindowRoot"/> class to decide which command to map to a
+        /// multiply assigned keyboard shortcut, for instance.
+        /// </summary>
+        /// <param name="commands">The commands.</param>
+        /// <returns>The best command found or <c>null</c>.</returns>
+        public Command GetBestCommand(IEnumerable<Command> commands)
+        {
+            int nearest = int.MaxValue;
+            Command selected = null;
 
-			chain.BuildPartialChain (visual);
-			chain.BuildPartialChain (window);
-			
-			return chain.RemoveDuplicates ();
-		}
+            foreach (Command command in commands)
+            {
+                int depth;
 
-		/// <summary>
-		/// Builds the dispatcher chain starting from the specified window.
-		/// </summary>
-		/// <param name="window">The window.</param>
-		/// <returns>The dispatcher chain or <c>null</c>.</returns>
-		public static CommandDispatcherChain BuildChain(Window window)
-		{
-			CommandDispatcherChain chain = new CommandDispatcherChain ();
+                if ((this.Contains(command, out depth)) && (depth < nearest))
+                {
+                    nearest = depth;
+                    selected = command;
+                }
+            }
 
-			chain.BuildPartialChain (window);
-			
-			return chain.RemoveDuplicates ();
-		}
+            return selected;
+        }
 
-		/// <summary>
-		/// Builds the dispatcher chain starting from the specified object.
-		/// </summary>
-		/// <param name="obj">The object.</param>
-		/// <returns>The dispatcher chain or <c>null</c>.</returns>
-		public static CommandDispatcherChain BuildChain(DependencyObject obj)
-		{
-			Visual visual = obj as Visual;
-			Window window = obj as Window;
+        /// <summary>
+        /// Builds the dispatcher chain starting from the specified visual.
+        /// </summary>
+        /// <param name="visual">The visual.</param>
+        /// <returns>The dispatcher chain or <c>null</c>.</returns>
+        public static CommandDispatcherChain BuildChain(Visual visual)
+        {
+            CommandDispatcherChain chain = new CommandDispatcherChain();
 
-			if (visual != null)
-			{
-				return CommandDispatcherChain.BuildChain (visual);
-			}
-			if (window != null)
-			{
-				return CommandDispatcherChain.BuildChain (window);
-			}
-			
-			CommandDispatcherChain chain = new CommandDispatcherChain ();
+            var window = visual.Window;
 
-			if (obj != null)
-			{
-				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (obj);
+            if (window != null)
+            {
+                chain.BuildPartialChain(window.FocusedWidget);
+                chain.BuildPartialChainBasedOnChildren(window.Root, c => c.ActiveWithoutFocus);
+            }
 
-				if (dispatcher != null)
-				{
-					chain.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
-				}
-			}
+            chain.BuildPartialChain(visual);
+            chain.BuildPartialChain(window);
 
-			return chain.RemoveDuplicates ();
-		}
+            return chain.RemoveDuplicates();
+        }
 
-		#region Private Methods
+        /// <summary>
+        /// Builds the dispatcher chain starting from the specified window.
+        /// </summary>
+        /// <param name="window">The window.</param>
+        /// <returns>The dispatcher chain or <c>null</c>.</returns>
+        public static CommandDispatcherChain BuildChain(Window window)
+        {
+            CommandDispatcherChain chain = new CommandDispatcherChain();
 
-		private void BuildPartialChain(DependencyObject obj)
-		{
-			Visual visual = obj as Visual;
-			Window window = obj as Window;
+            chain.BuildPartialChain(window);
 
-			if (visual != null)
-			{
-				this.BuildPartialChain (visual);
-			}
-			if (window != null)
-			{
-				this.BuildPartialChain (window);
-			}
-		}
+            return chain.RemoveDuplicates();
+        }
 
-		private void BuildPartialChain(Visual visual)
-		{
-			while (visual != null)
-			{
-				this.AddDispatcher (CommandDispatcher.GetDispatcher (visual));
+        /// <summary>
+        /// Builds the dispatcher chain starting from the specified object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>The dispatcher chain or <c>null</c>.</returns>
+        public static CommandDispatcherChain BuildChain(DependencyObject obj)
+        {
+            Visual visual = obj as Visual;
+            Window window = obj as Window;
 
-				AbstractMenu menu = visual as AbstractMenu;
+            if (visual != null)
+            {
+                return CommandDispatcherChain.BuildChain(visual);
+            }
+            if (window != null)
+            {
+                return CommandDispatcherChain.BuildChain(window);
+            }
 
-				if (menu != null)
-				{
-					this.BuildPartialChain (menu.Host);
-				}
+            CommandDispatcherChain chain = new CommandDispatcherChain();
 
-				visual = visual.Parent;
-			}
-		}
+            if (obj != null)
+            {
+                CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher(obj);
 
-		private void BuildPartialChainBasedOnChildren(Visual visual, System.Predicate<CommandDispatcher> predicate)
-		{
-			if (visual != null)
-			{
-				var visibleChildren   = visual.GetAllChildren (x => x.IsVisible);
-				var activeDispatchers = visibleChildren.Select (x => CommandDispatcher.GetDispatcher (x)).Where (x => (x != null) && predicate (x));
+                if (dispatcher != null)
+                {
+                    chain.dispatchers.Add(new Weak<CommandDispatcher>(dispatcher));
+                }
+            }
 
-				foreach (var dispatcher in activeDispatchers)
-				{
-					this.AddDispatcher (dispatcher);
-				}
-			}
-		}
+            return chain.RemoveDuplicates();
+        }
 
-		private void BuildPartialChain(Window window)
-		{
-			while (window != null)
-			{
-				this.BuildPartialChainOfPrimaryDispatchers (window);
-				this.AddDispatcher (CommandDispatcher.GetDispatcher (window));
+        #region Private Methods
 
-				window = window.Owner ?? window.Parent;
-			}
+        private void BuildPartialChain(DependencyObject obj)
+        {
+            Visual visual = obj as Visual;
+            Window window = obj as Window;
 
-			//	TODO: ajouter ici la notion d'application/module/document
-		}
+            if (visual != null)
+            {
+                this.BuildPartialChain(visual);
+            }
+            if (window != null)
+            {
+                this.BuildPartialChain(window);
+            }
+        }
 
-		private void BuildPartialChainOfPrimaryDispatchers(Window window)
-		{
-			var childWidgets       = window.Root.FindAllChildren ();
-			var childDispatchers   = childWidgets.Select (x => CommandDispatcher.GetDispatcher (x));
-			var primaryDispatchers = childDispatchers.Where (x => (x != null) && (x.Level == CommandDispatcherLevel.Primary)).ToList ();
+        private void BuildPartialChain(Visual visual)
+        {
+            while (visual != null)
+            {
+                this.AddDispatcher(CommandDispatcher.GetDispatcher(visual));
 
-			if (primaryDispatchers.Count > 0)
-			{
-				this.dispatchers.AddRange (primaryDispatchers.Select (x => new Weak<CommandDispatcher> (x)));
-			}
-		}
+                AbstractMenu menu = visual as AbstractMenu;
 
-		private void AddDispatcher(CommandDispatcher dispatcher)
-		{
-			if (dispatcher != null)
-			{
-				this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
-			}
-		}
+                if (menu != null)
+                {
+                    this.BuildPartialChain(menu.Host);
+                }
 
-		private CommandDispatcherChain RemoveDuplicates()
-		{
-			var items = this.dispatchers.Select (x => x.Target).Where (x => x != null).Distinct ().ToList ();
+                visual = visual.Parent;
+            }
+        }
 
-			if (items.Count == 0)
-			{
-				return null;
-			}
-			else
-			{
-				this.dispatchers.Clear ();
-				this.dispatchers.AddRange (items.Select (x => new Weak<CommandDispatcher> (x)));
-				return this;
-			}
-		}
+        private void BuildPartialChainBasedOnChildren(
+            Visual visual,
+            System.Predicate<CommandDispatcher> predicate
+        )
+        {
+            if (visual != null)
+            {
+                var visibleChildren = visual.GetAllChildren(x => x.IsVisible);
+                var activeDispatchers = visibleChildren
+                    .Select(x => CommandDispatcher.GetDispatcher(x))
+                    .Where(x => (x != null) && predicate(x));
 
-		#endregion
+                foreach (var dispatcher in activeDispatchers)
+                {
+                    this.AddDispatcher(dispatcher);
+                }
+            }
+        }
 
-		private readonly List<Weak<CommandDispatcher>>	dispatchers;
-	}
+        private void BuildPartialChain(Window window)
+        {
+            while (window != null)
+            {
+                this.BuildPartialChainOfPrimaryDispatchers(window);
+                this.AddDispatcher(CommandDispatcher.GetDispatcher(window));
+
+                window = window.Owner ?? window.Parent;
+            }
+
+            //	TODO: ajouter ici la notion d'application/module/document
+        }
+
+        private void BuildPartialChainOfPrimaryDispatchers(Window window)
+        {
+            var childWidgets = window.Root.FindAllChildren();
+            var childDispatchers = childWidgets.Select(x => CommandDispatcher.GetDispatcher(x));
+            var primaryDispatchers = childDispatchers
+                .Where(x => (x != null) && (x.Level == CommandDispatcherLevel.Primary))
+                .ToList();
+
+            if (primaryDispatchers.Count > 0)
+            {
+                this.dispatchers.AddRange(
+                    primaryDispatchers.Select(x => new Weak<CommandDispatcher>(x))
+                );
+            }
+        }
+
+        private void AddDispatcher(CommandDispatcher dispatcher)
+        {
+            if (dispatcher != null)
+            {
+                this.dispatchers.Add(new Weak<CommandDispatcher>(dispatcher));
+            }
+        }
+
+        private CommandDispatcherChain RemoveDuplicates()
+        {
+            var items = this
+                .dispatchers.Select(x => x.Target)
+                .Where(x => x != null)
+                .Distinct()
+                .ToList();
+
+            if (items.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                this.dispatchers.Clear();
+                this.dispatchers.AddRange(items.Select(x => new Weak<CommandDispatcher>(x)));
+                return this;
+            }
+        }
+
+        #endregion
+
+        private readonly List<Weak<CommandDispatcher>> dispatchers;
+    }
 }

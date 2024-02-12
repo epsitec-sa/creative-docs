@@ -3,26 +3,27 @@
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public static class VoidType
-	{
-		public static OtherType Default
-		{
-			get
-			{
-				TypeRosetta.InitializeKnownTypes ();
+    /// <summary>
+    ///
+    /// </summary>
+    public static class VoidType
+    {
+        public static OtherType Default
+        {
+            get
+            {
+                TypeRosetta.InitializeKnownTypes();
 
-				if (VoidType.defaultValue == null)
-				{
-					VoidType.defaultValue = (OtherType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1009]"));
-				}
+                if (VoidType.defaultValue == null)
+                {
+                    VoidType.defaultValue = (OtherType)
+                        TypeRosetta.CreateTypeObject(Support.Druid.Parse("[1009]"));
+                }
 
-				return VoidType.defaultValue;
-			}
-		}
+                return VoidType.defaultValue;
+            }
+        }
 
-		private static OtherType defaultValue;
-	}
+        private static OtherType defaultValue;
+    }
 }

@@ -5,20 +5,16 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Collections
 {
-	/// <summary>
-	/// The <c>CommandCollection</c> class implements an observable collection of
-	/// <see cref="Command"/> objects.
-	/// </summary>
-	public class CommandCollection : Types.Collections.HostedDependencyObjectList<Command>
-	{
-		public CommandCollection()
-			: base (null)
-		{
-		}
-		
-		public CommandCollection(IListHost<Command> host)
-			: base (host)
-		{
-		}
-	}
+    /// <summary>
+    /// The <c>CommandCollection</c> class implements an observable collection of
+    /// <see cref="Command"/> objects.
+    /// </summary>
+    public class CommandCollection : Types.Collections.HostedDependencyObjectList<Command>
+    {
+        public CommandCollection()
+            : base(null) { }
+
+        public CommandCollection(IListHost<Command> host)
+            : base(host) { }
+    }
 }

@@ -3,18 +3,17 @@
 
 namespace Epsitec.Common.UI
 {
-	/// <summary>
-	/// The <c>ItemPanelSelectionBehavior</c> enumeration lists the supported
-	/// selection behaviors used when interactively selecting items in an
-	/// <see cref="ItemPanel"/>.
-	/// </summary>
-	public enum ItemPanelSelectionBehavior : byte
-	{
-		None,
+    /// <summary>
+    /// The <c>ItemPanelSelectionBehavior</c> enumeration lists the supported
+    /// selection behaviors used when interactively selecting items in an
+    /// <see cref="ItemPanel"/>.
+    /// </summary>
+    public enum ItemPanelSelectionBehavior : byte
+    {
+        None,
 
-		Automatic,
-		Manual,
-		ManualOne
-		
-	}
+        Automatic,
+        Manual,
+        ManualOne
+    }
 }

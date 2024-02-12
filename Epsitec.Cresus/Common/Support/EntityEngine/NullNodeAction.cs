@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-	/// <summary>
-	/// The <c>NullNodeAction</c> enumeration defines what should be done when a <c>null</c>
-	/// node is reached while walking a graph.
-	/// </summary>
-	public enum NullNodeAction
-	{
-		ReturnNull,
-		CreateMissing,
-	}
+    /// <summary>
+    /// The <c>NullNodeAction</c> enumeration defines what should be done when a <c>null</c>
+    /// node is reached while walking a graph.
+    /// </summary>
+    public enum NullNodeAction
+    {
+        ReturnNull,
+        CreateMissing,
+    }
 }

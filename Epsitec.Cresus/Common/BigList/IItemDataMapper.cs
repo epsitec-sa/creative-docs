@@ -6,7 +6,5 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public interface IItemDataMapper
-	{
-	}
+    public interface IItemDataMapper { }
 }

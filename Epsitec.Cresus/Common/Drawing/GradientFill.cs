@@ -3,16 +3,15 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public enum GradientFill
-	{
-		None,
-		X,
-		Y,
-		XY,
-		Circle,
-		Diamond,
-		SqrtXY,
-		Conic
-	}
+    public enum GradientFill
+    {
+        None,
+        X,
+        Y,
+        XY,
+        Circle,
+        Diamond,
+        SqrtXY,
+        Conic
+    }
 }
-

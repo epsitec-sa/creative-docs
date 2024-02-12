@@ -5,29 +5,25 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
-	[ComImport]
-	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
-	[Guid ("0000010B-0000-0000-C000-000000000046")]
-	
-	public interface IPersistFile
-	{
-		void GetClassID(out System.Guid pClassID);
+    [ComImport]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [Guid("0000010B-0000-0000-C000-000000000046")]
+    public interface IPersistFile
+    {
+        void GetClassID(out System.Guid pClassID);
 
-		[PreserveSig]
-		int IsDirty();
+        [PreserveSig]
+        int IsDirty();
 
-		void Load(
-		  [MarshalAs (UnmanagedType.LPWStr)] string pszFileName,
-		  int dwMode);
+        void Load([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, int dwMode);
 
-		void Save(
-		  [MarshalAs (UnmanagedType.LPWStr)] string pszFileName,
-		  [MarshalAs (UnmanagedType.Bool)] bool fRemember);
+        void Save(
+            [MarshalAs(UnmanagedType.LPWStr)] string pszFileName,
+            [MarshalAs(UnmanagedType.Bool)] bool fRemember
+        );
 
-		void SaveCompleted(
-		  [MarshalAs (UnmanagedType.LPWStr)] string pszFileName);
+        void SaveCompleted([MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
 
-		void GetCurFile(
-		  out System.IntPtr ppszFileName);
-	}
+        void GetCurFile(out System.IntPtr ppszFileName);
+    }
 }

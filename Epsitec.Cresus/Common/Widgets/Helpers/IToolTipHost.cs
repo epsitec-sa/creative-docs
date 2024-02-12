@@ -3,12 +3,12 @@
 
 namespace Epsitec.Common.Widgets.Helpers
 {
-	/// <summary>
-	/// L'interface IToolTipHost permet à un widget de définir plusieurs régions
-	/// sensibles pour les tool-tips.
-	/// </summary>
-	public interface IToolTipHost
-	{
-		object GetToolTipCaption(Drawing.Point pos);
-	}
+    /// <summary>
+    /// L'interface IToolTipHost permet à un widget de définir plusieurs régions
+    /// sensibles pour les tool-tips.
+    /// </summary>
+    public interface IToolTipHost
+    {
+        object GetToolTipCaption(Drawing.Point pos);
+    }
 }

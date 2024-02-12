@@ -3,15 +3,15 @@
 
 namespace Epsitec.Common.Drawing.Protocols
 {
-	internal static class HttpProtocol
-	{
-		public static byte[] ReadBytes(string name)
-		{
-			using (System.Net.WebClient client = new System.Net.WebClient ())
-			{
-				client.Proxy = new System.Net.WebProxy ();
-				return client.DownloadData (string.Concat ("http:", name));
-			}
-		}
-	}
+    internal static class HttpProtocol
+    {
+        public static byte[] ReadBytes(string name)
+        {
+            using (System.Net.WebClient client = new System.Net.WebClient())
+            {
+                client.Proxy = new System.Net.WebProxy();
+                return client.DownloadData(string.Concat("http:", name));
+            }
+        }
+    }
 }

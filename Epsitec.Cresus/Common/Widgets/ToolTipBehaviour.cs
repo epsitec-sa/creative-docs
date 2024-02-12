@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	public enum ToolTipBehaviour
-	{
-		Normal,							//	presque comme Windows
-		FollowMouse,					//	suit la souris
-		Manual,							//	position définie manuellement
-	}
+    public enum ToolTipBehaviour
+    {
+        Normal, //	presque comme Windows
+        FollowMouse, //	suit la souris
+        Manual, //	position définie manuellement
+    }
 }

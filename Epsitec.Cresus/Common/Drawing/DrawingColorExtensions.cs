@@ -6,12 +6,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Drawing
 {
-	public static class DrawingColorExtensions
-	{
-		public static bool IsGray(this System.Drawing.Color color)
-		{
-			return color.R == color.G && color.G == color.B;
-		}
-	}
+    public static class DrawingColorExtensions
+    {
+        public static bool IsGray(this System.Drawing.Color color)
+        {
+            return color.R == color.G && color.G == color.B;
+        }
+    }
 }
-

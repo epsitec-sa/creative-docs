@@ -5,17 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
-	public interface IFavoritesSettings
-	{
-		bool UseLargeIcons
-		{
-			get;
-			set;
-		}
+    public interface IFavoritesSettings
+    {
+        bool UseLargeIcons { get; set; }
 
-		IList<string> Items
-		{
-			get;
-		}
-	}
+        IList<string> Items { get; }
+    }
 }

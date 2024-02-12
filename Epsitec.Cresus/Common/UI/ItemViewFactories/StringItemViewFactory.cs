@@ -4,36 +4,36 @@
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.ItemViewFactories;
 
-[assembly: ItemViewFactory (typeof (StringItemViewFactory), ItemType=typeof (string))]
-[assembly: ItemViewFactory (typeof (StringItemViewFactory), ItemType=typeof (object))]
+[assembly: ItemViewFactory(typeof(StringItemViewFactory), ItemType = typeof(string))]
+[assembly: ItemViewFactory(typeof(StringItemViewFactory), ItemType = typeof(object))]
 
 namespace Epsitec.Common.UI.ItemViewFactories
 {
-	internal sealed class StringItemViewFactory : IItemViewFactory
-	{
-		#region IItemViewFactory Members
+    internal sealed class StringItemViewFactory : IItemViewFactory
+    {
+        #region IItemViewFactory Members
 
-		public ItemViewWidget CreateUserInterface(ItemView itemView)
-		{
-			ItemViewWidget container = new ItemViewWidget (itemView);
-			Widgets.StaticText text = new Widgets.StaticText (container);
+        public ItemViewWidget CreateUserInterface(ItemView itemView)
+        {
+            ItemViewWidget container = new ItemViewWidget(itemView);
+            Widgets.StaticText text = new Widgets.StaticText(container);
 
-			text.Text = itemView.Item.ToString ();
-			text.Dock = Widgets.DockStyle.Fill;
-			
-			return container;
-		}
+            text.Text = itemView.Item.ToString();
+            text.Dock = Widgets.DockStyle.Fill;
 
-		public void DisposeUserInterface(ItemViewWidget widget)
-		{
-			widget.Dispose ();
-		}
+            return container;
+        }
 
-		public Drawing.Size GetPreferredSize(ItemView itemView)
-		{
-			return itemView.Size;
-		}
+        public void DisposeUserInterface(ItemViewWidget widget)
+        {
+            widget.Dispose();
+        }
 
-		#endregion
-	}
+        public Drawing.Size GetPreferredSize(ItemView itemView)
+        {
+            return itemView.Size;
+        }
+
+        #endregion
+    }
 }

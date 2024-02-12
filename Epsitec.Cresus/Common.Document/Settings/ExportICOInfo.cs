@@ -7,54 +7,53 @@ namespace Epsitec.Common.Document.Settings
     {
         XP,
         Vista,
-		Paginated,
+        Paginated,
     }
 
-	/// <summary>
-	/// La classe ExportICOInfo contient tous les réglages pour l'exportation d'une icône.
-	/// </summary>
-	[System.Serializable()]
-	public class ExportICOInfo : ISerializable
-	{
-		public ExportICOInfo(Document document)
-		{
-			this.document = document;
-			this.Initialize();
-		}
+    /// <summary>
+    /// La classe ExportICOInfo contient tous les réglages pour l'exportation d'une icône.
+    /// </summary>
+    [System.Serializable()]
+    public class ExportICOInfo : ISerializable
+    {
+        public ExportICOInfo(Document document)
+        {
+            this.document = document;
+            this.Initialize();
+        }
 
-		protected void Initialize()
-		{
-			this.format = ICOFormat.Paginated;
-		}
+        protected void Initialize()
+        {
+            this.format = ICOFormat.Paginated;
+        }
 
         public ICOFormat Format
-		{
-			get { return this.format; }
-			set { this.format = value; }
-		}
+        {
+            get { return this.format; }
+            set { this.format = value; }
+        }
 
-
-		#region Serialization
-		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			//	Sérialise les réglages.
-			info.AddValue("Rev", 0);
+        #region Serialization
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            //	Sérialise les réglages.
+            info.AddValue("Rev", 0);
             info.AddValue("ICOFormat", this.format);
-		}
+        }
 
-		protected ExportICOInfo(SerializationInfo info, StreamingContext context)
-		{
-			//	Constructeur qui désérialise les réglages.
-			this.document = Document.ReadDocument;
-			this.Initialize();
+        protected ExportICOInfo(SerializationInfo info, StreamingContext context)
+        {
+            //	Constructeur qui désérialise les réglages.
+            this.document = Document.ReadDocument;
+            this.Initialize();
 
-			int rev = info.GetInt32("Rev");
+            int rev = info.GetInt32("Rev");
             this.format = (ICOFormat)info.GetValue("ICOFormat", typeof(ICOFormat));
-		}
-		#endregion
+        }
+        #endregion
 
-		
-		protected Document					document;
-		protected ICOFormat 				format;
-	}
+
+        protected Document document;
+        protected ICOFormat format;
+    }
 }

@@ -3,10 +3,8 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public class ImageDataEventArgs : System.EventArgs
-	{
-		public ImageDataEventArgs()
-		{
-		}
-	}
+    public class ImageDataEventArgs : System.EventArgs
+    {
+        public ImageDataEventArgs() { }
+    }
 }

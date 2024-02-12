@@ -1,166 +1,169 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using NUnit.Framework;
-
 using System.Collections.Generic;
-using Epsitec.Common.Types;
-using Epsitec.Common.UI;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Serialization;
+using Epsitec.Common.UI;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.UI
 {
-	[TestFixture]
-	public class DataSourceMetadataTest
-	{
-		[SetUp]
-		public void Initialize()
-		{
-			Epsitec.Common.Widgets.Widget.Initialize ();
-		}
-		
-		[Test]
-		public void CheckDefaultDataType()
-		{
-			Panel panel = new Panel ();
-			DataSourceMetadata metadata = panel.DataSourceMetadata;
+    [TestFixture]
+    public class DataSourceMetadataTest
+    {
+        [SetUp]
+        public void Initialize()
+        {
+            Epsitec.Common.Widgets.Widget.Initialize();
+        }
 
-			StructuredType type = new StructuredType ();
-			
-			type.Fields.Add ("A", StringType.NativeDefault);
-			type.Fields.Add ("B", IntegerType.Default);
+        [Test]
+        public void CheckDefaultDataType()
+        {
+            Panel panel = new Panel();
+            DataSourceMetadata metadata = panel.DataSourceMetadata;
 
-			metadata.DefaultDataType = type;
+            StructuredType type = new StructuredType();
 
-			Assert.AreEqual (1, metadata.Fields.Count);
-			Assert.AreEqual ("*", Collection.Extract<string> (metadata.GetFieldIds (), 0));
-			Assert.AreEqual (type, metadata.GetField ("*").Type);
+            type.Fields.Add("A", StringType.NativeDefault);
+            type.Fields.Add("B", IntegerType.Default);
 
-			panel.SetupSampleDataSource ();
+            metadata.DefaultDataType = type;
 
-			Assert.AreEqual (null, StructuredTree.GetValue (panel.DataSource, "*.A"));
-			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "*.X"));
-		}
-		
-		[Test]
-		public void CheckPanelMetadata()
-		{
-			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
-			Panel panel = new Panel ();
-			panel.ResourceManager = manager;
-			DataSourceMetadata metadata = panel.DataSourceMetadata;
-			DataSource source = new DataSource ();
+            Assert.AreEqual(1, metadata.Fields.Count);
+            Assert.AreEqual("*", Collection.Extract<string>(metadata.GetFieldIds(), 0));
+            Assert.AreEqual(type, metadata.GetField("*").Type);
 
-			panel.DataSource = source;
+            panel.SetupSampleDataSource();
 
-			Assert.AreEqual (metadata, panel.DataSource.Metadata);
-			Assert.AreEqual (metadata, panel.DataSource.GetStructuredType ());
-			
-			string xml = Panel.SerializePanel (panel);
+            Assert.AreEqual(null, StructuredTree.GetValue(panel.DataSource, "*.A"));
+            Assert.AreEqual(UnknownValue.Value, StructuredTree.GetValue(panel.DataSource, "*.X"));
+        }
 
-			System.Console.Out.WriteLine (xml);
+        [Test]
+        public void CheckPanelMetadata()
+        {
+            ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
+            Panel panel = new Panel();
+            panel.ResourceManager = manager;
+            DataSourceMetadata metadata = panel.DataSourceMetadata;
+            DataSource source = new DataSource();
 
-			panel = Panel.DeserializePanel (xml, new DataSource (), manager);
-			metadata = panel.DataSourceMetadata;
-			source = panel.DataSource;
+            panel.DataSource = source;
 
-			Assert.IsNotNull (metadata);
-			Assert.IsNotNull (source);
-			Assert.AreEqual (panel.DataSource.GetStructuredType (), panel.DataSource.Metadata);
-		}
+            Assert.AreEqual(metadata, panel.DataSource.Metadata);
+            Assert.AreEqual(metadata, panel.DataSource.GetStructuredType());
 
-		[Test]
-		public void CheckSerialization()
-		{
-			string xml;
-			DataSourceMetadata metadata = new DataSourceMetadata ();
+            string xml = Panel.SerializePanel(panel);
 
-			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault));
-			metadata.Fields.Add (new StructuredTypeField ("Price", DecimalType.Default));
+            System.Console.Out.WriteLine(xml);
 
-			xml = DataSourceMetadataTest.SerializeToString (metadata);
+            panel = Panel.DeserializePanel(xml, new DataSource(), manager);
+            metadata = panel.DataSourceMetadata;
+            source = panel.DataSource;
 
-			DataSourceMetadata copy = DataSourceMetadataTest.DeserializeMetadataFromString (xml);
+            Assert.IsNotNull(metadata);
+            Assert.IsNotNull(source);
+            Assert.AreEqual(panel.DataSource.GetStructuredType(), panel.DataSource.Metadata);
+        }
 
-			Assert.AreEqual (metadata.Fields.Count, copy.Fields.Count);
+        [Test]
+        public void CheckSerialization()
+        {
+            string xml;
+            DataSourceMetadata metadata = new DataSourceMetadata();
 
-			Assert.AreEqual (metadata.Fields[0].Id, copy.Fields[0].Id);
-			Assert.AreEqual (metadata.Fields[1].Id, copy.Fields[1].Id);
+            metadata.Fields.Add(new StructuredTypeField("Name", StringType.NativeDefault));
+            metadata.Fields.Add(new StructuredTypeField("Price", DecimalType.Default));
 
-			Assert.AreEqual (metadata.Fields[0].Type, copy.Fields[0].Type);
-			Assert.AreEqual (metadata.Fields[1].Type, copy.Fields[1].Type);
-		}
-		
-		[Test]
-		public void CheckSerializationWithPanel()
-		{
-			string xml;
-			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
-			Panel panel = new Panel ();
-			panel.ResourceManager = manager;
-			panel.DataSource = new DataSource ();
-			DataSourceMetadata metadata = panel.DataSourceMetadata;
+            xml = DataSourceMetadataTest.SerializeToString(metadata);
 
-			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault));
-			metadata.Fields.Add (new StructuredTypeField ("Price", DecimalType.Default));
+            DataSourceMetadata copy = DataSourceMetadataTest.DeserializeMetadataFromString(xml);
 
-			xml = Panel.SerializePanel (panel);
+            Assert.AreEqual(metadata.Fields.Count, copy.Fields.Count);
 
-			System.Console.Out.WriteLine (xml);
+            Assert.AreEqual(metadata.Fields[0].Id, copy.Fields[0].Id);
+            Assert.AreEqual(metadata.Fields[1].Id, copy.Fields[1].Id);
 
-			Panel panelCopy = Panel.DeserializePanel (xml, new DataSource (), manager);
-			DataSourceMetadata copy = panelCopy.DataSourceMetadata;
+            Assert.AreEqual(metadata.Fields[0].Type, copy.Fields[0].Type);
+            Assert.AreEqual(metadata.Fields[1].Type, copy.Fields[1].Type);
+        }
 
-			Assert.AreEqual (metadata.Fields.Count, copy.Fields.Count);
+        [Test]
+        public void CheckSerializationWithPanel()
+        {
+            string xml;
+            ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
+            Panel panel = new Panel();
+            panel.ResourceManager = manager;
+            panel.DataSource = new DataSource();
+            DataSourceMetadata metadata = panel.DataSourceMetadata;
 
-			Assert.AreEqual (metadata.Fields[0].Id, copy.Fields[0].Id);
-			Assert.AreEqual (metadata.Fields[1].Id, copy.Fields[1].Id);
+            metadata.Fields.Add(new StructuredTypeField("Name", StringType.NativeDefault));
+            metadata.Fields.Add(new StructuredTypeField("Price", DecimalType.Default));
 
-			Assert.AreEqual (metadata.Fields[0].Type, copy.Fields[0].Type);
-			Assert.AreEqual (metadata.Fields[1].Type, copy.Fields[1].Type);
-		}
+            xml = Panel.SerializePanel(panel);
 
-		[Test]
-		public void CheckSerializationWithPanelAndNoDataSource()
-		{
-			string xml;
-			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
-			Panel panel = new Panel ();
-			panel.ResourceManager = manager;
-			DataSourceMetadata metadata = panel.DataSourceMetadata;
+            System.Console.Out.WriteLine(xml);
 
-			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault));
-			metadata.Fields.Add (new StructuredTypeField ("Price", DecimalType.Default));
+            Panel panelCopy = Panel.DeserializePanel(xml, new DataSource(), manager);
+            DataSourceMetadata copy = panelCopy.DataSourceMetadata;
 
-			xml = Panel.SerializePanel (panel);
+            Assert.AreEqual(metadata.Fields.Count, copy.Fields.Count);
 
-			System.Console.Out.WriteLine (xml);
+            Assert.AreEqual(metadata.Fields[0].Id, copy.Fields[0].Id);
+            Assert.AreEqual(metadata.Fields[1].Id, copy.Fields[1].Id);
 
-			Panel panelCopy = Panel.DeserializePanel (xml, null, manager);
-			DataSourceMetadata copy = panelCopy.DataSourceMetadata;
+            Assert.AreEqual(metadata.Fields[0].Type, copy.Fields[0].Type);
+            Assert.AreEqual(metadata.Fields[1].Type, copy.Fields[1].Type);
+        }
 
-			Assert.AreEqual (metadata.Fields.Count, copy.Fields.Count);
+        [Test]
+        public void CheckSerializationWithPanelAndNoDataSource()
+        {
+            string xml;
+            ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
+            Panel panel = new Panel();
+            panel.ResourceManager = manager;
+            DataSourceMetadata metadata = panel.DataSourceMetadata;
 
-			Assert.AreEqual (metadata.Fields[0].Id, copy.Fields[0].Id);
-			Assert.AreEqual (metadata.Fields[1].Id, copy.Fields[1].Id);
+            metadata.Fields.Add(new StructuredTypeField("Name", StringType.NativeDefault));
+            metadata.Fields.Add(new StructuredTypeField("Price", DecimalType.Default));
 
-			Assert.AreEqual (metadata.Fields[0].Type, copy.Fields[0].Type);
-			Assert.AreEqual (metadata.Fields[1].Type, copy.Fields[1].Type);
-		}
+            xml = Panel.SerializePanel(panel);
 
-		#region Support Methods
+            System.Console.Out.WriteLine(xml);
 
-		private static string SerializeToString(DataSourceMetadata metadata)
-		{
-			return SimpleSerialization.SerializeToString (metadata, "metadata", System.Xml.Formatting.Indented);
-		}
+            Panel panelCopy = Panel.DeserializePanel(xml, null, manager);
+            DataSourceMetadata copy = panelCopy.DataSourceMetadata;
 
-		private static DataSourceMetadata DeserializeMetadataFromString(string xml)
-		{
-			return SimpleSerialization.DeserializeFromString (xml, "metadata") as DataSourceMetadata;
-		}
+            Assert.AreEqual(metadata.Fields.Count, copy.Fields.Count);
 
-		#endregion
-	}
+            Assert.AreEqual(metadata.Fields[0].Id, copy.Fields[0].Id);
+            Assert.AreEqual(metadata.Fields[1].Id, copy.Fields[1].Id);
+
+            Assert.AreEqual(metadata.Fields[0].Type, copy.Fields[0].Type);
+            Assert.AreEqual(metadata.Fields[1].Type, copy.Fields[1].Type);
+        }
+
+        #region Support Methods
+
+        private static string SerializeToString(DataSourceMetadata metadata)
+        {
+            return SimpleSerialization.SerializeToString(
+                metadata,
+                "metadata",
+                System.Xml.Formatting.Indented
+            );
+        }
+
+        private static DataSourceMetadata DeserializeMetadataFromString(string xml)
+        {
+            return SimpleSerialization.DeserializeFromString(xml, "metadata") as DataSourceMetadata;
+        }
+
+        #endregion
+    }
 }

@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Common.Types
 {
-	[DesignerVisible]
-	public enum LabelDetailLevel
-	{
-		Default = 0,
+    [DesignerVisible]
+    public enum LabelDetailLevel
+    {
+        Default = 0,
 
-		Compact  = 1,
-		Normal   = 2,
-		Detailed = 3,
-	}
+        Compact = 1,
+        Normal = 2,
+        Detailed = 3,
+    }
 }

@@ -1,206 +1,244 @@
 //	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
-using Epsitec.Common.UI;
-
-using NUnit.Framework;
-
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
+using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.UI
 {
-	[TestFixture]
-	public class MetaButtonTest
-	{
-		[SetUp]
-		public void Initialize()
-		{
-			Epsitec.Common.Document.Engine.Initialize ();
-			Epsitec.Common.Widgets.Widget.Initialize ();
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
-		}
-		
-		[Test]
-		public void AutomatedTestEnvironment()
-		{
-			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
-		}
+    [TestFixture]
+    public class MetaButtonTest
+    {
+        [SetUp]
+        public void Initialize()
+        {
+            Epsitec.Common.Document.Engine.Initialize();
+            Epsitec.Common.Widgets.Widget.Initialize();
+            Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
+        }
 
-		[Test]
-		public void Check01Variations()
-		{
-			Window window = new Window ();
+        [Test]
+        public void AutomatedTestEnvironment()
+        {
+            Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+        }
 
-			window.Text = "MetaButtonTest.Check01Variations";
-			window.ClientSize = new Size (300, 600);
+        [Test]
+        public void Check01Variations()
+        {
+            Window window = new Window();
 
-			FrameBox box = new FrameBox ()
-			{
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Margins = new Margins (4, 4, 8, 8),
-				Dock = DockStyle.Fill,
-				Embedder = window.Root
-			};
+            window.Text = "MetaButtonTest.Check01Variations";
+            window.ClientSize = new Size(300, 600);
 
-			System.Action<MetaButton>[] modes = new System.Action<MetaButton>[]
-			{
-				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Color.Empty; },
-				button => { button.MarkDisposition = ButtonMarkDisposition.Left;  button.BulletColor = Color.Empty; },
-				button => { button.MarkDisposition = ButtonMarkDisposition.Below; button.BulletColor = Color.Empty; button.PreferredHeight += button.MarkLength; },
-				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Color.FromName ("Lime"); }
-			};
+            FrameBox box = new FrameBox()
+            {
+                ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+                Margins = new Margins(4, 4, 8, 8),
+                Dock = DockStyle.Fill,
+                Embedder = window.Root
+            };
 
-			foreach (System.Action<MetaButton> setup in modes)
-			{
-				MetaButton b1 = new MetaButton ()
-				{
-					ButtonClass = ButtonClass.DialogButton,
-					Dock = DockStyle.Stacked,
-					Embedder = box,
-					Text = "Text, DialogButton",
-					Margins = new Margins (0, 0, 0, 2)
-				};
+            System.Action<MetaButton>[] modes = new System.Action<MetaButton>[]
+            {
+                button =>
+                {
+                    button.MarkDisposition = ButtonMarkDisposition.None;
+                    button.BulletColor = Color.Empty;
+                },
+                button =>
+                {
+                    button.MarkDisposition = ButtonMarkDisposition.Left;
+                    button.BulletColor = Color.Empty;
+                },
+                button =>
+                {
+                    button.MarkDisposition = ButtonMarkDisposition.Below;
+                    button.BulletColor = Color.Empty;
+                    button.PreferredHeight += button.MarkLength;
+                },
+                button =>
+                {
+                    button.MarkDisposition = ButtonMarkDisposition.None;
+                    button.BulletColor = Color.FromName("Lime");
+                }
+            };
 
-				MetaButton b2 = new MetaButton ()
-				{
-					ButtonClass = ButtonClass.DialogButton,
-					Dock = DockStyle.Stacked,
-					Embedder = box,
-					Text = "Text+Icon, DialogButton",
-					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
-					Margins = new Margins (0, 0, 0, 2)
-				};
+            foreach (System.Action<MetaButton> setup in modes)
+            {
+                MetaButton b1 = new MetaButton()
+                {
+                    ButtonClass = ButtonClass.DialogButton,
+                    Dock = DockStyle.Stacked,
+                    Embedder = box,
+                    Text = "Text, DialogButton",
+                    Margins = new Margins(0, 0, 0, 2)
+                };
 
-				MetaButton b3 = new MetaButton ()
-				{
-					ButtonClass = ButtonClass.RichDialogButton,
-					Dock = DockStyle.Stacked,
-					Embedder = box,
-					Text = "Text, RichDialogButton",
-					Margins = new Margins (0, 0, 0, 2),
-					PreferredHeight = 28
-				};
+                MetaButton b2 = new MetaButton()
+                {
+                    ButtonClass = ButtonClass.DialogButton,
+                    Dock = DockStyle.Stacked,
+                    Embedder = box,
+                    Text = "Text+Icon, DialogButton",
+                    IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+                    Margins = new Margins(0, 0, 0, 2)
+                };
 
-				MetaButton b4 = new MetaButton ()
-				{
-					ButtonClass = ButtonClass.RichDialogButton,
-					Dock = DockStyle.Stacked,
-					Embedder = box,
-					Text = "Text+Icon, RichDialogButton",
-					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
-					Margins = new Margins (0, 0, 0, 2),
-					PreferredHeight = 28
-				};
+                MetaButton b3 = new MetaButton()
+                {
+                    ButtonClass = ButtonClass.RichDialogButton,
+                    Dock = DockStyle.Stacked,
+                    Embedder = box,
+                    Text = "Text, RichDialogButton",
+                    Margins = new Margins(0, 0, 0, 2),
+                    PreferredHeight = 28
+                };
 
-				MetaButton b5 = new MetaButton ()
-				{
-					ButtonClass = ButtonClass.FlatButton,
-					Dock = DockStyle.Stacked,
-					Embedder = box,
-					Text = "Text, FlatButton",
-					Margins = new Margins (0, 0, 0, 2)
-				};
+                MetaButton b4 = new MetaButton()
+                {
+                    ButtonClass = ButtonClass.RichDialogButton,
+                    Dock = DockStyle.Stacked,
+                    Embedder = box,
+                    Text = "Text+Icon, RichDialogButton",
+                    IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+                    Margins = new Margins(0, 0, 0, 2),
+                    PreferredHeight = 28
+                };
 
-				MetaButton b6 = new MetaButton ()
-				{
-					ButtonClass = ButtonClass.FlatButton,
-					Dock = DockStyle.Stacked,
-					Embedder = box,
-					Text = "Text+Icon, FlatButton",
-					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
-					Margins = new Margins (0, 0, 0, 2)
-				};
+                MetaButton b5 = new MetaButton()
+                {
+                    ButtonClass = ButtonClass.FlatButton,
+                    Dock = DockStyle.Stacked,
+                    Embedder = box,
+                    Text = "Text, FlatButton",
+                    Margins = new Margins(0, 0, 0, 2)
+                };
 
-				setup (b1);
-				setup (b2);
-				setup (b3);
-				setup (b4);
-				setup (b5);
-				setup (b6);
-				 
-				b1.Clicked += (s,e) => { b1.ActiveState = b1.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
-				b2.Clicked += (s,e) => { b2.ActiveState = b2.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
-				b3.Clicked += (s,e) => { b3.ActiveState = b3.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
-				b4.Clicked += (s,e) => { b4.ActiveState = b4.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
-				b5.Clicked += (s,e) => { b5.ActiveState = b3.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
-				b6.Clicked += (s,e) => { b6.ActiveState = b4.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
-			}
+                MetaButton b6 = new MetaButton()
+                {
+                    ButtonClass = ButtonClass.FlatButton,
+                    Dock = DockStyle.Stacked,
+                    Embedder = box,
+                    Text = "Text+Icon, FlatButton",
+                    IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+                    Margins = new Margins(0, 0, 0, 2)
+                };
 
-			window.Show ();
-			
-			Window.RunInTestEnvironment (window);
-		}
+                setup(b1);
+                setup(b2);
+                setup(b3);
+                setup(b4);
+                setup(b5);
+                setup(b6);
 
-		[Test]
-		public void Check02CreateFromCommandId()
-		{
-			Window window = new Window ();
+                b1.Clicked += (s, e) =>
+                {
+                    b1.ActiveState =
+                        b1.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes;
+                };
+                b2.Clicked += (s, e) =>
+                {
+                    b2.ActiveState =
+                        b2.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes;
+                };
+                b3.Clicked += (s, e) =>
+                {
+                    b3.ActiveState =
+                        b3.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes;
+                };
+                b4.Clicked += (s, e) =>
+                {
+                    b4.ActiveState =
+                        b4.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes;
+                };
+                b5.Clicked += (s, e) =>
+                {
+                    b5.ActiveState =
+                        b3.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes;
+                };
+                b6.Clicked += (s, e) =>
+                {
+                    b6.ActiveState =
+                        b4.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes;
+                };
+            }
 
-			window.Text = "MetaButtonTest.Check02CreateFromCommandId";
-			window.ClientSize = new Size (400, 300);
+            window.Show();
 
-			FrameBox box = new FrameBox ()
-			{
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Margins = new Margins (4, 4, 8, 8),
-				Dock = DockStyle.Fill,
-				Embedder = window.Root
-			};
+            Window.RunInTestEnvironment(window);
+        }
 
-			MetaButton b1 = new MetaButton ()
-			{
-				ButtonClass = ButtonClass.DialogButton,
-				Dock = DockStyle.Stacked,
-				Embedder = box,
-				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Margins (0, 0, 0, 2),
-				PreferredHeight = 32
-			};
+        [Test]
+        public void Check02CreateFromCommandId()
+        {
+            Window window = new Window();
 
-			MetaButton b2 = new MetaButton ()
-			{
-				ButtonClass = ButtonClass.FlatButton,
-				Dock = DockStyle.Stacked,
-				Embedder = box,
-				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Margins (0, 0, 0, 2),
-				PreferredHeight = 32
-			};
+            window.Text = "MetaButtonTest.Check02CreateFromCommandId";
+            window.ClientSize = new Size(400, 300);
 
-			MetaButton b3 = new MetaButton ()
-			{
-				ButtonClass = ButtonClass.RichDialogButton,
-				Dock = DockStyle.Stacked,
-				Embedder = box,
-				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Margins (0, 0, 0, 2),
-				PreferredHeight = 32
-			};
+            FrameBox box = new FrameBox()
+            {
+                ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+                Margins = new Margins(4, 4, 8, 8),
+                Dock = DockStyle.Fill,
+                Embedder = window.Root
+            };
 
-			Separator sep = new Separator ()
-			{
-				Dock = DockStyle.Stacked,
-				Embedder = box,
-				PreferredHeight = 1,
-				Margins = new Margins (0, 0, 0, 2)
-			};
+            MetaButton b1 = new MetaButton()
+            {
+                ButtonClass = ButtonClass.DialogButton,
+                Dock = DockStyle.Stacked,
+                Embedder = box,
+                CommandId = ApplicationCommands.Cut.Caption.Id,
+                Margins = new Margins(0, 0, 0, 2),
+                PreferredHeight = 32
+            };
 
-			MetaButton b4 = new MetaButton ()
-			{
-				Dock = DockStyle.Stacked,
-				Embedder = box,
-				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Margins (0, 0, 0, 2),
-				PreferredHeight = 32
-			};
-			
+            MetaButton b2 = new MetaButton()
+            {
+                ButtonClass = ButtonClass.FlatButton,
+                Dock = DockStyle.Stacked,
+                Embedder = box,
+                CommandId = ApplicationCommands.Cut.Caption.Id,
+                Margins = new Margins(0, 0, 0, 2),
+                PreferredHeight = 32
+            };
 
-			window.Show ();
+            MetaButton b3 = new MetaButton()
+            {
+                ButtonClass = ButtonClass.RichDialogButton,
+                Dock = DockStyle.Stacked,
+                Embedder = box,
+                CommandId = ApplicationCommands.Cut.Caption.Id,
+                Margins = new Margins(0, 0, 0, 2),
+                PreferredHeight = 32
+            };
 
-			Window.RunInTestEnvironment (window);
-		}
-	}
+            Separator sep = new Separator()
+            {
+                Dock = DockStyle.Stacked,
+                Embedder = box,
+                PreferredHeight = 1,
+                Margins = new Margins(0, 0, 0, 2)
+            };
+
+            MetaButton b4 = new MetaButton()
+            {
+                Dock = DockStyle.Stacked,
+                Embedder = box,
+                CommandId = ApplicationCommands.Cut.Caption.Id,
+                Margins = new Margins(0, 0, 0, 2),
+                PreferredHeight = 32
+            };
+
+            window.Show();
+
+            Window.RunInTestEnvironment(window);
+        }
+    }
 }

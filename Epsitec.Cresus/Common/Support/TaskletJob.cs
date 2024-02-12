@@ -3,72 +3,59 @@
 
 namespace Epsitec.Common.Support
 {
-	/// <summary>
-	/// The <c>TaskletJob</c> associates an action with a run mode.
-	/// </summary>
-	public sealed class TaskletJob
-	{
-		public TaskletJob(System.Action action, TaskletRunMode runMode)
-		{
-			this.action = action;
-			this.runMode = runMode;
-		}
-		
-		public TaskletJob(IIsDisposed owner, System.Action action, TaskletRunMode runMode)
-			: this (action, runMode)
-		{
-			this.Owner = owner;
-		}
+    /// <summary>
+    /// The <c>TaskletJob</c> associates an action with a run mode.
+    /// </summary>
+    public sealed class TaskletJob
+    {
+        public TaskletJob(System.Action action, TaskletRunMode runMode)
+        {
+            this.action = action;
+            this.runMode = runMode;
+        }
 
-		
-		public TaskletRunMode					RunMode
-		{
-			get
-			{
-				return this.runMode;
-			}
-		}
+        public TaskletJob(IIsDisposed owner, System.Action action, TaskletRunMode runMode)
+            : this(action, runMode)
+        {
+            this.Owner = owner;
+        }
 
-		public bool								IsBefore
-		{
-			get
-			{
-				return this.RunMode == TaskletRunMode.Before || this.RunMode == TaskletRunMode.BeforeAndAfter;
-			}
-		}
+        public TaskletRunMode RunMode
+        {
+            get { return this.runMode; }
+        }
 
-		public bool								IsAsync
-		{
-			get
-			{
-				return this.RunMode == TaskletRunMode.Async;
-			}
-		}
+        public bool IsBefore
+        {
+            get
+            {
+                return this.RunMode == TaskletRunMode.Before
+                    || this.RunMode == TaskletRunMode.BeforeAndAfter;
+            }
+        }
 
-		public bool								IsAfter
-		{
-			get
-			{
-				return this.RunMode == TaskletRunMode.After || this.RunMode == TaskletRunMode.BeforeAndAfter;
-			}
-		}
+        public bool IsAsync
+        {
+            get { return this.RunMode == TaskletRunMode.Async; }
+        }
 
-		public System.Action					Action
-		{
-			get
-			{
-				return this.action;
-			}
-		}
+        public bool IsAfter
+        {
+            get
+            {
+                return this.RunMode == TaskletRunMode.After
+                    || this.RunMode == TaskletRunMode.BeforeAndAfter;
+            }
+        }
 
-		public IIsDisposed						Owner
-		{
-			get;
-			set;
-		}
+        public System.Action Action
+        {
+            get { return this.action; }
+        }
 
-		
-		private readonly System.Action			action;
-		private readonly TaskletRunMode			runMode;
-	}
+        public IIsDisposed Owner { get; set; }
+
+        private readonly System.Action action;
+        private readonly TaskletRunMode runMode;
+    }
 }

@@ -3,9 +3,9 @@
 
 namespace Epsitec.Common.Support
 {
-	public enum FileInfoIconSelection : byte
-	{
-		Normal,
-		Active
-	}
+    public enum FileInfoIconSelection : byte
+    {
+        Normal,
+        Active
+    }
 }

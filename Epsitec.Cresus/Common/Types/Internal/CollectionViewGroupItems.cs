@@ -6,325 +6,299 @@ using System.Linq;
 
 namespace Epsitec.Common.Types.Internal
 {
-	/// <summary>
-	/// The <c>CollectionViewGroupItems</c> class is an internal class used by
-	/// <see cref="CollectionViewGroup"/> to iterate over its items, pretending
-	/// that all items are flat, even when they are stored within multiple
-	/// subgroups.
-	/// </summary>
-	internal class CollectionViewGroupItems : IList<object>, System.Collections.IList
-	{
-		public CollectionViewGroupItems(CollectionViewGroup host)
-		{
-			this.host = host;
-		}
+    /// <summary>
+    /// The <c>CollectionViewGroupItems</c> class is an internal class used by
+    /// <see cref="CollectionViewGroup"/> to iterate over its items, pretending
+    /// that all items are flat, even when they are stored within multiple
+    /// subgroups.
+    /// </summary>
+    internal class CollectionViewGroupItems : IList<object>, System.Collections.IList
+    {
+        public CollectionViewGroupItems(CollectionViewGroup host)
+        {
+            this.host = host;
+        }
 
-		#region IList<object> Members
+        #region IList<object> Members
 
-		public int IndexOf(object item)
-		{
-			int index = 0;
-			
-			foreach (object x in this.EnumerateItems ())
-			{
-				if (item == x)
-				{
-					return index;
-				}
-				index++;
-			}
-			
-			return -1;
-		}
+        public int IndexOf(object item)
+        {
+            int index = 0;
 
-		public void Insert(int index, object item)
-		{
-			throw new System.InvalidOperationException ();
-		}
+            foreach (object x in this.EnumerateItems())
+            {
+                if (item == x)
+                {
+                    return index;
+                }
+                index++;
+            }
 
-		public void RemoveAt(int index)
-		{
-			throw new System.InvalidOperationException ();
-		}
+            return -1;
+        }
 
-		public object this[int index]
-		{
-			get
-			{
-				CollectionViewGroup group = this.host;
+        public void Insert(int index, object item)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-				if ((index < group.ItemCount) &&
-					(CollectionViewGroupItems.FindItemGroup (ref group, ref index)))
-				{
-					return group.GetItems ()[index];
-				}
-				else
-				{
-					throw new System.ArgumentOutOfRangeException ("index");
-				}
-			}
-			set
-			{
-				throw new System.InvalidOperationException ();
-			}
-		}
+        public void RemoveAt(int index)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		#endregion
+        public object this[int index]
+        {
+            get
+            {
+                CollectionViewGroup group = this.host;
 
-		#region ICollection<object> Members
+                if (
+                    (index < group.ItemCount)
+                    && (CollectionViewGroupItems.FindItemGroup(ref group, ref index))
+                )
+                {
+                    return group.GetItems()[index];
+                }
+                else
+                {
+                    throw new System.ArgumentOutOfRangeException("index");
+                }
+            }
+            set { throw new System.InvalidOperationException(); }
+        }
 
-		public void Add(object item)
-		{
-			throw new System.InvalidOperationException ();
-		}
+        #endregion
 
-		public void Clear()
-		{
-			throw new System.InvalidOperationException ();
-		}
+        #region ICollection<object> Members
 
-		public bool Contains(object item)
-		{
-			foreach (object x in this.EnumerateItems ())
-			{
-				if (x == item)
-				{
-					return true;
-				}
-			}
-			
-			return false;
-		}
+        public void Add(object item)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		public void CopyTo(object[] array, int arrayIndex)
-		{
-			foreach (object x in this.EnumerateItems ())
-			{
-				array[arrayIndex++] = x;
-			}
-		}
+        public void Clear()
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		public int Count
-		{
-			get
-			{
-				return this.host.ItemCount;
-			}
-		}
+        public bool Contains(object item)
+        {
+            foreach (object x in this.EnumerateItems())
+            {
+                if (x == item)
+                {
+                    return true;
+                }
+            }
 
-		public bool IsReadOnly
-		{
-			get
-			{
-				return true;
-			}
-		}
+            return false;
+        }
 
-		public bool Remove(object item)
-		{
-			throw new System.InvalidOperationException ();
-		}
+        public void CopyTo(object[] array, int arrayIndex)
+        {
+            foreach (object x in this.EnumerateItems())
+            {
+                array[arrayIndex++] = x;
+            }
+        }
 
-		#endregion
+        public int Count
+        {
+            get { return this.host.ItemCount; }
+        }
 
-		#region IEnumerable<object> Members
+        public bool IsReadOnly
+        {
+            get { return true; }
+        }
 
-		public IEnumerator<object> GetEnumerator()
-		{
-			return this.EnumerateItems ().GetEnumerator ();
-		}
+        public bool Remove(object item)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		#endregion
+        #endregion
 
-		#region IEnumerable Members
+        #region IEnumerable<object> Members
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return this.EnumerateItems ().GetEnumerator ();
-		}
+        public IEnumerator<object> GetEnumerator()
+        {
+            return this.EnumerateItems().GetEnumerator();
+        }
 
-		#endregion
+        #endregion
 
-		#region IList Members
+        #region IEnumerable Members
 
-		int System.Collections.IList.Add(object value)
-		{
-			throw new System.InvalidOperationException ();
-		}
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.EnumerateItems().GetEnumerator();
+        }
 
-		void System.Collections.IList.Clear()
-		{
-			throw new System.InvalidOperationException ();
-		}
+        #endregion
 
-		bool System.Collections.IList.Contains(object value)
-		{
-			return this.Contains (value);
-		}
+        #region IList Members
 
-		int System.Collections.IList.IndexOf(object value)
-		{
-			return this.IndexOf (value);
-		}
+        int System.Collections.IList.Add(object value)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		void System.Collections.IList.Insert(int index, object value)
-		{
-			throw new System.InvalidOperationException ();
-		}
+        void System.Collections.IList.Clear()
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		bool System.Collections.IList.IsFixedSize
-		{
-			get
-			{
-				return true;
-			}
-		}
+        bool System.Collections.IList.Contains(object value)
+        {
+            return this.Contains(value);
+        }
 
-		bool System.Collections.IList.IsReadOnly
-		{
-			get
-			{
-				return true;
-			}
-		}
+        int System.Collections.IList.IndexOf(object value)
+        {
+            return this.IndexOf(value);
+        }
 
-		void System.Collections.IList.Remove(object value)
-		{
-			throw new System.InvalidOperationException ();
-		}
+        void System.Collections.IList.Insert(int index, object value)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		void System.Collections.IList.RemoveAt(int index)
-		{
-			throw new System.InvalidOperationException ();
-		}
+        bool System.Collections.IList.IsFixedSize
+        {
+            get { return true; }
+        }
 
-		object System.Collections.IList.this[int index]
-		{
-			get
-			{
-				return this[index];
-			}
-			set
-			{
-				throw new System.InvalidOperationException ();
-			}
-		}
+        bool System.Collections.IList.IsReadOnly
+        {
+            get { return true; }
+        }
 
-		#endregion
+        void System.Collections.IList.Remove(object value)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		#region ICollection Members
+        void System.Collections.IList.RemoveAt(int index)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		void System.Collections.ICollection.CopyTo(System.Array array, int index)
-		{
-			throw new System.InvalidOperationException ();
-		}
+        object System.Collections.IList.this[int index]
+        {
+            get { return this[index]; }
+            set { throw new System.InvalidOperationException(); }
+        }
 
-		int System.Collections.ICollection.Count
-		{
-			get
-			{
-				return this.Count;
-			}
-		}
+        #endregion
 
-		bool System.Collections.ICollection.IsSynchronized
-		{
-			get
-			{
-				return false;
-			}
-		}
+        #region ICollection Members
 
-		object System.Collections.ICollection.SyncRoot
-		{
-			get
-			{
-				return null;
-			}
-		}
+        void System.Collections.ICollection.CopyTo(System.Array array, int index)
+        {
+            throw new System.InvalidOperationException();
+        }
 
-		#endregion
+        int System.Collections.ICollection.Count
+        {
+            get { return this.Count; }
+        }
 
-		private IEnumerable<object> EnumerateItems()
-		{
-			if (this.host.ItemCount == 0)
-			{
-				return Enumerable.Empty<object> ();
-			}
-			else if (this.host.HasSubgroups)
-			{
-				return this.EnumerateSubgroupItems ();
-			}
-			else
-			{
-				return this.host.GetItems ();
-			}
-		}
+        bool System.Collections.ICollection.IsSynchronized
+        {
+            get { return false; }
+        }
 
-		private IEnumerable<object> EnumerateSubgroupItems()
-		{
-			System.Diagnostics.Debug.Assert (this.host.HasSubgroups);
+        object System.Collections.ICollection.SyncRoot
+        {
+            get { return null; }
+        }
 
-			foreach (CollectionViewGroup group in this.host.GetSubgroups ())
-			{
-				if (group.ItemCount > 0)
-				{
-					foreach (object item in group.Items)
-					{
-						yield return item;
-					}
-				}
-			}
-		}
+        #endregion
 
-		private static bool FindItemGroup(ref CollectionViewGroup group, ref int index)
-		{
-			while (true)
-			{
-				if (index < group.ItemCount)
-				{
-					if (group.HasSubgroups)
-					{
-						Collections.ObservableList<CollectionViewGroup> subgroups = group.GetSubgroups ();
-						group = subgroups[0];
-					}
-					else
-					{
-						return true;
-					}
-				}
-				else
-				{
-					index -= group.ItemCount;
+        private IEnumerable<object> EnumerateItems()
+        {
+            if (this.host.ItemCount == 0)
+            {
+                return Enumerable.Empty<object>();
+            }
+            else if (this.host.HasSubgroups)
+            {
+                return this.EnumerateSubgroupItems();
+            }
+            else
+            {
+                return this.host.GetItems();
+            }
+        }
 
-				moveUpOneGroup:
+        private IEnumerable<object> EnumerateSubgroupItems()
+        {
+            System.Diagnostics.Debug.Assert(this.host.HasSubgroups);
 
-					CollectionViewGroup parent = group.ParentGroup;
+            foreach (CollectionViewGroup group in this.host.GetSubgroups())
+            {
+                if (group.ItemCount > 0)
+                {
+                    foreach (object item in group.Items)
+                    {
+                        yield return item;
+                    }
+                }
+            }
+        }
 
-					if (parent == null)
-					{
-						return false;
-					}
+        private static bool FindItemGroup(ref CollectionViewGroup group, ref int index)
+        {
+            while (true)
+            {
+                if (index < group.ItemCount)
+                {
+                    if (group.HasSubgroups)
+                    {
+                        Collections.ObservableList<CollectionViewGroup> subgroups =
+                            group.GetSubgroups();
+                        group = subgroups[0];
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    index -= group.ItemCount;
 
-					Collections.ObservableList<CollectionViewGroup> subgroups = parent.GetSubgroups ();
-					int groupIndex = subgroups.IndexOf (group) + 1;
+                    moveUpOneGroup:
 
-					System.Diagnostics.Debug.Assert (groupIndex > 0);
-					System.Diagnostics.Debug.Assert (groupIndex < subgroups.Count+1);
+                    CollectionViewGroup parent = group.ParentGroup;
 
-					if (groupIndex == subgroups.Count)
-					{
-						group = parent;
-						goto moveUpOneGroup;
-					}
-					else
-					{
-						group = subgroups[groupIndex];
-					}
-				}
-			}
-		}
+                    if (parent == null)
+                    {
+                        return false;
+                    }
 
-		private CollectionViewGroup host;
-	}
+                    Collections.ObservableList<CollectionViewGroup> subgroups =
+                        parent.GetSubgroups();
+                    int groupIndex = subgroups.IndexOf(group) + 1;
+
+                    System.Diagnostics.Debug.Assert(groupIndex > 0);
+                    System.Diagnostics.Debug.Assert(groupIndex < subgroups.Count + 1);
+
+                    if (groupIndex == subgroups.Count)
+                    {
+                        group = parent;
+                        goto moveUpOneGroup;
+                    }
+                    else
+                    {
+                        group = subgroups[groupIndex];
+                    }
+                }
+            }
+        }
+
+        private CollectionViewGroup host;
+    }
 }

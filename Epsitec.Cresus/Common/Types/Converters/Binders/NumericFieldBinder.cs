@@ -1,151 +1,148 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Common.Types.Converters.Binders
 {
-	internal sealed class NumericFieldBinder : IFieldBinder, IFieldBinderProvider
-	{
-		public NumericFieldBinder()
-		{
-		}
+    internal sealed class NumericFieldBinder : IFieldBinder, IFieldBinderProvider
+    {
+        public NumericFieldBinder() { }
 
-		public NumericFieldBinder(int decimals, bool percent)
-		{
-			this.decimals = decimals;
-			this.percent = percent;
-		}
+        public NumericFieldBinder(int decimals, bool percent)
+        {
+            this.decimals = decimals;
+            this.percent = percent;
+        }
 
-		#region IFieldBinder Members
+        #region IFieldBinder Members
 
-		public FormattedText ConvertToUI(FormattedText formattedValue)
-		{
-			if (formattedValue.IsNullOrEmpty ())
-			{
-				return formattedValue;
-			}
+        public FormattedText ConvertToUI(FormattedText formattedValue)
+        {
+            if (formattedValue.IsNullOrEmpty())
+            {
+                return formattedValue;
+            }
 
-			var value = formattedValue.ToString ();
-			
-			int posDot   = value.IndexOf ('.');
-			int posComma = value.IndexOf (',');
+            var value = formattedValue.ToString();
 
-			string before;
-			string after;
-			string separator;
-			string zeroes;
+            int posDot = value.IndexOf('.');
+            int posComma = value.IndexOf(',');
 
-			if (posDot >= 0)
-			{
-				separator = ".";
-				before = value.Substring (0, posDot);
-				after  = value.Substring (posDot+1);
-			}
-			else if (posComma >= 0)
-			{
-				separator = ",";
-				before = value.Substring (0, posComma);
-				after = value.Substring (posComma+1);
-			}
-			else
-			{
-				separator = (1.1M).ToString ().Substring (1, 1);
-				before = value;
-				after = "";
-			}
+            string before;
+            string after;
+            string separator;
+            string zeroes;
 
-			after = after.TrimEnd ('0');
+            if (posDot >= 0)
+            {
+                separator = ".";
+                before = value.Substring(0, posDot);
+                after = value.Substring(posDot + 1);
+            }
+            else if (posComma >= 0)
+            {
+                separator = ",";
+                before = value.Substring(0, posComma);
+                after = value.Substring(posComma + 1);
+            }
+            else
+            {
+                separator = (1.1M).ToString().Substring(1, 1);
+                before = value;
+                after = "";
+            }
 
-			if (after.Length == this.decimals)
-			{
-				if (this.decimals == 0)
-				{
-					separator = "";
-				}
-				zeroes = "";
-			}
-			else if (after.Length < this.decimals)
-			{
-				zeroes = new string ('0', this.decimals - after.Length);
-			}
-			else
-			{
-				zeroes = "";
-			}
+            after = after.TrimEnd('0');
 
-			if (this.percent)
-			{
-				zeroes = zeroes + "%";
-			}
+            if (after.Length == this.decimals)
+            {
+                if (this.decimals == 0)
+                {
+                    separator = "";
+                }
+                zeroes = "";
+            }
+            else if (after.Length < this.decimals)
+            {
+                zeroes = new string('0', this.decimals - after.Length);
+            }
+            else
+            {
+                zeroes = "";
+            }
 
-			return new FormattedText (string.Concat (before, separator, after, zeroes));
-		}
+            if (this.percent)
+            {
+                zeroes = zeroes + "%";
+            }
 
-		public FormattedText ConvertFromUI(FormattedText value)
-		{
-			if (this.percent)
-			{
-				return new FormattedText (NumericFieldBinder.RemovePercent (value.ToString ()));
-			}
-			else
-			{
-				return value;
-			}
-		}
+            return new FormattedText(string.Concat(before, separator, after, zeroes));
+        }
 
-		public IValidationResult ValidateFromUI(FormattedText value)
-		{
-			return new ValidationResult (ValidationState.Ok);
-		}
+        public FormattedText ConvertFromUI(FormattedText value)
+        {
+            if (this.percent)
+            {
+                return new FormattedText(NumericFieldBinder.RemovePercent(value.ToString()));
+            }
+            else
+            {
+                return value;
+            }
+        }
 
-		public void Attach(Marshaler marshaler)
-		{
-			if (this.percent)
-			{
-				marshaler.CustomizeConverter ();
+        public IValidationResult ValidateFromUI(FormattedText value)
+        {
+            return new ValidationResult(ValidationState.Ok);
+        }
 
-				var converter = marshaler.GetConverter () as DecimalConverter;
+        public void Attach(Marshaler marshaler)
+        {
+            if (this.percent)
+            {
+                marshaler.CustomizeConverter();
 
-				converter.Format     = "{0}";
-				converter.Multiplier = 100;
-				converter.Filter     = NumericFieldBinder.RemovePercent;
-			}
-		}
+                var converter = marshaler.GetConverter() as DecimalConverter;
 
-		#endregion
+                converter.Format = "{0}";
+                converter.Multiplier = 100;
+                converter.Filter = NumericFieldBinder.RemovePercent;
+            }
+        }
 
-		#region IFieldBinderProvider Members
+        #endregion
 
-		public IFieldBinder GetFieldBinder(INamedType namedType)
-		{
-			if (namedType.DefaultControllerParameters.StartsWith ("Decimals:"))
-			{
-				var args = namedType.DefaultControllerParameters.Split (':');
-				int decimals = InvariantConverter.ToInt (args[1]);
-				return new NumericFieldBinder (decimals, percent: false);
-			}
-			if (namedType.DefaultControllerParameters.StartsWith ("Percentage:"))
-			{
-				var args = namedType.DefaultControllerParameters.Split (':');
-				int decimals = InvariantConverter.ToInt (args[1]);
-				return new NumericFieldBinder (decimals, percent: true);
-			}
-			return null;
-		}
+        #region IFieldBinderProvider Members
 
-		#endregion
+        public IFieldBinder GetFieldBinder(INamedType namedType)
+        {
+            if (namedType.DefaultControllerParameters.StartsWith("Decimals:"))
+            {
+                var args = namedType.DefaultControllerParameters.Split(':');
+                int decimals = InvariantConverter.ToInt(args[1]);
+                return new NumericFieldBinder(decimals, percent: false);
+            }
+            if (namedType.DefaultControllerParameters.StartsWith("Percentage:"))
+            {
+                var args = namedType.DefaultControllerParameters.Split(':');
+                int decimals = InvariantConverter.ToInt(args[1]);
+                return new NumericFieldBinder(decimals, percent: true);
+            }
+            return null;
+        }
 
-		private static string RemovePercent(string text)
-		{
-			return text.TrimEnd (' ', '%');
-		}
+        #endregion
 
-		private readonly int decimals;
-		private readonly bool percent;
-	}
+        private static string RemovePercent(string text)
+        {
+            return text.TrimEnd(' ', '%');
+        }
+
+        private readonly int decimals;
+        private readonly bool percent;
+    }
 }

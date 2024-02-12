@@ -3,15 +3,12 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public interface ISearchBox
-	{
-		SearchBoxPolicy Policy
-		{
-			get;
-		}
+    public interface ISearchBox
+    {
+        SearchBoxPolicy Policy { get; }
 
-		void NotifySearchClicked();
-		void NotifyShowNextClicked();
-		void NotifyShowPrevClicked();
-	}
+        void NotifySearchClicked();
+        void NotifyShowNextClicked();
+        void NotifyShowPrevClicked();
+    }
 }

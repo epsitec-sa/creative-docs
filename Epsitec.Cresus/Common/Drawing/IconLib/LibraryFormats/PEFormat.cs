@@ -2,28 +2,28 @@
 //  Email:  gustavo_franco@hotmail.com
 //  All rights reserved.
 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
 
-//  Redistributions of source code must retain the above copyright notice, 
-//  this list of conditions and the following disclaimer. 
-//  Redistributions in binary form must reproduce the above copyright notice, 
-//  this list of conditions and the following disclaimer in the documentation 
-//  and/or other materials provided with the distribution. 
+//  Redistributions of source code must retain the above copyright notice,
+//  this list of conditions and the following disclaimer.
+//  Redistributions in binary form must reproduce the above copyright notice,
+//  this list of conditions and the following disclaimer in the documentation
+//  and/or other materials provided with the distribution.
 
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
+//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
 using System;
-using System.IO;
-using System.Text;
+using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Drawing.IconLib.Exceptions;
 using System.Drawing.Imaging;
-using System.Collections;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace System.Drawing.IconLib.EncodingFormats
 {
@@ -42,7 +42,7 @@ namespace System.Drawing.IconLib.EncodingFormats
             {
                 // Has a valid MS-DOS header?
                 IMAGE_DOS_HEADER dos_header = new IMAGE_DOS_HEADER(stream);
-                if (dos_header.e_magic != (int) HeaderSignatures.IMAGE_DOS_SIGNATURE) //MZ
+                if (dos_header.e_magic != (int)HeaderSignatures.IMAGE_DOS_SIGNATURE) //MZ
                     return false;
 
                 //Lets position over the "PE" header
@@ -50,20 +50,20 @@ namespace System.Drawing.IconLib.EncodingFormats
 
                 //Lets read the NE header
                 IMAGE_NT_HEADERS nt_header = new IMAGE_NT_HEADERS(stream);
-                if (nt_header.Signature != (int) HeaderSignatures.IMAGE_NT_SIGNATURE) //PE
+                if (nt_header.Signature != (int)HeaderSignatures.IMAGE_NT_SIGNATURE) //PE
                     return false;
 
                 return true;
             }
-            catch(Exception){}
+            catch (Exception) { }
             return false;
         }
 
         public unsafe MultiIcon Load(Stream stream)
         {
             // LoadLibraryEx only can load files from File System, lets create a tmp file
-            string tmpFile  = null;
-            IntPtr hLib     = IntPtr.Zero;
+            string tmpFile = null;
+            IntPtr hLib = IntPtr.Zero;
             try
             {
                 stream.Position = 0;
@@ -76,7 +76,11 @@ namespace System.Drawing.IconLib.EncodingFormats
                 fs.Write(buffer, 0, buffer.Length);
                 fs.Close();
 
-                hLib = Win32.LoadLibraryEx(tmpFile, IntPtr.Zero, LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE);
+                hLib = Win32.LoadLibraryEx(
+                    tmpFile,
+                    IntPtr.Zero,
+                    LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE
+                );
                 if (hLib == IntPtr.Zero)
                     throw new InvalidFileException();
 
@@ -84,7 +88,12 @@ namespace System.Drawing.IconLib.EncodingFormats
                 lock (typeof(PEFormat))
                 {
                     mIconsIDs = new List<string>();
-                    bool bResult = Win32.EnumResourceNames(hLib, (IntPtr) ResourceType.RT_GROUP_ICON, new Win32.EnumResNameProc(EnumResNameProc), IntPtr.Zero);
+                    bool bResult = Win32.EnumResourceNames(
+                        hLib,
+                        (IntPtr)ResourceType.RT_GROUP_ICON,
+                        new Win32.EnumResNameProc(EnumResNameProc),
+                        IntPtr.Zero
+                    );
                     if (bResult == false)
                     {
                         // No Resources in this file
@@ -93,32 +102,40 @@ namespace System.Drawing.IconLib.EncodingFormats
                 }
 
                 MultiIcon multiIcon = new MultiIcon();
-                for(int index=0; index<iconsIDs.Count; index++)
+                for (int index = 0; index < iconsIDs.Count; index++)
                 {
                     string id = iconsIDs[index];
                     IntPtr hRsrc = IntPtr.Zero;
 
                     if (Win32.IS_INTRESOURCE(id))
-                        hRsrc = Win32.FindResource(hLib, int.Parse(id), (IntPtr) ResourceType.RT_GROUP_ICON);
+                        hRsrc = Win32.FindResource(
+                            hLib,
+                            int.Parse(id),
+                            (IntPtr)ResourceType.RT_GROUP_ICON
+                        );
                     else
-                        hRsrc = Win32.FindResource(hLib, id, (IntPtr) ResourceType.RT_GROUP_ICON);
+                        hRsrc = Win32.FindResource(hLib, id, (IntPtr)ResourceType.RT_GROUP_ICON);
 
                     if (hRsrc == IntPtr.Zero)
                         throw new InvalidFileException();
-                     
+
                     IntPtr hGlobal = Win32.LoadResource(hLib, hRsrc);
                     if (hGlobal == IntPtr.Zero)
                         throw new InvalidFileException();
 
-                    MEMICONDIR* pDirectory = (MEMICONDIR*) Win32.LockResource(hGlobal);
+                    MEMICONDIR* pDirectory = (MEMICONDIR*)Win32.LockResource(hGlobal);
                     if (pDirectory->wCount != 0)
                     {
                         MEMICONDIRENTRY* pEntry = &(pDirectory->arEntries);
 
                         SingleIcon singleIcon = new SingleIcon(id);
-                        for(int i=0;i<pDirectory->wCount; i++)
+                        for (int i = 0; i < pDirectory->wCount; i++)
                         {
-                            IntPtr hIconInfo = Win32.FindResource(hLib, (IntPtr) pEntry[i].wId, (IntPtr) ResourceType.RT_ICON);
+                            IntPtr hIconInfo = Win32.FindResource(
+                                hLib,
+                                (IntPtr)pEntry[i].wId,
+                                (IntPtr)ResourceType.RT_ICON
+                            );
                             if (hIconInfo == IntPtr.Zero)
                                 throw new InvalidFileException();
 
@@ -144,7 +161,7 @@ namespace System.Drawing.IconLib.EncodingFormats
                 // If everything went well then lets return the multiIcon.
                 return multiIcon;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new InvalidFileException();
             }
@@ -160,8 +177,8 @@ namespace System.Drawing.IconLib.EncodingFormats
         public unsafe void Save(MultiIcon multiIcon, Stream stream)
         {
             // LoadLibraryEx only can load files from File System, lets create a tmp file
-            string tmpFile  = null;
-            IntPtr hLib     = IntPtr.Zero;
+            string tmpFile = null;
+            IntPtr hLib = IntPtr.Zero;
             MemoryStream ms;
             bool bResult;
             try
@@ -177,34 +194,41 @@ namespace System.Drawing.IconLib.EncodingFormats
                 fs.Write(buffer, 0, buffer.Length);
                 fs.Close();
 
-				// Begin the injection process
-			    IntPtr updPtr = Win32.BeginUpdateResource(tmpFile, false);
+                // Begin the injection process
+                IntPtr updPtr = Win32.BeginUpdateResource(tmpFile, false);
                 if (updPtr == IntPtr.Zero)
                     throw new InvalidFileException();
 
                 ushort iconIndex = 1;
-                foreach(SingleIcon singleIcon in multiIcon)
+                foreach (SingleIcon singleIcon in multiIcon)
                 {
                     // Lets scan all groups
-                    GRPICONDIR grpIconDir   = GRPICONDIR.Initalizated;
-                    grpIconDir.idCount      = (ushort) singleIcon.Count;
-                    grpIconDir.idEntries    = new GRPICONDIRENTRY[grpIconDir.idCount];
+                    GRPICONDIR grpIconDir = GRPICONDIR.Initalizated;
+                    grpIconDir.idCount = (ushort)singleIcon.Count;
+                    grpIconDir.idEntries = new GRPICONDIRENTRY[grpIconDir.idCount];
 
-                    for(int i=0;i<singleIcon.Count; i++)
+                    for (int i = 0; i < singleIcon.Count; i++)
                     {
                         // Inside every Icon let update every image format
                         IconImage iconImage = singleIcon[i];
-                        grpIconDir.idEntries[i]     = iconImage.GRPICONDIRENTRY;
+                        grpIconDir.idEntries[i] = iconImage.GRPICONDIRENTRY;
                         grpIconDir.idEntries[i].nID = iconIndex;
 
                         // Buffer creation with the same size of the icon to optimize write call
-                        ms = new MemoryStream((int) grpIconDir.idEntries[i].dwBytesInRes);
+                        ms = new MemoryStream((int)grpIconDir.idEntries[i].dwBytesInRes);
                         iconImage.Write(ms);
                         buffer = ms.GetBuffer();
 
                         // Update resource but it doesn't write to disk yet
-                        bResult = Win32.UpdateResource(updPtr, (int) ResourceType.RT_ICON, iconIndex, 0,  buffer, (uint) ms.Length);
-                        
+                        bResult = Win32.UpdateResource(
+                            updPtr,
+                            (int)ResourceType.RT_ICON,
+                            iconIndex,
+                            0,
+                            buffer,
+                            (uint)ms.Length
+                        );
+
                         iconIndex++;
 
                         // For some reason Windows will fail if there are many calls to update resource and no call to endUpdateResource
@@ -229,17 +253,31 @@ namespace System.Drawing.IconLib.EncodingFormats
                     if (int.TryParse(singleIcon.Name, out id))
                     {
                         // Write id as an integer
-                        bResult = Win32.UpdateResource(updPtr, (int) ResourceType.RT_GROUP_ICON, (IntPtr) id, 0, buffer, (uint) ms.Length);
+                        bResult = Win32.UpdateResource(
+                            updPtr,
+                            (int)ResourceType.RT_GROUP_ICON,
+                            (IntPtr)id,
+                            0,
+                            buffer,
+                            (uint)ms.Length
+                        );
                     }
                     else
                     {
                         // Write id as string
                         IntPtr pName = Marshal.StringToHGlobalAnsi(singleIcon.Name.ToUpper());
-                        bResult = Win32.UpdateResource(updPtr, (int) ResourceType.RT_GROUP_ICON, pName, 0, buffer, (uint) ms.Length);
+                        bResult = Win32.UpdateResource(
+                            updPtr,
+                            (int)ResourceType.RT_GROUP_ICON,
+                            pName,
+                            0,
+                            buffer,
+                            (uint)ms.Length
+                        );
                         Marshal.FreeHGlobal(pName);
                     }
                 }
-                
+
                 // Last call to update the file with the rest not that was not write before
                 bResult = Win32.EndUpdateResource(updPtr, false);
 
@@ -251,7 +289,7 @@ namespace System.Drawing.IconLib.EncodingFormats
                 stream.Write(buffer, 0, buffer.Length);
                 fs.Close();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new InvalidFileException();
             }
@@ -266,15 +304,20 @@ namespace System.Drawing.IconLib.EncodingFormats
         #endregion
 
         #region Private Methods
-        private static unsafe bool EnumResNameProc(IntPtr hModule, IntPtr pType, IntPtr pName, IntPtr param)
+        private static unsafe bool EnumResNameProc(
+            IntPtr hModule,
+            IntPtr pType,
+            IntPtr pName,
+            IntPtr param
+        )
         {
             if (Win32.IS_INTRESOURCE(pName))
             {
-                mIconsIDs.Add(pName.ToString()); 
+                mIconsIDs.Add(pName.ToString());
             }
             else
             {
-                mIconsIDs.Add(Marshal.PtrToStringUni(pName)); 
+                mIconsIDs.Add(Marshal.PtrToStringUni(pName));
             }
             return true;
         }

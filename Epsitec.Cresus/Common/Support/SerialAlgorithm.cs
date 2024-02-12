@@ -5,72 +5,62 @@ using Epsitec.Serial;
 
 namespace Epsitec.Common.Support
 {
-	/// <summary>
-	/// SerialAlgorithm définit les fonctions de base nécessaires pour valider
-	/// une clef de logiciel.
-	/// </summary>
-	public static class SerialAlgorithm
-	{
-		public static int						ProductGeneration
-		{
-			get;
-			private set;
-		}
+    /// <summary>
+    /// SerialAlgorithm définit les fonctions de base nécessaires pour valider
+    /// une clef de logiciel.
+    /// </summary>
+    public static class SerialAlgorithm
+    {
+        public static int ProductGeneration { get; private set; }
 
-		public static int						ProductGracePeriod
-		{
-			get;
-			private set;
-		}
+        public static int ProductGracePeriod { get; private set; }
 
-		public static System.DateTime			BuildDate
-		{
-			get;
-			private set;
-		}
-		
-		
-		public static string ReadCrDocSerial()
-		{
-			string key = null;
-			return (string) Microsoft.Win32.Registry.GetValue (SerialAlgorithm.RegistrySerialPath, "ID", key);
-		}
-		
-		
-		public static bool CheckSerial(string key, int productFamily)
-		{
-			return CresusSerialAlgorithm.CheckSerial (key, productFamily);
-		}
+        public static System.DateTime BuildDate { get; private set; }
 
-		public static bool CheckSerial(string key, int productFamily, out bool updatesAllowed)
-		{
-			return CresusSerialAlgorithm.CheckSerial (key, productFamily, SerialAlgorithm.BuildDate, out updatesAllowed);
-		}
+        public static string ReadCrDocSerial()
+        {
+            string key = null;
+            return (string)
+                Microsoft.Win32.Registry.GetValue(SerialAlgorithm.RegistrySerialPath, "ID", key);
+        }
 
-		public static System.DateTime GetExpirationDate(string key)
-		{
-			return CresusSerialAlgorithm.GetSerialLimit (key);
-		}
+        public static bool CheckSerial(string key, int productFamily)
+        {
+            return CresusSerialAlgorithm.CheckSerial(key, productFamily);
+        }
 
-		public static int GetProduct(string key)
-		{
-			return CresusSerialAlgorithm.GetProduct (key);
-		}
+        public static bool CheckSerial(string key, int productFamily, out bool updatesAllowed)
+        {
+            return CresusSerialAlgorithm.CheckSerial(
+                key,
+                productFamily,
+                SerialAlgorithm.BuildDate,
+                out updatesAllowed
+            );
+        }
 
-		
-		
-		public static void SetProductBuildDate(System.DateTime date)
-		{
-			SerialAlgorithm.BuildDate = date;
-		}
-		
-		public static void SetProductGenerationNumber(int generation, int grace)
-		{
-			SerialAlgorithm.ProductGeneration  = generation;
-			SerialAlgorithm.ProductGracePeriod = grace;
-		}
-		
-		
-		private const string RegistrySerialPath = @"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Documents\Setup";
-	}
+        public static System.DateTime GetExpirationDate(string key)
+        {
+            return CresusSerialAlgorithm.GetSerialLimit(key);
+        }
+
+        public static int GetProduct(string key)
+        {
+            return CresusSerialAlgorithm.GetProduct(key);
+        }
+
+        public static void SetProductBuildDate(System.DateTime date)
+        {
+            SerialAlgorithm.BuildDate = date;
+        }
+
+        public static void SetProductGenerationNumber(int generation, int grace)
+        {
+            SerialAlgorithm.ProductGeneration = generation;
+            SerialAlgorithm.ProductGracePeriod = grace;
+        }
+
+        private const string RegistrySerialPath =
+            @"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Documents\Setup";
+    }
 }

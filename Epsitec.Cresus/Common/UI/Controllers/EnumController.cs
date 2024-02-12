@@ -2,311 +2,327 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-
+using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
 
-[assembly: Controller (typeof (Epsitec.Common.UI.Controllers.EnumController))]
+[assembly: Controller(typeof(Epsitec.Common.UI.Controllers.EnumController))]
 
 namespace Epsitec.Common.UI.Controllers
 {
-	public class EnumController : AbstractController
-	{
-		public EnumController(ControllerParameters parameters)
-			: base (parameters)
-		{
-			switch (parameters.GetParameterValue ("Mode"))
-			{
-				case "Combo":
-					this.helper = new ComboHelper (this);
-					break;
+    public class EnumController : AbstractController
+    {
+        public EnumController(ControllerParameters parameters)
+            : base(parameters)
+        {
+            switch (parameters.GetParameterValue("Mode"))
+            {
+                case "Combo":
+                    this.helper = new ComboHelper(this);
+                    break;
 
-				case "Icons":
-					this.helper = new IconsHelper (this);
-					break;
-				
-				case "Radio":
-					break;
-				
-				default:
-					break;
-			}
+                case "Icons":
+                    this.helper = new IconsHelper(this);
+                    break;
 
-			if (this.helper == null)
-			{
-				this.helper = new ComboHelper (this);
-			}
-		}
+                case "Radio":
+                    break;
 
-		public override object GetUserInterfaceValue()
-		{
-			return this.helper.GetSelectedKey ();
-		}
+                default:
+                    break;
+            }
 
-		protected override void CreateUserInterface(INamedType namedType, Caption caption)
-		{
-			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+            if (this.helper == null)
+            {
+                this.helper = new ComboHelper(this);
+            }
+        }
 
-			IEnumType enumType = namedType as IEnumType;
+        public override object GetUserInterfaceValue()
+        {
+            return this.helper.GetSelectedKey();
+        }
 
-			this.helper.CreateUserInterface (enumType, caption);
-		}
+        protected override void CreateUserInterface(INamedType namedType, Caption caption)
+        {
+            this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-		protected override void PrepareUserInterfaceDisposal()
-		{
-			base.PrepareUserInterfaceDisposal ();
+            IEnumType enumType = namedType as IEnumType;
 
-			this.helper.Dispose ();
-			this.helper = null;
-		}
+            this.helper.CreateUserInterface(enumType, caption);
+        }
 
-		protected override void RefreshUserInterface(object oldValue, object newValue)
-		{
-			if ((newValue != UndefinedValue.Value) &&
-				(newValue != InvalidValue.Value) &&
-				(newValue != null))
-			{
-				this.helper.SetSelectedKey (this.ConvertFromValue (newValue));
-			}
-		}
+        protected override void PrepareUserInterfaceDisposal()
+        {
+            base.PrepareUserInterfaceDisposal();
 
-		private void HandleComboTextChanged(object sender)
-		{
-			this.OnActualValueChanged ();
-		}
+            this.helper.Dispose();
+            this.helper = null;
+        }
 
-		private string ConvertFromValue(object newValue)
-		{
-			return newValue.ToString ();
-		}
-		
-		private enum Mode
-		{
-			None, Combo, Icons, Radio
-		}
+        protected override void RefreshUserInterface(object oldValue, object newValue)
+        {
+            if (
+                (newValue != UndefinedValue.Value)
+                && (newValue != InvalidValue.Value)
+                && (newValue != null)
+            )
+            {
+                this.helper.SetSelectedKey(this.ConvertFromValue(newValue));
+            }
+        }
 
-		private abstract class Helper : System.IDisposable
-		{
-			public Helper(EnumController host)
-			{
-				this.host = host;
-			}
-			
-			public abstract void CreateUserInterface(IEnumType enumType, Caption caption);
-			public abstract string GetSelectedKey();
-			
-			protected EnumController host;
+        private void HandleComboTextChanged(object sender)
+        {
+            this.OnActualValueChanged();
+        }
 
-			#region IDisposable Members
+        private string ConvertFromValue(object newValue)
+        {
+            return newValue.ToString();
+        }
 
-			public abstract void Dispose();
+        private enum Mode
+        {
+            None,
+            Combo,
+            Icons,
+            Radio
+        }
 
-			#endregion
+        private abstract class Helper : System.IDisposable
+        {
+            public Helper(EnumController host)
+            {
+                this.host = host;
+            }
 
-			public abstract void SetSelectedKey(string name);
-		}
+            public abstract void CreateUserInterface(IEnumType enumType, Caption caption);
+            public abstract string GetSelectedKey();
 
-		private class ComboHelper : Helper
-		{
-			public ComboHelper(EnumController host)
-				: base (host)
-			{
-			}
+            protected EnumController host;
 
-			public override string GetSelectedKey()
-			{
-				return this.combo.SelectedKey;
-			}
+            #region IDisposable Members
 
-			public override void SetSelectedKey(string name)
-			{
-				this.combo.SelectedKey = name;
-			}
-			
-			public override void Dispose()
-			{
-				this.combo.TextChanged -= this.host.HandleComboTextChanged;				
-			}
+            public abstract void Dispose();
 
-			public override void CreateUserInterface(IEnumType enumType, Caption caption)
-			{
-				this.label = new StaticText ();
-				this.combo = new TextFieldCombo ();
+            #endregion
 
-				this.host.AddWidget (this.label, WidgetType.Label);
-				this.host.AddWidget (this.combo, WidgetType.Input);
+            public abstract void SetSelectedKey(string name);
+        }
 
-				this.label.HorizontalAlignment = HorizontalAlignment.Right;
-				this.label.VerticalAlignment = VerticalAlignment.BaseLine;
-				this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
-				this.label.Dock = DockStyle.Stacked;
+        private class ComboHelper : Helper
+        {
+            public ComboHelper(EnumController host)
+                : base(host) { }
 
-				this.host.SetupLabelWidget (this.label, caption);
+            public override string GetSelectedKey()
+            {
+                return this.combo.SelectedKey;
+            }
 
-				this.combo.HorizontalAlignment = HorizontalAlignment.Stretch;
-				this.combo.VerticalAlignment = VerticalAlignment.BaseLine;
-				this.combo.TextChanged += this.host.HandleComboTextChanged;
-				this.combo.PreferredWidth = 40;
+            public override void SetSelectedKey(string name)
+            {
+                this.combo.SelectedKey = name;
+            }
 
-				this.combo.TabIndex = 1;
-				this.combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.combo.Dock = DockStyle.Stacked;
+            public override void Dispose()
+            {
+                this.combo.TextChanged -= this.host.HandleComboTextChanged;
+            }
 
-				if (enumType != null)
-				{
-					Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this.host.Placeholder);
-					
-					foreach (IEnumValue enumValue in enumType.Values)
-					{
-						if (!enumValue.IsHidden)
-						{
-							Caption evCaption = Support.CaptionCache.Instance.GetCaption (manager, enumValue.CaptionId);
-							string evCaptionText = null;
+            public override void CreateUserInterface(IEnumType enumType, Caption caption)
+            {
+                this.label = new StaticText();
+                this.combo = new TextFieldCombo();
 
-							if ((evCaption != null) &&
-								(evCaption.Labels.Count > 0))
-							{
-								evCaptionText = Collection.Extract (evCaption.Labels, 0);
-							}
+                this.host.AddWidget(this.label, WidgetType.Label);
+                this.host.AddWidget(this.combo, WidgetType.Input);
 
-							this.combo.Items.Add (enumValue.Name, evCaptionText ?? enumValue.Name);
-						}
-					}
+                this.label.HorizontalAlignment = HorizontalAlignment.Right;
+                this.label.VerticalAlignment = VerticalAlignment.BaseLine;
+                this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
+                this.label.Dock = DockStyle.Stacked;
 
-					this.combo.IsReadOnly = enumType.IsCustomizable ? false : true;
-				}
-			}
+                this.host.SetupLabelWidget(this.label, caption);
 
-			private TextFieldCombo combo;
-			private StaticText label;
-		}
+                this.combo.HorizontalAlignment = HorizontalAlignment.Stretch;
+                this.combo.VerticalAlignment = VerticalAlignment.BaseLine;
+                this.combo.TextChanged += this.host.HandleComboTextChanged;
+                this.combo.PreferredWidth = 40;
 
-		private class IconsHelper : Helper
-		{
-			public IconsHelper(EnumController host)
-				: base (host)
-			{
-			}
+                this.combo.TabIndex = 1;
+                this.combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+                this.combo.Dock = DockStyle.Stacked;
 
-			public override string GetSelectedKey()
-			{
-				if (this.enumType.IsDefinedAsFlags)
-				{
-					int flags = this.combo.SelectedValue;
-					IEnumerable<IEnumValue> values = EnumType.ConvertEnumValuesFromFlags (this.enumType, flags);
-					return EnumType.ConvertToString (values);
-				}
-				else
-				{
-					int rank = this.combo.SelectedValue;
-					IEnumValue value = this.enumType[rank];
+                if (enumType != null)
+                {
+                    Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager(
+                        this.host.Placeholder
+                    );
 
-					if (value != null)
-					{
-						return value.Name;
-					}
-					else
-					{
-						return null;
-					}
-				}
-			}
+                    foreach (IEnumValue enumValue in enumType.Values)
+                    {
+                        if (!enumValue.IsHidden)
+                        {
+                            Caption evCaption = Support.CaptionCache.Instance.GetCaption(
+                                manager,
+                                enumValue.CaptionId
+                            );
+                            string evCaptionText = null;
 
-			public override void SetSelectedKey(string name)
-			{
-				if (this.enumType.IsDefinedAsFlags)
-				{
-					IEnumerable<IEnumValue> values = EnumType.ConvertFromString (this.enumType, name);
-					int flags = EnumType.ConvertEnumValuesToFlags (values);
-					this.combo.SelectedValue = flags;
-				}
-				else
-				{
-					IEnumValue value = this.enumType[name];
-					if (value != null)
-					{
-						this.combo.SelectedValue = value.Rank;
-					}
-					else
-					{
-						this.combo.SelectedValue = -1;
-					}
-				}
-			}
+                            if ((evCaption != null) && (evCaption.Labels.Count > 0))
+                            {
+                                evCaptionText = Collection.Extract(evCaption.Labels, 0);
+                            }
 
-			public override void Dispose()
-			{
-				this.combo.SelectionChanged -= this.host.HandleComboTextChanged;
-			}
+                            this.combo.Items.Add(enumValue.Name, evCaptionText ?? enumValue.Name);
+                        }
+                    }
 
-			public override void CreateUserInterface(IEnumType enumType, Caption caption)
-			{
-				this.enumType = enumType;
-				
-				this.label = new StaticText ();
-				this.combo = enumType.IsDefinedAsFlags ? new CheckIconGrid () : new RadioIconGrid ();
+                    this.combo.IsReadOnly = enumType.IsCustomizable ? false : true;
+                }
+            }
 
-				this.host.AddWidget (this.label, WidgetType.Label);
-				this.host.AddWidget (this.combo, WidgetType.Input);
+            private TextFieldCombo combo;
+            private StaticText label;
+        }
 
-				this.label.HorizontalAlignment = HorizontalAlignment.Right;
-				this.label.VerticalAlignment = VerticalAlignment.Center;
-				this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
-				this.label.Dock = DockStyle.Stacked;
+        private class IconsHelper : Helper
+        {
+            public IconsHelper(EnumController host)
+                : base(host) { }
 
-				this.host.SetupLabelWidget (this.label, caption);
+            public override string GetSelectedKey()
+            {
+                if (this.enumType.IsDefinedAsFlags)
+                {
+                    int flags = this.combo.SelectedValue;
+                    IEnumerable<IEnumValue> values = EnumType.ConvertEnumValuesFromFlags(
+                        this.enumType,
+                        flags
+                    );
+                    return EnumType.ConvertToString(values);
+                }
+                else
+                {
+                    int rank = this.combo.SelectedValue;
+                    IEnumValue value = this.enumType[rank];
 
-				this.combo.HorizontalAlignment = HorizontalAlignment.Stretch;
-				this.combo.VerticalAlignment = VerticalAlignment.Center;
-				this.combo.SelectionChanged += this.host.HandleComboTextChanged;
-				this.combo.PreferredWidth = 40;
-				this.combo.PreferredHeight = 22;
+                    if (value != null)
+                    {
+                        return value.Name;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
 
-				this.combo.TabIndex = 1;
-				this.combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.combo.Dock = DockStyle.Stacked;
+            public override void SetSelectedKey(string name)
+            {
+                if (this.enumType.IsDefinedAsFlags)
+                {
+                    IEnumerable<IEnumValue> values = EnumType.ConvertFromString(
+                        this.enumType,
+                        name
+                    );
+                    int flags = EnumType.ConvertEnumValuesToFlags(values);
+                    this.combo.SelectedValue = flags;
+                }
+                else
+                {
+                    IEnumValue value = this.enumType[name];
+                    if (value != null)
+                    {
+                        this.combo.SelectedValue = value.Rank;
+                    }
+                    else
+                    {
+                        this.combo.SelectedValue = -1;
+                    }
+                }
+            }
 
-				if (enumType != null)
-				{
-					Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this.host.Placeholder);
+            public override void Dispose()
+            {
+                this.combo.SelectionChanged -= this.host.HandleComboTextChanged;
+            }
 
-					foreach (IEnumValue enumValue in enumType.Values)
-					{
-						if (!enumValue.IsHidden)
-						{
-							Caption evCaption = Support.CaptionCache.Instance.GetCaption (manager, enumValue.CaptionId);
-							string evCaptionText = null;
-							string evCaptionDesc = null;
+            public override void CreateUserInterface(IEnumType enumType, Caption caption)
+            {
+                this.enumType = enumType;
 
-							if ((evCaption != null) &&
-								(evCaption.Labels.Count > 0))
-							{
-								evCaptionText = Collection.Extract (evCaption.Labels, 0);
-							}
+                this.label = new StaticText();
+                this.combo = enumType.IsDefinedAsFlags ? new CheckIconGrid() : new RadioIconGrid();
 
-							if (evCaption != null)
-							{
-								evCaptionDesc = evCaption.Description;
-							}
+                this.host.AddWidget(this.label, WidgetType.Label);
+                this.host.AddWidget(this.combo, WidgetType.Input);
 
-							string icon = evCaption.Icon;
-							string text = evCaptionText ?? enumValue.Name;
-							string tip  = evCaptionDesc ?? text;
+                this.label.HorizontalAlignment = HorizontalAlignment.Right;
+                this.label.VerticalAlignment = VerticalAlignment.Center;
+                this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
+                this.label.Dock = DockStyle.Stacked;
 
-							int value = this.enumType.IsDefinedAsFlags ? EnumType.ConvertToInt (enumValue.Value) : enumValue.Rank;
+                this.host.SetupLabelWidget(this.label, caption);
 
-							this.combo.AddRadioIcon (icon, tip, value, false);
-						}
-					}
-				}
-			}
+                this.combo.HorizontalAlignment = HorizontalAlignment.Stretch;
+                this.combo.VerticalAlignment = VerticalAlignment.Center;
+                this.combo.SelectionChanged += this.host.HandleComboTextChanged;
+                this.combo.PreferredWidth = 40;
+                this.combo.PreferredHeight = 22;
 
-			private RadioIconGrid combo;
-			private StaticText label;
-			private IEnumType enumType;
-		}
+                this.combo.TabIndex = 1;
+                this.combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+                this.combo.Dock = DockStyle.Stacked;
 
-		private Helper helper;
-	}
+                if (enumType != null)
+                {
+                    Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager(
+                        this.host.Placeholder
+                    );
+
+                    foreach (IEnumValue enumValue in enumType.Values)
+                    {
+                        if (!enumValue.IsHidden)
+                        {
+                            Caption evCaption = Support.CaptionCache.Instance.GetCaption(
+                                manager,
+                                enumValue.CaptionId
+                            );
+                            string evCaptionText = null;
+                            string evCaptionDesc = null;
+
+                            if ((evCaption != null) && (evCaption.Labels.Count > 0))
+                            {
+                                evCaptionText = Collection.Extract(evCaption.Labels, 0);
+                            }
+
+                            if (evCaption != null)
+                            {
+                                evCaptionDesc = evCaption.Description;
+                            }
+
+                            string icon = evCaption.Icon;
+                            string text = evCaptionText ?? enumValue.Name;
+                            string tip = evCaptionDesc ?? text;
+
+                            int value = this.enumType.IsDefinedAsFlags
+                                ? EnumType.ConvertToInt(enumValue.Value)
+                                : enumValue.Rank;
+
+                            this.combo.AddRadioIcon(icon, tip, value, false);
+                        }
+                    }
+                }
+            }
+
+            private RadioIconGrid combo;
+            private StaticText label;
+            private IEnumType enumType;
+        }
+
+        private Helper helper;
+    }
 }

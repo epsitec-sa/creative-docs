@@ -1,360 +1,376 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 
-using System.Collections.Generic;
-
-[assembly: DependencyClass (typeof (PanelStack))]
+[assembly: DependencyClass(typeof(PanelStack))]
 
 namespace Epsitec.Common.UI
 {
-	/// <summary>
-	/// The <c>PanelStack</c> class manages a stack of <c>Panel</c> instances
-	/// (used when the panels are switched to <c>PanelMode.Edition</c>).
-	/// </summary>
-	public class PanelStack : Widgets.AbstractGroup
-	{
-		public PanelStack()
-		{
-			this.editPanels = new Stack<Panel> ();
-			this.miniPanels = new List<MiniPanel> ();
-			
-			this.mask = new PanelMask (this);
-			this.mask.Hide ();
+    /// <summary>
+    /// The <c>PanelStack</c> class manages a stack of <c>Panel</c> instances
+    /// (used when the panels are switched to <c>PanelMode.Edition</c>).
+    /// </summary>
+    public class PanelStack : Widgets.AbstractGroup
+    {
+        public PanelStack()
+        {
+            this.editPanels = new Stack<Panel>();
+            this.miniPanels = new List<MiniPanel>();
 
-			this.toolbar = new Widgets.FrameBox (this);
-			this.toolbar.Hide ();
-			this.toolbar.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+            this.mask = new PanelMask(this);
+            this.mask.Hide();
 
-			this.AddButton (Widgets.ApplicationCommands.Clear, 10);
-			this.AddButton (Widgets.ApplicationCommands.Accept, 0);
-			this.AddButton (Widgets.ApplicationCommands.Reject, 5);
-		}
+            this.toolbar = new Widgets.FrameBox(this);
+            this.toolbar.Hide();
+            this.toolbar.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
 
-		private void AddButton(Widgets.Command command, double spaceAfter)
-		{
-			Widgets.Widget button = new Widgets.IconButton (command);
+            this.AddButton(Widgets.ApplicationCommands.Clear, 10);
+            this.AddButton(Widgets.ApplicationCommands.Accept, 0);
+            this.AddButton(Widgets.ApplicationCommands.Reject, 5);
+        }
 
-			//	TODO: DR/rendre plus joli et plus petits les boutons
-			
-			button.Dock    = Widgets.DockStyle.Stacked;
-			button.Margins = new Drawing.Margins (0, spaceAfter, 0, 0);
-			button.AutoFocus = false;
-			button.SetValue (Widgets.Button.ButtonStyleProperty, Widgets.ButtonStyle.Normal);
-			button.PreferredSize = new Drawing.Size (28, 28);
-			
-			this.toolbar.Children.Add (button);
-		}
+        private void AddButton(Widgets.Command command, double spaceAfter)
+        {
+            Widgets.Widget button = new Widgets.IconButton(command);
 
-		public PanelStack(Widgets.Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
+            //	TODO: DR/rendre plus joli et plus petits les boutons
 
-		public PanelMask Mask
-		{
-			get
-			{
-				return this.mask;
-			}
-		}
+            button.Dock = Widgets.DockStyle.Stacked;
+            button.Margins = new Drawing.Margins(0, spaceAfter, 0, 0);
+            button.AutoFocus = false;
+            button.SetValue(Widgets.Button.ButtonStyleProperty, Widgets.ButtonStyle.Normal);
+            button.PreferredSize = new Drawing.Size(28, 28);
 
-		public Panel EditPanel
-		{
-			get
-			{
-				return this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
-			}
-		}
-		
-		public void StartEdition(Panel panel, string focusWidgetName)
-		{
-			this.StartEdition (panel);
-			
-			if (! string.IsNullOrEmpty (focusWidgetName))
-			{
-				Widgets.Widget focus = panel.FindChild (focusWidgetName);
-				
-				if (focus != null)
-				{
-					focus.SetFocusOnTabWidget ();
-				}
-			}
-		}
+            this.toolbar.Children.Add(button);
+        }
 
-		public void StartEdition(Panel panel)
-		{
-			Panel oldValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
-			
-			this.editPanels.Push (panel);
+        public PanelStack(Widgets.Widget embedder)
+            : this()
+        {
+            this.SetEmbedder(embedder);
+        }
 
-			panel.Owner.BoundsChanged += this.HandlePanelOwnerBoundsChanged;
-			panel.SetParent (this);
-			panel.ZOrder = 0;
-			
-			this.UpdateEditPanelBounds (panel);
-			
-			panel.Show ();
-			panel.SetFocusOnTabWidget ();
+        public PanelMask Mask
+        {
+            get { return this.mask; }
+        }
 
-			Panel newValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
+        public Panel EditPanel
+        {
+            get { return this.editPanels.Count == 0 ? null : this.editPanels.Peek(); }
+        }
 
-			this.OnEditPanelChanged (oldValue, newValue);
-		}
+        public void StartEdition(Panel panel, string focusWidgetName)
+        {
+            this.StartEdition(panel);
 
-		public void EndEdition()
-		{
-			this.EndEdition (this.editPanels.Peek ());
-		}
+            if (!string.IsNullOrEmpty(focusWidgetName))
+            {
+                Widgets.Widget focus = panel.FindChild(focusWidgetName);
 
-		public bool EndEdition(Panel panel)
-		{
-			if (this.editPanels.Contains (panel))
-			{
-				Panel oldValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
-				Panel item;
-				
-				do
-				{
-					item = this.editPanels.Pop ();
+                if (focus != null)
+                {
+                    focus.SetFocusOnTabWidget();
+                }
+            }
+        }
 
-					item.Hide ();
-					
-					item.Owner.BoundsChanged -= this.HandlePanelOwnerBoundsChanged;
-				}
-				while (item != panel);
+        public void StartEdition(Panel panel)
+        {
+            Panel oldValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek();
 
-				this.UpdateMask ();
-				panel.Owner.SetFocusOnTabWidget ();
+            this.editPanels.Push(panel);
 
-				Panel newValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
+            panel.Owner.BoundsChanged += this.HandlePanelOwnerBoundsChanged;
+            panel.SetParent(this);
+            panel.ZOrder = 0;
 
-				this.OnEditPanelChanged (oldValue, newValue);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+            this.UpdateEditPanelBounds(panel);
 
-		public static PanelStack GetPanelStack(Widgets.Visual widget)
-		{
-			while (widget != null)
-			{
-				PanelStack stack = widget as PanelStack;
+            panel.Show();
+            panel.SetFocusOnTabWidget();
 
-				if (stack != null)
-				{
-					return stack;
-				}
+            Panel newValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek();
 
-				Widgets.ILogicalTree logicalTree = widget as Widgets.ILogicalTree;
+            this.OnEditPanelChanged(oldValue, newValue);
+        }
 
-				widget = logicalTree == null ? widget.Parent : logicalTree.Parent;
-			}
+        public void EndEdition()
+        {
+            this.EndEdition(this.editPanels.Peek());
+        }
 
-			return null;
-		}
+        public bool EndEdition(Panel panel)
+        {
+            if (this.editPanels.Contains(panel))
+            {
+                Panel oldValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek();
+                Panel item;
 
-		internal void Add(MiniPanel panel)
-		{
-			this.miniPanels.Add (panel);
+                do
+                {
+                    item = this.editPanels.Pop();
 
-			panel.ApertureChanged += this.HandleMiniPanelApertureChanged;
-			panel.SetParent (this);
-			panel.ZOrder = 0;
+                    item.Hide();
 
-			this.UpdateMiniPanelBounds (panel);
+                    item.Owner.BoundsChanged -= this.HandlePanelOwnerBoundsChanged;
+                } while (item != panel);
 
-			panel.Show ();
-			panel.SetFocusOnTabWidget ();
-		}
+                this.UpdateMask();
+                panel.Owner.SetFocusOnTabWidget();
 
-		internal void Remove(MiniPanel panel)
-		{
-			if (this.miniPanels.Contains (panel))
-			{
-				this.miniPanels.Remove (panel);
+                Panel newValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek();
 
-				panel.ApertureChanged -= this.HandleMiniPanelApertureChanged;
-			}
-		}
+                this.OnEditPanelChanged(oldValue, newValue);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		internal bool NotifyPanelActivation(PanelActivationEventArgs e)
-		{
-			return this.OnPanelActivation (e);
-		}
+        public static PanelStack GetPanelStack(Widgets.Visual widget)
+        {
+            while (widget != null)
+            {
+                PanelStack stack = widget as PanelStack;
 
-		protected virtual bool OnPanelActivation(PanelActivationEventArgs e)
-		{
-			Support.EventHandler<PanelActivationEventArgs> handler = this.GetUserEventHandler<PanelActivationEventArgs> (PanelStack.PanelActivationEventName);
+                if (stack != null)
+                {
+                    return stack;
+                }
 
-			if (handler != null)
-			{
-				handler (this, e);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+                Widgets.ILogicalTree logicalTree = widget as Widgets.ILogicalTree;
 
-		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
-		{
-			base.SetBoundsOverride (oldRect, newRect);
+                widget = logicalTree == null ? widget.Parent : logicalTree.Parent;
+            }
 
-			this.mask.SetManualBounds (new Drawing.Rectangle (0, 0, newRect.Width, newRect.Height));
-		}
+            return null;
+        }
 
-		private void HandlePanelOwnerBoundsChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			foreach (Panel panel in this.editPanels)
-			{
-				if (panel.Owner == sender)
-				{
-					this.UpdateEditPanelBounds (panel);
-					break;
-				}
-			}
-		}
+        internal void Add(MiniPanel panel)
+        {
+            this.miniPanels.Add(panel);
 
-		private void HandleMiniPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			foreach (MiniPanel panel in this.miniPanels)
-			{
-				if (panel == sender)
-				{
-					this.UpdateMiniPanelBounds (panel);
-					break;
-				}
-			}
-		}
+            panel.ApertureChanged += this.HandleMiniPanelApertureChanged;
+            panel.SetParent(this);
+            panel.ZOrder = 0;
 
-		private void UpdateEditPanelBounds(Panel panel)
-		{
-			System.Diagnostics.Debug.Assert (this.editPanels.Count > 0);
-			System.Diagnostics.Debug.Assert (this.editPanels.Contains (panel));
-			
-			Panel owner = panel.Owner;
-			
-			Drawing.Rectangle stackBounds = this.Client.Bounds;
-			Drawing.Rectangle panelBounds = new Drawing.Rectangle (0, 0, System.Math.Max (panel.PreferredWidth, panel.MinWidth), System.Math.Max (panel.PreferredHeight, panel.MinHeight));
-			Drawing.Rectangle ownerBounds = Widgets.Helpers.VisualTree.MapVisualToAncestor (owner, this, owner.Client.Bounds);
+            this.UpdateMiniPanelBounds(panel);
 
-			stackBounds.Deflate (this.Padding);
-			panelBounds.Offset (ownerBounds.Center-panelBounds.Center);
+            panel.Show();
+            panel.SetFocusOnTabWidget();
+        }
 
-			panel.Dock   = Widgets.DockStyle.None;
-			panel.Anchor = Widgets.AnchorStyles.None;
-			
-			panel.SetManualBounds (Drawing.Rectangle.Constrain (panelBounds, stackBounds));
+        internal void Remove(MiniPanel panel)
+        {
+            if (this.miniPanels.Contains(panel))
+            {
+                this.miniPanels.Remove(panel);
 
-			if (panel == this.editPanels.Peek ())
-			{
-				this.UpdateMask ();
-			}
-		}
+                panel.ApertureChanged -= this.HandleMiniPanelApertureChanged;
+            }
+        }
 
-		private void UpdateMiniPanelBounds(MiniPanel panel)
-		{
-			System.Diagnostics.Debug.Assert (this.miniPanels.Count > 0);
-			System.Diagnostics.Debug.Assert (this.miniPanels.Contains (panel));
+        internal bool NotifyPanelActivation(PanelActivationEventArgs e)
+        {
+            return this.OnPanelActivation(e);
+        }
 
-			Drawing.Rectangle stackBounds = this.Client.Bounds;
-			Drawing.Rectangle panelBounds = new Drawing.Rectangle (0, 0, System.Math.Max (panel.PreferredWidth, panel.MinWidth), System.Math.Max (panel.PreferredHeight, panel.MinHeight));
-			Drawing.Rectangle ownerBounds = panel.Aperture;
+        protected virtual bool OnPanelActivation(PanelActivationEventArgs e)
+        {
+            Support.EventHandler<PanelActivationEventArgs> handler =
+                this.GetUserEventHandler<PanelActivationEventArgs>(
+                    PanelStack.PanelActivationEventName
+                );
 
-			panelBounds.Offset (ownerBounds.Left, ownerBounds.Center.Y-panelBounds.Center.Y);
+            if (handler != null)
+            {
+                handler(this, e);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-			panel.SetManualBounds (Drawing.Rectangle.Constrain (panelBounds, stackBounds));
-		}
+        protected override void SetBoundsOverride(
+            Drawing.Rectangle oldRect,
+            Drawing.Rectangle newRect
+        )
+        {
+            base.SetBoundsOverride(oldRect, newRect);
 
-		private void UpdateMask()
-		{
-			if (this.editPanels.Count > 0)
-			{
-				Panel topPanel = this.editPanels.Peek ();
-				Drawing.Rectangle bounds = topPanel.ActualBounds;
+            this.mask.SetManualBounds(new Drawing.Rectangle(0, 0, newRect.Width, newRect.Height));
+        }
 
-				Drawing.Path path = topPanel.CreateAperturePath (true);
+        private void HandlePanelOwnerBoundsChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e
+        )
+        {
+            foreach (Panel panel in this.editPanels)
+            {
+                if (panel.Owner == sender)
+                {
+                    this.UpdateEditPanelBounds(panel);
+                    break;
+                }
+            }
+        }
 
-				if (path == null)
-				{
-					this.mask.Aperture = bounds;
-				}
-				else
-				{
-					this.mask.AperturePath = path;
-				}
-				
-				this.mask.ZOrder = 0;
-				topPanel.ZOrder = 0;
-				this.toolbar.ZOrder = 0;
+        private void HandleMiniPanelApertureChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e
+        )
+        {
+            foreach (MiniPanel panel in this.miniPanels)
+            {
+                if (panel == sender)
+                {
+                    this.UpdateMiniPanelBounds(panel);
+                    break;
+                }
+            }
+        }
 
-				this.toolbar.Margins = new Drawing.Margins (0, this.ActualWidth - bounds.Right, 0, bounds.Bottom - this.toolbar.PreferredHeight);
-				this.toolbar.Anchor = Widgets.AnchorStyles.BottomRight;
-				
-				this.mask.Show ();
-				this.toolbar.Show ();
-			}
-			else
-			{
-				this.mask.Hide ();
-				this.toolbar.Hide ();
-			}
-		}
+        private void UpdateEditPanelBounds(Panel panel)
+        {
+            System.Diagnostics.Debug.Assert(this.editPanels.Count > 0);
+            System.Diagnostics.Debug.Assert(this.editPanels.Contains(panel));
 
-		private void OnEditPanelChanged(Panel oldValue, Panel newValue)
-		{
-			if (oldValue != newValue)
-			{
-				this.InvalidateProperty (PanelStack.EditPanelProperty, oldValue, newValue);
-			}
-		}
+            Panel owner = panel.Owner;
 
+            Drawing.Rectangle stackBounds = this.Client.Bounds;
+            Drawing.Rectangle panelBounds = new Drawing.Rectangle(
+                0,
+                0,
+                System.Math.Max(panel.PreferredWidth, panel.MinWidth),
+                System.Math.Max(panel.PreferredHeight, panel.MinHeight)
+            );
+            Drawing.Rectangle ownerBounds = Widgets.Helpers.VisualTree.MapVisualToAncestor(
+                owner,
+                this,
+                owner.Client.Bounds
+            );
 
-		private static object GetEditPanelValue(DependencyObject obj)
-		{
-			PanelStack stack = (PanelStack) obj;
-			return stack.EditPanel;
-		}
+            stackBounds.Deflate(this.Padding);
+            panelBounds.Offset(ownerBounds.Center - panelBounds.Center);
 
-		public event Support.EventHandler<PanelActivationEventArgs> PanelActivation
-		{
-			add
-			{
-				this.AddUserEventHandler (PanelStack.PanelActivationEventName, value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler (PanelStack.PanelActivationEventName, value);
-			}
-		}
+            panel.Dock = Widgets.DockStyle.None;
+            panel.Anchor = Widgets.AnchorStyles.None;
 
-		public event Support.EventHandler<DependencyPropertyChangedEventArgs> EditPanelChanged
-		{
-			add
-			{
-				this.AddEventHandler (PanelStack.EditPanelProperty, value);
-			}
-			remove
-			{
-				this.RemoveEventHandler (PanelStack.EditPanelProperty, value);
-			}
-		}
-		
-		public static readonly DependencyProperty EditPanelProperty = DependencyProperty.RegisterReadOnly ("EditPanel", typeof (Panel), typeof (PanelStack), new DependencyPropertyMetadata (PanelStack.GetEditPanelValue));
+            panel.SetManualBounds(Drawing.Rectangle.Constrain(panelBounds, stackBounds));
 
-		private const string PanelActivationEventName = "PanelActivation";
+            if (panel == this.editPanels.Peek())
+            {
+                this.UpdateMask();
+            }
+        }
 
-		private Stack<Panel> editPanels;
-		private List<MiniPanel> miniPanels;
-		private PanelMask mask;
-		private Widgets.FrameBox toolbar;
-	}
+        private void UpdateMiniPanelBounds(MiniPanel panel)
+        {
+            System.Diagnostics.Debug.Assert(this.miniPanels.Count > 0);
+            System.Diagnostics.Debug.Assert(this.miniPanels.Contains(panel));
+
+            Drawing.Rectangle stackBounds = this.Client.Bounds;
+            Drawing.Rectangle panelBounds = new Drawing.Rectangle(
+                0,
+                0,
+                System.Math.Max(panel.PreferredWidth, panel.MinWidth),
+                System.Math.Max(panel.PreferredHeight, panel.MinHeight)
+            );
+            Drawing.Rectangle ownerBounds = panel.Aperture;
+
+            panelBounds.Offset(ownerBounds.Left, ownerBounds.Center.Y - panelBounds.Center.Y);
+
+            panel.SetManualBounds(Drawing.Rectangle.Constrain(panelBounds, stackBounds));
+        }
+
+        private void UpdateMask()
+        {
+            if (this.editPanels.Count > 0)
+            {
+                Panel topPanel = this.editPanels.Peek();
+                Drawing.Rectangle bounds = topPanel.ActualBounds;
+
+                Drawing.Path path = topPanel.CreateAperturePath(true);
+
+                if (path == null)
+                {
+                    this.mask.Aperture = bounds;
+                }
+                else
+                {
+                    this.mask.AperturePath = path;
+                }
+
+                this.mask.ZOrder = 0;
+                topPanel.ZOrder = 0;
+                this.toolbar.ZOrder = 0;
+
+                this.toolbar.Margins = new Drawing.Margins(
+                    0,
+                    this.ActualWidth - bounds.Right,
+                    0,
+                    bounds.Bottom - this.toolbar.PreferredHeight
+                );
+                this.toolbar.Anchor = Widgets.AnchorStyles.BottomRight;
+
+                this.mask.Show();
+                this.toolbar.Show();
+            }
+            else
+            {
+                this.mask.Hide();
+                this.toolbar.Hide();
+            }
+        }
+
+        private void OnEditPanelChanged(Panel oldValue, Panel newValue)
+        {
+            if (oldValue != newValue)
+            {
+                this.InvalidateProperty(PanelStack.EditPanelProperty, oldValue, newValue);
+            }
+        }
+
+        private static object GetEditPanelValue(DependencyObject obj)
+        {
+            PanelStack stack = (PanelStack)obj;
+            return stack.EditPanel;
+        }
+
+        public event Support.EventHandler<PanelActivationEventArgs> PanelActivation
+        {
+            add { this.AddUserEventHandler(PanelStack.PanelActivationEventName, value); }
+            remove { this.RemoveUserEventHandler(PanelStack.PanelActivationEventName, value); }
+        }
+
+        public event Support.EventHandler<DependencyPropertyChangedEventArgs> EditPanelChanged
+        {
+            add { this.AddEventHandler(PanelStack.EditPanelProperty, value); }
+            remove { this.RemoveEventHandler(PanelStack.EditPanelProperty, value); }
+        }
+
+        public static readonly DependencyProperty EditPanelProperty =
+            DependencyProperty.RegisterReadOnly(
+                "EditPanel",
+                typeof(Panel),
+                typeof(PanelStack),
+                new DependencyPropertyMetadata(PanelStack.GetEditPanelValue)
+            );
+
+        private const string PanelActivationEventName = "PanelActivation";
+
+        private Stack<Panel> editPanels;
+        private List<MiniPanel> miniPanels;
+        private PanelMask mask;
+        private Widgets.FrameBox toolbar;
+    }
 }

@@ -6,215 +6,167 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Dialogs
 {
-	/// <summary>
-	/// La classe FileOpenDialog présente le dialogue pour ouvrir un fichier.
-	/// </summary>
-	public class FileOpenDialog : Helpers.IFilterCollectionHost
-	{
-		public FileOpenDialog()
-		{
-			this.filters = new Helpers.FilterCollection (this);
+    /// <summary>
+    /// La classe FileOpenDialog présente le dialogue pour ouvrir un fichier.
+    /// </summary>
+    public class FileOpenDialog : Helpers.IFilterCollectionHost
+    {
+        public FileOpenDialog()
+        {
+            this.filters = new Helpers.FilterCollection(this);
 
-			this.dialog = new System.Windows.Forms.OpenFileDialog ()
-			{
-				AutoUpgradeEnabled = true,
-				DereferenceLinks   = true,
-				AddExtension       = true,
-				CheckFileExists    = true,
-				CheckPathExists    = true,
-				RestoreDirectory   = true,
-				ShowHelp           = false,
-				ShowReadOnly       = false,
-				ValidateNames      = true,
-			};
-			
-			this.dialog.FileOk +=
-				(sender, e) =>
-				{
-					string name = this.FileName;
-					string path = System.IO.Path.GetDirectoryName (name);
-					string ext  = System.IO.Path.GetExtension (name);
+            this.dialog = new System.Windows.Forms.OpenFileDialog()
+            {
+                AutoUpgradeEnabled = true,
+                DereferenceLinks = true,
+                AddExtension = true,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                RestoreDirectory = true,
+                ShowHelp = false,
+                ShowReadOnly = false,
+                ValidateNames = true,
+            };
 
-					if ((this.dialog.AddExtension) &&
-						(this.filters.FindExtension (ext) == null))
-					{
-						if (this.dialog.ShowHelp)
-						{
-							//	See FileSaveDialog.
-							var type = typeof (System.Windows.Forms.FileDialog);
-							var info = type.GetField ("dialogHWnd", BindingFlags.NonPublic | BindingFlags.Instance);
-							var fileDialogHandle = (System.IntPtr) info.GetValue (dialog);
+            this.dialog.FileOk += (sender, e) =>
+            {
+                string name = this.FileName;
+                string path = System.IO.Path.GetDirectoryName(name);
+                string ext = System.IO.Path.GetExtension(name);
 
-							var fixedName = System.IO.Path.Combine (path, System.IO.Path.GetFileNameWithoutExtension (name) + "." + this.DefaultExt);
+                if ((this.dialog.AddExtension) && (this.filters.FindExtension(ext) == null))
+                {
+                    if (this.dialog.ShowHelp)
+                    {
+                        //	See FileSaveDialog.
+                        var type = typeof(System.Windows.Forms.FileDialog);
+                        var info = type.GetField(
+                            "dialogHWnd",
+                            BindingFlags.NonPublic | BindingFlags.Instance
+                        );
+                        var fileDialogHandle = (System.IntPtr)info.GetValue(dialog);
 
-							FileOpenDialog.SetFileName (fileDialogHandle, fixedName);
-							e.Cancel = true;
-						}
-						if (ext.ToLowerInvariant () == ".url")
-                        {
-							e.Cancel = true;
-                        }
-					}
-				};
-		}
+                        var fixedName = System.IO.Path.Combine(
+                            path,
+                            System.IO.Path.GetFileNameWithoutExtension(name) + "." + this.DefaultExt
+                        );
+
+                        FileOpenDialog.SetFileName(fileDialogHandle, fixedName);
+                        e.Cancel = true;
+                    }
+                    if (ext.ToLowerInvariant() == ".url")
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            };
+        }
 
 #if true
-		[DllImport ("User32")]
-		private static extern int SetDlgItemText(System.IntPtr hwnd, int id, string title);
+        [DllImport("User32")]
+        private static extern int SetDlgItemText(System.IntPtr hwnd, int id, string title);
 
-		private const int FileTitleCntrlID = 0x47c;
+        private const int FileTitleCntrlID = 0x47c;
 
-		private static void SetFileName(System.IntPtr hdlg, string name)
-		{
-			FileOpenDialog.SetDlgItemText (hdlg, FileOpenDialog.FileTitleCntrlID, name);
-		}
+        private static void SetFileName(System.IntPtr hdlg, string name)
+        {
+            FileOpenDialog.SetDlgItemText(hdlg, FileOpenDialog.FileTitleCntrlID, name);
+        }
 #endif
-		
-		
-		#region IDialog Members
-		public void OpenDialog()
-		{
-			this.dialog.Filter = this.Filters.FileDialogFilter;
-			this.dialog.FilterIndex = this.filterIndex + 1;
-			
-			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject);
-			
-			switch (result)
-			{
-				case System.Windows.Forms.DialogResult.OK:
-				case System.Windows.Forms.DialogResult.Yes:
-					this.result       = DialogResult.Accept;
-					this.filterIndex = this.dialog.FilterIndex - 1;
-					break;
-				
-				default:
-					this.result = DialogResult.Cancel;
-					break;
-			}
-		}
-		
-		public Common.Widgets.Window			OwnerWindow
-		{
-			get
-			{
-				return this.owner;
-			}
-			set
-			{
-				this.owner = value;
-			}
-		}
-		#endregion
+        #region IDialog Members
+        public void OpenDialog()
+        {
+            this.dialog.Filter = this.Filters.FileDialogFilter;
+            this.dialog.FilterIndex = this.filterIndex + 1;
 
-		public string							DefaultExt
-		{
-			get
-			{
-				return this.dialog.DefaultExt;
-			}
-			set
-			{
-				this.dialog.DefaultExt = value;
-			}
-		}
+            System.Windows.Forms.DialogResult result = this.dialog.ShowDialog(
+                this.owner == null ? null : this.owner.PlatformWindowObject
+            );
 
-		public string							FileName
-		{
-			get
-			{
-				return this.dialog.FileName;
-			}
-			set
-			{
-				this.dialog.FileName = value;
-			}
-		}
+            switch (result)
+            {
+                case System.Windows.Forms.DialogResult.OK:
+                case System.Windows.Forms.DialogResult.Yes:
+                    this.result = DialogResult.Accept;
+                    this.filterIndex = this.dialog.FilterIndex - 1;
+                    break;
 
-		public string[]							FileNames
-		{
-			get
-			{
-				return this.dialog.FileNames;
-			}
-		}
+                default:
+                    this.result = DialogResult.Cancel;
+                    break;
+            }
+        }
 
-		public Helpers.FilterCollection			Filters
-		{
-			get
-			{
-				return this.filters;
-			}
-		}
+        public Common.Widgets.Window OwnerWindow
+        {
+            get { return this.owner; }
+            set { this.owner = value; }
+        }
+        #endregion
 
-		public int								FilterIndex
-		{
-			get
-			{
-				return this.filterIndex;
-			}
-			set
-			{
-				this.filterIndex = value;
-			}
-		}
+        public string DefaultExt
+        {
+            get { return this.dialog.DefaultExt; }
+            set { this.dialog.DefaultExt = value; }
+        }
 
-		public string							InitialDirectory
-		{
-			get
-			{
-				return this.dialog.InitialDirectory;
-			}
-			set
-			{
-				this.dialog.InitialDirectory = value;
-			}
-		}
+        public string FileName
+        {
+            get { return this.dialog.FileName; }
+            set { this.dialog.FileName = value; }
+        }
 
-		public bool								AcceptMultipleSelection
-		{
-			get
-			{
-				return this.dialog.Multiselect;
-			}
-			set
-			{
-				this.dialog.Multiselect = value;
-			}
-		}
+        public string[] FileNames
+        {
+            get { return this.dialog.FileNames; }
+        }
 
-		public string							Title
-		{
-			get
-			{
-				return this.dialog.Title;
-			}
-			set
-			{
-				this.dialog.Title = value;
-			}
-		}
-		
-		public DialogResult						Result
-		{
-			get
-			{
-				return this.result;
-			}
-		}
-		
-		
-		#region IFilterCollectionHost Members
-		public void FilterCollectionChanged()
-		{
-			//	Rien de spécial à faire...
-		}
-		#endregion
+        public Helpers.FilterCollection Filters
+        {
+            get { return this.filters; }
+        }
+
+        public int FilterIndex
+        {
+            get { return this.filterIndex; }
+            set { this.filterIndex = value; }
+        }
+
+        public string InitialDirectory
+        {
+            get { return this.dialog.InitialDirectory; }
+            set { this.dialog.InitialDirectory = value; }
+        }
+
+        public bool AcceptMultipleSelection
+        {
+            get { return this.dialog.Multiselect; }
+            set { this.dialog.Multiselect = value; }
+        }
+
+        public string Title
+        {
+            get { return this.dialog.Title; }
+            set { this.dialog.Title = value; }
+        }
+
+        public DialogResult Result
+        {
+            get { return this.result; }
+        }
+
+        #region IFilterCollectionHost Members
+        public void FilterCollectionChanged()
+        {
+            //	Rien de spécial à faire...
+        }
+        #endregion
 
 
-		private readonly System.Windows.Forms.OpenFileDialog	dialog;
-		private readonly Helpers.FilterCollection				filters;
-		private Common.Widgets.Window							owner;
-		private int												filterIndex;
-		private DialogResult									result = DialogResult.None;
-	}
+        private readonly System.Windows.Forms.OpenFileDialog dialog;
+        private readonly Helpers.FilterCollection filters;
+        private Common.Widgets.Window owner;
+        private int filterIndex;
+        private DialogResult result = DialogResult.None;
+    }
 }

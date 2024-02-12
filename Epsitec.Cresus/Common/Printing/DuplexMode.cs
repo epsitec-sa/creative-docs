@@ -3,14 +3,14 @@
 
 namespace Epsitec.Common.Printing
 {
-	/// <summary>
-	/// L'énumération DuplexMode donne les divers mode d'impression recto/verso.
-	/// </summary>
-	public enum DuplexMode
-	{
-		Default,
-		Simplex,
-		Horizontal,
-		Vertical,
-	}
+    /// <summary>
+    /// L'énumération DuplexMode donne les divers mode d'impression recto/verso.
+    /// </summary>
+    public enum DuplexMode
+    {
+        Default,
+        Simplex,
+        Horizontal,
+        Vertical,
+    }
 }

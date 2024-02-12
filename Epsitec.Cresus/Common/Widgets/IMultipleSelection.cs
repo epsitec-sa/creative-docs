@@ -5,19 +5,18 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	public interface IMultipleSelection : Collections.IStringCollectionHost, Support.Data.IKeyedStringSelection
-	{
-		int SelectionCount
-		{
-			get;
-		}
+    public interface IMultipleSelection
+        : Collections.IStringCollectionHost,
+            Support.Data.IKeyedStringSelection
+    {
+        int SelectionCount { get; }
 
-		void AddSelection(IEnumerable<int> selection);
-		void RemoveSelection(IEnumerable<int> selection);
-		void ClearSelection();
+        void AddSelection(IEnumerable<int> selection);
+        void RemoveSelection(IEnumerable<int> selection);
+        void ClearSelection();
 
-		ICollection<int> GetSortedSelection();
+        ICollection<int> GetSortedSelection();
 
-		bool IsItemSelected(int index);
-	}
+        bool IsItemSelected(int index);
+    }
 }

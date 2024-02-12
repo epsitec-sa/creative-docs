@@ -6,11 +6,8 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public interface IItemDataProvider
-	{
-		int Count
-		{
-			get;
-		}
-	}
+    public interface IItemDataProvider
+    {
+        int Count { get; }
+    }
 }

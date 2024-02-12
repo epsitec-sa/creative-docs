@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Support
 {
-	/// <summary>
-	/// L'interface IImageProvider donne accès à des images en fonction de
-	/// leur nom.
-	/// </summary>
-	public interface IImageProvider
-	{
-		Drawing.Image GetImage(string name, ResourceManager resourceManager);
-		void ClearImageCache(string name);
-	}
+    /// <summary>
+    /// L'interface IImageProvider donne accès à des images en fonction de
+    /// leur nom.
+    /// </summary>
+    public interface IImageProvider
+    {
+        Drawing.Image GetImage(string name, ResourceManager resourceManager);
+        void ClearImageCache(string name);
+    }
 }

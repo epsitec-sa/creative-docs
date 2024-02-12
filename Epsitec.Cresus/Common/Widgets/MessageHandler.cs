@@ -3,5 +3,5 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public delegate void MessageHandler(object sender, Message message);
+    public delegate void MessageHandler(object sender, Message message);
 }

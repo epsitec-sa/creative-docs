@@ -3,17 +3,14 @@
 
 namespace Epsitec.Common.Debug
 {
-	/// <summary>
-	/// La classe FailureException permet de signaler un échec général.
-	/// </summary>
-	public class FailureException : System.ApplicationException
-	{
-		public FailureException()
-		{
-		}
-		
-		public FailureException(string message) : base (message)
-		{
-		}
-	}
+    /// <summary>
+    /// La classe FailureException permet de signaler un échec général.
+    /// </summary>
+    public class FailureException : System.ApplicationException
+    {
+        public FailureException() { }
+
+        public FailureException(string message)
+            : base(message) { }
+    }
 }

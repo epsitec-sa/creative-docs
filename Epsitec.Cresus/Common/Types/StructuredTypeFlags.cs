@@ -3,18 +3,18 @@
 
 namespace Epsitec.Common.Types
 {
-	[DesignerVisible]
-	[System.Flags]
-	public enum StructuredTypeFlags
-	{
-		None = 0,
+    [DesignerVisible]
+    [System.Flags]
+    public enum StructuredTypeFlags
+    {
+        None = 0,
 
-		GenerateSchema		= 0x00000001,
-		GenerateRepository	= 0x00000002,
+        GenerateSchema = 0x00000001,
+        GenerateRepository = 0x00000002,
 
-		AbstractClass		= 0x00000100,
+        AbstractClass = 0x00000100,
 
-		StandaloneDisplay	= 0x00001000,
-		StandaloneCreation	= 0x00002000,
-	}
+        StandaloneDisplay = 0x00001000,
+        StandaloneCreation = 0x00002000,
+    }
 }

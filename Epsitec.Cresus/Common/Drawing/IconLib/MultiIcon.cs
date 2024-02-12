@@ -2,28 +2,28 @@
 //  Email:  gustavo_franco@hotmail.com
 //  All rights reserved.
 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
 
-//  Redistributions of source code must retain the above copyright notice, 
-//  this list of conditions and the following disclaimer. 
-//  Redistributions in binary form must reproduce the above copyright notice, 
-//  this list of conditions and the following disclaimer in the documentation 
-//  and/or other materials provided with the distribution. 
+//  Redistributions of source code must retain the above copyright notice,
+//  this list of conditions and the following disclaimer.
+//  Redistributions in binary form must reproduce the above copyright notice,
+//  this list of conditions and the following disclaimer in the documentation
+//  and/or other materials provided with the distribution.
 
 //  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
+//  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
 using System;
-using System.IO;
-using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Drawing.IconLib.Exceptions;
 using System.Drawing.IconLib.EncodingFormats;
+using System.Drawing.IconLib.Exceptions;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace System.Drawing.IconLib
 {
@@ -31,13 +31,11 @@ namespace System.Drawing.IconLib
     public class MultiIcon : List<SingleIcon>
     {
         #region Variables Declaration
-        private int mSelectedIndex  = -1;
+        private int mSelectedIndex = -1;
         #endregion
 
         #region Constructors
-        public MultiIcon()
-        {
-        }
+        public MultiIcon() { }
 
         public MultiIcon(IEnumerable<SingleIcon> collection)
         {
@@ -54,7 +52,7 @@ namespace System.Drawing.IconLib
         #region Properties
         public int SelectedIndex
         {
-            get {return mSelectedIndex;}
+            get { return mSelectedIndex; }
             set
             {
                 if (value >= Count)
@@ -78,7 +76,7 @@ namespace System.Drawing.IconLib
                 if (value == null)
                     throw new ArgumentNullException("SelectedName");
 
-                for(int i=0; i<Count; i++)
+                for (int i = 0; i < Count; i++)
                     if (this[i].Name.ToLower() == value.ToLower())
                     {
                         mSelectedIndex = i;
@@ -91,10 +89,10 @@ namespace System.Drawing.IconLib
 
         public string[] IconNames
         {
-            get 
+            get
             {
                 List<string> names = new List<string>();
-                foreach(SingleIcon icon in this)
+                foreach (SingleIcon icon in this)
                     names.Add(icon.Name);
                 return names.ToArray();
             }
@@ -106,7 +104,7 @@ namespace System.Drawing.IconLib
         {
             get
             {
-                for(int i=0; i<Count; i++)
+                for (int i = 0; i < Count; i++)
                     if (this[i].Name.ToLower() == name.ToLower())
                         return this[i];
                 return null;
@@ -156,7 +154,7 @@ namespace System.Drawing.IconLib
                 throw new ArgumentNullException("iconName");
 
             // Exist?
-            for(int i=0; i<Count; i++)
+            for (int i = 0; i < Count; i++)
                 if (this[i].Name.ToLower() == iconName.ToLower())
                     return i;
             return -1;
@@ -245,7 +243,9 @@ namespace System.Drawing.IconLib
                 case MultiIconFormat.Src:
                     throw new NotSupportedException("File format not supported");
                 default:
-                    throw new NotSupportedException("Unknow file type destination, Icons can't be saved");
+                    throw new NotSupportedException(
+                        "Unknow file type destination, Icons can't be saved"
+                    );
             }
         }
         #endregion

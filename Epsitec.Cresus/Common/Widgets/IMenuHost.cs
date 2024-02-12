@@ -3,12 +3,17 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// L'interface IMenuHost permet à un widget de spécifier où un sous-menu
-	/// doit s'afficher à l'écran.
-	/// </summary>
-	public interface IMenuHost
-	{
-		void GetMenuDisposition(Widget parentWidget, ref Drawing.Size size, out Drawing.Point location, out Animation animation);
-	}
+    /// <summary>
+    /// L'interface IMenuHost permet à un widget de spécifier où un sous-menu
+    /// doit s'afficher à l'écran.
+    /// </summary>
+    public interface IMenuHost
+    {
+        void GetMenuDisposition(
+            Widget parentWidget,
+            ref Drawing.Size size,
+            out Drawing.Point location,
+            out Animation animation
+        );
+    }
 }

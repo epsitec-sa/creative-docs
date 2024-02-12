@@ -1,140 +1,128 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
-using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Common.Support.EntityEngine
 {
-	/// <summary>
-	/// The <c>EntityField</c> class defines an entity field based on the entity's DRUID
-	/// and the field's ID. <c>EntityField</c> can be mapped to a <see cref="PropertyInfo"/>.
-	/// See also <see cref="EntityFieldPath"/>.
-	/// </summary>
-	public sealed class EntityField : System.IEquatable<EntityField>
-	{
-		public EntityField()
-			: this (Druid.Empty, null)
-		{
+    /// <summary>
+    /// The <c>EntityField</c> class defines an entity field based on the entity's DRUID
+    /// and the field's ID. <c>EntityField</c> can be mapped to a <see cref="PropertyInfo"/>.
+    /// See also <see cref="EntityFieldPath"/>.
+    /// </summary>
+    public sealed class EntityField : System.IEquatable<EntityField>
+    {
+        public EntityField()
+            : this(Druid.Empty, null) { }
 
-		}
+        public EntityField(Druid entityId, string fieldId)
+        {
+            this.entityId = entityId;
+            this.fieldId = fieldId ?? "";
+        }
 
-		public EntityField(Druid entityId, string fieldId)
-		{
-			this.entityId = entityId;
-			this.fieldId  = fieldId ?? "";
-		}
+        public EntityField(PropertyInfo propertyInfo)
+            : this(Druid.Empty, null)
+        {
+            if (propertyInfo == null)
+            {
+                return;
+            }
 
-		public EntityField(PropertyInfo propertyInfo)
-			: this (Druid.Empty, null)
-		{
-			if (propertyInfo == null)
-			{
-				return;
-			}
+            var structuredType = EntityInfo.GetStructuredType(propertyInfo.DeclaringType);
+            var fieldAttribute = propertyInfo
+                .GetCustomAttributes<EntityFieldAttribute>(true)
+                .FirstOrDefault();
 
-			var structuredType = EntityInfo.GetStructuredType (propertyInfo.DeclaringType);
-			var fieldAttribute = propertyInfo.GetCustomAttributes<EntityFieldAttribute> (true).FirstOrDefault ();
+            if (
+                (structuredType == null)
+                || (fieldAttribute == null)
+                || (fieldAttribute.FieldId == null)
+            )
+            {
+                return;
+            }
 
-			if ((structuredType == null) ||
-				(fieldAttribute == null) ||
-				(fieldAttribute.FieldId == null))
-			{
-				return;
-			}
+            this.entityId = structuredType.CaptionId;
+            this.fieldId = fieldAttribute.FieldId;
+        }
 
-			this.entityId = structuredType.CaptionId;
-			this.fieldId  = fieldAttribute.FieldId;
-		}
+        public Druid EntityId
+        {
+            get { return entityId; }
+        }
 
-		
-		public Druid							EntityId
-		{
-			get
-			{
-				return entityId;
-			}
-		}
+        public string FieldId
+        {
+            get { return fieldId; }
+        }
 
-		public string							FieldId
-		{
-			get
-			{
-				return fieldId;
-			}
-		}
+        public static explicit operator PropertyInfo(EntityField field)
+        {
+            return EntityFieldConverter.ConvertToProperty(field);
+        }
 
+        public static explicit operator EntityField(PropertyInfo propertyInfo)
+        {
+            return EntityFieldConverter.ConvertToEntityField(propertyInfo);
+        }
 
-		public static explicit operator PropertyInfo(EntityField field)
-		{
-			return EntityFieldConverter.ConvertToProperty (field);
-		}
+        public static EntityField Parse(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new System.ArgumentNullException("vaue");
+            }
 
-		public static explicit operator EntityField(PropertyInfo propertyInfo)
-		{
-			return EntityFieldConverter.ConvertToEntityField (propertyInfo);
-		}
+            int pos = value.IndexOf(':');
 
+            if (pos < 1)
+            {
+                throw new System.FormatException("EntityField is not properly formatted");
+            }
 
-		public static EntityField Parse(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				throw new System.ArgumentNullException ("vaue");
-			}
+            var druid = value.Substring(0, pos);
+            var field = value.Substring(pos + 1);
 
-			int pos = value.IndexOf (':');
+            return new EntityField(Druid.Parse(druid), field);
+        }
 
-			if (pos < 1)
-			{
-				throw new System.FormatException ("EntityField is not properly formatted");
-			}
+        public override string ToString()
+        {
+            return string.Concat(this.entityId.ToString(), ":", this.fieldId);
+        }
 
-			var druid = value.Substring (0, pos);
-			var field = value.Substring (pos+1);
+        public override int GetHashCode()
+        {
+            return this.entityId.GetHashCode() ^ this.fieldId.GetHashCode();
+        }
 
-			return new EntityField (Druid.Parse (druid), field);
-		}
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as EntityField);
+        }
 
+        #region IEquatable<EntityField> Members
 
-		public override string ToString()
-		{
-			return string.Concat (this.entityId.ToString (), ":", this.fieldId);
-		}
-		
-		public override int GetHashCode()
-		{
-			return this.entityId.GetHashCode () ^ this.fieldId.GetHashCode ();
-		}
+        public bool Equals(EntityField other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
 
-		public override bool Equals(object obj)
-		{
-			return this.Equals (obj as EntityField);
-		}
+            return this.entityId == other.entityId && this.fieldId == other.fieldId;
+        }
 
-
-		#region IEquatable<EntityField> Members
-
-		public bool Equals(EntityField other)
-		{
-			if (other == null)
-			{
-				return false;
-			}
-
-			return this.entityId == other.entityId
-				&& this.fieldId == other.fieldId;
-		}
-
-		#endregion
+        #endregion
 
 
-		private readonly Druid					entityId;
-		private readonly string					fieldId;
-	}
+        private readonly Druid entityId;
+        private readonly string fieldId;
+    }
 }

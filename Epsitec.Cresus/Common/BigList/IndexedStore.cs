@@ -6,11 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	internal class IndexedStore<TValue> : Dictionary<int, TValue>
-	{
-		public IndexedStore(int capacity)
-			: base (capacity)
-		{
-		}
-	}
+    internal class IndexedStore<TValue> : Dictionary<int, TValue>
+    {
+        public IndexedStore(int capacity)
+            : base(capacity) { }
+    }
 }

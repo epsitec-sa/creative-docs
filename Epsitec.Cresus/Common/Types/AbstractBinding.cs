@@ -6,111 +6,106 @@ using System.Globalization;
 
 namespace Epsitec.Common.Types
 {
-	public abstract class AbstractBinding
-	{
-		protected AbstractBinding()
-		{
-		}
-		
-		internal bool Deferred
-		{
-			get
-			{
-				return this.deferCounter > 0;
-			}
-		}
+    public abstract class AbstractBinding
+    {
+        protected AbstractBinding() { }
 
-		/// <summary>
-		/// Defers the changes; this method should be used in a <c>using</c>
-		/// clause when changing several properties of the binding, to
-		/// avoid immediate changes.
-		/// </summary>
-		/// <returns>An <see cref="T:System.IDisposable"/> object which should
-		/// be disposed to reactivate the normal change propagation.</returns>
-		public System.IDisposable DeferChanges()
-		{
-			return new DeferManager (this);
-		}
+        internal bool Deferred
+        {
+            get { return this.deferCounter > 0; }
+        }
 
-		internal void Add(BindingExpression expression)
-		{
-			//	The binding expression is referenced through a weak binding
-			//	by the binding itself, which allows for the expression to be
-			//	garbage collected when its property dies.
+        /// <summary>
+        /// Defers the changes; this method should be used in a <c>using</c>
+        /// clause when changing several properties of the binding, to
+        /// avoid immediate changes.
+        /// </summary>
+        /// <returns>An <see cref="T:System.IDisposable"/> object which should
+        /// be disposed to reactivate the normal change propagation.</returns>
+        public System.IDisposable DeferChanges()
+        {
+            return new DeferManager(this);
+        }
 
-			this.AddExpression (expression);
-		}
+        internal void Add(BindingExpression expression)
+        {
+            //	The binding expression is referenced through a weak binding
+            //	by the binding itself, which allows for the expression to be
+            //	garbage collected when its property dies.
 
-		internal void Remove(BindingExpression expression)
-		{
-			this.RemoveExpression (expression);
-		}
+            this.AddExpression(expression);
+        }
 
-		protected void NotifyBeforeChange()
-		{
-			this.DetachBeforeChanges ();
-		}
+        internal void Remove(BindingExpression expression)
+        {
+            this.RemoveExpression(expression);
+        }
 
-		protected void NotifyAfterChange()
-		{
-			if (this.deferCounter == 0)
-			{
-				this.AttachAfterChanges ();
-			}
-		}
+        protected void NotifyBeforeChange()
+        {
+            this.DetachBeforeChanges();
+        }
 
-		protected abstract void DetachBeforeChanges();
+        protected void NotifyAfterChange()
+        {
+            if (this.deferCounter == 0)
+            {
+                this.AttachAfterChanges();
+            }
+        }
 
-		protected abstract void AttachAfterChanges();
+        protected abstract void DetachBeforeChanges();
 
-		protected abstract void AddExpression(BindingExpression expression);
+        protected abstract void AttachAfterChanges();
 
-		protected abstract void RemoveExpression(BindingExpression expression);
+        protected abstract void AddExpression(BindingExpression expression);
 
-		protected abstract IEnumerable<BindingExpression> GetExpressions();
+        protected abstract void RemoveExpression(BindingExpression expression);
 
-		private void BeginDefer()
-		{
-			System.Threading.Interlocked.Increment (ref this.deferCounter);
-		}
+        protected abstract IEnumerable<BindingExpression> GetExpressions();
 
-		private void EndDefer()
-		{
-			if (System.Threading.Interlocked.Decrement (ref this.deferCounter) == 0)
-			{
-				this.AttachAfterChanges ();
-			}
-		}
-		
-		#region Private DeferManager Class
-		
-		private sealed class DeferManager : System.IDisposable
-		{
-			public DeferManager(AbstractBinding binding)
-			{
-				this.binding = binding;
-				this.binding.BeginDefer ();
-			}
+        private void BeginDefer()
+        {
+            System.Threading.Interlocked.Increment(ref this.deferCounter);
+        }
 
-			#region IDisposable Members
-			
-			void System.IDisposable.Dispose()
-			{
-				if (this.binding != null)
-				{
-					AbstractBinding binding = this.binding;
-					this.binding = null;
-					binding.EndDefer ();
-				}
-			}
-			
-#endregion
+        private void EndDefer()
+        {
+            if (System.Threading.Interlocked.Decrement(ref this.deferCounter) == 0)
+            {
+                this.AttachAfterChanges();
+            }
+        }
 
-			private AbstractBinding binding;
-		}
-		
-#endregion
+        #region Private DeferManager Class
 
-		private int deferCounter;
-	}
+        private sealed class DeferManager : System.IDisposable
+        {
+            public DeferManager(AbstractBinding binding)
+            {
+                this.binding = binding;
+                this.binding.BeginDefer();
+            }
+
+            #region IDisposable Members
+
+            void System.IDisposable.Dispose()
+            {
+                if (this.binding != null)
+                {
+                    AbstractBinding binding = this.binding;
+                    this.binding = null;
+                    binding.EndDefer();
+                }
+            }
+
+            #endregion
+
+            private AbstractBinding binding;
+        }
+
+        #endregion
+
+        private int deferCounter;
+    }
 }

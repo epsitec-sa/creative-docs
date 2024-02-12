@@ -6,12 +6,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.Extensions
 {
-	public static class HashSetExtensions
-	{
-		public static void AddRange<T>(this HashSet<T> set, IEnumerable<T> collection)
-		{
-			set.UnionWith (collection);
-		}
-	}
+    public static class HashSetExtensions
+    {
+        public static void AddRange<T>(this HashSet<T> set, IEnumerable<T> collection)
+        {
+            set.UnionWith(collection);
+        }
+    }
 }
-

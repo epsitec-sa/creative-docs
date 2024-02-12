@@ -3,11 +3,11 @@
 
 namespace Epsitec.Common.Support
 {
-	public enum FileInfoIconSize : byte
-	{
-		None,
+    public enum FileInfoIconSize : byte
+    {
+        None,
 
-		Small,
-		Large,
-	}
+        Small,
+        Large,
+    }
 }

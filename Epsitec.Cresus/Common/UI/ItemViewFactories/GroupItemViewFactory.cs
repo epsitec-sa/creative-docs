@@ -5,54 +5,59 @@ using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.ItemViewFactories;
 
-[assembly:ItemViewFactory (typeof (GroupItemViewFactory), ItemType=typeof (CollectionViewGroup))]
+[assembly: ItemViewFactory(typeof(GroupItemViewFactory), ItemType = typeof(CollectionViewGroup))]
 
 namespace Epsitec.Common.UI.ItemViewFactories
 {
-	internal sealed class GroupItemViewFactory : AbstractItemViewFactory
-	{
-		#region IItemViewFactory Members
+    internal sealed class GroupItemViewFactory : AbstractItemViewFactory
+    {
+        #region IItemViewFactory Members
 
-		public override ItemViewWidget CreateUserInterface(ItemView itemView)
-		{
-			ItemPanelGroup group = itemView.Group;
+        public override ItemViewWidget CreateUserInterface(ItemView itemView)
+        {
+            ItemPanelGroup group = itemView.Group;
 
-			if (group == null)
-			{
-				group = new ItemPanelGroup (itemView);
-			}
-			
-			group.PreferredWidth = itemView.Size.Width;
-			
-			return group;
-		}
+            if (group == null)
+            {
+                group = new ItemPanelGroup(itemView);
+            }
 
-		public override void DisposeUserInterface(ItemViewWidget widget)
-		{
-			ItemPanelGroup group = widget as ItemPanelGroup;
+            group.PreferredWidth = itemView.Size.Width;
 
-			group.Dispose ();
-		}
+            return group;
+        }
 
-		#endregion
-		
-		protected override Widgets.Widget CreateElement(string name, ItemPanel panel, ItemView view, ItemViewShape shape)
-		{
-			return null;
-		}
+        public override void DisposeUserInterface(ItemViewWidget widget)
+        {
+            ItemPanelGroup group = widget as ItemPanelGroup;
 
-		public override Drawing.Size GetPreferredSize(ItemView itemView)
-		{
-			ItemPanelGroup group = itemView.Group;
+            group.Dispose();
+        }
 
-			if (group == null)
-			{
-				group = new ItemPanelGroup (itemView);
-			}
+        #endregion
 
-			group.ChildPanel.PreferredLayoutWidth = itemView.Owner.PreferredLayoutWidth;
-				
-			return group.GetBestFitSize ();
-		}
-	}
+        protected override Widgets.Widget CreateElement(
+            string name,
+            ItemPanel panel,
+            ItemView view,
+            ItemViewShape shape
+        )
+        {
+            return null;
+        }
+
+        public override Drawing.Size GetPreferredSize(ItemView itemView)
+        {
+            ItemPanelGroup group = itemView.Group;
+
+            if (group == null)
+            {
+                group = new ItemPanelGroup(itemView);
+            }
+
+            group.ChildPanel.PreferredLayoutWidth = itemView.Owner.PreferredLayoutWidth;
+
+            return group.GetBestFitSize();
+        }
+    }
 }

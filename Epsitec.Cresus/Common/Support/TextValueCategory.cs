@@ -6,16 +6,16 @@ using System.Linq;
 
 namespace Epsitec.Common.Support
 {
-	/// <summary>
-	/// The <c>TextValueCategory</c> enumeration defines a few common categories used to classify
-	/// <see cref="TextValue"/> instances.
-	/// </summary>
-	public enum TextValueCategory
-	{
-		Data,
+    /// <summary>
+    /// The <c>TextValueCategory</c> enumeration defines a few common categories used to classify
+    /// <see cref="TextValue"/> instances.
+    /// </summary>
+    public enum TextValueCategory
+    {
+        Data,
 
-		Summary,
-		Name,
-		Description,
-	}
+        Summary,
+        Name,
+        Description,
+    }
 }

@@ -3,10 +3,10 @@
 
 namespace Epsitec.Common.Dialogs
 {
-	public enum FileDialogType
-	{
-		Open,
-		Save,
-		New,
-	}
+    public enum FileDialogType
+    {
+        Open,
+        Save,
+        New,
+    }
 }

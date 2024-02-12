@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public enum ItemSelectionMode
-	{
-		None,
+    public enum ItemSelectionMode
+    {
+        None,
 
-		ZeroOrOne,
-		ExactlyOne,
+        ZeroOrOne,
+        ExactlyOne,
 
-		Multiple,
-		OneOrMore,
-	}
+        Multiple,
+        OneOrMore,
+    }
 }

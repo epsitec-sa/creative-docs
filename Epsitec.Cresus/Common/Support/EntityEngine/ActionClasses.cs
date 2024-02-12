@@ -6,25 +6,25 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-	/// <summary>
-	/// The <c>ActionClasses</c> enumeration defines classes used to categorize actions.
-	/// See also <see cref="ActionInfo"/> and the <c>[Action]</c> attribute.
-	/// </summary>
-	public enum ActionClasses
-	{
-		None,
+    /// <summary>
+    /// The <c>ActionClasses</c> enumeration defines classes used to categorize actions.
+    /// See also <see cref="ActionInfo"/> and the <c>[Action]</c> attribute.
+    /// </summary>
+    public enum ActionClasses
+    {
+        None,
 
-		Create,
-		Delete,
-		Validate,
-		Clear,
-		Cancel,
+        Create,
+        Delete,
+        Validate,
+        Clear,
+        Cancel,
 
-		Start,
-		NextStep,
-		Stop,
+        Start,
+        NextStep,
+        Stop,
 
-		Output,
-		Input,
-	}
+        Output,
+        Input,
+    }
 }

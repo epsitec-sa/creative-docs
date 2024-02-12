@@ -7,19 +7,19 @@ using System.Net;
 
 namespace Epsitec.Common.IO
 {
-	public static class Web
-	{
-		public static IEnumerable<string> DownloadLines(string uri, System.Text.Encoding encoding)
-		{
-			string value;
+    public static class Web
+    {
+        public static IEnumerable<string> DownloadLines(string uri, System.Text.Encoding encoding)
+        {
+            string value;
 
-			using (WebClient client = new WebClient ())
-			{
-				byte[] data = client.DownloadData (uri);
-				value = encoding.GetString (data);
-			}
+            using (WebClient client = new WebClient())
+            {
+                byte[] data = client.DownloadData(uri);
+                value = encoding.GetString(data);
+            }
 
-			return value.Split ('\n').Select (x => x.TrimEnd (' ', '\r'));
-		}
-	}
+            return value.Split('\n').Select(x => x.TrimEnd(' ', '\r'));
+        }
+    }
 }

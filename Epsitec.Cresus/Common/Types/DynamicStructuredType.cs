@@ -3,86 +3,81 @@
 
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.DynamicStructuredType))]
+[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Types.DynamicStructuredType))]
 
 namespace Epsitec.Common.Types
 {
-	/// <summary>
-	/// The <c>DynamicStructuredType</c> class describes a data structure which is
-	/// dynamic (it has no defined <c>IStructuredType</c>).
-	/// </summary>
-	public class DynamicStructuredType : AbstractType, IStructuredType
-	{
-		public DynamicStructuredType(IStructuredData data) : base ("DynamicStructure")
-		{
-			this.data = data;
-		}
+    /// <summary>
+    /// The <c>DynamicStructuredType</c> class describes a data structure which is
+    /// dynamic (it has no defined <c>IStructuredType</c>).
+    /// </summary>
+    public class DynamicStructuredType : AbstractType, IStructuredType
+    {
+        public DynamicStructuredType(IStructuredData data)
+            : base("DynamicStructure")
+        {
+            this.data = data;
+        }
 
-		/// <summary>
-		/// Gets the type code for the type.
-		/// </summary>
-		/// <value>The type code.</value>
-		public override TypeCode TypeCode
-		{
-			get
-			{
-				return TypeCode.Dynamic;
-			}
-		}
+        /// <summary>
+        /// Gets the type code for the type.
+        /// </summary>
+        /// <value>The type code.</value>
+        public override TypeCode TypeCode
+        {
+            get { return TypeCode.Dynamic; }
+        }
 
-		#region IStructuredType Members
+        #region IStructuredType Members
 
-		public StructuredTypeField GetField(string fieldId)
-		{
-			object value = this.data.GetValue (fieldId);
+        public StructuredTypeField GetField(string fieldId)
+        {
+            object value = this.data.GetValue(fieldId);
 
-			if (UnknownValue.IsUnknownValue (value))
-			{
-				return null;
-			}
-			
-			object typeObject = TypeRosetta.GetTypeObjectFromValue (value);
-			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
+            if (UnknownValue.IsUnknownValue(value))
+            {
+                return null;
+            }
 
-			return new StructuredTypeField (fieldId, namedType);
-		}
+            object typeObject = TypeRosetta.GetTypeObjectFromValue(value);
+            INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject(typeObject);
 
-		public IEnumerable<string> GetFieldIds()
-		{
-			return this.data.GetValueIds ();
-		}
+            return new StructuredTypeField(fieldId, namedType);
+        }
 
-		public StructuredTypeClass GetClass()
-		{
-			return StructuredTypeClass.None;
-		}
+        public IEnumerable<string> GetFieldIds()
+        {
+            return this.data.GetValueIds();
+        }
 
-		#endregion
+        public StructuredTypeClass GetClass()
+        {
+            return StructuredTypeClass.None;
+        }
 
-		#region ISystemType Members
+        #endregion
 
-		public override System.Type SystemType
-		{
-			get
-			{
-				return null;
-			}
-		}
+        #region ISystemType Members
 
-		#endregion
+        public override System.Type SystemType
+        {
+            get { return null; }
+        }
 
-		public override bool IsValidValue(object value)
-		{
-			if (this.IsNullValue (value))
-			{
-				return this.IsNullable;
-			}
+        #endregion
 
-			StructuredData data = value as StructuredData;
+        public override bool IsValidValue(object value)
+        {
+            if (this.IsNullValue(value))
+            {
+                return this.IsNullable;
+            }
 
-			return (data != null) && (data.StructuredType == this);
-		}
+            StructuredData data = value as StructuredData;
 
-		private IStructuredData data;
-	}
+            return (data != null) && (data.StructuredType == this);
+        }
+
+        private IStructuredData data;
+    }
 }

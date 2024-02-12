@@ -5,255 +5,261 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
-	/// <summary>
-	/// The <c>CustomThreadPool</c> class implements a specialized thread pool
-	/// which is used by the image manager to execute asynchronous threads.
-	/// </summary>
-	internal sealed class CustomThreadPool : System.IDisposable
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CustomThreadPool"/> class.
-		/// </summary>
-		public CustomThreadPool()
-		{
-		}
+    /// <summary>
+    /// The <c>CustomThreadPool</c> class implements a specialized thread pool
+    /// which is used by the image manager to execute asynchronous threads.
+    /// </summary>
+    internal sealed class CustomThreadPool : System.IDisposable
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomThreadPool"/> class.
+        /// </summary>
+        public CustomThreadPool() { }
 
-		/// <summary>
-		/// Defines the memory limit which specified when too much memory is used.
-		/// </summary>
-		/// <param name="limit">The limit.</param>
-		public void DefineMemoryLimit(long limit)
-		{
-			this.memoryLimit = limit;
-		}
+        /// <summary>
+        /// Defines the memory limit which specified when too much memory is used.
+        /// </summary>
+        /// <param name="limit">The limit.</param>
+        public void DefineMemoryLimit(long limit)
+        {
+            this.memoryLimit = limit;
+        }
 
-		/// <summary>
-		/// Queues a work item; it will be executed by one of the thread pool
-		/// threads.
-		/// </summary>
-		/// <param name="callback">The callback.</param>
-		public void QueueWorkItem(Callback callback)
-		{
-			int countThreads = 0;
-			int countWorkItems = 0;
+        /// <summary>
+        /// Queues a work item; it will be executed by one of the thread pool
+        /// threads.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        public void QueueWorkItem(Callback callback)
+        {
+            int countThreads = 0;
+            int countWorkItems = 0;
 
-			lock (this.exclusion)
-			{
-				this.workItems.Enqueue (callback);
+            lock (this.exclusion)
+            {
+                this.workItems.Enqueue(callback);
 
-				countThreads = this.threads.Count;
-				countWorkItems = this.workItems.Count;
-			}
+                countThreads = this.threads.Count;
+                countWorkItems = this.workItems.Count;
+            }
 
-			if (countThreads < countWorkItems)
-			{
-				this.AddThread ();
-			}
+            if (countThreads < countWorkItems)
+            {
+                this.AddThread();
+            }
 
-			this.semaphore.Release ();
-		}
+            this.semaphore.Release();
+        }
 
-		#region IDisposable Members
+        #region IDisposable Members
 
-		public void Dispose()
-		{
-			System.Threading.Thread[] threads;
+        public void Dispose()
+        {
+            System.Threading.Thread[] threads;
 
-			lock (this.threads)
-			{
-				this.exitRequested = true;
-				threads = this.threads.ToArray ();
-			}
+            lock (this.threads)
+            {
+                this.exitRequested = true;
+                threads = this.threads.ToArray();
+            }
 
-			if (threads.Length > 0)
-			{
-				this.semaphore.Release (threads.Length);
+            if (threads.Length > 0)
+            {
+                this.semaphore.Release(threads.Length);
 
-				for (int i = 0; i < threads.Length; i++)
-				{
-					threads[i].Join ();
-				}
-			}
+                for (int i = 0; i < threads.Length; i++)
+                {
+                    threads[i].Join();
+                }
+            }
 
-			System.Diagnostics.Debug.Assert (this.threads.Count == 0);
-		}
+            System.Diagnostics.Debug.Assert(this.threads.Count == 0);
+        }
 
-		#endregion
+        #endregion
 
-		private void AddThread()
-		{
-			System.Threading.Thread thread = null;
+        private void AddThread()
+        {
+            System.Threading.Thread thread = null;
 
-			lock (this.exclusion)
-			{
-				if (this.threads.Count >= System.Environment.ProcessorCount + 1)
-				{
-					return;
-				}
+            lock (this.exclusion)
+            {
+                if (this.threads.Count >= System.Environment.ProcessorCount + 1)
+                {
+                    return;
+                }
 
-				thread = new System.Threading.Thread (this.ProcessingLoop);
-				thread.Priority = System.Threading.ThreadPriority.BelowNormal;
-				thread.Name = string.Format ("CustomThreadPool Thread #{0}", this.threads.Count);
-				this.threads.Add (thread);
-			}
+                thread = new System.Threading.Thread(this.ProcessingLoop);
+                thread.Priority = System.Threading.ThreadPriority.BelowNormal;
+                thread.Name = string.Format("CustomThreadPool Thread #{0}", this.threads.Count);
+                this.threads.Add(thread);
+            }
 
-			if (thread != null)
-			{
-				thread.Start ();
-			}
-		}
+            if (thread != null)
+            {
+                thread.Start();
+            }
+        }
 
-		private void ProcessingLoop()
-		{
-			try
-			{
-				bool gcExecuted = false;
-				bool isFirstThread = false;
+        private void ProcessingLoop()
+        {
+            try
+            {
+                bool gcExecuted = false;
+                bool isFirstThread = false;
 
-				lock (this.threads)
-				{
-					if (this.threads[0] == System.Threading.Thread.CurrentThread)
-					{
-						isFirstThread = true;
-					}
-				}
-				
-				while (true)
-				{
-					lock (this.threads)
-					{
-						if (this.exitRequested)
-						{
-							break;
-						}
-					}
+                lock (this.threads)
+                {
+                    if (this.threads[0] == System.Threading.Thread.CurrentThread)
+                    {
+                        isFirstThread = true;
+                    }
+                }
 
-					if (this.semaphore.WaitOne (this.lifeTimeout, false))
-					{
-						bool doSomeWork = true;
-						bool ignoreWork = false;
+                while (true)
+                {
+                    lock (this.threads)
+                    {
+                        if (this.exitRequested)
+                        {
+                            break;
+                        }
+                    }
 
-						while (doSomeWork)
-						{
-							System.Threading.Interlocked.Increment (ref this.busyThreadCount);
+                    if (this.semaphore.WaitOne(this.lifeTimeout, false))
+                    {
+                        bool doSomeWork = true;
+                        bool ignoreWork = false;
 
-							if (ignoreWork == false)
-							{
-								try
-								{
-									this.ProcessWorkItem ();
-								}
-								finally
-								{
-									System.Threading.Interlocked.Decrement (ref this.busyThreadCount);
-								}
-							}
+                        while (doSomeWork)
+                        {
+                            System.Threading.Interlocked.Increment(ref this.busyThreadCount);
 
-							if (this.UsesTooMuchMemory ())
-							{
-								if (isFirstThread)
-								{
-									if (gcExecuted)
-									{
-										gcExecuted = false;
-									}
-									else
-									{
-										//System.Diagnostics.Debug.WriteLine ("Low memory, GC collection.");
-										System.GC.Collect ();
-										gcExecuted = true;
-									}
-								}
-								else
-								{
-									System.Threading.Thread.Sleep (100);
-									ignoreWork = true;
-								}
-							}
-							else
-							{
-								ignoreWork = false;
-							}
+                            if (ignoreWork == false)
+                            {
+                                try
+                                {
+                                    this.ProcessWorkItem();
+                                }
+                                finally
+                                {
+                                    System.Threading.Interlocked.Decrement(
+                                        ref this.busyThreadCount
+                                    );
+                                }
+                            }
 
-							lock (this.exclusion)
-							{
-								doSomeWork = this.workItems.Count > 0;
-							}
-						}
-					}
-					else
-					{
-						lock (this.threads)
-						{
-							if (!isFirstThread)
-							{
-								this.threads.Remove (System.Threading.Thread.CurrentThread);
-								break;
-							}
-						}
-					}
-				}
-			}
-			catch (System.Threading.ThreadInterruptedException)
-			{
-				//	Exit gracefully...
-			}
-			finally
-			{
-				lock (this.threads)
-				{
-					this.threads.Remove (System.Threading.Thread.CurrentThread);
-				}
-			}
-		}
+                            if (this.UsesTooMuchMemory())
+                            {
+                                if (isFirstThread)
+                                {
+                                    if (gcExecuted)
+                                    {
+                                        gcExecuted = false;
+                                    }
+                                    else
+                                    {
+                                        //System.Diagnostics.Debug.WriteLine ("Low memory, GC collection.");
+                                        System.GC.Collect();
+                                        gcExecuted = true;
+                                    }
+                                }
+                                else
+                                {
+                                    System.Threading.Thread.Sleep(100);
+                                    ignoreWork = true;
+                                }
+                            }
+                            else
+                            {
+                                ignoreWork = false;
+                            }
 
-		private void ProcessWorkItem()
-		{
-			while (true)
-			{
-				Callback callback = null;
+                            lock (this.exclusion)
+                            {
+                                doSomeWork = this.workItems.Count > 0;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        lock (this.threads)
+                        {
+                            if (!isFirstThread)
+                            {
+                                this.threads.Remove(System.Threading.Thread.CurrentThread);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Threading.ThreadInterruptedException)
+            {
+                //	Exit gracefully...
+            }
+            finally
+            {
+                lock (this.threads)
+                {
+                    this.threads.Remove(System.Threading.Thread.CurrentThread);
+                }
+            }
+        }
 
-				lock (this.exclusion)
-				{
-					if (this.workItems.Count > 0)
-					{
-						callback = this.workItems.Dequeue ();
-					}
-				}
+        private void ProcessWorkItem()
+        {
+            while (true)
+            {
+                Callback callback = null;
 
-				if (callback == null)
-				{
-					break;
-				}
+                lock (this.exclusion)
+                {
+                    if (this.workItems.Count > 0)
+                    {
+                        callback = this.workItems.Dequeue();
+                    }
+                }
 
-				callback ();
+                if (callback == null)
+                {
+                    break;
+                }
 
-				if (this.UsesTooMuchMemory ())
-				{
-					break;
-				}
-			}
-		}
+                callback();
 
-		private bool UsesTooMuchMemory()
-		{
-			if (System.Diagnostics.Process.GetCurrentProcess ().VirtualMemorySize64 > this.memoryLimit)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+                if (this.UsesTooMuchMemory())
+                {
+                    break;
+                }
+            }
+        }
 
-		private readonly object					exclusion	= new object ();
-		private long							memoryLimit = 200*1024*1024L;
-		private int								lifeTimeout = 20*1000;
-		private int								busyThreadCount;
-		private bool							exitRequested;
-		readonly Queue<Callback>				workItems	= new Queue<Callback> ();
-		readonly List<System.Threading.Thread>	threads		= new List<System.Threading.Thread> ();
-		readonly System.Threading.Semaphore		semaphore	= new System.Threading.Semaphore (0, 0x7fffffff);
-	}
+        private bool UsesTooMuchMemory()
+        {
+            if (
+                System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64
+                > this.memoryLimit
+            )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private readonly object exclusion = new object();
+        private long memoryLimit = 200 * 1024 * 1024L;
+        private int lifeTimeout = 20 * 1000;
+        private int busyThreadCount;
+        private bool exitRequested;
+        readonly Queue<Callback> workItems = new Queue<Callback>();
+        readonly List<System.Threading.Thread> threads = new List<System.Threading.Thread>();
+        readonly System.Threading.Semaphore semaphore = new System.Threading.Semaphore(
+            0,
+            0x7fffffff
+        );
+    }
 }

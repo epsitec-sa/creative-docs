@@ -3,52 +3,47 @@
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// La classe HMenu implémente le menu horizontal (ligne).
-	/// </summary>
-	public class HMenu : AbstractMenu
-	{
-		public HMenu()
-		{
-			MenuItem.SetZeroDelay (this, true);
-			
-			Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
-			
-			if (behavior != null)
-			{
-				behavior.Attach (this);
-			}
-		}
-		
-		public HMenu(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-		
+    /// <summary>
+    /// La classe HMenu implémente le menu horizontal (ligne).
+    /// </summary>
+    public class HMenu : AbstractMenu
+    {
+        public HMenu()
+        {
+            MenuItem.SetZeroDelay(this, true);
 
-		public override MenuOrientation			MenuOrientation
-		{
-			get
-			{
-				return MenuOrientation.Horizontal;
-			}
-		}
+            Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior(this);
 
-		
-		
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
-				
-				if (behavior != null)
-				{
-					behavior.Detach (this);
-				}
-			}
-			
-			base.Dispose (disposing);
-		}
-	}
+            if (behavior != null)
+            {
+                behavior.Attach(this);
+            }
+        }
+
+        public HMenu(Widget embedder)
+            : this()
+        {
+            this.SetEmbedder(embedder);
+        }
+
+        public override MenuOrientation MenuOrientation
+        {
+            get { return MenuOrientation.Horizontal; }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior(this);
+
+                if (behavior != null)
+                {
+                    behavior.Detach(this);
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+    }
 }

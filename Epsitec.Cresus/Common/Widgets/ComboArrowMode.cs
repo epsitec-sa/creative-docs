@@ -3,11 +3,11 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum ComboArrowMode
-	{
-		None,
-		
-		Cycle,							//	passe en revue les divers choix
-		Open							//	ouvre et montre la liste
-	}
+    public enum ComboArrowMode
+    {
+        None,
+
+        Cycle, //	passe en revue les divers choix
+        Open //	ouvre et montre la liste
+    }
 }

@@ -5,8 +5,6 @@ using System;
 
 namespace Epsitec.Common.IO
 {
-
-
     /// <summary>
     /// Little helper class that allows windows application to create a console that can be used
     /// for output and input.
@@ -35,11 +33,11 @@ namespace Epsitec.Common.IO
         {
             if (ConsoleCreator.IsWin10)
             {
-                ConsoleCreator.RunWithConsoleWin10 (action, windowWidth);
+                ConsoleCreator.RunWithConsoleWin10(action, windowWidth);
             }
             else
             {
-                ConsoleCreatorOld.RunWithConsole (action, windowWidth);
+                ConsoleCreatorOld.RunWithConsole(action, windowWidth);
             }
         }
 
@@ -47,10 +45,9 @@ namespace Epsitec.Common.IO
         {
             if (!ConsoleCreator.disableSetCursor)
             {
-                System.Console.SetCursorPosition (x, y);
+                System.Console.SetCursorPosition(x, y);
             }
         }
-
 
         /// <summary>
         /// Creates a console.
@@ -58,7 +55,9 @@ namespace Epsitec.Common.IO
         /// <returns>return true for success and false for failure.</returns>
         private static bool CreateConsole()
         {
-            return ConsoleCreator.IsWin10 ? ConsoleCreator.CreateConsoleWin10 () : ConsoleCreatorOld.CreateConsole ();
+            return ConsoleCreator.IsWin10
+                ? ConsoleCreator.CreateConsoleWin10()
+                : ConsoleCreatorOld.CreateConsole();
         }
 
         /// <summary>
@@ -67,7 +66,9 @@ namespace Epsitec.Common.IO
         /// <returns>return true for success and false for failure.</returns>
         private static bool DeleteConsole()
         {
-            return ConsoleCreator.IsWin10 ? ConsoleCreator.DeleteConsoleWin10 () : ConsoleCreatorOld.DeleteConsole ();
+            return ConsoleCreator.IsWin10
+                ? ConsoleCreator.DeleteConsoleWin10()
+                : ConsoleCreatorOld.DeleteConsole();
         }
 
         private static void RunWithConsoleWin10(Action action, int windowWidth = 0)
@@ -76,11 +77,11 @@ namespace Epsitec.Common.IO
 
             try
             {
-                success = ConsoleCreator.CreateConsole ();
+                success = ConsoleCreator.CreateConsole();
 
                 if (!success)
                 {
-                    throw new Exception ("The console could not be created.");
+                    throw new Exception("The console could not be created.");
                 }
 
                 if (windowWidth > 0)
@@ -89,7 +90,7 @@ namespace Epsitec.Common.IO
                     {
                         try
                         {
-                            System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                            System.Console.SetWindowSize(windowWidth, System.Console.WindowHeight);
                         }
                         catch (System.ArgumentOutOfRangeException ex)
                         {
@@ -97,33 +98,39 @@ namespace Epsitec.Common.IO
                             var message = ex.Message;
                             var pos = message.IndexOf(find);
 
-                            System.Diagnostics.Trace.WriteLine ($"RunWithConsole: {message}");
+                            System.Diagnostics.Trace.WriteLine($"RunWithConsole: {message}");
 
                             if (pos > 0)
                             {
-                                message = message.Substring (pos + find.Length);
-                                pos = message.IndexOf (' ');
+                                message = message.Substring(pos + find.Length);
+                                pos = message.IndexOf(' ');
                                 if (pos > 0)
                                 {
-                                    var value = int.Parse(message.Substring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
+                                    var value = int.Parse(
+                                        message.Substring(0, pos),
+                                        System.Globalization.CultureInfo.InvariantCulture
+                                    );
                                     windowWidth = value;
-                                    System.Diagnostics.Trace.WriteLine ($"Adjust to {windowWidth}");
-                                    System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                                    System.Diagnostics.Trace.WriteLine($"Adjust to {windowWidth}");
+                                    System.Console.SetWindowSize(
+                                        windowWidth,
+                                        System.Console.WindowHeight
+                                    );
                                 }
                             }
                         }
 
-                        System.Console.SetBufferSize (windowWidth, System.Console.BufferHeight);
+                        System.Console.SetBufferSize(windowWidth, System.Console.BufferHeight);
                     }
                 }
 
-                action ();
+                action();
             }
             finally
             {
                 if (success)
                 {
-                    ConsoleCreator.DeleteConsole ();
+                    ConsoleCreator.DeleteConsole();
                 }
             }
         }
@@ -132,16 +139,18 @@ namespace Epsitec.Common.IO
         {
             if (System.Threading.Interlocked.Increment(ref ConsoleCreator.counter) == 1)
             {
-                ConsoleCreator.consoleAllocResult = WinConsole.Initialize (false);
-                
+                ConsoleCreator.consoleAllocResult = WinConsole.Initialize(false);
+
                 if (ConsoleCreator.consoleAllocResult)
                 {
                     try
                     {
-                        System.Console.WriteLine ($"{System.DateTime.Now.ToShortDateString ()} {System.DateTime.Now.ToLongTimeString ()}");
-                        System.Console.SetCursorPosition (0, 0);
-                        System.Console.WriteLine ("                   ");
-                        System.Console.SetCursorPosition (0, 0);
+                        System.Console.WriteLine(
+                            $"{System.DateTime.Now.ToShortDateString()} {System.DateTime.Now.ToLongTimeString()}"
+                        );
+                        System.Console.SetCursorPosition(0, 0);
+                        System.Console.WriteLine("                   ");
+                        System.Console.SetCursorPosition(0, 0);
                     }
                     catch (System.IO.IOException)
                     {
@@ -155,16 +164,15 @@ namespace Epsitec.Common.IO
 
         private static bool DeleteConsoleWin10()
         {
-            if (System.Threading.Interlocked.Decrement (ref ConsoleCreator.counter) == 0)
+            if (System.Threading.Interlocked.Decrement(ref ConsoleCreator.counter) == 0)
             {
-                return WinConsole.Free ();
+                return WinConsole.Free();
             }
             else
             {
                 return true;
             }
         }
-
 
         private static int counter;
         private static bool consoleAllocResult;
