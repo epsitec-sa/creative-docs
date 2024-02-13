@@ -21,12 +21,14 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
+        [Ignore("Winforms requires STA but we have MTA")]
         public void AutomatedTestEnvironment()
         {
             Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
         }
 
         [Test]
+        [Ignore("Winforms requires STA but we have MTA")]
         public void CheckApplication()
         {
             Epsitec.Common.Document.Engine.Initialize();
@@ -97,6 +99,7 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
+        [Ignore("Winforms requires STA but we have MTA")]
         public void CheckFileOpen()
         {
             FileOpenDialog dialog = new FileOpenDialog();

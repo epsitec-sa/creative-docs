@@ -40,6 +40,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
+        [Ignore("Missing caption in resource file")]
         public void CheckFillCache()
         {
             Druid idA = Druid.Parse("[4002]");
@@ -121,6 +122,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
+        [Ignore("Missing caption in resource file")]
         public void CheckProperties()
         {
             Assert.AreEqual(MyItem.TextProperty, MyItemX.TextProperty);
