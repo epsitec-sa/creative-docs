@@ -144,10 +144,10 @@ namespace Epsitec.Common.Tests.Types
             Assert.AreEqual(MyEnum.Second, v2);
             Assert.AreEqual(MyEnum.Extra, v3);
 
-            Assert.IsTrue(!InvariantConverter.Convert(0, typeof(MyEnum), out v));
-            Assert.IsTrue(!InvariantConverter.Convert("", typeof(MyEnum), out v));
-            Assert.IsTrue(!InvariantConverter.Convert("X", typeof(MyEnum), out v));
-            Assert.IsTrue(!InvariantConverter.Convert("0", typeof(MyEnum), out v));
+            Assert.IsFalse(InvariantConverter.Convert(0, typeof(MyEnum), out v));
+            Assert.IsFalse(InvariantConverter.Convert("", typeof(MyEnum), out v));
+            Assert.IsFalse(InvariantConverter.Convert("X", typeof(MyEnum), out v));
+            Assert.IsFalse(InvariantConverter.Convert("0", typeof(MyEnum), out v));
         }
 
         [Test]
@@ -156,22 +156,23 @@ namespace Epsitec.Common.Tests.Types
             System.Enum v1,
                 v2,
                 v3,
+                v4,
                 v;
 
             Assert.IsTrue(InvariantConverter.Convert(MyFlags.Flag1, typeof(MyFlags), out v1));
             Assert.IsTrue(InvariantConverter.Convert("Flag2, Flag4", typeof(MyFlags), out v2));
             Assert.IsTrue(InvariantConverter.Convert(9, typeof(MyFlags), out v3));
+            Assert.IsTrue(InvariantConverter.Convert(0x0f, typeof(MyFlags), out v4));
 
             Assert.AreEqual(MyFlags.Flag1, v1);
             Assert.AreEqual(MyFlags.Flag2 | MyFlags.Flag4, v2);
             Assert.AreEqual(MyFlags.Flag1 | MyFlags.Flag4, v3);
+            Assert.AreEqual(MyFlags.Flag1 | MyFlags.Flag2 | MyFlags.Flag3 | MyFlags.Flag4, v4);
 
-            Assert.IsTrue(!InvariantConverter.Convert(-1, typeof(MyFlags), out v));
-            Assert.IsTrue(InvariantConverter.Convert(0x0f, typeof(MyFlags), out v));
-            Assert.IsTrue(!InvariantConverter.Convert(0x1f, typeof(MyFlags), out v));
-            Assert.IsTrue(!InvariantConverter.Convert("", typeof(MyFlags), out v));
-            Assert.IsTrue(!InvariantConverter.Convert("X", typeof(MyFlags), out v));
-            Assert.IsTrue(!InvariantConverter.Convert("-1", typeof(MyFlags), out v));
+            Assert.IsFalse(InvariantConverter.Convert(-1, typeof(MyFlags), out v));
+            Assert.IsFalse(InvariantConverter.Convert("", typeof(MyFlags), out v));
+            Assert.IsFalse(InvariantConverter.Convert("X", typeof(MyFlags), out v));
+            Assert.IsFalse(InvariantConverter.Convert("-1", typeof(MyFlags), out v));
         }
 
         [Test]
@@ -389,7 +390,7 @@ namespace Epsitec.Common.Tests.Types
             );
             Assert.AreEqual(
                 InvalidValue.Value,
-                AutomaticValueConverter.Instance.Convert(1025, typeof(MyFlags), null, culture)
+                AutomaticValueConverter.Instance.Convert(-1025, typeof(MyFlags), null, culture)
             );
             Assert.AreEqual(
                 "",

@@ -1294,78 +1294,22 @@ namespace Epsitec.Common.Types
             string input
         )
         {
-            if (underlyingType == typeof(int))
+            bool isFlagEnum = System.Attribute.IsDefined(type, typeof(System.FlagsAttribute));
+            var enumValue = System.Enum.Parse(type, input);
+            if (isFlagEnum)
             {
-                int s;
-                if (int.TryParse(input, out s))
+                // For Flags, we only check that the value is positive
+                if ((int)enumValue >= 0)
                 {
-                    return System.Enum.ToObject(type, s);
+                    return enumValue;
                 }
+                return null;
             }
-
-            if (underlyingType == typeof(uint))
+            // For simple Enum, we can check if the value exists in the Enum
+            if (System.Enum.IsDefined(type, enumValue))
             {
-                uint s;
-                if (uint.TryParse(input, out s))
-                {
-                    return System.Enum.ToObject(type, s);
-                }
+                return enumValue;
             }
-
-            if (underlyingType == typeof(ulong))
-            {
-                ulong s;
-                if (ulong.TryParse(input, out s))
-                {
-                    return System.Enum.ToObject(type, s);
-                }
-            }
-
-            if (underlyingType == typeof(long))
-            {
-                long s;
-                if (long.TryParse(input, out s))
-                {
-                    return System.Enum.ToObject(type, s);
-                }
-            }
-
-            if (underlyingType == typeof(short))
-            {
-                short s;
-                if (short.TryParse(input, out s))
-                {
-                    return System.Enum.ToObject(type, s);
-                }
-            }
-
-            if (underlyingType == typeof(ushort))
-            {
-                ushort s;
-                if (ushort.TryParse(input, out s))
-                {
-                    return System.Enum.ToObject(type, s);
-                }
-            }
-
-            if (underlyingType == typeof(byte))
-            {
-                byte s;
-                if (byte.TryParse(input, out s))
-                {
-                    return System.Enum.ToObject(type, s);
-                }
-            }
-
-            if (underlyingType == typeof(sbyte))
-            {
-                sbyte s;
-                if (sbyte.TryParse(input, out s))
-                {
-                    return System.Enum.ToObject(type, s);
-                }
-            }
-
             return null;
         }
 
