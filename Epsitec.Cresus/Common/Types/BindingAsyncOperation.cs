@@ -1,7 +1,7 @@
 //	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Epsitec.Common.Types
 {
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types
         public BindingAsyncOperation(BindingExpression bindingExpression)
         {
             this.bindingExpression = bindingExpression;
-            this.binding = this.bindingExpression.ParentBinding;
+            this.binding = bindingExpression.ParentBinding;
         }
 
         public BindingAsyncOperation(Binding binding, BindingExpression[] expressions)
@@ -33,36 +33,10 @@ namespace Epsitec.Common.Types
         /// </summary>
         public void QuerySourceValueAndUpdateTarget()
         {
-            lock (this.exclusion)
-            {
-                if (this.asyncWork == null)
-                {
-                    this.asyncWork = this.AsyncUpdate;
-                }
-
-                if (this.asyncResult == null)
-                {
-                    this.asyncResult = this.asyncWork.BeginInvoke(null, null);
-                }
-                else if (this.cleanupPending)
-                {
-                    //	We can't simply overwrite the IAsyncResult value since this
-                    //	could lead to uncollected garbage, it seems. So we make sure
-                    //	we follow the recommendations and call EndInvoke.
-
-                    this.asyncWork.EndInvoke(this.asyncResult);
-
-                    this.cleanupPending = false;
-                    this.asyncResult = this.asyncWork.BeginInvoke(null, null);
-                }
-                else
-                {
-                    //	The asynchronous thread is still working, just tell it to
-                    //	restart before it returns.
-
-                    this.restartRequested = true;
-                }
-            }
+            this.asyncTask?.Wait();
+            this.asyncTask = Task.Run(
+                () => BindingAsyncOperation.GetSourceAndUpdateTarget(this.bindingExpression)
+            );
         }
 
         /// <summary>
@@ -71,19 +45,14 @@ namespace Epsitec.Common.Types
         /// </summary>
         public void AttachToSourceAndUpdateTargets()
         {
-            System.Diagnostics.Debug.Assert(this.bindingExpression == null);
-            System.Diagnostics.Debug.Assert(this.asyncWork == null);
-            System.Diagnostics.Debug.Assert(this.asyncResult == null);
+            System.Diagnostics.Debug.Assert(this.bindingExpression == null); // This means that this method can only be called once per instance
+            System.Diagnostics.Debug.Assert(this.asyncTask == null);
 
-            lock (this.exclusion)
-            {
-                this.asyncWork = this.AsyncAttach;
-                this.asyncResult = this.asyncWork.BeginInvoke(this.NotifyAsyncAttachDone, null);
-            }
+            this.asyncTask = Task.Run(() => this.AsyncAttach());
         }
 
         /// <summary>
-        /// Defines the application thread invoker required to excute methods
+        /// Defines the application thread invoker required to execute methods
         /// on the UI main thread.
         /// </summary>
         /// <param name="value">The application thread invoker.</param>
@@ -101,59 +70,15 @@ namespace Epsitec.Common.Types
 
         #endregion
 
-        private void AsyncUpdate()
-        {
-            bool work = true;
-
-            while (work)
-            {
-                lock (this.exclusion)
-                {
-                    this.restartRequested = false;
-                }
-
-                BindingAsyncOperation.GetSourceAndUpdateTarget(this.bindingExpression);
-
-                //	We are done, but maybe someone already asked us for a new
-                //	update of the value in the meantime. Just restart the loop
-                //	in that case.
-
-                lock (this.exclusion)
-                {
-                    if (this.restartRequested == false)
-                    {
-                        work = false;
-                        this.cleanupPending = true;
-                    }
-                }
-            }
-        }
-
         private void AsyncAttach()
         {
             foreach (BindingExpression expression in this.expressions)
             {
-                BindingAsyncOperation.AttachToSource(expression);
+                expression.AttachToSource();
                 BindingAsyncOperation.GetSourceAndUpdateTarget(expression);
             }
 
             this.binding.NotifyAttachCompleted();
-        }
-
-        private void NotifyAsyncAttachDone(System.IAsyncResult result)
-        {
-            lock (this.exclusion)
-            {
-                this.asyncWork.EndInvoke(result);
-
-                this.asyncWork = null;
-                this.asyncResult = null;
-            }
-        }
-
-        private static void AttachToSource(BindingExpression expression)
-        {
-            expression.AttachToSource();
         }
 
         private static void GetSourceAndUpdateTarget(BindingExpression expression)
@@ -190,10 +115,6 @@ namespace Epsitec.Common.Types
         private Binding binding;
         private BindingExpression[] expressions;
 
-        private Support.SimpleCallback asyncWork;
-        private System.IAsyncResult asyncResult;
-        private object exclusion = new object();
-        private volatile bool restartRequested;
-        private volatile bool cleanupPending;
+        private Task asyncTask;
     }
 }
