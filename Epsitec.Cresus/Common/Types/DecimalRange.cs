@@ -262,11 +262,8 @@ namespace Epsitec.Common.Types
             if (this.fracDigits > 0)
             {
                 return value.ToString(
-                    string.Format(
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        "F{0}",
-                        this.fracDigits
-                    )
+                    string.Format("F{0}", this.fracDigits),
+                    System.Globalization.CultureInfo.InvariantCulture
                 );
             }
             else
