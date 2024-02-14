@@ -1,6 +1,7 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
@@ -22,26 +23,35 @@ namespace Epsitec.Common.Support
         static ImageProvider()
         {
             string path = System.IO.Directory.GetCurrentDirectory();
-            string other = null;
-            string[] strips = new string[] { @"\bin\Debug", @"\bin\Release" };
+            string targetDirectory = @"Common.Tests";
+            string otherPath = path;
 
-            // TODO: better strip filter
-            // instead of removing some suffix, discard everything after 'Common.Tests'
-
-            for (int i = 0; i < strips.Length; i++)
+            for (int i = 0; i < 100; i++)
             {
-                if (path.EndsWith(strips[i]))
+                try
                 {
-                    other = path.Substring(0, path.Length - strips[i].Length);
+                    otherPath = System.IO.Path.GetDirectoryName(otherPath);
+                }
+                catch (ArgumentException)
+                {
+                    otherPath = null;
+                    break;
+                }
+                string directoryName = System.IO.Path.GetFileName(otherPath);
+                if (directoryName == targetDirectory)
+                {
                     break;
                 }
             }
 
+            // TODO: better strip filter
+            // instead of removing some suffix, discard everything after 'Common.Tests'
+
             ImageProvider.defaultProvider = new ImageProvider();
             ImageProvider.defaultPaths = new string[4];
             ImageProvider.defaultPaths[0] = Globals.Directories.ExecutableRoot;
-            ImageProvider.defaultPaths[1] = path;
-            ImageProvider.defaultPaths[2] = other;
+            ImageProvider.defaultPaths[1] = otherPath;
+            ImageProvider.defaultPaths[2] = path;
             ImageProvider.defaultPaths[3] = "";
         }
 

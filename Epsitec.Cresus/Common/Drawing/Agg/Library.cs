@@ -15,6 +15,7 @@ namespace Epsitec.Common.Drawing.Agg
     {
         Library()
         {
+            System.Console.WriteLine("library constructor reached");
             AntiGrain.Interface.Initialise();
         }
 
@@ -27,7 +28,10 @@ namespace Epsitec.Common.Drawing.Agg
         /// <summary>
         /// Initializes the AGG library.
         /// </summary>
-        public static void Initialize() { }
+        public static void Initialize()
+        {
+            System.Console.WriteLine("test");
+        }
 
         public static Library Current
         {

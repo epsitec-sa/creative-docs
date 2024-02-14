@@ -1,6 +1,7 @@
 //	Copyright © 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -12,6 +13,7 @@ namespace Epsitec.Common.Tests.Dialogs
     public class FileDialogTest
     {
         [SetUp]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void Initialize()
         {
             Assert.AreEqual(
@@ -21,14 +23,14 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
-        [Ignore("Winforms requires STA but we have MTA")]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void AutomatedTestEnvironment()
         {
             Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
         }
 
         [Test]
-        [Ignore("Winforms requires STA but we have MTA")]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckApplication()
         {
             Epsitec.Common.Document.Engine.Initialize();
@@ -99,7 +101,7 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
-        [Ignore("Winforms requires STA but we have MTA")]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckFileOpen()
         {
             FileOpenDialog dialog = new FileOpenDialog();
@@ -124,6 +126,7 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
+        [Apartment(System.Threading.ApartmentState.STA)]
         [Ignore("Reported broken by Marc Bettex")]
         public void CheckFileSave1()
         {
@@ -149,6 +152,7 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
+        [Apartment(System.Threading.ApartmentState.STA)]
         [Ignore("Reported broken by Marc Bettex")]
         public void CheckFileSave2()
         {
