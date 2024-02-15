@@ -363,29 +363,29 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 
 			var fileName = fileNames[this.Request.Query.type];
-				
-			var message = "<br />"
-				/**/    + "<input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + fileName + "\");' value='Télécharger' />";
-
 			try
 			{
 				job.Start ();
 					
 				var caches = this.CoreServer.Caches;
 
-				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
-				{
-					var writer = this.GetEntityWriter (businessContext, caches, extractor, this.Request.Query);
-					DatabaseModule.ExportToDisk (fileName, extractor, writer);
-				}
-			}
+                using EntityExtractor extractor = this.GetEntityExtractor(businessContext, parameters);
+                var writer = this.GetEntityWriter(businessContext, caches, extractor, this.Request.Query);
+                DatabaseModule.ExportToDisk(fileName, extractor, writer);
+            }
 			catch (Exception ex)
 			{
-				message = string.Format ("Une erreur est survenue. Tâche annulée. ({0})", ex.Message);
-				System.Diagnostics.Trace.WriteLine ("LongRunningExportToFile: " + message);
+				System.Diagnostics.Trace.WriteLine ($"LongRunningExportToFile: Une erreur est survenue. Tâche annulée. ({ex.Message})");
 			}
 			finally
 			{
+                var message = $"""
+                    <br />
+                    <input
+                      type='button'
+                      onclick='Epsitec.Cresus.Core.app.downloadFile("{fileName}");'
+                      value='Télécharger' />
+                    """;
 				job.Finish (message);
 			}
 		}
