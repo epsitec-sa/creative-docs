@@ -47,7 +47,6 @@
     <EmbeddedResource Include="..\External\images\bitmap\box-64x48.png">
       <Link>Dialogs\Images\box-64x48.png</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Support\Resources\ProjectFileTemplate.xml" />
     <EmbeddedResource Include="Widgets\Adorners\Resources\*.png" />
     <EmbeddedResource Include="Dialogs\Images\*.icon" />
     <EmbeddedResource Include="Widgets\Images\*.icon" />
