@@ -12,8 +12,6 @@
 
 # Build results
 
-[Dd]ebug/
-[Rr]elease/
 x64/
 build/
 [Bb]in/
@@ -164,7 +162,7 @@ App.Dolphin/Resources/Common.Document
 
 Epsitec.Cresus.sln.ide/
 Export/
-External/Clipboard.Win32.dll
+;External/Clipboard.Win32.dll
 PrecompiledWeb/
 node_modules/
 Setup.CreativeDocs/SignedDlls/

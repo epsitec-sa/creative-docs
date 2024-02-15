@@ -17,22 +17,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{63780F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cresus-core", "cresus-core", "{86B64DEC-DD7B-431B-A5FC-ADF12D099F47}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\Directory.Build.props = ..\..\Directory.Build.props
-		..\..\Version.props = ..\..\Version.props
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\Version.props = ..\Version.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zou", "zou", "{BECED41F-17E9-4B78-A643-6ADB54CAC870}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\zou\Directory.Build.Default.props = ..\..\..\zou\Directory.Build.Default.props
-		..\..\..\zou\Directory.Build.Default.targets = ..\..\..\zou\Directory.Build.Default.targets
+		..\..\zou\Directory.Build.Default.props = ..\..\zou\Directory.Build.Default.props
+		..\..\zou\Directory.Build.Default.targets = ..\..\zou\Directory.Build.Default.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "..\Common.Tests\Common.Tests.csproj", "{1E921F71-7F6A-4130-84A6-A0180659F1D9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bundle", "bundle", "{85E86EC1-8245-40F2-BECE-0558B90C13BA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".bundle", ".bundle", "{85E86EC1-8245-40F2-BECE-0558B90C13BA}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Directory.Build.props = ..\..\..\Directory.Build.props
-		..\..\..\Directory.Build.targets = ..\..\..\Directory.Build.targets
+		..\..\Directory.Build.props = ..\..\Directory.Build.props
+		..\..\Directory.Build.targets = ..\..\Directory.Build.targets
+		..\..\NuGet.config = ..\..\NuGet.config
 	EndProjectSection
 EndProject
 Global
