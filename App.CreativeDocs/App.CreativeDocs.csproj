@@ -4,7 +4,6 @@
     <ApplicationIcon>App.ico</ApplicationIcon>
     <RootNamespace>Epsitec.App.CreativeDocs</RootNamespace>
     <AssemblyDescription>Creative Documents .NET Application</AssemblyDescription>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj" />
@@ -14,9 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
-    <None Include="app.manifest">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="uac.manifest">
       <SubType>Designer</SubType>
     </None>
