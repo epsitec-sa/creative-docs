@@ -5,7 +5,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\serial\CresusSerialAlgorithm.cs" Link="CresusSerialAlgorithm.cs" />
     <Compile Update="Widgets\Platform\Window.cs" />
     <Compile Remove="Drawing\FontHelper.cs" />
     <Compile Remove="Support\AppDomainStarter.cs" />
