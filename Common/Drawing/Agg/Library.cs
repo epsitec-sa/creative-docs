@@ -1,9 +1,6 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
-using System.Runtime.InteropServices;
-
 namespace Epsitec.Common.Drawing.Agg
 {
     /// <summary>
@@ -13,41 +10,15 @@ namespace Epsitec.Common.Drawing.Agg
     /// </summary>
     public sealed class Library
     {
-        Library()
-        {
-            System.Console.WriteLine("library constructor reached");
-            AntiGrain.Interface.Initialise();
-        }
-
-        ~Library()
-        {
-            Library.instance = null;
-            AntiGrain.Interface.ShutDown();
-        }
+        static Library() => AntiGrain.Interface.Initialise();
 
         /// <summary>
         /// Initializes the AGG library.
         /// </summary>
-        public static void Initialize()
-        {
-            System.Console.WriteLine("test");
-        }
+        public static void Initialize() { }
+        public static void ShutDown() => AntiGrain.Interface.ShutDown();
 
-        public static Library Current
-        {
-            get { return Library.instance; }
-        }
-
-        public static long Cycles
-        {
-            get { return 0; }
-        }
-
-        public static int CycleDelta
-        {
-            get { return 1; }
-        }
-
-        static Library instance = new Library();
+        public static long Cycles     => 0;
+        public static int  CycleDelta => 1;
     }
 }
