@@ -9,7 +9,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj" />
+    <ProjectReference Include="..\..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj" />
     <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
     <ProjectReference Include="..\Common.Identity\Common.Identity.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />

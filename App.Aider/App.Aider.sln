@@ -38,33 +38,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.WebCore.Server", "..
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Platform", "..\Data.Platform\Data.Platform.csproj", "{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.CresusToolkit", "..\..\..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{915BC8AC-A132-4EC4-A0AA-3122ECFB255F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.CresusToolkit", "..\..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{915BC8AC-A132-4EC4-A0AA-3122ECFB255F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.TwixClip", "..\..\..\twixclip\Epsitec.TwixClip\Epsitec.TwixClip.csproj", "{BCD2DB3B-208B-4465-8AE7-435F1B5CCC60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.TwixClip", "..\..\twixclip\Epsitec.TwixClip\Epsitec.TwixClip.csproj", "{BCD2DB3B-208B-4465-8AE7-435F1B5CCC60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.ZipMe", "..\..\..\zipme\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{6412AE89-0CAE-4455-9860-E11257D2484E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.ZipMe", "..\..\zipme\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{6412AE89-0CAE-4455-9860-E11257D2484E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{28F0BE08-8E44-4B04-84E0-2CA27394ED2A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cresus-core", "cresus-core", "{120518FF-0BF6-4FF2-ADA1-BF2B7992C578}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\Directory.Build.props = ..\..\Directory.Build.props
-		..\..\Version.props = ..\..\Version.props
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\Version.props = ..\Version.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zipme", "zipme", "{E831D371-08D0-43C8-B3FD-8B0E6093786A}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\zipme\Directory.Build.props = ..\..\..\zipme\Directory.Build.props
-		..\..\..\zipme\Version.props = ..\..\..\zipme\Version.props
+		..\..\zipme\Directory.Build.props = ..\..\zipme\Directory.Build.props
+		..\..\zipme\Version.props = ..\..\zipme\Version.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zipme", "zipme", "{202C62AD-C4A4-46F1-9A97-E122B7F9A4E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shellpe", "shellpe", "{94B2974A-6AF1-47B7-8B41-8CC5D697F9EA}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\shellpe\Directory.Build.props = ..\..\..\shellpe\Directory.Build.props
-		..\..\..\shellpe\to-build.bat = ..\..\..\shellpe\to-build.bat
-		..\..\..\shellpe\Version.props = ..\..\..\shellpe\Version.props
+		..\..\shellpe\Directory.Build.props = ..\..\shellpe\Directory.Build.props
+		..\..\shellpe\to-build.bat = ..\..\shellpe\to-build.bat
+		..\..\shellpe\Version.props = ..\..\shellpe\Version.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shellpe", "shellpe", "{9E0CAAB8-9E35-42A9-A11F-A4700A22C1A1}"
@@ -73,21 +73,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "twixclip", "twixclip", "{FE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "twixclip", "twixclip", "{5DA8C3AA-74B2-40FE-8043-4EDF7B6070F6}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\twixclip\Directory.Build.props = ..\..\..\twixclip\Directory.Build.props
-		..\..\..\twixclip\Version.props = ..\..\..\twixclip\Version.props
+		..\..\twixclip\Directory.Build.props = ..\..\twixclip\Directory.Build.props
+		..\..\twixclip\Version.props = ..\..\twixclip\Version.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".bundle", ".bundle", "{3EAFB1EF-8FE6-423D-8593-193852EE2AB2}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Directory.Build.props = ..\..\..\Directory.Build.props
-		..\..\..\Directory.Build.targets = ..\..\..\Directory.Build.targets
-		..\..\..\NuGet.config = ..\..\..\NuGet.config
+		..\..\Directory.Build.props = ..\..\Directory.Build.props
+		..\..\Directory.Build.targets = ..\..\Directory.Build.targets
+		..\..\NuGet.config = ..\..\NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zou", "zou", "{9182741C-4891-4EC8-ABD6-F15BA887C019}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\zou\Directory.Build.Default.props = ..\..\..\zou\Directory.Build.Default.props
-		..\..\..\zou\Directory.Build.Default.targets = ..\..\..\zou\Directory.Build.Default.targets
+		..\..\zou\Directory.Build.Default.props = ..\..\zou\Directory.Build.Default.props
+		..\..\zou\Directory.Build.Default.targets = ..\..\zou\Directory.Build.Default.targets
 	EndProjectSection
 EndProject
 Global

@@ -12,7 +12,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\twixclip\Epsitec.TwixClip\Epsitec.TwixClip.csproj" />
+    <ProjectReference Include="..\..\twixclip\Epsitec.TwixClip\Epsitec.TwixClip.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Cresus.Bricks\Cresus.Bricks.csproj" />
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj" />
