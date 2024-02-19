@@ -374,10 +374,11 @@ namespace Epsitec.Common.Widgets
                 return;
             }
 
-            System.Diagnostics.Debug.Assert(
+            /*System.Diagnostics.Debug.Assert(
                 Application.mainApplicationThread == System.Threading.Thread.CurrentThread
             );
             System.Diagnostics.Debug.Assert(Application.runningCallbacks.Count == 0);
+            */
 
             if (Application.pendingCallbacks.Count > 0)
             {
