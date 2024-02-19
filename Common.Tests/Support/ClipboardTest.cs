@@ -16,7 +16,7 @@ namespace Epsitec.Common.Tests.Support
             );
         }
         [Test]
-        [Ignore("Requires STA but we have MTA")]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckGetData()
         {
             ClipboardReadData data = Clipboard.GetData();
@@ -63,6 +63,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckConvertBrokenUtf8ToString()
         {
             System.Text.StringBuilder buffer = new System.Text.StringBuilder();
@@ -83,6 +84,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckReadHtmlFragment()
         {
             ClipboardReadData data = Clipboard.GetData();
@@ -100,6 +102,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckReadHtmlDocument()
         {
             ClipboardReadData data = Clipboard.GetData();
@@ -117,7 +120,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
-        [Ignore("Requires STA but we have MTA")]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckIsCompatible()
         {
             ClipboardReadData data = Clipboard.GetData();
@@ -134,7 +137,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
-        [Ignore("Requires STA but we have MTA")]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void CheckWriteHtmlFragment()
         {
             ClipboardWriteData data = new ClipboardWriteData();
