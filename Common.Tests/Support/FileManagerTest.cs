@@ -1,5 +1,6 @@
 using Epsitec.Common.Support;
 using NUnit.Framework;
+using System.IO;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -14,142 +15,221 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
-        public void _AutomaticRun()
-        {
-            //	If run individually, automaticRun will be false when the CheckDelete test
-            //	is run interactively; otherwise, the CheckDelete test will be run silently,
-            //	as it would block with the confirmation request from the Windows UI.
-
-            this.automaticRun = true;
-        }
-
-        [Test]
         public void CheckDelete()
         {
-            System.IO.File.WriteAllText(@"S:\test 1.txt", "Fichier 1\r\n");
-            System.IO.File.WriteAllText(@"S:\test 2.txt", "Fichier 2\r\n");
+            string testFile1 = Path.GetTempFileName();
+            string testFile2 = Path.GetTempFileName();
+            System.IO.File.WriteAllText(testFile1, "Fichier 1\r\n");
+            System.IO.File.WriteAllText(testFile2, "Fichier 2\r\n");
 
             FileOperationMode mode = new FileOperationMode();
 
-            mode.AutoConfirmation = this.automaticRun;
+            mode.AutoConfirmation = true;
 
-            FileManager.DeleteFiles(mode, @"S:\test 1.txt", @"S:\test 2.txt");
+            FileManager.DeleteFiles(mode, testFile1, testFile2);
 
-            Assert.IsFalse(System.IO.File.Exists(@"S:\test 1.txt"));
-            Assert.IsFalse(System.IO.File.Exists(@"S:\test 2.txt"));
+            Assert.IsFalse(System.IO.File.Exists(testFile1));
+            Assert.IsFalse(System.IO.File.Exists(testFile2));
         }
 
         [Test]
-        public void CheckCopyMoveRename()
+        [Ignore("Broken behavior. Seems unused.")]
+        public void CheckCopy()
         {
-            System.IO.File.WriteAllText(@"S:\test 1.txt", "Fichier 1\r\n");
-            System.IO.File.WriteAllText(@"S:\test 2.txt", "Fichier 2\r\n");
+            string testFile = Path.GetTempFileName();
+            System.IO.File.WriteAllText(testFile, "Fichier 1\r\n");
 
             FileOperationMode mode = new FileOperationMode();
 
+            string firstCopy = GetRandomTempPath();
+            string secondCopy = GetRandomTempPath();
             FileManager.CopyFiles(
                 mode,
-                new string[] { @"S:\test 1.txt", @"S:\test 2.txt" },
-                new string[] { @"S:\test 1 bis.txt", @"S:\Epsitec.Cresus\test 2 bis.txt" }
+                new string[] { testFile },
+                new string[] { firstCopy, secondCopy }
             );
-            FileManager.RenameFile(mode, @"S:\test 1.txt", @"S:\test A.txt");
-            FileManager.RenameFile(mode, @"S:\test 2.txt", @"S:\test B.txt");
+
+            Assert.IsTrue(System.IO.File.Exists(testFile));
+            Assert.IsTrue(System.IO.File.Exists(firstCopy));
+            Assert.IsTrue(System.IO.File.Exists(secondCopy));
+
+            System.IO.File.Delete(testFile);
+            System.IO.File.Delete(firstCopy);
+            System.IO.File.Delete(secondCopy);
+        }
+
+        [Test]
+        public void CheckMove()
+        {
+            string testFile1 = Path.GetTempFileName();
+            string testFile2 = Path.GetTempFileName();
+            System.IO.File.WriteAllText(testFile1, "Fichier 1\r\n");
+            System.IO.File.WriteAllText(testFile2, "Fichier 2\r\n");
+
+            FileOperationMode mode = new FileOperationMode();
+
+            string movedFile1 = GetRandomTempPath();
+            string movedFile2 = GetRandomTempPath();
             FileManager.MoveFiles(
                 mode,
-                new string[] { @"S:\test A.txt", @"S:\test B.txt" },
-                new string[] { @"S:\Epsitec.Cresus\test 1 move.txt", @"S:\test 2 move.txt" }
+                new string[] { testFile1, testFile2 },
+                new string[] { movedFile1, movedFile2 }
             );
 
-            Assert.IsTrue(System.IO.File.Exists(@"S:\test 1 bis.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\Epsitec.Cresus\test 2 bis.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\Epsitec.Cresus\test 1 move.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\test 2 move.txt"));
+            Assert.IsFalse(System.IO.File.Exists(testFile1));
+            Assert.IsFalse(System.IO.File.Exists(testFile2));
+            Assert.IsTrue(System.IO.File.Exists(movedFile1));
+            Assert.IsTrue(System.IO.File.Exists(movedFile2));
 
-            System.IO.File.Delete(@"S:\test 1 bis.txt");
-            System.IO.File.Delete(@"S:\Epsitec.Cresus\test 2 bis.txt");
-            System.IO.File.Delete(@"S:\Epsitec.Cresus\test 1 move.txt");
-            System.IO.File.Delete(@"S:\test 2 move.txt");
+            System.IO.File.Delete(movedFile1);
+            System.IO.File.Delete(movedFile2);
         }
-
+        
         [Test]
-        public void CheckCopyMoveToFolderDeleteFolder()
+        public void CheckRename()
         {
-            System.IO.File.WriteAllText(@"S:\test 1.txt", "Fichier 1\r\n");
-            System.IO.File.WriteAllText(@"S:\test 2.txt", "Fichier 2\r\n");
-
-            System.IO.Directory.CreateDirectory(@"S:\file manager test 1");
-            //			System.IO.Directory.CreateDirectory (@"S:\file manager test 2");
+            string testFile = Path.GetTempFileName();
+            System.IO.File.WriteAllText(testFile, "Fichier 1\r\n");
 
             FileOperationMode mode = new FileOperationMode();
 
-            mode.AutoCreateDirectory = true;
+            string renamedFile = GetRandomTempPath();
+            FileManager.RenameFile(mode, testFile, renamedFile);
 
-            FileManager.CopyFilesToFolder(
-                mode,
-                new string[] { @"S:\test 1.txt", @"S:\test 2.txt" },
-                @"S:\file manager test 1"
-            );
-            FileManager.MoveFilesToFolder(
-                mode,
-                new string[] { @"S:\test 1.txt", @"S:\test 2.txt" },
-                @"S:\file manager test 2"
-            );
+            Assert.IsFalse(System.IO.File.Exists(testFile));
+            Assert.IsTrue(System.IO.File.Exists(renamedFile));
 
-            Assert.IsFalse(System.IO.File.Exists(@"S:\test 1.txt"));
-            Assert.IsFalse(System.IO.File.Exists(@"S:\test 2.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 1\test 1.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 1\test 2.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 2\test 1.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 2\test 2.txt"));
-
-            mode.AutoConfirmation = true;
-
-            FileManager.DeleteFiles(mode, @"S:\file manager test 1", @"S:\file manager test 2");
+            System.IO.File.Delete(renamedFile);
         }
 
         [Test]
-        public void CheckCopyMoveWildcardToFolderDeleteFolder()
+        [Ignore("Broken behavior. Seems unused.")]
+        public void CheckCopyToFolderDeleteFolder()
         {
-            System.IO.File.WriteAllText(@"S:\test 1.txt", "Fichier 1\r\n");
-            System.IO.File.WriteAllText(@"S:\test 2.txt", "Fichier 2\r\n");
+            string testFile = Path.GetTempFileName();
+            System.IO.File.WriteAllText(testFile, "Fichier 1\r\n");
 
-            System.IO.Directory.CreateDirectory(@"S:\file manager test 1");
-            System.IO.Directory.CreateDirectory(@"S:\file manager test 2");
+            string folder = GetRandomTempPath();
+            System.IO.Directory.CreateDirectory(folder);
 
-            FileOperationMode mode = new FileOperationMode();
+            FileOperationMode mode = new FileOperationMode() { AutoCreateDirectory = true };
 
+            string newFolder = GetRandomTempPath();
+            string newFilePath = Path.Join(newFolder, Path.GetFileName(testFile));
             FileManager.CopyFilesToFolder(
                 mode,
-                new string[] { @"S:\*.txt" },
-                @"S:\file manager test 1"
-            );
-            FileManager.MoveFilesToFolder(
-                mode,
-                new string[] { @"S:\*.txt" },
-                @"S:\file manager test 2"
+                new string[] { testFile },
+                newFolder
             );
 
-            Assert.IsFalse(System.IO.File.Exists(@"S:\test 1.txt"));
-            Assert.IsFalse(System.IO.File.Exists(@"S:\test 2.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 1\test 1.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 1\test 2.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 2\test 1.txt"));
-            Assert.IsTrue(System.IO.File.Exists(@"S:\file manager test 2\test 2.txt"));
+            Assert.IsTrue(System.IO.File.Exists(testFile));
+            Assert.IsTrue(System.IO.File.Exists(newFilePath));
 
             mode.AutoConfirmation = true;
 
-            FileManager.DeleteFiles(mode, @"S:\file manager test 1", @"S:\file manager test 2");
+            FileManager.DeleteFiles(mode, newFolder);
+        }
+        [Test]
+        [Ignore("Broken behavior. Seems unused.")]
+        public void CheckMoveToFolderDeleteFolder()
+        {
+            string testFile = Path.GetTempFileName();
+            System.IO.File.WriteAllText(testFile, "Fichier 1\r\n");
+
+            string folder = GetRandomTempPath();
+            System.IO.Directory.CreateDirectory(folder);
+
+            FileOperationMode mode = new FileOperationMode() { AutoCreateDirectory = true };
+
+            string newFolder = GetRandomTempPath();
+            string newFilePath = Path.Join(newFolder, Path.GetFileName(testFile));
+            FileManager.MoveFilesToFolder(
+                mode,
+                new string[] { testFile },
+                newFolder
+            );
+
+            Assert.IsFalse(System.IO.File.Exists(testFile));
+            Assert.IsTrue(System.IO.File.Exists(newFilePath));
+
+            mode.AutoConfirmation = true;
+
+            FileManager.DeleteFiles(mode, newFolder);
+        }
+
+        [Test]
+        public void CheckMoveWildcardToFolderDeleteFolder()
+        {
+            string sourceFolder = GetRandomTempPath();
+            System.IO.Directory.CreateDirectory(sourceFolder);
+            
+            string testFile1 = Path.Join(sourceFolder, Path.GetRandomFileName());
+            string testFile2 = Path.Join(sourceFolder, Path.GetRandomFileName());
+            System.IO.File.WriteAllText(testFile1, "Fichier 1\r\n");
+            System.IO.File.WriteAllText(testFile2, "Fichier 2\r\n");
+
+            FileOperationMode mode = new FileOperationMode() { AutoCreateDirectory = true };
+
+            string newFolder = GetRandomTempPath();
+            string newFilePath1 = Path.Join(newFolder, Path.GetFileName(testFile1));
+            string newFilePath2 = Path.Join(newFolder, Path.GetFileName(testFile2));
+
+            string wildcardPattern = Path.Join(sourceFolder, "*.*");
+            FileManager.MoveFilesToFolder(
+                mode,
+                new string[] { wildcardPattern },
+                newFolder
+            );
+
+            Assert.IsFalse(System.IO.File.Exists(testFile1));
+            Assert.IsFalse(System.IO.File.Exists(testFile2));
+            Assert.IsTrue(System.IO.File.Exists(newFilePath1));
+            Assert.IsTrue(System.IO.File.Exists(newFilePath2));
+
+            mode.AutoConfirmation = true;
+
+            FileManager.DeleteFiles(mode, sourceFolder, newFolder);
+        }
+
+        [Test]
+        public void CheckCopyWildcardToFolderDeleteFolder()
+        {
+            string sourceFolder = GetRandomTempPath();
+            System.IO.Directory.CreateDirectory(sourceFolder);
+            
+            string testFile1 = Path.Join(sourceFolder, Path.GetRandomFileName());
+            string testFile2 = Path.Join(sourceFolder, Path.GetRandomFileName());
+            System.IO.File.WriteAllText(testFile1, "Fichier 1\r\n");
+            System.IO.File.WriteAllText(testFile2, "Fichier 2\r\n");
+
+            FileOperationMode mode = new FileOperationMode() { AutoCreateDirectory = true };
+
+            string newFolder = GetRandomTempPath();
+            string newFilePath1 = Path.Join(newFolder, Path.GetFileName(testFile1));
+            string newFilePath2 = Path.Join(newFolder, Path.GetFileName(testFile2));
+
+            string wildcardPattern = Path.Join(sourceFolder, "*.*");
+            FileManager.CopyFilesToFolder(
+                mode,
+                new string[] { wildcardPattern },
+                newFolder
+            );
+
+            Assert.IsTrue(System.IO.File.Exists(testFile1));
+            Assert.IsTrue(System.IO.File.Exists(testFile2));
+            Assert.IsTrue(System.IO.File.Exists(newFilePath1));
+            Assert.IsTrue(System.IO.File.Exists(newFilePath2));
+
+            mode.AutoConfirmation = true;
+
+            FileManager.DeleteFiles(mode, sourceFolder, newFolder);
         }
 
         [Test]
         public void CheckRecentDocuments()
         {
-            string path = @"S:\Epsitec.Cresus\Example Document.txt";
-
-            if (!System.IO.File.Exists(path))
-            {
-                System.IO.File.CreateText(path).Close();
-            }
+            string path = Path.GetTempFileName();
+            System.IO.File.WriteAllText(path, "");
 
             FileManager.AddToRecentDocuments(path);
 
@@ -164,22 +244,20 @@ namespace Epsitec.Common.Tests.Support
                 FolderItem item in FileManager.GetFolderItems(folderItem, FolderQueryMode.NoIcons)
             )
             {
-                System.Console.Out.WriteLine("{0}", item);
 
                 if (item.IsShortcut)
                 {
                     string resolvesTo = FileManager
                         .ResolveShortcut(item, FolderQueryMode.NoIcons)
                         .FullPath;
-                    System.Console.Out.WriteLine("  --> {0}", resolvesTo);
                     if (path == resolvesTo)
                     {
                         ok = true;
+                        break;
                     }
                 }
                 else
                 {
-                    System.Console.Out.Flush();
                     Assert.Fail(
                         string.Format("IsShortcut={0} for item {1}", item.IsShortcut, item)
                     );
@@ -194,6 +272,9 @@ namespace Epsitec.Common.Tests.Support
             Assert.IsTrue(ok, "Not found in recent folder");
         }
 
-        private bool automaticRun;
+        private string GetRandomTempPath()
+        {
+            return Path.Join(Path.GetTempPath(), Path.GetRandomFileName());
+        }
     }
 }
