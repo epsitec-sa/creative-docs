@@ -1,21 +1,22 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using Epsitec.Common.Text;
+using Epsitec.Common.Text.Cursors;
+using Epsitec.Common.Text.Properties;
+using NUnit.Framework;
 
-namespace Epsitec.Common.Text.Tests
+namespace Epsitec.Common.Tests.Text
 {
     /// <summary>
     /// La batterie de tests CheckGenerator vérifie le bon fonctionnement des
     /// générateurs.
     /// </summary>
+    [TestFixture]
     public sealed class CheckGenerator
     {
-        public static void RunTests()
-        {
-            CheckGenerator.TestGenerator();
-            CheckGenerator.TestTextStory();
-        }
 
-        private static void TestGenerator()
+        [Test]
+        public static void TestGenerator()
         {
             Generator generator = new Generator("Test");
 
@@ -44,7 +45,7 @@ namespace Epsitec.Common.Text.Tests
             buffer.Append(sALF.GenerateText(1, System.Globalization.CultureInfo.CurrentCulture));
             buffer.Append(sALF.Suffix == null ? "" : sALF.Suffix);
 
-            Debug.Assert.IsTrue(buffer.ToString() == "1.10.c)<A>");
+            Assert.IsTrue(buffer.ToString() == "1.10.c)<A>");
 
             generator.Add(sNum);
             generator.Add(sNum);
@@ -53,7 +54,7 @@ namespace Epsitec.Common.Text.Tests
 
             int[] ranks = new int[] { 1, 10, 3, 2, 3, 4 };
 
-            Debug.Assert.IsTrue(
+            Assert.IsTrue(
                 "1.10.c)2.3.4."
                     == generator.GenerateTextString(
                         ranks,
@@ -66,28 +67,29 @@ namespace Epsitec.Common.Text.Tests
 
             series = generator.NewSeries(System.Globalization.CultureInfo.CurrentCulture);
 
-            Debug.Assert.IsTrue("1." == series.GetNextTextString(0));
-            Debug.Assert.IsTrue("2." == series.GetNextTextString(0));
-            Debug.Assert.IsTrue("2.1." == series.GetNextTextString(1));
-            Debug.Assert.IsTrue("2.1.a)1." == series.GetNextTextString(3));
-            Debug.Assert.IsTrue("2.1.b)" == series.GetNextTextString(2));
-            Debug.Assert.IsTrue("2.1.c)" == series.GetNextTextString(2));
-            Debug.Assert.IsTrue("3." == series.GetNextTextString(0));
-            Debug.Assert.IsTrue("3.1.a)1.1.1." == series.GetNextTextString(5));
+            Assert.IsTrue("1." == series.GetNextTextString(0));
+            Assert.IsTrue("2." == series.GetNextTextString(0));
+            Assert.IsTrue("2.1." == series.GetNextTextString(1));
+            Assert.IsTrue("2.1.a)1." == series.GetNextTextString(3));
+            Assert.IsTrue("2.1.b)" == series.GetNextTextString(2));
+            Assert.IsTrue("2.1.c)" == series.GetNextTextString(2));
+            Assert.IsTrue("3." == series.GetNextTextString(0));
+            Assert.IsTrue("3.1.a)1.1.1." == series.GetNextTextString(5));
         }
 
-        private static void TestTextStory()
+        [Test]
+        public static void TestTextStory()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
             ulong[] text;
             System.Collections.ArrayList properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Verdana", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Verdana", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             TextStyle style = story.StyleList.NewTextStyle(
                 null,
@@ -96,15 +98,15 @@ namespace Epsitec.Common.Text.Tests
                 properties
             );
 
-            Properties.GeneratorProperty g1A = new Properties.GeneratorProperty("G1", 0, 101);
-            Properties.GeneratorProperty g1B = new Properties.GeneratorProperty("G1", 0, 102);
-            Properties.GeneratorProperty g1C = new Properties.GeneratorProperty("G1", 1, 103);
-            Properties.GeneratorProperty g1D = new Properties.GeneratorProperty("G1", 2, 104);
-            Properties.GeneratorProperty g1E = new Properties.GeneratorProperty("G1", 1, 105);
+            GeneratorProperty g1A = new GeneratorProperty("G1", 0, 101);
+            GeneratorProperty g1B = new GeneratorProperty("G1", 0, 102);
+            GeneratorProperty g1C = new GeneratorProperty("G1", 1, 103);
+            GeneratorProperty g1D = new GeneratorProperty("G1", 2, 104);
+            GeneratorProperty g1E = new GeneratorProperty("G1", 1, 105);
 
             properties.Clear();
             properties.Add(g1A);
-            properties.Add(new Properties.AutoTextProperty("g1a"));
+            properties.Add(new AutoTextProperty("g1a"));
 
             story.ConvertToStyledText("X", style, properties, out text);
             story.InsertText(cursor, text);
@@ -114,7 +116,7 @@ namespace Epsitec.Common.Text.Tests
 
             properties.Clear();
             properties.Add(g1B);
-            properties.Add(new Properties.AutoTextProperty("g1b"));
+            properties.Add(new AutoTextProperty("g1b"));
 
             story.ConvertToStyledText("X", style, properties, out text);
             story.InsertText(cursor, text);
@@ -124,7 +126,7 @@ namespace Epsitec.Common.Text.Tests
 
             properties.Clear();
             properties.Add(g1C);
-            properties.Add(new Properties.AutoTextProperty("g1c"));
+            properties.Add(new AutoTextProperty("g1c"));
 
             story.ConvertToStyledText("X", style, properties, out text);
             story.InsertText(cursor, text);
@@ -134,7 +136,7 @@ namespace Epsitec.Common.Text.Tests
 
             properties.Clear();
             properties.Add(g1D);
-            properties.Add(new Properties.AutoTextProperty("g1d"));
+            properties.Add(new AutoTextProperty("g1d"));
 
             story.ConvertToStyledText("X", style, properties, out text);
             story.InsertText(cursor, text);
@@ -144,7 +146,7 @@ namespace Epsitec.Common.Text.Tests
 
             properties.Clear();
             properties.Add(g1E);
-            properties.Add(new Properties.AutoTextProperty("g1e"));
+            properties.Add(new AutoTextProperty("g1e"));
 
             story.ConvertToStyledText("X", style, properties, out text);
             story.InsertText(cursor, text);
@@ -183,9 +185,9 @@ namespace Epsitec.Common.Text.Tests
                 System.Globalization.CultureInfo.CurrentCulture
             );
 
-            Debug.Assert.IsTrue(count1 == 5);
-            Debug.Assert.IsTrue(count2 == 0);
-            Debug.Assert.IsTrue(count3 == 5);
+            Assert.IsTrue(count1 == 5);
+            Assert.IsTrue(count2 == 0);
+            Assert.IsTrue(count3 == 5);
 
             text = new ulong[story.TextLength];
             story.SetCursorPosition(cursor, 0);

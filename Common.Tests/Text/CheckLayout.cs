@@ -1,26 +1,26 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text.Tests
+using Epsitec.Common.Text;
+using Epsitec.Common.Text.Cursors;
+using Epsitec.Common.Text.Layout;
+using Epsitec.Common.Text.Properties;
+using NUnit.Framework;
+
+namespace Epsitec.Common.Tests.Text
 {
     /// <summary>
-    /// Vérifie le bon fonctionnement des classes Layout.XyzEngine.
+    /// Vérifie le bon fonctionnement des classes XyzEngine.
     /// </summary>
+    [TestFixture]
     public class CheckLayout
     {
-        public static void RunTests()
-        {
-            CheckLayout.TestLineEngine();
-            CheckLayout.TestLineEngineWithFrame();
-            CheckLayout.TestLineEngineWithHyphens();
-            CheckLayout.TestLineEngineWithSpaces();
-            CheckLayout.TestTextToGlyphMapping();
-        }
 
-        private static void TestLineEngineWithFrame()
+        [Test]
+        public static void TestLineEngineWithFrame()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -29,21 +29,21 @@ namespace Epsitec.Common.Text.Tests
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
             properties.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     40,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -56,21 +56,21 @@ namespace Epsitec.Common.Text.Tests
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Bold"));
-            properties.Add(new Properties.FontSizeProperty(16.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Bold"));
+            properties.Add(new FontSizeProperty(16.0, SizeUnits.Points));
             properties.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     40,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -79,21 +79,21 @@ namespace Epsitec.Common.Text.Tests
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
             properties.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     40,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -123,11 +123,11 @@ namespace Epsitec.Common.Text.Tests
             frames.InsertAt(0, frame0);
             frames.InsertAt(1, frame1);
 
-            Layout.LineEngine layout = new Layout.LineEngine();
-            Layout.Context context = new Layout.Context(story.TextContext, storyText, 0, frames);
+            LineEngine layout = new LineEngine();
+            Context context = new Context(story.TextContext, storyText, 0, frames);
 
-            Layout.BreakCollection breaks;
-            Layout.Status status;
+            BreakCollection breaks;
+            Status status;
 
             breaks = null;
 
@@ -138,51 +138,51 @@ namespace Epsitec.Common.Text.Tests
 
             System.Diagnostics.Debug.WriteLine("CheckLayout: " + context.LineHeight.ToString());
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 28);
-            Debug.Assert.IsTrue(context.FrameIndex == 0);
-            Debug.Assert.IsTrue(context.LineHeight > 16.0874);
-            Debug.Assert.IsTrue(context.LineHeight < 16.0876);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 28);
+            Assert.IsTrue(context.FrameIndex == 0);
+            Assert.IsTrue(context.LineHeight > 16.0874);
+            Assert.IsTrue(context.LineHeight < 16.0876);
 
             status = context.Fit(ref breaks, 1);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 62);
-            Debug.Assert.IsTrue(context.FrameIndex == 1);
-            Debug.Assert.IsTrue(context.LineHeight > 21.4499);
-            Debug.Assert.IsTrue(context.LineHeight < 21.4501);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 62);
+            Assert.IsTrue(context.FrameIndex == 1);
+            Assert.IsTrue(context.LineHeight > 21.4499);
+            Assert.IsTrue(context.LineHeight < 21.4501);
 
             status = context.Fit(ref breaks, 2);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 95);
-            Debug.Assert.IsTrue(context.FrameIndex == 1);
-            Debug.Assert.IsTrue(context.LineHeight > 16.0874);
-            Debug.Assert.IsTrue(context.LineHeight < 16.0876);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 95);
+            Assert.IsTrue(context.FrameIndex == 1);
+            Assert.IsTrue(context.LineHeight > 16.0874);
+            Assert.IsTrue(context.LineHeight < 16.0876);
 
             status = context.Fit(ref breaks, 3);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 131);
-            Debug.Assert.IsTrue(context.FrameIndex == 1);
-            Debug.Assert.IsTrue(context.LineHeight > 16.0874);
-            Debug.Assert.IsTrue(context.LineHeight < 16.0876);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 131);
+            Assert.IsTrue(context.FrameIndex == 1);
+            Assert.IsTrue(context.LineHeight > 16.0874);
+            Assert.IsTrue(context.LineHeight < 16.0876);
 
             status = context.Fit(ref breaks, 4);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(status == Layout.Status.OkFitEnded);
-            Debug.Assert.IsTrue(breaks[0].Offset == 149);
-            Debug.Assert.IsTrue(context.FrameIndex == 1);
-            Debug.Assert.IsTrue(context.LineHeight > 16.0874);
-            Debug.Assert.IsTrue(context.LineHeight < 16.0876);
+            Assert.IsTrue(status == Status.OkFitEnded);
+            Assert.IsTrue(breaks[0].Offset == 149);
+            Assert.IsTrue(context.FrameIndex == 1);
+            Assert.IsTrue(context.LineHeight > 16.0874);
+            Assert.IsTrue(context.LineHeight < 16.0876);
 
             status = context.Fit(ref breaks, 4);
 
-            Debug.Assert.IsTrue(status == Layout.Status.ErrorNeedMoreText);
+            Assert.IsTrue(status == Status.ErrorNeedMoreText);
 
             //	Elargit le cadre 0 pour permettre de placer le mot en Arial 16
             //	autant en largeur qu'en hauteur :
@@ -196,9 +196,9 @@ namespace Epsitec.Common.Text.Tests
             status = context.Fit(ref breaks, 0);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 46);
-            Debug.Assert.IsTrue(context.FrameIndex == 0);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 46);
+            Assert.IsTrue(context.FrameIndex == 0);
 
             //	Diminue la hauteur du cadre 0 pour que la ligne en Arial 16 ne
             //	tienne plus dans le cadre :
@@ -212,29 +212,30 @@ namespace Epsitec.Common.Text.Tests
             status = context.Fit(ref breaks, 0);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 28);
-            Debug.Assert.IsTrue(context.FrameIndex == 1);
-            Debug.Assert.IsTrue(context.LineHeight > 21.4499);
-            Debug.Assert.IsTrue(context.LineHeight < 21.4501);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 28);
+            Assert.IsTrue(context.FrameIndex == 1);
+            Assert.IsTrue(context.LineHeight > 21.4499);
+            Assert.IsTrue(context.LineHeight < 21.4501);
 
             status = context.Fit(ref breaks, 0);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(context.LineHeight > 21.4499);
-            Debug.Assert.IsTrue(context.LineHeight < 21.4501);
+            Assert.IsTrue(context.LineHeight > 21.4499);
+            Assert.IsTrue(context.LineHeight < 21.4501);
 
             status = context.Fit(ref breaks, 0);
             context.DefineTextOffset(breaks[0].Offset);
 
-            Debug.Assert.IsTrue(context.LineHeight > 16.0874);
-            Debug.Assert.IsTrue(context.LineHeight < 16.0876);
+            Assert.IsTrue(context.LineHeight > 16.0874);
+            Assert.IsTrue(context.LineHeight < 16.0876);
         }
 
-        private static void TestLineEngine()
+        [Test]
+        public static void TestLineEngine()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -243,24 +244,24 @@ namespace Epsitec.Common.Text.Tests
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText("Affiche quelques mots pour ", properties, out styledText);
             story.InsertText(cursor, styledText);
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Bold"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Bold"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText("voir", properties, out styledText);
             story.InsertText(cursor, styledText);
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText(
                 "\u00A0" + "comment l'algorithme se débrouille.",
@@ -275,14 +276,14 @@ namespace Epsitec.Common.Text.Tests
 
             story.ReadText(cursor, storyText.Length, storyText);
 
-            Layout.LineEngine layout = new Layout.LineEngine();
-            Layout.Context context;
+            LineEngine layout = new LineEngine();
+            Context context;
 
-            Layout.BreakCollection breaks;
-            Layout.Status status;
+            BreakCollection breaks;
+            Status status;
 
             breaks = null;
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -296,15 +297,15 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 17);
-            Debug.Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 92.06);
-            Debug.Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 92.07);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 17);
+            Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 92.06);
+            Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 92.07);
 
             double y1 = context.MaxY;
             double y2 = context.MinY;
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -318,15 +319,15 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks[0].Offset == 27);
-            Debug.Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 148.75);
-            Debug.Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 148.76);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 27);
+            Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 148.75);
+            Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 148.76);
 
             double y3 = context.MaxY;
             double y4 = context.MinY;
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -340,16 +341,16 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
-            Debug.Assert.IsTrue(breaks.Count == 2);
-            Debug.Assert.IsTrue(breaks[0].Offset == 53);
-            Debug.Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 291.09);
-            Debug.Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 291.10);
-            Debug.Assert.IsTrue(breaks[1].Offset == 56);
-            Debug.Assert.IsTrue(breaks[1].Advance + breaks[1].Profile.WidthEndSpace > 307.10);
-            Debug.Assert.IsTrue(breaks[1].Advance + breaks[1].Profile.WidthEndSpace < 307.11);
+            Assert.IsTrue(status == Status.Ok);
+            Assert.IsTrue(breaks.Count == 2);
+            Assert.IsTrue(breaks[0].Offset == 53);
+            Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 291.09);
+            Assert.IsTrue(breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 291.10);
+            Assert.IsTrue(breaks[1].Offset == 56);
+            Assert.IsTrue(breaks[1].Advance + breaks[1].Profile.WidthEndSpace > 307.10);
+            Assert.IsTrue(breaks[1].Advance + breaks[1].Profile.WidthEndSpace < 307.11);
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -363,9 +364,9 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(status == Layout.Status.ErrorNeedMoreText);
+            Assert.IsTrue(status == Status.ErrorNeedMoreText);
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -379,9 +380,9 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(status == Layout.Status.ErrorCannotFit);
+            Assert.IsTrue(status == Status.ErrorCannotFit);
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -396,13 +397,13 @@ namespace Epsitec.Common.Text.Tests
             story.TextContext.IsDegradedLayoutEnabled = true;
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
+            Assert.IsTrue(status == Status.Ok);
 
             story.MoveCursor(cursor, story.TextLength);
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText("\n", properties, out styledText);
             story.InsertText(cursor, styledText);
@@ -411,7 +412,7 @@ namespace Epsitec.Common.Text.Tests
             storyText = new ulong[story.TextLength];
             story.ReadText(cursor, storyText.Length, storyText);
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -425,9 +426,9 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(status == Layout.Status.OkFitEnded);
+            Assert.IsTrue(status == Status.OkFitEnded);
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -441,26 +442,27 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(breaks[0].Offset == 27);
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 27);
+            Assert.IsTrue(status == Status.Ok);
 
             context.DefineTextOffset(breaks[0].Offset);
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(breaks[0].Offset == 56);
-            Debug.Assert.IsTrue(status == Layout.Status.Ok);
+            Assert.IsTrue(breaks[0].Offset == 56);
+            Assert.IsTrue(status == Status.Ok);
 
             context.DefineTextOffset(breaks[0].Offset);
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(breaks[0].Offset == 68);
-            Debug.Assert.IsTrue(status == Layout.Status.OkFitEnded);
+            Assert.IsTrue(breaks[0].Offset == 68);
+            Assert.IsTrue(status == Status.OkFitEnded);
         }
 
-        private static void TestLineEngineWithHyphens()
+        [Test]
+        public static void TestLineEngineWithHyphens()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -469,24 +471,24 @@ namespace Epsitec.Common.Text.Tests
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText("Affiche quelques mots pour ", properties, out styledText);
             story.InsertText(cursor, styledText);
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Bold"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Bold"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText("essayer", properties, out styledText);
             story.InsertText(cursor, styledText);
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText(" l'algo-rithme.\n", properties, out styledText);
             story.InsertText(cursor, styledText);
@@ -497,13 +499,13 @@ namespace Epsitec.Common.Text.Tests
 
             story.ReadText(cursor, storyText.Length, storyText);
 
-            Layout.LineEngine layout = new Layout.LineEngine();
-            Layout.Context context;
+            LineEngine layout = new LineEngine();
+            Context context;
 
-            Layout.BreakCollection breaks = null;
-            Layout.Status status;
+            BreakCollection breaks = null;
+            Status status;
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -517,13 +519,13 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(breaks.Count == 3);
-            Debug.Assert.IsTrue(breaks[0].Offset == 35);
-            Debug.Assert.IsTrue(breaks[1].Offset == 42);
-            Debug.Assert.IsTrue(breaks[2].Offset == 50);
-            Debug.Assert.IsTrue(System.Math.Round(breaks[0].SpacePenalty) == 70);
-            Debug.Assert.IsTrue(System.Math.Round(breaks[1].SpacePenalty) == 38);
-            Debug.Assert.IsTrue(System.Math.Round(breaks[2].SpacePenalty) == 0);
+            Assert.IsTrue(breaks.Count == 3);
+            Assert.IsTrue(breaks[0].Offset == 35);
+            Assert.IsTrue(breaks[1].Offset == 42);
+            Assert.IsTrue(breaks[2].Offset == 50);
+            Assert.IsTrue(System.Math.Round(breaks[0].SpacePenalty) == 70);
+            Assert.IsTrue(System.Math.Round(breaks[1].SpacePenalty) == 38);
+            Assert.IsTrue(System.Math.Round(breaks[2].SpacePenalty) == 0);
 
             OpenType.Font font;
             double fontSize;
@@ -531,10 +533,10 @@ namespace Epsitec.Common.Text.Tests
 
             story.TextContext.GetFontAndSize(storyText[0], out font, out fontSize, out fontScale);
 
-            Layout.StretchProfile profile = new Layout.StretchProfile();
+            StretchProfile profile = new StretchProfile();
             profile.Add(null, font, fontSize, storyText, 0, 26, 0);
 
-            context = new Layout.Context(
+            context = new Context(
                 story.TextContext,
                 storyText,
                 0,
@@ -548,22 +550,23 @@ namespace Epsitec.Common.Text.Tests
             );
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(breaks.Count == 1);
-            Debug.Assert.IsTrue(breaks[0].Offset == 42);
+            Assert.IsTrue(breaks.Count == 1);
+            Assert.IsTrue(breaks[0].Offset == 42);
 
             //			System.Diagnostics.Trace.WriteLine ("Starting layout.");
             //			for (int i = 0; i < 1000000; i++)
             //			{
-            //				context = new Layout.TextContext (story.TextContext, storyText, 0, 0, 14.0, 300, 15, 15, 30, 0);
+            //				context = new TextContext (story.TextContext, storyText, 0, 0, 14.0, 300, 15, 15, 30, 0);
             //				status  = context.Fit (ref breaks, 0);
             //			}
             //			System.Diagnostics.Trace.WriteLine ("Done.");
         }
 
-        private static void TestLineEngineWithSpaces()
+        [Test]
+        public static void TestLineEngineWithSpaces()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             ulong[] storyText;
 
@@ -574,8 +577,8 @@ namespace Epsitec.Common.Text.Tests
 
             properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
 
             story.ConvertToStyledText("Essai tout simple. XXXXXXXXXX", properties, out styledText);
             story.InsertText(cursor, styledText);
@@ -586,19 +589,19 @@ namespace Epsitec.Common.Text.Tests
 
             story.ReadText(cursor, storyText.Length, storyText);
 
-            Layout.LineEngine layout = new Layout.LineEngine();
-            Layout.Context context;
+            LineEngine layout = new LineEngine();
+            Context context;
 
-            Layout.BreakCollection breaks = null;
-            Layout.Status status;
+            BreakCollection breaks = null;
+            Status status;
 
-            context = new Layout.Context(story.TextContext, storyText, 0, 0, 14.0, 105, 0, 0, 0, 0);
+            context = new Context(story.TextContext, storyText, 0, 0, 14.0, 105, 0, 0, 0, 0);
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(breaks.Count == 1);
-            Debug.Assert.IsTrue(breaks[0].Offset == 19);
-            Debug.Assert.IsTrue(breaks[0].Advance > 94.03);
-            Debug.Assert.IsTrue(breaks[0].Advance < 94.04);
+            Assert.IsTrue(breaks.Count == 1);
+            Assert.IsTrue(breaks[0].Offset == 19);
+            Assert.IsTrue(breaks[0].Advance > 94.03);
+            Assert.IsTrue(breaks[0].Advance < 94.04);
 
             story.MoveCursor(cursor, story.TextLength - 10);
             story.ConvertToStyledText("    ", properties, out styledText);
@@ -610,22 +613,23 @@ namespace Epsitec.Common.Text.Tests
 
             story.ReadText(cursor, storyText.Length, storyText);
 
-            context = new Layout.Context(story.TextContext, storyText, 0, 0, 14.0, 105, 0, 0, 0, 0);
+            context = new Context(story.TextContext, storyText, 0, 0, 14.0, 105, 0, 0, 0, 0);
             status = context.Fit(ref breaks, 0);
 
-            Debug.Assert.IsTrue(breaks.Count == 1);
-            Debug.Assert.IsTrue(breaks[0].Offset == 23);
-            Debug.Assert.IsTrue(breaks[0].Advance > 94.03);
-            Debug.Assert.IsTrue(breaks[0].Advance < 94.04);
+            Assert.IsTrue(breaks.Count == 1);
+            Assert.IsTrue(breaks[0].Offset == 23);
+            Assert.IsTrue(breaks[0].Advance > 94.03);
+            Assert.IsTrue(breaks[0].Advance < 94.04);
         }
 
-        private static void TestTextToGlyphMapping()
+        [Test]
+        public static void TestTextToGlyphMapping()
         {
             ulong[] text = new ulong[] { 'A', 'f', 'f', 'i', 'c', 'h', 'e' };
             ushort[] glyphs = new ushort[] { 1, 100, 60, 65, 62 };
             short[] map = new short[] { 0, 1, 4, 5, 6, 7 };
 
-            Layout.TextToGlyphMapping mapping = new Layout.TextToGlyphMapping(
+            TextToGlyphMapping mapping = new TextToGlyphMapping(
                 text,
                 0,
                 text.Length,
@@ -638,78 +642,78 @@ namespace Epsitec.Common.Text.Tests
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 1);
-            Debug.Assert.IsTrue(c[0] == 'A');
-            Debug.Assert.IsTrue(g.Length == 1);
-            Debug.Assert.IsTrue(g[0] == 1);
+            Assert.IsTrue(c.Length == 1);
+            Assert.IsTrue(c[0] == 'A');
+            Assert.IsTrue(g.Length == 1);
+            Assert.IsTrue(g[0] == 1);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 3);
-            Debug.Assert.IsTrue(c[0] == 'f');
-            Debug.Assert.IsTrue(c[1] == 'f');
-            Debug.Assert.IsTrue(c[2] == 'i');
-            Debug.Assert.IsTrue(g.Length == 1);
-            Debug.Assert.IsTrue(g[0] == 100);
+            Assert.IsTrue(c.Length == 3);
+            Assert.IsTrue(c[0] == 'f');
+            Assert.IsTrue(c[1] == 'f');
+            Assert.IsTrue(c[2] == 'i');
+            Assert.IsTrue(g.Length == 1);
+            Assert.IsTrue(g[0] == 100);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 1);
-            Debug.Assert.IsTrue(c[0] == 'c');
-            Debug.Assert.IsTrue(g.Length == 1);
-            Debug.Assert.IsTrue(g[0] == 60);
+            Assert.IsTrue(c.Length == 1);
+            Assert.IsTrue(c[0] == 'c');
+            Assert.IsTrue(g.Length == 1);
+            Assert.IsTrue(g[0] == 60);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 1);
-            Debug.Assert.IsTrue(c[0] == 'h');
-            Debug.Assert.IsTrue(g.Length == 1);
-            Debug.Assert.IsTrue(g[0] == 65);
+            Assert.IsTrue(c.Length == 1);
+            Assert.IsTrue(c[0] == 'h');
+            Assert.IsTrue(g.Length == 1);
+            Assert.IsTrue(g[0] == 65);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 1);
-            Debug.Assert.IsTrue(c[0] == 'e');
-            Debug.Assert.IsTrue(g.Length == 1);
-            Debug.Assert.IsTrue(g[0] == 62);
+            Assert.IsTrue(c.Length == 1);
+            Assert.IsTrue(c[0] == 'e');
+            Assert.IsTrue(g.Length == 1);
+            Assert.IsTrue(g[0] == 62);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsNull(c);
-            Debug.Assert.IsNull(g);
+            Assert.IsNull(c);
+            Assert.IsNull(g);
 
             text = new ulong[] { 'a', 'é', 'x' };
             glyphs = new ushort[] { 1, 5, 100, 20 };
             map = new short[] { 0, 1, 1, 2, 3 };
 
-            mapping = new Layout.TextToGlyphMapping(text, 0, text.Length, glyphs, map);
+            mapping = new TextToGlyphMapping(text, 0, text.Length, glyphs, map);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 1);
-            Debug.Assert.IsTrue(c[0] == 'a');
-            Debug.Assert.IsTrue(g.Length == 1);
-            Debug.Assert.IsTrue(g[0] == 1);
+            Assert.IsTrue(c.Length == 1);
+            Assert.IsTrue(c[0] == 'a');
+            Assert.IsTrue(g.Length == 1);
+            Assert.IsTrue(g[0] == 1);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 1);
-            Debug.Assert.IsTrue(c[0] == 'é');
-            Debug.Assert.IsTrue(g.Length == 2);
-            Debug.Assert.IsTrue(g[0] == 5);
-            Debug.Assert.IsTrue(g[1] == 100);
+            Assert.IsTrue(c.Length == 1);
+            Assert.IsTrue(c[0] == 'é');
+            Assert.IsTrue(g.Length == 2);
+            Assert.IsTrue(g[0] == 5);
+            Assert.IsTrue(g[1] == 100);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsTrue(c.Length == 1);
-            Debug.Assert.IsTrue(c[0] == 'x');
-            Debug.Assert.IsTrue(g.Length == 1);
-            Debug.Assert.IsTrue(g[0] == 20);
+            Assert.IsTrue(c.Length == 1);
+            Assert.IsTrue(c[0] == 'x');
+            Assert.IsTrue(g.Length == 1);
+            Assert.IsTrue(g[0] == 20);
 
             mapping.GetNextMapping(out c, out g);
 
-            Debug.Assert.IsNull(c);
-            Debug.Assert.IsNull(g);
+            Assert.IsNull(c);
+            Assert.IsNull(g);
         }
     }
 }

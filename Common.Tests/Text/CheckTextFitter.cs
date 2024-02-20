@@ -1,26 +1,23 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text.Tests
+using Epsitec.Common.Text;
+using Epsitec.Common.Text.Cursors;
+using Epsitec.Common.Text.Properties;
+using Epsitec.Common.Text.Layout;
+using NUnit.Framework;
+
+namespace Epsitec.Common.Tests.Text
 {
     /// <summary>
     /// Vérifie le bon fonctionnement de la classe CheckTextFitter.
     /// </summary>
+    [TestFixture]
     public sealed class CheckTextFitter
     {
-        public static void RunTests()
-        {
-            CheckTextFitter.TestSimpleTextFrame();
-            CheckTextFitter.TestFit();
-            CheckTextFitter.TestFitTabs1();
-            CheckTextFitter.TestFitTabs2();
-            CheckTextFitter.TestFitTabs3();
-            CheckTextFitter.TestFitTabs4();
-            CheckTextFitter.TestTabs();
-            CheckTextFitter.TestCursorGeometry();
-        }
 
-        private static void TestSimpleTextFrame()
+        [Test]
+        public static void TestSimpleTextFrame()
         {
             SimpleTextFrame frame = new SimpleTextFrame();
 
@@ -55,8 +52,8 @@ namespace Epsitec.Common.Text.Tests
                 out y
             );
 
-            Debug.Assert.IsTrue(ok);
-            Debug.Assert.IsTrue(oy == -11);
+            Assert.IsTrue(ok);
+            Assert.IsTrue(oy == -11);
 
             ok = frame.ConstrainLineBox(
                 y,
@@ -71,8 +68,8 @@ namespace Epsitec.Common.Text.Tests
                 out y
             );
 
-            Debug.Assert.IsTrue(ok);
-            Debug.Assert.IsTrue(oy == -25);
+            Assert.IsTrue(ok);
+            Assert.IsTrue(oy == -25);
 
             ok = frame.ConstrainLineBox(
                 y,
@@ -87,8 +84,8 @@ namespace Epsitec.Common.Text.Tests
                 out y
             );
 
-            Debug.Assert.IsTrue(ok);
-            Debug.Assert.IsTrue(oy == -39);
+            Assert.IsTrue(ok);
+            Assert.IsTrue(oy == -39);
 
             ok = frame.ConstrainLineBox(
                 y,
@@ -103,8 +100,8 @@ namespace Epsitec.Common.Text.Tests
                 out y
             );
 
-            Debug.Assert.IsFalse(ok);
-            Debug.Assert.IsTrue(oy == -53);
+            Assert.IsFalse(ok);
+            Assert.IsTrue(oy == -53);
 
             ok = frame.ConstrainLineBox(
                 y,
@@ -119,36 +116,37 @@ namespace Epsitec.Common.Text.Tests
                 out y
             );
 
-            Debug.Assert.IsFalse(ok);
-            Debug.Assert.IsTrue(oy == -53);
+            Assert.IsFalse(ok);
+            Assert.IsTrue(oy == -53);
         }
 
-        private static void TestFit()
+        [Test]
+        public static void TestFit()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
             ulong[] text;
             System.Collections.ArrayList properties = new System.Collections.ArrayList();
 
-            properties.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(24.0, Properties.SizeUnits.Points));
-            properties.Add(new Properties.FontColorProperty("Black"));
+            properties.Add(new FontProperty("Arial", "Regular"));
+            properties.Add(new FontSizeProperty(24.0, SizeUnits.Points));
+            properties.Add(new FontColorProperty("Black"));
             properties.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     200,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -224,12 +222,12 @@ namespace Epsitec.Common.Text.Tests
             CursorInfo[] infos = story.TextTable.FindCursors(
                 0,
                 story.TextLength,
-                Cursors.FitterCursor.Filter
+                FitterCursor.Filter
             );
             count = 0;
 
             System.IO.StreamWriter writer = new System.IO.StreamWriter(
-                @"S:\text.txt",
+                System.IO.Path.GetTempFileName(),
                 false,
                 System.Text.Encoding.UTF8
             );
@@ -240,14 +238,14 @@ namespace Epsitec.Common.Text.Tests
             foreach (CursorInfo info in infos)
             {
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
 
                 buffer.AppendFormat("{0}:", story.GetCursorPosition(fitterCursor));
 
                 int pos = 0;
 
-                foreach (Cursors.FitterCursor.Element element in fitterCursor.Elements)
+                foreach (FitterCursor.Element element in fitterCursor.Elements)
                 {
                     int length = element.Length;
                     string textStr;
@@ -293,8 +291,8 @@ namespace Epsitec.Common.Text.Tests
             System.Diagnostics.Trace.WriteLine("Fitter: render (1) -- full document x 1");
             foreach (CursorInfo info in infos)
             {
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
                 fitter.RenderParagraph(fitterCursor, renderer);
                 renderer.NewParagraph();
             }
@@ -302,8 +300,8 @@ namespace Epsitec.Common.Text.Tests
 
             foreach (CursorInfo info in infos)
             {
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
 
                 if (fitterCursor.Elements.Length == 5)
                 {
@@ -331,10 +329,11 @@ namespace Epsitec.Common.Text.Tests
             System.Diagnostics.Trace.WriteLine("Done.");
         }
 
-        private static void TestFitTabs1()
+        [Test]
+        public static void TestFitTabs1()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -346,51 +345,51 @@ namespace Epsitec.Common.Text.Tests
 
             TabList tabs = story.TextContext.TabList;
 
-            properties1.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties1.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
-            properties1.Add(new Properties.FontColorProperty("Black"));
+            properties1.Add(new FontProperty("Arial", "Regular"));
+            properties1.Add(new FontSizeProperty(12.0, SizeUnits.Points));
+            properties1.Add(new FontColorProperty("Black"));
             properties1.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
             properties1.Add(
                 tabs.NewTab(
                     "T1",
                     60,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     null,
                     TabPositionMode.Absolute
                 )
             );
 
-            properties2.Add(new Properties.FontProperty("Arial", "Bold"));
-            properties2.Add(new Properties.FontSizeProperty(12.5, Properties.SizeUnits.Points));
-            properties2.Add(new Properties.FontColorProperty("Black"));
+            properties2.Add(new FontProperty("Arial", "Bold"));
+            properties2.Add(new FontSizeProperty(12.5, SizeUnits.Points));
+            properties2.Add(new FontColorProperty("Black"));
             properties2.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -435,17 +434,17 @@ namespace Epsitec.Common.Text.Tests
             CursorInfo[] infos = story.TextTable.FindCursors(
                 0,
                 story.TextLength,
-                Cursors.FitterCursor.Filter
+                FitterCursor.Filter
             );
 
             foreach (CursorInfo info in infos)
             {
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
 
                 System.Console.Out.WriteLine("{0}:", story.GetCursorPosition(fitterCursor));
 
-                foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
+                foreach (FitterCursor.Element elem in fitterCursor.Elements)
                 {
                     System.Console.Out.WriteLine(
                         "    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}",
@@ -459,10 +458,11 @@ namespace Epsitec.Common.Text.Tests
             }
         }
 
-        private static void TestFitTabs2()
+        [Test]
+        public static void TestFitTabs2()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -474,51 +474,51 @@ namespace Epsitec.Common.Text.Tests
 
             TabList tabs = story.TextContext.TabList;
 
-            properties1.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties1.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
-            properties1.Add(new Properties.FontColorProperty("Black"));
+            properties1.Add(new FontProperty("Arial", "Regular"));
+            properties1.Add(new FontSizeProperty(12.0, SizeUnits.Points));
+            properties1.Add(new FontColorProperty("Black"));
             properties1.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
             properties1.Add(
                 tabs.NewTab(
                     "T1",
                     60,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.5,
                     null,
                     TabPositionMode.Absolute
                 )
             );
 
-            properties2.Add(new Properties.FontProperty("Arial", "Bold"));
-            properties2.Add(new Properties.FontSizeProperty(12.5, Properties.SizeUnits.Points));
-            properties2.Add(new Properties.FontColorProperty("Black"));
+            properties2.Add(new FontProperty("Arial", "Bold"));
+            properties2.Add(new FontSizeProperty(12.5, SizeUnits.Points));
+            properties2.Add(new FontColorProperty("Black"));
             properties2.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -562,17 +562,17 @@ namespace Epsitec.Common.Text.Tests
             CursorInfo[] infos = story.TextTable.FindCursors(
                 0,
                 story.TextLength,
-                Cursors.FitterCursor.Filter
+                FitterCursor.Filter
             );
 
             foreach (CursorInfo info in infos)
             {
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
 
                 System.Console.Out.WriteLine("{0}:", story.GetCursorPosition(fitterCursor));
 
-                foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
+                foreach (FitterCursor.Element elem in fitterCursor.Elements)
                 {
                     System.Console.Out.WriteLine(
                         "    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}",
@@ -589,17 +589,18 @@ namespace Epsitec.Common.Text.Tests
 
             foreach (CursorInfo info in infos)
             {
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
                 fitter.RenderParagraph(fitterCursor, renderer);
                 renderer.NewParagraph();
             }
         }
 
-        private static void TestFitTabs3()
+        [Test]
+        public static void TestFitTabs3()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -611,51 +612,51 @@ namespace Epsitec.Common.Text.Tests
 
             TabList tabs = story.TextContext.TabList;
 
-            properties1.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties1.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
-            properties1.Add(new Properties.FontColorProperty("Black"));
+            properties1.Add(new FontProperty("Arial", "Regular"));
+            properties1.Add(new FontSizeProperty(12.0, SizeUnits.Points));
+            properties1.Add(new FontColorProperty("Black"));
             properties1.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
             properties1.Add(
                 tabs.NewTab(
                     "T1",
                     60,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     null,
                     TabPositionMode.Absolute
                 )
             );
 
-            properties2.Add(new Properties.FontProperty("Arial", "Bold"));
-            properties2.Add(new Properties.FontSizeProperty(12.5, Properties.SizeUnits.Points));
-            properties2.Add(new Properties.FontColorProperty("Black"));
+            properties2.Add(new FontProperty("Arial", "Bold"));
+            properties2.Add(new FontSizeProperty(12.5, SizeUnits.Points));
+            properties2.Add(new FontColorProperty("Black"));
             properties2.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -699,17 +700,17 @@ namespace Epsitec.Common.Text.Tests
             CursorInfo[] infos = story.TextTable.FindCursors(
                 0,
                 story.TextLength,
-                Cursors.FitterCursor.Filter
+                FitterCursor.Filter
             );
 
             foreach (CursorInfo info in infos)
             {
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
 
                 System.Console.Out.WriteLine("{0}:", story.GetCursorPosition(fitterCursor));
 
-                foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
+                foreach (FitterCursor.Element elem in fitterCursor.Elements)
                 {
                     System.Console.Out.WriteLine(
                         "    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}",
@@ -723,10 +724,11 @@ namespace Epsitec.Common.Text.Tests
             }
         }
 
-        private static void TestFitTabs4()
+        [Test]
+        public static void TestFitTabs4()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -738,51 +740,51 @@ namespace Epsitec.Common.Text.Tests
 
             TabList tabs = story.TextContext.TabList;
 
-            properties1.Add(new Properties.FontProperty("Arial", "Regular"));
-            properties1.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
-            properties1.Add(new Properties.FontColorProperty("Black"));
+            properties1.Add(new FontProperty("Arial", "Regular"));
+            properties1.Add(new FontSizeProperty(12.0, SizeUnits.Points));
+            properties1.Add(new FontColorProperty("Black"));
             properties1.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
             properties1.Add(
                 tabs.NewTab(
                     "T1",
                     60,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     null,
                     TabPositionMode.Absolute
                 )
             );
 
-            properties2.Add(new Properties.FontProperty("Arial", "Bold"));
-            properties2.Add(new Properties.FontSizeProperty(12.5, Properties.SizeUnits.Points));
-            properties2.Add(new Properties.FontColorProperty("Black"));
+            properties2.Add(new FontProperty("Arial", "Bold"));
+            properties2.Add(new FontSizeProperty(12.5, SizeUnits.Points));
+            properties2.Add(new FontColorProperty("Black"));
             properties2.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     60,
                     60,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -831,17 +833,17 @@ namespace Epsitec.Common.Text.Tests
             CursorInfo[] infos = story.TextTable.FindCursors(
                 0,
                 story.TextLength,
-                Cursors.FitterCursor.Filter
+                FitterCursor.Filter
             );
 
             foreach (CursorInfo info in infos)
             {
-                Cursors.FitterCursor fitterCursor =
-                    story.TextTable.GetCursorInstance(info.CursorId) as Cursors.FitterCursor;
+                FitterCursor fitterCursor =
+                    story.TextTable.GetCursorInstance(info.CursorId) as FitterCursor;
 
                 System.Console.Out.WriteLine("{0}:", story.GetCursorPosition(fitterCursor));
 
-                foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
+                foreach (FitterCursor.Element elem in fitterCursor.Elements)
                 {
                     System.Console.Out.WriteLine(
                         "    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}",
@@ -855,7 +857,8 @@ namespace Epsitec.Common.Text.Tests
             }
         }
 
-        private static void TestTabs()
+        [Test]
+        public static void TestTabs()
         {
             TextStory story = new TextStory();
             TabList tabs = story.TextContext.TabList;
@@ -866,11 +869,11 @@ namespace Epsitec.Common.Text.Tests
             string[] u1 = TabList.UnpackFromAttribute(p1);
             string[] u2 = TabList.UnpackFromAttribute(p2);
 
-            Debug.Assert.IsTrue(u1.Length == 0);
-            Debug.Assert.IsTrue(u2.Length == 3);
-            Debug.Assert.IsTrue(u2[0] == "a");
-            Debug.Assert.IsTrue(u2[1] == "b;/\\");
-            Debug.Assert.IsTrue(u2[2] == "c");
+            Assert.IsTrue(u1.Length == 0);
+            Assert.IsTrue(u2.Length == 3);
+            Assert.IsTrue(u2[0] == "a");
+            Assert.IsTrue(u2[1] == "b;/\\");
+            Assert.IsTrue(u2[2] == "c");
 
             string a1 = TabList.PackToAttribute("Dummy", "LevelMultiplier:10 mm");
             string a2 = TabList.PackToAttribute("Dummy", "LevelTable:10 mm;50 pt;2.54 in");
@@ -880,26 +883,27 @@ namespace Epsitec.Common.Text.Tests
             double v1_2 = TabList.GetLevelOffset(1.0, 2, a1);
             double v1_3 = TabList.GetLevelOffset(1.0, 3, a1);
 
-            Debug.Assert.Equals(0, (int)(v1_0 * 10));
-            Debug.Assert.Equals(283, (int)(v1_1 * 10));
-            Debug.Assert.Equals(566, (int)(v1_2 * 10));
-            Debug.Assert.Equals(850, (int)(v1_3 * 10));
+            Assert.AreEqual(0, (int)(v1_0 * 10));
+            Assert.AreEqual(283, (int)(v1_1 * 10));
+            Assert.AreEqual(566, (int)(v1_2 * 10));
+            Assert.AreEqual(850, (int)(v1_3 * 10));
 
             double v2_0 = TabList.GetLevelOffset(1.0, 0, a2);
             double v2_1 = TabList.GetLevelOffset(1.0, 1, a2);
             double v2_2 = TabList.GetLevelOffset(1.0, 2, a2);
             double v2_3 = TabList.GetLevelOffset(1.0, 3, a2);
 
-            Debug.Assert.Equals(283, (int)(v2_0 * 10));
-            Debug.Assert.Equals(500, (int)(v2_1 * 10));
-            Debug.Assert.Equals(1828, (int)(v2_2 * 10));
-            Debug.Assert.Equals(1828, (int)(v2_3 * 10));
+            Assert.AreEqual(283, (int)(v2_0 * 10));
+            Assert.AreEqual(500, (int)(v2_1 * 10));
+            Assert.AreEqual(1828, (int)(v2_2 * 10));
+            Assert.AreEqual(1828, (int)(v2_3 * 10));
         }
 
-        private static void TestCursorGeometry()
+        [Test]
+        public static void TestCursorGeometry()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -911,68 +915,68 @@ namespace Epsitec.Common.Text.Tests
 
             TabList tabs = story.TextContext.TabList;
 
-            Properties.FontProperty fontRegular = new Properties.FontProperty(
+            FontProperty fontRegular = new FontProperty(
                 "Arial",
                 "Regular",
                 "liga"
             );
-            Properties.FontProperty fontBold = new Properties.FontProperty("Arial", "Bold");
-            Properties.FontProperty fontItalic = new Properties.FontProperty("Arial", "Italic");
+            FontProperty fontBold = new FontProperty("Arial", "Bold");
+            FontProperty fontItalic = new FontProperty("Arial", "Italic");
 
             properties1.Add(fontRegular);
-            properties1.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
-            properties1.Add(new Properties.FontColorProperty("Black"));
+            properties1.Add(new FontSizeProperty(12.0, SizeUnits.Points));
+            properties1.Add(new FontColorProperty("Black"));
             properties1.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
             properties2.Add(fontBold);
-            properties2.Add(new Properties.FontSizeProperty(12.5, Properties.SizeUnits.Points));
-            properties2.Add(new Properties.FontColorProperty("Black"));
+            properties2.Add(new FontSizeProperty(12.5, SizeUnits.Points));
+            properties2.Add(new FontColorProperty("Black"));
             properties2.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     60,
                     60,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
             properties3.Add(fontItalic);
-            properties3.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
-            properties3.Add(new Properties.FontColorProperty("Black"));
+            properties3.Add(new FontSizeProperty(12.0, SizeUnits.Points));
+            properties3.Add(new FontColorProperty("Black"));
             properties3.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     0,
                     0,
                     0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     0.0,
                     1.0,
                     15,
                     1,
-                    Properties.ThreeState.False
+                    ThreeState.False
                 )
             );
 
@@ -983,7 +987,7 @@ namespace Epsitec.Common.Text.Tests
                 tabs.NewTab(
                     "T1",
                     60,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     0.0,
                     null,
                     TabPositionMode.Absolute
@@ -999,10 +1003,10 @@ namespace Epsitec.Common.Text.Tests
             );
             story.InsertText(cursor, text);
 
-            Text.TextStyle defaultStyle = story.StyleList.NewTextStyle(
+            TextStyle defaultStyle = story.StyleList.NewTextStyle(
                 null,
                 "Default",
-                Text.TextStyleClass.Paragraph,
+                TextStyleClass.Paragraph,
                 properties3
             );
 
@@ -1052,9 +1056,9 @@ namespace Epsitec.Common.Text.Tests
                 )
             );
 
-            Debug.Assert.IsTrue(cFrame == frame);
-            Debug.Assert.IsTrue(cLine == 0);
-            Debug.Assert.IsTrue(cChar == 0);
+            Assert.IsTrue(cFrame == frame);
+            Assert.IsTrue(cLine == 0);
+            Assert.IsTrue(cChar == 0);
 
             story.SetCursorPosition(cursor, 6, 1);
             fitter.GetCursorGeometry(cursor, out cFrame, out cx, out cy, out cLine, out cChar);
@@ -1069,9 +1073,9 @@ namespace Epsitec.Common.Text.Tests
                 )
             );
 
-            Debug.Assert.IsTrue(cFrame == frame);
-            Debug.Assert.IsTrue(cLine == 0);
-            Debug.Assert.IsTrue(cChar == 6);
+            Assert.IsTrue(cFrame == frame);
+            Assert.IsTrue(cLine == 0);
+            Assert.IsTrue(cChar == 6);
 
             story.SetCursorPosition(cursor, 14, 1);
             fitter.GetCursorGeometry(cursor, out cFrame, out cx, out cy, out cLine, out cChar);
@@ -1086,9 +1090,9 @@ namespace Epsitec.Common.Text.Tests
                 )
             );
 
-            Debug.Assert.IsTrue(cFrame == frame);
-            Debug.Assert.IsTrue(cLine == 0);
-            Debug.Assert.IsTrue(cChar == 14);
+            Assert.IsTrue(cFrame == frame);
+            Assert.IsTrue(cLine == 0);
+            Assert.IsTrue(cChar == 14);
 
             story.SetCursorPosition(cursor, 15, 1);
             fitter.GetCursorGeometry(cursor, out cFrame, out cx, out cy, out cLine, out cChar);
@@ -1103,9 +1107,9 @@ namespace Epsitec.Common.Text.Tests
                 )
             );
 
-            Debug.Assert.IsTrue(cFrame == frame);
-            Debug.Assert.IsTrue(cLine == 1);
-            Debug.Assert.IsTrue(cChar == 1);
+            Assert.IsTrue(cFrame == frame);
+            Assert.IsTrue(cLine == 1);
+            Assert.IsTrue(cChar == 1);
 
             story.SetCursorPosition(cursor, 14, -1);
             fitter.GetCursorGeometry(cursor, out cFrame, out cx, out cy, out cLine, out cChar);
@@ -1120,17 +1124,17 @@ namespace Epsitec.Common.Text.Tests
                 )
             );
 
-            Debug.Assert.IsTrue(cFrame == frame);
-            Debug.Assert.IsTrue(cLine == 1);
-            Debug.Assert.IsTrue(cChar == 0);
+            Assert.IsTrue(cFrame == frame);
+            Assert.IsTrue(cLine == 1);
+            Assert.IsTrue(cChar == 0);
 
             story.SetCursorPosition(cursor, 97, 1);
             fitter.GetCursorGeometry(cursor, out cFrame, out cx, out cy, out cLine, out cChar);
 
-            Debug.Assert.IsTrue(cFrame == frame);
-            Debug.Assert.IsTrue(cLine == 0);
-            Debug.Assert.IsTrue(cChar == 3);
-            Debug.Assert.IsTrue(cx == 150.0);
+            Assert.IsTrue(cFrame == frame);
+            Assert.IsTrue(cLine == 0);
+            Assert.IsTrue(cChar == 3);
+            Assert.IsTrue(cx == 150.0);
 
             story.SetCursorPosition(cursor, 98, 1);
             fitter.GetCursorGeometry(cursor, out cFrame, out cx, out cy, out cLine, out cChar);
@@ -1156,8 +1160,8 @@ namespace Epsitec.Common.Text.Tests
                 )
             );
 
-            Debug.Assert.IsTrue(cLine == 0);
-            Debug.Assert.IsTrue(cChar == 0);
+            Assert.IsTrue(cLine == 0);
+            Assert.IsTrue(cChar == 0);
 
             TextNavigator navigator = new TextNavigator(fitter);
 
@@ -1175,9 +1179,9 @@ namespace Epsitec.Common.Text.Tests
                 out angle
             );
 
-            Debug.Assert.IsInBounds(ascender, 10.863, 10.864);
-            Debug.Assert.IsInBounds(descender, -2.543, -2.542);
-            Debug.Assert.IsInBounds(angle, 1.361, 1.362);
+            Assert.IsTrue(10.863 <= ascender && ascender <= 10.864);
+            Assert.IsTrue(-2.543 <= descender && descender  <= -2.542);
+            Assert.IsTrue(1.361 <= angle && angle <= 1.362);
 
             System.Diagnostics.Debug.WriteLine(
                 string.Format(
@@ -1192,7 +1196,7 @@ namespace Epsitec.Common.Text.Tests
         }
 
         #region Renderer Classes
-        private class Renderer : Text.ITextRenderer
+        private class Renderer : ITextRenderer
         {
             public Renderer()
             {
@@ -1221,12 +1225,12 @@ namespace Epsitec.Common.Text.Tests
                 return true;
             }
 
-            public void RenderStartParagraph(Layout.Context context) { }
+            public void RenderStartParagraph(Context context) { }
 
-            public void RenderStartLine(Layout.Context context) { }
+            public void RenderStartLine(Context context) { }
 
             public void RenderTab(
-                Layout.Context layout,
+                Context layout,
                 string tag,
                 double tabOrigin,
                 double tabStop,
@@ -1236,11 +1240,11 @@ namespace Epsitec.Common.Text.Tests
             ) { }
 
             public void Render(
-                Layout.Context layout,
+                Context layout,
                 Epsitec.Common.OpenType.Font font,
                 double size,
                 string color,
-                Layout.TextToGlyphMapping mapping,
+                TextToGlyphMapping mapping,
                 ushort[] glyphs,
                 double[] x,
                 double[] y,
@@ -1281,7 +1285,7 @@ namespace Epsitec.Common.Text.Tests
             }
 
             public void Render(
-                Layout.Context layout,
+                Context layout,
                 IGlyphRenderer glyphRenderer,
                 string color,
                 double x,
@@ -1289,16 +1293,16 @@ namespace Epsitec.Common.Text.Tests
                 bool isLastRun
             ) { }
 
-            public void RenderEndLine(Layout.Context context) { }
+            public void RenderEndLine(Context context) { }
 
-            public void RenderEndParagraph(Layout.Context context) { }
+            public void RenderEndParagraph(Context context) { }
             #endregion
 
             private System.Text.StringBuilder buffer;
             private int count;
         }
 
-        private class ZeroRenderer : Text.ITextRenderer
+        private class ZeroRenderer : ITextRenderer
         {
             public ZeroRenderer() { }
 
@@ -1316,12 +1320,12 @@ namespace Epsitec.Common.Text.Tests
                 return true;
             }
 
-            public void RenderStartParagraph(Layout.Context context) { }
+            public void RenderStartParagraph(Context context) { }
 
-            public void RenderStartLine(Layout.Context context) { }
+            public void RenderStartLine(Context context) { }
 
             public void RenderTab(
-                Layout.Context layout,
+                Context layout,
                 string tag,
                 double tabOrigin,
                 double tabStop,
@@ -1331,11 +1335,11 @@ namespace Epsitec.Common.Text.Tests
             ) { }
 
             public void Render(
-                Layout.Context layout,
+                Context layout,
                 Epsitec.Common.OpenType.Font font,
                 double size,
                 string color,
-                Layout.TextToGlyphMapping mapping,
+                TextToGlyphMapping mapping,
                 ushort[] glyphs,
                 double[] x,
                 double[] y,
@@ -1345,7 +1349,7 @@ namespace Epsitec.Common.Text.Tests
             ) { }
 
             public void Render(
-                Layout.Context layout,
+                Context layout,
                 IGlyphRenderer glyphRenderer,
                 string color,
                 double x,
@@ -1353,9 +1357,9 @@ namespace Epsitec.Common.Text.Tests
                 bool isLastRun
             ) { }
 
-            public void RenderEndLine(Layout.Context context) { }
+            public void RenderEndLine(Context context) { }
 
-            public void RenderEndParagraph(Layout.Context context) { }
+            public void RenderEndParagraph(Context context) { }
             #endregion
         }
         #endregion

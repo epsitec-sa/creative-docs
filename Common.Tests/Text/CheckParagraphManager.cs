@@ -1,21 +1,24 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text.Tests
+using Epsitec.Common.Text;
+using Epsitec.Common.Text.Cursors;
+using Epsitec.Common.Text.Internal;
+using Epsitec.Common.Text.Properties;
+using Epsitec.Common.Text.ParagraphManagers;
+using NUnit.Framework;
+
+namespace Epsitec.Common.Tests.Text
 {
     /// <summary>
     /// La batterie de tests CheckParagraphManager vérifie le bon fonctionnement
     /// des gestionnaires de paragraphes (puces, etc.)
     /// </summary>
+    [TestFixture]
     public sealed class CheckParagraphManager
     {
-        public static void RunTests()
-        {
-            CheckParagraphManager.TestNavigation();
-            CheckParagraphManager.TestAttachDetach();
-        }
-
-        private static void TestNavigation()
+        [Test]
+        public static void TestNavigation()
         {
             TextStory story = new TextStory();
             TextNavigator navigator = new TextNavigator(story);
@@ -23,28 +26,28 @@ namespace Epsitec.Common.Text.Tests
             System.Collections.ArrayList properties = new System.Collections.ArrayList();
 
             properties.Clear();
-            properties.Add(new Properties.FontProperty("Verdana", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Verdana", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
             properties.Add(
-                new Properties.LeadingProperty(
+                new LeadingProperty(
                     14.0,
-                    Properties.SizeUnits.Points,
-                    Properties.AlignMode.None
+                    SizeUnits.Points,
+                    AlignMode.None
                 )
             );
             properties.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     5.0,
                     5.0,
                     5.0,
                     5.0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     5,
-                    Properties.ThreeState.True
+                    ThreeState.True
                 )
             );
 
@@ -61,21 +64,21 @@ namespace Epsitec.Common.Text.Tests
             ulong[] text1;
             ulong[] text2;
 
-            Properties.AutoTextProperty at;
-            Properties.AutoTextProperty at1 = new Epsitec.Common.Text.Properties.AutoTextProperty(
+            AutoTextProperty at;
+            AutoTextProperty at1 = new AutoTextProperty(
                 "NX"
             );
-            Properties.AutoTextProperty at2 = new Epsitec.Common.Text.Properties.AutoTextProperty(
+            AutoTextProperty at2 = new AutoTextProperty(
                 "NN"
             );
-            Properties.AutoTextProperty at3 = new Epsitec.Common.Text.Properties.AutoTextProperty(
+            AutoTextProperty at3 = new AutoTextProperty(
                 "NN"
             );
 
             //	Deux propriétés AutoText identiques ne le sont jamais (à cause de
             //	leur identificateur unique) :
 
-            Debug.Assert.IsFalse(Property.CompareEqualContents(at2, at3));
+            Assert.IsFalse(Property.CompareEqualContents(at2, at3));
 
             story.ConvertToStyledText(
                 "X",
@@ -96,39 +99,39 @@ namespace Epsitec.Common.Text.Tests
             //	Le texte est maintenant "Abc" + "X" + "12" + "def" avec les
             //	fragments "X" -> at1 et "12" -> at2.
 
-            Debug.Assert.Equals("AbcX12def", story.GetDebugText());
-            Debug.Assert.Equals(6, navigator.CursorPosition);
+            Assert.AreEqual("AbcX12def", story.GetDebugText());
+            Assert.AreEqual(6, navigator.CursorPosition);
 
             navigator.MoveTo(TextNavigator.Target.CharacterNext, 1);
-            Debug.Assert.Equals(7, navigator.CursorPosition);
+            Assert.AreEqual(7, navigator.CursorPosition);
 
             navigator.MoveTo(TextNavigator.Target.CharacterPrevious, 1);
-            Debug.Assert.Equals(6, navigator.CursorPosition);
+            Assert.AreEqual(6, navigator.CursorPosition);
 
             //	On recule d'un caractère, mais on en saute 2 à cause de 'at2'.
 
             navigator.MoveTo(TextNavigator.Target.CharacterPrevious, 1);
-            Debug.Assert.Equals(4, navigator.CursorPosition);
-            Debug.Assert.IsTrue(
+            Assert.AreEqual(4, navigator.CursorPosition);
+            Assert.IsTrue(
                 story.TextContext.GetAutoText(story.ReadChar(navigator.ActiveCursor), out at)
             );
-            Debug.Assert.IsTrue(Property.CompareEqualContents(at, at2));
+            Assert.IsTrue(Property.CompareEqualContents(at, at2));
 
             //	On recule d'un caractère et on en saute effectivement 1, même
             //	si 'at1' décore "X" (vérifie que le code de navigation est OK).
 
             navigator.MoveTo(TextNavigator.Target.CharacterPrevious, 1);
-            Debug.Assert.Equals(3, navigator.CursorPosition);
-            Debug.Assert.IsTrue(
+            Assert.AreEqual(3, navigator.CursorPosition);
+            Assert.IsTrue(
                 story.TextContext.GetAutoText(story.ReadChar(navigator.ActiveCursor), out at)
             );
-            Debug.Assert.IsTrue(Property.CompareEqualContents(at, at1));
+            Assert.IsTrue(Property.CompareEqualContents(at, at1));
 
             navigator.MoveTo(TextNavigator.Target.CharacterPrevious, 1);
-            Debug.Assert.Equals(2, navigator.CursorPosition);
+            Assert.AreEqual(2, navigator.CursorPosition);
 
             navigator.MoveTo(TextNavigator.Target.CharacterNext, 2);
-            Debug.Assert.Equals(4, navigator.CursorPosition);
+            Assert.AreEqual(4, navigator.CursorPosition);
 
             //	On se trouve à cheval entre "X" et "12". Les propriétés visibles
             //	par le navigateur ne reflètent jamais AutoText, car une insertion
@@ -136,14 +139,15 @@ namespace Epsitec.Common.Text.Tests
 
             foreach (Property property in navigator.AccumulatedTextProperties)
             {
-                Debug.Assert.IsFalse(property.WellKnownType == Properties.WellKnownType.AutoText);
+                Assert.IsFalse(property.WellKnownType == WellKnownType.AutoText);
             }
         }
 
-        private static void TestAttachDetach()
+        [Test]
+        public static void TestAttachDetach()
         {
             TextStory story = new TextStory();
-            ICursor cursor = new Cursors.SimpleCursor();
+            ICursor cursor = new SimpleCursor();
 
             story.NewCursor(cursor);
 
@@ -151,28 +155,28 @@ namespace Epsitec.Common.Text.Tests
             System.Collections.ArrayList properties = new System.Collections.ArrayList();
 
             properties.Clear();
-            properties.Add(new Properties.FontProperty("Verdana", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Verdana", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
             properties.Add(
-                new Properties.LeadingProperty(
+                new LeadingProperty(
                     14.0,
-                    Properties.SizeUnits.Points,
-                    Properties.AlignMode.None
+                    SizeUnits.Points,
+                    AlignMode.None
                 )
             );
             properties.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     5.0,
                     5.0,
                     5.0,
                     5.0,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     5,
-                    Properties.ThreeState.True
+                    ThreeState.True
                 )
             );
 
@@ -187,8 +191,8 @@ namespace Epsitec.Common.Text.Tests
 
             generator.Add(Generator.CreateSequence(Generator.SequenceType.Alphabetic, "", ")"));
 
-            ParagraphManagers.ItemListManager.Parameters items =
-                new ParagraphManagers.ItemListManager.Parameters();
+            ItemListManager.Parameters items =
+                new ItemListManager.Parameters();
 
             TabList tabs = story.TextContext.TabList;
 
@@ -196,7 +200,7 @@ namespace Epsitec.Common.Text.Tests
             items.TabItem = tabs.NewTab(
                 "T.item",
                 10.0,
-                Properties.SizeUnits.Points,
+                SizeUnits.Points,
                 0.0,
                 null,
                 TabPositionMode.Absolute
@@ -204,36 +208,36 @@ namespace Epsitec.Common.Text.Tests
             items.TabBody = tabs.NewTab(
                 "T.body",
                 40.0,
-                Properties.SizeUnits.Points,
+                SizeUnits.Points,
                 0.0,
                 null,
                 TabPositionMode.Absolute
             );
 
             properties.Clear();
-            properties.Add(new Properties.FontProperty("Verdana", "Regular"));
-            properties.Add(new Properties.FontSizeProperty(12.0, Properties.SizeUnits.Points));
+            properties.Add(new FontProperty("Verdana", "Regular"));
+            properties.Add(new FontSizeProperty(12.0, SizeUnits.Points));
             properties.Add(
-                new Properties.LeadingProperty(
+                new LeadingProperty(
                     14.0,
-                    Properties.SizeUnits.Points,
-                    Properties.AlignMode.None
+                    SizeUnits.Points,
+                    AlignMode.None
                 )
             );
-            properties.Add(new Properties.ManagedParagraphProperty("ItemList", items.Save()));
+            properties.Add(new ManagedParagraphProperty("ItemList", items.Save()));
             properties.Add(
-                new Properties.MarginsProperty(
+                new MarginsProperty(
                     0,
                     40.0,
                     double.NaN,
                     double.NaN,
-                    Properties.SizeUnits.Points,
+                    SizeUnits.Points,
                     1.0,
                     0.0,
                     0.0,
                     15,
                     5,
-                    Properties.ThreeState.Undefined
+                    ThreeState.Undefined
                 )
             );
 
@@ -247,7 +251,7 @@ namespace Epsitec.Common.Text.Tests
             story.ConvertToStyledText("Xyz\n", style1, null, out text);
             story.InsertText(cursor, text);
 
-            Debug.Assert.IsTrue(story.TextLength == 4);
+            Assert.IsTrue(story.TextLength == 4);
 
             text = new ulong[story.TextLength];
             story.SetCursorPosition(cursor, 0);
@@ -258,20 +262,20 @@ namespace Epsitec.Common.Text.Tests
 
             //	Crée la liste à puces :
 
-            ICursor temp = new Cursors.TempCursor();
+            ICursor temp = new TempCursor();
 
             story.NewCursor(temp);
             story.SetCursorPosition(temp, 2);
-            Internal.Navigator.SetParagraphStyles(story, temp, style2);
+            Navigator.SetParagraphStyles(story, temp, style2);
 
-            Properties.ManagedParagraphProperty[] mpp;
+            ManagedParagraphProperty[] mpp;
 
-            Debug.Assert.IsTrue(story.TextLength == 1 + 2 + 1 + 4);
-            Debug.Assert.IsTrue(
-                Internal.Navigator.GetManagedParagraphProperties(story, temp, 0, out mpp)
+            Assert.IsTrue(story.TextLength == 1 + 2 + 1 + 4);
+            Assert.IsTrue(
+                Navigator.GetManagedParagraphProperties(story, temp, 0, out mpp)
             );
-            Debug.Assert.IsTrue(mpp.Length == 1);
-            Debug.Assert.IsTrue(mpp[0].ManagerName == "ItemList");
+            Assert.IsTrue(mpp.Length == 1);
+            Assert.IsTrue(mpp[0].ManagerName == "ItemList");
 
             text = new ulong[story.TextLength];
             story.SetCursorPosition(temp, 0);
@@ -283,12 +287,12 @@ namespace Epsitec.Common.Text.Tests
             //	Supprime la liste à puces :
 
             story.SetCursorPosition(temp, 1);
-            Internal.Navigator.SetParagraphStyles(story, temp, style1);
+            Navigator.SetParagraphStyles(story, temp, style1);
 
-            Debug.Assert.IsTrue(
-                Internal.Navigator.GetManagedParagraphProperties(story, temp, 0, out mpp)
+            Assert.IsTrue(
+                Navigator.GetManagedParagraphProperties(story, temp, 0, out mpp)
             );
-            Debug.Assert.IsTrue(mpp.Length == 0);
+            Assert.IsTrue(mpp.Length == 0);
 
             text = new ulong[story.TextLength];
             story.SetCursorPosition(temp, 0);
@@ -297,7 +301,7 @@ namespace Epsitec.Common.Text.Tests
             System.Diagnostics.Debug.WriteLine("After SetParagraphStylesAndProperties (style1) :");
             System.Diagnostics.Debug.WriteLine(story.GetDebugStyledText(text));
 
-            Debug.Assert.IsTrue(story.TextLength == 4);
+            Assert.IsTrue(story.TextLength == 4);
         }
     }
 }

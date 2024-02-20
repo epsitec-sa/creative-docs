@@ -1,14 +1,19 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text.Tests
+using Epsitec.Common.Text;
+using NUnit.Framework;
+
+namespace Epsitec.Common.Tests.Text
 {
     /// <summary>
     /// Summary description for CheckUnicode.
     /// </summary>
+    [TestFixture]
     public sealed class CheckUnicode
     {
-        public static void RunTests()
+        [Test]
+        public static void CheckUnicodeText()
         {
             Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
 
@@ -54,7 +59,7 @@ namespace Epsitec.Common.Text.Tests
 
             //-			System.Diagnostics.Debug.WriteLine (CheckUnicode.GenerateBreakModel (plainText, breaks));
 
-            Debug.Assert.IsTrue(CheckUnicode.GenerateBreakModel(plainText, breaks) == expected);
+            Assert.IsTrue(CheckUnicode.GenerateBreakModel(plainText, breaks) == expected);
         }
 
         private static string GenerateBreakModel(string text, Unicode.BreakInfo[] breaks)

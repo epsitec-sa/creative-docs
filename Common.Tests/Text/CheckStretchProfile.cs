@@ -1,16 +1,22 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text.Tests
+using Epsitec.Common.Text;
+using Epsitec.Common.Text.Layout;
+using NUnit.Framework;
+
+namespace Epsitec.Common.Tests.Text
 {
     /// <summary>
     /// Summary description for CheckStretchProfile.
     /// </summary>
+    [TestFixture]
     public sealed class CheckStretchProfile
     {
+        [Test]
         public static void RunTests()
         {
-            Layout.StretchProfile profile = new Layout.StretchProfile();
+            StretchProfile profile = new StretchProfile();
 
             double p1;
             double p2;
@@ -68,36 +74,36 @@ namespace Epsitec.Common.Text.Tests
                 Unicode.StretchClass.Kashida
             };
 
-            Layout.StretchProfile.Scales classScales;
+            StretchProfile.Scales classScales;
             profile.ComputeScales(120, out classScales);
 
-            Debug.Assert.IsTrue(classScales.ScaleCharacter > 1.0009);
-            Debug.Assert.IsTrue(classScales.ScaleKashida > 1.9017);
-            Debug.Assert.IsTrue(classScales.ScaleSpace > 1.0901);
-            Debug.Assert.IsTrue(classScales.ScaleCharacter < 1.0010);
-            Debug.Assert.IsTrue(classScales.ScaleKashida < 1.9018);
-            Debug.Assert.IsTrue(classScales.ScaleSpace < 1.0902);
-            Debug.Assert.IsTrue(classScales.ScaleNoStretch == 1.0);
+            Assert.IsTrue(classScales.ScaleCharacter > 1.0009);
+            Assert.IsTrue(classScales.ScaleKashida > 1.9017);
+            Assert.IsTrue(classScales.ScaleSpace > 1.0901);
+            Assert.IsTrue(classScales.ScaleCharacter < 1.0010);
+            Assert.IsTrue(classScales.ScaleKashida < 1.9018);
+            Assert.IsTrue(classScales.ScaleSpace < 1.0902);
+            Assert.IsTrue(classScales.ScaleNoStretch == 1.0);
 
             profile.ComputeScales(150, out classScales);
 
-            Debug.Assert.IsTrue(classScales.ScaleCharacter > 1.0036);
-            Debug.Assert.IsTrue(classScales.ScaleKashida > 4.6068);
-            Debug.Assert.IsTrue(classScales.ScaleSpace > 1.3606);
-            Debug.Assert.IsTrue(classScales.ScaleCharacter < 1.0037);
-            Debug.Assert.IsTrue(classScales.ScaleKashida < 4.6069);
-            Debug.Assert.IsTrue(classScales.ScaleSpace < 1.3607);
-            Debug.Assert.IsTrue(classScales.ScaleNoStretch == 1.0);
+            Assert.IsTrue(classScales.ScaleCharacter > 1.0036);
+            Assert.IsTrue(classScales.ScaleKashida > 4.6068);
+            Assert.IsTrue(classScales.ScaleSpace > 1.3606);
+            Assert.IsTrue(classScales.ScaleCharacter < 1.0037);
+            Assert.IsTrue(classScales.ScaleKashida < 4.6069);
+            Assert.IsTrue(classScales.ScaleSpace < 1.3607);
+            Assert.IsTrue(classScales.ScaleNoStretch == 1.0);
 
             profile.ComputeScales(108, out classScales);
 
-            Debug.Assert.IsTrue(classScales.ScaleCharacter > 0.9999);
-            Debug.Assert.IsTrue(classScales.ScaleKashida > 0.9000);
-            Debug.Assert.IsTrue(classScales.ScaleSpace > 0.9000);
-            Debug.Assert.IsTrue(classScales.ScaleCharacter < 1.0000);
-            Debug.Assert.IsTrue(classScales.ScaleKashida < 0.9001);
-            Debug.Assert.IsTrue(classScales.ScaleSpace < 0.9001);
-            Debug.Assert.IsTrue(classScales.ScaleNoStretch == 1.0);
+            Assert.IsTrue(classScales.ScaleCharacter > 0.9999);
+            Assert.IsTrue(classScales.ScaleKashida > 0.9000);
+            Assert.IsTrue(classScales.ScaleSpace > 0.9000);
+            Assert.IsTrue(classScales.ScaleCharacter < 1.0000);
+            Assert.IsTrue(classScales.ScaleKashida < 0.9001);
+            Assert.IsTrue(classScales.ScaleSpace < 0.9001);
+            Assert.IsTrue(classScales.ScaleNoStretch == 1.0);
         }
     }
 }

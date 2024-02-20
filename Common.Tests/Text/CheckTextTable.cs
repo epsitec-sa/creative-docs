@@ -1,16 +1,22 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text.Tests
+using Epsitec.Common.Text;
+using Epsitec.Common.Text.Internal;
+using NUnit.Framework;
+
+namespace Epsitec.Common.Tests.Text
 {
     /// <summary>
     /// Vérifie le bon fonctionnement de la classe TextTable.
     /// </summary>
+    [TestFixture]
     public sealed class CheckTextTable
     {
-        public static void RunTests()
+        [Test]
+        public static void CheckTextTableBehavior()
         {
-            Internal.TextTable table = new Internal.TextTable();
+            TextTable table = new TextTable();
 
             int cursor1 = table.NewCursor(null);
             int cursor2 = table.NewCursor(null);
@@ -19,135 +25,135 @@ namespace Epsitec.Common.Text.Tests
 
             int cursor3 = table.NewCursor(null);
 
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 3);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 3);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 3);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 0);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 3);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 3);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 3);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 0);
 
             CursorInfo[] infoX0 = table.FindCursorsBefore(5);
             CursorInfo[] infoX1 = table.FindCursorsBefore(3);
             CursorInfo[] infoX2 = table.FindCursorsBefore(2);
             CursorInfo[] infoX3 = table.FindCursorsBefore(0);
 
-            Debug.Assert.IsTrue(infoX0.Length == 1);
-            Debug.Assert.IsTrue(infoX1.Length == 1);
-            Debug.Assert.IsTrue(infoX2.Length == 1);
-            Debug.Assert.IsTrue(infoX3.Length == 0);
+            Assert.IsTrue(infoX0.Length == 1);
+            Assert.IsTrue(infoX1.Length == 1);
+            Assert.IsTrue(infoX2.Length == 1);
+            Assert.IsTrue(infoX3.Length == 0);
 
-            Debug.Assert.IsTrue(infoX0[0].Position == 0);
-            Debug.Assert.IsTrue(infoX0[0].CursorId == cursor3);
+            Assert.IsTrue(infoX0[0].Position == 0);
+            Assert.IsTrue(infoX0[0].CursorId == cursor3);
 
             ulong[] text = new ulong[6000];
 
-            Debug.Assert.IsTrue(table.ReadText(cursor1, 10, text) == 0);
-            Debug.Assert.IsTrue(table.ReadText(cursor2, 10, text) == 0);
-            Debug.Assert.IsTrue(table.ReadText(cursor3, 10, text) == 3);
+            Assert.IsTrue(table.ReadText(cursor1, 10, text) == 0);
+            Assert.IsTrue(table.ReadText(cursor2, 10, text) == 0);
+            Assert.IsTrue(table.ReadText(cursor3, 10, text) == 3);
 
-            Debug.Assert.IsTrue(text[0] == 65ul);
-            Debug.Assert.IsTrue(text[1] == 66ul);
-            Debug.Assert.IsTrue(text[2] == 67ul);
+            Assert.IsTrue(text[0] == 65ul);
+            Assert.IsTrue(text[1] == 66ul);
+            Assert.IsTrue(text[2] == 67ul);
 
             table.InsertText(cursor3, new ulong[] { 34ul });
             table.InsertText(cursor2, new ulong[] { 34ul });
 
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 5);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 5);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 5);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 5);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 1);
 
-            Debug.Assert.IsTrue(table.ReadText(cursor1, 10, text) == 0);
-            Debug.Assert.IsTrue(table.ReadText(cursor2, 10, text) == 0);
-            Debug.Assert.IsTrue(table.ReadText(cursor3, 10, text) == 4);
+            Assert.IsTrue(table.ReadText(cursor1, 10, text) == 0);
+            Assert.IsTrue(table.ReadText(cursor2, 10, text) == 0);
+            Assert.IsTrue(table.ReadText(cursor3, 10, text) == 4);
 
-            Debug.Assert.IsTrue(text[0] == 65ul);
-            Debug.Assert.IsTrue(text[1] == 66ul);
-            Debug.Assert.IsTrue(text[2] == 67ul);
-            Debug.Assert.IsTrue(text[3] == 34ul);
+            Assert.IsTrue(text[0] == 65ul);
+            Assert.IsTrue(text[1] == 66ul);
+            Assert.IsTrue(text[2] == 67ul);
+            Assert.IsTrue(text[3] == 34ul);
 
-            Debug.Assert.IsTrue(table.MoveCursor(cursor3, 2) == 2);
-            Debug.Assert.IsTrue(table.MoveCursor(cursor2, -10) == -5);
+            Assert.IsTrue(table.MoveCursor(cursor3, 2) == 2);
+            Assert.IsTrue(table.MoveCursor(cursor2, -10) == -5);
 
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 5);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 0);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 3);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 5);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 0);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 3);
 
             CursorInfo[] info0 = table.FindCursors(0, 100);
-            Debug.Assert.IsTrue(info0.Length == 3);
-            Debug.Assert.IsTrue(info0[1].Position == 3);
+            Assert.IsTrue(info0.Length == 3);
+            Assert.IsTrue(info0[1].Position == 3);
             CursorInfo[] info2 = table.FindCursors(2, 100);
-            Debug.Assert.IsTrue(info2.Length == 2);
-            Debug.Assert.IsTrue(info2[1].Position == 5);
+            Assert.IsTrue(info2.Length == 2);
+            Assert.IsTrue(info2[1].Position == 5);
             CursorInfo[] info3 = table.FindCursors(3, 100);
-            Debug.Assert.IsTrue(info3.Length == 2);
-            Debug.Assert.IsTrue(info3[1].CursorId == cursor1);
+            Assert.IsTrue(info3.Length == 2);
+            Assert.IsTrue(info3[1].CursorId == cursor1);
             CursorInfo[] info4 = table.FindCursors(4, 100);
-            Debug.Assert.IsTrue(info4.Length == 1);
-            Debug.Assert.IsTrue(info4[0].Position == 5);
+            Assert.IsTrue(info4.Length == 1);
+            Assert.IsTrue(info4[0].Position == 5);
             CursorInfo[] info5 = table.FindCursors(5, 100);
-            Debug.Assert.IsTrue(info5.Length == 1);
-            Debug.Assert.IsTrue(info5[0].CursorId == cursor1);
+            Assert.IsTrue(info5.Length == 1);
+            Assert.IsTrue(info5[0].CursorId == cursor1);
             CursorInfo[] info6 = table.FindCursors(6, 100);
-            Debug.Assert.IsTrue(info6.Length == 0);
+            Assert.IsTrue(info6.Length == 0);
 
-            Debug.Assert.IsTrue(table.ReadText(cursor1, 10, text) == 0);
-            Debug.Assert.IsTrue(table.ReadText(cursor2, 10, text) == 5);
+            Assert.IsTrue(table.ReadText(cursor1, 10, text) == 0);
+            Assert.IsTrue(table.ReadText(cursor2, 10, text) == 5);
 
-            Debug.Assert.IsTrue(text[0] == 34ul);
-            Debug.Assert.IsTrue(text[1] == 65ul);
-            Debug.Assert.IsTrue(text[2] == 66ul);
-            Debug.Assert.IsTrue(text[3] == 67ul);
-            Debug.Assert.IsTrue(text[4] == 34ul);
+            Assert.IsTrue(text[0] == 34ul);
+            Assert.IsTrue(text[1] == 65ul);
+            Assert.IsTrue(text[2] == 66ul);
+            Assert.IsTrue(text[3] == 67ul);
+            Assert.IsTrue(text[4] == 34ul);
 
-            Debug.Assert.IsTrue(table.ReadText(cursor3, 10, text) == 2);
+            Assert.IsTrue(table.ReadText(cursor3, 10, text) == 2);
 
-            Debug.Assert.IsTrue(text[0] == 67ul);
-            Debug.Assert.IsTrue(text[1] == 34ul);
+            Assert.IsTrue(text[0] == 67ul);
+            Assert.IsTrue(text[1] == 34ul);
 
             table.MoveCursor(cursor1, -1);
             table.MoveCursor(cursor2, 1);
 
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 3);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 4);
-            Debug.Assert.IsTrue(table.TextLength == 5);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 3);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 4);
+            Assert.IsTrue(table.TextLength == 5);
 
             infoX0 = table.FindNextCursor(cursor2, null);
             infoX1 = table.FindNextCursor(cursor3, null);
             infoX2 = table.FindNextCursor(cursor1, null);
 
-            Debug.Assert.IsTrue(infoX0.Length == 1);
-            Debug.Assert.IsTrue(infoX1.Length == 1);
-            Debug.Assert.IsTrue(infoX2.Length == 0);
-            Debug.Assert.IsTrue(infoX0[0].CursorId == cursor3);
-            Debug.Assert.IsTrue(infoX1[0].CursorId == cursor1);
+            Assert.IsTrue(infoX0.Length == 1);
+            Assert.IsTrue(infoX1.Length == 1);
+            Assert.IsTrue(infoX2.Length == 0);
+            Assert.IsTrue(infoX0[0].CursorId == cursor3);
+            Assert.IsTrue(infoX1[0].CursorId == cursor1);
 
             infoX0 = table.FindPrevCursor(cursor2, null);
             infoX1 = table.FindPrevCursor(cursor3, null);
             infoX2 = table.FindPrevCursor(cursor1, null);
 
-            Debug.Assert.IsTrue(infoX0.Length == 0);
-            Debug.Assert.IsTrue(infoX1.Length == 1);
-            Debug.Assert.IsTrue(infoX2.Length == 1);
-            Debug.Assert.IsTrue(infoX1[0].CursorId == cursor2);
-            Debug.Assert.IsTrue(infoX2[0].CursorId == cursor3);
+            Assert.IsTrue(infoX0.Length == 0);
+            Assert.IsTrue(infoX1.Length == 1);
+            Assert.IsTrue(infoX2.Length == 1);
+            Assert.IsTrue(infoX1[0].CursorId == cursor2);
+            Assert.IsTrue(infoX2[0].CursorId == cursor3);
 
             infoX0 = table.FindCursorsBefore(5);
             infoX1 = table.FindCursorsBefore(4);
             infoX2 = table.FindCursorsBefore(3);
             infoX3 = table.FindCursorsBefore(2);
 
-            Debug.Assert.IsTrue(infoX0.Length == 1);
-            Debug.Assert.IsTrue(infoX1.Length == 1);
-            Debug.Assert.IsTrue(infoX2.Length == 1);
-            Debug.Assert.IsTrue(infoX3.Length == 1);
+            Assert.IsTrue(infoX0.Length == 1);
+            Assert.IsTrue(infoX1.Length == 1);
+            Assert.IsTrue(infoX2.Length == 1);
+            Assert.IsTrue(infoX3.Length == 1);
 
-            Debug.Assert.IsTrue(infoX0[0].Position == 4);
-            Debug.Assert.IsTrue(infoX0[0].CursorId == cursor1);
-            Debug.Assert.IsTrue(infoX1[0].Position == 3);
-            Debug.Assert.IsTrue(infoX1[0].CursorId == cursor3);
-            Debug.Assert.IsTrue(infoX2[0].Position == 1);
-            Debug.Assert.IsTrue(infoX2[0].CursorId == cursor2);
-            Debug.Assert.IsTrue(infoX3[0].Position == 1);
-            Debug.Assert.IsTrue(infoX3[0].CursorId == cursor2);
+            Assert.IsTrue(infoX0[0].Position == 4);
+            Assert.IsTrue(infoX0[0].CursorId == cursor1);
+            Assert.IsTrue(infoX1[0].Position == 3);
+            Assert.IsTrue(infoX1[0].CursorId == cursor3);
+            Assert.IsTrue(infoX2[0].Position == 1);
+            Assert.IsTrue(infoX2[0].CursorId == cursor2);
+            Assert.IsTrue(infoX3[0].Position == 1);
+            Assert.IsTrue(infoX3[0].CursorId == cursor2);
 
             CursorInfo[] cInfos1;
             CursorInfo[] cInfos2;
@@ -156,66 +162,66 @@ namespace Epsitec.Common.Text.Tests
 
             table.DeleteText(cursor3, 2, out cInfos1);
 
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 3);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 3);
-            Debug.Assert.IsTrue(table.TextLength == 3);
-            Debug.Assert.IsNull(cInfos1);
-            //			Debug.Assert.IsNotNull (cInfos1);
-            //			Debug.Assert.IsTrue (cInfos1.Length == 1);
-            //			Debug.Assert.IsTrue (cInfos1[0].CursorId == cursor1);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 3);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 3);
+            Assert.IsTrue(table.TextLength == 3);
+            Assert.IsNull(cInfos1);
+            //			Assert.IsNotNull (cInfos1);
+            //			Assert.IsTrue (cInfos1.Length == 1);
+            //			Assert.IsTrue (cInfos1[0].CursorId == cursor1);
 
             table.DeleteText(cursor2, 1, out cInfos2);
 
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 2);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 2);
-            Debug.Assert.IsTrue(table.TextLength == 2);
-            Debug.Assert.IsNull(cInfos2);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 2);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 2);
+            Assert.IsTrue(table.TextLength == 2);
+            Assert.IsNull(cInfos2);
 
             infoX0 = table.FindPrevCursor(cursor2, null);
             infoX1 = table.FindPrevCursor(cursor3, null);
             infoX2 = table.FindPrevCursor(cursor1, null);
 
-            Debug.Assert.IsTrue(infoX0.Length == 0);
-            Debug.Assert.IsTrue(infoX1.Length == 1);
-            Debug.Assert.IsTrue(infoX2.Length == 1);
-            Debug.Assert.IsTrue(infoX1[0].CursorId == cursor2);
-            Debug.Assert.IsTrue(infoX2[0].CursorId == cursor3);
+            Assert.IsTrue(infoX0.Length == 0);
+            Assert.IsTrue(infoX1.Length == 1);
+            Assert.IsTrue(infoX2.Length == 1);
+            Assert.IsTrue(infoX1[0].CursorId == cursor2);
+            Assert.IsTrue(infoX2[0].CursorId == cursor3);
 
             table.MoveCursor(cursor1, -1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 2);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 2);
 
             infoX0 = table.FindCursorsBefore(2);
 
-            Debug.Assert.IsTrue(infoX0.Length == 2);
+            Assert.IsTrue(infoX0.Length == 2);
 
-            Debug.Assert.IsTrue(infoX0[0].Position == 1);
-            Debug.Assert.IsTrue(infoX0[1].Position == 1);
-            Debug.Assert.IsTrue(infoX0[0].CursorId == cursor1);
-            Debug.Assert.IsTrue(infoX0[1].CursorId == cursor2);
+            Assert.IsTrue(infoX0[0].Position == 1);
+            Assert.IsTrue(infoX0[1].Position == 1);
+            Assert.IsTrue(infoX0[0].CursorId == cursor1);
+            Assert.IsTrue(infoX0[1].CursorId == cursor2);
 
             table.DeleteText(cursor2, 1, out cInfos3);
 
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor3) == 1);
-            Debug.Assert.IsTrue(table.GetCursorPosition(cursor1) == 1);
-            Debug.Assert.IsTrue(table.TextLength == 1);
-            Debug.Assert.IsNull(cInfos3);
+            Assert.IsTrue(table.GetCursorPosition(cursor2) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor3) == 1);
+            Assert.IsTrue(table.GetCursorPosition(cursor1) == 1);
+            Assert.IsTrue(table.TextLength == 1);
+            Assert.IsNull(cInfos3);
 
             //			table.DeleteTextAtPosition (0, 1, out cInfos4);
             //
-            //			Debug.Assert.IsTrue (table.GetCursorPosition (cursor2) == 0);
-            //			Debug.Assert.IsTrue (table.GetCursorPosition (cursor3) == 0);
-            //			Debug.Assert.IsTrue (table.GetCursorPosition (cursor1) == 0);
-            //			Debug.Assert.IsTrue (table.TextLength == 0);
-            //			Debug.Assert.IsNull (cInfos4);
+            //			Assert.IsTrue (table.GetCursorPosition (cursor2) == 0);
+            //			Assert.IsTrue (table.GetCursorPosition (cursor3) == 0);
+            //			Assert.IsTrue (table.GetCursorPosition (cursor1) == 0);
+            //			Assert.IsTrue (table.TextLength == 0);
+            //			Assert.IsNull (cInfos4);
 
-            Internal.TextTable table1 = new Internal.TextTable();
-            Internal.TextTable table2 = new Internal.TextTable();
-            Internal.TextTable table3 = new Internal.TextTable();
+            TextTable table1 = new TextTable();
+            TextTable table2 = new TextTable();
+            TextTable table3 = new TextTable();
 
             int cursorId = table1.NewCursor(null);
 
@@ -255,10 +261,12 @@ namespace Epsitec.Common.Text.Tests
                 table1.InsertText(cursorId, text);
             }
 
+            string testFile = System.IO.Path.GetTempFileName();
+            string testFileCompressed = System.IO.Path.GetTempFileName();
             System.Diagnostics.Trace.WriteLine("Saving file.");
             using (
                 System.IO.FileStream file = new System.IO.FileStream(
-                    @"S:\test.text",
+                    testFile,
                     System.IO.FileMode.OpenOrCreate,
                     System.IO.FileAccess.Write
                 )
@@ -271,7 +279,7 @@ namespace Epsitec.Common.Text.Tests
             System.Diagnostics.Trace.WriteLine("Loading file.");
             using (
                 System.IO.FileStream file = new System.IO.FileStream(
-                    @"S:\test.text",
+                    testFile,
                     System.IO.FileMode.Open,
                     System.IO.FileAccess.Read
                 )
@@ -281,12 +289,12 @@ namespace Epsitec.Common.Text.Tests
             }
             System.Diagnostics.Trace.WriteLine("Loading file, done.");
 
-            Debug.Assert.IsTrue(table1.TextLength == table2.TextLength);
+            Assert.IsTrue(table1.TextLength == table2.TextLength);
 
             System.Diagnostics.Trace.WriteLine("Saving compressed file.");
             using (
                 System.IO.FileStream file = new System.IO.FileStream(
-                    @"S:\test.compressed",
+                    testFileCompressed,
                     System.IO.FileMode.OpenOrCreate,
                     System.IO.FileAccess.Write
                 )
@@ -304,7 +312,7 @@ namespace Epsitec.Common.Text.Tests
             System.Diagnostics.Trace.WriteLine("Loading compressed file.");
             using (
                 System.IO.FileStream file = new System.IO.FileStream(
-                    @"S:\test.compressed",
+                    testFileCompressed,
                     System.IO.FileMode.Open,
                     System.IO.FileAccess.Read
                 )
@@ -324,8 +332,8 @@ namespace Epsitec.Common.Text.Tests
              *	Traversée <-- 750ns / caractère
              */
 
-            Internal.CursorId cursor3_1 = table3.NewCursor(null);
-            Internal.CursorId cursor3_2 = table3.NewCursor(null);
+            CursorId cursor3_1 = table3.NewCursor(null);
+            CursorId cursor3_2 = table3.NewCursor(null);
 
             System.Diagnostics.Trace.WriteLine("Starting traversal, 1 char. at a time -->");
             while (table3.MoveCursor(cursor3_1, 1) > 0) { }
@@ -335,8 +343,8 @@ namespace Epsitec.Common.Text.Tests
             while (table3.MoveCursor(cursor3_2, 10000) > 0) { }
             System.Diagnostics.Trace.WriteLine("Done.");
 
-            Debug.Assert.IsTrue(table3.TextLength == table3.GetCursorPosition(cursor3_1));
-            Debug.Assert.IsTrue(table3.TextLength == table3.GetCursorPosition(cursor3_2));
+            Assert.IsTrue(table3.TextLength == table3.GetCursorPosition(cursor3_1));
+            Assert.IsTrue(table3.TextLength == table3.GetCursorPosition(cursor3_2));
 
             System.Diagnostics.Trace.WriteLine("Starting traversal, 1 char. at a time <--");
             while (table3.MoveCursor(cursor3_1, -1) < 0) { }
@@ -347,8 +355,8 @@ namespace Epsitec.Common.Text.Tests
 
             System.Diagnostics.Trace.WriteLine("Done.");
 
-            Debug.Assert.IsTrue(0 == table3.GetCursorPosition(cursor3_1));
-            Debug.Assert.IsTrue(0 == table3.GetCursorPosition(cursor3_2));
+            Assert.IsTrue(0 == table3.GetCursorPosition(cursor3_1));
+            Assert.IsTrue(0 == table3.GetCursorPosition(cursor3_2));
 
             /*
              *	Mesures sur bi-Xeon 1.7GHz :
@@ -389,14 +397,14 @@ namespace Epsitec.Common.Text.Tests
             CursorInfo[] info3C = table3.FindCursors(10000, 30000);
             CursorInfo[] info3D = table3.FindCursors(1000, 30000);
 
-            Debug.Assert.IsTrue(info3A.Length == 0);
-            Debug.Assert.IsTrue(info3B.Length == 1);
-            Debug.Assert.IsTrue(info3B[0].Position == 8000);
-            Debug.Assert.IsTrue(info3C.Length == 1);
-            Debug.Assert.IsTrue(info3C[0].Position == 25000);
-            Debug.Assert.IsTrue(info3D.Length == 2);
-            Debug.Assert.IsTrue(info3D[0].Position == 8000);
-            Debug.Assert.IsTrue(info3D[1].Position == 25000);
+            Assert.IsTrue(info3A.Length == 0);
+            Assert.IsTrue(info3B.Length == 1);
+            Assert.IsTrue(info3B[0].Position == 8000);
+            Assert.IsTrue(info3C.Length == 1);
+            Assert.IsTrue(info3C[0].Position == 25000);
+            Assert.IsTrue(info3D.Length == 2);
+            Assert.IsTrue(info3D[0].Position == 8000);
+            Assert.IsTrue(info3D[1].Position == 25000);
 #if false
 			using (System.IO.FileStream input = new System.IO.FileStream (@"S:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
