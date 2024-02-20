@@ -5,11 +5,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Widgets\Platform\Window.cs" />
-    <Compile Remove="Drawing\FontHelper.cs" />
-    <Compile Remove="Support\AppDomainStarter.cs" />
-    <Compile Remove="Support\Data\IDisablableChangedSource.cs" />
-    <Compile Remove="Text\Styles\ApplyMode.cs" />
+    <Compile Remove="_deprecated\Drawing\FontHelper.cs" />
+    <Compile Remove="_deprecated\Support\AppDomainStarter.cs" />
+    <Compile Remove="_deprecated\Support\Data\IDisablableChangedSource.cs" />
+    <Compile Remove="_deprecated\Text\Styles\ApplyMode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_deprecated\Drawing\FontHelper.cs" />
+    <None Include="_deprecated\Support\AppDomainStarter.cs" />
+    <None Include="_deprecated\Support\Data\IDisablableChangedSource.cs" />
+    <None Include="_deprecated\Text\Styles\ApplyMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
@@ -26,14 +31,7 @@
       <Link>Clipboard.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Drawing\IconLib\Resources\EmptyDll.dll">
-      <Link>EmptyDll.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\**\*.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\**\*.info">
+    <Content Include="Resources\**\*" Exclude="Resources\**\*.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -41,22 +39,14 @@
     <EmbeddedResource Update="Drawing\IconLib\Resource.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\External\images\bitmap\binocular-64x48.png">
-      <Link>Dialogs\Images\binocular-64x48.png</Link>
+    <EmbeddedResource Include="..\External\images\bitmap\*">
+      <Link>Dialogs\Images\%(FileName)%(Extension)</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\External\images\bitmap\box-64x48.png">
-      <Link>Dialogs\Images\box-64x48.png</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\Adorners\Resources\*.png" />
+    <EmbeddedResource Include="Widgets\Adorners\Resources\**\*" />
     <EmbeddedResource Include="Dialogs\Images\*.icon" />
     <EmbeddedResource Include="Widgets\Images\*.icon" />
     <EmbeddedResource Include="Drawing\Resources\LineBreak.compressed" />
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Drawing\FontHelper.cs" />
-    <None Include="IO\Serialization.cs" />
-    <None Include="Support\AppDomainStarter.cs" />
   </ItemGroup>
 
   <Target Name="CresusCore_Common_AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes">
