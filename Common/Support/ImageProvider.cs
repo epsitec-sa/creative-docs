@@ -23,29 +23,7 @@ namespace Epsitec.Common.Support
         static ImageProvider()
         {
             string path = System.IO.Directory.GetCurrentDirectory();
-            string targetDirectory = @"Common.Tests";
-            string otherPath = path;
-
-            for (int i = 0; i < 100; i++)
-            {
-                try
-                {
-                    otherPath = System.IO.Path.GetDirectoryName(otherPath);
-                }
-                catch (ArgumentException)
-                {
-                    otherPath = null;
-                    break;
-                }
-                string directoryName = System.IO.Path.GetFileName(otherPath);
-                if (directoryName == targetDirectory)
-                {
-                    break;
-                }
-            }
-
-            // TODO: better strip filter
-            // instead of removing some suffix, discard everything after 'Common.Tests'
+            string otherPath = Epsitec.Common.IO.PathTools.RemoveUntilDir("Common.Tests", path);
 
             ImageProvider.defaultProvider = new ImageProvider();
             ImageProvider.defaultPaths = new string[4];
