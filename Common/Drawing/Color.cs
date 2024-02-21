@@ -11,6 +11,7 @@ namespace Epsitec.Common.Drawing
     {
         public Color(System.Drawing.Color color)
         {
+            this.IsEmpty = color.IsEmpty;
             this.r = color.R / 255.0;
             this.g = color.G / 255.0;
             this.b = color.B / 255.0;
@@ -19,14 +20,17 @@ namespace Epsitec.Common.Drawing
 
         public Color(double a, double r, double g, double b)
         {
+            this.IsEmpty = false;
             this.r = r;
             this.g = g;
             this.b = b;
             this.a = a;
+            
         }
 
         public Color(double r, double g, double b)
         {
+            this.IsEmpty = false;
             this.r = r;
             this.g = g;
             this.b = b;
@@ -35,6 +39,7 @@ namespace Epsitec.Common.Drawing
 
         public Color(double brightness)
         {
+            this.IsEmpty = false;
             this.r = brightness;
             this.g = brightness;
             this.b = brightness;
@@ -59,11 +64,6 @@ namespace Epsitec.Common.Drawing
         public double A
         {
             get { return this.a; }
-        }
-
-        public bool IsEmpty
-        {
-            get { return this.a.IsSafeNaN(); }
         }
 
         public bool IsValid
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public static readonly Color Empty = new Color(double.NaN, 0, 0, 0);
+        public static readonly Color Empty = new Color(System.Drawing.Color.Empty);
 
         public static Color Transparent
         {
@@ -637,5 +637,7 @@ namespace Epsitec.Common.Drawing
             g,
             b;
         private readonly double a;
+
+        public readonly bool IsEmpty;
     }
 }
