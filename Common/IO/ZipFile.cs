@@ -23,11 +23,6 @@ namespace Epsitec.Common.IO
             this.entries = new List<Entry>();
         }
 
-        static ZipFile()
-        {
-            ICSharpCode.SharpZipLib.Zip.StringCodec.FromCodePage(850);
-        }
-
         /// <summary>
         /// Gets or sets the compression level.
         /// </summary>
