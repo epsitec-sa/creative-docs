@@ -23,36 +23,16 @@ namespace Epsitec.Common.Support
         static ImageProvider()
         {
             string path = System.IO.Directory.GetCurrentDirectory();
-            string targetDirectory = @"Common.Tests";
-            string otherPath = path;
-
-            for (int i = 0; i < 100; i++)
-            {
-                try
-                {
-                    otherPath = System.IO.Path.GetDirectoryName(otherPath);
-                }
-                catch (ArgumentException)
-                {
-                    otherPath = null;
-                    break;
-                }
-                string directoryName = System.IO.Path.GetFileName(otherPath);
-                if (directoryName == targetDirectory)
-                {
-                    break;
-                }
-            }
-
-            // TODO: better strip filter
-            // instead of removing some suffix, discard everything after 'Common.Tests'
+            string otherPath = IO.PathTools.RemoveUntilDir("Common.Tests", path);
+            string thirdPath = System.IO.Path.Join(IO.PathTools.RemoveUntilDir("cresus-core", path), "External");
 
             ImageProvider.defaultProvider = new ImageProvider();
-            ImageProvider.defaultPaths = new string[4];
+            ImageProvider.defaultPaths = new string[5];
             ImageProvider.defaultPaths[0] = Globals.Directories.ExecutableRoot;
             ImageProvider.defaultPaths[1] = otherPath;
-            ImageProvider.defaultPaths[2] = path;
-            ImageProvider.defaultPaths[3] = "";
+            ImageProvider.defaultPaths[2] = thirdPath;
+            ImageProvider.defaultPaths[3] = path;
+            ImageProvider.defaultPaths[4] = "";
         }
 
         public static void Initialize()
