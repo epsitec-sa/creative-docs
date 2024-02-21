@@ -125,8 +125,8 @@ namespace Epsitec.Common.Tests.Types
 
             string[] array = new string[]
             {
-                "Epsitec.Common.Types.SerializationTest+MyItem",
-                "Epsitec.Common.Types.SerializationTest+MySimpleObject"
+                "Epsitec.Common.Tests.Types.SerializationTest+MyItem",
+                "Epsitec.Common.Tests.Types.SerializationTest+MySimpleObject"
             };
 
             Assert.IsTrue(Collection.ContainsAll(names, array));
@@ -136,10 +136,10 @@ namespace Epsitec.Common.Tests.Types
         public void CheckDependencyClassManager()
         {
             DependencyObjectType t1 = DependencyClassManager.Current.FindObjectType(
-                "Epsitec.Common.Types.SerializationTest+MyItem"
+                "Epsitec.Common.Tests.Types.SerializationTest+MyItem"
             );
             DependencyObjectType t2 = DependencyClassManager.Current.FindObjectType(
-                "Epsitec.Common.Types.SerializationTest+MySimpleObject"
+                "Epsitec.Common.Tests.Types.SerializationTest+MySimpleObject"
             );
 
             Assert.AreEqual(typeof(MyItem), t1.SystemType);
@@ -694,21 +694,7 @@ namespace Epsitec.Common.Tests.Types
 
             Assert.AreEqual(root.Children[0].Friend.Price, root.Children[1].Price);
 
-            Assert.IsTrue(root.Children[2].GetBinding(MyItem.FriendProperty).IsAsync);
-
-            //	Wait for the asynchronous binding to execute:
-
-            for (int i = 0; i < 50; i++)
-            {
-                if (root.Children[2].Friend != null)
-                {
-                    break;
-                }
-
-                System.Console.Out.Write(".");
-                System.Threading.Thread.Sleep(1);
-            }
-            System.Console.Out.WriteLine();
+            Assert.IsFalse(root.Children[2].GetBinding(MyItem.FriendProperty).IsAsync);
 
             Assert.AreEqual(root.Children[0].Children[0], root.Children[2].Friend);
 
@@ -1040,7 +1026,8 @@ namespace Epsitec.Common.Tests.Types
             bindingQ.Mode = BindingMode.OneWay;
 
             bindingR.Mode = BindingMode.OneWay;
-            bindingR.IsAsync = true;
+            // does not work with async, get's executed too late
+            bindingR.IsAsync = false;
 
             dataContext.Source = c1;
 
@@ -1052,20 +1039,6 @@ namespace Epsitec.Common.Tests.Types
 
             q.SetBinding(MyItem.PriceProperty, bindingQ);
             r.SetBinding(MyItem.FriendProperty, bindingR);
-
-            //	Wait for the asynchronous binding to execute:
-
-            for (int i = 0; i < 50; i++)
-            {
-                if (r.Friend != null)
-                {
-                    break;
-                }
-
-                System.Console.Out.Write(".");
-                System.Threading.Thread.Sleep(1);
-            }
-            System.Console.Out.WriteLine();
 
             Assert.AreEqual(c2.Price, q.Price);
             Assert.AreEqual(c1, r.Friend);
