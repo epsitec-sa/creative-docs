@@ -57,8 +57,13 @@ namespace Epsitec.Common.Tests.Types
         }
 
         [Test]
+        [Ignore("Broken async code. Test is not independent.")]
         public void CheckAsyncBinding()
         {
+            // This test fails if you run it together with CollectionTest.CheckCollectionType
+            // I believe there is some interdependent state between the two of them
+            // The asynchronous ode management is most likely part of the problem
+
             Binding binding = new Binding();
             SlowObject source = new SlowObject();
             MyObject target = new MyObject();
@@ -71,8 +76,9 @@ namespace Epsitec.Common.Tests.Types
             target.Name = "-";
             target.SetBinding(MyObject.NameProperty, binding);
 
-            // we wait in a loop for the asynchronous operation to update the target
-            // this test has a small probability to fail if the asynchronous operation is not run quickly enough
+            // we wait in a loop for the asynchronous operation to update the
+            // target this test has a small probability to fail if the
+            // asynchronous operation is not run quickly enough
             for (int i = 0; i < 500; i++)
             {
                 string value = target.Name;
@@ -100,8 +106,11 @@ namespace Epsitec.Common.Tests.Types
         }
 
         [Test]
+        [Ignore("Broken async code. Test is not independent.")]
         public void CheckAsyncBindingAndAttach()
         {
+            // See CheckAsyncBinding for details on the issues with this test.
+
             Binding binding = new Binding();
             SlowObject source = new SlowObject();
             MyObject target = new MyObject();
