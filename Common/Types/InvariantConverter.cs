@@ -1295,15 +1295,10 @@ namespace Epsitec.Common.Types
         )
         {
             bool isFlagEnum = System.Attribute.IsDefined(type, typeof(System.FlagsAttribute));
-            var enumValue = System.Enum.Parse(type, input);
+            object enumValue = System.Enum.Parse(type, input);
             if (isFlagEnum)
             {
-                // For Flags, we only check that the value is positive
-                if ((int)enumValue >= 0)
-                {
-                    return enumValue;
-                }
-                return null;
+                return enumValue;
             }
             // For simple Enum, we can check if the value exists in the Enum
             if (System.Enum.IsDefined(type, enumValue))
