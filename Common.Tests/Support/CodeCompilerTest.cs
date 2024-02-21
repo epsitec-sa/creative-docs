@@ -113,6 +113,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
+        [Ignore("Missing file. Not used outside of tests.")]
         public void CheckCodeProjectReplace()
         {
             CodeProject project = new CodeProject();
@@ -125,6 +126,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
+        [Ignore("Missing file. Not used outside of tests.")]
         public void CheckCodeProjectSetProjectSettings()
         {
             CodeProject project = new CodeProject();
