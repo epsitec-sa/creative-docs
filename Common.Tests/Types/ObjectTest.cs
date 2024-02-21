@@ -71,7 +71,9 @@ namespace Epsitec.Common.Tests.Types
             target.Name = "-";
             target.SetBinding(MyObject.NameProperty, binding);
 
-            for (int i = 0; i < 50; i++)
+            // we wait in a loop for the asynchronous operation to update the target
+            // this test has a small probability to fail if the asynchronous operation is not run quickly enough
+            for (int i = 0; i < 500; i++)
             {
                 string value = target.Name;
                 System.Threading.Thread.Sleep(10);
@@ -112,7 +114,9 @@ namespace Epsitec.Common.Tests.Types
             target.Name = "-";
             target.SetBinding(MyObject.NameProperty, binding);
 
-            for (int i = 0; i < 200; i++)
+            // we wait in a loop for the asynchronous operation to update the target
+            // this test has a small probability to fail if the asynchronous operation is not run quickly enough
+            for (int i = 0; i < 500; i++)
             {
                 string value = target.Name;
                 System.Threading.Thread.Sleep(10);
