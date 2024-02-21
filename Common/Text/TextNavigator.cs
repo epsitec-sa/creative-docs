@@ -2579,12 +2579,10 @@ namespace Epsitec.Common.Text
                 if (direction > 0)
                 {
                     code = this.story.ReadChar(this.tempCursor);
-                    this.story.MoveCursor(this.tempCursor, direction);
                 }
                 else
                 {
-                    this.story.MoveCursor(this.tempCursor, direction);
-                    code = this.story.ReadChar(this.tempCursor);
+                    code = this.story.ReadChar(this.tempCursor, -1);
                 }
 
                 if (code == 0)
@@ -2594,6 +2592,7 @@ namespace Epsitec.Common.Text
 
                     moved += 1;
                     pos += 1;
+                    this.story.MoveCursor(this.tempCursor, direction);
 
                     break;
                 }
@@ -2607,7 +2606,6 @@ namespace Epsitec.Common.Text
 
                 Property propertyToSkip = null;
 
-                pos += direction;
 
                 if (context.GetAutoText(code, out autoTextProperty))
                 {
@@ -2632,7 +2630,9 @@ namespace Epsitec.Common.Text
                 }
                 else
                 {
+                    pos += direction;
                     moved += 1;
+                    this.story.MoveCursor(this.tempCursor, direction);
                 }
             }
 
