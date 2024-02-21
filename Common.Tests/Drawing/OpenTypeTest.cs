@@ -47,6 +47,7 @@ namespace Epsitec.Common.Tests.Drawing
             Assert.AreEqual("scissors", wing1_id.GetGlyphName(5));
             Assert.AreEqual("windowslogo", wing1_id.GetGlyphName(225));
 
+            // TODO: make those test run properly on their own
             Common.OpenType.Tests.CheckTables.RunTests();
         }
 

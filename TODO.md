@@ -18,3 +18,7 @@ However, there are many Initialize() methods (most of which are empty) that are 
 
 ## Async
 A lot of asynchronous code is poorly tested with manual waiting loops of Thread.Sleep to wait for asynchronous callback completion.
+
+## Manual testing
+Some tests are run together thourgh a RunTests method. They should be run separately by the test runner.
+I refactored most of those, there is still one such instance in Common.Tests.Drawing.OpenTypeTest
