@@ -28,8 +28,13 @@ namespace Epsitec.Common.Tests.Drawing
         }
 
         [Test]
+        [Ignore("Weird test. Should probably be deleted.")]
         public void CheckInit()
         {
+            // This test has several issues:
+            // - the huge loop on all the fonts makes it really annoying to debug
+            // - there are many Console.Out that don't belong here
+
             int n = Font.Count;
             System.Console.Out.WriteLine(n.ToString() + " fonts found");
 
