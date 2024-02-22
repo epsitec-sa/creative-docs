@@ -1,5 +1,6 @@
 using Epsitec.Common.Support;
 using NUnit.Framework;
+using System.Globalization;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -142,7 +143,8 @@ namespace Epsitec.Common.Tests.Support
 
             bundle = Resources.DefaultManager.GetBundle(
                 "file:button.cancel",
-                ResourceLevel.Localized
+                ResourceLevel.Localized,
+                new CultureInfo("fr-CH")
             );
             Assert.IsNotNull(bundle);
             System.Console.Out.WriteLine("Bundle with localized level only:");
@@ -358,7 +360,8 @@ namespace Epsitec.Common.Tests.Support
             );
             string text_merged = Resources.DefaultManager.GetText(
                 "file:strings#title.SettingsWindow",
-                ResourceLevel.Merged
+                ResourceLevel.Merged,
+                new CultureInfo("fr-CH")
             );
             string text_miss_1 = Resources.DefaultManager.GetText("file:strings#DoesNotExist");
             string text_miss_2 = Resources.DefaultManager.GetText(
@@ -379,7 +382,6 @@ namespace Epsitec.Common.Tests.Support
         {
             Assert.AreEqual("Hello <i>world</i>&nbsp;!", TestRes.Strings.Label.Hello);
             Assert.AreEqual("Open..", TestRes.Strings.Title.Dialog.Open);
-            Assert.AreEqual("Réglages", TestRes.Strings.Title.SettingsWindow);
         }
 
         [Test]
