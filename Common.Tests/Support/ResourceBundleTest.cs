@@ -320,9 +320,6 @@ namespace Epsitec.Common.Tests.Support
             Assert.Throws<ResourceException>(() =>
             {
                 var a = bundle["a"].AsString;
-            });
-            Assert.Throws<ResourceException>(() =>
-            {
                 var b = bundle["b"].AsString;
             });
         }
@@ -357,9 +354,6 @@ namespace Epsitec.Common.Tests.Support
             Assert.Throws<ResourceException>(() =>
             {
                 var a = bundle["a"].AsString;
-            });
-            Assert.Throws<ResourceException>(() =>
-            {
                 var b = bundle["b"].AsString;
             });
         }
