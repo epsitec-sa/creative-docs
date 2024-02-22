@@ -1,125 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Cresus.Graph</RootNamespace>
     <AssemblyName>Graph</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>App.ico</ApplicationIcon>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
+  <!--<ItemGroup>
     <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
-      <Link>Properties\AssemblyInfo.Solution.cs</Link>
-    </Compile>
-    <Compile Include="Actions\ActionRecord.cs" />
-    <Compile Include="Actions\Factory.cs" />
-    <Compile Include="Actions\Recorder.cs" />
-    <Compile Include="Actions\GenericAction.cs" />
-    <Compile Include="ChartOptions.cs" />
-    <Compile Include="Controllers\ChartOptionsController.cs" />
-    <Compile Include="Controllers\MainWindowController.cs" />
-    <Compile Include="Controllers\DocumentViewController.cs" />
-    <Compile Include="Controllers\SeriesDetectionController.cs" />
-    <Compile Include="Controllers\WorkspaceController.cs" />
-    <Compile Include="GraphApplication.Paths.cs" />
-    <Compile Include="GraphApplication.cs" />
-    <Compile Include="GraphCommands.cs" />
-    <Compile Include="GraphDataSet.cs" />
-    <Compile Include="GraphDocument.cs" />
-    <Compile Include="GraphProgram.cs" />
-    <Compile Include="ImportConverters\ComptaNmcBilanImportConverter.cs" />
-    <Compile Include="ImportConverters\ComptaNmcFoncImportConverter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Actions\Action.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
+  </ItemGroup>-->
+<!--    <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -127,91 +17,15 @@
       <Link>Clipboard.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>-->
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
+    <ProjectReference Include="..\Common.Graph\Common.Graph.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj" />
+    <ProjectReference Include="..\Common.Graph.Connector\Common.Graph.Connector.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
-      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
-      <Name>Common.Document</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Graph\Common.Graph.csproj">
-      <Project>{76C4BB36-308A-483E-9D6C-3401C96D2AD6}</Project>
-      <Name>Common.Graph</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
-      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
-      <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Graph.Connector\Common.Graph.Connector.csproj">
-      <Project>{D4CE4659-71D4-49B3-89F6-50A543F601FD}</Project>
-      <Name>Common.Graph.Connector</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ClipboardDataEventArgs.cs" />
-    <Compile Include="Controllers\DataCubeSelectionController.cs" />
-    <Compile Include="Controllers\DragController.cs" />
-    <Compile Include="Controllers\SnapshotsController.cs" />
-    <Compile Include="DataCubeCardinality.cs" />
-    <Compile Include="Dialogs\DownloadUpdateDialog.cs" />
-    <Compile Include="Dialogs\DuplicateImportDialog.cs" />
-    <Compile Include="Dialogs\QuestionDialog.cs" />
-    <Compile Include="GraphChartSnapshot.cs" />
-    <Compile Include="GraphDataCube.cs" />
-    <Compile Include="GraphDataSettings.cs" />
-    <Compile Include="GraphSerial.cs" />
-    <Compile Include="GraphUpdate.cs" />
-    <Compile Include="ImportConverters\Compta.cs" />
-    <Compile Include="ImportConverters\ComptaBilanImportConverter.cs" />
-    <Compile Include="ImportConverters\ComptaPPImportConverter.cs" />
-    <Compile Include="ImportConverters\ComptaCompteImportConverter.cs" />
-    <Compile Include="ImportConverters\GenericCsvImportConverter.cs" />
-    <Compile Include="ImportOperation.cs" />
-    <Compile Include="LicensingInfo.cs" />
-    <Compile Include="Splash\SplashPhase.cs" />
-    <Compile Include="Splash\SplashScreen.cs" />
-    <Compile Include="Splash\Win32Api.cs" />
-    <Compile Include="UndoRedoManager.cs" />
-    <Compile Include="Controllers\ChartViewController.cs" />
-    <Compile Include="Controllers\GroupDetailsController.cs" />
-    <Compile Include="Controllers\GroupsController.cs" />
-    <Compile Include="Controllers\ViewDragDropManager.cs" />
-    <Compile Include="Controllers\ItemLayoutMode.cs" />
-    <Compile Include="Controllers\ItemListController.cs" />
-    <Compile Include="Controllers\SeriesPickerControllerOriginal.cs" />
-    <Compile Include="GraphActions.cs" />
-    <Compile Include="GraphDataCategory.cs" />
-    <Compile Include="Functions\FunctionFactory.cs" />
-    <Compile Include="GraphSyntheticDataSeries.cs" />
-    <Compile Include="GraphDataGroup.cs" />
-    <Compile Include="GraphDataSeries.cs" />
-    <Compile Include="GraphDataSource.cs" />
-    <Compile Include="ImportConverters\AbstractImportConverter.cs" />
-    <Compile Include="ImportConverters\ComptaResumePeriodiqueImportConverter.cs" />
-    <Compile Include="ImportConverters\ImportConverter.cs" />
-    <Compile Include="ImportConverters\ImporterAttribute.cs" />
-    <Compile Include="Resources\Cresus.Graph\SourceCode\Res.cs" />
-    <Compile Include="Widgets\AnchoredPalette.cs" />
-    <Compile Include="Widgets\CommandSelectionBar.cs" />
-    <Compile Include="Widgets\BalloonTip.cs" />
-    <Compile Include="Widgets\DataCubeTableDetails.cs" />
-    <Compile Include="Widgets\DataCubeFrame.cs" />
-    <Compile Include="Widgets\DataCubeButton.cs" />
-    <Compile Include="Widgets\DataCubeTableButton.cs" />
-    <Compile Include="Widgets\DialogHeader.cs" />
-    <Compile Include="Widgets\GroupView.cs" />
-    <Compile Include="Widgets\SnapshotMiniChartView.cs" />
-    <Compile Include="Widgets\VerticalInjectionArrow.cs" />
-    <Compile Include="Widgets\GraphicIconButton.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
-    </None>
-    <None Include="app.config" />
     <EmbeddedResource Include="Resources\calibri.ttf" />
     <EmbeddedResource Include="Images\GraphType.PieChart.icon" />
     <EmbeddedResource Include="Images\TakeSnapshot.icon" />
@@ -255,48 +69,4 @@
     <EmbeddedResource Include="Images\SeriesCaptions.icon" />
     <EmbeddedResource Include="Images\GraphType.GeoChart.icon" />
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
 </Project>

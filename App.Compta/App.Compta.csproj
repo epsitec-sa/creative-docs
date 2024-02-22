@@ -1,145 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{29711BE4-6B98-4DDE-B40D-B2F0C46E248C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>App.Compta</RootNamespace>
-    <AssemblyName>App.Compta</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
-      <Link>Properties\AssemblyInfo.Solution.cs</Link>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Properties\Epsitec.Cresus.snk</Link>
-    </None>
-    <None Include="app.config" />
     <Content Include="app.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Cresus.Core.Library.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Epsitec.Cresus.snk" />
     <Content Include="External\Data\écritures.txt" />
     <Content Include="External\Data\pme 2011.crp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
-      <Project>{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}</Project>
-      <Name>App.DebugService</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
-      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
-      <Name>Common.Document</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Splash\Common.Splash.csproj">
-      <Project>{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}</Project>
-      <Name>Common.Splash</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Compta\Cresus.Compta.csproj">
-      <Project>{12FC693E-674E-4DE2-891D-B856239CD977}</Project>
-      <Name>Cresus.Compta</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
-      <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
-      <Name>Cresus.Core.Library.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
-      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
-      <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
-      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
-      <Name>Cresus.Database.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
-      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
-      <Name>Cresus.Database</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Name>Cresus.DataLayer</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\App.DebugService\App.DebugService.csproj" />
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
+    <ProjectReference Include="..\Common.Splash\Common.Splash.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Cresus.Compta\Cresus.Compta.csproj" />
+    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj" />
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj" />
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj" />
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj" />
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj" />
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
