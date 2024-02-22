@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 
 namespace Epsitec.Common.IO
 {
@@ -11,13 +11,9 @@ namespace Epsitec.Common.IO
     {
         public static IEnumerable<string> DownloadLines(string uri, System.Text.Encoding encoding)
         {
-            string value;
-
-            using (WebClient client = new WebClient())
-            {
-                byte[] data = client.DownloadData(uri);
-                value = encoding.GetString(data);
-            }
+            using var client = new HttpClient();
+            var data  = client.GetByteArrayAsync(uri).Result;
+            var value = encoding.GetString(data);
 
             return value.Split('\n').Select(x => x.TrimEnd(' ', '\r'));
         }
