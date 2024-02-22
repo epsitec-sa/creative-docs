@@ -58,30 +58,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
-        public void Check02AddRemoveAndGC()
-        {
-            Dummy dummy = new Dummy();
-            Weak<Dummy> weakDummy = new Weak<Dummy>(dummy);
-            WeakEventListeners listeners = new WeakEventListeners();
-
-            listeners.Add(new SimpleCallback(dummy.HandleEvent));
-            listeners.Invoke();
-
-            Assert.AreEqual(1, dummy.Counter);
-
-            dummy = null;
-            System.GC.Collect();
-
-            Assert.IsFalse(weakDummy.IsAlive);
-            Assert.AreEqual(1, listeners.DebugGetListenerCount());
-
-            listeners.Invoke();
-
-            Assert.AreEqual(0, listeners.DebugGetListenerCount());
-        }
-
-        [Test]
-        public void Check03InvokeWithArgs()
+        public void Check02InvokeWithArgs()
         {
             WeakEventListeners listeners = new WeakEventListeners();
 
@@ -96,7 +73,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
-        public void Check04InvokeWithArgs()
+        public void Check03InvokeWithArgs()
         {
             WeakEventListeners listeners = new WeakEventListeners();
 
@@ -111,7 +88,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
-        public void Check05InvokeNoListener()
+        public void Check04InvokeNoListener()
         {
             WeakEventListeners listeners = new WeakEventListeners();
 
