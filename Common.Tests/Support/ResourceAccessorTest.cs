@@ -29,11 +29,6 @@ namespace Epsitec.Common.Tests.Support
                     .DeveloperIdPropertyName,
                 0
             );
-        }
-
-        [Test]
-        public void AutomatedTestEnvironment()
-        {
             Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
         }
 
@@ -813,7 +808,7 @@ namespace Epsitec.Common.Tests.Support
         }
 
         [Test]
-        public void CheckAnyTypeAccessor()
+        public void CheckIntegerTypeAccessor()
         {
             Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor accessor =
                 new Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor();
@@ -821,27 +816,6 @@ namespace Epsitec.Common.Tests.Support
             Assert.IsFalse(accessor.ContainsChanges);
 
             accessor.Load(Epsitec.Common.Support.Res.Manager);
-
-            System.Console.Out.WriteLine("{0} resources found", accessor.Collection.Count);
-
-            foreach (CultureMap item in accessor.Collection)
-            {
-                StructuredData data = item.GetCultureData(
-                    Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName
-                );
-                string[] ids = Collection.ToArray(data.GetValueIds());
-                TypeCode code = (TypeCode)
-                    data.GetValue(Epsitec.Common.Support.Res.Fields.ResourceBaseType.TypeCode);
-
-                System.Console.Out.WriteLine("  {2}, {0} --> {1}", item.Name, item.Id, code);
-
-                foreach (string id in ids)
-                {
-                    System.Console.Out.WriteLine("    {0}: {1}", id, data.GetValue(id));
-                }
-            }
-
-            //	Check Integer
 
             CultureMap newItem = accessor.CreateItem();
             StructuredData newData = newItem.GetCultureData(
@@ -873,11 +847,20 @@ namespace Epsitec.Common.Tests.Support
             Assert.AreEqual(1M, intType.SmallStep);
             Assert.AreEqual(10M, intType.LargeStep);
             Assert.AreEqual(999M, intType.Range.Maximum);
+        }
 
-            //	Check DateTime
+        [Test]
+        public void CheckDateTimeTypeAccessor()
+        {
+            Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor accessor =
+                new Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor();
 
-            newItem = accessor.CreateItem();
-            newData = newItem.GetCultureData(
+            Assert.IsFalse(accessor.ContainsChanges);
+
+            accessor.Load(Epsitec.Common.Support.Res.Manager);
+
+            CultureMap newItem = accessor.CreateItem();
+            StructuredData newData = newItem.GetCultureData(
                 Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName
             );
             newItem.Name = "AnyTypeAccessorDateTime1";
@@ -902,7 +885,7 @@ namespace Epsitec.Common.Tests.Support
             accessor.Collection.Add(newItem);
             accessor.PersistChanges();
 
-            caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
+            Caption caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
             DateTimeType dtType = TypeRosetta.CreateTypeObject(caption, false) as DateTimeType;
 
             Assert.IsNotNull(dtType);
@@ -914,11 +897,20 @@ namespace Epsitec.Common.Tests.Support
             Assert.IsTrue(dtType.MinimumTime.IsNull);
             Assert.IsTrue(dtType.MaximumTime.IsNull);
             Assert.AreEqual(15, dtType.TimeStep.TotalMinutes);
+        }
 
-            //	Check Other
+        [Test]
+        public void CheckOtherTypeAccessor()
+        {
+            Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor accessor =
+                new Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor();
 
-            newItem = accessor.CreateItem();
-            newData = newItem.GetCultureData(
+            Assert.IsFalse(accessor.ContainsChanges);
+
+            accessor.Load(Epsitec.Common.Support.Res.Manager);
+
+            CultureMap newItem = accessor.CreateItem();
+            StructuredData newData = newItem.GetCultureData(
                 Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName
             );
             newItem.Name = "AnyTypeAccessorOther1";
@@ -935,16 +927,25 @@ namespace Epsitec.Common.Tests.Support
             accessor.Collection.Add(newItem);
             accessor.PersistChanges();
 
-            caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
+            Caption caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
             OtherType otherType = TypeRosetta.CreateTypeObject(caption, false) as OtherType;
 
             Assert.IsNotNull(otherType);
             Assert.AreEqual(typeof(char).Name, otherType.SystemType.Name);
+        }
 
-            //	Check String
+        [Test]
+        public void CheckStringTypeAccessor()
+        {
+            Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor accessor =
+                new Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor();
 
-            newItem = accessor.CreateItem();
-            newData = newItem.GetCultureData(
+            Assert.IsFalse(accessor.ContainsChanges);
+
+            accessor.Load(Epsitec.Common.Support.Res.Manager);
+
+            CultureMap newItem = accessor.CreateItem();
+            StructuredData newData = newItem.GetCultureData(
                 Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName
             );
             newItem.Name = "AnyTypeAccessorString1";
@@ -962,18 +963,27 @@ namespace Epsitec.Common.Tests.Support
             accessor.Collection.Add(newItem);
             accessor.PersistChanges();
 
-            caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
+            Caption caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
             StringType stringType = TypeRosetta.CreateTypeObject(caption, false) as StringType;
 
             Assert.IsNotNull(stringType);
             Assert.AreEqual(true, stringType.UseMultilingualStorage);
             Assert.AreEqual(1, stringType.MinimumLength);
             Assert.AreEqual(1000000, stringType.MaximumLength);
+        }
 
-            //	Check Collection
+        [Test]
+        public void CheckCollectionTypeAccessor()
+        {
+            Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor accessor =
+                new Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor();
 
-            newItem = accessor.CreateItem();
-            newData = newItem.GetCultureData(
+            Assert.IsFalse(accessor.ContainsChanges);
+
+            accessor.Load(Epsitec.Common.Support.Res.Manager);
+
+            CultureMap newItem = accessor.CreateItem();
+            StructuredData newData = newItem.GetCultureData(
                 Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName
             );
             newItem.Name = "AnyTypeAccessorCollection1";
@@ -990,13 +1000,22 @@ namespace Epsitec.Common.Tests.Support
             accessor.Collection.Add(newItem);
             accessor.PersistChanges();
 
-            caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
+            Caption caption = accessor.ResourceManager.GetCaption(newItem.Id, ResourceLevel.Default);
             CollectionType colType = TypeRosetta.CreateTypeObject(caption, false) as CollectionType;
 
             Assert.IsNotNull(colType);
             Assert.AreEqual(IntegerType.Default.CaptionId, colType.ItemType.CaptionId);
+        }
 
-            //	Check Enumeration
+        [Test]
+        public void CheckEnumerationTypeAccessor()
+        {
+            Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor accessor =
+                new Epsitec.Common.Support.ResourceAccessors.AnyTypeResourceAccessor();
+
+            Assert.IsFalse(accessor.ContainsChanges);
+
+            accessor.Load(Epsitec.Common.Support.Res.Manager);
 
             CultureMap map = accessor.Collection[
                 Epsitec.Common.Types.Res.Types.BindingMode.CaptionId
