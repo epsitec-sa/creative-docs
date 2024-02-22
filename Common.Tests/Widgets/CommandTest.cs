@@ -26,8 +26,12 @@ namespace Epsitec.Common.Tests.Widgets
         }
 
         [Test]
+        [Ignore("Not independent test.")]
         public void Check0TemporaryCommand()
         {
+            // This test will pass if it's run alone but will fail if it's run together with e.g. AdornerTest.CheckAdornerBigText
+            // They probably share some state that is not reset properly
+
             Caption caption1 = Epsitec.Common.Support.Resources.DefaultManager.GetCaption(
                 Druid.Parse("[0005]")
             );

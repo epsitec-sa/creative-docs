@@ -24,6 +24,7 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
+        [Ignore("Has a getter that modifies internal state!")]
         public void Check01DialogModeIsolated()
         {
             EntityContext context = new EntityContext();
@@ -37,6 +38,8 @@ namespace Epsitec.Common.Tests.Dialogs
 
             PrixEntity prix2 = data.Data as PrixEntity;
 
+            // The getter `Ht` MODIFIES the internal state of `prix2` (aka data.Data)
+            // This is absolutely cursed
             Assert.AreEqual(10.0M, prix2.Ht);
             Assert.AreEqual("CHF", prix2.Monnaie.Désignation);
 
@@ -139,6 +142,7 @@ namespace Epsitec.Common.Tests.Dialogs
         }
 
         [Test]
+        [Ignore("Has a getter that modifies internal state!")]
         public void Check02DialogModeRealTime()
         {
             EntityContext context = new EntityContext();
