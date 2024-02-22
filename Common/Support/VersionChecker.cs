@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Net.Http;
+
 using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.Support
@@ -303,7 +305,6 @@ namespace Epsitec.Common.Support
 
         private void ReadVersionInfoFromWebServer(string url)
         {
-            string result = "";
             System.Threading.Thread.Sleep(200);
 
             try
@@ -318,18 +319,7 @@ namespace Epsitec.Common.Support
                 }
 
                 System.Diagnostics.Debug.WriteLine("Checking for updates at URL " + url);
-
-                var request = System.Net.HttpWebRequest.Create(new System.Uri(url));
-                request.Proxy = new System.Net.WebProxy();
-
-                var response = request.GetResponse();
-                var raw = response.GetResponseStream();
-                var reader = new System.IO.StreamReader(raw);
-
-                result = reader.ReadToEnd();
-
-                reader.Close();
-                response.Close();
+                var result = GetResult(url);
 
                 System.Diagnostics.Debug.WriteLine("Update result : " + result);
 
@@ -367,6 +357,12 @@ namespace Epsitec.Common.Support
                     this.IsNetworkAvailable = false;
                     this.ReadVersionInfoFromWebServer(url);
                 }
+            }
+
+            static string GetResult(string url)
+            {
+                using var client = new HttpClient();
+                return client.GetStringAsync(url).Result;
             }
         }
 

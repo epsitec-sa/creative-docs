@@ -13,8 +13,8 @@ namespace Epsitec.Common.Tests
         [Test]
         public void CanLoadAntiGrain()
         {
-            Library.Initialize();
-            Library.ShutDown();
+            AntiGrain.Interface.Initialise();
+            AntiGrain.Interface.ShutDown();
         }
     }
 }

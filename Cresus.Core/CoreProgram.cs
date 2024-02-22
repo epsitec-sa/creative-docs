@@ -4,67 +4,59 @@
 using Epsitec.Common.Debug;
 using Epsitec.Common.Splash;
 
-using Epsitec.Cresus.Core.Library;
-
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Cresus.Core
 {
-	public static class CoreProgram
-	{
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[System.STAThread]
-		public static void Main(string[] args)
-		{
-			GeneralExceptionCatcher.Setup ();
+    public static class CoreProgram
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [System.STAThread]
+        public static void Main(string[] args)
+        {
+            GeneralExceptionCatcher.Setup();
             GeneralExceptionCatcher.AbortOnException = true;
 
-            CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
+            Library.CoreContext.ParseOptionalSettingsFile(Library.CoreContext.ReadCoreContextSettingsFile());
 
-			if ((args.Length > 0) &&
-				(args[0] != "-start"))
-			{
-				CoreProgramOperations.ProcessCommandLine (args);
-			}
-			else
-			{
-				CoreProgram.ExecuteCoreProgram ();
-			}
-		}
+            if ((args.Length > 0) && (args[0] != "-start"))
+            {
+                CoreProgramOperations.ProcessCommandLine(args);
+            }
+            else
+            {
+                CoreProgram.ExecuteCoreProgram();
+            }
+        }
 
-		private static void ExecuteCoreProgram()
-		{
-			Library.CoreContext.StartAsInteractive ();
-			Library.UI.Services.Initialize ();
+        private static void ExecuteCoreProgram()
+        {
+            Library.CoreContext.StartAsInteractive();
+            Library.UI.Services.Initialize();
 
-			var  snapshotService = CoreContext.EnableSnapshotService
-				? new Library.Business.CoreSnapshotService ()
-				: null;
+            var snapshotService = Library.CoreContext.EnableSnapshotService
+                ? new Library.Business.CoreSnapshotService()
+                : null;
 
-			using (var app = CoreContext.CreateApplication<CoreInteractiveApp> () ?? new CoreApplication ())
-			{
-				System.Diagnostics.Debug.Assert (app.ResourceManagerPool.PoolName == "Core");
+            using var app = Library.CoreContext.CreateApplication<Library.CoreInteractiveApp>() ?? new CoreApplication();
+            System.Diagnostics.Debug.Assert(app.ResourceManagerPool.PoolName == "Core");
 
-				app.SetupApplication ();
+            app.SetupApplication();
 
-				if (snapshotService != null)
-				{
-					snapshotService.NotifyApplicationStarted (app);
-				}
+            if (snapshotService != null)
+            {
+                snapshotService.NotifyApplicationStarted(app);
+            }
 
-				SplashScreen.DismissSplashScreen ();
+            SplashScreen.DismissSplashScreen();
 
-				if (app.StartupLogin ())
-				{
-					app.Window.Show ();
-					app.Window.Run ();
-				}
+            if (app.StartupLogin())
+            {
+                app.Window.Show();
+                app.Window.Run();
+            }
 
-				Library.UI.Services.ShutDown ();
-			}
-		}
-	}
+            Library.UI.Services.ShutDown();
+        }
+    }
 }

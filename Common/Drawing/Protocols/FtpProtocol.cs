@@ -1,17 +1,16 @@
 //	Copyright © 2007-2011, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Net.Http;
+
 namespace Epsitec.Common.Drawing.Protocols
 {
     internal static class FtpProtocol
     {
         public static byte[] ReadBytes(string name)
         {
-            using (System.Net.WebClient client = new System.Net.WebClient())
-            {
-                client.Proxy = new System.Net.WebProxy();
-                return client.DownloadData(string.Concat("ftp:", name));
-            }
+            using var client = new HttpClient();
+            return client.GetByteArrayAsync(string.Concat("ftp:", name)).Result;
         }
     }
 }

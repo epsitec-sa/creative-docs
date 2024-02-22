@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8930BC66-032C-41FE-BCD5-2B6BA7214320}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,9 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App Projects", "App Project
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Designer", "Common.Designer\Common.Designer.csproj", "{A70AD57E-0E80-48D7-8583-836C4758669D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document", "Common.Document\Common.Document.csproj", "{B324896E-2CDE-45B8-91CE-B476687EA384}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Document", "Common.Document\Common.Document.csproj", "{B324896E-2CDE-45B8-91CE-B476687EA384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Identity", "Common.Identity\Common.Identity.csproj", "{3B21F4C6-9461-4751-9B23-9A9006743D68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Identity", "Common.Identity\Common.Identity.csproj", "{3B21F4C6-9461-4751-9B23-9A9006743D68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tool Projects", "Tool Projects", "{53746D5D-E24F-4FA5-A3C7-0934D47285D6}"
 EndProject
@@ -36,9 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleRepository.Service", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleRepository.TestClient", "Tool.ModuleRepository\ModuleRepository.TestClient\ModuleRepository.TestClient.csproj", "{FC80577A-0E20-4469-864C-87ADB7B12C07}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win32 Projects", "Win32 Projects", "{D74E34FB-9F8F-442A-AB89-4A6C700E4774}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DocumentEditor", "Common.DocumentEditor\Common.DocumentEditor.csproj", "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.DocumentEditor", "Common.DocumentEditor\Common.DocumentEditor.csproj", "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Designer.Protocol", "Tool.Designer.Protocol\Tool.Designer.Protocol.csproj", "{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}"
 EndProject
@@ -48,17 +46,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Designer.Protocol.Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Designer.Protocol.Tests", "Tool.Designer.Protocol.Tests\Tool.Designer.Protocol.Tests.csproj", "{1CFC6987-C967-442F-B0AC-05632037022B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Splash", "Common.Splash\Common.Splash.csproj", "{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Splash", "Common.Splash\Common.Splash.csproj", "{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database", "Cresus.Database\Cresus.Database.csproj", "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Database", "Cresus.Database\Cresus.Database.csproj", "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Implementation", "Cresus.Database.Implementation\Cresus.Database.Implementation.csproj", "{C757AD58-605D-4480-BC2E-03E8076368B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Database.Implementation", "Cresus.Database.Implementation\Cresus.Database.Implementation.csproj", "{C757AD58-605D-4480-BC2E-03E8076368B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer", "Cresus.DataLayer\Cresus.DataLayer.csproj", "{BA604F89-53C1-4228-AC76-5D5E68205029}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.DataLayer", "Cresus.DataLayer\Cresus.DataLayer.csproj", "{BA604F89-53C1-4228-AC76-5D5E68205029}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph", "Common.Graph\Common.Graph.csproj", "{76C4BB36-308A-483E-9D6C-3401C96D2AD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core", "Cresus.Core\Cresus.Core.csproj", "{543293D0-CAFB-4431-8202-6C6D5FF5403A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Core", "Cresus.Core\Cresus.Core.csproj", "{543293D0-CAFB-4431-8202-6C6D5FF5403A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.CorePlugIn.WorkflowDesigner", "Cresus.CorePlugIn.WorkflowDesigner\Cresus.CorePlugIn.WorkflowDesigner.csproj", "{527D3555-0B76-4E86-9EE0-443CC97061F0}"
 EndProject
@@ -66,25 +64,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph.Connector", "C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{BE113330-11CC-46B3-98FD-2D92295A1010}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Business", "Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj", "{E70C6F16-A0BF-439B-845D-87B164510AA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Core.Library.Business", "Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj", "{E70C6F16-A0BF-439B-845D-87B164510AA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Bricks", "Cresus.Bricks\Cresus.Bricks.csproj", "{AE911461-2EFC-435D-B7AD-1F0DE07EE251}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Bricks", "Cresus.Bricks\Cresus.Bricks.csproj", "{AE911461-2EFC-435D-B7AD-1F0DE07EE251}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting", "Common.UnitTesting\Common.UnitTesting.csproj", "{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Export", "Tool.Export\Tool.Export.csproj", "{F3A53056-6C28-470B-A79F-9AA9C2235BBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document.ExportEngine", "Common.Document.ExportEngine\Common.Document.ExportEngine.csproj", "{DBB98025-2979-45C6-AB5E-A36E7015F9EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Document.ExportEngine", "Common.Document.ExportEngine\Common.Document.ExportEngine.csproj", "{DBB98025-2979-45C6-AB5E-A36E7015F9EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.WebCore.Server", "Cresus.WebCore.Server\Cresus.WebCore.Server.csproj", "{E85C5738-4267-4F95-B6B0-A30B47B76D01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.WebCore.Server", "Cresus.WebCore.Server\Cresus.WebCore.Server.csproj", "{E85C5738-4267-4F95-B6B0-A30B47B76D01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Platform", "Data.Platform\Data.Platform.csproj", "{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Platform", "Data.Platform\Data.Platform.csproj", "{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Maintenance", "Cresus.Core.Maintenance\Cresus.Core.Maintenance.csproj", "{917EB960-42F9-48DF-A649-69A0065AA07C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Core.Maintenance", "Cresus.Core.Maintenance\Cresus.Core.Maintenance.csproj", "{917EB960-42F9-48DF-A649-69A0065AA07C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aider", "Aider\Aider.csproj", "{0F0E9452-EFE5-4007-B634-B0198E13E3DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aider", "Aider\Aider.csproj", "{0F0E9452-EFE5-4007-B634-B0198E13E3DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Aider", "App.Aider\App.Aider.csproj", "{1FC8B84D-BE6E-4723-90BD-4D124E005DE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Aider", "App.Aider\App.Aider.csproj", "{1FC8B84D-BE6E-4723-90BD-4D124E005DE5}"
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cresus.WebCore.Client", "Cresus.WebCore.Client\", "{8F9BA1C7-A50B-474E-A98E-E29DB41EAD51}"
 	ProjectSection(WebsiteProperties) = preProject
@@ -109,15 +107,15 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cresus.WebCore.Client", "Cr
 		StartServerOnDebug = "false"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pdf", "Common.Pdf\Common.Pdf.csproj", "{0C93255B-4D0C-4AF6-9244-D835427E42E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Pdf", "Common.Pdf\Common.Pdf.csproj", "{0C93255B-4D0C-4AF6-9244-D835427E42E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Data.Platform", "Tool.Data.Platform\Tool.Data.Platform.csproj", "{7D04D788-D4B2-440E-B3E3-AB646E7AFE5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.ZipMe", "..\Epsitec.ShellPE\Epsitec.ZipMe\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{C7FE1E82-BC10-43AE-BCFB-3A00D3F671E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.ZipMe", "..\zipme\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{C7FE1E82-BC10-43AE-BCFB-3A00D3F671E4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{A254E420-166A-488D-9687-0268BF6FFEE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aider.Processors", "Aider.Processors\Aider.Processors.csproj", "{8DE96414-E7B3-42B6-831A-2C92E924E121}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aider.Processors", "Aider.Processors\Aider.Processors.csproj", "{8DE96414-E7B3-42B6-831A-2C92E924E121}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets.Doc", "Assets.Doc", "{0745F681-777F-44AD-8667-94B0DD918401}"
 	ProjectSection(SolutionItems) = preProject
@@ -134,11 +132,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets.Obsolete", "Assets.O
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aider ParishProcessor", "Aider ParishProcessor", "{6460C03F-0A07-4480-97B7-1E3AD5AF5CFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aider.ParishPreprocessor", "Aider.ParishProcessor\Aider.ParishPreprocessor.csproj", "{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aider.ParishPreprocessor", "Aider.ParishProcessor\Aider.ParishPreprocessor.csproj", "{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library", "Cresus.Core.Library\Cresus.Core.Library.csproj", "{91DA0241-F084-40C5-B76E-0240884D1841}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Core.Library", "Cresus.Core.Library\Cresus.Core.Library.csproj", "{91DA0241-F084-40C5-B76E-0240884D1841}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.CresusToolkit", "..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tool.AcmeCert", "Tool.AcmeCert\Tool.AcmeCert.csproj", "{F89C6E6E-A2D2-4BB9-9B5B-AF19ADD9582D}"
 EndProject
@@ -154,7 +152,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.DebugService", "App.Deb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Compta", "Cresus.Compta\Cresus.Compta.csproj", "{12FC693E-674E-4DE2-891D-B856239CD977}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.TwixClip", "..\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj", "{79A62BAB-FBDF-444A-8E23-3AD503940A17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.TwixClip", "..\twixclip\Epsitec.TwixClip\Epsitec.TwixClip.csproj", "{79A62BAB-FBDF-444A-8E23-3AD503940A17}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_doc", "_doc", "{47156742-039F-4223-9849-35EAA0BDA667}"
 	ProjectSection(SolutionItems) = preProject
@@ -164,7 +162,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{2A50DB89-D33B-473B-9774-62714BA6549D}"
 	ProjectSection(SolutionItems) = preProject
 		..\Directory.Build.props = ..\Directory.Build.props
-		..\global.json = ..\global.json
 	EndProjectSection
 EndProject
 Global

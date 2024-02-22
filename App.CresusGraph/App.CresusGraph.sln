@@ -1,0 +1,91 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusGraph", "App.CresusGraph.csproj", "{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Document", "..\Common.Document\Common.Document.csproj", "{83FAF288-1DAC-45C7-9E6E-E201D133EDBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph.Connector", "..\Common.Graph.Connector\Common.Graph.Connector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph", "..\Common.Graph\Common.Graph.csproj", "{76C4BB36-308A-483E-9D6C-3401C96D2AD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Identity", "..\Common.Identity\Common.Identity.csproj", "{E505FD13-35C3-4DE8-8D28-8EFD07227353}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "..\Common\Common.csproj", "{93897050-A211-47FD-87CA-BAB4530DB54C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Bricks", "..\Cresus.Bricks\Cresus.Bricks.csproj", "{649AAD1E-D8DD-4441-9EEC-8D26755A716F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Core.Library", "..\Cresus.Core.Library\Cresus.Core.Library.csproj", "{B9F5AFC1-7C37-4BB6-AF0A-09836BF9D0F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.Database", "..\Cresus.Database\Cresus.Database.csproj", "{58F86537-9672-44F5-BFAD-4B1B921A3397}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cresus.DataLayer", "..\Cresus.DataLayer\Cresus.DataLayer.csproj", "{F5C43D75-8651-4177-8F84-C0BB9C679434}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.CresusToolkit", "..\..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{488DF643-7D3E-4B61-8E7A-AD2905E7D4FB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.ZipMe", "..\..\zipme\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|x86.ActiveCfg = Debug|x86
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|x86.Build.0 = Debug|x86
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|x86.ActiveCfg = Release|x86
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|x86.Build.0 = Release|x86
+		{83FAF288-1DAC-45C7-9E6E-E201D133EDBC}.Debug|x86.ActiveCfg = Debug|x86
+		{83FAF288-1DAC-45C7-9E6E-E201D133EDBC}.Debug|x86.Build.0 = Debug|x86
+		{83FAF288-1DAC-45C7-9E6E-E201D133EDBC}.Release|x86.ActiveCfg = Release|x86
+		{83FAF288-1DAC-45C7-9E6E-E201D133EDBC}.Release|x86.Build.0 = Release|x86
+		{D4CE4659-71D4-49B3-89F6-50A543F601FD}.Debug|x86.ActiveCfg = Debug|x86
+		{D4CE4659-71D4-49B3-89F6-50A543F601FD}.Debug|x86.Build.0 = Debug|x86
+		{D4CE4659-71D4-49B3-89F6-50A543F601FD}.Release|x86.ActiveCfg = Release|x86
+		{D4CE4659-71D4-49B3-89F6-50A543F601FD}.Release|x86.Build.0 = Release|x86
+		{76C4BB36-308A-483E-9D6C-3401C96D2AD6}.Debug|x86.ActiveCfg = Debug|x86
+		{76C4BB36-308A-483E-9D6C-3401C96D2AD6}.Debug|x86.Build.0 = Debug|x86
+		{76C4BB36-308A-483E-9D6C-3401C96D2AD6}.Release|x86.ActiveCfg = Release|x86
+		{76C4BB36-308A-483E-9D6C-3401C96D2AD6}.Release|x86.Build.0 = Release|x86
+		{E505FD13-35C3-4DE8-8D28-8EFD07227353}.Debug|x86.ActiveCfg = Debug|x86
+		{E505FD13-35C3-4DE8-8D28-8EFD07227353}.Debug|x86.Build.0 = Debug|x86
+		{E505FD13-35C3-4DE8-8D28-8EFD07227353}.Release|x86.ActiveCfg = Release|x86
+		{E505FD13-35C3-4DE8-8D28-8EFD07227353}.Release|x86.Build.0 = Release|x86
+		{93897050-A211-47FD-87CA-BAB4530DB54C}.Debug|x86.ActiveCfg = Debug|x86
+		{93897050-A211-47FD-87CA-BAB4530DB54C}.Debug|x86.Build.0 = Debug|x86
+		{93897050-A211-47FD-87CA-BAB4530DB54C}.Release|x86.ActiveCfg = Release|x86
+		{93897050-A211-47FD-87CA-BAB4530DB54C}.Release|x86.Build.0 = Release|x86
+		{649AAD1E-D8DD-4441-9EEC-8D26755A716F}.Debug|x86.ActiveCfg = Debug|x86
+		{649AAD1E-D8DD-4441-9EEC-8D26755A716F}.Debug|x86.Build.0 = Debug|x86
+		{649AAD1E-D8DD-4441-9EEC-8D26755A716F}.Release|x86.ActiveCfg = Release|x86
+		{649AAD1E-D8DD-4441-9EEC-8D26755A716F}.Release|x86.Build.0 = Release|x86
+		{B9F5AFC1-7C37-4BB6-AF0A-09836BF9D0F5}.Debug|x86.ActiveCfg = Debug|x86
+		{B9F5AFC1-7C37-4BB6-AF0A-09836BF9D0F5}.Debug|x86.Build.0 = Debug|x86
+		{B9F5AFC1-7C37-4BB6-AF0A-09836BF9D0F5}.Release|x86.ActiveCfg = Release|x86
+		{B9F5AFC1-7C37-4BB6-AF0A-09836BF9D0F5}.Release|x86.Build.0 = Release|x86
+		{58F86537-9672-44F5-BFAD-4B1B921A3397}.Debug|x86.ActiveCfg = Debug|x86
+		{58F86537-9672-44F5-BFAD-4B1B921A3397}.Debug|x86.Build.0 = Debug|x86
+		{58F86537-9672-44F5-BFAD-4B1B921A3397}.Release|x86.ActiveCfg = Release|x86
+		{58F86537-9672-44F5-BFAD-4B1B921A3397}.Release|x86.Build.0 = Release|x86
+		{F5C43D75-8651-4177-8F84-C0BB9C679434}.Debug|x86.ActiveCfg = Debug|x86
+		{F5C43D75-8651-4177-8F84-C0BB9C679434}.Debug|x86.Build.0 = Debug|x86
+		{F5C43D75-8651-4177-8F84-C0BB9C679434}.Release|x86.ActiveCfg = Release|x86
+		{F5C43D75-8651-4177-8F84-C0BB9C679434}.Release|x86.Build.0 = Release|x86
+		{488DF643-7D3E-4B61-8E7A-AD2905E7D4FB}.Debug|x86.ActiveCfg = Debug|x86
+		{488DF643-7D3E-4B61-8E7A-AD2905E7D4FB}.Debug|x86.Build.0 = Debug|x86
+		{488DF643-7D3E-4B61-8E7A-AD2905E7D4FB}.Release|x86.ActiveCfg = Release|x86
+		{488DF643-7D3E-4B61-8E7A-AD2905E7D4FB}.Release|x86.Build.0 = Release|x86
+		{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}.Debug|x86.ActiveCfg = Debug|x86
+		{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}.Debug|x86.Build.0 = Debug|x86
+		{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}.Release|x86.ActiveCfg = Release|x86
+		{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE4DF414-273E-44C7-8C96-1479F759906C}
+	EndGlobalSection
+EndGlobal

@@ -71,35 +71,31 @@ namespace Epsitec.Aider.Data.ECh
 		
 		private bool FtpDownloadFile(string fileName)
 		{
-			long size;
+            if (this.ftpDirectoryDetails.TryGetValue(fileName, out long size))
+            {
+                using WebClient client = new WebClient();
+                client.Proxy = new WebProxy();
+                client.Credentials = EchDataDownloader.GetCredentials();
 
-			if (this.ftpDirectoryDetails.TryGetValue (fileName, out size))
-			{
-				using (WebClient client = new WebClient ())
-				{
-					client.Proxy       = new WebProxy ();
-					client.Credentials = EchDataDownloader.GetCredentials ();
+                System.Console.WriteLine("FTP: Downloading {0}, {1} MB", fileName, size / (1024 * 1024));
 
-					System.Console.WriteLine ("FTP: Downloading {0}, {1} MB", fileName, size/(1024*1024));
+                var filePath = System.IO.Path.Combine(this.repositoryPath, fileName);
+                client.DownloadFile(EchDataDownloader.GetFtpUri(fileName), filePath);
+                var fileInfo = new System.IO.FileInfo(filePath);
 
-					var filePath = System.IO.Path.Combine (this.repositoryPath, fileName);
-					client.DownloadFile (EchDataDownloader.GetFtpUri (fileName), filePath);
-					var fileInfo = new System.IO.FileInfo (filePath);
+                if (fileInfo.Length == size)
+                {
+                    this.downloadedFilePaths.Add(filePath);
 
-					if (fileInfo.Length == size)
-					{
-						this.downloadedFilePaths.Add (filePath);
+                    System.Console.WriteLine("FTP: Download successful ({0}, {1} MB)", fileName, size / (1024 * 1024));
 
-						System.Console.WriteLine ("FTP: Download successful ({0}, {1} MB)", fileName, size/(1024*1024));
+                    return true;
+                }
 
-						return true;
-					}
+                System.Console.WriteLine("FTP: Download failed ({0}, size mismatch = {1})", fileName, fileInfo.Length - size);
+            }
 
-					System.Console.WriteLine ("FTP: Download failed ({0}, size mismatch = {1})", fileName, fileInfo.Length - size);
-				}
-			}
-
-			return false;
+            return false;
 		}
 
 		private IEnumerable<string> GetMismatches()
@@ -109,14 +105,12 @@ namespace Epsitec.Aider.Data.ECh
 
 			foreach (var file in local.Select (x => new System.IO.FileInfo (x)))
 			{
-				long size;
-
-				if ((this.ftpDirectoryDetails.TryGetValue (file.Name, out size)) &&
-					(size == file.Length))
-				{
-					remote.Remove (file.Name);
-				}
-			}
+                if ((this.ftpDirectoryDetails.TryGetValue(file.Name, out long size)) &&
+                    (size == file.Length))
+                {
+                    remote.Remove(file.Name);
+                }
+            }
 
 			return remote;
 		}
@@ -183,13 +177,11 @@ namespace Epsitec.Aider.Data.ECh
 
 					if (this.ftpDirectory.Contains (name))
 					{
-						long size;
-						
-						if (InvariantConverter.Convert (tokens[6], out size))
-						{
-							this.ftpDirectoryDetails.Add (name, size);
-						}
-					}
+                        if (InvariantConverter.Convert(tokens[6], out long size))
+                        {
+                            this.ftpDirectoryDetails.Add(name, size);
+                        }
+                    }
 				}
 
 				line = streamReader.ReadLine ();

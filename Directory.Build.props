@@ -2,9 +2,7 @@
   <Import Project="Version.props" />
   <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
+    <TargetFramework>$(WindowsTargetFramework)</TargetFramework>
 
     <!--
     TODO: NOT RECOMMENDED
@@ -14,8 +12,6 @@
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <NoWarn>SYSLIB0011;$(NoWarn)</NoWarn>
 
-    <Copyright>Copyright © 2003-2011, Daniel Roux, Pierre Arnaud, EPSITEC SA &amp; OPaC bright ideas, Switzerland</Copyright>
-    <PackageTags>core</PackageTags>
     <PackageProjectUrl>https://git.epsitec.ch/core/cresus-core.git</PackageProjectUrl>
   </PropertyGroup>
 </Project>
