@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public string GetTooltip(GraphSurfaceId surface)
 		{
 			//	Retourne le texte du tooltip à utiliser pour une surface donnée.
-			if (surface != null && surface.CubeX >= 0 && surface.CubeY >= 0)
+			if (surface.CubeX >= 0 && surface.CubeY >= 0)
 			{
 				var value = this.cube.GetValue (surface.CubeX, surface.CubeY);
 				if (value.HasValue)

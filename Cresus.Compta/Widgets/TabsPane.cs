@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			base.ProcessMessage (message, pos);
 		}
 
-		private void MouseMove(Message message, Point pos)
+		private new void MouseMove(Message message, Point pos)
 		{
 			int index, rank;
 
