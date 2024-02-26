@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
-
     /// <summary>
     /// La classe MenuItemContainer permet d'incorporer dans une case de menu
     /// des widgets divers et variés.

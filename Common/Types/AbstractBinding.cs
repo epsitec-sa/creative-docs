@@ -2,7 +2,6 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace Epsitec.Common.Types
 {

@@ -1,13 +1,13 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Internal;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Tests.Types
 {

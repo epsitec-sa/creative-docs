@@ -4,7 +4,6 @@
 namespace Epsitec.Common.Drawing
 {
     using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
-    using XmlIgnore = System.Xml.Serialization.XmlIgnoreAttribute;
 
     [System.Serializable]
     [System.ComponentModel.TypeConverter(typeof(Margins.Converter))]

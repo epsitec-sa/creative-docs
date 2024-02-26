@@ -1,6 +1,5 @@
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.OpenType;
 using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
@@ -9,7 +8,6 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 {
     using Document = Common.Document.Document;
     using FontFaceCombo = Common.Document.Widgets.FontFaceCombo;
-    using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
     /// <summary>
     /// Dialogue permettant de choisir un caractère quelconque à insérer dans

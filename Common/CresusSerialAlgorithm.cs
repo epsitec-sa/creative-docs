@@ -5,7 +5,7 @@
 
 namespace Epsitec.Serial
 {
-	public static class CresusSerialAlgorithm
+    public static class CresusSerialAlgorithm
 	{
 		#region	Algorithmes et détails internes...
 		private static int f1(long n)

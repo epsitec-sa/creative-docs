@@ -1,7 +1,6 @@
+using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Properties
 {

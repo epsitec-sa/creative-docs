@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using Epsitec.Common.Support;
 using NUnit.Framework;
 

@@ -1,5 +1,3 @@
-using Epsitec.Common.Types;
-
 namespace Epsitec.Common.Widgets
 {
     /// <summary>

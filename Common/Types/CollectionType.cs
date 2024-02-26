@@ -1,8 +1,6 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
-
 [assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Types.CollectionType))]
 
 namespace Epsitec.Common.Types

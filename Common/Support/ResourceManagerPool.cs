@@ -1,9 +1,8 @@
 //	Copyright © 2006-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Support.ResourceManagerPool))]
 

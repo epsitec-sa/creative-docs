@@ -1,10 +1,10 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
+using System.Collections.Generic;
 
 [assembly: Controller(typeof(Epsitec.Common.UI.Controllers.EnumController))]
 

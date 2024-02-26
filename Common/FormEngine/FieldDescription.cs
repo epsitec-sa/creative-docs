@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Serialization;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace Epsitec.Common.FormEngine
 {

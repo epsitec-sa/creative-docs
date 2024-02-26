@@ -1,6 +1,6 @@
-using System.Text.RegularExpressions;
 using Epsitec.Common.Support;
 using NUnit.Framework;
+using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Tests.Support
 {

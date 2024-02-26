@@ -1,10 +1,7 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
-using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
-using Epsitec.Common.UI;
 
 namespace Epsitec.Common.UI.Collections
 {

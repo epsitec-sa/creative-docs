@@ -1,8 +1,6 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-
 namespace Epsitec.Common.Widgets.Tools
 {
     using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;

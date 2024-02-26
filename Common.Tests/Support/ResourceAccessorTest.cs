@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -6,6 +5,7 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Adorners;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.Support
 {

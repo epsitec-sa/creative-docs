@@ -1,8 +1,8 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
+using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Widgets.Shortcut))]
 

@@ -1,6 +1,3 @@
-using Epsitec.Common.Widgets;
-using NUnit.Framework;
-
 namespace Epsitec.Common.Tests.Support
 {
 #if false

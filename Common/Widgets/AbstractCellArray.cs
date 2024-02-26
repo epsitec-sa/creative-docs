@@ -1,14 +1,11 @@
 //	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-    using PropertyChangedEventHandler = EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
-
     /// <summary>
     /// The <c>AbstractCellArray</c> class implements the basic functionality for cell
     /// tables, lists and arrays. See for instance <see cref="CellTable"/>, <see cref="CellBar"/>

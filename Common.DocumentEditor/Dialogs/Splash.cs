@@ -1,13 +1,9 @@
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.OpenType;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
-    using GlobalSettings = Common.Document.Settings.GlobalSettings;
-
     /// <summary>
     /// Dialogue des informations sur le document.
     /// </summary>

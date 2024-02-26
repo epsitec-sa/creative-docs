@@ -1,4 +1,3 @@
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Widgets

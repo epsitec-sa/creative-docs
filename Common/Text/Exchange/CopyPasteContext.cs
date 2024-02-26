@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 // La classe CopyPasetContext définit un context nécessaire au copier/coller
 // c-à-d:

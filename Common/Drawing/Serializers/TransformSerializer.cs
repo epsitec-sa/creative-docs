@@ -1,9 +1,6 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Daniel ROUX
 
-using System;
-using System.Collections.Generic;
-
 namespace Epsitec.Common.Drawing.Serializers
 {
     public class TransformSerializer : AbstractSerializer

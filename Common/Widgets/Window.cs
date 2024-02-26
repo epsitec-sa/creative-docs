@@ -1,16 +1,14 @@
 //	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUDinternal void MakeTitlelessResizableWindow()
 
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
     using Epsitec.Common.Types.Collections;
-    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
     using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 
     /// <summary>

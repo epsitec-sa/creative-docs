@@ -4,9 +4,7 @@
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 using Epsitec.Common.UI;
-using Epsitec.Common.UI.ItemViewFactories;
 using Epsitec.Common.Widgets;
 
 [assembly: ItemViewFactory(typeof(FileListItemViewFactory), ItemType = typeof(FileListItem))]

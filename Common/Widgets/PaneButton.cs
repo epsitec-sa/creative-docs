@@ -1,5 +1,3 @@
-using Epsitec.Common.Support;
-
 namespace Epsitec.Common.Widgets
 {
     public enum PaneButtonStyle

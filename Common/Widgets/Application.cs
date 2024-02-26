@@ -1,12 +1,12 @@
 //	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Epsitec.Common.Widgets
 {

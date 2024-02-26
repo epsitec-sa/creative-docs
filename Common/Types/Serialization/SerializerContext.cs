@@ -2,7 +2,6 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
-using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {

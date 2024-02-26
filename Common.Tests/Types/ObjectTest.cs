@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Formatters.Soap;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Exceptions;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.Types
 {

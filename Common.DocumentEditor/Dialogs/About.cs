@@ -1,13 +1,11 @@
-using System.Reflection;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using System.Reflection;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
     using Document = Common.Document.Document;
-    using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
     /// <summary>
     /// Dialogue "A propos de".

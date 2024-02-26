@@ -1,15 +1,11 @@
 //	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
+using Epsitec.Common.Types;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support.EntityEngine
 {

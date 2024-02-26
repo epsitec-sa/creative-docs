@@ -1,10 +1,10 @@
-using System;
-using System.Globalization;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using NUnit.Framework;
+using System;
+using System.Globalization;
 
 namespace Epsitec.Common.Tests.Types
 {

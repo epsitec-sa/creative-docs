@@ -2,8 +2,6 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document
 {
-    using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
-
     public enum Type
     {
         Undefined, // indéfini

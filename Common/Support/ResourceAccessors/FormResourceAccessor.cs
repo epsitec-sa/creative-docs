@@ -1,13 +1,10 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
-    using CultureInfo = System.Globalization.CultureInfo;
-
     public class FormResourceAccessor : AbstractFileResourceAccessor
     {
         public FormResourceAccessor() { }

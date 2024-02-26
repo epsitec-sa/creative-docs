@@ -5,8 +5,6 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets.Tools
 {
-    using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
-
     /// <summary>
     /// The <c>Magnifier</c> class manages the rounded magnifier window
     /// which is used by the color picker.

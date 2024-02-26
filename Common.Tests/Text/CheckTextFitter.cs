@@ -3,8 +3,8 @@
 
 using Epsitec.Common.Text;
 using Epsitec.Common.Text.Cursors;
-using Epsitec.Common.Text.Properties;
 using Epsitec.Common.Text.Layout;
+using Epsitec.Common.Text.Properties;
 using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Text

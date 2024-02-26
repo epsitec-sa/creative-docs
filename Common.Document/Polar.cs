@@ -1,5 +1,3 @@
-using Epsitec.Common.Drawing;
-
 namespace Epsitec.Common.Document
 {
     using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;

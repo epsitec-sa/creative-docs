@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace Epsitec.Common.IO

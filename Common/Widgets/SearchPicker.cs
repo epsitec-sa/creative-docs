@@ -6,7 +6,6 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Widgets.Behaviors;
 
 [assembly: DependencyClass(typeof(SearchPicker))]
 

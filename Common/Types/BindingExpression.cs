@@ -1,12 +1,8 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
-
 namespace Epsitec.Common.Types
 {
-    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
-
     /// <summary>
     /// The <c>BindingExpression</c> class is used to maintain the real binding
     /// between a source and a target, whereas the <see cref="T:Binding"/> class

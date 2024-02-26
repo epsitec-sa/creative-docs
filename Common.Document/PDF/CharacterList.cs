@@ -1,5 +1,3 @@
-using Epsitec.Common.OpenType;
-using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.PDF

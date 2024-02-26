@@ -1,11 +1,10 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support
 {

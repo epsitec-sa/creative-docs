@@ -1,14 +1,14 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System;
-using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Serialization;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.UI
 {

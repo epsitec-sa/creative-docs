@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Specialized;
-using System.IO;
 using System.Text;
 
 namespace Epsitec.Common.Text.Exchange.HtmlParser

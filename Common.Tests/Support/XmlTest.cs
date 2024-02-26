@@ -1,9 +1,9 @@
 //	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Xml.Linq;
 using Epsitec.Common.Support;
 using NUnit.Framework;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Tests.Support
 {

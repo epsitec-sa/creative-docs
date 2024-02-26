@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Printing;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Document
 {

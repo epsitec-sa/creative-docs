@@ -1,12 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
-using Epsitec.Common.BigList;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.BigList.Widgets

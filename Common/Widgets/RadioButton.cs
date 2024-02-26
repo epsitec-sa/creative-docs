@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-    using ContentAlignment = Drawing.ContentAlignment;
-
     /// <summary>
     /// La classe RadioButton réalise un bouton radio.
     /// </summary>

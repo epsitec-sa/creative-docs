@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Formatters.Soap;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
@@ -8,6 +5,7 @@ using Epsitec.Common.Types.Serialization;
 using Epsitec.Common.Types.Serialization.Generic;
 using Epsitec.Common.Types.Serialization.IO;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass(
     typeof(Epsitec.Common.Tests.Types.SerializationTest.ContainerX)

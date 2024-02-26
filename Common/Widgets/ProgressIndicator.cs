@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {

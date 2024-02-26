@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Text;
 
 namespace Epsitec.Common.Text.Exchange.HtmlParser

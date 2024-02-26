@@ -4,9 +4,8 @@
 #define USE_SPAN
 #define SIMPLECOPYPASTE
 
-using System.Collections.Generic;
-using System.Text;
 using Epsitec.Common.Text.Exchange.HtmlParser;
+using System.Collections.Generic;
 
 // Il faudrait trouver comment accéder à Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0)
 //

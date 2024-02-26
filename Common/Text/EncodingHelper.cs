@@ -1,5 +1,5 @@
-using System.Text;
 using Epsitec.Common.Support;
+using System.Text;
 
 namespace Epsitec.Common.Text
 {

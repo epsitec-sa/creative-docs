@@ -2,9 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.CodeCompilation;
-using Epsitec.Common.Support.CodeGeneration;
 
 namespace Epsitec.Common.Support.CodeCompilation
 {

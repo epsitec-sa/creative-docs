@@ -1,15 +1,13 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.BigList;
 using Epsitec.Common.BigList.Processors;
-using Epsitec.Common.BigList.Renderers;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
+using System.Collections.Generic;
+using System.Linq;
 
 [assembly: DependencyClass(typeof(ItemListColumnHeaderView))]
 

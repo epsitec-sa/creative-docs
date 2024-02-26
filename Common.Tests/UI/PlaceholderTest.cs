@@ -1,7 +1,6 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Tests.UI;
@@ -11,6 +10,7 @@ using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 [assembly: Controller(typeof(PlaceholderTest.Test1Controller))]
 

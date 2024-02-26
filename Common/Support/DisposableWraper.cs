@@ -1,9 +1,9 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.Support
 {

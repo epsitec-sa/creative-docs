@@ -1,5 +1,4 @@
 using Epsitec.Common.Drawing;
-using Epsitec.Common.OpenType;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 

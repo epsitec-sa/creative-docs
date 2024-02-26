@@ -1,8 +1,8 @@
 //	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Linq;
 using Epsitec.Common.Support.Extensions;
+using System.Linq;
 
 namespace Epsitec.Common.Dialogs
 {

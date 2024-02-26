@@ -1,9 +1,6 @@
 //	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Common.Types
 {
     /// <summary>

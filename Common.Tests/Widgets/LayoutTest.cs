@@ -7,7 +7,6 @@ namespace Epsitec.Common.Tests.Widgets
     using Epsitec.Common.Widgets;
     using Epsitec.Common.Widgets.Helpers;
     using Epsitec.Common.Widgets.Layouts;
-    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 
     [TestFixture]
     public class LayoutTest

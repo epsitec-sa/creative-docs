@@ -1,8 +1,6 @@
 //	Copyright © 2007-2010, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-
 namespace Epsitec.Common.Drawing.Platform
 {
     /// <summary>

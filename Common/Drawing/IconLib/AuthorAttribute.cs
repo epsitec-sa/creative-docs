@@ -16,10 +16,6 @@
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
 //  PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER
 //  REMAINS UNCHANGED.
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace System.Drawing.IconLib
 {
     [AttributeUsage(

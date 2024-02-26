@@ -1,11 +1,10 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using System.Collections.Generic;
-using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Serializers;
-using Epsitec.Common.Support;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Printing
 {

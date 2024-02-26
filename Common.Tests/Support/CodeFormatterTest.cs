@@ -1,11 +1,9 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
-using System.Collections.Generic;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.CodeGeneration;
 using NUnit.Framework;
+using System;
 
 namespace Epsitec.Common.Tests.Support
 {

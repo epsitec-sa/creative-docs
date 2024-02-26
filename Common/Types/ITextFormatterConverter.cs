@@ -2,8 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Types
 {

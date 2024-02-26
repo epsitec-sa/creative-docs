@@ -2,7 +2,6 @@
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Common.Support
 {

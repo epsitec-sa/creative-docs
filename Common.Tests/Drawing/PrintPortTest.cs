@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
-using Epsitec.Common.Widgets;
 using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Drawing

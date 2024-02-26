@@ -2,9 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Widgets
 {

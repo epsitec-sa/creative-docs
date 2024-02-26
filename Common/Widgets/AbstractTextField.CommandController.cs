@@ -1,10 +1,7 @@
 //	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Common.Widgets

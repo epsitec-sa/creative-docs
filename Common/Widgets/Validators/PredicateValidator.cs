@@ -2,7 +2,6 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Types;
-using Epsitec.Common.Widgets.Validators;
 
 namespace Epsitec.Common.Widgets.Validators
 {

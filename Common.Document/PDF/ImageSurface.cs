@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.PDF
 {

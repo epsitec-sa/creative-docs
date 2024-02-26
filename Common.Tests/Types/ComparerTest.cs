@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Epsitec.Common.Types;
 using NUnit.Framework;
 

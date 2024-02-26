@@ -1,11 +1,11 @@
 //	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 [assembly: EntityClass("[70052]", typeof(Epsitec.Common.Tests.Support.EntityTest.MyEnumTypeEntity))]
 [assembly: EntityClass(

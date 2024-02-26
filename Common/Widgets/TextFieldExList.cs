@@ -1,5 +1,3 @@
-using System;
-
 namespace Epsitec.Common.Widgets
 {
     public enum TextFieldExListMode

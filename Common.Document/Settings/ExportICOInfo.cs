@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
 {

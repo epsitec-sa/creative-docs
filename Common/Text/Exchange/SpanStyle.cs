@@ -1,10 +1,6 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Michael WALZ
 
-
-using System.Collections.Generic;
-using System.Text;
-
 namespace Epsitec.Common.Text.Exchange
 {
     /// <summary>

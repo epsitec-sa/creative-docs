@@ -1,12 +1,8 @@
-using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
-    using GlobalSettings = Common.Document.Settings.GlobalSettings;
-
     /// <summary>
     /// Dialogue d'exportation d'un fichier PDF.
     /// </summary>

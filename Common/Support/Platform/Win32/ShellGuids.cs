@@ -1,8 +1,6 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Runtime.InteropServices;
-
 namespace Epsitec.Common.Support.Platform.Win32
 {
     internal static class ShellGuids

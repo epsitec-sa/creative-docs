@@ -1,8 +1,8 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types.Serialization.Generic;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {

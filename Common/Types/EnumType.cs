@@ -3,17 +3,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support.Extensions;
 
 [assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Types.EnumType))]
 
 namespace Epsitec.Common.Types
 {
-    using System.Reflection;
     using Epsitec.Common.Support;
+    using System.Reflection;
     using BindingFlags = System.Reflection.BindingFlags;
     using FieldInfo = System.Reflection.FieldInfo;
-    using IComparer = System.Collections.IComparer;
 
     /// <summary>
     /// La classe EnumType décrit des valeurs de type System.Enum.

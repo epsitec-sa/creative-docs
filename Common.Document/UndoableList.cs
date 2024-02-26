@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Epsitec.Common.Support;
-using Epsitec.Common.Widgets;
+using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document
 {

@@ -1,10 +1,9 @@
 //	Copyright © 2006-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {

@@ -1,4 +1,3 @@
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using NUnit.Framework;
 
@@ -7,7 +6,6 @@ namespace Epsitec.Common.Tests.Widgets
     using Epsitec.Common.Types;
     using Epsitec.Common.Widgets;
     using Epsitec.Common.Widgets.Collections;
-    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 
     [TestFixture]
     public class VisualTest

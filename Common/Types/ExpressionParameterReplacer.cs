@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Epsitec.Common.Types

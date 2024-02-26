@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.ResourceAccessors;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.FormEngine
 {

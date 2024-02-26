@@ -5,8 +5,6 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-    using PropertyChangedEventHandler = EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
-
     /// <summary>
     /// La classe IconButtonsCombo implémente une liste de IconButton avec bouton "v"
     /// qui fait apparaître un menu dit "combo" pour permettre de choisir une

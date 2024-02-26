@@ -2,8 +2,6 @@
 //	Responsable: Michael WALZ
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {

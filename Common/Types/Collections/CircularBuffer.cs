@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Epsitec.Common.Types.Collections
 {
     /// <summary>

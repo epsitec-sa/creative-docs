@@ -2,9 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
-using Epsitec.Common.UI;
 
 namespace Epsitec.Common.UI
 {

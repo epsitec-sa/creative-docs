@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Widgets.Adorners
 {

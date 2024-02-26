@@ -1,9 +1,6 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Michael WALZ, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-
 namespace Epsitec.Common.Text.Exchange
 {
     public static class NativeHtmlClipboardReader

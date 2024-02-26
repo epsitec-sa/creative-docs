@@ -5,8 +5,6 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets.Tools
 {
-    using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
-
     /// <summary>
     /// The <c>MagnifierDragSource</c> class represents the widget which starts
     /// a magnified color picker.

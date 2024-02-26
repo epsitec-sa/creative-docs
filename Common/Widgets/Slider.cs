@@ -1,4 +1,3 @@
-using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets

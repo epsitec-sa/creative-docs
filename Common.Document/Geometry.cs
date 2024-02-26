@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Epsitec.Common.Drawing;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {

@@ -4,8 +4,8 @@
 using Epsitec.Common.Text;
 using Epsitec.Common.Text.Cursors;
 using Epsitec.Common.Text.Internal;
-using Epsitec.Common.Text.Properties;
 using Epsitec.Common.Text.ParagraphManagers;
+using Epsitec.Common.Text.Properties;
 using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Text

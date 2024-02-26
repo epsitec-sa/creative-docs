@@ -1,13 +1,12 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 [assembly: DependencyClass(typeof(Command), Converter = typeof(Command.SerializationConverter))]
 

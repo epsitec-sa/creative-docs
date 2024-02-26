@@ -1,7 +1,6 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD
 
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32

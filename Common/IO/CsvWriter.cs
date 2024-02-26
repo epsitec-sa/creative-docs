@@ -1,8 +1,7 @@
-using System;
+using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.IO
 {

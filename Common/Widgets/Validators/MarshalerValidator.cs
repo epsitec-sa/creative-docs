@@ -3,8 +3,6 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Widgets.Validators;
 
 namespace Epsitec.Common.Widgets.Validators
 {

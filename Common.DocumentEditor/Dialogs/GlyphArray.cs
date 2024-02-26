@@ -1,6 +1,5 @@
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.OpenType;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
 

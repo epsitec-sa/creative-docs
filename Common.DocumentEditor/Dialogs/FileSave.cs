@@ -1,11 +1,5 @@
-using System.Collections.Generic;
-using System.IO;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Document;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
-using Epsitec.Common.Support;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {

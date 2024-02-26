@@ -1,13 +1,11 @@
 //	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
-    using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
-
     /// <summary>
     /// La classe MenuBehavior implémente la logique permettant de gérer un menu
     /// (affichage d'une ou plusieurs fenêtres flottantes, fermeture, etc.)

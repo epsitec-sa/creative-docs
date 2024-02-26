@@ -1,10 +1,10 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.ItemViewFactories;
+using System.Collections.Generic;
 
 [assembly: ItemViewFactory(typeof(StructuredItemViewFactory), ItemType = typeof(StructuredData))]
 

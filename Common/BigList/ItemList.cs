@@ -2,9 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.Linq;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.BigList
 {

@@ -1,9 +1,8 @@
 //	Copyright © 2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Linq;
-using System.Threading.Tasks;
 using Epsitec.Common.Support.Extensions;
+using System.Threading.Tasks;
 
 namespace Epsitec.Common.Support
 {

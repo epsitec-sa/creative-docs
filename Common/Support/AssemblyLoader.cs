@@ -1,11 +1,11 @@
 //	Copyright © 2004-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support
 {

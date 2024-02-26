@@ -15,9 +15,6 @@
 ///		Dans la fonction ProcessIt () il faut voir si les divers Clear...() sont appelées correctement
 ///
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Epsitec.Common.Text.Exchange.HtmlParser;
 
 namespace Epsitec.Common.Text.Exchange

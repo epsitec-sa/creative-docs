@@ -1,15 +1,12 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
-    using CultureInfo = System.Globalization.CultureInfo;
-
     /// <summary>
     /// The <c>CaptionResourceAccessor</c> is used to access caption resources,
     /// stored in the <c>Captions</c> resource bundle and which have a field

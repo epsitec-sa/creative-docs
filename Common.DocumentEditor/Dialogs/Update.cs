@@ -5,8 +5,6 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
-    using GlobalSettings = Common.Document.Settings.GlobalSettings;
-
     /// <summary>
     /// Dialogue "mise à jour".
     /// </summary>

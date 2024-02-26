@@ -2,9 +2,6 @@
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
-using Epsitec.Common.Widgets.Helpers;
 
 namespace Epsitec.Common.Widgets
 {

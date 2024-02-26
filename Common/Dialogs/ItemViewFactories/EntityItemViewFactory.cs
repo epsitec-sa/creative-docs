@@ -1,11 +1,9 @@
 //	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Dialogs.ItemViewFactories;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.UI;
-using Epsitec.Common.UI.ItemViewFactories;
 using Epsitec.Common.Widgets;
 
 [assembly: ItemViewFactory(typeof(EntityItemViewFactory), ItemType = typeof(AbstractEntity))]

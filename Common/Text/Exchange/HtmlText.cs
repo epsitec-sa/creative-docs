@@ -1,7 +1,5 @@
 #define USE_SPAN
 
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
