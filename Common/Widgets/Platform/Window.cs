@@ -64,11 +64,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.isWndProcHandlingRestricted = new SafeCounter();
         }
 
-        internal Window(
-            Epsitec.Common.Widgets.Window window,
-            System.Action<Window> platformWindowSetter
-        )
-            : this()
+        internal Window(Widgets.Window window, System.Action<Window> platformWindowSetter)
         {
             this.widgetWindow = window;
             platformWindowSetter(this);
