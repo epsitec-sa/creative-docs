@@ -18,15 +18,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <Reference Include="AntiGrain.NET">
-      <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
-      <Link>AntiGrain.Win32.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\External\Clipboard.Win32.dll">
       <Link>Clipboard.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -47,6 +40,17 @@
     <EmbeddedResource Include="Widgets\Images\*.icon" />
     <EmbeddedResource Include="Drawing\Resources\LineBreak.compressed" />
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
+  </ItemGroup>
+
+  <!-- Build AntiGrain -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\grafix\AntiGrain.NET\AntiGrain.NET.vcxproj" />
+  </ItemGroup>
+  <!-- Ensure AntiGrain outputs are copied to current and super projects -->
+  <ItemGroup>
+    <Content Include="$(SolutionDir)bin\$(Configuration)\Win32\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <Target Name="CresusCore_Common_AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes">

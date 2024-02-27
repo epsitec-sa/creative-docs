@@ -17,10 +17,6 @@
       <HintPath>..\External\Adobe.AcrobatDistiller.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="AntiGrain.NET">
-      <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Notes.txt" />

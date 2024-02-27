@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusGraph", "App.CresusGraph.csproj", "{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.CresusGraph", "App.CresusGraph.csproj", "{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Document", "..\Common.Document\Common.Document.csproj", "{83FAF288-1DAC-45C7-9E6E-E201D133EDBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph.Connector", "..\Common.Graph.Connector\Common.Graph.Connector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Graph.Connector", "..\Common.Graph.Connector\Common.Graph.Connector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph", "..\Common.Graph\Common.Graph.csproj", "{76C4BB36-308A-483E-9D6C-3401C96D2AD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Graph", "..\Common.Graph\Common.Graph.csproj", "{76C4BB36-308A-483E-9D6C-3401C96D2AD6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Identity", "..\Common.Identity\Common.Identity.csproj", "{E505FD13-35C3-4DE8-8D28-8EFD07227353}"
 EndProject
@@ -26,6 +26,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.CresusToolkit", "..\..\shellpe\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{488DF643-7D3E-4B61-8E7A-AD2905E7D4FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.ZipMe", "..\..\zipme\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntiGrain.Win32", "..\..\grafix\AntiGrain.Win32\AntiGrain.Win32.vcxproj", "{01A5A54B-EEF0-492B-90E0-412DFF1B2657}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntiGrain.NET", "..\..\grafix\AntiGrain.NET\AntiGrain.NET.vcxproj", "{5B06F6A2-61B0-4405-9B4A-DB806E199B56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafix", "grafix", "{24002CA8-269E-4192-AC47-F62F3D702256}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,9 +87,21 @@ Global
 		{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}.Debug|x86.Build.0 = Debug|x86
 		{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}.Release|x86.ActiveCfg = Release|x86
 		{9C35E13F-BE7A-4985-8722-B6F59EF6DC74}.Release|x86.Build.0 = Release|x86
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Debug|x86.ActiveCfg = Debug|Win32
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Debug|x86.Build.0 = Debug|Win32
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Release|x86.ActiveCfg = Release|Win32
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Release|x86.Build.0 = Release|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Debug|x86.ActiveCfg = Debug|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Debug|x86.Build.0 = Debug|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Release|x86.ActiveCfg = Release|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657} = {24002CA8-269E-4192-AC47-F62F3D702256}
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56} = {24002CA8-269E-4192-AC47-F62F3D702256}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE4DF414-273E-44C7-8C96-1479F759906C}

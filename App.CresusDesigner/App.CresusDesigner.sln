@@ -66,6 +66,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.TwixClip", "..\..\t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epsitec.ZipMe", "..\..\zipme\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{95566E75-A48B-4E73-9D9F-E34980F86BD5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntiGrain.Win32", "..\..\grafix\AntiGrain.Win32\AntiGrain.Win32.vcxproj", "{01A5A54B-EEF0-492B-90E0-412DFF1B2657}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntiGrain.NET", "..\..\grafix\AntiGrain.NET\AntiGrain.NET.vcxproj", "{5B06F6A2-61B0-4405-9B4A-DB806E199B56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -197,6 +201,14 @@ Global
 		{95566E75-A48B-4E73-9D9F-E34980F86BD5}.Debug|x86.Build.0 = Debug|x86
 		{95566E75-A48B-4E73-9D9F-E34980F86BD5}.Release|x86.ActiveCfg = Release|x86
 		{95566E75-A48B-4E73-9D9F-E34980F86BD5}.Release|x86.Build.0 = Release|x86
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Debug|x86.ActiveCfg = Debug|Win32
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Debug|x86.Build.0 = Debug|Win32
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Release|x86.ActiveCfg = Release|Win32
+		{01A5A54B-EEF0-492B-90E0-412DFF1B2657}.Release|x86.Build.0 = Release|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Debug|x86.ActiveCfg = Debug|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Debug|x86.Build.0 = Debug|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Release|x86.ActiveCfg = Release|Win32
+		{5B06F6A2-61B0-4405-9B4A-DB806E199B56}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
