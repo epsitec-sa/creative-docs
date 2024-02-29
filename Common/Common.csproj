@@ -4,26 +4,23 @@
     <RootNamespace>Epsitec.Common</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="_deprecated\Drawing\FontHelper.cs" />
-    <Compile Remove="_deprecated\Support\AppDomainStarter.cs" />
-    <Compile Remove="_deprecated\Support\Data\IDisablableChangedSource.cs" />
-    <Compile Remove="_deprecated\Text\Styles\ApplyMode.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="_deprecated\Drawing\FontHelper.cs" />
-    <None Include="_deprecated\Support\AppDomainStarter.cs" />
-    <None Include="_deprecated\Support\Data\IDisablableChangedSource.cs" />
-    <None Include="_deprecated\Text\Styles\ApplyMode.cs" />
-  </ItemGroup>
+  
+  <!-- Binaries -->
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\grafix\AntiGrain.CSharp\AntiGrain.CSharp.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\External\Clipboard.Win32.dll">
       <Link>Clipboard.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <!-- Resources -->
+  <ItemGroup>
     <Content Include="Resources\**\*" Exclude="Resources\**\*.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -42,17 +39,21 @@
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
   </ItemGroup>
 
-  <!-- Build AntiGrain -->
+  <!-- Deprecated -->
   <ItemGroup>
-    <ProjectReference Include="..\..\grafix\AntiGrain.NET\AntiGrain.NET.vcxproj" />
+    <Compile Remove="_deprecated\Drawing\FontHelper.cs" />
+    <Compile Remove="_deprecated\Support\AppDomainStarter.cs" />
+    <Compile Remove="_deprecated\Support\Data\IDisablableChangedSource.cs" />
+    <Compile Remove="_deprecated\Text\Styles\ApplyMode.cs" />
   </ItemGroup>
-  <!-- Ensure AntiGrain outputs are copied to current and super projects -->
   <ItemGroup>
-    <Content Include="$(SolutionDir)bin\$(Configuration)\Win32\**\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="_deprecated\Drawing\FontHelper.cs" />
+    <None Include="_deprecated\Support\AppDomainStarter.cs" />
+    <None Include="_deprecated\Support\Data\IDisablableChangedSource.cs" />
+    <None Include="_deprecated\Text\Styles\ApplyMode.cs" />
   </ItemGroup>
 
+  <!-- InternalsVisibleTo -->
   <Target Name="CresusCore_Common_AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes">
     <ItemGroup>
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
