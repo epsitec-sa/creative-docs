@@ -12,6 +12,10 @@ namespace Epsitec.Common.Widgets
     /// mouse click.
     /// </summary>
     public sealed class Message
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - handle mouse buttons in a cross-platform way
+        // ******************************************************************
     {
         public Message()
         {
@@ -19,9 +23,9 @@ namespace Epsitec.Common.Widgets
             this.messageId = System.Threading.Interlocked.Increment(ref Message.nextMessageId);
             this.userMessageId = Message.currentUserMessageId;
 
-            Message.state.buttons = (MouseButtons)(int)System.Windows.Forms.Control.MouseButtons;
+/*            Message.state.buttons = (MouseButtons)(int)System.Windows.Forms.Control.MouseButtons;
             Message.state.modifiers = (ModifierKeys)(int)System.Windows.Forms.Control.ModifierKeys;
-
+*/
             this.modifiers = Message.state.modifiers;
 
             this.cursor = Message.state.windowCursor;
@@ -470,7 +474,7 @@ namespace Epsitec.Common.Widgets
             Message.state.window = null;
         }
 
-        internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr wParam)
+/*        internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr wParam)
         {
             System.Windows.Forms.MouseButtons buttons = System.Windows.Forms.MouseButtons.None;
             int wp = (int)wParam;
@@ -498,7 +502,7 @@ namespace Epsitec.Common.Widgets
 
             return buttons;
         }
-
+*/
         internal static int WheelDeltaFromWParam(System.IntPtr wParam)
         {
             int wp = (int)wParam;
@@ -511,7 +515,7 @@ namespace Epsitec.Common.Widgets
             y = (short)((((int)lParam) >> 16) & 0x0000ffff);
         }
 
-        internal static bool IsMouseMsg(System.Windows.Forms.Message msg)
+/*        internal static bool IsMouseMsg(System.Windows.Forms.Message msg)
         {
             switch (msg.Msg)
             {
@@ -545,8 +549,8 @@ namespace Epsitec.Common.Widgets
 
             return false;
         }
-
-        internal static System.Windows.Forms.MouseButtons ButtonFromMsg(
+*/
+/*        internal static System.Windows.Forms.MouseButtons ButtonFromMsg(
             System.Windows.Forms.Message msg
         )
         {
@@ -587,7 +591,7 @@ namespace Epsitec.Common.Widgets
 
             return System.Windows.Forms.MouseButtons.None;
         }
-
+*/
         internal static Message PostProcessMessage(Message message)
         {
             if (message == null)
@@ -595,7 +599,7 @@ namespace Epsitec.Common.Widgets
                 return null;
             }
 
-            //	Simulate Alt-Left and Alt-Right when the user clicks the special
+/*            //	Simulate Alt-Left and Alt-Right when the user clicks the special
             //	<-- and --> buttons on the mouse; let's hope that this is indeed
             //	what the mouse buttons are configured to do !
 
@@ -625,11 +629,11 @@ namespace Epsitec.Common.Widgets
                         );
                 }
             }
-
+*/
             return message;
         }
 
-        internal static Message FromWndProcMessage(
+/*        internal static Message FromWndProcMessage(
             Platform.Window form,
             ref System.Windows.Forms.Message msg
         )
@@ -745,8 +749,8 @@ namespace Epsitec.Common.Widgets
 
             return message;
         }
-
-        internal static Message FromMouseEvent(
+*/
+/*        internal static Message FromMouseEvent(
             MessageType type,
             Platform.Window form,
             System.Windows.Forms.MouseEventArgs e
@@ -847,8 +851,8 @@ namespace Epsitec.Common.Widgets
 
             return message;
         }
-
-        internal static Message FromKeyEvent(MessageType type, System.Windows.Forms.KeyEventArgs e)
+*/
+/*        internal static Message FromKeyEvent(MessageType type, System.Windows.Forms.KeyEventArgs e)
         {
             Message message = new Message(type);
 
@@ -880,10 +884,12 @@ namespace Epsitec.Common.Widgets
 
             return message;
         }
-
+*/
         internal static Message FromKeyEvent(int msg, System.IntPtr wParam, System.IntPtr lParam)
         {
-            //	Synthétise un événement clavier à partir de la description de
+            MessageType messageType = MessageType.None;
+            Message message = new Message(messageType);
+/*            //	Synthétise un événement clavier à partir de la description de
             //	très bas niveau...
 
             MessageType messageType = MessageType.None;
@@ -959,11 +965,11 @@ namespace Epsitec.Common.Widgets
                 Message.lastCode = rawKeyCode;
                 message.keyCode = Message.lastCode;
             }
-
+*/
             return message;
         }
 
-        internal static Message FromKeyEvent(
+/*        internal static Message FromKeyEvent(
             MessageType type,
             System.Windows.Forms.KeyPressEventArgs e
         )
@@ -979,7 +985,7 @@ namespace Epsitec.Common.Widgets
 
             return message;
         }
-
+*/
         internal static Message CreateDummyMouseMoveEvent()
         {
             Message message = new Message(MessageType.MouseMove);

@@ -19,4 +19,65 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\*.icon" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Application.cs" />
+    <Compile Remove="Dialogs\About.cs" />
+    <Compile Remove="Dialogs\Abstract.cs" />
+    <Compile Remove="Dialogs\AbstractFile.cs" />
+    <Compile Remove="Dialogs\Download.cs" />
+    <Compile Remove="Dialogs\Export.cs" />
+    <Compile Remove="Dialogs\ExportICO.cs" />
+    <Compile Remove="Dialogs\ExportPDF.cs" />
+    <Compile Remove="Dialogs\ExportType.cs" />
+    <Compile Remove="Dialogs\FileExport.cs" />
+    <Compile Remove="Dialogs\FileNew.cs" />
+    <Compile Remove="Dialogs\FileOpen.cs" />
+    <Compile Remove="Dialogs\FileOpenModel.cs" />
+    <Compile Remove="Dialogs\FileSave.cs" />
+    <Compile Remove="Dialogs\FileSaveModel.cs" />
+    <Compile Remove="Dialogs\GlyphArray.cs" />
+    <Compile Remove="Dialogs\Glyphs.cs" />
+    <Compile Remove="Dialogs\Infos.cs" />
+    <Compile Remove="Dialogs\PageStack.cs" />
+    <Compile Remove="Dialogs\Print.cs" />
+    <Compile Remove="Dialogs\Replace.cs" />
+    <Compile Remove="Dialogs\Settings.cs" />
+    <Compile Remove="Dialogs\Splash.cs" />
+    <Compile Remove="Dialogs\Update.cs" />
+    <Compile Remove="DocumentEditor.cs" />
+    <Compile Remove="Resources\Common.DocumentEditor\SourceCode\Res.cs" />
+  </ItemGroup>
+
+<!--
+  <ItemGroup>
+    <None Include="Application.cs" />
+    <None Include="Dialogs\About.cs" />
+    <None Include="Dialogs\Abstract.cs" />
+    <None Include="Dialogs\AbstractFile.cs" />
+    <None Include="Dialogs\Download.cs" />
+    <None Include="Dialogs\Export.cs" />
+    <None Include="Dialogs\ExportICO.cs" />
+    <None Include="Dialogs\ExportPDF.cs" />
+    <None Include="Dialogs\ExportType.cs" />
+    <None Include="Dialogs\FileExport.cs" />
+    <None Include="Dialogs\FileNew.cs" />
+    <None Include="Dialogs\FileOpen.cs" />
+    <None Include="Dialogs\FileOpenModel.cs" />
+    <None Include="Dialogs\FileSave.cs" />
+    <None Include="Dialogs\FileSaveModel.cs" />
+    <None Include="Dialogs\GlyphArray.cs" />
+    <None Include="Dialogs\Glyphs.cs" />
+    <None Include="Dialogs\Infos.cs" />
+    <None Include="Dialogs\PageStack.cs" />
+    <None Include="Dialogs\Print.cs" />
+    <None Include="Dialogs\Replace.cs" />
+    <None Include="Dialogs\Settings.cs" />
+    <None Include="Dialogs\Splash.cs" />
+    <None Include="Dialogs\Update.cs" />
+    <None Include="DocumentEditor.cs" />
+    <None Include="Resources\Common.DocumentEditor\SourceCode\Res.cs" />
+  </ItemGroup>
+  -->
+
 </Project>

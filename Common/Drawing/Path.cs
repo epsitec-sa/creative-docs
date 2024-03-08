@@ -7,6 +7,10 @@ namespace Epsitec.Common.Drawing
 {
     public class Path : System.IDisposable
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - implement CreateSystemPath (removed)
+        // ******************************************************************
         public Path() { }
 
         public Path(Rectangle rect)
@@ -1169,7 +1173,7 @@ namespace Epsitec.Common.Drawing
             return buffer.ToString();
         }
 
-        public System.Drawing.Drawing2D.GraphicsPath CreateSystemPath()
+/*        public System.Drawing.Drawing2D.GraphicsPath CreateSystemPath()
         {
             PathElement[] elements;
             Point[] points;
@@ -1267,7 +1271,7 @@ namespace Epsitec.Common.Drawing
 
             return gp;
         }
-
+*/
         public static Path Combine(Path a, Path b, PathOperation operation)
         {
             Path result = new Path();

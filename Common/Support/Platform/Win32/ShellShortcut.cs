@@ -8,6 +8,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 
     internal sealed class ShellShortcut : System.IDisposable
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - some methods removed
+        // ******************************************************************
         public ShellShortcut(string path)
         {
             IPersistFile pf;
@@ -141,7 +145,7 @@ namespace Epsitec.Common.Support.Platform.Win32
             set { this.link.SetIconLocation(this.IconPath, value); }
         }
 
-        public System.Drawing.Icon Icon
+/*        public System.Drawing.Icon Icon
         {
             get
             {
@@ -176,7 +180,7 @@ namespace Epsitec.Common.Support.Platform.Win32
                 return iconCopy;
             }
         }
-
+*/
         public ProcessWindowStyle WindowStyle
         {
             get
@@ -222,7 +226,7 @@ namespace Epsitec.Common.Support.Platform.Win32
             }
         }
 
-        public System.Windows.Forms.Keys Hotkey
+/*        public System.Windows.Forms.Keys Hotkey
         {
             get
             {
@@ -252,7 +256,7 @@ namespace Epsitec.Common.Support.Platform.Win32
                 this.link.SetHotkey((ushort)(modifiers << 8 + virtualKey));
             }
         }
-
+*/
         public void Save()
         {
             IPersistFile pf = (IPersistFile)this.link;

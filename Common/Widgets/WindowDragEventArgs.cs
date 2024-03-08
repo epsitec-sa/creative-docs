@@ -9,26 +9,31 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public sealed class WindowDragEventArgs : Support.EventArgs
     {
-        internal WindowDragEventArgs(System.Windows.Forms.DragEventArgs args)
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // implement WindowDragEventArg (stub)
+        // ******************************************************************
+/*        internal WindowDragEventArgs(System.Windows.Forms.DragEventArgs args)
         {
             this.original = args;
         }
-
+*/
         /// <summary>
         /// Gets the associated clipboard data.
         /// </summary>
         /// <value>The associated clipboard data.</value>
-        public Support.ClipboardReadData Data
+/*        public Support.ClipboardReadData Data
         {
             get { return Support.Clipboard.CreateReadDataFromIDataObject(this.original.Data); }
         }
-
+*/
         /// <summary>
         /// Gets or sets a value indicating whether the target is accepting the drop.
         /// </summary>
         /// <value><c>true</c> if the target is accepting the drop; otherwise, <c>false</c>.</value>
         public bool AcceptDrop
         {
+            /*
             get { return (this.original.Effect & System.Windows.Forms.DragDropEffects.Copy) != 0; }
             set
             {
@@ -44,8 +49,10 @@ namespace Epsitec.Common.Widgets
                     }
                 }
             }
+            */
+            get { return true; }
         }
 
-        private readonly System.Windows.Forms.DragEventArgs original;
+        //private readonly System.Windows.Forms.DragEventArgs original;
     }
 }

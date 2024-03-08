@@ -155,7 +155,7 @@ namespace Epsitec.Common.Support
         /// </remarks>
         public static readonly string defaultSettingsFile = string.Format(
             @"{0}\Settings\settings.xml",
-            System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.UserAppDataPath)
+            System.IO.Path.GetDirectoryName(Globals.Directories.UserAppData)
         );
     }
 }

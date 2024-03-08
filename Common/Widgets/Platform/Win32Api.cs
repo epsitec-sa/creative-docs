@@ -11,6 +11,10 @@ namespace Epsitec.Common.Widgets.Platform
     /// </summary>
     public class Win32Api
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // implement Win32Api (stub)
+        // ******************************************************************
         [DllImport("User32.dll")]
         internal static extern int SetWindowLong(System.IntPtr handle, int index, int value);
 
@@ -299,7 +303,7 @@ namespace Epsitec.Common.Widgets.Platform
             return ok;
         }
 
-        public class Win32HandleWrapper : System.Windows.Forms.IWin32Window
+/*        public class Win32HandleWrapper : System.Windows.Forms.IWin32Window
         {
             public Win32HandleWrapper(System.IntPtr handle)
             {
@@ -315,7 +319,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             private System.IntPtr handle;
         }
-
+*/
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct Point
         {
@@ -428,7 +432,7 @@ namespace Epsitec.Common.Widgets.Platform
             return Win32Api.SetWindowLong(handle, Win32Const.GWL_EXSTYLE, exStyle);
         }
 
-        internal static bool UpdateLayeredWindow(
+/*        internal static bool UpdateLayeredWindow(
             System.IntPtr handle,
             System.Drawing.Bitmap bitmap,
             System.Drawing.Rectangle bounds,
@@ -469,14 +473,14 @@ namespace Epsitec.Common.Widgets.Platform
 
             res = Win32Api.UpdateLayeredWindow(
                 handle,
-                /**/screenDc,
-                /**/ref dstPoint,
-                /**/ref newSize,
-                /**/memoryDc,
-                /**/ref srcPoint,
-                /**/0,
-                /**/ref blendFunction,
-                /**/flags
+                *//**//*screenDc,
+                *//**//*ref dstPoint,
+                *//**//*ref newSize,
+                *//**//*memoryDc,
+                *//**//*ref srcPoint,
+                *//**//*0,
+                *//**//*ref blendFunction,
+                *//**//*flags
             );
 
             if (res == false)
@@ -493,9 +497,10 @@ namespace Epsitec.Common.Widgets.Platform
 
             return res;
         }
-
+*/
         public static void GrabScreen(Drawing.Image bitmap, int x, int y)
         {
+            /*
             System.Drawing.Bitmap native = bitmap.BitmapImage.NativeBitmap;
             System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(native);
 
@@ -526,6 +531,7 @@ namespace Epsitec.Common.Widgets.Platform
             Win32Api.ReleaseDC(System.IntPtr.Zero, desktopDc);
             gfx.Flush();
             gfx.Dispose();
+            */
         }
 
         public static System.IntPtr FindThreadActiveWindowHandle(int thread)

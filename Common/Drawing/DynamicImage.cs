@@ -22,6 +22,10 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public sealed class DynamicImage : Image
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - implement ValidateCache (stub)
+        // ******************************************************************
         public DynamicImage(Drawing.Size size, DynamicImagePaintCallback callback)
             : this()
         {
@@ -413,7 +417,7 @@ namespace Epsitec.Common.Drawing
 
         private void ValidateCache()
         {
-            //	Construit l'image bitmap...
+/*            //	Construit l'image bitmap...
 
             DynamicImagePaintCallback callback = this.PaintCallback;
 
@@ -502,7 +506,7 @@ namespace Epsitec.Common.Drawing
                     }
                 }
             }
-        }
+*/        }
 
         private void ValidateGeometry() { }
 

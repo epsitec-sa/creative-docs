@@ -22,6 +22,10 @@ namespace Epsitec.Common.Widgets
             Support.Platform.IFileOperationWindow,
             Support.IIsDisposed
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // implement Window (stub)
+        // ******************************************************************
         public Window()
             : this(null) { }
 
@@ -45,6 +49,7 @@ namespace Epsitec.Common.Widgets
 
         private void Initialize(WindowRoot root)
         {
+            /*
             this.components = new Support.Data.ComponentCollection(this);
 
             this.root = root;
@@ -61,16 +66,21 @@ namespace Epsitec.Common.Widgets
             this.timer.AutoRepeat = 0.050;
 
             Window.windows.Add(this);
+            */
         }
 
         public void Run()
         {
+            /*
             System.Windows.Forms.Application.Run(this.window);
+            */
         }
 
         public static void Quit()
         {
+            /*
             System.Windows.Forms.Application.Exit();
+            */
         }
 
         public static void InvalidateAll(Window.InvalidateReason reason)
@@ -159,7 +169,9 @@ namespace Epsitec.Common.Widgets
 
         public static void PumpEvents()
         {
+            /*
             System.Windows.Forms.Application.DoEvents();
+            */
         }
 
         public void Invoke(System.Action action)
@@ -464,6 +476,7 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
+                /*
                 List<Window> list = new List<Window>();
 
                 if ((this.window != null) && (this.window.IsDisposed == false))
@@ -478,6 +491,8 @@ namespace Epsitec.Common.Widgets
                 }
 
                 return list.ToArray();
+                */
+                return null;
             }
         }
 
@@ -582,12 +597,14 @@ namespace Epsitec.Common.Widgets
         {
             set
             {
+                /*
                 if (this.window == null)
                 {
                     return;
                 }
                 this.window.Cursor = (value == null) ? null : value.GetPlatformCursor();
                 this.windowCursor = value;
+                */
             }
         }
 
@@ -660,38 +677,40 @@ namespace Epsitec.Common.Widgets
 
         public bool IsFullScreen
         {
-            get
+/*            get
             {
                 return (this.window != null)
                     && (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized);
             }
+*/            get { return true; }
             set
             {
-                if (this.window != null)
+/*                if (this.window != null)
                 {
                     this.window.WindowState = value
                         ? System.Windows.Forms.FormWindowState.Maximized
                         : System.Windows.Forms.FormWindowState.Normal;
                 }
-            }
+*/            }
         }
 
         public bool IsMinimized
         {
-            get
+/*            get
             {
                 return (this.window != null)
                     && (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized);
             }
+*/            get { return true; }
             set
             {
-                if (this.window != null)
+/*                if (this.window != null)
                 {
                     this.window.WindowState = value
                         ? System.Windows.Forms.FormWindowState.Minimized
                         : System.Windows.Forms.FormWindowState.Normal;
                 }
-            }
+*/            }
         }
 
         public bool IsToolWindow
@@ -788,7 +807,8 @@ namespace Epsitec.Common.Widgets
 
         public static bool IsApplicationActive
         {
-            get { return Platform.Window.IsApplicationActive; }
+            //get { return Platform.Window.IsApplicationActive; }
+            get { return true; }
         }
 
         public static int DebugAliveWindowsCount
@@ -827,16 +847,16 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        internal Platform.Window PlatformWindow
+/*        internal Platform.Window PlatformWindow
         {
             get { return this.window; }
         }
-
-        public System.Windows.Forms.IWin32Window PlatformWindowObject
+*/
+/*        public System.Windows.Forms.IWin32Window PlatformWindowObject
         {
             get { return this.window; }
         }
-
+*/
         public Drawing.Point WindowLocation
         {
             get { return this.window.WindowLocation; }
@@ -944,6 +964,7 @@ namespace Epsitec.Common.Widgets
 
         public static void RunInTestEnvironment(Window window)
         {
+            /*
             //	Cette méthode doit être appelée dans des tests basés sur NUnit, lorsque
             //	l'on désire que la fenêtre reste visible jusqu'à sa fermeture manuelle.
 
@@ -960,10 +981,12 @@ namespace Epsitec.Common.Widgets
             {
                 System.Windows.Forms.Application.Run(window.PlatformWindow);
             }
+            */
         }
 
-        public static void RunInTestEnvironment(System.Windows.Forms.Form form)
+/*        public static void RunInTestEnvironment(System.Windows.Forms.Form form)
         {
+
             if (Window.RunningInAutomatedTestEnvironment)
             {
                 System.Windows.Forms.Application.DoEvents();
@@ -972,8 +995,9 @@ namespace Epsitec.Common.Widgets
             {
                 System.Windows.Forms.Application.Run(form);
             }
-        }
 
+        }
+*/
         public System.IDisposable PushPaintFilter(IPaintFilter filter)
         {
             return new PushPaintFilterHelper(this, filter);
@@ -1139,6 +1163,7 @@ namespace Epsitec.Common.Widgets
 
         public void ToggleMaximize()
         {
+            /*
             if (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized)
             {
                 this.window.WindowState = System.Windows.Forms.FormWindowState.Normal;
@@ -1151,10 +1176,12 @@ namespace Epsitec.Common.Widgets
             //			var placement = this.WindowPlacement;
             //			placement = new WindowPlacement (placement.Bounds, !placement.IsFullScreen, placement.IsMinimized, placement.IsHidden);
             //			this.WindowPlacement = placement;
+            */
         }
 
         public void ToggleMinimize()
         {
+            /*
             var placement = this.WindowPlacement;
 
             if (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized)
@@ -1175,6 +1202,7 @@ namespace Epsitec.Common.Widgets
 
             //			placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, !placement.IsMinimized, placement.IsHidden);
             //			this.WindowPlacement = placement;
+            */
         }
 
         public void SimulateCloseClick()
@@ -1193,6 +1221,7 @@ namespace Epsitec.Common.Widgets
 
         protected override void Dispose(bool disposing)
         {
+            /*
             if (this.isDisposed)
             {
                 System.Diagnostics.Debug.WriteLine(
@@ -1332,6 +1361,7 @@ namespace Epsitec.Common.Widgets
 
                 this.OnWindowDisposed();
             }
+            */
         }
 
         internal void ResetWindow()
@@ -1849,6 +1879,7 @@ namespace Epsitec.Common.Widgets
 
         public void AsyncDispose()
         {
+            /*
             Platform.Window.ProcessCrossThreadOperation(() => this.window.Owner = null);
 
             if (Application.MainUIThread == System.Threading.Thread.CurrentThread)
@@ -1860,6 +1891,7 @@ namespace Epsitec.Common.Widgets
             {
                 this.Dispose();
             }
+            */
         }
 
         public void AsyncNotify()

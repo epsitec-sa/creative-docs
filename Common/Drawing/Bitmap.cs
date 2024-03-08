@@ -7,8 +7,12 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Drawing
 {
+    // ******************************************************************
+    // TODO bl-net8-cross
+    // - implement the Bitmap class (stub for now)
+    // ******************************************************************
     using Epsitec.Common.Widgets.Platform;
-    using BitmapData = System.Drawing.Imaging.BitmapData;
+    //using BitmapData = System.Drawing.Imaging.BitmapData;
 
     /// <summary>
     /// La classe Bitmap encapsule une image de type bitmap.
@@ -17,10 +21,10 @@ namespace Epsitec.Common.Drawing
     {
         static Bitmap()
         {
-            Epsitec.Common.Drawing.Platform.NativeBitmap.SetOutOfMemoryHandler(
+/*            Epsitec.Common.Drawing.Platform.NativeBitmap.SetOutOfMemoryHandler(
                 Bitmap.NotifyMemoryExhauted
             );
-        }
+*/        }
 
         public Bitmap() { }
 
@@ -29,7 +33,7 @@ namespace Epsitec.Common.Drawing
             get { return this; }
         }
 
-        public System.Drawing.Bitmap NativeBitmap
+/*        public System.Drawing.Bitmap NativeBitmap
         {
             get
             {
@@ -59,15 +63,16 @@ namespace Epsitec.Common.Drawing
                 return this.bitmap;
             }
         }
-
+*/
         public bool IsLocked
         {
-            get { return this.bitmapData != null; }
+            //get { return this.bitmapData != null; }
+            get { return false; }
         }
 
         public System.IntPtr Scan0
         {
-            get
+/*            get
             {
                 if (this.bitmapData == null)
                 {
@@ -76,11 +81,12 @@ namespace Epsitec.Common.Drawing
 
                 return this.bitmapData.Scan0;
             }
+*/            get { return System.IntPtr.Zero; }
         }
 
         public int Stride
         {
-            get
+/*            get
             {
                 if (this.bitmapData == null)
                 {
@@ -89,11 +95,12 @@ namespace Epsitec.Common.Drawing
 
                 return this.bitmapData.Stride;
             }
+*/            get { return 0; }
         }
 
         public byte[] GetRawBitmapBytes()
         {
-            this.LockBits();
+/*            this.LockBits();
 
             try
             {
@@ -114,13 +121,14 @@ namespace Epsitec.Common.Drawing
             {
                 this.UnlockBits();
             }
-
+*/
             return null;
         }
 
         public bool IsValid
         {
-            get { return this.bitmap != null; }
+            //get { return this.bitmap != null; }
+            get { return true; }
         }
 
         public int PixelWidth
@@ -149,14 +157,14 @@ namespace Epsitec.Common.Drawing
 
         public override void DefineAdorner(object adorner) { }
 
-        static System.Collections.Generic.Dictionary<
+/*        static System.Collections.Generic.Dictionary<
             System.Drawing.Bitmap,
             System.Drawing.Imaging.BitmapData
         > lockedBitmapDataCache = new System.Collections.Generic.Dictionary<
             System.Drawing.Bitmap,
             System.Drawing.Imaging.BitmapData
         >();
-
+*/
         public static void Merge(
             Bitmap bitmapBlack,
             Bitmap bitmapWhite,
@@ -276,7 +284,7 @@ namespace Epsitec.Common.Drawing
 
         public bool LockBits()
         {
-            lock (this)
+/*            lock (this)
             {
                 if (this.bitmapData == null)
                 {
@@ -337,12 +345,12 @@ namespace Epsitec.Common.Drawing
                 }
             }
 
-            return false;
+*/            return false;
         }
 
         public void UnlockBits()
         {
-            lock (this)
+/*            lock (this)
             {
                 if (this.bitmapLockCount > 0)
                 {
@@ -363,11 +371,11 @@ namespace Epsitec.Common.Drawing
                     }
                 }
             }
-        }
+*/        }
 
         public void FlipY()
         {
-            try
+/*            try
             {
                 this.LockBits();
 
@@ -402,7 +410,7 @@ namespace Epsitec.Common.Drawing
             {
                 this.UnlockBits();
             }
-        }
+*/        }
 
         public byte[] Save(ImageFormat format)
         {
@@ -452,10 +460,11 @@ namespace Epsitec.Common.Drawing
 
         public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression)
         {
-            return this.Save(format, depth, quality, compression, 72.0);
+            //return this.Save(format, depth, quality, compression, 72.0);
+            return null;
         }
 
-        public byte[] Save(
+/*        public byte[] Save(
             ImageFormat format,
             int depth,
             int quality,
@@ -560,7 +569,7 @@ namespace Epsitec.Common.Drawing
 
             return null;
         }
-
+*/
         private byte[] SaveIcon(ImageFormat format)
         {
             byte[] imageBytes = this.GetRawBitmapBytes();
@@ -601,7 +610,7 @@ namespace Epsitec.Common.Drawing
             return null;
         }
 
-        public static Image FromImage(NativeBitmap image)
+/*        public static Image FromImage(NativeBitmap image)
         {
             if ((image == null) || (image.IsValid == false))
             {
@@ -620,13 +629,13 @@ namespace Epsitec.Common.Drawing
                 return null;
             }
         }
-
+*/
         public static Image FromPixmap(Pixmap pixmap)
         {
             Bitmap bitmap = new Bitmap();
 
             bitmap.pixmap = pixmap;
-            bitmap.bitmap = null;
+            //bitmap.bitmap = null;
             bitmap.bitmapDx = pixmap.Size.Width;
             bitmap.bitmapDy = pixmap.Size.Height;
             bitmap.size = new Size(bitmap.bitmapDx, bitmap.bitmapDy);
@@ -638,7 +647,7 @@ namespace Epsitec.Common.Drawing
             bitmap.bitmapLockCount = 1;
             bitmap.isOriginDefined = true;
 
-            int dx,
+/*            int dx,
                 dy,
                 stride;
             System.IntPtr pixels;
@@ -653,28 +662,29 @@ namespace Epsitec.Common.Drawing
             bitmap.bitmapData.PixelFormat = format;
             bitmap.bitmapData.Scan0 = pixels;
             bitmap.bitmapData.Stride = stride;
-
+*/
             return bitmap;
         }
 
         public static Image FromNativeBitmap(int dx, int dy)
         {
-            return Bitmap.FromNativeBitmap(new System.Drawing.Bitmap(dx, dy));
+            //return Bitmap.FromNativeBitmap(new System.Drawing.Bitmap(dx, dy));
+            return null;
         }
 
-        public static Image FromNativeBitmap(System.Drawing.Bitmap native)
+/*        public static Image FromNativeBitmap(System.Drawing.Bitmap native)
         {
             Image bitmap = Bitmap.FromNativeBitmap(native, new Point(0, 0));
             bitmap.isOriginDefined = false;
             return bitmap;
         }
-
-        public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin)
+*/
+/*        public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin)
         {
             return Bitmap.FromNativeBitmap(native, origin, Size.Empty);
         }
-
-        public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin, Size size)
+*/
+/*        public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin, Size size)
         {
             if (size == Size.Empty)
             {
@@ -693,23 +703,25 @@ namespace Epsitec.Common.Drawing
 
             return bitmap;
         }
-
+*/
         public static Image FromNativeBitmap(byte[] data)
         {
-            var bitmap = Bitmap.DecompressBitmap(data);
+/*            var bitmap = Bitmap.DecompressBitmap(data);
             return Bitmap.FromNativeBitmap(bitmap);
+*/            return null;
         }
 
         public static Image FromNativeIcon(string path, int dx, int dy)
         {
-            return Bitmap.FromNativeIcon(IconLoader.LoadIcon(path, dx, dy));
+            //return Bitmap.FromNativeIcon(IconLoader.LoadIcon(path, dx, dy));
+            return null;
         }
 
-        public static System.Drawing.Icon LoadNativeIcon(string path, int dx, int dy)
+/*        public static System.Drawing.Icon LoadNativeIcon(string path, int dx, int dy)
         {
             return IconLoader.LoadIcon(path, dx, dy);
         }
-
+*/
         public static int GetIconWidth(IconSize iconSize)
         {
             switch (iconSize)
@@ -744,7 +756,7 @@ namespace Epsitec.Common.Drawing
 
         public static Image FromNativeIcon(PlatformSystemIcon systemIcon)
         {
-            System.Drawing.Icon icon = null;
+/*            System.Drawing.Icon icon = null;
 
             switch (systemIcon)
             {
@@ -797,9 +809,11 @@ namespace Epsitec.Common.Drawing
             {
                 return null;
             }
+*/
+            return null;
         }
 
-        public static Image FromNativeIcon(System.Drawing.Icon native)
+/*        public static Image FromNativeIcon(System.Drawing.Icon native)
         {
             if (native == null)
             {
@@ -831,7 +845,7 @@ namespace Epsitec.Common.Drawing
 
             return bitmap;
         }
-
+*/
         public static Image FromData(byte[] data)
         {
             Image bitmap = Bitmap.FromData(data, new Point(0, 0));
@@ -854,7 +868,7 @@ namespace Epsitec.Common.Drawing
 
         public static Image FromData(byte[] data, Point origin, Size size)
         {
-            //	Avant de passer les données brutes à .NET pour en extraire l'image de
+/*            //	Avant de passer les données brutes à .NET pour en extraire l'image de
             //	format PNG/TIFF/JPEG, on regarde s'il ne s'agit pas d'un format "maison".
 
             if (data.Length > 40)
@@ -1015,9 +1029,10 @@ namespace Epsitec.Common.Drawing
 
                 return null;
             }
+*/            return null;
         }
 
-        private static System.Drawing.Bitmap DecompressBitmap(byte[] data)
+/*        private static System.Drawing.Bitmap DecompressBitmap(byte[] data)
         {
             try
             {
@@ -1051,13 +1066,13 @@ namespace Epsitec.Common.Drawing
                 }
             }
         }
-
+*/
         private static bool IsPngHeader(byte[] data)
         {
             return (data[0] == 0x89) && (data[1] == 0x50) && (data[2] == 0x4e) && (data[3] == 0x47);
         }
 
-        private static System.Drawing.Bitmap DecompressPngBitmap(byte[] data)
+/*        private static System.Drawing.Bitmap DecompressPngBitmap(byte[] data)
         {
             using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data, false))
             {
@@ -1082,8 +1097,8 @@ namespace Epsitec.Common.Drawing
                 return Bitmap.CreateBmpBitmap(pngFrame);
             }
         }
-
-        private static System.Drawing.Bitmap CreateBmpBitmap(
+*/
+/*        private static System.Drawing.Bitmap CreateBmpBitmap(
             System.Windows.Media.Imaging.BitmapFrame pngFrame
         )
         {
@@ -1099,7 +1114,7 @@ namespace Epsitec.Common.Drawing
                 return new System.Drawing.Bitmap(bmpStream);
             }
         }
-
+*/
         private static void NotifyMemoryExhauted()
         {
             Bitmap.OnOutOfMemoryEncountered();
@@ -1219,7 +1234,7 @@ namespace Epsitec.Common.Drawing
 
         public static Image FromImageDisabled(Image image, Color background)
         {
-            System.Diagnostics.Debug.Assert(image != null);
+/*            System.Diagnostics.Debug.Assert(image != null);
 
             int r = (int)(background.R * 255.5);
             int g = (int)(background.G * 255.5);
@@ -1257,11 +1272,12 @@ namespace Epsitec.Common.Drawing
 
                 return bitmap;
             }
+*/            return null;
         }
 
         public static Image CopyImage(Image image)
         {
-            if (image == null)
+/*            if (image == null)
             {
                 return null;
             }
@@ -1295,6 +1311,7 @@ namespace Epsitec.Common.Drawing
             bitmap.dpiY = dpiY;
 
             return bitmap;
+*/            return null;
         }
 
         public static Image FromLargerImage(Image image, Rectangle clip)
@@ -1306,7 +1323,7 @@ namespace Epsitec.Common.Drawing
 
         public static Image FromLargerImage(Image image, Rectangle clip, Point origin)
         {
-            if (image == null)
+/*            if (image == null)
             {
                 return null;
             }
@@ -1345,9 +1362,10 @@ namespace Epsitec.Common.Drawing
             bitmap.isOriginDefined = true;
 
             return bitmap;
+*/            return null;
         }
 
-        public static ImageFormat MapFromMicrosoftImageFormat(
+/*        public static ImageFormat MapFromMicrosoftImageFormat(
             System.Drawing.Imaging.ImageFormat format
         )
         {
@@ -1401,8 +1419,8 @@ namespace Epsitec.Common.Drawing
 
             return null;
         }
-
-        public static System.Drawing.Imaging.ImageCodecInfo GetCodecInfo(ImageFormat format)
+*/
+/*        public static System.Drawing.Imaging.ImageCodecInfo GetCodecInfo(ImageFormat format)
         {
             string mime = null;
 
@@ -1443,22 +1461,22 @@ namespace Epsitec.Common.Drawing
 
             return null;
         }
-
+*/
         public static string[] GetFilenameExtensions(ImageFormat format)
         {
-            System.Drawing.Imaging.ImageCodecInfo info = Bitmap.GetCodecInfo(format);
+/*            System.Drawing.Imaging.ImageCodecInfo info = Bitmap.GetCodecInfo(format);
 
             if (info != null)
             {
                 return info.FilenameExtension.Split(';');
             }
-
+*/
             return null;
         }
 
         protected override void Dispose(bool disposing)
         {
-            System.Diagnostics.Debug.Assert(this.isDisposed == false);
+/*            System.Diagnostics.Debug.Assert(this.isDisposed == false);
 
             this.isDisposed = true;
 
@@ -1475,9 +1493,9 @@ namespace Epsitec.Common.Drawing
             }
 
             base.Dispose(disposing);
-        }
+*/        }
 
-        private static System.Drawing.Bitmap ConvertIcon(System.IntPtr hIcon, int dx, int dy)
+/*        private static System.Drawing.Bitmap ConvertIcon(System.IntPtr hIcon, int dx, int dy)
         {
             BITMAPV5HEADER bmpInfo32 = new BITMAPV5HEADER();
             const int BI_BITFIELDS = 3;
@@ -1568,10 +1586,10 @@ namespace Epsitec.Common.Drawing
 
             return bitmap;
         }
-
+*/
         private static class IconLoader
         {
-            public static System.Drawing.Icon LoadIcon(string path, int dx, int dy)
+/*            public static System.Drawing.Icon LoadIcon(string path, int dx, int dy)
             {
                 uint mode = IconLoader.LR_LOADFROMFILE;
 
@@ -1595,7 +1613,7 @@ namespace Epsitec.Common.Drawing
                 ).Message;
                 return hIcon == System.IntPtr.Zero ? null : System.Drawing.Icon.FromHandle(hIcon);
             }
-
+*/
             const int IMAGE_ICON = 1;
             const int LR_LOADFROMFILE = 0x0010;
             const int LR_DEFAULTSIZE = 0x0040;
@@ -1772,10 +1790,10 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        protected System.Drawing.Bitmap bitmap;
+        //protected System.Drawing.Bitmap bitmap;
         protected int bitmapDx;
         protected int bitmapDy;
-        protected BitmapData bitmapData;
+        //protected BitmapData bitmapData;
         protected volatile int bitmapLockCount;
         protected Pixmap pixmap;
 

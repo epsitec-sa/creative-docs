@@ -2,7 +2,7 @@
   <Import Project="Version.props" />
   <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
   <PropertyGroup>
-    <TargetFramework>$(WindowsTargetFramework)</TargetFramework>
+    <TargetFramework>$(CoreTargetFramework)</TargetFramework>
 
     <!--
     TODO: NOT RECOMMENDED

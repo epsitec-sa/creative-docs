@@ -10,11 +10,16 @@ namespace Epsitec.Common.Widgets.Platform
     /// La classe Platform.Window fait le lien avec les WinForms.
     /// </summary>
     internal class Window
-        : System.Windows.Forms.Form,
-            Types.BindingAsyncOperation.IApplicationThreadInvoker
+        //: System.Windows.Forms.Form,
+          :  Types.BindingAsyncOperation.IApplicationThreadInvoker
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // implement Window (stub)
+        // ******************************************************************
         static Window()
         {
+            /*
             RestartManager.Setup();
 
             Microsoft.Win32.SystemEvents.UserPreferenceChanged +=
@@ -31,6 +36,7 @@ namespace Epsitec.Common.Widgets.Platform
             //	the special thread invoker interface :
 
             Types.BindingAsyncOperation.DefineApplicationThreadInvoker(Window.dispatchWindow);
+            */
         }
 
         public static void Initialize()
@@ -38,7 +44,7 @@ namespace Epsitec.Common.Widgets.Platform
             //	This invokes the static constructor...
         }
 
-        private static void HandleSystemEventsUserPreferenceChanged(
+/*        private static void HandleSystemEventsUserPreferenceChanged(
             object sender,
             Microsoft.Win32.UserPreferenceChangedEventArgs e
         )
@@ -56,7 +62,7 @@ namespace Epsitec.Common.Widgets.Platform
                     break;
             }
         }
-
+*/
         private Window()
         {
             this.isSyncPaintDisabled = new SafeCounter();
@@ -70,6 +76,7 @@ namespace Epsitec.Common.Widgets.Platform
         )
             : this()
         {
+            /*
             this.widgetWindow = window;
             platformWindowSetter(this);
 
@@ -107,6 +114,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.ReallocatePixmap();
 
             WindowList.Insert(this);
+            */
         }
 
         internal static bool IsInAnyWndProc
@@ -126,20 +134,25 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void MakeTopLevelWindow()
         {
+            /*
             this.TopLevel = true;
             this.TopMost = true;
+            */
         }
 
         internal void MakeFramelessWindow()
         {
+            /*
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.ShowInTaskbar = false;
             Window.DummyHandleEater(this.Handle);
             this.widgetWindow.WindowStyles = this.WindowStyles | (WindowStyles.Frameless);
+            */
         }
 
         internal void MakeFixedSizeWindow()
         {
+            /*
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -148,10 +161,12 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.WindowStyles =
                 this.WindowStyles
                 & ~(WindowStyles.CanMaximize | WindowStyles.CanMinimize | WindowStyles.CanResize);
+            */
         }
 
         internal void MakeMinimizableFixedSizeWindow()
         {
+            /*
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = true;
@@ -159,10 +174,12 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.WindowStyles =
                 (this.WindowStyles & ~(WindowStyles.CanMaximize | WindowStyles.CanResize))
                 | WindowStyles.CanMinimize;
+            */
         }
 
         internal void MakeButtonlessWindow()
         {
+            /*
             this.ControlBox = false;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -174,12 +191,14 @@ namespace Epsitec.Common.Widgets.Platform
                     | WindowStyles.CanMinimize
                     | WindowStyles.HasCloseButton
                 );
+            */
         }
 
         internal bool IsFixedSize
         {
             get
             {
+                /*
                 switch (this.FormBorderStyle)
                 {
                     case System.Windows.Forms.FormBorderStyle.Fixed3D:
@@ -196,13 +215,17 @@ namespace Epsitec.Common.Widgets.Platform
                 throw new System.InvalidOperationException(
                     string.Format("{0} not supported", this.FormBorderStyle)
                 );
+                */
+                return false;
             }
         }
 
         internal void MakeSecondaryWindow()
         {
+            /*
             this.ShowInTaskbar = false;
             Window.DummyHandleEater(this.Handle);
+            */
         }
 
         internal void MakeTitlelessResizableWindow()
@@ -212,25 +235,31 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void MakeToolWindow()
         {
+            /*
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.ShowInTaskbar = false;
             this.isToolWindow = true;
             Window.DummyHandleEater(this.Handle);
+            */
         }
 
         internal void MakeSizableToolWindow()
         {
+            /*
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.ShowInTaskbar = false;
             this.isToolWindow = true;
             Window.DummyHandleEater(this.Handle);
+            */
         }
 
         internal void MakeFloatingWindow()
         {
+            /*
             this.ShowInTaskbar = false;
             this.isToolWindow = true;
             Window.DummyHandleEater(this.Handle);
+            */
         }
 
         internal void ResetHostingWidgetWindow()
@@ -246,16 +275,19 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void HideWindow()
         {
+            /*
             using (this.isWndProcHandlingRestricted.Enter())
             {
                 this.Hide();
             }
+            */
         }
 
         static void DummyHandleEater(System.IntPtr handle) { }
 
         internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
         {
+            /*
             Window.DummyHandleEater(this.Handle);
 
             if (this.isLayered)
@@ -368,6 +400,7 @@ namespace Epsitec.Common.Widgets.Platform
                     this.ShowWindow();
                     break;
             }
+            */
         }
 
         internal void AnimateHide(Animation animation, Drawing.Rectangle bounds)
@@ -454,6 +487,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
         {
+            /*
             if (this.IsDisposed)
             {
                 return;
@@ -463,20 +497,24 @@ namespace Epsitec.Common.Widgets.Platform
             this.paintOffset = offset;
             this.Invalidate();
             this.Update();
+            */
         }
 
         protected void AnimateAlpha(double alpha)
         {
+            /*
             if (this.IsDisposed)
             {
                 return;
             }
 
             this.Alpha = alpha;
+            */
         }
 
         protected void AnimateCleanup(Animator animator)
         {
+            /*
             animator.Dispose();
 
             if (this.IsDisposed)
@@ -493,6 +531,7 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 this.widgetWindow.OnWindowAnimationEnded();
             }
+            */
         }
 
         internal WindowStyles WindowStyles
@@ -523,6 +562,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private void UpdateWindowTypeAndStyles()
         {
+            /*
             var windowStyles = this.WindowStyles;
 
             switch (this.windowType)
@@ -584,6 +624,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.MaximizeBox = ((windowStyles & WindowStyles.CanMaximize) != 0);
             this.HelpButton = ((windowStyles & WindowStyles.HasHelpButton) != 0);
             this.ControlBox = ((windowStyles & WindowStyles.HasCloseButton) != 0);
+            */
         }
 
         internal bool PreventSyncPaint
@@ -608,6 +649,7 @@ namespace Epsitec.Common.Widgets.Platform
             get { return this.isLayered; }
             set
             {
+                /*
                 if (this.isLayered != value)
                 {
                     if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
@@ -632,6 +674,7 @@ namespace Epsitec.Common.Widgets.Platform
                         this.isLayered = value;
                     }
                 }
+                */
             }
         }
 
@@ -639,6 +682,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get
             {
+                /*
                 if (this.Handle == Win32Api.GetActiveWindow())
                 {
                     return true;
@@ -647,6 +691,8 @@ namespace Epsitec.Common.Widgets.Platform
                 {
                     return false;
                 }
+                */
+                return true;
             }
         }
 
@@ -703,6 +749,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get
             {
+                /*
                 System.Drawing.Rectangle rect;
 
                 if (this.formBoundsSet)
@@ -720,9 +767,12 @@ namespace Epsitec.Common.Widgets.Platform
                 double dy = this.MapFromWinFormsHeight(rect.Height);
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
+                */
+                return Drawing.Rectangle.Empty;
             }
             set
             {
+                /*
                 if (this.windowBounds != value)
                 {
                     int ox = this.MapToWinFormsX(value.Left);
@@ -777,6 +827,7 @@ namespace Epsitec.Common.Widgets.Platform
 
                     this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
                 }
+                */
             }
         }
 
@@ -784,6 +835,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get
             {
+                /*
                 System.Drawing.Size clientSize = base.ClientSize;
 
                 if (this.formBoundsSet)
@@ -802,6 +854,8 @@ namespace Epsitec.Common.Widgets.Platform
                 }
 
                 return clientSize;
+                */
+                return System.Drawing.Size.Empty;
             }
         }
 
@@ -824,6 +878,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get
             {
+                /*
                 Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement()
                 {
                     Length = 4 + 4 + 4 + 2 * 4 + 2 * 4 + 4 * 4
@@ -849,6 +904,8 @@ namespace Epsitec.Common.Widgets.Platform
                 Window.AdjustWindowPlacementOrigin(placement, ref ox, ref oy);
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
+                */
+                return Drawing.Rectangle.Empty;
             }
         }
 
@@ -858,6 +915,7 @@ namespace Epsitec.Common.Widgets.Platform
             ref double oy
         )
         {
+            /*
             //	La conversion entre "screen coordinates" et "workspace coordinates" est
             //	théoriquement impossible avec les informations que fournit Windows mais
             //	on peut s'arranger en créant une fenêtre temporaire pour déterminer son
@@ -892,6 +950,7 @@ namespace Epsitec.Common.Widgets.Platform
                     oy += placementOffsetY;
                 }
             }
+            */
         }
 
         private WindowPlacement CurrentWindowPlacement
@@ -914,6 +973,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get
             {
+                /*
                 Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement()
                 {
                     Length = 4 + 4 + 4 + 2 * 4 + 2 * 4 + 4 * 4
@@ -933,9 +993,12 @@ namespace Epsitec.Common.Widgets.Platform
                 );
 
                 return new WindowPlacement(bounds, isMaximized, isMinimized, isHidden);
+                */
+                return new WindowPlacement(Drawing.Rectangle.Empty, false, false, false);
             }
             set
             {
+                /*
                 int show = Win32Const.SW_SHOWNORMAL;
                 int flags = 0;
 
@@ -976,6 +1039,7 @@ namespace Epsitec.Common.Widgets.Platform
                 {
                     this.ExitWndProc();
                 }
+                */
             }
         }
 
@@ -1011,29 +1075,37 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal new string Text
         {
-            get { return TextLayout.ConvertToTaggedText(base.Text); }
-            set { base.Text = TextLayout.ConvertToSimpleText(value); }
+            //get { return TextLayout.ConvertToTaggedText(base.Text); }
+            get { return null; }
+            //set { base.Text = TextLayout.ConvertToSimpleText(value); }
+            set { }
         }
 
         internal new string Name
         {
-            get { return base.Name; }
-            set { base.Name = value; }
+            //get { return base.Name; }
+            get { return null; }
+            //set { base.Name = value; }
+            set { }
         }
 
         internal new Drawing.Image Icon
         {
             get
             {
+                /*
                 if (base.Icon == null)
                 {
                     return null;
                 }
 
                 return Drawing.Bitmap.FromNativeBitmap(base.Icon.ToBitmap());
+                */
+                return null;
             }
             set
             {
+                /*
                 if (value == null)
                 {
                     base.Icon = null;
@@ -1044,17 +1116,21 @@ namespace Epsitec.Common.Widgets.Platform
                         value.BitmapImage.NativeBitmap.GetHicon()
                     );
                 }
+                */
             }
         }
 
         internal void SetNativeIcon(System.IO.Stream iconStream)
         {
+            /*
             System.Drawing.Icon nativeIcon = new System.Drawing.Icon(iconStream);
             base.Icon = nativeIcon;
+            */
         }
 
         internal void SetNativeIcon(System.IO.Stream iconStream, int dx, int dy)
         {
+            /*
             byte[] buffer = new byte[iconStream.Length];
             iconStream.Read(buffer, 0, buffer.Length);
             string path = System.IO.Path.GetTempFileName();
@@ -1108,6 +1184,7 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 System.IO.File.Delete(path);
             }
+            */
         }
 
         internal double Alpha
@@ -1127,6 +1204,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get
             {
+                /*
                 System.Drawing.Size borderSize = new System.Drawing.Size(0, 0);
 
                 switch (this.FormBorderStyle)
@@ -1154,6 +1232,8 @@ namespace Epsitec.Common.Widgets.Platform
                 }
 
                 return borderSize;
+                */
+                return System.Drawing.Size.Empty;
             }
         }
 
@@ -1181,12 +1261,15 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal static new bool UseWaitCursor
         {
-            get { return System.Windows.Forms.Application.UseWaitCursor; }
-            set { System.Windows.Forms.Application.UseWaitCursor = value; }
+            //get { return System.Windows.Forms.Application.UseWaitCursor; }
+            get { return true; }
+            //set { System.Windows.Forms.Application.UseWaitCursor = value; }
+            set {}
         }
 
         internal new void Close()
         {
+            /*
             try
             {
                 this.forcedClose = true;
@@ -1196,11 +1279,14 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 this.forcedClose = false;
             }
+            */
         }
 
         internal void SimulateCloseClick()
         {
+            /*
             base.Close();
+            */
         }
 
         internal void SetFrozen(bool frozen)
@@ -1208,8 +1294,10 @@ namespace Epsitec.Common.Widgets.Platform
             this.isFrozen = frozen;
         }
 
-        protected override void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
+        //protected override void Dispose(bool disposing)
         {
+            /*
             if (disposing)
             {
                 WindowList.Remove(this);
@@ -1247,10 +1335,13 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             base.Dispose(disposing);
+            */
         }
 
-        protected override void OnClosed(System.EventArgs e)
+        protected void OnClosed(System.EventArgs e)
+        //protected override void OnClosed(System.EventArgs e)
         {
+            /*
             if (this.Focused)
             {
                 //	Si la fenêtre avait le focus et qu'on la ferme, on aimerait bien que
@@ -1271,27 +1362,34 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             base.OnClosed(e);
+            */
         }
 
-        protected override void OnGotFocus(System.EventArgs e)
+        protected void OnGotFocus(System.EventArgs e)
+        //protected override void OnGotFocus(System.EventArgs e)
         {
+            /*
             base.OnGotFocus(e);
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.NotifyWindowFocused();
             }
+            */
         }
 
-        protected override void OnLostFocus(System.EventArgs e)
+        protected void OnLostFocus(System.EventArgs e)
+        //protected override void OnLostFocus(System.EventArgs e)
         {
+            /*
             base.OnLostFocus(e);
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.NotifyWindowDefocused();
             }
+            */
         }
 
-        protected override System.Windows.Forms.CreateParams CreateParams
+/*        protected override System.Windows.Forms.CreateParams CreateParams
         {
             get
             {
@@ -1308,9 +1406,11 @@ namespace Epsitec.Common.Widgets.Platform
                 return parms;
             }
         }
-
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+*/
+        protected void OnClosing(System.ComponentModel.CancelEventArgs e)
+        //protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            /*
             base.OnClosing(e);
 
             if (this.forcedClose)
@@ -1357,43 +1457,58 @@ namespace Epsitec.Common.Widgets.Platform
                 message.MarkAsDummyMessage();
                 this.DispatchMessage(message);
             }
+            */
         }
 
-        protected override void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
+/*        protected void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
+        //protected override void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
         {
+            *//*
             base.OnKeyDown(e);
 
             Message message = Message.FromKeyEvent(MessageType.KeyDown, e);
             this.DispatchMessage(message);
             e.Handled = message.Handled;
+            *//*
         }
-
-        protected override void OnKeyUp(System.Windows.Forms.KeyEventArgs e)
+*/
+/*        protected void OnKeyUp(System.Windows.Forms.KeyEventArgs e)
+        //protected override void OnKeyUp(System.Windows.Forms.KeyEventArgs e)
         {
+            *//*
             base.OnKeyUp(e);
 
             Message message = Message.FromKeyEvent(MessageType.KeyUp, e);
             this.DispatchMessage(message);
             e.Handled = message.Handled;
+            *//*
         }
-
-        protected override void OnKeyPress(System.Windows.Forms.KeyPressEventArgs e)
+*/
+/*        protected void OnKeyPress(System.Windows.Forms.KeyPressEventArgs e)
+        //protected override void OnKeyPress(System.Windows.Forms.KeyPressEventArgs e)
         {
+            *//*
             base.OnKeyPress(e);
 
             Message message = Message.FromKeyEvent(MessageType.KeyPress, e);
             this.DispatchMessage(message);
             e.Handled = message.Handled;
+            *//*
         }
-
-        protected override void OnMouseWheel(System.Windows.Forms.MouseEventArgs e)
+*/
+/*        protected void OnMouseWheel(System.Windows.Forms.MouseEventArgs e)
+        //protected override void OnMouseWheel(System.Windows.Forms.MouseEventArgs e)
         {
+            *//*
             base.OnMouseWheel(e);
             this.DispatchMessage(Message.FromMouseEvent(MessageType.MouseWheel, this, e));
+            *//*
         }
-
-        protected override void OnMouseEnter(System.EventArgs e)
+*/
+        protected void OnMouseEnter(System.EventArgs e)
+        //protected override void OnMouseEnter(System.EventArgs e)
         {
+            /*
             base.OnMouseEnter(e);
 
             System.Drawing.Point point = this.PointToClient(
@@ -1416,10 +1531,13 @@ namespace Epsitec.Common.Widgets.Platform
                     this.DispatchMessage(message);
                 }
             }
+            */
         }
 
-        protected override void OnMouseLeave(System.EventArgs e)
+        protected void OnMouseLeave(System.EventArgs e)
+        //protected override void OnMouseLeave(System.EventArgs e)
         {
+            /*
             base.OnMouseLeave(e);
 
             Message message = Message.FromMouseEvent(MessageType.MouseLeave, this, null);
@@ -1431,42 +1549,60 @@ namespace Epsitec.Common.Widgets.Platform
                     this.DispatchMessage(message);
                 }
             }
+            */
         }
 
-        protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+/*        protected void OnPaint(System.Windows.Forms.PaintEventArgs e)
+        //protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
         {
+            *//*
             //			System.Diagnostics.Debug.WriteLine ("OnPaint");
             base.OnPaint(e);
             this.DispatchPaint(e.Graphics, e.ClipRectangle);
+            *//*
         }
-
-        protected override void OnPaintBackground(System.Windows.Forms.PaintEventArgs e)
+*/
+/*        protected void OnPaintBackground(System.Windows.Forms.PaintEventArgs e)
+        //protected override void OnPaintBackground(System.Windows.Forms.PaintEventArgs e)
         {
+            *//*
             //			System.Diagnostics.Debug.WriteLine ("OnPaintBackground called");
             base.OnPaintBackground(e);
             this.DispatchPaint(e.Graphics, e.ClipRectangle);
+            *//*
         }
-
-        protected override void OnResize(System.EventArgs e)
+*/
+        protected void OnResize(System.EventArgs e)
+        //protected override void OnResize(System.EventArgs e)
         {
+            /*
             //			System.Diagnostics.Debug.WriteLine ("OnResize");
             base.OnResize(e);
+            */
         }
 
-        protected override void OnResizeBegin(System.EventArgs e)
+        protected void OnResizeBegin(System.EventArgs e)
+        //protected override void OnResizeBegin(System.EventArgs e)
         {
+            /*
             base.OnResizeBegin(e);
             this.widgetWindow.OnWindowResizeBeginning();
+            */
         }
 
-        protected override void OnResizeEnd(System.EventArgs e)
+        protected void OnResizeEnd(System.EventArgs e)
+        //protected override void OnResizeEnd(System.EventArgs e)
         {
+            /*
             base.OnResizeEnd(e);
             this.widgetWindow.OnWindowResizeEnded();
+            */
         }
 
-        protected override void OnSizeChanged(System.EventArgs e)
+        protected void OnSizeChanged(System.EventArgs e)
+        //protected override void OnSizeChanged(System.EventArgs e)
         {
+            /*
             //			System.Diagnostics.Debug.WriteLine ("OnSizeChanged");
             using (this.isSyncPaintDisabled.Enter())
             {
@@ -1499,30 +1635,39 @@ namespace Epsitec.Common.Widgets.Platform
 
                 this.formBoundsSet = false;
             }
+            */
         }
 
-        protected override void OnActivated(System.EventArgs e)
+        protected void OnActivated(System.EventArgs e)
+        //protected override void OnActivated(System.EventArgs e)
         {
+            /*
             base.OnActivated(e);
 
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.OnWindowActivated();
             }
+            */
         }
 
-        protected override void OnDeactivate(System.EventArgs e)
+        protected void OnDeactivate(System.EventArgs e)
+        //protected override void OnDeactivate(System.EventArgs e)
         {
+            /*
             base.OnDeactivate(e);
 
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.OnWindowDeactivated();
             }
+            */
         }
 
-        protected override void OnVisibleChanged(System.EventArgs e)
+        protected void OnVisibleChanged(System.EventArgs e)
+        //protected override void OnVisibleChanged(System.EventArgs e)
         {
+            /*
             base.OnVisibleChanged(e);
 
             if (this.Visible)
@@ -1543,38 +1688,48 @@ namespace Epsitec.Common.Widgets.Platform
                     this.widgetWindow.OnWindowHidden();
                 }
             }
+            */
         }
 
-        protected override void OnDragEnter(System.Windows.Forms.DragEventArgs drgevent)
+/*        protected void OnDragEnter(System.Windows.Forms.DragEventArgs drgevent)
+        //protected override void OnDragEnter(System.Windows.Forms.DragEventArgs drgevent)
         {
+            *//*
             base.OnDragEnter(drgevent);
 
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.OnWindowDragEntered(new WindowDragEventArgs(drgevent));
             }
+            *//*
         }
-
-        protected override void OnDragLeave(System.EventArgs e)
+*/
+        protected void OnDragLeave(System.EventArgs e)
+        //protected override void OnDragLeave(System.EventArgs e)
         {
+            /*
             base.OnDragLeave(e);
 
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.OnWindowDragExited();
             }
+            */
         }
 
-        protected override void OnDragDrop(System.Windows.Forms.DragEventArgs drgevent)
+/*        protected void OnDragDrop(System.Windows.Forms.DragEventArgs drgevent)
+        //protected override void OnDragDrop(System.Windows.Forms.DragEventArgs drgevent)
         {
+            *//*
             base.OnDragDrop(drgevent);
 
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.OnWindowDragDropped(new WindowDragEventArgs(drgevent));
             }
+            *//*
         }
-
+*/
         protected void ReallocatePixmap()
         {
             if (this.IsFrozen)
@@ -1666,6 +1821,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void MarkForRepaint(Drawing.Rectangle rect)
         {
+            /*
             rect.RoundInflate();
 
             this.dirtyRectangle.MergeWith(rect);
@@ -1685,10 +1841,12 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             this.Invalidate(new System.Drawing.Rectangle(x, y, width, height));
+            */
         }
 
         internal void SynchronousRepaint()
         {
+            /*
             if (this.isLayoutInProgress)
             {
                 return;
@@ -1715,10 +1873,12 @@ namespace Epsitec.Common.Widgets.Platform
                     this.Update();
                 }
             }
+            */
         }
 
         internal void SendQueueCommand()
         {
+            /*
             if (this.InvokeRequired)
             {
                 this.Invoke(new SimpleCallback(this.SendQueueCommand));
@@ -1732,16 +1892,19 @@ namespace Epsitec.Common.Widgets.Platform
                     System.IntPtr.Zero
                 );
             }
+            */
         }
 
         internal void SendValidation()
         {
+            /*
             Win32Api.PostMessage(
                 this.Handle,
                 Win32Const.WM_APP_VALIDATION,
                 System.IntPtr.Zero,
                 System.IntPtr.Zero
             );
+            */
         }
 
         internal void StartSizeMove()
@@ -1812,6 +1975,7 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
+        /*
         protected override void WndProc(ref System.Windows.Forms.Message msg)
         {
             //System.Diagnostics.Debug.WriteLine (msg.ToString ());
@@ -2140,9 +2304,9 @@ namespace Epsitec.Common.Widgets.Platform
                     }
                 }
             }
-        }
+        }*/
 
-        protected bool WndProcActivation(ref System.Windows.Forms.Message msg)
+/*        protected bool WndProcActivation(ref System.Windows.Forms.Message msg)
         {
             //	Top Level forms should keep their 'active' visual style as long as any top level
             //	form is active. This is implemented by faking WM_NCACTIVATE messages with the
@@ -2271,9 +2435,10 @@ namespace Epsitec.Common.Widgets.Platform
 
             return false;
         }
-
+*/
         internal Platform.Window FindRootOwner()
         {
+            /*
             Window owner = this.Owner as Window;
 
             if (owner != null)
@@ -2282,10 +2447,13 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return this;
+            */
+            return null;
         }
 
         internal Platform.Window[] FindOwnedWindows()
         {
+            /*
             System.Windows.Forms.Form[] forms = this.OwnedForms;
             Platform.Window[] windows = new Platform.Window[forms.Length];
 
@@ -2295,6 +2463,8 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return windows;
+            */
+            return null;
         }
 
         internal bool StartWindowManagerOperation(WindowManagerOperation op)
@@ -2358,6 +2528,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private void ReleaseCaptureAndSendMessage(uint ht)
         {
+            /*
             Win32Api.ReleaseCapture();
             Win32Api.SendMessage(
                 this.Handle,
@@ -2365,10 +2536,12 @@ namespace Epsitec.Common.Widgets.Platform
                 (System.IntPtr)ht,
                 (System.IntPtr)0
             );
+            */
         }
 
         protected void FakeActivate(bool active)
         {
+            /*
             if (this.hasActiveFrame != active)
             {
                 this.hasActiveFrame = active;
@@ -2380,10 +2553,12 @@ namespace Epsitec.Common.Widgets.Platform
                     base.WndProc(ref message);
                 }
             }
+            */
         }
 
         protected void FakeActivateOwned(bool active)
         {
+            /*
             this.FakeActivate(active);
 
             System.Windows.Forms.Form[] forms = this.OwnedForms;
@@ -2400,10 +2575,12 @@ namespace Epsitec.Common.Widgets.Platform
                     }
                 }
             }
+            */
         }
 
         protected bool IsOwnedWindow(Platform.Window find)
         {
+            /*
             System.Windows.Forms.Form[] forms = this.OwnedForms;
 
             for (int i = 0; i < forms.Length; i++)
@@ -2420,9 +2597,11 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return false;
+            */
+            return true;
         }
 
-        protected bool WndProcFiltering(ref System.Windows.Forms.Message msg)
+/*        protected bool WndProcFiltering(ref System.Windows.Forms.Message msg)
         {
             Message rawMessage = Message.FromWndProcMessage(this, ref msg);
             Message message = Message.PostProcessMessage(rawMessage);
@@ -2510,8 +2689,8 @@ namespace Epsitec.Common.Widgets.Platform
 
             return false;
         }
-
-        protected static System.Windows.Forms.Message CreateNCActivate(
+*/
+/*        protected static System.Windows.Forms.Message CreateNCActivate(
             System.Windows.Forms.Form form,
             bool activate
         )
@@ -2533,7 +2712,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return msg;
         }
-
+*/
         internal Drawing.Pixmap GetWindowPixmap()
         {
             if ((this.graphics != null) && (this.isPixmapOk))
@@ -2546,7 +2725,7 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
-        protected void DispatchPaint(
+/*        protected void DispatchPaint(
             System.Drawing.Graphics winGraphics,
             System.Drawing.Rectangle winClipRect
         )
@@ -2588,7 +2767,7 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
         }
-
+*/
         protected bool RefreshGraphics()
         {
             if (this.isLayoutInProgress)
@@ -2641,6 +2820,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         protected bool UpdateLayeredWindow()
         {
+            /*
             bool paintNeeded = true;
 
             this.RefreshGraphics();
@@ -2705,10 +2885,13 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return paintNeeded;
+            */
+            return true;
         }
 
         internal static void ProcessException(System.Exception ex, string tag)
         {
+            /*
             System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
             buffer.Append("------------------------------------------------------------");
@@ -2784,10 +2967,12 @@ namespace Epsitec.Common.Widgets.Platform
 
             System.Diagnostics.Debug.WriteLine(buffer.ToString());
             System.Windows.Forms.MessageBox.Show(null, message, title);
+            */
         }
 
         internal static void ProcessCrossThreadOperation(System.Action action)
         {
+            /*
             bool state = System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls;
 
             try
@@ -2800,6 +2985,7 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = state;
             }
+            */
         }
 
         internal void DispatchMessage(Message message)
@@ -2812,6 +2998,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void ShowWindow()
         {
+            /*
             this.UpdateLayeredWindow();
 
             if (this.IsMouseActivationEnabled)
@@ -2822,10 +3009,12 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 Win32Api.ShowWindow(this.Handle, Win32Const.SW_SHOWNA);
             }
+            */
         }
 
         internal void ShowDialogWindow()
         {
+            /*
             this.UpdateLayeredWindow();
 
             System.Windows.Forms.Application.DoEvents();
@@ -2858,9 +3047,10 @@ namespace Epsitec.Common.Widgets.Platform
                 this.preventQuit = preventQuit;
                 Window.globalWndProcDepth = wndProcDepth;
             }
+            */
         }
 
-        class WindowHandleWrapper : System.Windows.Forms.IWin32Window
+        class WindowHandleWrapper //: System.Windows.Forms.IWin32Window
         {
             public WindowHandleWrapper(System.IntPtr handle)
             {
@@ -2869,11 +3059,11 @@ namespace Epsitec.Common.Widgets.Platform
 
             #region IWin32Window Members
 
-            System.IntPtr System.Windows.Forms.IWin32Window.Handle
+/*            System.IntPtr System.Windows.Forms.IWin32Window.Handle
             {
                 get { return this.handle; }
             }
-
+*/
             #endregion
 
             private readonly System.IntPtr handle;
@@ -2885,6 +3075,7 @@ namespace Epsitec.Common.Widgets.Platform
             SimpleCallback method
         )
         {
+            /*
             //	Execute the method in the main UI thread. If the caller is
             //	on another thread, we have to go through the not specially
             //	pleasant WndProc-based "Invoke" mechanism :
@@ -2897,6 +3088,7 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 method();
             }
+            */
         }
 
         #endregion

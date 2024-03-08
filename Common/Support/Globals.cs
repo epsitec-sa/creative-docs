@@ -13,6 +13,10 @@ namespace Epsitec.Common.Support
     /// </summary>
     public sealed class Globals
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // implement Globals (stub)
+        // ******************************************************************
         private Globals()
         {
             this.propertyHash = new Dictionary<string, object>();
@@ -33,8 +37,11 @@ namespace Epsitec.Common.Support
         {
             get
             {
+                /*
                 string name = System.Windows.Forms.Application.ExecutablePath;
                 return System.IO.Path.GetFileName(name);
+                */
+                return null;
             }
         }
 
@@ -42,14 +49,18 @@ namespace Epsitec.Common.Support
         {
             get
             {
+                /*
                 string name = System.Windows.Forms.Application.ExecutablePath;
                 return name;
+                */
+                return null;
             }
         }
 
         public static string ExecutableDirectory
         {
-            get { return System.Windows.Forms.Application.StartupPath; }
+            //get { return System.Windows.Forms.Application.StartupPath; }
+            get { return null; }
         }
 
         public object this[string key]
@@ -213,7 +224,8 @@ namespace Epsitec.Common.Support
         {
             public static string CommonAppDataRevision
             {
-                get { return System.Windows.Forms.Application.CommonAppDataPath; }
+                //get { return System.Windows.Forms.Application.CommonAppDataPath; }
+                get { return null; }
             }
 
             public static string CommonAppData
@@ -227,7 +239,8 @@ namespace Epsitec.Common.Support
 
             public static string UserAppDataRevision
             {
-                get { return System.Windows.Forms.Application.UserAppDataPath; }
+                //get { return System.Windows.Forms.Application.UserAppDataPath; }
+                get { return null; }
             }
 
             public static string UserAppData
@@ -241,7 +254,8 @@ namespace Epsitec.Common.Support
 
             public static string Executable
             {
-                get { return System.Windows.Forms.Application.StartupPath; }
+                //get { return System.Windows.Forms.Application.StartupPath; }
+                get { return null; }
             }
 
             public static string ExecutableRoot

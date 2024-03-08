@@ -10,17 +10,21 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public sealed class MouseCursor : System.IDisposable
     {
-        private MouseCursor(System.Windows.Forms.Cursor cursor)
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - implement MouseCursor (stub)
+        // ******************************************************************
+/*        private MouseCursor(System.Windows.Forms.Cursor cursor)
         {
             this.cursor = cursor;
         }
-
-        private MouseCursor(System.Windows.Forms.Cursor cursor, System.IntPtr handle)
+*/
+/*        private MouseCursor(System.Windows.Forms.Cursor cursor, System.IntPtr handle)
         {
             this.cursor = cursor;
             this.handle = handle;
         }
-
+*/
         ~MouseCursor()
         {
             this.Dispose(false);
@@ -28,6 +32,7 @@ namespace Epsitec.Common.Widgets
 
         public static MouseCursor FromImage(Drawing.Image cursorImage, int xhot, int yhot)
         {
+            /*
             Drawing.Image image = Drawing.Bitmap.CopyImage(cursorImage);
             System.Drawing.Bitmap bitmap = image.BitmapImage.NativeBitmap;
             System.IntPtr orgHandle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon();
@@ -61,10 +66,13 @@ namespace Epsitec.Common.Widgets
             image.Dispose();
 
             return new MouseCursor(winCursor, newHandle);
+            */
+            return null;
         }
 
         public static MouseCursor FromImage(Drawing.Image cursorImage)
         {
+            /*
             Drawing.Image image = Drawing.Bitmap.CopyImage(cursorImage);
             System.Drawing.Bitmap bitmap = image.BitmapImage.NativeBitmap;
             System.IntPtr orgHandle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon();
@@ -103,16 +111,22 @@ namespace Epsitec.Common.Widgets
             image.Dispose();
 
             return new MouseCursor(winCursor, newHandle);
+            */
+            return null;
         }
 
         public static void Hide()
         {
+            /*
             System.Windows.Forms.Cursor.Hide();
+            */
         }
 
         public static void Show()
         {
+            /*
             System.Windows.Forms.Cursor.Show();
+            */
         }
 
         #region IDisposable Members
@@ -125,6 +139,7 @@ namespace Epsitec.Common.Widgets
 
         private void Dispose(bool disposing)
         {
+            /*
             if (disposing)
             {
                 if (this.cursor != null)
@@ -139,142 +154,168 @@ namespace Epsitec.Common.Widgets
                 Win32Api.DestroyIcon(this.handle);
                 this.handle = System.IntPtr.Zero;
             }
+            */
         }
 
-        internal System.Windows.Forms.Cursor GetPlatformCursor()
+/*        internal System.Windows.Forms.Cursor GetPlatformCursor()
         {
             return this.cursor;
         }
-
+*/
         public static MouseCursor Default
         {
-            get { return MouseCursor.asArrow; }
+            //get { return MouseCursor.asArrow; }
+            get { return null; }
         }
 
         public static MouseCursor AsArrow
         {
-            get { return MouseCursor.asArrow; }
+            //get { return MouseCursor.asArrow; }
+            get { return null; }
         }
 
         public static MouseCursor AsHand
         {
-            get { return MouseCursor.asHand; }
+            //get { return MouseCursor.asHand; }
+            get { return null; }
         }
 
         public static MouseCursor AsIBeam
         {
-            get { return MouseCursor.asIBeam; }
+            //get { return MouseCursor.asIBeam; }
+            get { return null; }
         }
 
         public static MouseCursor AsHSplit
         {
-            get { return MouseCursor.asHSplit; }
+            //get { return MouseCursor.asHSplit; }
+            get { return null; }
         }
 
         public static MouseCursor AsVSplit
         {
-            get { return MouseCursor.asVSplit; }
+            //get { return MouseCursor.asVSplit; }
+            get { return null; }
         }
 
         public static MouseCursor AsCross
         {
-            get { return MouseCursor.asCross; }
+            //get { return MouseCursor.asCross; }
+            get { return null; }
         }
 
         public static MouseCursor AsWait
         {
-            get { return MouseCursor.asWait; }
+            //get { return MouseCursor.asWait; }
+            get { return null; }
         }
 
         public static MouseCursor AsHelp
         {
-            get { return MouseCursor.asHelp; }
+            //get { return MouseCursor.asHelp; }
+            get { return null; }
         }
 
         public static MouseCursor AsNo
         {
-            get { return MouseCursor.asNo; }
+            //get { return MouseCursor.asNo; }
+            get { return null; }
         }
 
         public static MouseCursor AsNoHMove
         {
-            get { return MouseCursor.asNoHMove; }
+            //get { return MouseCursor.asNoHMove; }
+            get { return null; }
         }
 
         public static MouseCursor AsNoVMove
         {
-            get { return MouseCursor.asNoVMove; }
+            //get { return MouseCursor.asNoVMove; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanEast
         {
-            get { return MouseCursor.asPanEast; }
+            //get { return MouseCursor.asPanEast; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanNE
         {
-            get { return MouseCursor.asPanNe; }
+            //get { return MouseCursor.asPanNe; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanNorth
         {
-            get { return MouseCursor.asPanNorth; }
+            //get { return MouseCursor.asPanNorth; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanNW
         {
-            get { return MouseCursor.asPanNw; }
+            //get { return MouseCursor.asPanNw; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanSE
         {
-            get { return MouseCursor.asPanSe; }
+            //get { return MouseCursor.asPanSe; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanSouth
         {
-            get { return MouseCursor.asPanSouth; }
+            //get { return MouseCursor.asPanSouth; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanSW
         {
-            get { return MouseCursor.asPanSw; }
+            //get { return MouseCursor.asPanSw; }
+            get { return null; }
         }
 
         public static MouseCursor AsPanWest
         {
-            get { return MouseCursor.asPanWest; }
+            //get { return MouseCursor.asPanWest; }
+            get { return null; }
         }
 
         public static MouseCursor AsSizeAll
         {
-            get { return MouseCursor.asSizeAll; }
+            //get { return MouseCursor.asSizeAll; }
+            get { return null; }
         }
 
         public static MouseCursor AsSizeNESW
         {
-            get { return MouseCursor.asSizeNesw; }
+            //get { return MouseCursor.asSizeNesw; }
+            get { return null; }
         }
 
         public static MouseCursor AsSizeNS
         {
-            get { return MouseCursor.asSizeNs; }
+            //get { return MouseCursor.asSizeNs; }
+            get { return null; }
         }
 
         public static MouseCursor AsSizeNWSE
         {
-            get { return MouseCursor.asSizeNwse; }
+            //get { return MouseCursor.asSizeNwse; }
+            get { return null; }
         }
 
         public static MouseCursor AsSizeWE
         {
-            get { return MouseCursor.asSizeWe; }
+            //get { return MouseCursor.asSizeWe; }
+            get { return null; }
         }
 
-        private System.Windows.Forms.Cursor cursor;
+        //private System.Windows.Forms.Cursor cursor;
         private System.IntPtr handle;
 
-        private static readonly MouseCursor asArrow = new MouseCursor(
+/*        private static readonly MouseCursor asArrow = new MouseCursor(
             System.Windows.Forms.Cursors.Arrow
         );
         private static readonly MouseCursor asHand = new MouseCursor(
@@ -344,5 +385,5 @@ namespace Epsitec.Common.Widgets
         private static readonly MouseCursor asSizeWe = new MouseCursor(
             System.Windows.Forms.Cursors.SizeWE
         );
-    }
+*/    }
 }

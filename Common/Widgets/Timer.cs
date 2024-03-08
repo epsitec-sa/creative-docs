@@ -11,6 +11,10 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public sealed class Timer : System.IDisposable, IIsDisposed
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - implement Timer (stub)
+        // ******************************************************************
         public Timer() { }
 
         public bool HigherAccuracy
@@ -91,15 +95,18 @@ namespace Epsitec.Common.Widgets
 
         private void SetupTimerIfNeeded()
         {
+            /*
             if (this.timer == null)
             {
                 this.timer = new System.Windows.Forms.Timer();
                 this.timer.Tick += this.HandleTimerTick;
             }
+            */
         }
 
         private void CleanupTimerIfNeeded()
         {
+            /*
             var timer = this.timer;
 
             //	Work on a copy of the timer variable, since the internal field
@@ -113,10 +120,12 @@ namespace Epsitec.Common.Widgets
                 timer.Tick -= this.HandleTimerTick;
                 timer.Dispose();
             }
+            */
         }
 
         private void UpdateTimerSettings()
         {
+            /*
             switch (this.state)
             {
                 case TimerState.Running:
@@ -152,6 +161,7 @@ namespace Epsitec.Common.Widgets
                     }
                     break;
             }
+            */
         }
 
         public void Start()
@@ -212,6 +222,7 @@ namespace Epsitec.Common.Widgets
 
         public void Suspend()
         {
+            /*
             //	Suspend le timer (le temps restant est conservé jusqu'au prochain démarrage
             //	du timer).
 
@@ -226,6 +237,7 @@ namespace Epsitec.Common.Widgets
                 this.remainingTime = this.expirationDate.Subtract(System.DateTime.Now);
                 this.state = TimerState.Suspended;
             }
+            */
         }
 
         public void Stop()
@@ -251,8 +263,10 @@ namespace Epsitec.Common.Widgets
 
         private void HandleTimerTick(object sender, System.EventArgs e)
         {
+            /*
             this.timer.Stop();
             this.OnTimeElapsed();
+            */
         }
 
         private void OnTimeElapsed()
@@ -313,7 +327,7 @@ namespace Epsitec.Common.Widgets
 
         public event Support.EventHandler TimeElapsed;
 
-        private System.Windows.Forms.Timer timer;
+        //private System.Windows.Forms.Timer timer;
         private TimerState state;
         private System.DateTime expirationDate;
         private System.TimeSpan remainingTime;

@@ -10,6 +10,10 @@ namespace Epsitec.Common.Widgets.Platform
     /// </summary>
     internal static class RestartManager
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - see if we need this RestartManager at all
+        // ******************************************************************
         internal static void Setup()
         {
             if (RestartManager.initialized)
@@ -41,7 +45,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private static void SetExceptionMode()
         {
-            if (Epsitec.Common.Debug.GeneralExceptionCatcher.IsActive)
+/*            if (Epsitec.Common.Debug.GeneralExceptionCatcher.IsActive)
             {
                 //	Don't set the exception mode since we already have an exception
                 //	handler in place.
@@ -67,7 +71,7 @@ namespace Epsitec.Common.Widgets.Platform
                     //	did it before creating the first Form instances...
                 }
             }
-        }
+*/        }
 
         private static void SetupVistaRestartManager(string commandLine)
         {
@@ -109,7 +113,7 @@ namespace Epsitec.Common.Widgets.Platform
             return canceled;
         }
 
-        internal static bool HandleWndProc(ref System.Windows.Forms.Message msg)
+/*        internal static bool HandleWndProc(ref System.Windows.Forms.Message msg)
         {
             if (System.Environment.OSVersion.Version.Major > 5)
             {
@@ -125,8 +129,8 @@ namespace Epsitec.Common.Widgets.Platform
 
             return false;
         }
-
-        private static bool QueryEndSession(ref System.Windows.Forms.Message msg)
+*/
+/*        private static bool QueryEndSession(ref System.Windows.Forms.Message msg)
         {
             int lParam = msg.LParam.ToInt32();
 
@@ -158,7 +162,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return false;
         }
-
+*/
         private static void NotifyEndSessionPending()
         {
             //	TODO: ...
@@ -166,7 +170,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private static void NotifySessionEnding()
         {
-            System.Windows.Forms.Application.Exit();
+            //System.Windows.Forms.Application.Exit();
         }
 
         private static bool initialized;

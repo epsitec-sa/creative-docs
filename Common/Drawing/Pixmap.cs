@@ -5,11 +5,15 @@ using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Drawing
 {
-    using BitmapData = System.Drawing.Imaging.BitmapData;
-    using PixelFormat = System.Drawing.Imaging.PixelFormat;
+    //using BitmapData = System.Drawing.Imaging.BitmapData;
+    //using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
     public class Pixmap : System.IDisposable
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - implement Pixmap (stub)
+        // ******************************************************************
         public Pixmap() { }
 
         ~Pixmap()
@@ -143,7 +147,7 @@ namespace Epsitec.Common.Drawing
             AntiGrain.Buffer.Clear(this.aggBuffer);
         }
 
-        public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
+/*        public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
         {
             System.IntPtr hdc = graphics.GetHdc();
 
@@ -192,7 +196,7 @@ namespace Epsitec.Common.Drawing
                 graphics.ReleaseHdc(hdc);
             }
         }
-
+*/
         public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
         {
             AntiGrain.Buffer.Paint(
@@ -296,7 +300,7 @@ namespace Epsitec.Common.Drawing
             );
         }
 
-        public void GetMemoryLayout(
+/*        public void GetMemoryLayout(
             out int width,
             out int height,
             out int stride,
@@ -312,7 +316,7 @@ namespace Epsitec.Common.Drawing
                 out stride
             );
         }
-
+*/
         public System.IntPtr GetMemoryBitmapHandle()
         {
             return AntiGrain.Buffer.GetMemoryBitmapHandle(this.aggBuffer);
@@ -352,6 +356,7 @@ namespace Epsitec.Common.Drawing
 
         public void PremultiplyAlpha()
         {
+            /*
             int pixWidth;
             int pixHeight;
             int pixStride;
@@ -406,6 +411,7 @@ namespace Epsitec.Common.Drawing
                     }
                 }
             }
+            */
         }
 
         #region IDisposable Members
@@ -435,6 +441,7 @@ namespace Epsitec.Common.Drawing
         {
             public RawData(Pixmap pixmap)
             {
+                /*
                 pixmap.GetMemoryLayout(
                     out this.dx,
                     out this.dy,
@@ -442,12 +449,13 @@ namespace Epsitec.Common.Drawing
                     out this.format,
                     out this.pixels
                 );
+                */
             }
 
-            public RawData(System.Drawing.Bitmap bitmap)
+/*            public RawData(System.Drawing.Bitmap bitmap)
                 : this(bitmap, System.Drawing.Imaging.PixelFormat.Format32bppArgb) { }
-
-            public RawData(System.Drawing.Bitmap bitmap, System.Drawing.Imaging.PixelFormat format)
+*/
+/*            public RawData(System.Drawing.Bitmap bitmap, System.Drawing.Imaging.PixelFormat format)
             {
                 System.Drawing.Rectangle clip = new System.Drawing.Rectangle(
                     0,
@@ -478,7 +486,7 @@ namespace Epsitec.Common.Drawing
             {
                 get { return this.format; }
             }
-
+*/
             public int Stride
             {
                 get { return this.stride; }
@@ -501,13 +509,15 @@ namespace Epsitec.Common.Drawing
 
             public bool IsBottomUp
             {
-                get { return this.bm == null; }
+                //get { return this.bm == null; }
+                get { return false; }
             }
 
             public Color this[int x, int y]
             {
                 get
                 {
+                    /*
                     byte r,
                         g,
                         b,
@@ -535,9 +545,12 @@ namespace Epsitec.Common.Drawing
                     }
 
                     return Color.FromAlphaRgb(a / 255.0, r / 255.0, g / 255.0, b / 255.0);
+                    */
+                    return Color.Empty;
                 }
                 set
                 {
+                    /*
                     byte r = (byte)(value.R * 255.0 + .5);
                     byte g = (byte)(value.G * 255.0 + .5);
                     byte b = (byte)(value.B * 255.0 + .5);
@@ -563,6 +576,7 @@ namespace Epsitec.Common.Drawing
                         ptr[1] = g;
                         ptr[0] = b;
                     }
+                    */
                 }
             }
 
@@ -576,6 +590,7 @@ namespace Epsitec.Common.Drawing
 
             public void CopyFrom(RawData that)
             {
+                /*
                 if (this.format != that.format)
                 {
                     throw new System.InvalidOperationException(
@@ -640,6 +655,7 @@ namespace Epsitec.Common.Drawing
                         dstdata += dstymul;
                     }
                 }
+                */
             }
 
             public void CopyTo(RawData raw)
@@ -649,6 +665,7 @@ namespace Epsitec.Common.Drawing
 
             protected virtual void Dispose(bool disposing)
             {
+                /*
                 if (disposing)
                 {
                     if (this.bm != null)
@@ -659,16 +676,17 @@ namespace Epsitec.Common.Drawing
                         this.bmData = null;
                     }
                 }
+                */
             }
 
             protected int stride;
             protected System.IntPtr pixels;
             protected int dx,
                 dy;
-            protected PixelFormat format;
+            //protected PixelFormat format;
 
-            protected System.Drawing.Bitmap bm;
-            protected BitmapData bmData;
+            //protected System.Drawing.Bitmap bm;
+            //protected BitmapData bmData;
         }
         #endregion
 

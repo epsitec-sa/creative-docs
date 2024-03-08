@@ -12,6 +12,10 @@ namespace Epsitec.Common.Text.Exchange.Internal
     [System.Serializable]
     public class FormattedText
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - clipboard related class, some stuff removed (stub)
+        // ******************************************************************
         public FormattedText()
         {
             this.encodedText = "";
@@ -28,11 +32,11 @@ namespace Epsitec.Common.Text.Exchange.Internal
             set { this.encodedText = value; }
         }
 
-        public static System.Windows.Forms.DataFormats.Format ClipboardFormat
+/*        public static System.Windows.Forms.DataFormats.Format ClipboardFormat
         {
             get { return FormattedText.format; }
         }
-
+*/
         public override string ToString()
         {
             return this.EncodedText;
@@ -41,10 +45,10 @@ namespace Epsitec.Common.Text.Exchange.Internal
         static FormattedText()
         {
             // Registers a new data format with the windows Clipboard
-            format = System.Windows.Forms.DataFormats.GetFormat("Epsitec.FormattedText");
+            //format = System.Windows.Forms.DataFormats.GetFormat("Epsitec.FormattedText");
         }
 
-        private static System.Windows.Forms.DataFormats.Format format;
+        //private static System.Windows.Forms.DataFormats.Format format;
         private string encodedText;
     }
 }

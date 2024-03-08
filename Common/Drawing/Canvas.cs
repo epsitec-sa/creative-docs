@@ -7,9 +7,13 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public class Canvas : Image
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - reconnect the bitmap cache
+        // ******************************************************************
         static Canvas()
         {
-            Bitmap.CanvasFactory = new Canvas.Factory();
+            //Bitmap.CanvasFactory = new Canvas.Factory();
         }
 
         internal Canvas(byte[] data)
@@ -285,11 +289,12 @@ namespace Epsitec.Common.Drawing
 
         public override Bitmap BitmapImage
         {
-            get
+/*            get
             {
                 this.ValidateCache();
                 return this.cache;
             }
+*/            get { return null; }
         }
 
         public override Size Size
@@ -329,7 +334,7 @@ namespace Epsitec.Common.Drawing
 
         protected void ValidateCache()
         {
-            //	Met le bitmap de l'image en cache, à la taille selon les préférences.
+/*            //	Met le bitmap de l'image en cache, à la taille selon les préférences.
             if (this.cache == null)
             {
                 Size size = this.Size;
@@ -415,7 +420,7 @@ namespace Epsitec.Common.Drawing
                     this.cache = Bitmap.FromNativeBitmap(bitmap, this.Origin, size).BitmapImage;
                 }
             }
-        }
+*/        }
 
         protected void ValidateGeometry()
         {
@@ -432,12 +437,12 @@ namespace Epsitec.Common.Drawing
 
         protected void InvalidateCache()
         {
-            if (this.cache != null)
+/*            if (this.cache != null)
             {
                 this.cache.Dispose();
                 this.cache = null;
             }
-        }
+*/        }
 
         protected override void Dispose(bool disposing)
         {
@@ -692,7 +697,7 @@ namespace Epsitec.Common.Drawing
         protected double zoom = 1.0;
         protected Drawing.Color color = Drawing.Color.Empty;
         protected object adorner = null;
-        protected Bitmap cache;
+        //protected Bitmap cache;
         protected int debugDeep = -1;
 
         static ICanvasEngine[] engines = new ICanvasEngine[0];

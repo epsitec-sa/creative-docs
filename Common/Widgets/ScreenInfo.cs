@@ -8,9 +8,14 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public class ScreenInfo
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - implement ScreenInfo (stub)
+        // ******************************************************************
         public static double PrimaryHeight
         {
-            get { return System.Windows.Forms.SystemInformation.PrimaryMonitorSize.Height; }
+            //get { return System.Windows.Forms.SystemInformation.PrimaryMonitorSize.Height; }
+            get { return 0; }
         }
 
         /// <summary>
@@ -19,7 +24,7 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public Drawing.Rectangle Bounds
         {
-            get
+/*            get
             {
                 int ox = this.screen.Bounds.Left;
                 int oy = (int)ScreenInfo.PrimaryHeight - this.screen.Bounds.Bottom;
@@ -28,6 +33,7 @@ namespace Epsitec.Common.Widgets
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
             }
+*/            get { return Drawing.Rectangle.Empty; }
         }
 
         /// <summary>
@@ -37,7 +43,7 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public Drawing.Rectangle WorkingArea
         {
-            get
+/*            get
             {
                 int ox = this.screen.WorkingArea.Left;
                 int oy = (int)ScreenInfo.PrimaryHeight - this.screen.WorkingArea.Bottom;
@@ -46,6 +52,7 @@ namespace Epsitec.Common.Widgets
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
             }
+*/            get { return Drawing.Rectangle.Empty; }
         }
 
         /// <summary>
@@ -54,13 +61,15 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public bool IsPrimary
         {
-            get { return this.screen.Primary; }
+            //get { return this.screen.Primary; }
+            get { return true; }
         }
 
         public string DeviceName
         {
             get
             {
+                /*
                 string name = this.screen.DeviceName;
                 int pos = name.IndexOf('\0');
 
@@ -70,6 +79,8 @@ namespace Epsitec.Common.Widgets
                 }
 
                 return name;
+                */
+                return null;
             }
         }
 
@@ -79,7 +90,7 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public static Drawing.Rectangle GlobalArea
         {
-            get
+/*            get
             {
                 int ox = System.Windows.Forms.SystemInformation.VirtualScreen.Left;
                 int oy =
@@ -90,8 +101,8 @@ namespace Epsitec.Common.Widgets
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
             }
+*/            get { return Drawing.Rectangle.Empty; }
         }
-
         /// <summary>
         /// Construit la table de tous les écrans disponibles.
         /// </summary>
@@ -99,6 +110,7 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
+                /*
                 System.Windows.Forms.Screen[] screens = System.Windows.Forms.Screen.AllScreens;
 
                 int n = screens.Length;
@@ -111,6 +123,8 @@ namespace Epsitec.Common.Widgets
                 }
 
                 return infos;
+                */
+                return null;
             }
         }
 
@@ -121,6 +135,7 @@ namespace Epsitec.Common.Widgets
         /// <returns>écran trouvé</returns>
         public static ScreenInfo Find(Drawing.Point point)
         {
+            /*
             int ox = (int)(point.X + 0.5);
             int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(point.Y + 0.5);
 
@@ -128,6 +143,8 @@ namespace Epsitec.Common.Widgets
                 new System.Drawing.Point(ox, oy)
             );
             return screen == null ? null : new ScreenInfo(screen);
+            */
+            return null;
         }
 
         /// <summary>
@@ -137,6 +154,7 @@ namespace Epsitec.Common.Widgets
         /// <returns>écran trouvé</returns>
         public static ScreenInfo Find(Drawing.Rectangle rect)
         {
+            /*
             int ox = (int)(rect.Left + 0.5);
             int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(rect.Top + 0.5);
             int dx = (int)(rect.Width + 0.5);
@@ -146,6 +164,8 @@ namespace Epsitec.Common.Widgets
                 new System.Drawing.Rectangle(ox, oy, dx, dy)
             );
             return screen == null ? null : new ScreenInfo(screen);
+            */
+            return null;
         }
 
         /// <summary>
@@ -185,11 +205,11 @@ namespace Epsitec.Common.Widgets
             return rect;
         }
 
-        protected ScreenInfo(System.Windows.Forms.Screen screen)
+/*        protected ScreenInfo(System.Windows.Forms.Screen screen)
         {
             this.screen = screen;
         }
-
-        private System.Windows.Forms.Screen screen;
+*/
+        //private System.Windows.Forms.Screen screen;
     }
 }

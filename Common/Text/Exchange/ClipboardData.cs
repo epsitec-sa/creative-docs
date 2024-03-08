@@ -7,6 +7,10 @@ namespace Epsitec.Common.Text.Exchange
 {
     public class ClipboardData
     {
+        // ******************************************************************
+        // TODO bl-net8-cross
+        // - implement ClipboardData (stub)
+        // ******************************************************************
         public void Clear()
         {
             this.list.Clear();
@@ -29,6 +33,7 @@ namespace Epsitec.Common.Text.Exchange
 
         public void CopyToSystemClipboard()
         {
+            /*
             System.Windows.Forms.IDataObject data = new System.Windows.Forms.DataObject();
 
             foreach (Record record in this.list)
@@ -51,6 +56,7 @@ namespace Epsitec.Common.Text.Exchange
             }
 
             System.Windows.Forms.Clipboard.SetDataObject(data, true);
+            */
         }
 
         public bool Contains(string id)
@@ -68,6 +74,7 @@ namespace Epsitec.Common.Text.Exchange
 
         public void CopyFromSystemClipboard()
         {
+            /*
             this.list.Clear();
 
             System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject();
@@ -107,10 +114,12 @@ namespace Epsitec.Common.Text.Exchange
                     }
                 }
             }
+            */
         }
 
         public string GetDataText()
         {
+            /*
             string text;
 
             text = this.GetData("System.Text") as string;
@@ -135,10 +144,13 @@ namespace Epsitec.Common.Text.Exchange
             }
 
             return null;
+            */
+            return null;
         }
 
         public string GetFormattedText()
         {
+            /*
             Internal.FormattedText text =
                 this.GetData(Internal.FormattedText.ClipboardFormat.Name) as Internal.FormattedText;
 
@@ -150,6 +162,8 @@ namespace Epsitec.Common.Text.Exchange
             {
                 return text.EncodedText;
             }
+            */
+            return null;
         }
 
         public object GetData(string id)
@@ -176,10 +190,12 @@ namespace Epsitec.Common.Text.Exchange
 
         public void SetFormattedText(string text)
         {
+            /*
             Internal.FormattedText formattedText =
                 new Epsitec.Common.Text.Exchange.Internal.FormattedText(text);
 
             this.Add(Internal.FormattedText.ClipboardFormat.Name, formattedText);
+            */
         }
 
         #region Record Structure

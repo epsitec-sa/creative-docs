@@ -1,7 +1,7 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Document.PDF;
+//using Epsitec.Common.Document.PDF;
 
 namespace Common.Document.ExportEngine
 {
@@ -13,7 +13,7 @@ namespace Common.Document.ExportEngine
         [System.STAThread]
         static void Main()
         {
-            try
+/*            try
             {
                 System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
                 string[] args = System.Environment.GetCommandLineArgs();
@@ -58,6 +58,6 @@ namespace Common.Document.ExportEngine
                 System.Diagnostics.Debug.WriteLine("ExportEngine: threw exception " + ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.StackTrace);
             }
-        }
+*/        }
     }
 }

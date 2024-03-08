@@ -94,7 +94,7 @@ namespace Epsitec.Common.IO
         /// </remarks>
         public static readonly string defaultLogFile = string.Format(
             @"{0}\Logs\logs.txt",
-            System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.UserAppDataPath)
+            System.IO.Path.GetDirectoryName(Support.Globals.Directories.UserAppData)
         );
     }
 }

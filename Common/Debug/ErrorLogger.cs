@@ -111,7 +111,7 @@ namespace Epsitec.Common.Debug
         /// </remarks>
         public static readonly string defaultErrorFile = string.Format(
             @"{0}\Logs\errors.txt",
-            System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.UserAppDataPath)
+            System.IO.Path.GetDirectoryName(Support.Globals.Directories.UserAppData)
         );
     }
 }
