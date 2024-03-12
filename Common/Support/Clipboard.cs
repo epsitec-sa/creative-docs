@@ -6,21 +6,29 @@ using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Support
 {
-    using IDataObject = System.Windows.Forms.IDataObject;
+    //using IDataObject = System.Windows.Forms.IDataObject;
 
     /// <summary>
     /// La classe Clipboard donne accès au presse-papier.
     /// </summary>
     public class Clipboard
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement Clipboard (stub)
+        // ********************************************************************
+
         public static ClipboardReadData GetData()
         {
-            return new ClipboardReadData(null);
+            //return new ClipboardReadData(null);
+            return new ClipboardReadData();
         }
 
         public static void SetData(ClipboardWriteData data)
         {
+            /*
             System.Windows.Forms.Clipboard.SetDataObject(data.Data, true);
+            */
         }
 
         public static string ConvertBrokenUtf8ToString(string value)
@@ -418,15 +426,16 @@ namespace Epsitec.Common.Support
             return buffer.ToString();
         }
 
-        public static ClipboardReadData CreateReadDataFromIDataObject(IDataObject data)
+/*        public static ClipboardReadData CreateReadDataFromIDataObject(IDataObject data)
         {
             return new ClipboardReadData(data);
         }
-
+*/
         #region Clipboard setup
 
         static Clipboard()
         {
+            /*
             //	Référence: http://www.w3.org/TR/REC-html40/sgml/entities.html#iso-88591
 
             string[] pairs = new string[]
@@ -647,6 +656,7 @@ namespace Epsitec.Common.Support
 
             Platform.Win32.Clipboard.Initialize();
             Platform.Win32.Clipboard.DataChanged += Clipboard.HandleDataChanged;
+            */
         }
 
         #endregion

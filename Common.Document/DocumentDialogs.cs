@@ -10,6 +10,11 @@ namespace Epsitec.Common.Document
     /// </summary>
     public class DocumentDialogs
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement DocumentDialogs (stub)
+        // ********************************************************************
+
         public DocumentDialogs(Document document)
         {
             this.document = document;
@@ -1469,6 +1474,7 @@ namespace Epsitec.Common.Document
 
         private void HandleFilenameButtonClicked(object sender, MessageEventArgs e)
         {
+            /*
             Common.Dialogs.FileSaveDialog dialog = new Common.Dialogs.FileSaveDialog();
             dialog.FileName = this.document.Settings.PrintInfo.PrintFilename;
             dialog.Title = Res.Strings.Dialog.Print.ToFile.Title;
@@ -1486,6 +1492,7 @@ namespace Epsitec.Common.Document
             this.document.Settings.PrintInfo.PrintFilename = dialog.FileName;
             this.document.Settings.PrintInfo.PrintToFile = true;
             this.UpdatePrint(false);
+            */
         }
         #endregion
 
@@ -1856,6 +1863,7 @@ namespace Epsitec.Common.Document
 
         private void HandlePrinterComboOpening(object sender, CancelEventArgs e)
         {
+            /*
             TextFieldCombo field = sender as TextFieldCombo;
             field.Items.Clear();
 
@@ -1866,6 +1874,7 @@ namespace Epsitec.Common.Document
             {
                 field.Items.Add(Types.FormattedText.Escape(name));
             }
+            */
         }
 
         private void HandlePrinterComboClosed(object sender)
@@ -1876,6 +1885,7 @@ namespace Epsitec.Common.Document
 
         private void HandlePrinterButtonClicked(object sender, MessageEventArgs e)
         {
+            /*
             Button button = sender as Button;
             Common.Dialogs.PrintDialog dialog = this.document.PrintDialog;
             Settings.PrintInfo pi = this.document.Settings.PrintInfo;
@@ -1893,10 +1903,12 @@ namespace Epsitec.Common.Document
                 pi.PrintName = dialog.Document.PrinterSettings.PrinterName;
                 this.UpdatePrint(false);
             }
+            */
         }
 
         protected void UpdatePrinter(string name)
         {
+            /*
             Settings.Abstract settings = this.document.Settings.Get(name);
             if (settings == null)
                 return;
@@ -1907,6 +1919,7 @@ namespace Epsitec.Common.Document
             Common.Dialogs.PrintDialog dialog = this.document.PrintDialog;
             TextFieldCombo field = this.WidgetsTableSearch(name, "") as TextFieldCombo;
             field.Text = Types.FormattedText.Escape(this.document.Settings.PrintInfo.PrintName);
+            */
         }
         #endregion
 

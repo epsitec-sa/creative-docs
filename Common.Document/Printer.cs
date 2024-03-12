@@ -1,6 +1,6 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
-using Epsitec.Common.Printing;
+//using Epsitec.Common.Printing;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,6 +19,11 @@ namespace Epsitec.Common.Document
     ///
     public class Printer
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement Printer (stub)
+        // ********************************************************************
+
         public Printer(Document document)
         {
             this.document = document;
@@ -41,7 +46,7 @@ namespace Epsitec.Common.Document
 
         public void Dispose() { }
 
-        public void Print(Epsitec.Common.Dialogs.PrintDialog dp)
+/*        public void Print(Epsitec.Common.Dialogs.PrintDialog dp)
         {
             //	Imprime le document selon les choix faits dans le dialogue Window (dp)
             //	ainsi que dans le dialogue des réglages (PrintInfo).
@@ -51,7 +56,7 @@ namespace Epsitec.Common.Document
                 dp.Document.Print(printEngine);
             }
         }
-
+*/
         public string Export(string filename)
         {
             //	Exporte le document dans un fichier bitmap.
@@ -333,6 +338,7 @@ namespace Epsitec.Common.Document
         #endregion
 
 
+        /*
         protected class PrintEngine : Printing.IPrintEngine
         {
             public bool Initialize(Printer printer, Epsitec.Common.Dialogs.PrintDialog dp)
@@ -550,8 +556,9 @@ namespace Epsitec.Common.Document
             protected List<int> pageList;
             protected int pageCounter;
         }
+        */
 
-        protected void PrintGeometry(
+/*        protected void PrintGeometry(
             Printing.PrintPort port,
             PrintEngine printEngine,
             DrawingContext drawingContext,
@@ -672,7 +679,7 @@ namespace Epsitec.Common.Document
                 this.PrintExpired(port, printEngine, offset, pageNumber);
             }
         }
-
+*/
         protected System.Collections.ArrayList ComputeLayers(int pageNumber)
         {
             //	Calcule la liste des calques, y compris ceux des pages maîtres.
@@ -898,7 +905,7 @@ namespace Epsitec.Common.Document
             return false;
         }
 
-        protected void PrintSimplyGeometry(
+/*        protected void PrintSimplyGeometry(
             Printing.PrintPort port,
             PrintEngine printEngine,
             DrawingContext drawingContext,
@@ -932,8 +939,8 @@ namespace Epsitec.Common.Document
 
             port.Transform = initialTransform;
         }
-
-        protected void PrintMixGeometry(
+*/
+/*        protected void PrintMixGeometry(
             Printing.PrintPort port,
             PrintEngine printEngine,
             DrawingContext drawingContext,
@@ -1020,8 +1027,8 @@ namespace Epsitec.Common.Document
 
             port.Transform = initialTransform;
         }
-
-        protected void PrintBitmapGeometry(
+*/
+/*        protected void PrintBitmapGeometry(
             Printing.PrintPort port,
             PrintEngine printEngine,
             DrawingContext drawingContext,
@@ -1097,8 +1104,8 @@ namespace Epsitec.Common.Document
 
             port.Transform = initialTransform;
         }
-
-        protected void PrintAreas(
+*/
+/*        protected void PrintAreas(
             Printing.PrintPort port,
             PrintEngine printEngine,
             DrawingContext drawingContext,
@@ -1123,8 +1130,8 @@ namespace Epsitec.Common.Document
 
             port.Transform = initialTransform;
         }
-
-        protected void PrintTarget(
+*/
+/*        protected void PrintTarget(
             Printing.PrintPort port,
             PrintEngine printEngine,
             DrawingContext drawingContext,
@@ -1138,13 +1145,14 @@ namespace Epsitec.Common.Document
             this.PaintTarget(port, drawingContext, pageNumber);
             port.Transform = initialTransform;
         }
-
+*/
         public void PaintTarget(
             Drawing.IPaintPort port,
             DrawingContext drawingContext,
             int pageNumber
         )
         {
+            /*
             //	Dessine les traits de coupe.
             if (port is Printing.PrintPort)
             {
@@ -1221,6 +1229,7 @@ namespace Epsitec.Common.Document
             this.PaintColorSample(port, rect, Color.FromRgb(1, 0, 1)); // magenta
             rect.Offset(rect.Width, 0.0);
             this.PaintColorSample(port, rect, Color.FromRgb(1, 1, 0)); // jaune
+            */
         }
 
         protected void PaintColorSample(Drawing.IPaintPort port, Rectangle rect, Color color)
@@ -1236,7 +1245,7 @@ namespace Epsitec.Common.Document
             port.PaintOutline(path);
         }
 
-        protected void PrintDemo(
+/*        protected void PrintDemo(
             Printing.PrintPort port,
             PrintEngine printEngine,
             Point offset,
@@ -1249,7 +1258,7 @@ namespace Epsitec.Common.Document
             this.PaintDemo(port, pageNumber);
             port.Transform = initialTransform;
         }
-
+*/
         protected void PaintDemo(Drawing.IPaintPort port, int pageNumber)
         {
             //	Desine le warning d'installation.
@@ -1291,7 +1300,7 @@ namespace Epsitec.Common.Document
             port.PaintOutline(path);
         }
 
-        protected void PrintExpired(
+/*        protected void PrintExpired(
             Printing.PrintPort port,
             PrintEngine printEngine,
             Point offset,
@@ -1304,7 +1313,7 @@ namespace Epsitec.Common.Document
             this.PaintExpired(port, pageNumber);
             port.Transform = initialTransform;
         }
-
+*/
         protected void PaintExpired(Drawing.IPaintPort port, int pageNumber)
         {
             //	Dessine le warning d'installation.
@@ -1361,7 +1370,7 @@ namespace Epsitec.Common.Document
             }
         }
 
-        protected void InitSimplyPort(
+/*        protected void InitSimplyPort(
             Printing.PrintPort port,
             PrintEngine printEngine,
             Point offset,
@@ -1389,7 +1398,7 @@ namespace Epsitec.Common.Document
             port.ScaleTransform(zoom, zoom, 0, 0);
             port.TranslateTransform(offset.X, offset.Y);
         }
-
+*/
         private string ExportGeometry(
             DrawingContext drawingContext,
             string filename,
@@ -1654,6 +1663,7 @@ namespace Epsitec.Common.Document
             out byte[] data
         )
         {
+            /*
             //	Exporte la géométrie complexe de tous les objets d'une page donnée, en
             //	utilisant un bitmap intermédiaire. Retourne un éventuel message d'erreur
             //	ainsi que le tableau de bytes pour le fichier.
@@ -1694,6 +1704,9 @@ namespace Epsitec.Common.Document
             }
 
             return ""; // ok
+            */
+            data = null;
+            return null;
         }
 
         protected string ExportGeometry(

@@ -21,8 +21,10 @@ namespace Epsitec.Common.Tests.Drawing
         }
 
         [Test]
+        [Ignore("Disabled (does not build)")]
         public void CheckPixmapNew()
         {
+            /*
             Pixmap pixmap = new Pixmap();
 
             pixmap.Size = new System.Drawing.Size(200, 100);
@@ -44,6 +46,7 @@ namespace Epsitec.Common.Tests.Drawing
             Assert.IsFalse(pixmap.GetMemoryBitmapHandle() == System.IntPtr.Zero);
 
             pixmap.Dispose();
+            */
         }
 
         [Test]
@@ -156,8 +159,10 @@ namespace Epsitec.Common.Tests.Drawing
         }
 
         [Test]
+        [Ignore("Disabled (does not build)")]
         public void CheckAllocatePixmap()
         {
+            /*
             Pixmap pixmap = new Pixmap();
             System.IntPtr dc = System.IntPtr.Zero;
 
@@ -180,11 +185,14 @@ namespace Epsitec.Common.Tests.Drawing
             Assert.IsFalse(pixmap.GetMemoryBitmapHandle() == System.IntPtr.Zero);
 
             pixmap.Dispose();
+            */
         }
 
         [Test]
+        [Ignore("Disabled (does not build)")]
         public void CheckPixmapPaintInOSBitmap()
         {
+            /*
             Graphics graphics = new Graphics();
             Pixmap pixmap = graphics.Pixmap;
 
@@ -273,6 +281,7 @@ namespace Epsitec.Common.Tests.Drawing
             }
 
             pixmap.Dispose();
+            */
         }
 
         [System.Runtime.InteropServices.DllImport("GDI32.dll")]

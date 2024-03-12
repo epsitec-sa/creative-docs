@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using System;
 
 namespace Epsitec.Common.Widgets.Platform
 {
@@ -38,6 +39,57 @@ namespace Epsitec.Common.Widgets.Platform
             Types.BindingAsyncOperation.DefineApplicationThreadInvoker(Window.dispatchWindow);
             */
         }
+
+        // --------------------------------------------------------------------------------------------
+        //                             System.Windows.Forms.Form stubs
+        // --------------------------------------------------------------------------------------------
+        // We are missing several properties by removing the inheritance from System.Windows.Forms.Form 
+        // We add them here as stubs
+        
+        public bool InvokeRequired { get; }
+
+        public System.IntPtr Handle { get; }
+
+        public void Activate() {
+            throw new NotImplementedException();
+        }
+
+        public bool AllowDrop { get; set; }
+
+        public System.Drawing.Rectangle Bounds { get; set; }
+
+        public bool Capture { get; set; }
+
+        public bool Focused { get; }
+
+        public System.Drawing.Point Location { get; set; }
+
+        //public System.Windows.Forms.Form? Owner { get; set; }
+
+        public bool ShowIcon { get; set; }
+
+        public System.Drawing.Size Size { get; set; }
+
+        public bool Focus ()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Invoke (Action method)
+        {
+            throw new NotImplementedException();
+        }
+
+        public System.Drawing.Point PointToClient (System.Drawing.Point p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public System.Drawing.Point PointToScreen (System.Drawing.Point p)
+        {
+            throw new NotImplementedException();
+        }
+        // --------------------------------------------------------------------------------------------
 
         public static void Initialize()
         {

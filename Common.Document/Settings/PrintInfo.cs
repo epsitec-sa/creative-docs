@@ -43,6 +43,10 @@ namespace Epsitec.Common.Document.Settings
     [System.Serializable()]
     public class PrintInfo : ISerializable
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement PrintName property (stub)
+        // ********************************************************************
         public PrintInfo(Document document)
         {
             this.document = document;
@@ -84,11 +88,14 @@ namespace Epsitec.Common.Document.Settings
         {
             get
             {
+                /*
                 if (this.printName == "")
                 {
                     return this.document.PrintDialog.Document.PrinterSettings.PrinterName;
                 }
                 return this.printName;
+                */
+                return null;
             }
             set { this.printName = value; }
         }

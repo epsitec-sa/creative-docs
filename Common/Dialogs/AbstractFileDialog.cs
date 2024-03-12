@@ -19,6 +19,11 @@ namespace Epsitec.Common.Dialogs
     /// </summary>
     public abstract class AbstractFileDialog
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement AbstractFileDialog (stub)
+        // ********************************************************************
+
         public AbstractFileDialog()
         {
             this.filters = new FilterCollection(null);
@@ -110,6 +115,7 @@ namespace Epsitec.Common.Dialogs
 
         public DialogResult ShowDialog()
         {
+            /*
             System.Windows.Forms.FileDialog dialog;
 
             switch (this.fileDialogType)
@@ -173,6 +179,8 @@ namespace Epsitec.Common.Dialogs
             {
                 return this.result;
             }
+            */
+            return DialogResult.None;
         }
 
         protected virtual string RedirectPath(string path)
@@ -333,7 +341,7 @@ namespace Epsitec.Common.Dialogs
         #endregion
 
 
-        private static DialogResult ConvertWindowsResult(
+/*        private static DialogResult ConvertWindowsResult(
             System.Windows.Forms.DialogResult windowsResult
         )
         {
@@ -349,7 +357,7 @@ namespace Epsitec.Common.Dialogs
                     return DialogResult.None;
             }
         }
-
+*/
         public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
 
         private readonly FilterCollection filters;

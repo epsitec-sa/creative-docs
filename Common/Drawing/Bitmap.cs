@@ -610,7 +610,7 @@ namespace Epsitec.Common.Drawing
             return null;
         }
 
-/*        public static Image FromImage(NativeBitmap image)
+        public static Image FromImage(NativeBitmap image)
         {
             if ((image == null) || (image.IsValid == false))
             {
@@ -629,7 +629,7 @@ namespace Epsitec.Common.Drawing
                 return null;
             }
         }
-*/
+
         public static Image FromPixmap(Pixmap pixmap)
         {
             Bitmap bitmap = new Bitmap();

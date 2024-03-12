@@ -478,11 +478,17 @@ namespace Epsitec.Common.Drawing
                 this.dy = this.bmData.Height;
                 this.format = format;
             }
+*/
 
-            public RawData(Image image)
+/*            public RawData(Image image)
                 : this(image.BitmapImage.NativeBitmap) { }
+*/
+            public RawData(Image image)
+            {
+                throw new System.NotImplementedException();
+            }
 
-            public PixelFormat PixelFormat
+/*            public PixelFormat PixelFormat
             {
                 get { return this.format; }
             }

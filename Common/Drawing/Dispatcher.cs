@@ -9,6 +9,10 @@ namespace Epsitec.Common.Drawing.Platform
     /// </summary>
     public static class Dispatcher
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement Dispatcher (stub)
+        // ********************************************************************
         /// <summary>
         /// Initializes the dispatcher.
         /// </summary>
@@ -16,11 +20,13 @@ namespace Epsitec.Common.Drawing.Platform
 
         static Dispatcher()
         {
+            /*
             Dispatcher.form = new System.Windows.Forms.Form();
             Dispatcher.form.CreateControl();
             Dispatcher.DummyHandleEater(Dispatcher.form.Handle);
 
             System.Diagnostics.Debug.Assert(Dispatcher.form.IsHandleCreated);
+            */
         }
 
         static void DummyHandleEater(System.IntPtr handle) { }
@@ -32,11 +38,13 @@ namespace Epsitec.Common.Drawing.Platform
         /// <value><c>true</c> if a call to <c>Invoke</c> is required; otherwise, <c>false</c>.</value>
         public static bool InvokeRequired
         {
-            get { return Dispatcher.form.InvokeRequired; }
+            //get { return Dispatcher.form.InvokeRequired; }
+            get { return true; }
         }
 
         public static void Join(System.Threading.Thread thread)
         {
+            /*
             int counter = Dispatcher.invokeCounter;
             int timeout = 0;
 
@@ -50,6 +58,7 @@ namespace Epsitec.Common.Drawing.Platform
 
                 timeout = System.Math.Min(10, timeout + 1);
             }
+            */
         }
 
         /// <summary>
@@ -58,6 +67,7 @@ namespace Epsitec.Common.Drawing.Platform
         /// <param name="callback">The callback to execute synchronously.</param>
         public static void Invoke(System.Delegate callback)
         {
+            /*
             if (Dispatcher.InvokeRequired)
             {
                 lock (Dispatcher.exclusion)
@@ -78,11 +88,12 @@ namespace Epsitec.Common.Drawing.Platform
             {
                 callback.DynamicInvoke();
             }
+            */
         }
 
 #pragma warning disable 414
 
-        private static System.Windows.Forms.Form form;
+        //private static System.Windows.Forms.Form form;
         private static object exclusion = new object();
         private static bool isInvoking;
         private static int invokeCounter;

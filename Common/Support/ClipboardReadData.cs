@@ -3,14 +3,19 @@
 
 namespace Epsitec.Common.Support
 {
-    using IDataObject = System.Windows.Forms.IDataObject;
+    //using IDataObject = System.Windows.Forms.IDataObject;
 
     /// <summary>
     /// The <c>ClipboardReadData</c> class contains a snapshot of the clipboard contents.
     /// </summary>
     public sealed class ClipboardReadData
     {
-        internal ClipboardReadData(IDataObject data)
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement ClipboardReadData (stub)
+        // ********************************************************************
+
+/*        internal ClipboardReadData(IDataObject data)
         {
             if (data == null)
             {
@@ -23,19 +28,22 @@ namespace Epsitec.Common.Support
                 this.html = null;
             }
         }
-
+*/
         public string[] NativeFormats
         {
-            get { return this.data.GetFormats(false); }
+            //get { return this.data.GetFormats(false); }
+            get { return null; }
         }
 
         public string[] AllPossibleFormats
         {
-            get { return this.data.GetFormats(true); }
+            //get { return this.data.GetFormats(true); }
+            get { return null; }
         }
 
         public object Read(string format)
         {
+            /*
             if ((format == Clipboard.Formats.Hmtl) && (this.html != null))
             {
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder(this.html.Length);
@@ -51,6 +59,8 @@ namespace Epsitec.Common.Support
             {
                 return this.data.GetData(format, true);
             }
+            */
+            return null;
         }
 
         public string ReadAsString(string format)
@@ -65,11 +75,15 @@ namespace Epsitec.Common.Support
 
         public string ReadText()
         {
+            /*
             return this.data.GetData(typeof(string)) as string;
+            */
+            return null;
         }
 
         public string ReadHtmlFragment()
         {
+            /*
             string rawHtml = this.ReadAsString(Clipboard.Formats.Hmtl);
 
             if (rawHtml == null)
@@ -105,10 +119,13 @@ namespace Epsitec.Common.Support
             return Clipboard.ConvertBrokenUtf8ToString(
                 rawHtml.Substring(idxBegin, idxEnd - idxBegin)
             );
+            */
+            return null;
         }
 
         public string ReadHtmlDocument()
         {
+            /*
             string rawHtml = this.ReadAsString(Clipboard.Formats.Hmtl);
 
             if (rawHtml == null)
@@ -147,15 +164,21 @@ namespace Epsitec.Common.Support
             return Clipboard.ConvertBrokenUtf8ToString(
                 rawHtml.Substring(idxBegin, idxEnd - idxBegin)
             );
+            */
+            return null;
         }
 
         public string ReadTextLayout()
         {
+            /*
             return this.ReadAsString(Clipboard.Formats.TextLayoutV1);
+            */
+            return null;
         }
 
         public bool IsCompatible(ClipboardDataFormat format)
         {
+            /*
             switch (format)
             {
                 case ClipboardDataFormat.Text:
@@ -169,11 +192,16 @@ namespace Epsitec.Common.Support
             }
 
             return false;
+            */
+            return true;
         }
 
         public bool IsCompatible(string format)
         {
+            /*
             return this.data.GetDataPresent(format, true);
+            */
+            return true;
         }
 
         private string ExtractDigits(string text, int pos)
@@ -195,7 +223,7 @@ namespace Epsitec.Common.Support
             return buffer.ToString();
         }
 
-        private IDataObject data;
+        //private IDataObject data;
         private byte[] html;
     }
 }

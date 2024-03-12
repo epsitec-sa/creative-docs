@@ -15,6 +15,10 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public abstract class Application : DependencyObject
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement Application (stub)
+        // ********************************************************************
         protected Application()
         {
             this.applicationThread = System.Threading.Thread.CurrentThread;
@@ -195,12 +199,16 @@ namespace Epsitec.Common.Widgets
 
         public void RunMessageLoop()
         {
+            /*
             System.Windows.Forms.Application.Run(this.Window.PlatformWindow);
+            */
         }
 
         public void PumpMessageLoop()
         {
+            /*
             System.Windows.Forms.Application.DoEvents();
+            */
         }
 
         public void DispatchCommandLineCommands()
@@ -256,6 +264,7 @@ namespace Epsitec.Common.Widgets
 
         static Application()
         {
+            /*
             Application.mainApplicationThread = System.Threading.Thread.CurrentThread;
             Application.synchronizationContext = SynchronizationContext.Current;
 
@@ -263,6 +272,7 @@ namespace Epsitec.Common.Widgets
                 Application.SynchronizationContext
                     is System.Windows.Forms.WindowsFormsSynchronizationContext
             );
+            */
         }
 
         public static void QueueTasklets(string name, params TaskletJob[] jobs)

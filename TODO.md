@@ -22,3 +22,7 @@ A lot of asynchronous code is poorly tested with manual waiting loops of Thread.
 ## Manual testing
 Some tests are run together thourgh a RunTests method. They should be run separately by the test runner.
 I refactored most of those, there is still one such instance in Common.Tests.Drawing.OpenTypeTest
+
+## Rename classes with same name
+There are several classes and files with the same name in different namespaces.
+It would probably be clearer to rename them.

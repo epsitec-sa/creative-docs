@@ -215,10 +215,8 @@
     <None   Include="Debug\Tracker.cs" />
     <Compile Remove="Dialogs\AbstractDialog.cs" />
     <None   Include="Dialogs\AbstractDialog.cs" />
-    -->
     <Compile Remove="Dialogs\AbstractFileDialog.cs" />
     <None Include="Dialogs\AbstractFileDialog.cs" />
-    <!--
     <Compile Remove="Dialogs\AbstractMessageDialog.cs" />
     <None   Include="Dialogs\AbstractMessageDialog.cs" />
     <Compile Remove="Dialogs\AbstractOkCancelDialog.cs" />
@@ -363,10 +361,8 @@
     <None   Include="Drawing\DashedPath.cs" />
     <Compile Remove="Drawing\DirtyRegion.cs" />
     <None   Include="Drawing\DirtyRegion.cs" />
-    -->
     <Compile Remove="Drawing\Dispatcher.cs" />
     <None Include="Drawing\Dispatcher.cs" />
-    <!--
     <Compile Remove="Drawing\DrawingColorExtensions.cs" />
     <None   Include="Drawing\DrawingColorExtensions.cs" />
     -->
@@ -505,10 +501,8 @@
     <!--
     <Compile Remove="Drawing\NativeBitmap.cs" />
     <None Include="Drawing\NativeBitmap.cs" />
-    -->
     <Compile Remove="Drawing\NativeIcon.cs" />
     <None   Include="Drawing\NativeIcon.cs" />
-    <!--
     <Compile Remove="Drawing\NativeTextRenderer.cs" />
     <None   Include="Drawing\NativeTextRenderer.cs" />
     -->
@@ -769,7 +763,6 @@
     <None   Include="Support\CancelEventArgs.cs" />
     <Compile Remove="Support\CaptionCache.cs" />
     <None   Include="Support\CaptionCache.cs" />
-    -->
     <Compile Remove="Support\Clipboard.cs" />
     <None Include="Support\Clipboard.cs" />
     <Compile Remove="Support\ClipboardDataChangedEventArgs.cs" />
@@ -780,7 +773,6 @@
     <None Include="Support\ClipboardReadData.cs" />
     <Compile Remove="Support\ClipboardWriteData.cs" />
     <None Include="Support\ClipboardWriteData.cs" />
-    <!--
     <Compile Remove="Support\CodeCompilation\BuildDriver.cs" />
     <None   Include="Support\CodeCompilation\BuildDriver.cs" />
     <Compile Remove="Support\CodeCompilation\CodeProject.cs" />

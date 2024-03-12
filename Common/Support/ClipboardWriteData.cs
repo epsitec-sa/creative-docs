@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Support
 {
-    using IDataObject = System.Windows.Forms.IDataObject;
+    //using IDataObject = System.Windows.Forms.IDataObject;
 
     /// <summary>
     /// The <c>ClipboardWriteData</c> class contains a collection of values which
@@ -11,31 +11,42 @@ namespace Epsitec.Common.Support
     /// </summary>
     public sealed class ClipboardWriteData
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement ClipboardWriteData (stub)
+        // ********************************************************************
         public ClipboardWriteData()
         {
+            /*
             this.data = new System.Windows.Forms.DataObject();
+            */
         }
 
-        internal IDataObject Data
+/*        internal IDataObject Data
         {
             get { return this.data; }
         }
-
+*/
         public void WriteObject(string format, object value)
         {
+            /*
             this.data.SetData(format, false, value);
+            */
         }
 
         public void WriteText(string value)
         {
+            /*
             value = value.Replace("\r\n", "\n");
             value = value.Replace("\n", "\r\n");
 
             this.data.SetData("UnicodeText", true, value);
+            */
         }
 
         public void WriteHtmlFragment(string value)
         {
+            /*
             //	Quand on place un texte HTML dans le presse-papier, il faut aussi en placer une
             //	version textuelle :
 
@@ -121,11 +132,14 @@ namespace Epsitec.Common.Support
             System.IO.MemoryStream stream = new System.IO.MemoryStream(blob);
 
             this.data.SetData(Clipboard.Formats.Hmtl, true, stream);
+            */
         }
 
         public void WriteTextLayout(string value)
         {
+            /*
             this.data.SetData(Clipboard.Formats.TextLayoutV1, false, value);
+            */
         }
 
         private void PatchString(System.Text.StringBuilder buffer, int pos, string text)
@@ -136,6 +150,6 @@ namespace Epsitec.Common.Support
             }
         }
 
-        private readonly IDataObject data;
+        //private readonly IDataObject data;
     }
 }

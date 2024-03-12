@@ -8,6 +8,10 @@ namespace Epsitec.Common.Document
     /// </summary>
     public class Drawer
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - reimplement printing in Drawer (removed)
+        // ********************************************************************
         public enum DrawShapesMode
         {
             All, // dessine tout
@@ -77,10 +81,11 @@ namespace Epsitec.Common.Document
                     {
                         this.DrawSurface(port as Graphics, drawingContext, shape, obj);
                     }
-                    else if (port is Printing.PrintPort)
+/*                    else if (port is Printing.PrintPort)
                     {
                         this.DrawSurface(port as Printing.PrintPort, drawingContext, shape, obj);
                     }
+*/
                     else if (port is PDF.Port)
                     {
                         this.DrawSurface(port as PDF.Port, drawingContext, shape, obj);
@@ -98,10 +103,11 @@ namespace Epsitec.Common.Document
                     {
                         this.DrawStroke(port as Graphics, drawingContext, shape, obj);
                     }
-                    else if (port is Printing.PrintPort)
+/*                    else if (port is Printing.PrintPort)
                     {
                         this.DrawStroke(port as Printing.PrintPort, drawingContext, shape, obj);
                     }
+*/
                     else if (port is PDF.Port)
                     {
                         this.DrawStroke(port as PDF.Port, drawingContext, shape, obj);
@@ -980,7 +986,7 @@ namespace Epsitec.Common.Document
 
 
         #region Printer
-        protected void DrawSurface(
+/*        protected void DrawSurface(
             Printing.PrintPort port,
             DrawingContext drawingContext,
             Shape shape,
@@ -1066,6 +1072,7 @@ namespace Epsitec.Common.Document
             port.Color = color;
             return true;
         }
+*/        
         #endregion
 
 

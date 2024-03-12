@@ -12,6 +12,10 @@ namespace Epsitec.Common.Support
     /// </summary>
     public sealed class PrivilegeManager
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement GetShieldIcon (stub)
+        // ********************************************************************
         private PrivilegeManager()
         {
             this.shieldIcons = new Dictionary<IconSize, Image>();
@@ -52,6 +56,7 @@ namespace Epsitec.Common.Support
         /// <returns>The shield icon or <c>null</c>.</returns>
         public Image GetShieldIcon(IconSize iconSize)
         {
+            /*
             if (Platform.UserAccountApi.IsUserAnAdministrator)
             {
                 return null;
@@ -79,6 +84,8 @@ namespace Epsitec.Common.Support
             this.shieldIcons[iconSize] = bitmap;
 
             return bitmap;
+            */
+            return null;
         }
 
         /// <summary>

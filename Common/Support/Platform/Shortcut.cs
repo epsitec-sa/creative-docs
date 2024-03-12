@@ -24,7 +24,7 @@ namespace Epsitec.Common.Support.Platform
 
                 return handle == null
                     ? FolderItem.Empty
-                    : Win32.FileInfo.CreateFolderItem(handle, mode);
+                    : FileInfo.CreateFolderItem(handle, mode);
             }
         }
     }

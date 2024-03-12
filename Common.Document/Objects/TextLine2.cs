@@ -10,6 +10,10 @@ namespace Epsitec.Common.Document.Objects
     [System.Serializable()]
     public class TextLine2 : Objects.AbstractText, Text.ITextRenderer
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - reimplement printing support (removed)
+        // ********************************************************************
         public TextLine2(Document document, Objects.Abstract model)
             : base(document, model) { }
 
@@ -2650,6 +2654,7 @@ namespace Epsitec.Common.Document.Objects
                         this.graphics.RenderSolid(color.Basic);
                     }
                 }
+                /*
                 else if (this.port is Printing.PrintPort) // impression ?
                 {
                     Printing.PrintPort printPort = port as Printing.PrintPort;
@@ -2701,6 +2706,7 @@ namespace Epsitec.Common.Document.Objects
                         }
                     }
                 }
+                */
                 else if (this.port is PDF.Port) // exportation PDF ?
                 {
                     PDF.Port pdfPort = port as PDF.Port;

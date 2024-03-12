@@ -11,6 +11,10 @@ namespace Epsitec.Common.Drawing.Platform
     /// </summary>
     public static class NativeIcon
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement NativeIcon (stub)
+        // ********************************************************************
         public static byte[] CreateIcon(byte[] imageBytes, int pitch, int dx, int dy)
         {
             return NativeIcon.CreateIcon(
@@ -81,6 +85,7 @@ namespace Epsitec.Common.Drawing.Platform
         /// <returns>The contents of the ICO file.</returns>
         public static byte[] CreateIcon(IEnumerable<NativeBitmap> images)
         {
+            /*
             System.Drawing.IconLib.MultiIcon multi = new System.Drawing.IconLib.MultiIcon();
             System.Drawing.IconLib.SingleIcon icon = multi.Add("base");
 
@@ -158,6 +163,8 @@ namespace Epsitec.Common.Drawing.Platform
             multi.Save(stream, System.Drawing.IconLib.MultiIconFormat.Ico);
 
             return stream.ToArray();
+            */
+            return null;
         }
     }
 }

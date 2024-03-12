@@ -68,6 +68,10 @@ namespace Epsitec.Common.Document
     [System.Serializable()]
     public class Document : ISerializable
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - reimplement printing in Document (removed)
+        // ********************************************************************
         public enum IOType
         {
             Unknown, // format inconnu
@@ -163,7 +167,7 @@ namespace Epsitec.Common.Document
             this.containOldText = false;
             this.fontList = null;
 
-            this.printDialog = new Common.Dialogs.PrinterDocumentPropertiesDialog();
+            //this.printDialog = new Common.Dialogs.PrinterDocumentPropertiesDialog();
 
             if (this.mode == DocumentMode.Modify || this.mode == DocumentMode.Clipboard)
             {
@@ -172,7 +176,7 @@ namespace Epsitec.Common.Document
                 this.notifier = new Notifier(this);
                 this.dialogs = new DocumentDialogs(this);
                 this.settings = new Settings.Settings(this);
-                this.printer = new Printer(this);
+                //this.printer = new Printer(this);
                 this.exportPdf = new PDF.Export(this);
             }
 
@@ -246,12 +250,12 @@ namespace Epsitec.Common.Document
                 this.settings = null;
             }
 
-            if (this.printer != null)
+/*            if (this.printer != null)
             {
                 this.printer.Dispose();
                 this.printer = null;
             }
-
+*/
             if (this.exportPdf != null)
             {
                 this.exportPdf.Dispose();
@@ -581,12 +585,12 @@ namespace Epsitec.Common.Document
             set { this.printer = value; }
         }
 
-        public Common.Dialogs.PrintDialog PrintDialog
-        {
-            //	Dialogue d'impression pour ce document.
-            get { return this.printDialog; }
-        }
-
+        /*        public Common.Dialogs.PrintDialog PrintDialog
+                {
+                    //	Dialogue d'impression pour ce document.
+                    get { return this.printDialog; }
+                }
+        */
         public bool IsSurfaceRotation
         {
             //	Rotation spéciale pour calculer SurfaceAnchor en cours.
@@ -1941,6 +1945,7 @@ namespace Epsitec.Common.Document
         #region Miniature
         protected void WriteMiniature(ZipFile zip, int priority, bool isModel)
         {
+            /*
             //	Ecrit la miniature de la première page dans le fichier zip.
             string filename;
             byte[] data;
@@ -1948,6 +1953,7 @@ namespace Epsitec.Common.Document
             {
                 zip.AddEntry(filename, data, System.DateTime.Now, priority, false);
             }
+            */
         }
         #endregion
 
@@ -2537,7 +2543,7 @@ namespace Epsitec.Common.Document
             }
         }
 
-        public void Print(Common.Dialogs.PrintDialog dp)
+/*        public void Print(Common.Dialogs.PrintDialog dp)
         {
             //	Imprime le document.
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
@@ -2549,9 +2555,10 @@ namespace Epsitec.Common.Document
             }
             this.printer.Print(dp);
         }
-
+*/
         public string Export(string filename)
         {
+            /*
             //	Exporte le document.
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
@@ -2567,6 +2574,8 @@ namespace Epsitec.Common.Document
 
             this.MainWindowClearFrozen();
             return err;
+            */
+            return null;
         }
 
         public string ExportPdf(string filename, Common.Dialogs.IWorkInProgressReport report)
@@ -2616,6 +2625,7 @@ namespace Epsitec.Common.Document
 
         public string ExportICO(string filename)
         {
+            /*
             //	Exporte le document.
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
@@ -2631,6 +2641,8 @@ namespace Epsitec.Common.Document
 
             this.MainWindowClearFrozen();
             return err;
+            */
+            return null;
         }
 
         #region TextContext
@@ -3587,7 +3599,7 @@ namespace Epsitec.Common.Document
         protected Wrappers wrappers;
         protected Notifier notifier;
         protected Printer printer;
-        protected Common.Dialogs.PrintDialog printDialog;
+        //protected Common.Dialogs.PrintDialog printDialog;
         protected PDF.Export exportPdf;
         protected DocumentDialogs dialogs;
         protected string ioDirectory;

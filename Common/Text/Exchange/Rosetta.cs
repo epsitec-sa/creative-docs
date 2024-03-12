@@ -19,19 +19,23 @@ namespace Epsitec.Common.Text.Exchange
     /// </summary>
     public class Rosetta
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement TogglePasteMode and CopyText (stub)
+        // ********************************************************************
         public Rosetta() { }
 
         public static PasteMode pasteMode = PasteMode.KeepSource;
 
         public static void TogglePasteMode()
         {
-            if (pasteMode == PasteMode.KeepTextOnly)
-                Rosetta.pasteMode = PasteMode.Unknown;
+            /*            if (pasteMode == PasteMode.KeepTextOnly)
+                            Rosetta.pasteMode = PasteMode.Unknown;
 
-            Rosetta.pasteMode++;
+                        Rosetta.pasteMode++;
 
-            string text = string.Format("Mode paste: {0}", Rosetta.pasteMode);
-            System.Windows.Forms.MessageBox.Show(text, "Debug: Mode pour paste");
+                        string text = string.Format("Mode paste: {0}", Rosetta.pasteMode);
+                        System.Windows.Forms.MessageBox.Show(text, "Debug: Mode pour paste");*/
         }
 
         public static void PasteHtmlText(TextStory story, TextNavigator navigator)
@@ -84,6 +88,7 @@ namespace Epsitec.Common.Text.Exchange
             ClipboardData clipboard
         )
         {
+            /*
             HtmlTextOut htmlText = new HtmlTextOut();
             NativeTextOut nativeText = new NativeTextOut();
             string rawText = string.Empty;
@@ -102,6 +107,7 @@ namespace Epsitec.Common.Text.Exchange
                     nativeText.FormattedText
                 );
             }
+            */
         }
 
         private static void CopyHtmlText(

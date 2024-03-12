@@ -444,9 +444,11 @@ namespace Epsitec.Common.Widgets
 
         public Window Owner
         {
-            get { return this.owner; }
+            //get { return this.owner; }
+            get { return null; }
             set
             {
+                /*
                 if (this.owner != value)
                 {
                     this.owner = value;
@@ -467,6 +469,7 @@ namespace Epsitec.Common.Widgets
 
                     Helpers.VisualTree.InvalidateCommandDispatcher(this);
                 }
+                */
             }
         }
 
@@ -1406,6 +1409,7 @@ namespace Epsitec.Common.Widgets
 
         private void AssignWindowOwner()
         {
+            /*
             if ((this.owner != null) && (this.window != null) && (this.window.Owner == null))
             {
                 if ((this.owner.window.InvokeRequired) || (this.window.InvokeRequired))
@@ -1419,6 +1423,7 @@ namespace Epsitec.Common.Widgets
                     this.window.Owner = this.owner.window;
                 }
             }
+            */
         }
 
         protected virtual void OnAboutToHideWindow()
@@ -1458,6 +1463,7 @@ namespace Epsitec.Common.Widgets
 
         internal void OnWindowHidden()
         {
+            /*
             System.Diagnostics.Debug.Assert(this.windowIsVisible);
 
             this.windowIsVisible = false;
@@ -1470,6 +1476,7 @@ namespace Epsitec.Common.Widgets
             this.root.NotifyWindowIsVisibleChanged();
             this.WindowHidden.Raise(this);
             Window.GlobalWindowHidden.Raise(this);
+            */
         }
 
         internal void OnWindowClosed()

@@ -6,6 +6,10 @@ namespace Epsitec.Common.Widgets.Platform
     /// </summary>
     public class WindowList
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement WindowList (stub)
+        // ********************************************************************
         private WindowList() { }
 
         static System.Collections.ArrayList windows = new System.Collections.ArrayList();
@@ -22,6 +26,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         public static Epsitec.Common.Widgets.Window[] GetVisibleWindows()
         {
+            /*
             System.Collections.ArrayList list = new System.Collections.ArrayList();
 
             if (WindowList.windows.Count > 0)
@@ -76,6 +81,8 @@ namespace Epsitec.Common.Widgets.Platform
             list.CopyTo(array);
 
             return array;
+            */
+            return null;
         }
     }
 }

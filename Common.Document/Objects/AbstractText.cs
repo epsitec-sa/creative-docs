@@ -15,6 +15,10 @@ namespace Epsitec.Common.Document.Objects
     [System.Serializable()]
     public abstract class AbstractText : Objects.Abstract
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement EditPaste method (stub)
+        // ********************************************************************
         protected enum InternalOperation
         {
             Painting,
@@ -422,6 +426,7 @@ namespace Epsitec.Common.Document.Objects
 
         public virtual bool EditPaste(Text.Exchange.ClipboardData clipboard)
         {
+            /*
 #if SIMPLECOPYPASTE
             if (
                 clipboard.Contains(Common.Text.Exchange.Internal.FormattedText.ClipboardFormat.Name)
@@ -535,6 +540,8 @@ namespace Epsitec.Common.Document.Objects
 
 #endif
 #endif
+            */
+            return false;
         }
 
         public virtual bool EditSelectAll()

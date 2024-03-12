@@ -13,20 +13,21 @@ namespace Epsitec.Common.Widgets
         // TODO bl-net8-cross
         // implement WindowDragEventArg (stub)
         // ******************************************************************
-/*        internal WindowDragEventArgs(System.Windows.Forms.DragEventArgs args)
-        {
-            this.original = args;
-        }
-*/
+        /*        internal WindowDragEventArgs(System.Windows.Forms.DragEventArgs args)
+                {
+                    this.original = args;
+                }
+        */
         /// <summary>
         /// Gets the associated clipboard data.
         /// </summary>
         /// <value>The associated clipboard data.</value>
-/*        public Support.ClipboardReadData Data
+        public Support.ClipboardReadData Data
         {
-            get { return Support.Clipboard.CreateReadDataFromIDataObject(this.original.Data); }
+            //get { return Support.Clipboard.CreateReadDataFromIDataObject(this.original.Data); }
+            get { return new Support.ClipboardReadData(); }
         }
-*/
+
         /// <summary>
         /// Gets or sets a value indicating whether the target is accepting the drop.
         /// </summary>
@@ -51,6 +52,7 @@ namespace Epsitec.Common.Widgets
             }
             */
             get { return true; }
+            set { }
         }
 
         //private readonly System.Windows.Forms.DragEventArgs original;

@@ -12,6 +12,10 @@ namespace Epsitec.Common.Widgets.Behaviors
     /// </summary>
     public sealed class CopyPasteBehavior : DependencyObject
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement CopyPasteBehavior (stub)
+        // ********************************************************************
         public CopyPasteBehavior(Widget host)
         {
             this.host = host;
@@ -80,6 +84,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
         public bool ProcessCopy()
         {
+            /*
             AbstractTextField text = this.host as AbstractTextField;
 
             if (text != null)
@@ -101,10 +106,13 @@ namespace Epsitec.Common.Widgets.Behaviors
             }
 
             return false;
+            */
+            return true;
         }
 
         public bool ProcessPaste()
         {
+            /*
             AbstractTextField text = this.host as AbstractTextField;
 
             if (text != null)
@@ -154,6 +162,8 @@ namespace Epsitec.Common.Widgets.Behaviors
             }
 
             return false;
+            */
+            return true;
         }
 
         public bool ProcessDelete()

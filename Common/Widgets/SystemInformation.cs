@@ -5,6 +5,10 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public class SystemInformation
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement SystemInformation (stub)
+        // ********************************************************************
         public enum Animation
         {
             None,
@@ -190,32 +194,40 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
+                /*
                 return System.Windows.Forms.OSFeature.Feature.GetVersionPresent(
                         System.Windows.Forms.OSFeature.LayeredWindows
                     ) != null;
+                */
+                return true;
             }
         }
 
         public static bool PreferRightAlignedMenus
         {
-            get { return System.Windows.Forms.SystemInformation.RightAlignedMenus; }
+            //get { return System.Windows.Forms.SystemInformation.RightAlignedMenus; }
+            get { return true; }
         }
 
         public static double DoubleClickDelay
         {
-            get { return System.Windows.Forms.SystemInformation.DoubleClickTime / 1000.0; }
+            //get { return System.Windows.Forms.SystemInformation.DoubleClickTime / 1000.0; }
+            get { return 0.1; }
         }
 
         public static int DoubleClickRadius2
         {
             get
             {
+                /*
                 System.Drawing.Size size = System.Windows.Forms.SystemInformation.DoubleClickSize;
 
                 int dx = size.Width;
                 int dy = size.Height;
 
                 return dx * dx + dy * dy;
+                */
+                return 50;
             }
         }
 

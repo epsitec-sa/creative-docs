@@ -5,8 +5,13 @@ namespace Epsitec.Common.Text.Exchange
 {
     public static class NativeHtmlClipboardReader
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement NativeHtmlClipboardReader (stub)
+        // ********************************************************************
         public static string Read()
         {
+            /*
             byte[] clipboardBytes =
                 Epsitec.Common.Support.Platform.Win32.Clipboard.ReadHtmlFormat();
 
@@ -40,6 +45,8 @@ namespace Epsitec.Common.Text.Exchange
                 index,
                 clipboardBytes.Length - index
             );
+            */
+            return null;
         }
     }
 }

@@ -8,6 +8,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
     /// </summary>
     public class Print : Abstract
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - reimplement printing support (removed)
+        // ********************************************************************
+
         public Print(DocumentEditor editor)
             : base(editor)
         {
@@ -129,10 +134,12 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
         private void HandlePrintButtonOkClicked(object sender, MessageEventArgs e)
         {
+            /*
             this.CloseWindow();
 
             Common.Dialogs.PrintDialog dialog = this.editor.CurrentDocument.PrintDialog;
             this.editor.CurrentDocument.Print(dialog);
+            */
         }
 
         private readonly CommandDispatcher dispatcher;

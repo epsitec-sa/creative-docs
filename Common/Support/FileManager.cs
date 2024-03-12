@@ -12,14 +12,20 @@ namespace Epsitec.Common.Support
     /// </summary>
     public static class FileManager
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - implement FileManager
+        // ********************************************************************
         static FileManager()
         {
+            /*
             System.Threading.ThreadPool.QueueUserWorkItem(
                 delegate(object arg)
                 {
                     Platform.Win32.FileInfo.InitializeWellKnownFolderItems();
                 }
             );
+            */
         }
 
         /// <summary>

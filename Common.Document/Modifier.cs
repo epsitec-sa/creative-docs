@@ -11,6 +11,10 @@ namespace Epsitec.Common.Document
     /// </summary>
     public class Modifier
     {
+        // ********************************************************************
+        // TODO bl-net8-cross
+        // - reimplement PasteBitmap (stub)
+        // ********************************************************************
         public Modifier(Document document)
         {
             this.document = document;
@@ -2040,6 +2044,7 @@ namespace Epsitec.Common.Document
 
         protected bool PasteBitmap()
         {
+            /*
             //	Essaie de coller le contenu du clipboard sous forme d'une image bitmap.
             System.Drawing.Bitmap bitmap = this.GetPastedBitmap();
             if (bitmap == null)
@@ -2091,6 +2096,8 @@ namespace Epsitec.Common.Document
             }
 
             return true;
+            */
+            return false;
         }
 
         //---------------------------------------------------------------------------
@@ -2137,7 +2144,7 @@ namespace Epsitec.Common.Document
             return true;
         }
 
-        protected System.Drawing.Bitmap GetPastedBitmap()
+/*        protected System.Drawing.Bitmap GetPastedBitmap()
         {
             //	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
             ClipboardReadData clipboard = Clipboard.GetData();
@@ -2157,7 +2164,7 @@ namespace Epsitec.Common.Document
 
             return null;
         }
-
+*/
         protected string CreateBitmapFile(Drawing.Image image)
         {
             //	Crée un fichier image bitmap .png dans le dossier temporaire de Windows.
