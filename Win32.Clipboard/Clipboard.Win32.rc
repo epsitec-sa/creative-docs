@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,2,1016,0
- PRODUCTVERSION 2,2,0,0
+ FILEVERSION 2,0,0,2410
+ PRODUCTVERSION 2,0,0,2410
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Epsitec SA"
             VALUE "FileDescription", "Win32 Clipboard Interface for .NET"
-            VALUE "FileVersion", "2.2.1016.0"
+            VALUE "FileVersion", "2.0.0.2410"
             VALUE "InternalName", "Clipboard"
             VALUE "LegalCopyright", "Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland"
             VALUE "OriginalFilename", "Clipboard.Win32"
             VALUE "ProductName", "Clipboard.Win32"
-            VALUE "ProductVersion", "2, 2, 0, 0"
+            VALUE "ProductVersion", "2.0.0.2410"
         END
     END
     BLOCK "VarFileInfo"
