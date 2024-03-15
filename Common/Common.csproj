@@ -2922,20 +2922,10 @@
 
 
   <!-- InternalsVisibleTo -->
-  <Target Name="CresusCore_Common_AddInternalsVisibleToAttribute" BeforeTargets="GetAssemblyAttributes">
-    <ItemGroup>
-      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-        <_Parameter1>Common.Tests</_Parameter1>
-      </AssemblyAttribute>
-      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-        <_Parameter1>Common.Tests.Vs</_Parameter1>
-      </AssemblyAttribute>
-      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-        <_Parameter1>Cresus.DataLayer.Tests.Vs</_Parameter1>
-      </AssemblyAttribute>
-      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-        <_Parameter1>Cresus.DataLayer</_Parameter1>
-      </AssemblyAttribute>
-    </ItemGroup>
-  </Target>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Common.Tests"/>
+    <InternalsVisibleTo Include="Common.Tests.Vs"/>
+    <InternalsVisibleTo Include="Cresus.DataLayer"/>
+    <InternalsVisibleTo Include="Cresus.DataLayer.Tests.Vs"/>
+  </ItemGroup>
 </Project>
