@@ -7,16 +7,10 @@ namespace Epsitec.Common.Drawing.Agg
     /// The <c>Library</c> class provides the basic initialization interface
     /// for AGG. It must be called to properly set up the underlying drawing
     /// engine.
+    /// TODO (bl-net8-cross) This class can probably be deleted soon.
     /// </summary>
     public sealed class Library
     {
-        static Library() => AntigrainCPP.Interface.Initialise();
-
-        /// <summary>
-        /// Initializes the AGG library.
-        /// </summary>
-        public static void Initialize() { }
-        public static void ShutDown() => AntigrainCPP.Interface.ShutDown();
 
         public static long Cycles     => 0;
         public static int  CycleDelta => 1;

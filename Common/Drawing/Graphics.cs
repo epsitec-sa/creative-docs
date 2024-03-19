@@ -10,10 +10,6 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public class Graphics : System.IDisposable, IPaintPort
     {
-        static Graphics()
-        {
-            Agg.Library.Initialize();
-        }
 
         public Graphics()
         {

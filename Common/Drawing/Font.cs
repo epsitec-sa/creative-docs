@@ -78,8 +78,6 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.WriteLine ("AntigrainCPPWin32.dll loaded successfully", "Epsitec.Common.Drawing.Font");
 #endif
 
-            Agg.Library.Initialize();
-
             Font.useSegoe = System.Environment.OSVersion.Version.Major > 5;
             Font.SetupFonts();
         }
