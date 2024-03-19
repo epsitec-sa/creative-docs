@@ -634,9 +634,9 @@ namespace Epsitec.Common.Tests.Drawing
             string text =
                 "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
 
-            AntiGrain.Interface.NoOp();
-            AntiGrain.Interface.NoOp();
-            AntiGrain.Interface.NoOp();
+            AntigrainCPP.Interface.NoOp();
+            AntigrainCPP.Interface.NoOp();
+            AntigrainCPP.Interface.NoOp();
 
             long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
             long c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
@@ -645,12 +645,12 @@ namespace Epsitec.Common.Tests.Drawing
             System.Console.Out.WriteLine("Zero work: " + c0.ToString());
 
             c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
-            AntiGrain.Interface.NoOp();
+            AntigrainCPP.Interface.NoOp();
             c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
             System.Console.Out.WriteLine("No-op work: " + c2.ToString());
 
             c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
-            AntiGrain.Interface.NoOpString(text);
+            AntigrainCPP.Interface.NoOpString(text);
             c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
             System.Console.Out.WriteLine("No-op work with string: " + c2.ToString());
 

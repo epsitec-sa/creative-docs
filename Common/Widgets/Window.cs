@@ -49,7 +49,6 @@ namespace Epsitec.Common.Widgets
 
         private void Initialize(WindowRoot root)
         {
-            /*
             this.components = new Support.Data.ComponentCollection(this);
 
             this.root = root;
@@ -66,14 +65,11 @@ namespace Epsitec.Common.Widgets
             this.timer.AutoRepeat = 0.050;
 
             Window.windows.Add(this);
-            */
         }
 
         public void Run()
         {
-            /*
-            System.Windows.Forms.Application.Run(this.window);
-            */
+            this.window.run();
         }
 
         public static void Quit()

@@ -31,8 +31,8 @@ namespace Epsitec.Common.Drawing.Agg
         /// </summary>
         public void Create(System.IntPtr pixmapHandle)
         {
-            System.Diagnostics.Debug.Assert(this.handle == System.IntPtr.Zero);
-            this.handle = AntiGrain.Renderer.Smooth.New(pixmapHandle);
+            // System.Diagnostics.Debug.Assert(this.handle == System.IntPtr.Zero);
+            this.handle = AntigrainCPP.Renderer.Smooth.New(pixmapHandle);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Drawing.Agg
         /// </summary>
         public void Delete()
         {
-            System.Diagnostics.Debug.Assert(this.handle != System.IntPtr.Zero);
+            // System.Diagnostics.Debug.Assert(this.handle != System.IntPtr.Zero);
             this.ReleaseHandle();
         }
 
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Drawing.Agg
         /// </returns>
         protected override bool ReleaseHandle()
         {
-            AntiGrain.Renderer.Smooth.Delete(this.handle);
+            AntigrainCPP.Renderer.Smooth.Delete(this.handle);
             this.handle = System.IntPtr.Zero;
             return true;
         }

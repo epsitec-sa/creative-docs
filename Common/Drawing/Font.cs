@@ -44,7 +44,7 @@ namespace Epsitec.Common.Drawing
 
             try
             {
-                string dllName = "AntiGrain.Win32.dll";
+                string dllName = "AntigrainCPP.dll";
                 string dllPath = null;
 
                 foreach (string path in Font.GetAntiGrainProbePaths())
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Drawing
 
                 if (dllPath == null)
                 {
-                    System.Diagnostics.Debug.Fail("Could not locate native AntiGrain DLL");
+                    System.Diagnostics.Debug.Print("Could not locate native AntiGrain DLL");
                 }
                 else
                 {
@@ -72,10 +72,10 @@ namespace Epsitec.Common.Drawing
             }
 
 #if false
-			System.IntPtr result = Font.LoadLibrary ("AntiGrain.Win32.dll");
+			System.IntPtr result = Font.LoadLibrary ("AntigrainCPPWin32.dll");
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
-			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully", "Epsitec.Common.Drawing.Font");
+			System.Diagnostics.Debug.WriteLine ("AntigrainCPPWin32.dll loaded successfully", "Epsitec.Common.Drawing.Font");
 #endif
 
             Agg.Library.Initialize();
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Drawing
                     }
                     else
                     {
-                        this.handle = AntiGrain.Font.CreateFaceHandle(data, size, offset, osHandle);
+                        this.handle = AntigrainCPP.Font.CreateFaceHandle(data, size, offset, osHandle);
                     }
                 }
 
@@ -749,7 +749,7 @@ namespace Epsitec.Common.Drawing
             }
 
             ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text);
-            AntiGrain.Font.PixelCache.Fill(this.Handle, glyphs, size, ox, oy);
+            AntigrainCPP.Font.PixelCache.Fill(this.Handle, glyphs, size, ox, oy);
         }
 
         public double PaintPixelCache(
@@ -777,7 +777,7 @@ namespace Epsitec.Common.Drawing
             {
                 ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text);
 
-                return AntiGrain.Font.PixelCache.Paint(
+                return AntigrainCPP.Font.PixelCache.Paint(
                     pixmapHandle,
                     fontHandle,
                     glyphs,
@@ -806,7 +806,7 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
-            AntiGrain.Font.PixelCache.Paint(
+            AntigrainCPP.Font.PixelCache.Paint(
                 pixmap.Handle,
                 this.Handle,
                 scale,
@@ -829,7 +829,7 @@ namespace Epsitec.Common.Drawing
         {
             if (this.handle != System.IntPtr.Zero)
             {
-                AntiGrain.Font.DisposeFaceHandle(this.handle);
+                AntigrainCPP.Font.DisposeFaceHandle(this.handle);
                 this.handle = System.IntPtr.Zero;
             }
         }

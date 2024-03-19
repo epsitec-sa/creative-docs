@@ -246,7 +246,7 @@ namespace Epsitec.Common.Tests.Drawing
                 deltas[i] = (int)(x_pos[i + 1] - x_pos[i + 0]);
             }
 
-            AntiGrain.Buffer.DrawGlyphs(
+            AntigrainCPP.Buffer.DrawGlyphs(
                 pixmap.Handle,
                 hfont,
                 x,
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Tests.Drawing
                 glyphs.Length,
                 0x000000
             );
-            AntiGrain.Buffer.DrawGlyphs(
+            AntigrainCPP.Buffer.DrawGlyphs(
                 pixmap.Handle,
                 hfont,
                 x,

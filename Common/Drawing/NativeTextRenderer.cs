@@ -114,7 +114,7 @@ namespace Epsitec.Common.Drawing
             {
                 dxArray[count - 1] = 0;
 
-                AntiGrain.Buffer.DrawGlyphs(
+                AntigrainCPP.Buffer.DrawGlyphs(
                     pixmap.Handle,
                     fontHandle,
                     ox,

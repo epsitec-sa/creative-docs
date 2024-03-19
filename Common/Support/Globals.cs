@@ -254,8 +254,7 @@ namespace Epsitec.Common.Support
 
             public static string Executable
             {
-                //get { return System.Windows.Forms.Application.StartupPath; }
-                get { return null; }
+                get { return System.Reflection.Assembly.GetExecutingAssembly().Location; }
             }
 
             public static string ExecutableRoot

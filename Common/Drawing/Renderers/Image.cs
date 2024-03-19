@@ -29,7 +29,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
                 Transform inverse = Transform.Inverse(this.internalTransform);
 
-                AntiGrain.Renderer.Image.Matrix(
+                AntigrainCPP.Renderer.Image.Matrix(
                     this.handle,
                     inverse.XX,
                     inverse.XY,
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Drawing.Renderers
                         this.bitmap = null;
                         this.bitmapNeedsUnlock = false;
 
-                        AntiGrain.Renderer.Image.Source2(this.handle, System.IntPtr.Zero, 0, 0, 0);
+                        AntigrainCPP.Renderer.Image.Source2(this.handle, System.IntPtr.Zero, 0, 0, 0);
                     }
 
                     this.image = value;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
                         this.AssertAttached();
 
-                        AntiGrain.Renderer.Image.Source2(
+                        AntigrainCPP.Renderer.Image.Source2(
                             this.handle,
                             this.bitmap.Scan0,
                             width,
@@ -120,17 +120,17 @@ namespace Epsitec.Common.Drawing.Renderers
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
         {
             this.AssertAttached();
-            AntiGrain.Renderer.Image.SetAlphaMask(
+            AntigrainCPP.Renderer.Image.SetAlphaMask(
                 this.handle,
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntiGrain.Renderer.MaskComponent)component
+                (AntigrainCPP.Renderer.MaskComponent)component
             );
         }
 
         public void SelectAdvancedFilter(ImageFilteringMode mode, double radius)
         {
             this.AssertAttached();
-            AntiGrain.Renderer.Image.SetStretchMode(this.handle, (int)mode, radius);
+            AntigrainCPP.Renderer.Image.SetStretchMode(this.handle, (int)mode, radius);
         }
 
         #region IDisposable Members

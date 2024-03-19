@@ -43,17 +43,17 @@ namespace Epsitec.Common.Drawing.Renderers
                     return;
                 }
 
-                AntiGrain.Renderer.Smooth.Color(this.handle, value.R, value.G, value.B, value.A);
+                AntigrainCPP.Renderer.Smooth.Color(this.handle, value.R, value.G, value.B, value.A);
             }
         }
 
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
         {
             this.AssertAttached();
-            AntiGrain.Renderer.Smooth.SetAlphaMask(
+            AntigrainCPP.Renderer.Smooth.SetAlphaMask(
                 this.handle,
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntiGrain.Renderer.MaskComponent)component
+                (AntigrainCPP.Renderer.MaskComponent)component
             );
         }
 
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Drawing.Renderers
         {
             this.SetTransform(this.graphics.Transform);
 
-            AntiGrain.Renderer.Smooth.Setup(
+            AntigrainCPP.Renderer.Smooth.Setup(
                 this.handle,
                 this.r1,
                 this.r2,
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Drawing.Renderers
                 this.transform.TX,
                 this.transform.TY
             );
-            AntiGrain.Renderer.Smooth.AddPath(this.handle, path.Handle);
+            AntigrainCPP.Renderer.Smooth.AddPath(this.handle, path.Handle);
         }
 
         #region IDisposable Members
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Drawing.Renderers
             }
 
             this.transform = value;
-            AntiGrain.Renderer.Smooth.Setup(
+            AntigrainCPP.Renderer.Smooth.Setup(
                 this.handle,
                 this.r1,
                 this.r2,

@@ -69,7 +69,7 @@ namespace Epsitec.Common.Drawing.Renderers
                 return;
             }
 
-            AntiGrain.Renderer.Solid.Clear(this.handle, r, g, b, a * this.AlphaMutiplier);
+            AntigrainCPP.Renderer.Solid.Clear(this.handle, r, g, b, a * this.AlphaMutiplier);
         }
 
         public void Clear4Colors(
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Drawing.Renderers
                 return;
             }
 
-            AntiGrain.Renderer.Special.Fill4Colors(
+            AntigrainCPP.Renderer.Special.Fill4Colors(
                 this.handle,
                 x,
                 y,
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Drawing.Renderers
                 return;
             }
 
-            AntiGrain.Renderer.Solid.Color(this.handle, r, g, b, a * this.AlphaMutiplier);
+            AntigrainCPP.Renderer.Solid.Color(this.handle, r, g, b, a * this.AlphaMutiplier);
         }
 
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
@@ -143,10 +143,10 @@ namespace Epsitec.Common.Drawing.Renderers
                 return;
             }
 
-            AntiGrain.Renderer.Solid.SetAlphaMask(
+            AntigrainCPP.Renderer.Solid.SetAlphaMask(
                 this.handle,
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntiGrain.Renderer.MaskComponent)component
+                (AntigrainCPP.Renderer.MaskComponent)component
             );
         }
 

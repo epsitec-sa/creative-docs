@@ -17,20 +17,20 @@ namespace Epsitec.Common.Drawing
             {
                 this.CreateOnTheFly();
                 this.start = value;
-                AntiGrain.Path.SetDashOffset(this.aggPath, this.start);
+                AntigrainCPP.Path.SetDashOffset(this.aggPath, this.start);
             }
         }
 
         public void ResetDash()
         {
             this.CreateOnTheFly();
-            AntiGrain.Path.ResetDash(this.aggPath);
+            AntigrainCPP.Path.ResetDash(this.aggPath);
         }
 
         public void AddDash(double dashLength, double gapLength)
         {
             this.CreateOnTheFly();
-            AntiGrain.Path.AddDash(this.aggPath, dashLength, gapLength);
+            AntigrainCPP.Path.AddDash(this.aggPath, dashLength, gapLength);
         }
 
         public Path GenerateDashedPath()
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Drawing
             this.CreateOnTheFly();
             path.InternalCreateNonEmpty();
 
-            AntiGrain.Path.AppendDashedPath(path.Handle, this.aggPath, approximationZoom);
+            AntigrainCPP.Path.AppendDashedPath(path.Handle, this.aggPath, approximationZoom);
 
             return path;
         }

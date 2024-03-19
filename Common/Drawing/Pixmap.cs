@@ -30,11 +30,11 @@ namespace Epsitec.Common.Drawing
                 {
                     if (this.aggBuffer == System.IntPtr.Zero)
                     {
-                        this.aggBuffer = AntiGrain.Buffer.New(value.Width, value.Height, 32);
+                        this.aggBuffer = AntigrainCPP.Buffer.New(value.Width, value.Height, 32);
                     }
                     else
                     {
-                        bool ok = AntiGrain.Buffer.Resize(
+                        bool ok = AntigrainCPP.Buffer.Resize(
                             this.aggBuffer,
                             value.Width,
                             value.Height,
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Drawing
         {
             if ((this.size.IsEmpty) && (this.aggBuffer == System.IntPtr.Zero))
             {
-                this.aggBuffer = AntiGrain.Buffer.New(size.Width, size.Height, 32);
+                this.aggBuffer = AntigrainCPP.Buffer.New(size.Width, size.Height, 32);
                 this.size = size;
                 this.isOsBitmap = true;
                 return;
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Drawing
 
                 image.CopyPixelsToBuffer(bufferMemory, bufferSize, pitch);
 
-                this.aggBuffer = AntiGrain.Buffer.NewFrom(
+                this.aggBuffer = AntigrainCPP.Buffer.NewFrom(
                     width,
                     height,
                     bitsPerPixel,
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Drawing
 
         public void Clear()
         {
-            AntiGrain.Buffer.Clear(this.aggBuffer);
+            AntigrainCPP.Buffer.Clear(this.aggBuffer);
         }
 
 /*        public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Drawing
 */
         public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
         {
-            AntiGrain.Buffer.Paint(
+            AntigrainCPP.Buffer.Paint(
                 this.aggBuffer,
                 hdc,
                 clip.Left,
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Drawing
             System.Drawing.Rectangle clip
         )
         {
-            AntiGrain.Buffer.PaintOffset(
+            AntigrainCPP.Buffer.PaintOffset(
                 this.aggBuffer,
                 hdc,
                 offset.X,
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Drawing
             System.Drawing.Rectangle clip
         )
         {
-            AntiGrain.Buffer.BlendOffset(
+            AntigrainCPP.Buffer.BlendOffset(
                 this.aggBuffer,
                 hdc,
                 offset.X,
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Drawing
             int height
         )
         {
-            AntiGrain.Buffer.ComposeBuffer(
+            AntigrainCPP.Buffer.ComposeBuffer(
                 this.aggBuffer,
                 x,
                 y,
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Drawing
             int height
         )
         {
-            AntiGrain.Buffer.BltBuffer(
+            AntigrainCPP.Buffer.BltBuffer(
                 this.aggBuffer,
                 x,
                 y,
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Drawing
 
         public void Erase(System.Drawing.Rectangle clip)
         {
-            AntiGrain.Buffer.ClearRect(
+            AntigrainCPP.Buffer.ClearRect(
                 this.aggBuffer,
                 clip.Left,
                 clip.Top,
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Drawing
         )
         {
             format = System.Drawing.Imaging.PixelFormat.Format32bppPArgb;
-            scan0 = AntiGrain.Buffer.GetMemoryLayout(
+            scan0 = AntigrainCPP.Buffer.GetMemoryLayout(
                 this.aggBuffer,
                 out width,
                 out height,
@@ -319,17 +319,17 @@ namespace Epsitec.Common.Drawing
 */
         public System.IntPtr GetMemoryBitmapHandle()
         {
-            return AntiGrain.Buffer.GetMemoryBitmapHandle(this.aggBuffer);
+            return AntigrainCPP.Buffer.GetMemoryBitmapHandle(this.aggBuffer);
         }
 
         public void InfiniteClipping()
         {
-            AntiGrain.Buffer.InfiniteClipping(this.aggBuffer);
+            AntigrainCPP.Buffer.InfiniteClipping(this.aggBuffer);
         }
 
         public void EmptyClipping()
         {
-            AntiGrain.Buffer.EmptyClipping(this.aggBuffer);
+            AntigrainCPP.Buffer.EmptyClipping(this.aggBuffer);
         }
 
         public void AddClipBox(double x1, double y1, double x2, double y2)
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Drawing
             int cy1 = (int)(y1);
             int cx2 = (int)(x2 + 0.9999);
             int cy2 = (int)(y2 + 0.9999);
-            AntiGrain.Buffer.AddClipBox(this.aggBuffer, cx1, cy1, cx2 - 1, cy2 - 1);
+            AntigrainCPP.Buffer.AddClipBox(this.aggBuffer, cx1, cy1, cx2 - 1, cy2 - 1);
         }
 
         public Color GetPixel(int x, int y)
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Drawing
 
             if (this.aggBuffer != System.IntPtr.Zero)
             {
-                AntiGrain.Buffer.Delete(this.aggBuffer);
+                AntigrainCPP.Buffer.Delete(this.aggBuffer);
                 this.aggBuffer = System.IntPtr.Zero;
             }
         }

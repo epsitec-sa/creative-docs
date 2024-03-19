@@ -31,7 +31,7 @@ namespace Epsitec.Common.Drawing.Agg
         /// </summary>
         public void Create()
         {
-            this.handle = AntiGrain.Rasterizer.New();
+            this.handle = AntigrainCPP.Rasterizer.New();
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Drawing.Agg
         /// </returns>
         protected override bool ReleaseHandle()
         {
-            AntiGrain.Rasterizer.Delete(this.handle);
+            AntigrainCPP.Rasterizer.Delete(this.handle);
             this.handle = System.IntPtr.Zero;
             return true;
         }

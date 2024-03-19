@@ -11,8 +11,8 @@ namespace Epsitec.Common.Widgets.Platform
     /// La classe Platform.Window fait le lien avec les WinForms.
     /// </summary>
     internal class Window
-        //: System.Windows.Forms.Form,
-          :  Types.BindingAsyncOperation.IApplicationThreadInvoker
+          : AggUI.AggWindow,
+            Types.BindingAsyncOperation.IApplicationThreadInvoker
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -20,14 +20,17 @@ namespace Epsitec.Common.Widgets.Platform
         // ******************************************************************
         static Window()
         {
-            /*
             RestartManager.Setup();
 
+            /* REMOVED (bl-net-8-cross)
             Microsoft.Win32.SystemEvents.UserPreferenceChanged +=
                 Window.HandleSystemEventsUserPreferenceChanged;
+            */
 
             Window.dispatchWindow = new Window();
+            /* REMOVED (bl-net8-cross)
             Window.dispatchWindow.CreateControl();
+            */
             Window.dispatchWindowHandle = Window.dispatchWindow.Handle;
 
             Epsitec.Common.Drawing.Platform.Dispatcher.Initialize();
@@ -37,7 +40,6 @@ namespace Epsitec.Common.Widgets.Platform
             //	the special thread invoker interface :
 
             Types.BindingAsyncOperation.DefineApplicationThreadInvoker(Window.dispatchWindow);
-            */
         }
 
         // --------------------------------------------------------------------------------------------
@@ -115,11 +117,17 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 */
-        private Window()
+        private Window() : base(AggUI.PixFmt.pix_format_bgr24, true)
         {
             this.isSyncPaintDisabled = new SafeCounter();
             this.isSyncUpdating = new SafeCounter();
             this.isWndProcHandlingRestricted = new SafeCounter();
+
+            bool ok = this.init(800, 600, AggUI.WindowFlags.Resize);
+            if (!ok)
+            {
+                throw new Exception("Failed to initialize antigrain window");
+            }
         }
 
         internal Window(
@@ -128,13 +136,13 @@ namespace Epsitec.Common.Widgets.Platform
         )
             : this()
         {
-            /*
             this.widgetWindow = window;
             platformWindowSetter(this);
 
             this.dirtyRectangle = Drawing.Rectangle.Empty;
             this.dirtyRegion = new Drawing.DirtyRegion();
 
+            /* REMOVED (bl-net8-cross)
             base.MinimumSize = new System.Drawing.Size(1, 1);
 
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
@@ -143,6 +151,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.SetStyle(System.Windows.Forms.ControlStyles.Opaque, true);
             this.SetStyle(System.Windows.Forms.ControlStyles.ResizeRedraw, true);
             this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint, true);
+            */
 
             this.widgetWindow.WindowType = WindowType.Document;
             this.widgetWindow.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
@@ -166,7 +175,6 @@ namespace Epsitec.Common.Widgets.Platform
             this.ReallocatePixmap();
 
             WindowList.Insert(this);
-            */
         }
 
         internal static bool IsInAnyWndProc

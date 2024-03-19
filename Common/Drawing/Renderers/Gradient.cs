@@ -35,7 +35,7 @@ namespace Epsitec.Common.Drawing.Renderers
                 this.internalTransform = value.MultiplyBy(this.graphics.Transform);
 
                 Transform inverse = Transform.Inverse(this.internalTransform);
-                AntiGrain.Renderer.Gradient.Matrix(
+                AntigrainCPP.Renderer.Gradient.Matrix(
                     this.handle,
                     inverse.XX,
                     inverse.XY,
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Drawing.Renderers
                 {
                     this.AssertAttached();
                     this.fill = value;
-                    AntiGrain.Renderer.Gradient.Select(this.handle, (int)this.fill);
+                    AntigrainCPP.Renderer.Gradient.Select(this.handle, (int)this.fill);
                 }
             }
         }
@@ -87,10 +87,10 @@ namespace Epsitec.Common.Drawing.Renderers
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
         {
             this.AssertAttached();
-            AntiGrain.Renderer.Gradient.SetAlphaMask(
+            AntigrainCPP.Renderer.Gradient.SetAlphaMask(
                 this.handle,
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntiGrain.Renderer.MaskComponent)component
+                (AntigrainCPP.Renderer.MaskComponent)component
             );
         }
 
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
             if (this.AlphaMutiplier == 1.0)
             {
-                AntiGrain.Renderer.Gradient.Color1(this.handle, r, g, b, a);
+                AntigrainCPP.Renderer.Gradient.Color1(this.handle, r, g, b, a);
             }
             else
             {
@@ -164,14 +164,14 @@ namespace Epsitec.Common.Drawing.Renderers
                     aa[i] = a[i] * this.AlphaMutiplier;
                 }
 
-                AntiGrain.Renderer.Gradient.Color1(this.handle, rr, gg, bb, aa);
+                AntigrainCPP.Renderer.Gradient.Color1(this.handle, rr, gg, bb, aa);
             }
         }
 
         public void SetParameters(double r1, double r2)
         {
             this.AssertAttached();
-            AntiGrain.Renderer.Gradient.Range(this.handle, r1, r2);
+            AntigrainCPP.Renderer.Gradient.Range(this.handle, r1, r2);
         }
 
         #region IDisposable Members

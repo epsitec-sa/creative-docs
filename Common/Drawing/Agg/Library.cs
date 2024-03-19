@@ -10,13 +10,13 @@ namespace Epsitec.Common.Drawing.Agg
     /// </summary>
     public sealed class Library
     {
-        static Library() => AntiGrain.Interface.Initialise();
+        static Library() => AntigrainCPP.Interface.Initialise();
 
         /// <summary>
         /// Initializes the AGG library.
         /// </summary>
         public static void Initialize() { }
-        public static void ShutDown() => AntiGrain.Interface.ShutDown();
+        public static void ShutDown() => AntigrainCPP.Interface.ShutDown();
 
         public static long Cycles     => 0;
         public static int  CycleDelta => 1;
