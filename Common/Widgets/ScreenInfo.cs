@@ -1,6 +1,10 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Net.NetworkInformation;
+using System;
+using System.ComponentModel.Design;
+
 namespace Epsitec.Common.Widgets
 {
     /// <summary>
@@ -14,8 +18,7 @@ namespace Epsitec.Common.Widgets
         // ******************************************************************
         public static double PrimaryHeight
         {
-            //get { return System.Windows.Forms.SystemInformation.PrimaryMonitorSize.Height; }
-            get { return 0; }
+            get { throw new System.NotImplementedException(); }
         }
 
         /// <summary>
@@ -24,16 +27,16 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public Drawing.Rectangle Bounds
         {
-/*            get
+            get
             {
-                int ox = this.screen.Bounds.Left;
-                int oy = (int)ScreenInfo.PrimaryHeight - this.screen.Bounds.Bottom;
-                int dx = this.screen.Bounds.Width;
-                int dy = this.screen.Bounds.Height;
+                SystemTools.ScreenInfo.Rect screen = SystemTools.ScreenInfo.GetResolution();
+                int ox = 0;
+                int oy = 0;
+                int dx = screen.Width;
+                int dy = screen.Height;
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
             }
-*/            get { return Drawing.Rectangle.Empty; }
         }
 
         /// <summary>
@@ -43,6 +46,7 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public Drawing.Rectangle WorkingArea
         {
+            get { return this.Bounds; }
 /*            get
             {
                 int ox = this.screen.WorkingArea.Left;
@@ -52,8 +56,7 @@ namespace Epsitec.Common.Widgets
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
             }
-*/            get { return Drawing.Rectangle.Empty; }
-        }
+*/        }
 
         /// <summary>
         /// Indique s'il s'agit de l'écran principal (celui où il y a la barre des
@@ -61,15 +64,15 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public bool IsPrimary
         {
-            //get { return this.screen.Primary; }
-            get { return true; }
+            // get { return this.screen.Primary; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public string DeviceName
         {
-            get
+            get { throw new System.NotImplementedException(); }
+/*            get
             {
-                /*
                 string name = this.screen.DeviceName;
                 int pos = name.IndexOf('\0');
 
@@ -79,10 +82,8 @@ namespace Epsitec.Common.Widgets
                 }
 
                 return name;
-                */
-                return null;
             }
-        }
+*/        }
 
         /// <summary>
         /// Retourne le rectangle correspondant à la surface de travail globale. Cette
@@ -90,6 +91,7 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public static Drawing.Rectangle GlobalArea
         {
+            get { throw new System.NotImplementedException(); }
 /*            get
             {
                 int ox = System.Windows.Forms.SystemInformation.VirtualScreen.Left;
@@ -101,16 +103,15 @@ namespace Epsitec.Common.Widgets
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
             }
-*/            get { return Drawing.Rectangle.Empty; }
-        }
+*/        }
         /// <summary>
         /// Construit la table de tous les écrans disponibles.
         /// </summary>
         public static ScreenInfo[] AllScreens
         {
-            get
+            get { throw new System.NotImplementedException(); }
+/*            get
             {
-                /*
                 System.Windows.Forms.Screen[] screens = System.Windows.Forms.Screen.AllScreens;
 
                 int n = screens.Length;
@@ -123,10 +124,8 @@ namespace Epsitec.Common.Widgets
                 }
 
                 return infos;
-                */
-                return null;
             }
-        }
+*/        }
 
         /// <summary>
         /// Trouve l'écran qui se trouve au point indiqué.
@@ -135,17 +134,16 @@ namespace Epsitec.Common.Widgets
         /// <returns>écran trouvé</returns>
         public static ScreenInfo Find(Drawing.Point point)
         {
-            /*
-            int ox = (int)(point.X + 0.5);
-            int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(point.Y + 0.5);
+            return new ScreenInfo();
+    /*            int ox = (int)(point.X + 0.5);
+                int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(point.Y + 0.5);
 
-            System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint(
-                new System.Drawing.Point(ox, oy)
-            );
-            return screen == null ? null : new ScreenInfo(screen);
-            */
-            return null;
-        }
+                System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint(
+                    new System.Drawing.Point(ox, oy)
+                );
+                return screen == null ? null : new ScreenInfo(screen);
+    */
+}
 
         /// <summary>
         /// Trouve l'écran qui est le plus recouvert par le rectangle indiqué.
@@ -154,8 +152,8 @@ namespace Epsitec.Common.Widgets
         /// <returns>écran trouvé</returns>
         public static ScreenInfo Find(Drawing.Rectangle rect)
         {
-            /*
-            int ox = (int)(rect.Left + 0.5);
+            return new ScreenInfo();
+/*            int ox = (int)(rect.Left + 0.5);
             int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(rect.Top + 0.5);
             int dx = (int)(rect.Width + 0.5);
             int dy = (int)(rect.Height + 0.5);
@@ -164,9 +162,7 @@ namespace Epsitec.Common.Widgets
                 new System.Drawing.Rectangle(ox, oy, dx, dy)
             );
             return screen == null ? null : new ScreenInfo(screen);
-            */
-            return null;
-        }
+*/        }
 
         /// <summary>
         /// Fits the specified rectangle into the working area. This can be used
@@ -209,7 +205,6 @@ namespace Epsitec.Common.Widgets
         {
             this.screen = screen;
         }
-*/
-        //private System.Windows.Forms.Screen screen;
+*/        //private System.Windows.Forms.Screen screen;
     }
 }
