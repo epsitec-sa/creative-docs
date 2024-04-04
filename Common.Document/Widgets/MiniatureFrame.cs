@@ -383,7 +383,6 @@ namespace Epsitec.Common.Document.Widgets
                     path.LineTo(r.Center.X, r.Top);
                 }
                 Drawer.DrawPathDash(graphics, 1.0, path, 2.0, 4.0, 5.0, Color.FromRgb(1, 0, 0)); // dessine une bande latérale traitillée rouge
-                path.Dispose();
             }
 
             if (this.IsEnabled && this.DragHost != null) // contenu de la fenêtre flottante ?

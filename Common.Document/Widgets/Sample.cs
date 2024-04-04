@@ -313,8 +313,6 @@ namespace Epsitec.Common.Document.Widgets
             graphics.Transform = initial;
 
             obj.Dispose();
-            path.Dispose();
-
             graphics.RestoreClippingRectangle(iClip);
         }
 

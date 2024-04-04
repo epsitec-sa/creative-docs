@@ -266,8 +266,6 @@ namespace Epsitec.Common.Document.Widgets
 
                     graphics.Color = textColor;
                     graphics.PaintSurface(path);
-                    path.Dispose();
-
                     if (this.isCenter)
                     {
                         graphics.TranslateTransform(-sx, 0);

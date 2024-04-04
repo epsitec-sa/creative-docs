@@ -804,24 +804,20 @@ namespace Epsitec.Common.Document.Objects
                 {
                     if (drawingContext.FillEmptyPlaceholders)
                     {
-                        using (Path path = this.PathBuildSurface())
-                        {
-                            port.Color = Color.FromAlphaRgb(1.0, 0.5, 0.5, 1);
-                            port.PaintSurface(path); // dessine une surface bleue
-                            port.Color = Color.FromAlphaRgb(1.0, 0.0, 0.0, 1);
-                            port.LineWidth = 20.0;
-                            port.LineJoin = JoinStyle.Miter;
-                            port.PaintOutline(path);
-                        }
+                        Path path = this.PathBuildSurface();
+                        port.Color = Color.FromAlphaRgb(1.0, 0.5, 0.5, 1);
+                        port.PaintSurface(path); // dessine une surface bleue
+                        port.Color = Color.FromAlphaRgb(1.0, 0.0, 0.0, 1);
+                        port.LineWidth = 20.0;
+                        port.LineJoin = JoinStyle.Miter;
+                        port.PaintOutline(path);
                     }
                     else
                     {
-                        using (Path path = this.PathBuildOutline())
-                        {
-                            port.Color = Color.FromBrightness(0.5);
-                            port.LineWidth = 1.0 / drawingContext.ScaleX;
-                            port.PaintOutline(path); // dessine un rectangle avec une croix
-                        }
+                        Path path = this.PathBuildOutline();
+                        port.Color = Color.FromBrightness(0.5);
+                        port.LineWidth = 1.0 / drawingContext.ScaleX;
+                        port.PaintOutline(path); // dessine un rectangle avec une croix
                     }
                 }
             }

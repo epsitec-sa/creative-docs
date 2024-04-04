@@ -1937,8 +1937,6 @@ namespace Epsitec.Common.Document
 
                     graphics.Color = c;
                     graphics.PaintSurface(path);
-                    path.Dispose();
-
                     graphics.TranslateTransform(-sx, 0);
                 }
             }
@@ -2002,7 +2000,6 @@ namespace Epsitec.Common.Document
                 {
                     graphics.Color = c;
                     graphics.PaintSurface(path);
-                    path.Dispose();
                 }
 
                 //	Dessine les traits verticaux de séparation.

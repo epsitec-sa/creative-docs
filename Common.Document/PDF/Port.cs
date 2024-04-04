@@ -415,8 +415,6 @@ namespace Epsitec.Common.Document.PDF
                 this.SetFillColor(this.color);
                 this.DoFill(path);
                 this.PutEOL();
-
-                path.Dispose();
             }
             else // textes en fontes ?
             {
@@ -522,8 +520,6 @@ namespace Epsitec.Common.Document.PDF
                 this.SetFillColor(this.color);
                 this.DoFill(path);
                 this.PutEOL();
-
-                path.Dispose();
                 return width;
             }
             else // textes en fontes ?

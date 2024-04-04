@@ -886,27 +886,25 @@ namespace Epsitec.Common.Document.PDF
             }
             else
             {
-                using (Path path = new Path())
-                {
-                    double clip = 1000.0;
+                Path path = new Path();
+                double clip = 1000.0;
 
-                    path.MoveTo(0.0 - clip, 0.0 - clip);
-                    path.LineTo(width + clip, 0.0 - clip);
-                    path.LineTo(width + clip, height + clip);
-                    path.LineTo(0.0 - clip, height + clip);
-                    path.LineTo(0.0 - clip, 0.0 - clip);
-                    path.Close();
+                path.MoveTo(0.0 - clip, 0.0 - clip);
+                path.LineTo(width + clip, 0.0 - clip);
+                path.LineTo(width + clip, height + clip);
+                path.LineTo(0.0 - clip, height + clip);
+                path.LineTo(0.0 - clip, 0.0 - clip);
+                path.Close();
 
-                    path.MoveTo(0.0 - left, 0.0 - bottom);
-                    path.LineTo(0.0 - left, height + top);
-                    path.LineTo(width + right, height + top);
-                    path.LineTo(width + right, 0.0 - bottom);
-                    path.LineTo(0.0 - left, 0.0 - bottom);
-                    path.Close();
+                path.MoveTo(0.0 - left, 0.0 - bottom);
+                path.LineTo(0.0 - left, height + top);
+                path.LineTo(width + right, height + top);
+                path.LineTo(width + right, 0.0 - bottom);
+                path.LineTo(0.0 - left, 0.0 - bottom);
+                path.Close();
 
-                    port.RichColor = RichColor.FromCmyk(0.0, 0.0, 0.0, 0.0); // masque blanc
-                    port.PaintSurface(path);
-                }
+                port.RichColor = RichColor.FromCmyk(0.0, 0.0, 0.0, 0.0); // masque blanc
+                port.PaintSurface(path);
             }
         }
 
@@ -926,71 +924,67 @@ namespace Epsitec.Common.Document.PDF
             double lengthX = info.CropMarksLengthX;
             double lengthY = info.CropMarksLengthY;
 
-            using (Path path = new Path())
-            {
-                //	Traits horizontaux.
-                path.MoveTo(0.0 - offsetX, 0.0);
-                path.LineTo(0.0 - offsetX - lengthX, 0.0);
+            Path path = new Path();
+            //	Traits horizontaux.
+            path.MoveTo(0.0 - offsetX, 0.0);
+            path.LineTo(0.0 - offsetX - lengthX, 0.0);
 
-                path.MoveTo(0.0 - offsetX, height);
-                path.LineTo(0.0 - offsetX - lengthX, height);
+            path.MoveTo(0.0 - offsetX, height);
+            path.LineTo(0.0 - offsetX - lengthX, height);
 
-                path.MoveTo(width + offsetX, 0.0);
-                path.LineTo(width + offsetX + lengthX, 0.0);
+            path.MoveTo(width + offsetX, 0.0);
+            path.LineTo(width + offsetX + lengthX, 0.0);
 
-                path.MoveTo(width + offsetX, height);
-                path.LineTo(width + offsetX + lengthX, height);
+            path.MoveTo(width + offsetX, height);
+            path.LineTo(width + offsetX + lengthX, height);
 
-                //	Traits verticaux.
-                path.MoveTo(0.0, 0.0 - offsetY);
-                path.LineTo(0.0, 0.0 - offsetY - lengthY);
+            //	Traits verticaux.
+            path.MoveTo(0.0, 0.0 - offsetY);
+            path.LineTo(0.0, 0.0 - offsetY - lengthY);
 
-                path.MoveTo(width, 0.0 - offsetY);
-                path.LineTo(width, 0.0 - offsetY - lengthY);
+            path.MoveTo(width, 0.0 - offsetY);
+            path.LineTo(width, 0.0 - offsetY - lengthY);
 
-                path.MoveTo(0.0, height + offsetY);
-                path.LineTo(0.0, height + offsetY + lengthY);
+            path.MoveTo(0.0, height + offsetY);
+            path.LineTo(0.0, height + offsetY + lengthY);
 
-                path.MoveTo(width, height + offsetY);
-                path.LineTo(width, height + offsetY + lengthY);
+            path.MoveTo(width, height + offsetY);
+            path.LineTo(width, height + offsetY + lengthY);
 
-                port.LineWidth = info.CropMarksWidth * 3;
-                port.LineCap = CapStyle.Butt;
-                port.RichColor = RichColor.FromCmyk(0.0, 0.0, 0.0, 0.0); // fond blanc derrière les traits de coupe
-                port.PaintOutline(path);
+            port.LineWidth = info.CropMarksWidth * 3;
+            port.LineCap = CapStyle.Butt;
+            port.RichColor = RichColor.FromCmyk(0.0, 0.0, 0.0, 0.0); // fond blanc derrière les traits de coupe
+            port.PaintOutline(path);
 
-                port.LineWidth = info.CropMarksWidth;
-                port.LineCap = CapStyle.Butt;
-                port.RichColor = RichColor.FromCmyk(1.0, 1.0, 1.0, 1.0); // noir de repérage
-                port.PaintOutline(path);
-            }
+            port.LineWidth = info.CropMarksWidth;
+            port.LineCap = CapStyle.Butt;
+            port.RichColor = RichColor.FromCmyk(1.0, 1.0, 1.0, 1.0); // noir de repérage
+            port.PaintOutline(path);
 
-            using (Path path = new Path())
-            {
-                int rank = this.document.Modifier.PageLocalRank(page);
-                double x = lengthY;
-                double y = 0.0 - offsetY - lengthY / 2.0;
-                double size = System.Math.Min(20.0, lengthY * 0.6);
-                string text = string.Format("{0} : {1}", this.documentTitle, rank + 1);
-                Font font = Font.GetFont("Arial", "Regular");
+            path = new Path();
+            int rank = this.document.Modifier.PageLocalRank(page);
+            double x = lengthY;
+            double y = 0.0 - offsetY - lengthY / 2.0;
+            double size = System.Math.Min(20.0, lengthY * 0.6);
+            string text = string.Format("{0} : {1}", this.documentTitle, rank + 1);
+            Font font = Font.GetFont("Arial", "Regular");
 
-                double dx = font.GetTextAdvance(text) * size;
+            double dx = font.GetTextAdvance(text) * size;
 
-                path.AppendRoundedRectangle(
-                    x - x / 2,
-                    y + size * font.Descender,
-                    dx + 2 * x / 2,
-                    size,
-                    x / 8
-                );
-                port.RichColor = RichColor.FromCmyk(0.0, 0.0, 0.0, 0.0); // fond blanc
-                port.PaintSurface(path);
+            path.AppendRoundedRectangle(
+                x - x / 2,
+                y + size * font.Descender,
+                dx + 2 * x / 2,
+                size,
+                x / 8
+            );
+            port.RichColor = RichColor.FromCmyk(0.0, 0.0, 0.0, 0.0); // fond blanc
+            port.PaintSurface(path);
 
-                path.Clear();
-                path.Append(font, text, x, y, size);
-                port.RichColor = RichColor.FromCmyk(1.0, 1.0, 1.0, 1.0); // noir de repérage
-                port.PaintSurface(path);
-            }
+            path.Clear();
+            path.Append(font, text, x, y, size);
+            port.RichColor = RichColor.FromCmyk(1.0, 1.0, 1.0, 1.0); // noir de repérage
+            port.PaintSurface(path);
         }
 
         #region ComplexSurface

@@ -198,17 +198,15 @@ namespace Epsitec.Common.Document
             }
             dp.AddDash(dash, gap);
 
-            using (Path temp = dp.GenerateDashedPath())
-            {
-                graphics.Rasterizer.AddOutline(
-                    temp,
-                    width / scale,
-                    CapStyle.Square,
-                    JoinStyle.Round,
-                    5.0
-                );
-                graphics.RenderSolid(color);
-            }
+            Path temp = dp.GenerateDashedPath();
+            graphics.Rasterizer.AddOutline(
+                temp,
+                width / scale,
+                CapStyle.Square,
+                JoinStyle.Round,
+                5.0
+            );
+            graphics.RenderSolid(color);
         }
 
         public bool Detect(Point pos, DrawingContext drawingContext, params Shape[] shapes)
@@ -329,13 +327,11 @@ namespace Epsitec.Common.Document
                     }
                 }
 
-                using (Path temp = dp.GenerateDashedPath())
-                {
-                    Path initial = shape.Path;
-                    shape.Path = temp;
-                    this.DrawShape(port, drawingContext, shape, obj);
-                    shape.Path = initial;
-                }
+                Path temp = dp.GenerateDashedPath();
+                Path initial = shape.Path;
+                shape.Path = temp;
+                this.DrawShape(port, drawingContext, shape, obj);
+                shape.Path = initial;
             }
             else // trait continu ?
             {
@@ -1132,21 +1128,19 @@ namespace Epsitec.Common.Document
                         dp.AddDash(pen, gap);
                     }
 
-                    using (Path temp = dp.GenerateDashedPath())
-                    {
-                        Path pathSurface = new Path();
-                        pathSurface.Append(
-                            temp,
-                            stroke.Width,
-                            stroke.Cap,
-                            stroke.EffectiveJoin,
-                            stroke.Limit,
-                            drawingContext.ScaleX
-                        );
+                    Path temp = dp.GenerateDashedPath();
+                    Path pathSurface = new Path();
+                    pathSurface.Append(
+                        temp,
+                        stroke.Width,
+                        stroke.Cap,
+                        stroke.EffectiveJoin,
+                        stroke.Limit,
+                        drawingContext.ScaleX
+                    );
 
-                        this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
-                        port.PaintSurface(pathSurface);
-                    }
+                    this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
+                    port.PaintSurface(pathSurface);
                 }
                 else
                 {
