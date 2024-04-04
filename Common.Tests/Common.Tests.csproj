@@ -76,10 +76,8 @@
     <None   Include="Drawing\NativeBitmapTest.cs" />
     <Compile Remove="Drawing\OpenTypeTest.cs" />
     <None   Include="Drawing\OpenTypeTest.cs" />
-    -->
     <Compile Remove="Drawing\PathTest.cs" />
     <None   Include="Drawing\PathTest.cs" />
-    <!--
     <Compile Remove="Drawing\PixmapTest.cs" />
     <None   Include="Drawing\PixmapTest.cs" />
     -->

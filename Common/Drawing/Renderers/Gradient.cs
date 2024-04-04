@@ -12,7 +12,6 @@ namespace Epsitec.Common.Drawing.Renderers
         public Gradient(Graphics graphics)
         {
             this.graphics = graphics;
-            this.handle = new Agg.SafeGradientRendererHandle();
             this.AlphaMutiplier = 1.0;
         }
 
@@ -26,17 +25,16 @@ namespace Epsitec.Common.Drawing.Renderers
                 //	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
                 //	Graphics.UpdateTransform...
 
-                if (this.handle.IsInvalid)
+/*                if (this.handle.IsInvalid)
                 {
                     return;
                 }
-
+*/
                 this.transform = value;
                 this.internalTransform = value.MultiplyBy(this.graphics.Transform);
 
                 Transform inverse = Transform.Inverse(this.internalTransform);
-                AntigrainCPP.Renderer.Gradient.Matrix(
-                    this.handle,
+                this.gradientRenderer.Matrix(
                     inverse.XX,
                     inverse.XY,
                     inverse.YX,
@@ -72,26 +70,21 @@ namespace Epsitec.Common.Drawing.Renderers
             {
                 if (this.fill != value)
                 {
-                    this.AssertAttached();
                     this.fill = value;
-                    AntigrainCPP.Renderer.Gradient.Select(this.handle, (int)this.fill);
+                    this.gradientRenderer.Select((int)this.fill);
                 }
             }
         }
 
-        public System.IntPtr Handle
-        {
-            get { return this.handle; }
-        }
-
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
         {
-            this.AssertAttached();
-            AntigrainCPP.Renderer.Gradient.SetAlphaMask(
-                this.handle,
+            /*
+            this.gradientRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
                 (AntigrainCPP.Renderer.MaskComponent)component
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void SetColors(Color a, Color b)
@@ -143,11 +136,9 @@ namespace Epsitec.Common.Drawing.Renderers
                 throw new System.ArgumentOutOfRangeException("Color arrays missized");
             }
 
-            this.AssertAttached();
-
             if (this.AlphaMutiplier == 1.0)
             {
-                AntigrainCPP.Renderer.Gradient.Color1(this.handle, r, g, b, a);
+                this.gradientRenderer.Color1(r, g, b, a);
             }
             else
             {
@@ -164,14 +155,13 @@ namespace Epsitec.Common.Drawing.Renderers
                     aa[i] = a[i] * this.AlphaMutiplier;
                 }
 
-                AntigrainCPP.Renderer.Gradient.Color1(this.handle, rr, gg, bb, aa);
+                this.gradientRenderer.Color1(rr, gg, bb, aa);
             }
         }
 
         public void SetParameters(double r1, double r2)
         {
-            this.AssertAttached();
-            AntigrainCPP.Renderer.Gradient.Range(this.handle, r1, r2);
+            this.gradientRenderer.Range(r1, r2);
         }
 
         #region IDisposable Members
@@ -183,19 +173,10 @@ namespace Epsitec.Common.Drawing.Renderers
 
         #endregion
 
-        private void AssertAttached()
-        {
-            if (this.handle.IsInvalid)
-            {
-                throw new System.NullReferenceException("RendererGradient not attached");
-            }
-        }
 
         private void Attach(Pixmap pixmap)
         {
             this.Detach();
-
-            this.handle.Create(pixmap.Handle);
             this.pixmap = pixmap;
         }
 
@@ -203,7 +184,6 @@ namespace Epsitec.Common.Drawing.Renderers
         {
             if (this.pixmap != null)
             {
-                this.handle.Delete();
                 this.pixmap = null;
                 this.fill = GradientFill.None;
                 this.transform = Transform.Identity;
@@ -212,7 +192,7 @@ namespace Epsitec.Common.Drawing.Renderers
         }
 
         readonly Graphics graphics;
-        readonly Agg.SafeGradientRendererHandle handle;
+        readonly AntigrainCPP.Renderer.Gradient gradientRenderer;
         private Pixmap pixmap;
         private GradientFill fill;
         private Transform transform = Transform.Identity;

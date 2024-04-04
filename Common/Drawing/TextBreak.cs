@@ -115,7 +115,10 @@ namespace Epsitec.Common.Drawing
 
         public static string GetUnicodeName(int code)
         {
+            /*
             return AntigrainCPP.Font.GetUnicodeName(code);
+            */
+            throw new System.NotImplementedException();
         }
 
         public class XRun

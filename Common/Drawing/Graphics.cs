@@ -1280,10 +1280,6 @@ namespace Epsitec.Common.Drawing
                 {
                     this.pixmap.Dispose();
                 }
-                if (this.rasterizer != null)
-                {
-                    this.rasterizer.Dispose();
-                }
                 if (this.solidRenderer != null)
                 {
                     this.solidRenderer.Pixmap = null;

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Drawing.Renderers
         public Smooth(Graphics graphics)
         {
             this.graphics = graphics;
-            this.handle = new Agg.SafeSmoothRendererHandle();
         }
 
         public Pixmap Pixmap
@@ -29,32 +28,23 @@ namespace Epsitec.Common.Drawing.Renderers
             }
         }
 
-        public System.IntPtr Handle
-        {
-            get { return this.handle; }
-        }
-
         public Color Color
         {
             set
             {
-                if (this.handle.IsInvalid)
-                {
-                    return;
-                }
-
-                AntigrainCPP.Renderer.Smooth.Color(this.handle, value.R, value.G, value.B, value.A);
+                this.smoothRenderer.Color(value.R, value.G, value.B, value.A);
             }
         }
 
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
         {
-            this.AssertAttached();
-            AntigrainCPP.Renderer.Smooth.SetAlphaMask(
-                this.handle,
+            /*
+            this.smoothRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
                 (AntigrainCPP.Renderer.MaskComponent)component
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void SetParameters(double r1, double r2)
@@ -63,20 +53,15 @@ namespace Epsitec.Common.Drawing.Renderers
             {
                 this.r1 = r1;
                 this.r2 = r2;
-
-                if (this.handle.IsInvalid)
-                {
-                    return;
-                }
             }
         }
 
         public void AddPath(Drawing.Path path)
         {
+            /*
             this.SetTransform(this.graphics.Transform);
 
-            AntigrainCPP.Renderer.Smooth.Setup(
-                this.handle,
+            this.smoothRenderer.Setup(
                 this.r1,
                 this.r2,
                 this.transform.XX,
@@ -86,7 +71,9 @@ namespace Epsitec.Common.Drawing.Renderers
                 this.transform.TX,
                 this.transform.TY
             );
-            AntigrainCPP.Renderer.Smooth.AddPath(this.handle, path.Handle);
+            this.smoothRenderer.AddPath(path.Handle);
+            */
+            throw new System.NotImplementedException();
         }
 
         #region IDisposable Members
@@ -99,14 +86,8 @@ namespace Epsitec.Common.Drawing.Renderers
 
         private void SetTransform(Transform value)
         {
-            if (this.handle.IsInvalid)
-            {
-                return;
-            }
-
             this.transform = value;
-            AntigrainCPP.Renderer.Smooth.Setup(
-                this.handle,
+            this.smoothRenderer.Setup(
                 this.r1,
                 this.r2,
                 this.transform.XX,
@@ -118,19 +99,9 @@ namespace Epsitec.Common.Drawing.Renderers
             );
         }
 
-        private void AssertAttached()
-        {
-            if (this.handle.IsInvalid)
-            {
-                throw new System.NullReferenceException("RendererSmooth not attached");
-            }
-        }
-
         private void Attach(Pixmap pixmap)
         {
             this.Detach();
-
-            this.handle.Create(pixmap.Handle);
             this.pixmap = pixmap;
         }
 
@@ -138,14 +109,13 @@ namespace Epsitec.Common.Drawing.Renderers
         {
             if (this.pixmap != null)
             {
-                this.handle.Delete();
                 this.pixmap = null;
                 this.transform = Transform.Identity;
             }
         }
 
         readonly Graphics graphics;
-        private readonly Agg.SafeSmoothRendererHandle handle;
+        private readonly AntigrainCPP.Renderer.Smooth smoothRenderer;
         private Pixmap pixmap;
         private Transform transform = Transform.Identity;
         private double r1;

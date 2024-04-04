@@ -176,7 +176,8 @@ namespace Epsitec.Common.Drawing
                     }
                     else
                     {
-                        this.handle = AntigrainCPP.Font.CreateFaceHandle(data, size, offset, osHandle);
+                        //this.handle = AntigrainCPP.Font.CreateFaceHandle(data, size, offset, osHandle);
+                        throw new System.NotImplementedException();
                     }
                 }
 
@@ -484,11 +485,9 @@ namespace Epsitec.Common.Drawing
         {
             if (this.syntheticMode == SyntheticFontMode.Oblique)
             {
-                using (Path path = new Path())
-                {
-                    path.Append(this, glyph, this.SyntheticTransform);
-                    return path.ComputeBounds();
-                }
+                Path path = new Path();
+                path.Append(this, glyph, this.SyntheticTransform);
+                return path.ComputeBounds();
             }
 
             double x1,
@@ -741,6 +740,7 @@ namespace Epsitec.Common.Drawing
 
         public void FillPixelCache(string text, double size, double ox, double oy)
         {
+            /*
             if (string.IsNullOrEmpty(text))
             {
                 return;
@@ -748,6 +748,8 @@ namespace Epsitec.Common.Drawing
 
             ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text);
             AntigrainCPP.Font.PixelCache.Fill(this.Handle, glyphs, size, ox, oy);
+            */
+            throw new System.NotImplementedException();
         }
 
         public double PaintPixelCache(
@@ -759,6 +761,7 @@ namespace Epsitec.Common.Drawing
             Color color
         )
         {
+            /*
             if (string.IsNullOrEmpty(text))
             {
                 return 0.0;
@@ -788,6 +791,8 @@ namespace Epsitec.Common.Drawing
                     color.A
                 );
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public void PaintPixelGlyphs(
@@ -804,6 +809,7 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
+            /*
             AntigrainCPP.Font.PixelCache.Paint(
                 pixmap.Handle,
                 this.Handle,
@@ -821,15 +827,19 @@ namespace Epsitec.Common.Drawing
                 tx,
                 ty
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void DisposeFaceHandle()
         {
+            /*
             if (this.handle != System.IntPtr.Zero)
             {
                 AntigrainCPP.Font.DisposeFaceHandle(this.handle);
                 this.handle = System.IntPtr.Zero;
             }
+            */
         }
 
         public static void RegisterResourceFont(

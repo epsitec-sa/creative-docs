@@ -8,7 +8,7 @@ namespace Epsitec.Common.Drawing
     /// implementations (currently, there is just one such implementation).
     /// See the <see cref="Rasterizer"/> class for details.
     /// </summary>
-    public abstract class AbstractRasterizer : System.IDisposable
+    public abstract class AbstractRasterizer
     {
         /// <summary>
         /// Gets or sets the surface fill mode.
@@ -360,6 +360,7 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
+            /*
             ushort[] glyphs = font.OpenTypeFont.GenerateGlyphs(text);
             double[] x = new double[glyphs.Length];
             double advance = font.OpenTypeFont.GetPositions(glyphs, 1.0, 0.0, x);
@@ -367,19 +368,9 @@ namespace Epsitec.Common.Drawing
             this.AddPlainGlyphs(font, glyphs, x, xx, xy, yx, yy, tx, ty);
 
             return advance;
+            */
+            throw new System.NotImplementedException();
         }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            System.GC.SuppressFinalize(this);
-        }
-
-        #endregion
-
-        protected abstract void Dispose(bool disposing);
 
         protected abstract void SyncFillMode();
         protected abstract void SyncGamma();

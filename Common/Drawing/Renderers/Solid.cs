@@ -7,7 +7,6 @@ namespace Epsitec.Common.Drawing.Renderers
     {
         public Solid()
         {
-            this.handle = new Agg.SafeSolidRendererHandle();
             this.AlphaMutiplier = 1.0;
         }
 
@@ -27,11 +26,6 @@ namespace Epsitec.Common.Drawing.Renderers
                     }
                 }
             }
-        }
-
-        public System.IntPtr Handle
-        {
-            get { return this.handle; }
         }
 
         public Color Color
@@ -64,12 +58,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
         public void ClearAlphaRgb(double a, double r, double g, double b)
         {
-            if (this.handle.IsInvalid)
-            {
-                return;
-            }
-
-            AntigrainCPP.Renderer.Solid.Clear(this.handle, r, g, b, a * this.AlphaMutiplier);
+            this.solidRenderer.Clear(r, g, b, a * this.AlphaMutiplier);
         }
 
         public void Clear4Colors(
@@ -83,13 +72,8 @@ namespace Epsitec.Common.Drawing.Renderers
             Color c4
         )
         {
-            if (this.handle.IsInvalid)
-            {
-                return;
-            }
-
+            /*
             AntigrainCPP.Renderer.Special.Fill4Colors(
-                this.handle,
                 x,
                 y,
                 dx,
@@ -107,6 +91,8 @@ namespace Epsitec.Common.Drawing.Renderers
                 c4.G,
                 c4.B
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void SetColor(Color color)
@@ -128,26 +114,18 @@ namespace Epsitec.Common.Drawing.Renderers
 
         public void SetColorAlphaRgb(double a, double r, double g, double b)
         {
-            if (this.handle.IsInvalid)
-            {
-                return;
-            }
-
-            AntigrainCPP.Renderer.Solid.Color(this.handle, r, g, b, a * this.AlphaMutiplier);
+            this.solidRenderer.Color(r, g, b, a * this.AlphaMutiplier);
         }
 
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
         {
-            if (this.handle.IsInvalid)
-            {
-                return;
-            }
-
-            AntigrainCPP.Renderer.Solid.SetAlphaMask(
-                this.handle,
+            /*
+            this.solidRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
                 (AntigrainCPP.Renderer.MaskComponent)component
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         #region IDisposable Members
@@ -157,19 +135,10 @@ namespace Epsitec.Common.Drawing.Renderers
         }
         #endregion
 
-        private void AssertAttached()
-        {
-            if (this.handle.IsInvalid)
-            {
-                throw new System.NullReferenceException("SolidRenderer not attached");
-            }
-        }
-
         private void Attach(Pixmap pixmap)
         {
             this.Detach();
 
-            this.handle.Create(pixmap.Handle);
             this.pixmap = pixmap;
             this.color = new Color();
         }
@@ -178,13 +147,12 @@ namespace Epsitec.Common.Drawing.Renderers
         {
             if (this.pixmap != null)
             {
-                this.handle.Delete();
                 this.pixmap = null;
             }
         }
 
         private Color color;
-        private readonly Agg.SafeSolidRendererHandle handle;
+        private readonly AntigrainCPP.Renderer.Solid solidRenderer;
         private Pixmap pixmap;
     }
 }

@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using System;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Platform
 {
@@ -27,11 +28,11 @@ namespace Epsitec.Common.Widgets.Platform
                 Window.HandleSystemEventsUserPreferenceChanged;
             */
 
-            Window.dispatchWindow = new Window();
             /* REMOVED (bl-net8-cross)
+            Window.dispatchWindow = new Window();
             Window.dispatchWindow.CreateControl();
-            */
             Window.dispatchWindowHandle = Window.dispatchWindow.Handle;
+            */
 
             Epsitec.Common.Drawing.Platform.Dispatcher.Initialize();
 
@@ -39,8 +40,85 @@ namespace Epsitec.Common.Widgets.Platform
             //	code on the main application thread. Thus, we have to register
             //	the special thread invoker interface :
 
+            /* REMOVED (bl-net8-cross)
             Types.BindingAsyncOperation.DefineApplicationThreadInvoker(Window.dispatchWindow);
+            */
         }
+
+        // --------------------------------------------------------------------------------------------
+        //                             AggUI.AggWindow overrides
+        // --------------------------------------------------------------------------------------------
+        ~Window()
+        {
+            System.Console.WriteLine("Delete window");
+        }
+
+        public override void OnDraw(AggUI.GraphicContext gctx)
+        {
+            AntigrainCPP.Path path = new AntigrainCPP.Path();
+            gctx.renderer_smooth.Color(0, 0, 0, 1);
+            gctx.renderer_smooth.Setup(7, 2,
+                1, 0,
+                0, 1,
+                0, 0
+            );
+            bool first = true;
+            foreach (var point in points){
+                (int x, int y, int r, int g, int b, int s) = point;
+                if (first) {
+                    path.MoveTo(x, y);
+                    first = false;
+                } else {
+                    path.LineTo(x, y);
+                }
+                gctx.SetColor(r, g, b);
+                gctx.DrawEllipse(x, y, s, s);
+            }
+            gctx.renderer_smooth.AddPath(path);
+        }
+
+        public override void OnKey(int x, int y, uint key, uint flags){
+            points = new();
+            this.ForceRedraw();
+        }
+
+        public override void OnMouseButtonDown(int x, int y, uint flags){
+            if (flags == 0){
+                return;
+            }
+            if (count <= 0){
+                count = rnd.Next(100, 500);
+                size = rnd.Next(10, 50);
+                color = (
+                    rnd.Next(0, 256),
+                    rnd.Next(0, 256),
+                    rnd.Next(0, 256)
+                );
+            }
+            count -= size;
+            (int r, int g, int b) = color;
+            int f;
+            int s;
+            if (flags == 1){
+                f = 300;
+                s = size;
+            } else {
+                f = 10;
+                s = 15;
+            } 
+            double m = f / System.Math.Sqrt(r*r + g*g + b*b);
+            r = (int)System.Math.Round(r*m);
+            g = (int)System.Math.Round(g*m);
+            b = (int)System.Math.Round(b*m);
+            points.Add((x, y, r, g, b, s));
+            this.ForceRedraw();
+        }
+
+        private List<(int, int, int, int, int, int)> points = new();
+        private Random rnd = new();
+        private (int, int, int) color = (0, 0, 0);
+        private int size = 0;
+        private int count = 0;
 
         // --------------------------------------------------------------------------------------------
         //                             System.Windows.Forms.Form stubs
@@ -53,7 +131,7 @@ namespace Epsitec.Common.Widgets.Platform
         public System.IntPtr Handle { get; }
 
         public void Activate() {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public bool AllowDrop { get; set; }
@@ -117,13 +195,13 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 */
-        private Window() : base(AggUI.PixFmt.pix_format_bgr24, true)
+        private Window() : base(true)
         {
             this.isSyncPaintDisabled = new SafeCounter();
             this.isSyncUpdating = new SafeCounter();
             this.isWndProcHandlingRestricted = new SafeCounter();
 
-            bool ok = this.init(800, 600, AggUI.WindowFlags.Resize);
+            bool ok = this.Init(800, 600, AggUI.WindowFlags.Resize);
             if (!ok)
             {
                 throw new Exception("Failed to initialize antigrain window");
@@ -156,8 +234,8 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.WindowType = WindowType.Document;
             this.widgetWindow.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 
-            this.graphics = new Epsitec.Common.Drawing.Graphics();
-            this.graphics.AllocatePixmap();
+            //this.graphics = new Epsitec.Common.Drawing.Graphics();
+            //this.graphics.AllocatePixmap();
 
             Window.DummyHandleEater(this.Handle);
 
@@ -172,7 +250,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             Win32Api.SetClassLong(this.Handle, Win32Const.GCL_STYLE, classWindowStyle);
 
-            this.ReallocatePixmap();
+            //this.ReallocatePixmap();
 
             WindowList.Insert(this);
         }
@@ -1805,6 +1883,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private bool ReallocatePixmapLowLevel()
         {
+            /*
             bool changed = false;
 
             int width = this.ClientSize.Width;
@@ -1830,6 +1909,8 @@ namespace Epsitec.Common.Widgets.Platform
             this.isPixmapOk = true;
 
             return changed;
+            */
+            throw new System.NotImplementedException();
         }
 
         internal int MapToWinFormsX(double x)
@@ -2775,6 +2856,7 @@ namespace Epsitec.Common.Widgets.Platform
 */
         internal Drawing.Pixmap GetWindowPixmap()
         {
+            /*
             if ((this.graphics != null) && (this.isPixmapOk))
             {
                 return this.graphics.Pixmap;
@@ -2783,6 +2865,8 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 return null;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
 /*        protected void DispatchPaint(
@@ -2859,6 +2943,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private bool RefreshGraphicsLowLevel()
         {
+            /*
             if (this.dirtyRectangle.IsValid)
             {
                 Drawing.Rectangle repaint = this.dirtyRectangle;
@@ -2876,6 +2961,8 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return false;
+            */
+            throw new System.NotImplementedException();
         }
 
         protected bool UpdateLayeredWindow()
@@ -3156,7 +3243,7 @@ namespace Epsitec.Common.Widgets.Platform
         private bool widgetWindowDisposed;
         private Epsitec.Common.Widgets.Window widgetWindow;
 
-        private Drawing.Graphics graphics;
+        //private Drawing.Graphics graphics;
         private Drawing.Rectangle dirtyRectangle;
         private Drawing.DirtyRegion dirtyRegion;
         private Drawing.Rectangle windowBounds;

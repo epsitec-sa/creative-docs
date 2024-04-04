@@ -82,6 +82,7 @@ namespace Epsitec.Common.Drawing
             uint color
         )
         {
+            /*
             int[] dxArray = new int[length];
             ushort[] text = new ushort[length];
             int count = 0;
@@ -125,6 +126,8 @@ namespace Epsitec.Common.Drawing
                     color
                 );
             }
+            */
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -241,6 +241,7 @@ namespace Epsitec.Common.Tests.Drawing
             Assert.AreEqual(210, bounds.Top);
         }
 
+        /*
         [Test]
         public void CheckSystemInterop()
         {
@@ -253,6 +254,7 @@ namespace Epsitec.Common.Tests.Drawing
 
             form.Show();
         }
+        */
 
         [Test]
         public void CheckAppendPathOutlines1()
@@ -337,6 +339,7 @@ namespace Epsitec.Common.Tests.Drawing
 
         static readonly int cpu_speed = 1700;
 
+        /*
         private void HandleFormPaint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             System.Windows.Forms.Form form = sender as System.Windows.Forms.Form;
@@ -415,6 +418,7 @@ namespace Epsitec.Common.Tests.Drawing
 			this.DrawString ("Hello, world. 14pt", 10, 60, 14, e.Graphics, font);
 #endif
         }
+        */
 
 #if false
 		private void DrawString(string text, double x, double y, double size, System.Drawing.Graphics os_graphics, Font font)
@@ -436,10 +440,10 @@ namespace Epsitec.Common.Tests.Drawing
 		}
 #endif
 
-        private void HandleFormSizeChanged(object sender, System.EventArgs e)
+/*        private void HandleFormSizeChanged(object sender, System.EventArgs e)
         {
             System.Windows.Forms.Form form = sender as System.Windows.Forms.Form;
             form.Invalidate();
         }
-    }
+*/    }
 }

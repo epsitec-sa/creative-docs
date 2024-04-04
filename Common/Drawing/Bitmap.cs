@@ -13,6 +13,7 @@ namespace Epsitec.Common.Drawing
     // ******************************************************************
     using Epsitec.Common.Widgets.Platform;
     //using BitmapData = System.Drawing.Imaging.BitmapData;
+    public class BitmapData { } // TODO bl-net8-cross move this to a separate file
 
     /// <summary>
     /// La classe Bitmap encapsule une image de type bitmap.
@@ -1793,7 +1794,7 @@ namespace Epsitec.Common.Drawing
         //protected System.Drawing.Bitmap bitmap;
         protected int bitmapDx;
         protected int bitmapDy;
-        //protected BitmapData bitmapData;
+        protected BitmapData bitmapData;
         protected volatile int bitmapLockCount;
         protected Pixmap pixmap;
 

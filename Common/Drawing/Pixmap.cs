@@ -26,6 +26,7 @@ namespace Epsitec.Common.Drawing
             get { return this.size; }
             set
             {
+                /*
                 if (this.size != value)
                 {
                     if (this.aggBuffer == System.IntPtr.Zero)
@@ -56,6 +57,8 @@ namespace Epsitec.Common.Drawing
 
                     this.size = value;
                 }
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -76,6 +79,7 @@ namespace Epsitec.Common.Drawing
 
         public void AllocatePixmap(System.Drawing.Size size)
         {
+            /*
             if ((this.size.IsEmpty) && (this.aggBuffer == System.IntPtr.Zero))
             {
                 this.aggBuffer = AntigrainCPP.Buffer.New(size.Width, size.Height, 32);
@@ -85,6 +89,8 @@ namespace Epsitec.Common.Drawing
             }
 
             throw new System.InvalidOperationException("Cannot re-allocate pixmap.");
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -96,6 +102,7 @@ namespace Epsitec.Common.Drawing
         /// image must stay alive as long as the pixmap in that case).</returns>
         public bool AllocatePixmap(NativeBitmap image)
         {
+            /*
             if ((this.size.IsEmpty) && (this.aggBuffer == System.IntPtr.Zero))
             {
                 NativeBitmap temp = null;
@@ -140,14 +147,20 @@ namespace Epsitec.Common.Drawing
             {
                 throw new System.InvalidOperationException("Cannot re-allocate pixmap.");
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public void Clear()
         {
+            /*
             AntigrainCPP.Buffer.Clear(this.aggBuffer);
+            */
+            throw new System.NotImplementedException();
         }
 
-/*        public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
+        /*
+        public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
         {
             System.IntPtr hdc = graphics.GetHdc();
 
@@ -196,9 +209,11 @@ namespace Epsitec.Common.Drawing
                 graphics.ReleaseHdc(hdc);
             }
         }
-*/
+        */
+
         public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
         {
+            /*
             AntigrainCPP.Buffer.Paint(
                 this.aggBuffer,
                 hdc,
@@ -207,6 +222,8 @@ namespace Epsitec.Common.Drawing
                 clip.Right,
                 clip.Top
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void Paint(
@@ -215,6 +232,7 @@ namespace Epsitec.Common.Drawing
             System.Drawing.Rectangle clip
         )
         {
+            /*
             AntigrainCPP.Buffer.PaintOffset(
                 this.aggBuffer,
                 hdc,
@@ -225,6 +243,8 @@ namespace Epsitec.Common.Drawing
                 clip.Right,
                 clip.Top
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void Blend(
@@ -233,6 +253,7 @@ namespace Epsitec.Common.Drawing
             System.Drawing.Rectangle clip
         )
         {
+            /*
             AntigrainCPP.Buffer.BlendOffset(
                 this.aggBuffer,
                 hdc,
@@ -243,6 +264,8 @@ namespace Epsitec.Common.Drawing
                 clip.Right,
                 clip.Top
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void Compose(
@@ -255,6 +278,7 @@ namespace Epsitec.Common.Drawing
             int height
         )
         {
+            /*
             AntigrainCPP.Buffer.ComposeBuffer(
                 this.aggBuffer,
                 x,
@@ -265,6 +289,8 @@ namespace Epsitec.Common.Drawing
                 width,
                 height
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void Copy(
@@ -277,6 +303,7 @@ namespace Epsitec.Common.Drawing
             int height
         )
         {
+            /*
             AntigrainCPP.Buffer.BltBuffer(
                 this.aggBuffer,
                 x,
@@ -287,10 +314,13 @@ namespace Epsitec.Common.Drawing
                 width,
                 height
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void Erase(System.Drawing.Rectangle clip)
         {
+            /*
             AntigrainCPP.Buffer.ClearRect(
                 this.aggBuffer,
                 clip.Left,
@@ -298,47 +328,64 @@ namespace Epsitec.Common.Drawing
                 clip.Right,
                 clip.Bottom
             );
+            */
+            throw new System.NotImplementedException();
         }
 
-/*        public void GetMemoryLayout(
+        public void GetMemoryLayout(
             out int width,
             out int height,
             out int stride,
-            out System.Drawing.Imaging.PixelFormat format,
+            //out System.Drawing.Imaging.PixelFormat format,
             out System.IntPtr scan0
         )
         {
-            format = System.Drawing.Imaging.PixelFormat.Format32bppPArgb;
+            /*
+            //format = System.Drawing.Imaging.PixelFormat.Format32bppPArgb;
             scan0 = AntigrainCPP.Buffer.GetMemoryLayout(
                 this.aggBuffer,
                 out width,
                 out height,
                 out stride
             );
+            */
+            throw new System.NotImplementedException();
         }
-*/
+
         public System.IntPtr GetMemoryBitmapHandle()
         {
+            /*
             return AntigrainCPP.Buffer.GetMemoryBitmapHandle(this.aggBuffer);
+            */
+            throw new System.NotImplementedException();
         }
 
         public void InfiniteClipping()
         {
+            /*
             AntigrainCPP.Buffer.InfiniteClipping(this.aggBuffer);
+            */
+            throw new System.NotImplementedException();
         }
 
         public void EmptyClipping()
         {
+            /*
             AntigrainCPP.Buffer.EmptyClipping(this.aggBuffer);
+            */
+            throw new System.NotImplementedException();
         }
 
         public void AddClipBox(double x1, double y1, double x2, double y2)
         {
+            /*
             int cx1 = (int)(x1);
             int cy1 = (int)(y1);
             int cx2 = (int)(x2 + 0.9999);
             int cy2 = (int)(y2 + 0.9999);
             AntigrainCPP.Buffer.AddClipBox(this.aggBuffer, cx1, cy1, cx2 - 1, cy2 - 1);
+            */
+            throw new System.NotImplementedException();
         }
 
         public Color GetPixel(int x, int y)
@@ -356,62 +403,60 @@ namespace Epsitec.Common.Drawing
 
         public void PremultiplyAlpha()
         {
-            /*
             int pixWidth;
             int pixHeight;
             int pixStride;
 
-            System.Drawing.Imaging.PixelFormat pixFormat;
+            //System.Drawing.Imaging.PixelFormat pixFormat;
             System.IntPtr pixScan0;
 
             this.GetMemoryLayout(
                 out pixWidth,
                 out pixHeight,
                 out pixStride,
-                out pixFormat,
+                //out pixFormat,
                 out pixScan0
             );
 
-            if (pixScan0 != System.IntPtr.Zero)
+            if (pixScan0 == System.IntPtr.Zero)
             {
+                return;
+            }
+                /*                
                 if (
                     (pixFormat == PixelFormat.Format32bppArgb)
                     || (pixFormat == PixelFormat.Format32bppPArgb)
-                )
+                ) */                
+            unsafe
+            {
+                byte* pixData = (byte*)pixScan0.ToPointer();
+
+                for (int y = 0; y < pixHeight; y++)
                 {
-                    unsafe
+                    byte* row = pixData + pixStride * y;
+
+                    for (int x = 0; x < pixWidth; x++)
                     {
-                        byte* pixData = (byte*)pixScan0.ToPointer();
+                        int a = row[3];
+                        int r = row[2];
+                        int g = row[1];
+                        int b = row[0];
 
-                        for (int y = 0; y < pixHeight; y++)
+                        if ((a != 0) && (a != 255))
                         {
-                            byte* row = pixData + pixStride * y;
+                            r = r * a / 255;
+                            g = g * a / 255;
+                            b = b * a / 255;
 
-                            for (int x = 0; x < pixWidth; x++)
-                            {
-                                int a = row[3];
-                                int r = row[2];
-                                int g = row[1];
-                                int b = row[0];
-
-                                if ((a != 0) && (a != 255))
-                                {
-                                    r = r * a / 255;
-                                    g = g * a / 255;
-                                    b = b * a / 255;
-
-                                    row[2] = (byte)r;
-                                    row[1] = (byte)g;
-                                    row[0] = (byte)b;
-                                }
-
-                                row += 4;
-                            }
+                            row[2] = (byte)r;
+                            row[1] = (byte)g;
+                            row[0] = (byte)b;
                         }
+
+                        row += 4;
                     }
                 }
             }
-            */
         }
 
         #region IDisposable Members
@@ -424,6 +469,7 @@ namespace Epsitec.Common.Drawing
 
         protected virtual void Dispose(bool disposing)
         {
+            /*
             if (disposing)
             {
                 //	Nothing 'managed' to dispose here
@@ -434,6 +480,8 @@ namespace Epsitec.Common.Drawing
                 AntigrainCPP.Buffer.Delete(this.aggBuffer);
                 this.aggBuffer = System.IntPtr.Zero;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         #region RawData Class

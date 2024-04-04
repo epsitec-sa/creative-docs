@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
                     FontPreviewer.Initialize();
 
                     Platform.Window.Initialize();
-                    Res.Initialize();
+                    //Res.Initialize(); (bl-net8-cross)
                     ApplicationCommands.Initialize();
 
                     Support.ImageProvider.Initialize();
@@ -2900,7 +2900,7 @@ namespace Epsitec.Common.Widgets
 
             this.OnPreparePaint();
 
-            long cycles = Drawing.Agg.Library.Cycles;
+            //long cycles = Drawing.Agg.Library.Cycles;
 
             if (this.DebugActive)
             {
@@ -3019,14 +3019,14 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine ("          widget ="+this.Bounds);
 			}
 #endif
-            if (this.DebugActive)
+/*            if (this.DebugActive)
             {
                 cycles = Drawing.Agg.Library.Cycles - cycles;
                 System.Diagnostics.Debug.WriteLine(
                     string.Format("{0}: {1} us @ 1.7GHz", this.ToString(), cycles / 1700)
                 );
             }
-        }
+*/        }
 
         protected virtual WidgetPaintState GetPaintState()
         {

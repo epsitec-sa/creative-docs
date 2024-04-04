@@ -96,7 +96,8 @@ namespace Epsitec.Common.Drawing
 
         public Font Font
         {
-            get { return (this.font == null) ? this.parent.Font : this.font; }
+            //get { return this.font ?? this.parent.Font; }
+            get { return this.font ?? this.parent?.Font; }
             set
             {
                 this.CheckForDefaultStyle();

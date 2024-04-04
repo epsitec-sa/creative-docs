@@ -8,7 +8,7 @@ namespace Epsitec.Common.Drawing.Renderers
         public Image(Graphics graphics)
         {
             this.graphics = graphics;
-            this.handle = new Agg.SafeImageRendererHandle();
+            //this.imageRenderer = new AntigrainCPP.Renderer.Image();
         }
 
         public Transform Transform
@@ -19,18 +19,17 @@ namespace Epsitec.Common.Drawing.Renderers
                 //	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
                 //	Graphics.UpdateTransform...
 
-                if (this.handle.IsInvalid)
+/*                if (this.handle.IsInvalid)
                 {
                     return;
                 }
-
+*/
                 this.transform = value;
                 this.internalTransform = value.MultiplyBy(this.graphics.Transform);
 
                 Transform inverse = Transform.Inverse(this.internalTransform);
 
-                AntigrainCPP.Renderer.Image.Matrix(
-                    this.handle,
+                this.imageRenderer.Matrix(
                     inverse.XX,
                     inverse.XY,
                     inverse.YX,
@@ -66,6 +65,7 @@ namespace Epsitec.Common.Drawing.Renderers
             get { return this.image; }
             set
             {
+                /*
                 if (this.image != value)
                 {
                     if (this.bitmap != null)
@@ -75,12 +75,10 @@ namespace Epsitec.Common.Drawing.Renderers
                             this.bitmap.UnlockBits();
                         }
 
-                        this.AssertAttached();
-
                         this.bitmap = null;
                         this.bitmapNeedsUnlock = false;
 
-                        AntigrainCPP.Renderer.Image.Source2(this.handle, System.IntPtr.Zero, 0, 0, 0);
+                        this.imageRenderer.Source2(System.IntPtr.Zero, 0, 0, 0);
                     }
 
                     this.image = value;
@@ -98,10 +96,7 @@ namespace Epsitec.Common.Drawing.Renderers
                             this.bitmap.LockBits();
                         }
 
-                        this.AssertAttached();
-
-                        AntigrainCPP.Renderer.Image.Source2(
-                            this.handle,
+                        this.imageRenderer.Source2(
                             this.bitmap.Scan0,
                             width,
                             height,
@@ -109,28 +104,25 @@ namespace Epsitec.Common.Drawing.Renderers
                         );
                     }
                 }
+                */
+                throw new System.NotImplementedException();
             }
-        }
-
-        public System.IntPtr Handle
-        {
-            get { return this.handle; }
         }
 
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
         {
-            this.AssertAttached();
-            AntigrainCPP.Renderer.Image.SetAlphaMask(
-                this.handle,
+            /*
+            this.imageRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
                 (AntigrainCPP.Renderer.MaskComponent)component
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         public void SelectAdvancedFilter(ImageFilteringMode mode, double radius)
         {
-            this.AssertAttached();
-            AntigrainCPP.Renderer.Image.SetStretchMode(this.handle, (int)mode, radius);
+            this.imageRenderer.SetStretchMode((int)mode, radius);
         }
 
         #region IDisposable Members
@@ -141,20 +133,11 @@ namespace Epsitec.Common.Drawing.Renderers
         }
         #endregion
 
-        private void AssertAttached()
-        {
-            if (this.handle.IsInvalid)
-            {
-                throw new System.NullReferenceException("RendererImage not attached");
-            }
-        }
-
         private void Attach(Pixmap pixmap)
         {
             this.Detach();
 
             this.transform = Transform.Identity;
-            this.handle.Create(pixmap.Handle);
             this.pixmap = pixmap;
         }
 
@@ -162,13 +145,12 @@ namespace Epsitec.Common.Drawing.Renderers
         {
             if (this.pixmap != null)
             {
-                this.handle.Delete();
                 this.pixmap = null;
             }
         }
 
         readonly Graphics graphics;
-        readonly Agg.SafeImageRendererHandle handle;
+        readonly AntigrainCPP.Renderer.Image imageRenderer;
         private Pixmap pixmap;
         private Drawing.Image image;
         private Drawing.Bitmap bitmap;

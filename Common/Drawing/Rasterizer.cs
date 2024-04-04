@@ -15,7 +15,7 @@ namespace Epsitec.Common.Drawing
         /// </summary>
         public Rasterizer()
         {
-            this.handle = new Agg.SafeRasterizerHandle();
+            this.rasterizer = new AntigrainCPP.Rasterizer();
         }
 
         /// <summary>
@@ -28,8 +28,7 @@ namespace Epsitec.Common.Drawing
         /// <param name="y2">The topmost pixel included in the clip box.</param>
         public override void SetClipBox(double x1, double y1, double x2, double y2)
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.SetClipBox(this.handle, x1, y1, x2, y2);
+            this.rasterizer.SetClipBox(x1, y1, x2, y2);
         }
 
         /// <summary>
@@ -37,8 +36,7 @@ namespace Epsitec.Common.Drawing
         /// </summary>
         public override void ResetClipBox()
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.ResetClipBox(this.handle);
+            this.rasterizer.ResetClipBox();
         }
 
         /// <summary>
@@ -50,8 +48,10 @@ namespace Epsitec.Common.Drawing
         {
             if (path != null)
             {
-                this.CreateOnTheFly();
-                AntigrainCPP.Rasterizer.AddPath(this.handle, path.Handle, path.ContainsCurves);
+                /*
+                this.rasterizer.AddPath(path.Handle, path.ContainsCurves);
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -65,13 +65,14 @@ namespace Epsitec.Common.Drawing
         {
             if (path != null)
             {
-                this.CreateOnTheFly();
-                AntigrainCPP.Rasterizer.AddPathStroke1(
-                    this.handle,
+                /*
+                this.rasterizer.AddPathStroke1(
                     path.Handle,
                     width,
                     path.ContainsCurves
                 );
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -94,9 +95,8 @@ namespace Epsitec.Common.Drawing
         {
             if (path != null)
             {
-                this.CreateOnTheFly();
-                AntigrainCPP.Rasterizer.AddPathStroke2(
-                    this.handle,
+                /*
+                this.rasterizer.AddPathStroke2(
                     path.Handle,
                     width,
                     (int)cap,
@@ -104,6 +104,8 @@ namespace Epsitec.Common.Drawing
                     miterLimit,
                     path.ContainsCurves
                 );
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -118,7 +120,7 @@ namespace Epsitec.Common.Drawing
         /// <param name="scale">The font scale (or font point size).</param>
         public override void AddGlyph(Font font, int glyph, double x, double y, double scale)
         {
-            this.CreateOnTheFly();
+            /*
 
             if (font.IsSynthetic)
             {
@@ -130,8 +132,7 @@ namespace Epsitec.Common.Drawing
                 {
                     case SyntheticFontMode.Oblique:
                         ft = ft.MultiplyBy(this.transform);
-                        AntigrainCPP.Rasterizer.SetTransform(
-                            this.handle,
+                        this.rasterizer.SetTransform(
                             ft.XX,
                             ft.XY,
                             ft.YX,
@@ -139,9 +140,8 @@ namespace Epsitec.Common.Drawing
                             ft.TX,
                             ft.TY
                         );
-                        AntigrainCPP.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
-                        AntigrainCPP.Rasterizer.SetTransform(
-                            this.handle,
+                        this.rasterizer.AddGlyph(font.Handle, glyph, 0, 0, scale);
+                        this.rasterizer.SetTransform(
                             this.transform.XX,
                             this.transform.XY,
                             this.transform.YX,
@@ -156,7 +156,9 @@ namespace Epsitec.Common.Drawing
                 }
             }
 
-            AntigrainCPP.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, x, y, scale);
+            this.rasterizer.AddGlyph(font.Handle, glyph, x, y, scale);
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -180,14 +182,13 @@ namespace Epsitec.Common.Drawing
             double sy
         )
         {
+            /*
             if ((sx == 1.0) && (sy == 1.0))
             {
                 this.AddGlyph(font, glyph, x, y, scale);
             }
             else
             {
-                this.CreateOnTheFly();
-
                 Transform ft = font.SyntheticTransform;
 
                 ft = new Transform(ft.XX, ft.XY, ft.YX, ft.YY, x, y);
@@ -195,8 +196,7 @@ namespace Epsitec.Common.Drawing
                 ft = ft.MultiplyBy(this.transform);
                 ft = ft.MultiplyByPostfix(Transform.CreateScaleTransform(sx, sy));
 
-                AntigrainCPP.Rasterizer.SetTransform(
-                    this.handle,
+                this.rasterizer.SetTransform(
                     ft.XX,
                     ft.XY,
                     ft.YX,
@@ -204,9 +204,8 @@ namespace Epsitec.Common.Drawing
                     ft.TX,
                     ft.TY
                 );
-                AntigrainCPP.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
-                AntigrainCPP.Rasterizer.SetTransform(
-                    this.handle,
+                this.rasterizer.AddGlyph(font.Handle, glyph, 0, 0, scale);
+                this.rasterizer.SetTransform(
                     this.transform.XX,
                     this.transform.XY,
                     this.transform.YX,
@@ -215,6 +214,8 @@ namespace Epsitec.Common.Drawing
                     this.transform.TY
                 );
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -224,9 +225,11 @@ namespace Epsitec.Common.Drawing
         /// <param name="renderer">The renderer.</param>
         public override void Render(Renderers.Solid renderer)
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.RenderSolid(this.handle, renderer.Handle);
-            AntigrainCPP.Rasterizer.Clear(this.handle);
+            /*
+            this.rasterizer.RenderSolid(renderer.Handle);
+            this.rasterizer.Clear();
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -236,9 +239,11 @@ namespace Epsitec.Common.Drawing
         /// <param name="renderer">The renderer.</param>
         public override void Render(Renderers.Image renderer)
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.RenderImage(this.handle, renderer.Handle);
-            AntigrainCPP.Rasterizer.Clear(this.handle);
+            /*
+            this.rasterizer.RenderImage(renderer.Handle);
+            this.rasterizer.Clear();
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -248,9 +253,11 @@ namespace Epsitec.Common.Drawing
         /// <param name="renderer">The renderer.</param>
         public override void Render(Renderers.Gradient renderer)
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.RenderGradient(this.handle, renderer.Handle);
-            AntigrainCPP.Rasterizer.Clear(this.handle);
+            /*
+            this.rasterizer.RenderGradient(renderer.Handle);
+            this.rasterizer.Clear();
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -267,8 +274,7 @@ namespace Epsitec.Common.Drawing
             int xx = (int)(x + 0.5);
             int yy = (int)(y + 0.5);
 
-            this.CreateOnTheFly();
-            return AntigrainCPP.Rasterizer.HitTest(this.handle, xx, yy);
+            return this.rasterizer.HitTest(xx, yy);
         }
 
         /// <summary>
@@ -297,6 +303,7 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
+            /*
             if ((glyphs == null) || (glyphs.Length == 0))
             {
                 return;
@@ -305,8 +312,7 @@ namespace Epsitec.Common.Drawing
             Transform transform = new Transform(xx, xy, yx, yy, tx, ty);
 
             transform = transform.MultiplyBy(this.transform);
-            AntigrainCPP.Rasterizer.SetTransform(
-                this.handle,
+            this.rasterizer.SetTransform(
                 transform.XX,
                 transform.XY,
                 transform.YX,
@@ -314,9 +320,8 @@ namespace Epsitec.Common.Drawing
                 transform.TX,
                 transform.TY
             );
-            AntigrainCPP.Rasterizer.AddGlyphs(this.handle, font.Handle, 1.0, glyphs, x, null, null);
-            AntigrainCPP.Rasterizer.SetTransform(
-                this.handle,
+            this.rasterizer.AddGlyphs(font.Handle, 1.0, glyphs, x, null, null);
+            this.rasterizer.SetTransform(
                 this.transform.XX,
                 this.transform.XY,
                 this.transform.YX,
@@ -324,6 +329,8 @@ namespace Epsitec.Common.Drawing
                 this.transform.TX,
                 this.transform.TY
             );
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -344,27 +351,25 @@ namespace Epsitec.Common.Drawing
             double[] sx
         )
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.AddGlyphs(this.handle, font.Handle, scale, glyphs, x, y, sx);
+            /*
+            this.rasterizer.AddGlyphs(font.Handle, scale, glyphs, x, y, sx);
+            */
+            throw new System.NotImplementedException();
         }
 
         protected override void SyncFillMode()
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.FillingRule(this.handle, (int)this.fillMode);
+            this.rasterizer.FillingRule((int)this.fillMode);
         }
 
         protected override void SyncGamma()
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.Gamma(this.handle, this.gamma);
+            this.rasterizer.Gamma(this.gamma);
         }
 
         protected override void SyncTransform()
         {
-            this.CreateOnTheFly();
-            AntigrainCPP.Rasterizer.SetTransform(
-                this.handle,
+            this.rasterizer.SetTransform(
                 this.transform.XX,
                 this.transform.XY,
                 this.transform.YX,
@@ -374,19 +379,6 @@ namespace Epsitec.Common.Drawing
             );
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            this.handle.Close();
-        }
-
-        private void CreateOnTheFly()
-        {
-            if (this.handle.IsInvalid)
-            {
-                this.handle.Create();
-            }
-        }
-
-        private readonly Agg.SafeRasterizerHandle handle;
+        private readonly AntigrainCPP.Rasterizer rasterizer;
     }
 }

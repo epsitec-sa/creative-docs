@@ -69,7 +69,7 @@ namespace Epsitec.Common.Widgets
 
         public void Run()
         {
-            this.window.run();
+            this.window.Run();
         }
 
         public static void Quit()

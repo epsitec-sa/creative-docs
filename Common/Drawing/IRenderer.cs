@@ -16,12 +16,6 @@ namespace Epsitec.Common.Drawing
         Pixmap Pixmap { set; }
 
         /// <summary>
-        /// Gets the internal AGG handle.
-        /// </summary>
-        /// <value>The AGG handle.</value>
-        System.IntPtr Handle { get; }
-
-        /// <summary>
         /// Sets the alpha mask using the specified 8-bit component of the
         /// mask pixmap. The mask can be reset by specifying a <c>null</c>
         /// pixmap.

@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\grafix\AggUI\AggUI.csproj" />
   </ItemGroup>
@@ -312,6 +311,7 @@
     <None   Include="Dialogs\YesNoCancelDialog.cs" />
     <Compile Remove="Drawing\AbstractRasterizer.cs" />
     <None   Include="Drawing\AbstractRasterizer.cs" />
+    -->
     <Compile Remove="Drawing\Agg\Library.cs" />
     <None   Include="Drawing\Agg\Library.cs" />
     <Compile Remove="Drawing\Agg\SafeGradientRendererHandle.cs" />
@@ -324,6 +324,7 @@
     <None   Include="Drawing\Agg\SafeSmoothRendererHandle.cs" />
     <Compile Remove="Drawing\Agg\SafeSolidRendererHandle.cs" />
     <None   Include="Drawing\Agg\SafeSolidRendererHandle.cs" />
+    <!--
     <Compile Remove="Drawing\Bitmap.cs" />
     <None Include="Drawing\Bitmap.cs" />
     <Compile Remove="Drawing\BitmapColorChannel.cs" />
@@ -696,8 +697,10 @@
     <None   Include="OpenType\Platform\IFontHandle.cs" />
     <Compile Remove="OpenType\Platform\Neutral.cs" />
     <None   Include="OpenType\Platform\Neutral.cs" />
+    -->
     <Compile Remove="OpenType\Platform\Win32.cs" />
     <None   Include="OpenType\Platform\Win32.cs" />
+    <!--
     <Compile Remove="OpenType\Support.cs" />
     <None   Include="OpenType\Support.cs" />
     <Compile Remove="OpenType\Tables.cs" />

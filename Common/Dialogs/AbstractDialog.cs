@@ -225,7 +225,8 @@ namespace Epsitec.Common.Dialogs
             }
             else
             {
-                ownerBounds = ScreenInfo.AllScreens[0].Bounds;
+                // ownerBounds = ScreenInfo.AllScreens[0].Bounds;
+                ownerBounds = (new ScreenInfo()).Bounds;
             }
 
             //	Make sure we release the mouse capture and we don't process

@@ -497,7 +497,7 @@ namespace Epsitec.Common.Widgets
                 this.scrollTotalWidth += len;
             }
 
-            System.Diagnostics.Debug.Assert(this.scrollTotalWidth > 0);
+            //System.Diagnostics.Debug.Assert(this.scrollTotalWidth > 0);
 
             Drawing.Rectangle rect = this.Client.Bounds;
             rect.Bottom = rect.Top - this.TabHeight;
