@@ -103,58 +103,54 @@ namespace Epsitec.Common.Widgets
 
             if (this.DrawDesignerFrame)
             {
-                using (Path path = new Path(rect))
-                {
-                    graphics.PaintDashedOutline(
-                        path,
-                        1,
-                        4,
-                        4,
-                        CapStyle.Square,
-                        adorner.ColorBorder
-                    );
-                }
+                Path path = new Path(rect);
+                graphics.PaintDashedOutline(
+                    path,
+                    1,
+                    4,
+                    4,
+                    CapStyle.Square,
+                    adorner.ColorBorder
+                );
             }
 
             if (this.DrawFrameEdges != FrameEdges.None)
             {
-                using (Path path = new Path())
+                Path path = new Path();
+                if ((this.DrawFrameEdges & FrameEdges.Left) != 0)
                 {
-                    if ((this.DrawFrameEdges & FrameEdges.Left) != 0)
-                    {
-                        path.MoveTo(rect.BottomLeft);
-                        path.LineTo(rect.TopLeft);
-                    }
-
-                    if ((this.DrawFrameEdges & FrameEdges.Right) != 0)
-                    {
-                        path.MoveTo(rect.BottomRight);
-                        path.LineTo(rect.TopRight);
-                    }
-
-                    if ((this.DrawFrameEdges & FrameEdges.Top) != 0)
-                    {
-                        path.MoveTo(rect.TopLeft);
-                        path.LineTo(rect.TopRight);
-                    }
-
-                    if ((this.DrawFrameEdges & FrameEdges.Bottom) != 0)
-                    {
-                        path.MoveTo(rect.BottomLeft);
-                        path.LineTo(rect.BottomRight);
-                    }
-
-                    graphics.Rasterizer.AddOutline(
-                        path,
-                        this.DrawFrameWidth,
-                        CapStyle.Square,
-                        JoinStyle.Round,
-                        5.0
-                    );
-                    graphics.RenderSolid(
-                        Color.FromAlphaColor(this.borderAlpha, adorner.ColorBorder)
-                    );
+                    path.MoveTo(rect.BottomLeft);
+                    path.LineTo(rect.TopLeft);
                 }
+
+                if ((this.DrawFrameEdges & FrameEdges.Right) != 0)
+                {
+                    path.MoveTo(rect.BottomRight);
+                    path.LineTo(rect.TopRight);
+                }
+
+                if ((this.DrawFrameEdges & FrameEdges.Top) != 0)
+                {
+                    path.MoveTo(rect.TopLeft);
+                    path.LineTo(rect.TopRight);
+                }
+
+                if ((this.DrawFrameEdges & FrameEdges.Bottom) != 0)
+                {
+                    path.MoveTo(rect.BottomLeft);
+                    path.LineTo(rect.BottomRight);
+                }
+
+                graphics.Rasterizer.AddOutline(
+                    path,
+                    this.DrawFrameWidth,
+                    CapStyle.Square,
+                    JoinStyle.Round,
+                    5.0
+                );
+                graphics.RenderSolid(
+                    Color.FromAlphaColor(this.borderAlpha, adorner.ColorBorder)
+                );
             }
         }
 

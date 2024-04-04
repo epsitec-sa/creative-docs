@@ -32,7 +32,6 @@ namespace Epsitec.Common.UI
 
                     if (this.aperturePath != null)
                     {
-                        this.aperturePath.Dispose();
                         this.aperturePath = null;
                     }
 
@@ -51,7 +50,6 @@ namespace Epsitec.Common.UI
                 {
                     if (this.aperturePath != null)
                     {
-                        this.aperturePath.Dispose();
                         this.aperturePath = null;
                     }
 
@@ -123,9 +121,6 @@ namespace Epsitec.Common.UI
 
                 graphics.Rasterizer.AddSurface(shape);
                 graphics.RenderSolid(this.MaskColor);
-
-                shape.Dispose();
-                path.Dispose();
             }
 
             Drawing.Path arrowPath = null;
@@ -143,7 +138,6 @@ namespace Epsitec.Common.UI
             {
                 graphics.Rasterizer.AddSurface(arrowPath);
                 graphics.RenderSolid(this.ArrowColor);
-                arrowPath.Dispose();
             }
         }
 

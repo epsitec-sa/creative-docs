@@ -179,7 +179,6 @@ namespace Epsitec.Common.Widgets.Adorners
             AbstractAdorner.GenerateGlyphShape(rect, type, center, path);
             path.Close();
             graphics.Rasterizer.AddSurface(path);
-            path.Dispose();
             graphics.RenderSolid(color);
         }
 
@@ -237,17 +236,15 @@ namespace Epsitec.Common.Widgets.Adorners
             if ((state & WidgetPaintState.ActiveYes) != 0) // coché ?
             {
                 Drawing.Point center = rect.Center;
-                using (Drawing.Path path = new Drawing.Path())
-                {
-                    path.MoveTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.1);
-                    path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.3);
-                    path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.1);
-                    path.LineTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.3);
-                    path.LineTo(center.X - rect.Width * 0.3, center.Y - rect.Height * 0.1);
-                    path.LineTo(center.X - rect.Width * 0.3, center.Y + rect.Height * 0.1);
-                    path.Close();
-                    graphics.Rasterizer.AddSurface(path);
-                }
+                Drawing.Path path = new Drawing.Path();
+                path.MoveTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.1);
+                path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.3);
+                path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.1);
+                path.LineTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.3);
+                path.LineTo(center.X - rect.Width * 0.3, center.Y - rect.Height * 0.1);
+                path.LineTo(center.X - rect.Width * 0.3, center.Y + rect.Height * 0.1);
+                path.Close();
+                graphics.Rasterizer.AddSurface(path);
                 if ((state & WidgetPaintState.Enabled) != 0)
                 {
                     graphics.RenderSolid(this.colorGreen);

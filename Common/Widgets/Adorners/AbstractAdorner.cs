@@ -237,10 +237,8 @@ namespace Epsitec.Common.Widgets.Adorners
         {
             //	Dessine un rectangle pointillé correspondant à un widget ayant le focus.
             rect.Deflate(0.5);
-            using (Drawing.Path path = new Epsitec.Common.Drawing.Path(rect))
-            {
-                AbstractAdorner.DrawPathDash(graphics, path, 1, 0, 2, color);
-            }
+            Path path = new Path(rect);
+            AbstractAdorner.DrawPathDash(graphics, path, 1, 0, 2, color);
         }
 
         protected static void DrawFocusedPath(
@@ -371,18 +369,16 @@ namespace Epsitec.Common.Widgets.Adorners
             Drawing.Point center
         )
         {
-            using (var wire = new Path())
-            {
-                double radius = rect.Width * 0.20;
+            var wire = new Path();
+            double radius = rect.Width * 0.20;
 
-                center = new Point(center.X, center.Y - rect.Width * 0.025);
+            center = new Point(center.X, center.Y - rect.Width * 0.025);
 
-                wire.AppendCircle(center.X + 0.5 * radius, center.Y + 0.5 * radius, radius);
-                wire.MoveTo(center.X - 0.2 * radius, center.Y - 0.2 * radius);
-                wire.LineToRelative(-0.25 * rect.Width, -0.25 * rect.Width);
+            wire.AppendCircle(center.X + 0.5 * radius, center.Y + 0.5 * radius, radius);
+            wire.MoveTo(center.X - 0.2 * radius, center.Y - 0.2 * radius);
+            wire.LineToRelative(-0.25 * rect.Width, -0.25 * rect.Width);
 
-                path.Append(wire, rect.Width * 0.10, CapStyle.Butt, JoinStyle.Miter, 5.0, 2.0);
-            }
+            path.Append(wire, rect.Width * 0.10, CapStyle.Butt, JoinStyle.Miter, 5.0, 2.0);
         }
 
         protected static Drawing.Path GetMultilingualFrame(
@@ -546,48 +542,46 @@ namespace Epsitec.Common.Widgets.Adorners
             double markLength
         )
         {
-            using (Drawing.Path path = new Drawing.Path())
+            Drawing.Path path = new Drawing.Path();
+            bool enable = ((state & WidgetPaintState.Enabled) != 0);
+
+            double middle;
+            double factor = 1.0;
+
+            switch (markDisposition)
             {
-                bool enable = ((state & WidgetPaintState.Enabled) != 0);
+                case ButtonMarkDisposition.Below:
+                    middle = (rect.Left + rect.Right) / 2;
+                    path.MoveTo(middle, rect.Bottom);
+                    path.LineTo(middle - markLength * factor, rect.Bottom + markLength);
+                    path.LineTo(middle + markLength * factor, rect.Bottom + markLength);
+                    break;
 
-                double middle;
-                double factor = 1.0;
+                case ButtonMarkDisposition.Above:
+                    middle = (rect.Left + rect.Right) / 2;
+                    path.MoveTo(middle, rect.Top);
+                    path.LineTo(middle - markLength * factor, rect.Top - markLength);
+                    path.LineTo(middle + markLength * factor, rect.Top - markLength);
+                    break;
 
-                switch (markDisposition)
-                {
-                    case ButtonMarkDisposition.Below:
-                        middle = (rect.Left + rect.Right) / 2;
-                        path.MoveTo(middle, rect.Bottom);
-                        path.LineTo(middle - markLength * factor, rect.Bottom + markLength);
-                        path.LineTo(middle + markLength * factor, rect.Bottom + markLength);
-                        break;
+                case ButtonMarkDisposition.Left:
+                    middle = (rect.Bottom + rect.Top) / 2;
+                    path.MoveTo(rect.Left, middle);
+                    path.LineTo(rect.Left + markLength, middle - markLength * factor);
+                    path.LineTo(rect.Left + markLength, middle + markLength * factor);
+                    break;
 
-                    case ButtonMarkDisposition.Above:
-                        middle = (rect.Left + rect.Right) / 2;
-                        path.MoveTo(middle, rect.Top);
-                        path.LineTo(middle - markLength * factor, rect.Top - markLength);
-                        path.LineTo(middle + markLength * factor, rect.Top - markLength);
-                        break;
-
-                    case ButtonMarkDisposition.Left:
-                        middle = (rect.Bottom + rect.Top) / 2;
-                        path.MoveTo(rect.Left, middle);
-                        path.LineTo(rect.Left + markLength, middle - markLength * factor);
-                        path.LineTo(rect.Left + markLength, middle + markLength * factor);
-                        break;
-
-                    case ButtonMarkDisposition.Right:
-                        middle = (rect.Bottom + rect.Top) / 2;
-                        path.MoveTo(rect.Right, middle);
-                        path.LineTo(rect.Right - markLength, middle - markLength * factor);
-                        path.LineTo(rect.Right - markLength, middle + markLength * factor);
-                        break;
-                }
-                path.Close();
-
-                graphics.Color = this.ColorTextFieldBorder(enable);
-                graphics.PaintSurface(path);
+                case ButtonMarkDisposition.Right:
+                    middle = (rect.Bottom + rect.Top) / 2;
+                    path.MoveTo(rect.Right, middle);
+                    path.LineTo(rect.Right - markLength, middle - markLength * factor);
+                    path.LineTo(rect.Right - markLength, middle + markLength * factor);
+                    break;
             }
+            path.Close();
+
+            graphics.Color = this.ColorTextFieldBorder(enable);
+            graphics.PaintSurface(path);
         }
 
         public abstract void PaintTextFieldBackground(

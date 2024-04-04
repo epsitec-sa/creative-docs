@@ -485,7 +485,6 @@ namespace Epsitec.Common.Widgets.Adorners
             }
             path.Close();
             graphics.Rasterizer.AddSurface(path);
-            path.Dispose();
             graphics.RenderSolid(color);
         }
 

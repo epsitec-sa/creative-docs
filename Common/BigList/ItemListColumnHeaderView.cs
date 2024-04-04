@@ -178,16 +178,12 @@ namespace Epsitec.Common.BigList
 
             var bounds = new Rectangle(cx - dx / 2, cy, dx, dx);
 
-            using (
-                var path = Epsitec.Common.Widgets.Adorners.Default.GetGlyphPath(
-                    bounds,
-                    this.PaintState,
-                    glyphShape
-                )
-            )
-            {
-                graphics.PaintSurface(path);
-            }
+            var path = Epsitec.Common.Widgets.Adorners.Default.GetGlyphPath(
+                bounds,
+                this.PaintState,
+                glyphShape
+            );
+            graphics.PaintSurface(path);
         }
 
         private void DefineColumnCollection(ItemListColumnCollection collection)

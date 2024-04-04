@@ -518,11 +518,9 @@ namespace Epsitec.Common.Widgets
             double rx = rect.Width / 2;
             double ry = rect.Height / 2;
 
-            using (Drawing.Path path = Drawing.Path.CreateCircle(c.X, c.Y, rx, ry))
-            {
-                graphics.Rasterizer.AddOutline(path);
-                graphics.RenderSolid(color);
-            }
+            Drawing.Path path = Drawing.Path.CreateCircle(c.X, c.Y, rx, ry);
+            graphics.Rasterizer.AddOutline(path);
+            graphics.RenderSolid(color);
         }
 
         protected void PaintGradientSquare(

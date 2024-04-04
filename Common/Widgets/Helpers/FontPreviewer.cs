@@ -49,8 +49,6 @@ namespace Epsitec.Common.Widgets.Helpers
                     path.SetBlobOfElements(fid.AssociatedBlob1);
                     copy.Append(path, size, 0, 0, size, ox, oy, size);
 
-                    path.Dispose();
-
                     return copy;
                 }
             }
@@ -85,8 +83,6 @@ namespace Epsitec.Common.Widgets.Helpers
 
                     path.SetBlobOfElements(fid.AssociatedBlob2);
                     copy.Append(path, size, 0, 0, size, ox, oy, size);
-
-                    path.Dispose();
 
                     return copy;
                 }
@@ -125,62 +121,57 @@ namespace Epsitec.Common.Widgets.Helpers
 
             if (font != null)
             {
-                using (Drawing.Path path = new Drawing.Path())
+                Drawing.Path path = new Drawing.Path();
+                double x = 0;
+                double y = 0;
+
+                if (fid.IsSymbolFont)
                 {
-                    double x = 0;
-                    double y = 0;
-
-                    if (fid.IsSymbolFont)
+                    for (ushort i = 2; i < 100; i++)
                     {
-                        for (ushort i = 2; i < 100; i++)
-                        {
-                            double advance = font.GetGlyphAdvance(i);
+                        double advance = font.GetGlyphAdvance(i);
 
-                            if (advance > 0)
+                        if (advance > 0)
+                        {
+                            Drawing.Path temp = new Drawing.Path();
+
+                            temp.Append(font, i, x, y, 1);
+
+                            //	Vérifie si le glyphe dessine quelque chose; si ce n'est
+                            //	pas le cas, on passe simplement au suivant sans avancer.
+
+                            if ((temp.IsEmpty) || (temp.GetBlobOfElements().Length < 20))
                             {
-                                Drawing.Path temp = new Drawing.Path();
-
-                                temp.Append(font, i, x, y, 1);
-
-                                //	Vérifie si le glyphe dessine quelque chose; si ce n'est
-                                //	pas le cas, on passe simplement au suivant sans avancer.
-
-                                if ((temp.IsEmpty) || (temp.GetBlobOfElements().Length < 20))
-                                {
-                                    temp.Dispose();
-                                    continue;
-                                }
-
-                                temp.Dispose();
-
-                                if (x + advance > 5)
-                                {
-                                    break;
-                                }
-
-                                path.Append(font, i, x, y, 1);
-
-                                x += advance;
+                                continue;
                             }
-                        }
-                    }
-                    else
-                    {
-                        string sample = "AaBbYyZz";
 
-                        for (int i = 0; i < sample.Length; i++)
-                        {
-                            ushort glyph = font.GetGlyphIndex(sample[i]);
-                            double advance = font.GetGlyphAdvance(glyph);
+                            if (x + advance > 5)
+                            {
+                                break;
+                            }
 
-                            path.Append(font, glyph, x, y, 1);
+                            path.Append(font, i, x, y, 1);
 
                             x += advance;
                         }
                     }
-
-                    fid.AssociatedBlob1 = path.GetBlobOfElements();
                 }
+                else
+                {
+                    string sample = "AaBbYyZz";
+
+                    for (int i = 0; i < sample.Length; i++)
+                    {
+                        ushort glyph = font.GetGlyphIndex(sample[i]);
+                        double advance = font.GetGlyphAdvance(glyph);
+
+                        path.Append(font, glyph, x, y, 1);
+
+                        x += advance;
+                    }
+                }
+
+                fid.AssociatedBlob1 = path.GetBlobOfElements();
             }
         }
 
@@ -190,62 +181,57 @@ namespace Epsitec.Common.Widgets.Helpers
 
             if (font != null)
             {
-                using (Drawing.Path path = new Drawing.Path())
+                Drawing.Path path = new Drawing.Path();
+                double x = 0;
+                double y = 0;
+
+                if (fid.IsSymbolFont)
                 {
-                    double x = 0;
-                    double y = 0;
-
-                    if (fid.IsSymbolFont)
+                    for (ushort i = 2; i < 100; i++)
                     {
-                        for (ushort i = 2; i < 100; i++)
-                        {
-                            double advance = font.GetGlyphAdvance(i);
+                        double advance = font.GetGlyphAdvance(i);
 
-                            if (advance > 0)
+                        if (advance > 0)
+                        {
+                            Drawing.Path temp = new Drawing.Path();
+
+                            temp.Append(font, i, x, y, 1);
+
+                            //	Vérifie si le glyphe dessine quelque chose; si ce n'est
+                            //	pas le cas, on passe simplement au suivant sans avancer.
+
+                            if ((temp.IsEmpty) || (temp.GetBlobOfElements().Length < 20))
                             {
-                                Drawing.Path temp = new Drawing.Path();
-
-                                temp.Append(font, i, x, y, 1);
-
-                                //	Vérifie si le glyphe dessine quelque chose; si ce n'est
-                                //	pas le cas, on passe simplement au suivant sans avancer.
-
-                                if ((temp.IsEmpty) || (temp.GetBlobOfElements().Length < 20))
-                                {
-                                    temp.Dispose();
-                                    continue;
-                                }
-
-                                temp.Dispose();
-
-                                if (x + advance > 2.0)
-                                {
-                                    break;
-                                }
-
-                                path.Append(font, i, x, y, 1);
-
-                                x += advance;
+                                continue;
                             }
-                        }
-                    }
-                    else
-                    {
-                        string sample = "Abc";
 
-                        for (int i = 0; i < sample.Length; i++)
-                        {
-                            ushort glyph = font.GetGlyphIndex(sample[i]);
-                            double advance = font.GetGlyphAdvance(glyph);
+                            if (x + advance > 2.0)
+                            {
+                                break;
+                            }
 
-                            path.Append(font, glyph, x, y, 1);
+                            path.Append(font, i, x, y, 1);
 
                             x += advance;
                         }
                     }
-
-                    fid.AssociatedBlob2 = path.GetBlobOfElements();
                 }
+                else
+                {
+                    string sample = "Abc";
+
+                    for (int i = 0; i < sample.Length; i++)
+                    {
+                        ushort glyph = font.GetGlyphIndex(sample[i]);
+                        double advance = font.GetGlyphAdvance(glyph);
+
+                        path.Append(font, glyph, x, y, 1);
+
+                        x += advance;
+                    }
+                }
+
+                fid.AssociatedBlob2 = path.GetBlobOfElements();
             }
         }
     }

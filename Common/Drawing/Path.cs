@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
-    public class Path : System.IDisposable
+    public class Path
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -13,19 +13,14 @@ namespace Epsitec.Common.Drawing
         // ******************************************************************
         public Path() { }
 
+        internal Path(AntigrainCPP.Path path)
+        {
+            this.path = path;
+        }
+
         public Path(Rectangle rect)
         {
             this.AppendRectangle(rect);
-        }
-
-        ~Path()
-        {
-            this.Dispose(false);
-        }
-
-        public System.IntPtr Handle
-        {
-            get { return this.aggPath; }
         }
 
         public bool ContainsCurves
@@ -69,11 +64,10 @@ namespace Epsitec.Common.Drawing
 
         public void Clear()
         {
-            this.CreateOnTheFly();
             this.hasCurve = false;
             this.isEmpty = true;
             this.hasCurrentPoint = false;
-            AntigrainCPP.Path.RemoveAll(this.aggPath);
+            this.path.RemoveAll();
         }
 
         public void MoveTo(Point p)
@@ -83,11 +77,10 @@ namespace Epsitec.Common.Drawing
 
         public void MoveTo(double x, double y)
         {
-            this.CreateOnTheFly();
             this.isEmpty = false;
             this.hasCurrentPoint = true;
             this.currentPoint = new Point(x, y);
-            AntigrainCPP.Path.MoveTo(this.aggPath, x, y);
+            this.path.MoveTo(x, y);
         }
 
         public void MoveToRelative(double x, double y)
@@ -109,11 +102,10 @@ namespace Epsitec.Common.Drawing
 
         public void LineTo(double x, double y)
         {
-            this.CreateOnTheFly();
             this.isEmpty = false;
             this.hasCurrentPoint = true;
             this.currentPoint = new Point(x, y);
-            AntigrainCPP.Path.LineTo(this.aggPath, x, y);
+            this.path.LineTo(x, y);
         }
 
         public void LineToRelative(double x, double y)
@@ -161,12 +153,11 @@ namespace Epsitec.Common.Drawing
 
         public void CurveTo(double xC1, double yC1, double xC2, double yC2, double x, double y)
         {
-            this.CreateOnTheFly();
             this.isEmpty = false;
             this.hasCurve = true;
             this.hasCurrentPoint = true;
             this.currentPoint = new Point(x, y);
-            AntigrainCPP.Path.Curve4(this.aggPath, xC1, yC1, xC2, yC2, x, y);
+            this.path.Curve4(xC1, yC1, xC2, yC2, x, y);
         }
 
         public void CurveTo(Point c, Point p)
@@ -176,12 +167,11 @@ namespace Epsitec.Common.Drawing
 
         public void CurveTo(double xC, double yC, double x, double y)
         {
-            this.CreateOnTheFly();
             this.isEmpty = false;
             this.hasCurve = true;
             this.hasCurrentPoint = true;
             this.currentPoint = new Point(x, y);
-            AntigrainCPP.Path.Curve3(this.aggPath, xC, yC, x, y);
+            this.path.Curve3(xC, yC, x, y);
         }
 
         public void CurveToRelative(double xC, double yC, double x, double y)
@@ -343,9 +333,8 @@ namespace Epsitec.Common.Drawing
         {
             if (!this.isEmpty)
             {
-                this.CreateOnTheFly();
                 this.hasCurrentPoint = false;
-                AntigrainCPP.Path.Close(this.aggPath);
+                this.path.Close();
             }
         }
 
@@ -353,9 +342,8 @@ namespace Epsitec.Common.Drawing
         {
             if (!this.isEmpty)
             {
-                this.CreateOnTheFly();
                 this.hasCurrentPoint = false;
-                AntigrainCPP.Path.AddNewPath(this.aggPath);
+                this.path.AddNewPath();
             }
         }
 
@@ -398,11 +386,9 @@ namespace Epsitec.Common.Drawing
             bool flattenCurves
         )
         {
-            this.CreateOnTheFly();
             this.isEmpty &= path.isEmpty;
-            AntigrainCPP.Path.AppendPath(
-                this.aggPath,
-                path.aggPath,
+            this.path.AppendPath(
+                path.path,
                 width,
                 (int)cap,
                 (int)join,
@@ -457,12 +443,10 @@ namespace Epsitec.Common.Drawing
             double approximationZoom
         )
         {
-            this.CreateOnTheFly();
             this.hasCurve |= path.hasCurve;
             this.isEmpty &= path.isEmpty;
-            AntigrainCPP.Path.AppendPath(
-                this.aggPath,
-                path.aggPath,
+            this.path.AppendPath(
+                path.path,
                 xx,
                 xy,
                 yx,
@@ -486,12 +470,10 @@ namespace Epsitec.Common.Drawing
             double boldWidth
         )
         {
-            this.CreateOnTheFly();
             this.hasCurve |= path.hasCurve;
             this.isEmpty &= path.isEmpty;
-            AntigrainCPP.Path.AppendPath(
-                this.aggPath,
-                path.aggPath,
+            this.path.AppendPath(
+                path.path,
                 xx,
                 xy,
                 yx,
@@ -505,12 +487,10 @@ namespace Epsitec.Common.Drawing
 
         public void Append(Path path, double approximationZoom, double boldWidth)
         {
-            this.CreateOnTheFly();
             this.hasCurve |= path.hasCurve;
             this.isEmpty &= path.isEmpty;
-            AntigrainCPP.Path.AppendPath(
-                this.aggPath,
-                path.aggPath,
+            this.path.AppendPath(
+                path.path,
                 1,
                 0,
                 0,
@@ -572,8 +552,6 @@ namespace Epsitec.Common.Drawing
             {
                 return;
             }
-
-            this.CreateOnTheFly();
             this.hasCurve = true;
             this.isEmpty = false;
 
@@ -593,8 +571,7 @@ namespace Epsitec.Common.Drawing
 
             if (glyph < 0xfff0)
             {
-                AntigrainCPP.Path.AppendGlyph(
-                    this.aggPath,
+                this.path.AppendGlyph(
                     font.Handle,
                     glyph,
                     xx,
@@ -620,7 +597,6 @@ namespace Epsitec.Common.Drawing
             double boldWidth
         )
         {
-            this.CreateOnTheFly();
             this.hasCurve = true;
             this.isEmpty = false;
 
@@ -640,8 +616,7 @@ namespace Epsitec.Common.Drawing
 
             if (glyph < 0xfff0)
             {
-                AntigrainCPP.Path.AppendGlyph(
-                    this.aggPath,
+                this.path.AppendGlyph(
                     font.Handle,
                     glyph,
                     xx,
@@ -811,8 +786,7 @@ namespace Epsitec.Common.Drawing
             }
             else
             {
-                this.CreateOnTheFly();
-                AntigrainCPP.Path.ComputeBounds(this.aggPath, out x1, out y1, out x2, out y2);
+                this.path.ComputeBounds(out x1, out y1, out x2, out y2);
             }
         }
 
@@ -837,18 +811,16 @@ namespace Epsitec.Common.Drawing
         {
             if (this.ContainsCurves)
             {
-                using (Path path = new Path())
-                {
-                    path.Append(this, approximationZoom);
+                Path path = new Path();
+                path.Append(this, approximationZoom);
 
-                    /* The path detection doesn't work with curves.
-                     * They are firstly converted into other shapes that can be handled.
-                     * Since we use the Append() method - which sets ContainsCurves to true,
-                     * since the path *has* curves - we call another method which doesn't
-                     * check the curves to prevent a infinite recursive loop.
-                     */
-                    return path.SurfaceContainsPointWithoutCurves(x, y, approximationZoom);
-                }
+                /* The path detection doesn't work with curves.
+                 * They are firstly converted into other shapes that can be handled.
+                 * Since we use the Append() method - which sets ContainsCurves to true,
+                 * since the path *has* curves - we call another method which doesn't
+                 * check the curves to prevent a infinite recursive loop.
+                 */
+                return path.SurfaceContainsPointWithoutCurves(x, y, approximationZoom);
             }
             else
             {
@@ -917,24 +889,19 @@ namespace Epsitec.Common.Drawing
                 {
                     return true;
                 }
-                else
-                {
-                    this.CreateOnTheFly();
+                int n = this.path.ElemCount();
+                if (n == 0)
+                    return true;
+                if (n != 1)
+                    return false;
 
-                    int n = AntigrainCPP.Path.ElemCount(this.aggPath);
-                    if (n == 0)
-                        return true;
-                    if (n != 1)
-                        return false;
+                int[] e = new int[n];
+                double[] x = new double[n];
+                double[] y = new double[n];
 
-                    int[] e = new int[n];
-                    double[] x = new double[n];
-                    double[] y = new double[n];
-
-                    AntigrainCPP.Path.ElemGet(this.aggPath, n, e, x, y);
-                    PathElement element = (PathElement)e[0];
-                    return (element == PathElement.Stop);
-                }
+                this.path.ElemGet(n, e, x, y);
+                PathElement element = (PathElement)e[0];
+                return (element == PathElement.Stop);
             }
         }
 
@@ -947,9 +914,7 @@ namespace Epsitec.Common.Drawing
             }
             else
             {
-                this.CreateOnTheFly();
-
-                int n = AntigrainCPP.Path.ElemCount(this.aggPath);
+                int n = this.path.ElemCount();
 
                 int[] e = new int[n];
                 double[] x = new double[n];
@@ -960,7 +925,7 @@ namespace Epsitec.Common.Drawing
                     System.Diagnostics.Debug.WriteLine("Huge path, n = " + n.ToString());
                 }
 
-                AntigrainCPP.Path.ElemGet(this.aggPath, n, e, x, y);
+                this.path.ElemGet(n, e, x, y);
 
                 elements = new PathElement[n];
                 points = new Point[n];
@@ -1274,19 +1239,12 @@ namespace Epsitec.Common.Drawing
 */
         public static Path Combine(Path a, Path b, PathOperation operation)
         {
-            Path result = new Path();
-
-            a.CreateOnTheFly();
-            b.CreateOnTheFly();
-
-            result.CreateOnTheFly();
-
-            AntigrainCPP.Path.CombinePathsUsingGpc(
-                a.aggPath,
-                b.aggPath,
-                result.aggPath,
+            AntigrainCPP.Path newPath = a.path.CombinePathUsingGpc(
+                b.path,
                 (int)operation
             );
+
+            Path result = new Path(newPath);
 
             result.hasCurve = false;
             result.isEmpty = false;
@@ -1339,36 +1297,6 @@ namespace Epsitec.Common.Drawing
             Path path = new Path();
             path.AppendCircle(x, y, rx, ry);
             return path;
-        }
-
-        #region IDisposable Members
-        public void Dispose()
-        {
-            this.Dispose(true);
-            System.GC.SuppressFinalize(this);
-        }
-        #endregion
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                //	No managed stuff here...
-            }
-
-            if (this.aggPath != System.IntPtr.Zero)
-            {
-                AntigrainCPP.Path.Delete(this.aggPath);
-                this.aggPath = System.IntPtr.Zero;
-            }
-        }
-
-        protected virtual void CreateOnTheFly()
-        {
-            if (this.aggPath == System.IntPtr.Zero)
-            {
-                this.aggPath = AntigrainCPP.Path.New();
-            }
         }
 
         protected Point ArcBezierRad(
@@ -1501,7 +1429,6 @@ namespace Epsitec.Common.Drawing
 
         internal void InternalCreateNonEmpty()
         {
-            this.CreateOnTheFly();
             this.isEmpty = false;
         }
 
@@ -1575,7 +1502,7 @@ namespace Epsitec.Common.Drawing
 
         public const double Kappa = 0.552284749828;
 
-        protected System.IntPtr aggPath;
+        protected AntigrainCPP.Path path;
         protected double defaultZoom = 1.0;
 
         private bool hasCurve = false;

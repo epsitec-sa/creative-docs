@@ -367,7 +367,6 @@ namespace Epsitec.Common.Widgets.Adorners
             }
             path.Close();
             graphics.Rasterizer.AddSurface(path);
-            path.Dispose();
             graphics.RenderSolid(color);
         }
 
@@ -422,17 +421,15 @@ namespace Epsitec.Common.Widgets.Adorners
             if ((state & WidgetPaintState.ActiveYes) != 0) // coché ?
             {
                 Drawing.Point center = rect.Center;
-                using (Drawing.Path path = new Drawing.Path())
-                {
-                    path.MoveTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.1);
-                    path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.3);
-                    path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.1);
-                    path.LineTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.3);
-                    path.LineTo(center.X - rect.Width * 0.3, center.Y - rect.Height * 0.1);
-                    path.LineTo(center.X - rect.Width * 0.3, center.Y + rect.Height * 0.1);
-                    path.Close();
-                    graphics.Rasterizer.AddSurface(path);
-                }
+                Drawing.Path path = new Drawing.Path();
+                path.MoveTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.1);
+                path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.3);
+                path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.1);
+                path.LineTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.3);
+                path.LineTo(center.X - rect.Width * 0.3, center.Y - rect.Height * 0.1);
+                path.LineTo(center.X - rect.Width * 0.3, center.Y + rect.Height * 0.1);
+                path.Close();
+                graphics.Rasterizer.AddSurface(path);
                 if ((state & WidgetPaintState.Enabled) != 0)
                 {
                     graphics.RenderSolid(this.colorBlack);
@@ -589,7 +586,6 @@ namespace Epsitec.Common.Widgets.Adorners
                 }
 
                 graphics.Rasterizer.AddOutline(path, 1);
-                path.Dispose();
                 if ((state & WidgetPaintState.Enabled) != 0)
                 {
                     graphics.RenderSolid(this.colorControlDarkDark);
@@ -622,7 +618,6 @@ namespace Epsitec.Common.Widgets.Adorners
                     Drawing.Path pInside = this.PathRoundRectangle(rInside, -1);
                     graphics.Rasterizer.AddOutline(pInside, 2);
                     graphics.RenderSolid(this.colorHilite);
-                    pInside.Dispose();
                 }
 
                 rInside = rect;
@@ -651,7 +646,6 @@ namespace Epsitec.Common.Widgets.Adorners
                     Drawing.Path pInside = this.PathRoundRectangle(rInside, -1);
                     graphics.Rasterizer.AddOutline(pInside, 2);
                     graphics.RenderSolid(this.colorHilite);
-                    pInside.Dispose();
                 }
 
                 rInside = rect;
@@ -1386,7 +1380,6 @@ namespace Epsitec.Common.Widgets.Adorners
             }
 
             graphics.Rasterizer.AddOutline(pTitle, 1);
-            pTitle.Dispose();
             if ((state & WidgetPaintState.Enabled) != 0)
             {
                 graphics.RenderSolid(this.colorControlDarkDark);
@@ -1433,7 +1426,6 @@ namespace Epsitec.Common.Widgets.Adorners
             }
 
             graphics.Rasterizer.AddOutline(pTitle, 1);
-            pTitle.Dispose();
             if ((state & WidgetPaintState.Enabled) != 0)
             {
                 graphics.RenderSolid(this.colorControlDarkDark);
@@ -2065,7 +2057,6 @@ namespace Epsitec.Common.Widgets.Adorners
                 }
 
                 graphics.Rasterizer.AddOutline(pTitle, 1);
-                pTitle.Dispose();
                 if ((state & WidgetPaintState.Enabled) != 0)
                 {
                     graphics.RenderSolid(this.colorControlDarkDark);
@@ -2093,7 +2084,6 @@ namespace Epsitec.Common.Widgets.Adorners
                     graphics.RenderSolid(this.colorHilite);
 
                     graphics.Rasterizer.AddOutline(pTitle, 1);
-                    pTitle.Dispose();
                     if ((state & WidgetPaintState.Enabled) != 0)
                     {
                         graphics.RenderSolid(this.colorControlDarkDark);
@@ -2215,37 +2205,30 @@ namespace Epsitec.Common.Widgets.Adorners
                 graphics.RenderSolid(color);
             }
 
+            Drawing.Path path;
             Drawing.Rectangle rInside;
 
             if ((state & WidgetPaintState.Entered) != 0) // bouton survolé ?
             {
                 rInside = rect;
                 rInside.Deflate(1.5);
-                using (
-                    Drawing.Path path = Drawing.Path.CreateCircle(
-                        rInside.Center,
-                        rInside.Width / 2,
-                        rInside.Height / 2
-                    )
-                )
-                {
-                    graphics.Rasterizer.AddOutline(path, 2);
-                    graphics.RenderSolid(this.colorHilite);
-                }
+                path = Drawing.Path.CreateCircle(
+                    rInside.Center,
+                    rInside.Width / 2,
+                    rInside.Height / 2
+                );
+                graphics.Rasterizer.AddOutline(path, 2);
+                graphics.RenderSolid(this.colorHilite);
             }
 
             rInside = rect;
             rInside.Deflate(0.5);
-            using (
-                Drawing.Path path = Drawing.Path.CreateCircle(
-                    rInside.Center,
-                    rInside.Width / 2,
-                    rInside.Height / 2
-                )
-            )
-            {
-                graphics.Rasterizer.AddOutline(path, 1);
-            }
+            path = Drawing.Path.CreateCircle(
+                rInside.Center,
+                rInside.Width / 2,
+                rInside.Height / 2
+            );
+            graphics.Rasterizer.AddOutline(path, 1);
             if ((state & WidgetPaintState.Enabled) != 0)
             {
                 graphics.RenderSolid(this.colorControlDarkDark);

@@ -365,7 +365,6 @@ namespace Epsitec.Common.Widgets.Adorners
             }
             path.Close();
             graphics.Rasterizer.AddSurface(path);
-            path.Dispose();
             graphics.RenderSolid(color);
         }
 
@@ -1558,7 +1557,6 @@ namespace Epsitec.Common.Widgets.Adorners
 
             Drawing.Path pRect = this.PathRoundRectangle(rect, 4.0);
             graphics.Rasterizer.AddOutline(pRect, 1);
-            pRect.Dispose();
             graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
         }
 
@@ -1963,7 +1961,6 @@ namespace Epsitec.Common.Widgets.Adorners
                 }
 
                 graphics.Rasterizer.AddOutline(pTitle, 1);
-                pTitle.Dispose();
                 if ((state & WidgetPaintState.Enabled) != 0)
                 {
                     graphics.RenderSolid(this.colorControlDarkDark);
@@ -1994,7 +1991,6 @@ namespace Epsitec.Common.Widgets.Adorners
                     graphics.RenderSolid(this.colorHilite);
 
                     graphics.Rasterizer.AddOutline(pTitle, 1);
-                    pTitle.Dispose();
                     if ((state & WidgetPaintState.Enabled) != 0)
                     {
                         graphics.RenderSolid(this.colorControlDarkDark);
@@ -2058,12 +2054,10 @@ namespace Epsitec.Common.Widgets.Adorners
             //	Dessine une section d'un ruban.
             Drawing.Path pRect = this.PathBottomRoundRectangle(textRect, 4.0);
             graphics.Rasterizer.AddSurface(pRect);
-            pRect.Dispose();
             graphics.RenderSolid(this.colorWindow);
 
             pRect = this.PathRoundRectangle(fullRect, 4.0);
             graphics.Rasterizer.AddOutline(pRect, 1);
-            pRect.Dispose();
             graphics.AddLine(textRect.Left, textRect.Top + 0.5, textRect.Right, textRect.Top + 0.5);
             graphics.RenderSolid(this.colorControlDarkDark);
 

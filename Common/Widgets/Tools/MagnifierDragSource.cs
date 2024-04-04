@@ -62,23 +62,21 @@ namespace Epsitec.Common.Widgets.Tools
             double ox = cx - sx / 2 - 0.5;
             double oy = cy - sy / 2 - 0.5;
 
-            using (Drawing.Path path = new Drawing.Path())
-            {
-                path.MoveTo(ox + 2, oy + 0);
-                path.LineTo(ox + 0, oy + 0);
-                path.LineTo(ox + 0, oy + 2);
-                path.MoveTo(ox + 0, oy + sy + 1 - 2);
-                path.LineTo(ox + 0, oy + sy + 1 - 0);
-                path.LineTo(ox + 2, oy + sy + 1 - 0);
-                path.MoveTo(ox + sx + 1 - 2, oy + sy + 1 - 0);
-                path.LineTo(ox + sx + 1 - 0, oy + sy + 1 - 0);
-                path.LineTo(ox + sx + 1 - 0, oy + sy + 1 - 2);
-                path.MoveTo(ox + sx + 1 - 0, oy + 2);
-                path.LineTo(ox + sx + 1 - 0, oy + 0);
-                path.LineTo(ox + sx + 1 - 2, oy + 0);
+            Drawing.Path path = new Drawing.Path();
+            path.MoveTo(ox + 2, oy + 0);
+            path.LineTo(ox + 0, oy + 0);
+            path.LineTo(ox + 0, oy + 2);
+            path.MoveTo(ox + 0, oy + sy + 1 - 2);
+            path.LineTo(ox + 0, oy + sy + 1 - 0);
+            path.LineTo(ox + 2, oy + sy + 1 - 0);
+            path.MoveTo(ox + sx + 1 - 2, oy + sy + 1 - 0);
+            path.LineTo(ox + sx + 1 - 0, oy + sy + 1 - 0);
+            path.LineTo(ox + sx + 1 - 0, oy + sy + 1 - 2);
+            path.MoveTo(ox + sx + 1 - 0, oy + 2);
+            path.LineTo(ox + sx + 1 - 0, oy + 0);
+            path.LineTo(ox + sx + 1 - 2, oy + 0);
 
-                graphics.Rasterizer.AddOutline(path, 0.5);
-            }
+            graphics.Rasterizer.AddOutline(path, 0.5);
 
             graphics.RenderSolid(color2);
         }

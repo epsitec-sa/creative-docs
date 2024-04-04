@@ -160,8 +160,6 @@ namespace Epsitec.Common.Widgets.Tools
 
                 this.mask.Color = Drawing.Color.FromRgb(1, 0, 0);
                 this.mask.PaintSurface(path);
-
-                path.Dispose();
             }
 
             Drawing.Point pos = this.MapClientToScreen(new Drawing.Point(cx, cy));
@@ -204,7 +202,6 @@ namespace Epsitec.Common.Widgets.Tools
                                 );
                                 graphics.Color = Drawing.Color.FromBrightness(sample.R);
                                 graphics.PaintSurface(path);
-                                path.Dispose();
                                 path = Drawing.Path.FromRectangle(
                                     x + sx / 3,
                                     dy - y - sy,
@@ -213,7 +210,6 @@ namespace Epsitec.Common.Widgets.Tools
                                 );
                                 graphics.Color = Drawing.Color.FromBrightness(sample.G);
                                 graphics.PaintSurface(path);
-                                path.Dispose();
                                 path = Drawing.Path.FromRectangle(
                                     x + 2 * sx / 3,
                                     dy - y - sy,
@@ -222,7 +218,6 @@ namespace Epsitec.Common.Widgets.Tools
                                 );
                                 graphics.Color = Drawing.Color.FromBrightness(sample.B);
                                 graphics.PaintSurface(path);
-                                path.Dispose();
                                 x += sx;
                             }
                         }
@@ -239,7 +234,6 @@ namespace Epsitec.Common.Widgets.Tools
                                 );
                                 graphics.Color = Drawing.Color.FromRgb(sample.R, 0, 0);
                                 graphics.PaintSurface(path);
-                                path.Dispose();
                                 path = Drawing.Path.FromRectangle(
                                     x + sx / 3,
                                     dy - y - sy,
@@ -248,7 +242,6 @@ namespace Epsitec.Common.Widgets.Tools
                                 );
                                 graphics.Color = Drawing.Color.FromRgb(0, sample.G, 0);
                                 graphics.PaintSurface(path);
-                                path.Dispose();
                                 path = Drawing.Path.FromRectangle(
                                     x + 2 * sx / 3,
                                     dy - y - sy,
@@ -257,7 +250,6 @@ namespace Epsitec.Common.Widgets.Tools
                                 );
                                 graphics.Color = Drawing.Color.FromRgb(0, 0, sample.B);
                                 graphics.PaintSurface(path);
-                                path.Dispose();
                                 x += sx;
                             }
                         }
@@ -269,7 +261,6 @@ namespace Epsitec.Common.Widgets.Tools
                             path = Drawing.Path.FromRectangle(x, dy - y - sy, sx + 1, sy + 1);
                             graphics.Color = raw[ix, iy];
                             graphics.PaintSurface(path);
-                            path.Dispose();
                             x += sx;
                         }
                     }
@@ -306,8 +297,6 @@ namespace Epsitec.Common.Widgets.Tools
             graphics.Color = Drawing.Color.FromAlphaRgb(0.5, 0, 0, 0.8);
             graphics.LineWidth = 1.0;
             graphics.PaintOutline(path);
-
-            path.Dispose();
 
             graphics.SolidRenderer.SetAlphaMask(null, Drawing.MaskComponent.None);
 

@@ -55,7 +55,6 @@ namespace Epsitec.Common.Drawing
                 temp1.Append(path, this.transform, this.approximation);
                 temp2.Append(temp1, width, cap, join, miterLimit, this.approximation, false);
                 this.list.Add(temp2);
-                temp1.Dispose();
             }
         }
 
@@ -66,7 +65,6 @@ namespace Epsitec.Common.Drawing
                 Path temp = new Path();
                 temp.Append(font, glyph, x, y, scale);
                 this.AddSurface(temp);
-                temp.Dispose();
             }
         }
 
@@ -98,7 +96,6 @@ namespace Epsitec.Common.Drawing
                     Path temp = new Path();
                     temp.Append(font, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
                     this.AddSurface(temp);
-                    temp.Dispose();
                 }
             }
         }
@@ -165,12 +162,9 @@ namespace Epsitec.Common.Drawing
                     Path temp = new Path();
                     temp.Append(font, glyph, xx, xy, yx, yy, tx, ty);
                     this.AddSurface(temp);
-                    temp.Dispose();
                 }
             }
         }
-
-        protected override void Dispose(bool disposing) { }
 
         private double approximation = 0;
         private System.Collections.ArrayList list = new System.Collections.ArrayList();

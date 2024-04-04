@@ -162,7 +162,6 @@ namespace Epsitec.Common.Widgets.Adorners
             AbstractAdorner.GenerateGlyphShape(rect, type, center, path);
             path.Close();
             graphics.Rasterizer.AddSurface(path);
-            path.Dispose();
             graphics.RenderSolid(color);
         }
 
@@ -1800,7 +1799,6 @@ namespace Epsitec.Common.Widgets.Adorners
                 }
 
                 graphics.Rasterizer.AddOutline(pTitle, 1);
-                pTitle.Dispose();
                 if ((state & WidgetPaintState.Enabled) != 0)
                 {
                     graphics.RenderSolid(this.colorControlDarkDark);
@@ -1832,7 +1830,6 @@ namespace Epsitec.Common.Widgets.Adorners
                     graphics.RenderSolid(this.colorHilite);
 
                     graphics.Rasterizer.AddOutline(pTitle, 1);
-                    pTitle.Dispose();
                     if ((state & WidgetPaintState.Enabled) != 0)
                     {
                         graphics.RenderSolid(this.colorControlDarkDark);

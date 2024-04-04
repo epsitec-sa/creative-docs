@@ -145,14 +145,12 @@ namespace Epsitec.Common.Widgets.Adorners
                 rect.Height *= 1.5;
             }
 
-            using (Drawing.Path path = new Drawing.Path())
-            {
-                AbstractAdorner.GenerateGlyphShape(rect, type, center, path);
+            Drawing.Path path = new Drawing.Path();
+            AbstractAdorner.GenerateGlyphShape(rect, type, center, path);
 
-                path.Close();
-                graphics.Rasterizer.AddSurface(path);
-                graphics.RenderSolid(color);
-            }
+            path.Close();
+            graphics.Rasterizer.AddSurface(path);
+            graphics.RenderSolid(color);
         }
 
         public override void PaintCheck(
@@ -209,17 +207,15 @@ namespace Epsitec.Common.Widgets.Adorners
             if ((state & WidgetPaintState.ActiveYes) != 0) // coché ?
             {
                 Drawing.Point center = rect.Center;
-                using (Drawing.Path path = new Drawing.Path())
-                {
-                    path.MoveTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.1);
-                    path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.3);
-                    path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.1);
-                    path.LineTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.3);
-                    path.LineTo(center.X - rect.Width * 0.3, center.Y - rect.Height * 0.1);
-                    path.LineTo(center.X - rect.Width * 0.3, center.Y + rect.Height * 0.1);
-                    path.Close();
-                    graphics.Rasterizer.AddSurface(path);
-                }
+                Drawing.Path path = new Drawing.Path();
+                path.MoveTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.1);
+                path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.3);
+                path.LineTo(center.X + rect.Width * 0.3, center.Y + rect.Height * 0.1);
+                path.LineTo(center.X - rect.Width * 0.1, center.Y - rect.Height * 0.3);
+                path.LineTo(center.X - rect.Width * 0.3, center.Y - rect.Height * 0.1);
+                path.LineTo(center.X - rect.Width * 0.3, center.Y + rect.Height * 0.1);
+                path.Close();
+                graphics.Rasterizer.AddSurface(path);
                 if ((state & WidgetPaintState.Enabled) != 0)
                 {
                     graphics.RenderSolid(this.colorGreen);

@@ -2104,8 +2104,6 @@ namespace Epsitec.Common.Widgets
                     graphics.LineWidth = 0.5;
                     graphics.Color = Drawing.Color.FromAlphaColor(1, graphics.Color);
                     graphics.PaintOutline(path);
-
-                    path.Dispose();
                 }
 
                 graphics.RichColor = color;

@@ -52,16 +52,14 @@ namespace Epsitec.Common.Widgets
 
             double y = this.GetBaseLine().Y - 1.5;
 
-            using (Drawing.Path path = Drawing.Path.FromLine(fill.Left, y, fill.Right, y))
-            {
-                graphics.Rasterizer.AddOutline(
-                    path,
-                    0.5,
-                    Epsitec.Common.Drawing.CapStyle.Butt,
-                    Epsitec.Common.Drawing.JoinStyle.Round
-                );
-                graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.5, 0.2, 0.2, 0.5));
-            }
+            Drawing.Path path = Drawing.Path.FromLine(fill.Left, y, fill.Right, y);
+            graphics.Rasterizer.AddOutline(
+                path,
+                0.5,
+                Epsitec.Common.Drawing.CapStyle.Butt,
+                Epsitec.Common.Drawing.JoinStyle.Round
+            );
+            graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.5, 0.2, 0.2, 0.5));
         }
 
         private static Drawing.TextStyle defaultStyle;

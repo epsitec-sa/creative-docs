@@ -180,33 +180,29 @@ namespace Epsitec.Common.Dialogs
 
             frame.Deflate(0.5);
 
-            using (Path path = new Path())
-            {
-                //	Paint the rounded frame for the search box
+            Path path = new Path();
+            //	Paint the rounded frame for the search box
 
-                path.AppendRoundedRectangle(frame, 6);
-                graphics.Rasterizer.AddSurface(path);
-                graphics.RenderSolid(Color.FromBrightness(1));
+            path.AppendRoundedRectangle(frame, 6);
+            graphics.Rasterizer.AddSurface(path);
+            graphics.RenderSolid(Color.FromBrightness(1));
 
-                graphics.Rasterizer.AddOutline(path, 1, CapStyle.Round, JoinStyle.Round);
-                graphics.RenderSolid(color);
-            }
+            graphics.Rasterizer.AddOutline(path, 1, CapStyle.Round, JoinStyle.Round);
+            graphics.RenderSolid(color);
 
-            using (Path path = new Path())
-            {
-                //	Paint a stylized magnifying glass
+            path = new Path();
+            //	Paint a stylized magnifying glass
 
-                double cx = frame.Right - 10;
-                double cy = frame.Top - 10;
-                double r = 5;
+            double cx = frame.Right - 10;
+            double cy = frame.Top - 10;
+            double r = 5;
 
-                path.AppendCircle(cx, cy, r);
-                path.MoveTo(cx - 0.707 * r, cy - 0.707 * r);
-                path.LineTo(cx - 1.707 * r, cy - 1.707 * r);
+            path.AppendCircle(cx, cy, r);
+            path.MoveTo(cx - 0.707 * r, cy - 0.707 * r);
+            path.LineTo(cx - 1.707 * r, cy - 1.707 * r);
 
-                graphics.Rasterizer.AddOutline(path, 2.5, CapStyle.Round, JoinStyle.Round);
-                graphics.RenderSolid(color);
-            }
+            graphics.Rasterizer.AddOutline(path, 2.5, CapStyle.Round, JoinStyle.Round);
+            graphics.RenderSolid(color);
         }
 
         private void HandleTextFieldTextChanged(object sender)

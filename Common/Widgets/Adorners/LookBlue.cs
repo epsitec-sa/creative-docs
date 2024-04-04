@@ -163,7 +163,6 @@ namespace Epsitec.Common.Widgets.Adorners
             AbstractAdorner.GenerateGlyphShape(rect, type, center, path);
             path.Close();
             graphics.Rasterizer.AddSurface(path);
-            path.Dispose();
             graphics.RenderSolid(color);
         }
 

@@ -82,29 +82,27 @@ namespace Epsitec.Common.BigList.Processors
 
         protected override void Paint(Graphics graphics, Rectangle clipRect)
         {
-            using (var path = new Path())
+            var path = new Path();
+            foreach (var rect in this.currentFrames)
             {
-                foreach (var rect in this.currentFrames)
+                if (clipRect.IntersectsWith(rect.Bounds))
                 {
-                    if (clipRect.IntersectsWith(rect.Bounds))
-                    {
-                        path.AppendRectangle(rect.Bounds);
-                    }
+                    path.AppendRectangle(rect.Bounds);
                 }
-
-                if (path.IsEmpty)
-                {
-                    return;
-                }
-
-                graphics.Color = Color.FromName("Orange");
-
-                graphics.LineWidth = 1.0;
-                graphics.LineJoin = JoinStyle.Miter;
-                graphics.LineCap = CapStyle.Square;
-
-                graphics.PaintOutline(path);
             }
+
+            if (path.IsEmpty)
+            {
+                return;
+            }
+
+            graphics.Color = Color.FromName("Orange");
+
+            graphics.LineWidth = 1.0;
+            graphics.LineJoin = JoinStyle.Miter;
+            graphics.LineCap = CapStyle.Square;
+
+            graphics.PaintOutline(path);
         }
 
         private void ProcessMove(Point pos)

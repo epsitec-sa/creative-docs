@@ -65,42 +65,36 @@ namespace Epsitec.Common.Widgets
             graphics.LineJoin = JoinStyle.MiterRound;
             graphics.FillMode = Drawing.FillMode.NonZero;
 
-            using (var path = OptionTab.CreateOutlinePath(rect, 1.0, close: true))
-            {
-                path.Close();
-                graphics.AddFilledPath(path);
-                graphics.RenderSolid(this.BackColor);
-            }
+            var path = OptionTab.CreateOutlinePath(rect, 1.0, close: true);
+            path.Close();
+            graphics.AddFilledPath(path);
+            graphics.RenderSolid(this.BackColor);
 
-            using (var path = OptionTab.CreateOutlinePath(rect, 1.0, close: false))
-            {
-                var color1 = this.GetFrameColor();
-                var color2 = Color.Mix(color1, Color.FromBrightness(0), 0.3);
+            path = OptionTab.CreateOutlinePath(rect, 1.0, close: false);
+            var color1 = this.GetFrameColor();
+            var color2 = Color.Mix(color1, Color.FromBrightness(0), 0.3);
 
-                graphics.LineWidth = 1.0;
-                graphics.AddPath(path);
-                graphics.RenderGradient(rect, color1, color2, GradientFill.X);
-            }
+            graphics.LineWidth = 1.0;
+            graphics.AddPath(path);
+            graphics.RenderGradient(rect, color1, color2, GradientFill.X);
         }
 
         private void PaintCloseGlyph(Graphics graphics)
         {
-            using (var path = OptionTab.CreateCloseGlyphPath(this.GetCloseGlyphBounds()))
+            var path = OptionTab.CreateCloseGlyphPath(this.GetCloseGlyphBounds());
+            if (this.HiliteCloseGlyph)
             {
-                if (this.HiliteCloseGlyph)
-                {
-                    graphics.LineWidth = 2.8;
-                    graphics.LineCap = CapStyle.Butt;
-                    graphics.AddPath(path);
-                    graphics.RenderSolid(Color.FromBrightness(0.08));
-                }
-                else
-                {
-                    graphics.LineWidth = 2.5;
-                    graphics.LineCap = CapStyle.Butt;
-                    graphics.AddPath(path);
-                    graphics.RenderSolid(Color.FromBrightness(0.16));
-                }
+                graphics.LineWidth = 2.8;
+                graphics.LineCap = CapStyle.Butt;
+                graphics.AddPath(path);
+                graphics.RenderSolid(Color.FromBrightness(0.08));
+            }
+            else
+            {
+                graphics.LineWidth = 2.5;
+                graphics.LineCap = CapStyle.Butt;
+                graphics.AddPath(path);
+                graphics.RenderSolid(Color.FromBrightness(0.16));
             }
         }
 

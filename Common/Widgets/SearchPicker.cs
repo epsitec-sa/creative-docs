@@ -156,25 +156,23 @@ namespace Epsitec.Common.Widgets
             double ox = System.Math.Floor(bounds.Center.X);
             double oy = System.Math.Floor((bounds.Height - 12) / 2);
 
-            using (Path path = new Path())
-            {
-                path.MoveTo(ox + 0.5, oy + 0.5);
-                path.LineToRelative(20, 5);
-                path.LineToRelative(-10, 0);
-                path.LineToRelative(0, 5);
-                path.LineToRelative(-20, 0);
-                path.LineToRelative(0, -5);
-                path.LineToRelative(-10, 0);
-                path.LineToRelative(20, -5);
-                path.Close();
+            Path path = new Path();
+            path.MoveTo(ox + 0.5, oy + 0.5);
+            path.LineToRelative(20, 5);
+            path.LineToRelative(-10, 0);
+            path.LineToRelative(0, 5);
+            path.LineToRelative(-20, 0);
+            path.LineToRelative(0, -5);
+            path.LineToRelative(-10, 0);
+            path.LineToRelative(20, -5);
+            path.Close();
 
-                graphics.Color = Color.FromRgb(0.8, 0.8, 1);
-                graphics.PaintSurface(path);
+            graphics.Color = Color.FromRgb(0.8, 0.8, 1);
+            graphics.PaintSurface(path);
 
-                graphics.LineWidth = 1.0;
-                graphics.Color = Color.FromRgb(0.5, 0.5, 0.8);
-                graphics.PaintOutline(path);
-            }
+            graphics.LineWidth = 1.0;
+            graphics.Color = Color.FromRgb(0.5, 0.5, 0.8);
+            graphics.PaintOutline(path);
         }
 
         private void HandleSearchBoxSearchClicked(object sender)

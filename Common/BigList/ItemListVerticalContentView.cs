@@ -385,17 +385,15 @@ namespace Epsitec.Common.BigList
                 {
                     var rect = Rectangle.Deflate(bounds, 0.5, 0.5);
 
-                    using (var path = new Path(rect))
-                    {
-                        graphics.PaintDashedOutline(
-                            path,
-                            1,
-                            0,
-                            2,
-                            Drawing.CapStyle.Square,
-                            Color.FromBrightness(0.2)
-                        );
-                    }
+                    var path = new Path(rect);
+                    graphics.PaintDashedOutline(
+                        path,
+                        1,
+                        0,
+                        2,
+                        Drawing.CapStyle.Square,
+                        Color.FromBrightness(0.2)
+                    );
                 }
             }
         }

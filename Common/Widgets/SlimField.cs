@@ -178,20 +178,18 @@ namespace Epsitec.Common.Widgets
         {
             var surface = this.GetTextSurface();
 
-            using (var path = Path.CreateRoundedRectangle(surface, 2, 2))
-            {
-                graphics.AddFilledPath(path);
-                graphics.RenderSolid(SlimField.Colors.LabelColor);
+            var path = Path.CreateRoundedRectangle(surface, 2, 2);
+            graphics.AddFilledPath(path);
+            graphics.RenderSolid(SlimField.Colors.LabelColor);
 
-                graphics.Color = SlimField.Colors.BackColor;
-                graphics.PaintText(
-                    surface,
-                    this.FieldLabel,
-                    SlimField.Fonts.LabelFont,
-                    Font.DefaultFontSize,
-                    Drawing.ContentAlignment.MiddleCenter
-                );
-            }
+            graphics.Color = SlimField.Colors.BackColor;
+            graphics.PaintText(
+                surface,
+                this.FieldLabel,
+                SlimField.Fonts.LabelFont,
+                Font.DefaultFontSize,
+                Drawing.ContentAlignment.MiddleCenter
+            );
         }
 
         private void PaintText(Graphics graphics)

@@ -326,23 +326,19 @@ namespace Epsitec.Common.Drawing
                 return;
             }
 
-            using (var dp = new DashedPath())
+            var dp = new DashedPath();
+            dp.Append(path);
+
+            if (dash == 0.0) // juste un point ?
             {
-                dp.Append(path);
-
-                if (dash == 0.0) // juste un point ?
-                {
-                    dash = 0.00001;
-                    gap -= dash;
-                }
-                dp.AddDash(dash, gap);
-
-                using (Path temp = dp.GenerateDashedPath())
-                {
-                    this.Rasterizer.AddOutline(temp, width, capStyle, JoinStyle.Round, 5.0);
-                    this.RenderSolid(color);
-                }
+                dash = 0.00001;
+                gap -= dash;
             }
+            dp.AddDash(dash, gap);
+
+            Path temp = dp.GenerateDashedPath();
+            this.Rasterizer.AddOutline(temp, width, capStyle, JoinStyle.Round, 5.0);
+            this.RenderSolid(color);
         }
 
         public void PaintGlyphs(
@@ -898,35 +894,29 @@ namespace Epsitec.Common.Drawing
 
         public void AddLine(double x1, double y1, double x2, double y2)
         {
-            using (Path path = new Path())
-            {
-                path.MoveTo(x1, y1);
-                path.LineTo(x2, y2);
+            Path path = new Path();
+            path.MoveTo(x1, y1);
+            path.LineTo(x2, y2);
 
-                this.AddPath(path);
-            }
+            this.AddPath(path);
         }
 
         public void AddRectangle(double x, double y, double width, double height)
         {
-            using (Path path = new Path())
-            {
-                path.MoveTo(x, y);
-                path.LineTo(x + width, y);
-                path.LineTo(x + width, y + height);
-                path.LineTo(x, y + height);
-                path.Close();
+            Path path = new Path();
+            path.MoveTo(x, y);
+            path.LineTo(x + width, y);
+            path.LineTo(x + width, y + height);
+            path.LineTo(x, y + height);
+            path.Close();
 
-                this.AddPath(path);
-            }
+            this.AddPath(path);
         }
 
         public void AddCircle(double cx, double cy, double rx, double ry)
         {
-            using (Path path = Path.CreateCircle(cx, cy, rx, ry))
-            {
-                this.AddPath(path);
-            }
+            Path path = Path.CreateCircle(cx, cy, rx, ry);
+            this.AddPath(path);
         }
 
         public void AddPath(Path path)
@@ -952,24 +942,20 @@ namespace Epsitec.Common.Drawing
 
         public void AddFilledRectangle(double x, double y, double width, double height)
         {
-            using (Path path = new Path())
-            {
-                path.MoveTo(x, y);
-                path.LineTo(x + width, y);
-                path.LineTo(x + width, y + height);
-                path.LineTo(x, y + height);
-                path.Close();
+            Path path = new Path();
+            path.MoveTo(x, y);
+            path.LineTo(x + width, y);
+            path.LineTo(x + width, y + height);
+            path.LineTo(x, y + height);
+            path.Close();
 
-                this.AddFilledPath(path);
-            }
+            this.AddFilledPath(path);
         }
 
         public void AddFilledCircle(double cx, double cy, double rx, double ry)
         {
-            using (Path path = Path.CreateCircle(cx, cy, rx, ry))
-            {
-                this.AddFilledPath(path);
-            }
+            Path path = Path.CreateCircle(cx, cy, rx, ry);
+            this.AddFilledPath(path);
         }
 
         public void Align(ref double x, ref double y, GridSnapping gridSnapping)
