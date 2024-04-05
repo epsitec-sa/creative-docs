@@ -201,11 +201,6 @@ namespace Epsitec.Common.Widgets.Platform
             this.isSyncUpdating = new SafeCounter();
             this.isWndProcHandlingRestricted = new SafeCounter();
 
-            bool ok = this.Init(800, 600, AggUI.WindowFlags.Resize);
-            if (!ok)
-            {
-                throw new Exception("Failed to initialize antigrain window");
-            }
         }
 
         internal Window(
@@ -220,7 +215,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.dirtyRectangle = Drawing.Rectangle.Empty;
             this.dirtyRegion = new Drawing.DirtyRegion();
 
-            /* REMOVED (bl-net8-cross)
+            /* //REMOVED (bl-net8-cross)
             base.MinimumSize = new System.Drawing.Size(1, 1);
 
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
@@ -234,11 +229,12 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.WindowType = WindowType.Document;
             this.widgetWindow.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 
-            //this.graphics = new Epsitec.Common.Drawing.Graphics();
+            this.graphics = new Epsitec.Common.Drawing.Graphics();
             //this.graphics.AllocatePixmap();
 
             Window.DummyHandleEater(this.Handle);
 
+            /*
             //	Fait en sorte que les changements de dimensions en [x] et en [y] provoquent un
             //	redessin complet de la fenêtre, sinon Windows tente de recopier l'ancien contenu
             //	en le décalant, ce qui donne des effets bizarres :
@@ -249,6 +245,7 @@ namespace Epsitec.Common.Widgets.Platform
             classWindowStyle |= Win32Const.CS_VREDRAW;
 
             Win32Api.SetClassLong(this.Handle, Win32Const.GCL_STYLE, classWindowStyle);
+            */
 
             //this.ReallocatePixmap();
 
@@ -1883,7 +1880,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         private bool ReallocatePixmapLowLevel()
         {
-            /*
             bool changed = false;
 
             int width = this.ClientSize.Width;
@@ -1909,8 +1905,6 @@ namespace Epsitec.Common.Widgets.Platform
             this.isPixmapOk = true;
 
             return changed;
-            */
-            throw new System.NotImplementedException();
         }
 
         internal int MapToWinFormsX(double x)
@@ -1955,6 +1949,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void MarkForRepaint()
         {
+            // repaint all
             this.MarkForRepaint(
                 new Drawing.Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height)
             );
@@ -1962,6 +1957,11 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void MarkForRepaint(Drawing.Rectangle rect)
         {
+            // TODO bl-net8-cross
+            // since the drawing works differently with AggUI than with winforms,
+            // those Invalidate calls will probably not be needed anymore
+            // If that turn out to be the case, we could delete them
+
             /*
             rect.RoundInflate();
 
@@ -1987,7 +1987,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void SynchronousRepaint()
         {
-            /*
             if (this.isLayoutInProgress)
             {
                 return;
@@ -2011,10 +2010,9 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 using (this.isSyncUpdating.Enter())
                 {
-                    this.Update();
+                    //this.Update(); // winforms: redraw the invalidated areas
                 }
             }
-            */
         }
 
         internal void SendQueueCommand()
@@ -2943,7 +2941,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         private bool RefreshGraphicsLowLevel()
         {
-            /*
             if (this.dirtyRectangle.IsValid)
             {
                 Drawing.Rectangle repaint = this.dirtyRectangle;
@@ -2961,17 +2958,15 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return false;
-            */
-            throw new System.NotImplementedException();
         }
 
         protected bool UpdateLayeredWindow()
         {
-            /*
             bool paintNeeded = true;
 
             this.RefreshGraphics();
 
+            /*
             if (this.isLayered)
             {
                 if (this.isLayeredDirty)
@@ -3033,7 +3028,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return paintNeeded;
             */
-            return true;
+            return paintNeeded;
         }
 
         internal static void ProcessException(System.Exception ex, string tag)
@@ -3145,56 +3140,18 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void ShowWindow()
         {
-            /*
+            bool ok = this.Init(800, 600, AggUI.WindowFlags.Resize);
+            if (!ok)
+            {
+                throw new Exception("Failed to initialize antigrain window");
+            }
             this.UpdateLayeredWindow();
-
-            if (this.IsMouseActivationEnabled)
-            {
-                this.Show();
-            }
-            else
-            {
-                Win32Api.ShowWindow(this.Handle, Win32Const.SW_SHOWNA);
-            }
-            */
         }
 
         internal void ShowDialogWindow()
         {
-            /*
-            this.UpdateLayeredWindow();
-
-            System.Windows.Forms.Application.DoEvents();
-
+            this.ShowWindow();
             ToolTip.HideAllToolTips();
-
-            bool preventQuit = this.preventQuit;
-            int wndProcDepth = Window.globalWndProcDepth;
-
-            try
-            {
-                this.preventQuit = true;
-                Window.globalWndProcDepth = 0;
-
-                if ((this.Owner != null) && (this.Owner.InvokeRequired))
-                {
-                    //	Don't set the owner... it won't work ! First turn off the cross-thread
-                    //	checking, or else we will crash (bug in WinForms).
-                    //	See http://stackoverflow.com/questions/5273674/cross-thread-exception-when-setting-winforms-form-owner-how-to-do-it-right
-
-                    Platform.Window.ProcessCrossThreadOperation(() => this.ShowDialog(this.Owner));
-                }
-                else
-                {
-                    this.ShowDialog(this.Owner);
-                }
-            }
-            finally
-            {
-                this.preventQuit = preventQuit;
-                Window.globalWndProcDepth = wndProcDepth;
-            }
-            */
         }
 
         class WindowHandleWrapper //: System.Windows.Forms.IWin32Window
@@ -3243,7 +3200,7 @@ namespace Epsitec.Common.Widgets.Platform
         private bool widgetWindowDisposed;
         private Epsitec.Common.Widgets.Window widgetWindow;
 
-        //private Drawing.Graphics graphics;
+        private Drawing.Graphics graphics;
         private Drawing.Rectangle dirtyRectangle;
         private Drawing.DirtyRegion dirtyRegion;
         private Drawing.Rectangle windowBounds;

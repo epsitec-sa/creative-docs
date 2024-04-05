@@ -69,6 +69,7 @@ namespace Epsitec.Common.Widgets
 
         public void Run()
         {
+            System.Console.WriteLine("Run window");
             this.window.Run();
         }
 
