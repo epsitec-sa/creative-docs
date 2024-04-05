@@ -12,7 +12,7 @@ namespace Epsitec.Common.Tests.Drawing
         [Test]
         public void TestRgbTiff()
         {
-            NativeBitmap image = NativeBitmap.Load(@"..\..\..\..\Images\rgb.tif");
+            NativeBitmap image = NativeBitmap.Load(@"..\..\..\Images\rgb.tif");
 
             NativeBitmap imageR = image.GetChannel(BitmapColorChannel.Red);
             NativeBitmap imageG = image.GetChannel(BitmapColorChannel.Green);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Tests.Drawing
         [Test]
         public void TestRgbAlphaTiff()
         {
-            NativeBitmap image = NativeBitmap.Load(@"..\..\..\..\Images\rgba.tif");
+            NativeBitmap image = NativeBitmap.Load(@"..\..\..\Images\rgba.tif");
 
             NativeBitmap imageR = image.GetChannel(BitmapColorChannel.Red);
             NativeBitmap imageG = image.GetChannel(BitmapColorChannel.Green);
