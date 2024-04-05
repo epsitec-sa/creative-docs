@@ -20,6 +20,7 @@ namespace Epsitec.Common.Support.Implementation
         {
             foreach (var path in FileProvider.GetProbingPaths(manager).Distinct())
             {
+                System.Console.WriteLine($"try path: {path}");
                 if (this.SelectPath(path))
                 {
                     this.idRegex = RegexFactory.FileName;
@@ -491,7 +492,7 @@ namespace Epsitec.Common.Support.Implementation
                 path = path + System.IO.Path.DirectorySeparatorChar;
             }
 
-            string path1 = System.IO.Path.Combine(path, "resources");
+            string path1 = System.IO.Path.Combine(path, "Resources");
 
             if (System.IO.Directory.Exists(path1))
             {
@@ -501,23 +502,10 @@ namespace Epsitec.Common.Support.Implementation
                 return true;
             }
 
-            //	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
-            //	plus intéressant (celui des sources).
-
-            if (path.ToLower().EndsWith(@"\bin\debug\"))
-            {
-                path = path.Substring(0, path.Length - 10);
-            }
-            else if (path.ToLower().EndsWith(@"\bin\debug .net 2.0\"))
-            {
-                path = path.Substring(0, path.Length - 19);
-            }
-            else if (path.ToLower().EndsWith(@"\bin\release\"))
-            {
-                path = path.Substring(0, path.Length - 12);
-            }
-
-            path = System.IO.Path.Combine(path, "resources");
+            path = System.IO.Path.Combine(
+                Epsitec.Common.IO.PathTools.RemoveUntilDir("App.CreativeDocs", path),
+                "Resources"
+            );
 
             if (System.IO.Directory.Exists(path))
             {
@@ -526,10 +514,7 @@ namespace Epsitec.Common.Support.Implementation
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private IEnumerable<string> GetModuleProbingDirectories()
