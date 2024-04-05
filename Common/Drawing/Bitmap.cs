@@ -725,6 +725,8 @@ namespace Epsitec.Common.Drawing
 */
         public static int GetIconWidth(IconSize iconSize)
         {
+            // bl-net8-cross
+            /*
             switch (iconSize)
             {
                 case IconSize.Default:
@@ -737,10 +739,14 @@ namespace Epsitec.Common.Drawing
                         string.Format("{0} not supported", iconSize.GetQualifiedName())
                     );
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public static int GetIconHeight(IconSize iconSize)
         {
+            // bl-net8-cross
+            /*
             switch (iconSize)
             {
                 case IconSize.Default:
@@ -753,6 +759,8 @@ namespace Epsitec.Common.Drawing
                         string.Format("{0} not supported", iconSize.GetQualifiedName())
                     );
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public static Image FromNativeIcon(PlatformSystemIcon systemIcon)

@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Widgets
 {
-    using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+    //using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 
     /// <summary>
     /// La classe MouseCursor décrit un curseur de souris.

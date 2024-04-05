@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets.Platform
         // ******************************************************************
         static Window()
         {
-            RestartManager.Setup();
+            //RestartManager.Setup();
 
             /* REMOVED (bl-net-8-cross)
             Microsoft.Win32.SystemEvents.UserPreferenceChanged +=
@@ -1044,13 +1044,13 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
+        /*
         private static void AdjustWindowPlacementOrigin(
             Win32Api.WindowPlacement placement,
             ref double ox,
             ref double oy
         )
         {
-            /*
             //	La conversion entre "screen coordinates" et "workspace coordinates" est
             //	théoriquement impossible avec les informations que fournit Windows mais
             //	on peut s'arranger en créant une fenêtre temporaire pour déterminer son
@@ -1085,8 +1085,8 @@ namespace Epsitec.Common.Widgets.Platform
                     oy += placementOffsetY;
                 }
             }
-            */
         }
+        */
 
         private WindowPlacement CurrentWindowPlacement
         {
@@ -2060,6 +2060,8 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal static void SendSynchronizeCommandCache()
         {
+            // bl-net8-cross
+            /*
             Window.isSyncRequested = true;
 
             try
@@ -2078,10 +2080,13 @@ namespace Epsitec.Common.Widgets.Platform
                 );
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
+            */
         }
 
         internal static void SendAwakeEvent()
         {
+            // bl-net8-cross
+            /*
             bool awake = false;
 
             lock (Window.dispatchWindow)
@@ -2112,6 +2117,7 @@ namespace Epsitec.Common.Widgets.Platform
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
+            */
         }
 
         /*

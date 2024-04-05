@@ -75,6 +75,8 @@ namespace Epsitec.Common.Widgets.Platform
 
         private static void SetupVistaRestartManager(string commandLine)
         {
+            // bl-net8-cross
+            /*
             RestartManager.SetExceptionMode();
 
             //	See http://www.danielmoth.com/Blog/2006/08/vista-registerapplicationrecoverycallb.html
@@ -89,14 +91,20 @@ namespace Epsitec.Common.Widgets.Platform
             );
 
             RestartManager.useWindowsErrorReporting = true;
+            */
+            throw new System.NotImplementedException();
         }
 
         private static int RecoveryCallback(System.IntPtr parameter)
         {
+            // bl-net8-cross
+            /*
             bool success = RestartManager.Recover();
 
             Win32Api.ApplicationRecoveryFinished(success);
             return 0;
+            */
+            throw new System.NotImplementedException();
         }
 
         private static bool Recover()
@@ -108,9 +116,13 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal static bool ShouldCancelRecovery()
         {
+            // bl-net8-cross
+            /*
             bool canceled;
             Win32Api.ApplicationRecoveryInProgress(out canceled);
             return canceled;
+            */
+            throw new System.NotImplementedException();
         }
 
 /*        internal static bool HandleWndProc(ref System.Windows.Forms.Message msg)

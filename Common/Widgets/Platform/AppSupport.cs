@@ -12,6 +12,8 @@ namespace Epsitec.Common.Widgets.Platform
         /// <returns>The application start status.</returns>
         public static ApplicationStartStatus CreateSemaphore(string semaphoreName)
         {
+            // bl-net8-cross
+            /*
             AppSupport.ValidateSemaphoreName(semaphoreName);
 
             var result = Win32Api.CreateSemaphore(System.IntPtr.Zero, 0, 1, semaphoreName);
@@ -36,6 +38,8 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 return ApplicationStartStatus.RunningAlone;
             }
+            */
+            return ApplicationStartStatus.RunningAlone;
         }
 
         /// <summary>
@@ -48,6 +52,8 @@ namespace Epsitec.Common.Widgets.Platform
         /// </returns>
         public static bool IsRunning(string semaphoreName)
         {
+            // bl-net8-cross
+            /*
             AppSupport.ValidateSemaphoreName(semaphoreName);
 
             var result = Win32Api.OpenSemaphore(0, 0, semaphoreName);
@@ -61,6 +67,8 @@ namespace Epsitec.Common.Widgets.Platform
                 Win32Api.CloseHandle(result);
                 return true;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         private static void ValidateSemaphoreName(string semaphoreName)

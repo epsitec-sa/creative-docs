@@ -4,7 +4,7 @@
 
 namespace Epsitec.Common.Widgets
 {
-    using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+    //using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
     using Win32Const = Epsitec.Common.Widgets.Platform.Win32Const;
 
     /// <summary>
@@ -186,6 +186,8 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
+                // bl-net8-cross
+                /*
                 int scale;
 
                 if (
@@ -203,6 +205,8 @@ namespace Epsitec.Common.Widgets
                 {
                     return (double)(this.wheel) * 3 / Win32Const.WHEEL_DELTA;
                 }
+                */
+                return (double)(this.wheel) * 3 / Win32Const.WHEEL_DELTA;
             }
         }
 
@@ -1162,6 +1166,8 @@ namespace Epsitec.Common.Widgets
 
         private static string GetSimpleKeyName(KeyCode code)
         {
+            // bl-net8-cross
+            /*
             string name;
 
             if (code >= KeyCode.ExtendedKeys)
@@ -1214,6 +1220,8 @@ namespace Epsitec.Common.Widgets
             }
 
             return name;
+            */
+            return "";
         }
 
         private static KeyCode lastCode;

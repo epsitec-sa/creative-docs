@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
     using Epsitec.Common.Types.Collections;
-    using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+    //using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 
     /// <summary>
     /// La classe Window représente une fenêtre du système d'exploitation. Ce
@@ -119,7 +119,8 @@ namespace Epsitec.Common.Widgets
 
         public static void GrabScreen(Drawing.Image bitmap, int x, int y)
         {
-            Win32Api.GrabScreen(bitmap, x, y);
+            // bl-net8-cross
+            // Win32Api.GrabScreen(bitmap, x, y);
         }
 
         public static Window FindFirstLiveWindow()

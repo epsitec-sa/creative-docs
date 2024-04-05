@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Widgets.Tools
 {
-    using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+    //using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 
     /// <summary>
     /// The <c>Magnifier</c> class manages the rounded magnifier window
@@ -171,7 +171,8 @@ namespace Epsitec.Common.Widgets.Tools
             int px = (int)(pos.X) - nx / 2;
             int py = (int)(pos.Y) - ny / 2;
 
-            Win32Api.GrabScreen(bitmap, px, py);
+            // bl-net8-cross
+            // Win32Api.GrabScreen(bitmap, px, py);
 
             double sx = dx / nx;
             double sy = dy / ny;
