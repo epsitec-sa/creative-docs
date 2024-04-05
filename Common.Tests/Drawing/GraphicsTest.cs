@@ -518,9 +518,6 @@ namespace Epsitec.Common.Tests.Drawing
                 e.Graphics.Rasterizer.AddGlyph(font, i + 3, x + 192, y, size);
 
                 y -= size;
-
-                path.Dispose();
-                copy.Dispose();
             }
 
             e.Graphics.RenderSolid(Color.FromBrightness(0));
@@ -713,15 +710,11 @@ namespace Epsitec.Common.Tests.Drawing
             e.Graphics.SmoothRenderer.AddPath(path1);
             e.Graphics.SmoothRenderer.AddPath(path2);
 
-            using (Path dashed = path3.GenerateDashedPath())
-            {
-                e.Graphics.Rasterizer.AddOutline(dashed, 0.2);
-            }
+            Path dashed = path3.GenerateDashedPath();
+            e.Graphics.Rasterizer.AddOutline(dashed, 0.2);
 
-            using (Path dashed = path4.GenerateDashedPath())
-            {
-                e.Graphics.Rasterizer.AddOutline(dashed, 0.2);
-            }
+            dashed = path4.GenerateDashedPath();
+            e.Graphics.Rasterizer.AddOutline(dashed, 0.2);
 
             e.Graphics.RenderSolid(Color.FromRgb(0, 1, 0));
 
@@ -1008,16 +1001,12 @@ namespace Epsitec.Common.Tests.Drawing
                     e.Graphics.Color = Color.FromName("Black");
                     e.Graphics.PaintSurface(path);
 
-                    path.Dispose();
-
                     path = FontPreviewer.GetPathAbc(fid, ox, oy + size * fonts.Length, size);
 
                     e.Graphics.Color = Color.FromName("Black");
                     e.Graphics.PaintSurface(path);
 
                     oy += size;
-
-                    path.Dispose();
                 }
             }
         }

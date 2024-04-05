@@ -11,7 +11,7 @@ namespace Epsitec.Common.Drawing
         // TODO bl-net8-cross
         // - implement CreateSystemPath (removed)
         // ******************************************************************
-        public Path() { }
+        public Path() : this(new AntigrainCPP.Path()) { }
 
         internal Path(AntigrainCPP.Path path)
         {

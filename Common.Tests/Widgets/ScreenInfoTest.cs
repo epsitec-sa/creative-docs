@@ -298,8 +298,6 @@ namespace Epsitec.Common.Tests.Widgets
 
                     this.mask.Color = Color.FromRgb(1, 0, 0);
                     this.mask.PaintSurface(path);
-
-                    path.Dispose();
                 }
 
                 Point pos = this.MapClientToScreen(new Point(dx / 2, dy / 2));
@@ -331,7 +329,6 @@ namespace Epsitec.Common.Tests.Widgets
                             path = Path.FromRectangle(x, dy - y - sy, sx + 1, sy + 1);
                             graphics.Color = raw[ix, iy];
                             graphics.PaintSurface(path);
-                            path.Dispose();
                             x += sx;
                         }
                         y += sy;
@@ -363,8 +360,6 @@ namespace Epsitec.Common.Tests.Widgets
                 graphics.Color = Color.FromAlphaRgb(0.5, 0, 0, 0.8);
                 graphics.LineWidth = 1.0;
                 graphics.PaintOutline(path);
-
-                path.Dispose();
 
                 graphics.SolidRenderer.SetAlphaMask(null, MaskComponent.None);
 
