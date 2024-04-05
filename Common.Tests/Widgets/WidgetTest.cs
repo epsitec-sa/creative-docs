@@ -36,30 +36,16 @@ namespace Epsitec.Common.Tests.Widgets
             Widget[] widgets = new Widget[runs];
             System.Console.WriteLine("Testing Widget allocation.");
 
-            for (int i = 0; i < 1000; i++)
-            {
-                long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
-            }
-
-            long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-            long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-            long c0 = Epsitec.Common.Drawing.Agg.Library.Cycles - c2;
-
-            System.Console.Out.WriteLine("Zero work: " + c0.ToString());
-
             long s1 = System.GC.GetTotalMemory(true);
-            c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
             for (int i = 0; i < runs; i++)
             {
                 widgets[i] = new Widget();
             }
-            c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
             long s2 = System.GC.GetTotalMemory(true);
 
             System.Console.WriteLine(
-                "Using {0} bytes / empty Widget instance, {1} cycles.",
-                (s2 - s1) / runs,
-                (c2 - c1) / runs
+                "Using {0} bytes / empty Widget instance",
+                (s2 - s1) / runs
             );
         }
 
@@ -71,31 +57,17 @@ namespace Epsitec.Common.Tests.Widgets
             Widget[] widgets = new Widget[runs];
             System.Console.WriteLine("Testing Widget allocation.");
 
-            for (int i = 0; i < 1000; i++)
-            {
-                long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
-            }
-
-            long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-            long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-            long c0 = Epsitec.Common.Drawing.Agg.Library.Cycles - c2;
-
-            System.Console.Out.WriteLine("Zero work: " + c0.ToString());
-
             long s1 = System.GC.GetTotalMemory(true);
-            c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
             for (int i = 0; i < runs; i++)
             {
                 widgets[i] = new Widget();
                 widgets[i].Text = "Test";
             }
-            c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
             long s2 = System.GC.GetTotalMemory(true);
 
             System.Console.WriteLine(
-                "Using {0} bytes / Widget instance with text, {1} cycles.",
-                (s2 - s1) / runs,
-                (c2 - c1) / runs
+                "Using {0} bytes / Widget instance with text",
+                (s2 - s1) / runs
             );
         }
 #endif
