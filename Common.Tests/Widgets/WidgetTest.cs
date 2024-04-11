@@ -394,7 +394,7 @@ namespace Epsitec.Common.Tests.Widgets
                 System.Console.WriteLine("Font face: {0}", face);
 
                 foreach (
-                    OpenType.FontIdentity id in Common.Text.TextContext.GetAvailableFontIdentities(
+                    Common.OpenType.FontIdentity id in Common.Text.TextContext.GetAvailableFontIdentities(
                         face
                     )
                 )

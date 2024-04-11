@@ -205,7 +205,6 @@
     <None   Include="Debug\FailureException.cs" />
     -->
     <Compile Remove="Debug\GeneralExceptionCatcher.cs" />
-    <None   Include="Debug\GeneralExceptionCatcher.cs" />
     <!--
     <Compile Remove="Debug\Profiler.cs" />
     <None   Include="Debug\Profiler.cs" />
@@ -669,45 +668,43 @@
     <None   Include="IO\WinConsole.cs" />
     <Compile Remove="IO\ZipFile.cs" />
     <None   Include="IO\ZipFile.cs" />
-    <Compile Remove="OpenType\Font.cs" />
-    <None   Include="OpenType\Font.cs" />
-    <Compile Remove="OpenType\FontCollection.cs" />
-    <None   Include="OpenType\FontCollection.cs" />
-    <Compile Remove="OpenType\FontData.cs" />
-    <None   Include="OpenType\FontData.cs" />
-    <Compile Remove="OpenType\FontIdentity.cs" />
-    <None   Include="OpenType\FontIdentity.cs" />
-    <Compile Remove="OpenType\FontManagerType.cs" />
-    <None   Include="OpenType\FontManagerType.cs" />
-    <Compile Remove="OpenType\FontName.cs" />
-    <None   Include="OpenType\FontName.cs" />
-    <Compile Remove="OpenType\FontNumeralAlignment.cs" />
-    <None   Include="OpenType\FontNumeralAlignment.cs" />
-    <Compile Remove="OpenType\FontNumeralStyle.cs" />
-    <None   Include="OpenType\FontNumeralStyle.cs" />
-    <Compile Remove="OpenType\FontSizeInfo.cs" />
-    <None   Include="OpenType\FontSizeInfo.cs" />
-    <Compile Remove="OpenType\FontStyle.cs" />
-    <None   Include="OpenType\FontStyle.cs" />
-    <Compile Remove="OpenType\FontType.cs" />
-    <None   Include="OpenType\FontType.cs" />
-    <Compile Remove="OpenType\FontWeight.cs" />
-    <None   Include="OpenType\FontWeight.cs" />
-    <Compile Remove="OpenType\Platform\IFontHandle.cs" />
-    <None   Include="OpenType\Platform\IFontHandle.cs" />
-    <Compile Remove="OpenType\Platform\Neutral.cs" />
-    <None   Include="OpenType\Platform\Neutral.cs" />
     -->
-    <Compile Remove="OpenType\Platform\Win32.cs" />
-    <None   Include="OpenType\Platform\Win32.cs" />
-    <!--
-    <Compile Remove="OpenType\Support.cs" />
-    <None   Include="OpenType\Support.cs" />
-    <Compile Remove="OpenType\Tables.cs" />
-    <None   Include="OpenType\Tables.cs" />
-    <Compile Remove="OpenType\Tests\CheckTables.cs" />
-    <None   Include="OpenType\Tests\CheckTables.cs" />
-    -->
+    <Compile Remove="OpenType_old\Font.cs" />
+    <None   Include="OpenType_old\Font.cs" />
+    <Compile Remove="OpenType_old\FontCollection.cs" />
+    <None   Include="OpenType_old\FontCollection.cs" />
+    <Compile Remove="OpenType_old\FontData.cs" />
+    <None   Include="OpenType_old\FontData.cs" />
+    <Compile Remove="OpenType_old\FontIdentity.cs" />
+    <None   Include="OpenType_old\FontIdentity.cs" />
+    <Compile Remove="OpenType_old\FontManagerType.cs" />
+    <None   Include="OpenType_old\FontManagerType.cs" />
+    <Compile Remove="OpenType_old\FontName.cs" />
+    <None   Include="OpenType_old\FontName.cs" />
+    <Compile Remove="OpenType_old\FontNumeralAlignment.cs" />
+    <None   Include="OpenType_old\FontNumeralAlignment.cs" />
+    <Compile Remove="OpenType_old\FontNumeralStyle.cs" />
+    <None   Include="OpenType_old\FontNumeralStyle.cs" />
+    <Compile Remove="OpenType_old\FontSizeInfo.cs" />
+    <None   Include="OpenType_old\FontSizeInfo.cs" />
+    <Compile Remove="OpenType_old\FontStyle.cs" />
+    <None   Include="OpenType_old\FontStyle.cs" />
+    <Compile Remove="OpenType_old\FontType.cs" />
+    <None   Include="OpenType_old\FontType.cs" />
+    <Compile Remove="OpenType_old\FontWeight.cs" />
+    <None   Include="OpenType_old\FontWeight.cs" />
+    <Compile Remove="OpenType_old\Platform\IFontHandle.cs" />
+    <None   Include="OpenType_old\Platform\IFontHandle.cs" />
+    <Compile Remove="OpenType_old\Platform\Neutral.cs" />
+    <None   Include="OpenType_old\Platform\Neutral.cs" />
+    <Compile Remove="OpenType_old\Platform\Win32.cs" />
+    <None   Include="OpenType_old\Platform\Win32.cs" />
+    <Compile Remove="OpenType_old\Support.cs" />
+    <None   Include="OpenType_old\Support.cs" />
+    <Compile Remove="OpenType_old\Tables.cs" />
+    <None   Include="OpenType_old\Tables.cs" />
+    <Compile Remove="OpenType_old\Tests\CheckTables.cs" />
+    <None   Include="OpenType_old\Tests\CheckTables.cs" />
     <Compile Remove="Printing\DuplexMode.cs" />
     <None   Include="Printing\DuplexMode.cs" />
     <Compile Remove="Printing\IPrintEngine.cs" />
@@ -2929,9 +2926,9 @@
 
   <!-- InternalsVisibleTo -->
   <ItemGroup>
-    <InternalsVisibleTo Include="Common.Tests"/>
-    <InternalsVisibleTo Include="Common.Tests.Vs"/>
-    <InternalsVisibleTo Include="Cresus.DataLayer"/>
-    <InternalsVisibleTo Include="Cresus.DataLayer.Tests.Vs"/>
+    <InternalsVisibleTo Include="Common.Tests" />
+    <InternalsVisibleTo Include="Common.Tests.Vs" />
+    <InternalsVisibleTo Include="Cresus.DataLayer" />
+    <InternalsVisibleTo Include="Cresus.DataLayer.Tests.Vs" />
   </ItemGroup>
 </Project>

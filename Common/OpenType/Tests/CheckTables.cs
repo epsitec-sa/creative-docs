@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.OpenType.Tests
 {
+#if false
     /// <summary>
     /// Summary description for CheckTables.
     /// </summary>
@@ -794,4 +795,5 @@ namespace Epsitec.Common.OpenType.Tests
             return (int[])list.ToArray(typeof(int));
         }
     }
+#endif
 }

@@ -387,7 +387,7 @@ namespace Epsitec.Common.Tests.Drawing
 
                 //-				System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 
-                if (font.FontManagerType == OpenType.FontManagerType.System)
+                if (font.FontManagerType == Common.OpenType.FontManagerType.System)
                 {
                     NativeTextRenderer.Draw(
                         this.graphics.Pixmap,
@@ -1297,7 +1297,7 @@ namespace Epsitec.Common.Tests.Drawing
 							properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.False));
 							properties.Add (new FontColorProperty (Drawing.Color.FromName ("Black")));
 							properties.Add (new LeadingProperty (28.0, SizeUnits.Points, 0.0, SizeUnits.Points, 0.0, SizeUnits.Points, AlignMode.None));
-							properties.Add (new OpenTypeProperty (symbol, glyph++));
+							properties.Add (new Common.OpenTypeProperty (symbol, glyph++));
 							
 							this.painter.TextStory.ConvertToStyledText ("X", no_styles, properties, out text);
 							this.painter.TextStory.InsertText (cursor, text);

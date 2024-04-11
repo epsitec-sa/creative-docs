@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.OpenType.Platform
 {
+#if false
     internal sealed class Win32
     {
         private Win32() { }
@@ -808,4 +809,5 @@ namespace Epsitec.Common.OpenType.Platform
             return (length > 0) ? true : false;
         }
     }
+#endif
 }

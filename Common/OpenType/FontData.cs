@@ -3,37 +3,13 @@
 
 namespace Epsitec.Common.OpenType
 {
+#if false
     /// <summary>
     /// The <c>FontData</c> class is a wrapper for the internal OpenType font
     /// tables. It keeps a reference to the raw font data.
     /// </summary>
     public sealed class FontData
     {
-        internal FontData() { }
-
-        internal FontData(byte[] data, int ttcIndex)
-        {
-            if ((data[0] == 't') && (data[1] == 't') && (data[2] == 'c') && (data[3] == 'f'))
-            {
-                //	This is not a unique font, but a TrueType font Collection.
-
-                TableTtcf ttcf = new TableTtcf(data, 0);
-
-                System.Diagnostics.Debug.Assert(ttcIndex >= 0);
-                System.Diagnostics.Debug.Assert(ttcIndex < ttcf.NumFonts);
-
-                //	The table directory is located further in the file :
-
-                int fontOffset = ttcf.GetFontOffset(ttcIndex);
-
-                this.Initialize(new TableDirectory(data, fontOffset));
-            }
-            else
-            {
-                this.Initialize(new TableDirectory(data, 0));
-            }
-        }
-
         public TableEntry this[string name]
         {
             get
@@ -82,15 +58,6 @@ namespace Epsitec.Common.OpenType
                 }
             }
         }
-
-        private void Initialize(TableDirectory directory)
-        {
-            System.Diagnostics.Debug.Assert(this.otDirectory == null);
-            System.Diagnostics.Debug.Assert(directory != null);
-
-            this.otDirectory = directory;
-        }
-
-        private TableDirectory otDirectory;
     }
+#endif
 }

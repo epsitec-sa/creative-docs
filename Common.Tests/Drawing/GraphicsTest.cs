@@ -973,7 +973,7 @@ namespace Epsitec.Common.Tests.Drawing
         private void FontPreviewer_PaintForeground(object sender, PaintEventArgs e)
         {
             WindowRoot root = sender as WindowRoot;
-            OpenType.FontCollection collection = OpenType.FontCollection.Default;
+            Common.OpenType.FontCollection collection = Common.OpenType.FontCollection.Default;
             collection.RefreshCache();
 
             double ox = 10;
@@ -992,7 +992,7 @@ namespace Epsitec.Common.Tests.Drawing
 
             foreach (string font in fonts)
             {
-                OpenType.FontIdentity fid = collection[font];
+                Common.OpenType.FontIdentity fid = collection[font];
 
                 if (fid != null)
                 {

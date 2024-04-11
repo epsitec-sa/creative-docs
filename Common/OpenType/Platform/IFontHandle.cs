@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.OpenType.Platform
 {
+#if false
     /// <summary>
     /// Summary description for IFontHandle.
     /// </summary>
@@ -10,4 +11,5 @@ namespace Epsitec.Common.OpenType.Platform
     {
         System.IntPtr Handle { get; }
     }
+#endif
 }

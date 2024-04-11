@@ -2168,6 +2168,7 @@ namespace Epsitec.Common.Document
 
         protected void FontWriteAll(ZipFile zip)
         {
+            /*
             //	Ecrit sur disque tous les fichiers des polices utilisées dans le document.
             if (this.fontList == null || this.fontIncludeMode == FontIncludeMode.None)
             {
@@ -2190,6 +2191,8 @@ namespace Epsitec.Common.Document
 
                 zip.AddEntry(name, font.FontData.Data.Array, true);
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         protected void FontReadAll(ZipFile zip)

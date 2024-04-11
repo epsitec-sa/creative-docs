@@ -30,7 +30,7 @@ namespace Epsitec.Common.Tests.Text
 
             Assert.IsTrue(text.Length == 7);
 
-            OpenType.Font font;
+            Common.OpenType.Font font;
             double fontSize;
             double fontScale;
 

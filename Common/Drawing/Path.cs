@@ -572,7 +572,7 @@ namespace Epsitec.Common.Drawing
             if (glyph < 0xfff0)
             {
                 this.path.AppendGlyph(
-                    font.Handle,
+                    System.IntPtr.Zero,
                     glyph,
                     xx,
                     xy,
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Drawing
             if (glyph < 0xfff0)
             {
                 this.path.AppendGlyph(
-                    font.Handle,
+                    System.IntPtr.Zero,
                     glyph,
                     xx,
                     xy,

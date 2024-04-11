@@ -32,7 +32,7 @@ namespace Epsitec.Common.Drawing
             uint g = (uint)(color.G * 256 - 0.1);
             uint b = (uint)(color.B * 256 - 0.1);
 
-            System.IntPtr fontHandle = font.GetFontHandle(size);
+            //System.IntPtr fontHandle = font.GetFontHandle(size);
             uint win32Color = (b << 16) | (g << 8) | (r);
 
             double boxY = pixmap.Size.Height;
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Drawing
                 {
                     NativeTextRenderer.ExtendedTextOut(
                         pixmap,
-                        fontHandle,
+                        System.IntPtr.Zero,
                         (int)(boxY - oy - hy),
                         glyphs,
                         start,
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Drawing
 
             NativeTextRenderer.ExtendedTextOut(
                 pixmap,
-                fontHandle,
+                System.IntPtr.Zero,
                 (int)(boxY - oy - hy),
                 glyphs,
                 start,

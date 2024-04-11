@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.OpenType
 {
+#if false
     /// <summary>
     /// The <c>Support</c> class provides a few methods used to manipulate
     /// OpenType font tables.
@@ -34,4 +35,5 @@ namespace Epsitec.Common.OpenType
                 | (data[offset + 3]);
         }
     }
+#endif
 }

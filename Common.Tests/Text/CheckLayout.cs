@@ -527,7 +527,7 @@ namespace Epsitec.Common.Tests.Text
             Assert.IsTrue(System.Math.Round(breaks[1].SpacePenalty) == 38);
             Assert.IsTrue(System.Math.Round(breaks[2].SpacePenalty) == 0);
 
-            OpenType.Font font;
+            Common.OpenType.Font font;
             double fontSize;
             double fontScale;
 

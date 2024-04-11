@@ -28,16 +28,19 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        #region Low level initialisation
+#region Low level initialisation
 
+#if false
         [System.Runtime.InteropServices.DllImport("Kernel32.dll")]
         private static extern System.IntPtr LoadLibrary(string fullpath);
 
         [System.Runtime.InteropServices.DllImport("Kernel32.dll")]
         private static extern bool SetDllDirectory(string pathName);
+#endif
 
         static Font()
         {
+#if false
             //	Pour une raison étrange, la DLL Win32 doit être chargée très, très tôt, sinon
             //	elle pourrait ne pas être trouvée (c'est probablement lié à la copie locale des
             //	assemblies .NET qui est faite lors de l'exécution avec NUnit).
@@ -71,7 +74,6 @@ namespace Epsitec.Common.Drawing
                 //	are running on a system older than XP SP1 or Server 2003.
             }
 
-#if false
 			System.IntPtr result = Font.LoadLibrary ("AntigrainCPPWin32.dll");
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
@@ -81,7 +83,7 @@ namespace Epsitec.Common.Drawing
             Font.useSegoe = System.Environment.OSVersion.Version.Major > 5;
             Font.SetupFonts();
         }
-        #endregion
+#endregion
 
         public static void Initialize() { }
 
@@ -93,6 +95,7 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
+#if false
         [System.Runtime.InteropServices.DllImport("Gdi32.dll")]
         private static extern int AddFontResourceEx(
             string fontPath,
@@ -106,84 +109,85 @@ namespace Epsitec.Common.Drawing
             int fontFlags,
             System.IntPtr reserved
         );
+#endif
 
-        private static IEnumerable<string> GetAntiGrainProbePaths()
-        {
-            yield return Support.Globals.Directories.ExecutableRoot;
-            yield return Support.Globals.Directories.Executable;
-            yield return Support.Globals.Directories.InitialDirectory;
+        //private static IEnumerable<string> GetAntiGrainProbePaths()
+        //{
+        //    yield return Support.Globals.Directories.ExecutableRoot;
+        //    yield return Support.Globals.Directories.Executable;
+        //    yield return Support.Globals.Directories.InitialDirectory;
 
-            var assemblyLocation = typeof(Font).Assembly.Location;
+        //    var assemblyLocation = typeof(Font).Assembly.Location;
 
-            if (string.IsNullOrEmpty(assemblyLocation) == false)
-            {
-                yield return System.IO.Path.GetDirectoryName(assemblyLocation);
-            }
-            else
-            {
-                yield return System.IO.Directory.GetCurrentDirectory();
-            }
-        }
+        //    if (string.IsNullOrEmpty(assemblyLocation) == false)
+        //    {
+        //        yield return System.IO.Path.GetDirectoryName(assemblyLocation);
+        //    }
+        //    else
+        //    {
+        //        yield return System.IO.Directory.GetCurrentDirectory();
+        //    }
+        //}
 
-        public System.IntPtr Handle
-        {
-            get
-            {
-                if (this.handle == System.IntPtr.Zero)
-                {
-                    System.ArraySegment<byte> segment = this.OpenTypeFont.FontData.Data;
+        //public System.IntPtr Handle
+        //{
+        //    get
+        //    {
+        //        if (this.handle == System.IntPtr.Zero)
+        //        {
+        //            System.ArraySegment<byte> segment = this.OpenTypeFont.FontData.Data;
 
-                    if (segment.Offset > 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine(
-                            "Requested Font.Handle for TTC font " + this.FullName,
-                            "Epsitec.Common.Drawing.Font"
-                        );
-                    }
+        //            if (segment.Offset > 0)
+        //            {
+        //                System.Diagnostics.Debug.WriteLine(
+        //                    "Requested Font.Handle for TTC font " + this.FullName,
+        //                    "Epsitec.Common.Drawing.Font"
+        //                );
+        //            }
 
-                    byte[] data = segment.Array;
-                    int size = data.Length;
-                    int offset = segment.Offset;
+        //            byte[] data = segment.Array;
+        //            int size = data.Length;
+        //            int offset = segment.Offset;
 
-                    if (this.openTypeFontIdentity.IsDynamicFont)
-                    {
-                        string fontHash = this.OpenTypeFont.FontIdentity.FullHash;
-                        string fontPath;
+        //            if (this.openTypeFontIdentity.IsDynamicFont)
+        //            {
+        //                string fontHash = this.OpenTypeFont.FontIdentity.FullHash;
+        //                string fontPath;
 
-                        if (Font.registeredFonts.TryGetValue(fontHash, out fontPath))
-                        {
-                            //	Font already registered...
-                        }
-                        else
-                        {
-                            fontPath = System.IO.Path.Combine(
-                                System.IO.Path.GetTempPath(),
-                                System.IO.Path.GetRandomFileName() + ".otf"
-                            );
+        //                if (Font.registeredFonts.TryGetValue(fontHash, out fontPath))
+        //                {
+        //                    //	Font already registered...
+        //                }
+        //                else
+        //                {
+        //                    fontPath = System.IO.Path.Combine(
+        //                        System.IO.Path.GetTempPath(),
+        //                        System.IO.Path.GetRandomFileName() + ".otf"
+        //                    );
 
-                            System.IO.File.WriteAllBytes(fontPath, data);
-                            Font.AddFontResourceEx(fontPath, 0x10, System.IntPtr.Zero);
-                            Font.registeredFonts[fontHash] = fontPath;
-                            Font.shutdownCleanup.Add(fontPath);
-                        }
-                    }
+        //                    System.IO.File.WriteAllBytes(fontPath, data);
+        //                    Font.AddFontResourceEx(fontPath, 0x10, System.IntPtr.Zero);
+        //                    Font.registeredFonts[fontHash] = fontPath;
+        //                    Font.shutdownCleanup.Add(fontPath);
+        //                }
+        //            }
 
-                    System.IntPtr osHandle = this.OpenTypeFont.GetFontHandleAtEmSize();
+        //            System.IntPtr osHandle = this.OpenTypeFont.GetFontHandleAtEmSize();
 
-                    if (osHandle == System.IntPtr.Zero)
-                    {
-                        this.handle = System.IntPtr.Zero;
-                    }
-                    else
-                    {
-                        //this.handle = AntigrainCPP.Font.CreateFaceHandle(data, size, offset, osHandle);
-                        throw new System.NotImplementedException();
-                    }
-                }
+        //            if (osHandle == System.IntPtr.Zero)
+        //            {
+        //                this.handle = System.IntPtr.Zero;
+        //            }
+        //            else
+        //            {
+        //                //this.handle = AntigrainCPP.Font.CreateFaceHandle(data, size, offset, osHandle);
+        //                throw new System.NotImplementedException();
+        //            }
+        //        }
 
-                return this.handle;
-            }
-        }
+        //        return this.handle;
+        //    }
+        //}
 
         public string FaceName
         {
@@ -882,6 +886,7 @@ namespace Epsitec.Common.Drawing
 
         private static void SetupFonts()
         {
+            /*
             bool save = false;
 
             if (Font.fontArray == null)
@@ -927,6 +932,8 @@ namespace Epsitec.Common.Drawing
             }
 
             Font.fontCollection.FontIdentityDefined += Font.HandleFontCollectionFontIdentityDefined;
+            */
+            throw new System.NotImplementedException();
         }
 
         private static void HandleFontCollectionFontIdentityDefined(
@@ -1208,6 +1215,7 @@ namespace Epsitec.Common.Drawing
         }
 
         #region ShutdownCleanup Class
+#if false
 
         /// <summary>
         /// The <c>ShutdownCleanup</c> class is used to delete any font files
@@ -1243,8 +1251,9 @@ namespace Epsitec.Common.Drawing
 
             readonly List<string> tempFiles;
         }
+#endif
 
-        #endregion
+#endregion
 
         #region NameId Enumeration
 
@@ -1277,6 +1286,6 @@ namespace Epsitec.Common.Drawing
 
         static readonly Dictionary<string, string> registeredFonts =
             new Dictionary<string, string>();
-        static readonly ShutdownCleanup shutdownCleanup = new ShutdownCleanup();
+        //static readonly ShutdownCleanup shutdownCleanup = new ShutdownCleanup();
     }
 }

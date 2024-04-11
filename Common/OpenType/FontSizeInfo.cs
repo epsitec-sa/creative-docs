@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.OpenType
 {
+#if false
     /// <summary>
     /// The <c>FontSizeInfo</c> class stores glyph size information for a
     /// discrete font size. The information is gathered through calls to
@@ -106,17 +107,6 @@ namespace Epsitec.Common.OpenType
         }
 
         #endregion
-
-
-        private const int BlockSize = 64;
-
-        private int pointSize;
-        private Platform.IFontHandle fontHandle;
-        private int[][] glyphWidths;
-        private int height;
-        private int ascender;
-        private int descender;
-        private int internalLeading;
-        private int externalLeading;
     }
+#endif
 }

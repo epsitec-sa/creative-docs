@@ -6,11 +6,13 @@ namespace Epsitec.Common.OpenType
     //	Data types:     http://partners.adobe.com/public/developer/opentype/index_font_file.html
     //	List of tables: http://partners.adobe.com/public/developer/opentype/index_tables.html
 
+#if false
     /// <summary>
     /// <c>Tables</c> is the base class used to access all OpenType tables.
     /// </summary>
     public class Tables
     {
+
         public Tables(byte[] data, int offset)
         {
             this.data = data;
@@ -1362,7 +1364,7 @@ namespace Epsitec.Common.OpenType
                         return (ushort)(
                             code
                             - this.ReadInt32(12 * i + oStartCharCode)
-                            /**/+ this.ReadInt32(12 * i + oStartGlyphId)
+                            + this.ReadInt32(12 * i + oStartGlyphId)
                         );
                     }
 
@@ -2569,75 +2571,100 @@ USHORT usMaxContext			94
         }
     }
 
-    public class LookupTable : Tables
+#endif
+
+    public class LookupTable
     {
-        public LookupTable(byte[] data, int offset)
-            : base(data, offset) { }
+        public LookupTable(byte[] data, int offset) { }
 
         public LookupType LookupType
         {
-            get { return (LookupType)this.ReadInt16(0); }
+            get {
+                /*
+                
+                return (LookupType)this.ReadInt16(0);
+            
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         public int LookupFlags
         {
-            get { return this.ReadInt16(2); }
+            get {
+                /*
+                
+                return this.ReadInt16(2);
+            
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         public int SubTableCount
         {
-            get { return this.ReadInt16(4); }
+            get {
+                /*
+                
+                return this.ReadInt16(4);
+            
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         public int GetSubTableOffset(int n)
         {
+            /*
             return this.ReadInt16((int)(6 + n * 2));
+            */
+            throw new System.NotImplementedException();
         }
 
-        public SubstSubTable GetSubTable(int n)
-        {
-            return new SubstSubTable(this.data, this.offset + (int)this.GetSubTableOffset(n));
-        }
+        //public SubstSubTable GetSubTable(int n)
+        //{
+        //    return new SubstSubTable(this.data, this.offset + (int)this.GetSubTableOffset(n));
+        //}
 
-        public BaseSubstitution GetSubstitution(int n)
-        {
-            int offset = this.offset + (int)this.GetSubTableOffset(n);
+        //public BaseSubstitution GetSubstitution(int n)
+        //{
+        //    int offset = this.offset + (int)this.GetSubTableOffset(n);
 
-            switch (this.LookupType)
-            {
-                case LookupType.Single:
-                    return new SingleSubstitution(this.data, offset);
-                case LookupType.Alternate:
-                    return new AlternateSubstitution(this.data, offset);
-                case LookupType.Ligature:
-                    return new LigatureSubstitution(this.data, offset);
-                case LookupType.ChainingContext:
-                    return new ChainingContextSubstitution(this.data, offset);
+        //    switch (this.LookupType)
+        //    {
+        //        case LookupType.Single:
+        //            return new SingleSubstitution(this.data, offset);
+        //        case LookupType.Alternate:
+        //            return new AlternateSubstitution(this.data, offset);
+        //        case LookupType.Ligature:
+        //            return new LigatureSubstitution(this.data, offset);
+        //        case LookupType.ChainingContext:
+        //            return new ChainingContextSubstitution(this.data, offset);
 
-                case LookupType.Context:
+        //        case LookupType.Context:
 
-                    //	TODO: ...
+        //            //	TODO: ...
 
-                    return null;
+        //            return null;
 
-                case LookupType.ExtensionSubstitution:
+        //        case LookupType.ExtensionSubstitution:
 
-                    //	TODO: ...
+        //            //	TODO: ...
 
-                    return null;
+        //            return null;
 
-                case LookupType.Multiple:
+        //        case LookupType.Multiple:
 
-                    //	TODO: ...
+        //            //	TODO: ...
 
-                    return null;
+        //            return null;
 
-                default:
-                    throw new System.NotSupportedException(
-                        string.Format("LookupType {0} not supported.", this.LookupType)
-                    );
-            }
-        }
+        //        default:
+        //            throw new System.NotSupportedException(
+        //                string.Format("LookupType {0} not supported.", this.LookupType)
+        //            );
+        //    }
+        //}
     }
 
     public enum LookupType
@@ -2652,6 +2679,7 @@ USHORT usMaxContext			94
         ReverseChainingContextSingle = 8,
     }
 
+    /*
     public class SubstSubTable : Tables
     {
         public SubstSubTable(byte[] data, int offset)
@@ -3083,4 +3111,5 @@ USHORT usMaxContext			94
             return this.ReadInt16((int)(4 + n * 2));
         }
     }
+    */
 }

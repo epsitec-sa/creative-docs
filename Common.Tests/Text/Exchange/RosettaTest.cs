@@ -189,7 +189,7 @@ namespace Epsitec.Common.Tests.Text.Exchange
                         string fontFace = fontProperty.FaceName;
                         string fontStyle = fontProperty.StyleName;
 
-                        fontStyle = OpenType.FontCollection.GetStyleHash(fontStyle);
+                        fontStyle = Common.OpenType.FontCollection.GetStyleHash(fontStyle);
 
                         System.Console.Out.WriteLine("- Font: {0} {1}", fontFace, fontStyle);
                     }

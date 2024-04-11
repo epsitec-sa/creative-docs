@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.OpenType.Platform
 {
+#if false
     /// <summary>
     /// La classe Neutral encapsule les dépendances système de manière à ce que
     /// l'appelant ne voie pas ce qui se passe derrière les rideaux.
@@ -121,4 +122,5 @@ namespace Epsitec.Common.OpenType.Platform
             throw new System.NotImplementedException();
         }
     }
+#endif
 }
