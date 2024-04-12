@@ -21,9 +21,25 @@ namespace Epsitec.Common.OpenType
         public FontName(string face, string style)
         {
             this.face = face;
-            this.style = style;
+
+            this.style = FontStyle.Normal;
+            foreach (string styleElement in style.ToLower().Split(' '))
+            {
+                switch (styleElement)
+                {
+                    case "bold":
+                        this.style |= FontStyle.Bold;
+                        break;
+                    case "italic":
+                        this.style |= FontStyle.Italic;
+                        break;
+                }
+            }
         }
 
+        public FontName(string face) : this(face, "") {}
+
+#if false
         /// <summary>
         /// Initializes a new instance of the <see cref="FontName"/> structure.
         /// </summary>
@@ -33,6 +49,7 @@ namespace Epsitec.Common.OpenType
             this.face = fontIdentity.InvariantFaceName;
             this.style = fontIdentity.InvariantStyleName;
         }
+#endif
 
         /// <summary>
         /// Gets the name of the font face.
@@ -49,7 +66,18 @@ namespace Epsitec.Common.OpenType
         /// <value>The name of the font style.</value>
         public string StyleName
         {
-            get { return this.style; }
+            get {
+                switch (this.style) {
+                    case FontStyle.Normal:
+                    case FontStyle.Bold:
+                    case FontStyle.Italic:
+                        return this.style.ToString(); 
+                    case FontStyle.BoldItalic:
+                        return "Bold Italic"; 
+                    default:
+                        return null;
+                }
+            }
         }
 
         /// <summary>
@@ -60,14 +88,11 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                if (string.IsNullOrEmpty(this.style))
+                if (this.style == FontStyle.Normal)
                 {
                     return this.face;
                 }
-                else
-                {
-                    return string.Concat(this.face, " ", this.style);
-                }
+                return FontName.GetFullName(this.face, this.StyleName);
             }
         }
 
@@ -116,6 +141,7 @@ namespace Epsitec.Common.OpenType
             }
         }
 
+#if false
         /// <summary>
         /// Gets the full hash of the specified full font name. This will sort
         /// all elements in alphabetic order and remove any <c>"Regular"</c>,
@@ -190,6 +216,7 @@ namespace Epsitec.Common.OpenType
             return string.Join(" ", names.OrderBy(x => x));
         }
 
+#endif
         #region IComparable Members
 
         public int CompareTo(object obj)
@@ -220,6 +247,6 @@ namespace Epsitec.Common.OpenType
         #endregion
 
         private string face;
-        private string style;
+        private FontStyle style;
     }
 }
