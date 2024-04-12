@@ -13,6 +13,7 @@ namespace Epsitec.Common.OpenType
     {
         internal Font(FontIdentity identity)
         {
+            this.identity = identity;
         }
 
         public FontManagerType FontManagerType
@@ -28,11 +29,6 @@ namespace Epsitec.Common.OpenType
         {
             get { return this.identity; }
         }
-
-        //public FontData FontData
-        //{
-        //    get { return this.fontData; }
-        //}
 
         public double SpaceWidth
         {

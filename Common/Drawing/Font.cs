@@ -22,172 +22,18 @@ namespace Epsitec.Common.Drawing
             this.syntheticMode = syntheticMode;
         }
 
-        ~Font()
-        {
-            this.Dispose(false);
-        }
         #endregion
 
-#region Low level initialisation
-
-#if false
-        [System.Runtime.InteropServices.DllImport("Kernel32.dll")]
-        private static extern System.IntPtr LoadLibrary(string fullpath);
-
-        [System.Runtime.InteropServices.DllImport("Kernel32.dll")]
-        private static extern bool SetDllDirectory(string pathName);
-#endif
-
-        static Font()
-        {
-#if false
-            //	Pour une raison étrange, la DLL Win32 doit être chargée très, très tôt, sinon
-            //	elle pourrait ne pas être trouvée (c'est probablement lié à la copie locale des
-            //	assemblies .NET qui est faite lors de l'exécution avec NUnit).
-
-            try
-            {
-                string dllName = "AntigrainCPP.dll";
-                string dllPath = null;
-
-                foreach (string path in Font.GetAntiGrainProbePaths())
-                {
-                    if (System.IO.File.Exists(System.IO.Path.Combine(path, dllName)))
-                    {
-                        dllPath = path;
-                        break;
-                    }
-                }
-
-                if (dllPath == null)
-                {
-                    System.Diagnostics.Debug.Print("Could not locate native AntiGrain DLL");
-                }
-                else
-                {
-                    Font.SetDllDirectory(dllPath);
-                }
-            }
-            catch
-            {
-                //	Never mind if we cannot set the DLL directory; this probably means that we
-                //	are running on a system older than XP SP1 or Server 2003.
-            }
-
-			System.IntPtr result = Font.LoadLibrary ("AntigrainCPPWin32.dll");
-			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
-			
-			System.Diagnostics.Debug.WriteLine ("AntigrainCPPWin32.dll loaded successfully", "Epsitec.Common.Drawing.Font");
-#endif
-
-            Font.useSegoe = System.Environment.OSVersion.Version.Major > 5;
+        public static void Initialize() { 
+            //Font.useSegoe = System.Environment.OSVersion.Version.Major > 5;
             Font.SetupFonts();
         }
-#endregion
-
-        public static void Initialize() { }
 
         #region IDisposable members
         public void Dispose()
         {
-            this.Dispose(true);
-            System.GC.SuppressFinalize(this);
         }
         #endregion
-
-#if false
-        [System.Runtime.InteropServices.DllImport("Gdi32.dll")]
-        private static extern int AddFontResourceEx(
-            string fontPath,
-            int fontFlags,
-            System.IntPtr reserved
-        );
-
-        [System.Runtime.InteropServices.DllImport("Gdi32.dll")]
-        private static extern int RemoveFontResourceEx(
-            string fontPath,
-            int fontFlags,
-            System.IntPtr reserved
-        );
-#endif
-
-        //private static IEnumerable<string> GetAntiGrainProbePaths()
-        //{
-        //    yield return Support.Globals.Directories.ExecutableRoot;
-        //    yield return Support.Globals.Directories.Executable;
-        //    yield return Support.Globals.Directories.InitialDirectory;
-
-        //    var assemblyLocation = typeof(Font).Assembly.Location;
-
-        //    if (string.IsNullOrEmpty(assemblyLocation) == false)
-        //    {
-        //        yield return System.IO.Path.GetDirectoryName(assemblyLocation);
-        //    }
-        //    else
-        //    {
-        //        yield return System.IO.Directory.GetCurrentDirectory();
-        //    }
-        //}
-
-        //public System.IntPtr Handle
-        //{
-        //    get
-        //    {
-        //        if (this.handle == System.IntPtr.Zero)
-        //        {
-        //            System.ArraySegment<byte> segment = this.OpenTypeFont.FontData.Data;
-
-        //            if (segment.Offset > 0)
-        //            {
-        //                System.Diagnostics.Debug.WriteLine(
-        //                    "Requested Font.Handle for TTC font " + this.FullName,
-        //                    "Epsitec.Common.Drawing.Font"
-        //                );
-        //            }
-
-        //            byte[] data = segment.Array;
-        //            int size = data.Length;
-        //            int offset = segment.Offset;
-
-        //            if (this.openTypeFontIdentity.IsDynamicFont)
-        //            {
-        //                string fontHash = this.OpenTypeFont.FontIdentity.FullHash;
-        //                string fontPath;
-
-        //                if (Font.registeredFonts.TryGetValue(fontHash, out fontPath))
-        //                {
-        //                    //	Font already registered...
-        //                }
-        //                else
-        //                {
-        //                    fontPath = System.IO.Path.Combine(
-        //                        System.IO.Path.GetTempPath(),
-        //                        System.IO.Path.GetRandomFileName() + ".otf"
-        //                    );
-
-        //                    System.IO.File.WriteAllBytes(fontPath, data);
-        //                    Font.AddFontResourceEx(fontPath, 0x10, System.IntPtr.Zero);
-        //                    Font.registeredFonts[fontHash] = fontPath;
-        //                    Font.shutdownCleanup.Add(fontPath);
-        //                }
-        //            }
-
-        //            System.IntPtr osHandle = this.OpenTypeFont.GetFontHandleAtEmSize();
-
-        //            if (osHandle == System.IntPtr.Zero)
-        //            {
-        //                this.handle = System.IntPtr.Zero;
-        //            }
-        //            else
-        //            {
-        //                //this.handle = AntigrainCPP.Font.CreateFaceHandle(data, size, offset, osHandle);
-        //                throw new System.NotImplementedException();
-        //            }
-        //        }
-
-        //        return this.handle;
-        //    }
-        //}
 
         public string FaceName
         {
@@ -738,7 +584,6 @@ namespace Epsitec.Common.Drawing
             {
                 this.openTypeFontIdentity.InternalClearFontData();
                 this.openTypeFont = null;
-                this.DisposeFaceHandle();
             }
         }
 
@@ -835,17 +680,6 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public void DisposeFaceHandle()
-        {
-            /*
-            if (this.handle != System.IntPtr.Zero)
-            {
-                AntigrainCPP.Font.DisposeFaceHandle(this.handle);
-                this.handle = System.IntPtr.Zero;
-            }
-            */
-        }
-
         public static void RegisterResourceFont(
             System.Reflection.Assembly assembly,
             string resourceName
@@ -875,13 +709,6 @@ namespace Epsitec.Common.Drawing
         public static void RegisterDynamicFont(byte[] data)
         {
             Font.fontCollection.RegisterDynamicFont(data);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing) { }
-
-            this.DisposeFaceHandle();
         }
 
         private static void SetupFonts()
@@ -1212,47 +1039,6 @@ namespace Epsitec.Common.Drawing
             this.faceInfo = info;
         }
 
-        #region ShutdownCleanup Class
-#if false
-
-        /// <summary>
-        /// The <c>ShutdownCleanup</c> class is used to delete any font files
-        /// created on disk and temporarily registered with Windows.
-        /// </summary>
-        private class ShutdownCleanup
-        {
-            public ShutdownCleanup()
-            {
-                this.tempFiles = new List<string>();
-            }
-
-            ~ShutdownCleanup()
-            {
-                foreach (string path in tempFiles)
-                {
-                    try
-                    {
-                        //	Remove the font file; we must first unregister it
-                        //	or else we could not delete it...
-
-                        Font.RemoveFontResourceEx(path, 0x10, System.IntPtr.Zero);
-                        System.IO.File.Delete(path);
-                    }
-                    catch { }
-                }
-            }
-
-            public void Add(string path)
-            {
-                this.tempFiles.Add(path);
-            }
-
-            readonly List<string> tempFiles;
-        }
-#endif
-
-#endregion
-
         #region NameId Enumeration
 
         enum NameId
@@ -1284,6 +1070,5 @@ namespace Epsitec.Common.Drawing
 
         static readonly Dictionary<string, string> registeredFonts =
             new Dictionary<string, string>();
-        //static readonly ShutdownCleanup shutdownCleanup = new ShutdownCleanup();
     }
 }
