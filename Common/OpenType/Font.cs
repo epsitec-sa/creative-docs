@@ -233,7 +233,6 @@ namespace Epsitec.Common.OpenType
         /// </returns>
         public ushort[] GenerateGlyphs(string text, ref int[] glMap)
         {
-            /*
             int length = text.Length;
             ushort[] glyphs = new ushort[length];
 
@@ -242,11 +241,9 @@ namespace Epsitec.Common.OpenType
                 glyphs[i] = this.GetGlyphIndex(text[i]);
             }
 
-            this.ApplySubstitutions(ref glyphs, ref glMap);
+            //this.ApplySubstitutions(ref glyphs, ref glMap);
 
             return glyphs;
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -258,7 +255,6 @@ namespace Epsitec.Common.OpenType
         /// <returns>The glyphs represented by 16-bit unsigned values.</returns>
         public ushort[] GenerateGlyphs(ulong[] text, int start, int length)
         {
-            /*
             ushort[] glyphs = new ushort[length];
             int[] glMap = null;
 
@@ -273,11 +269,9 @@ namespace Epsitec.Common.OpenType
                         : (ushort)code;
             }
 
-            this.ApplySubstitutions(ref glyphs, ref glMap);
+            //this.ApplySubstitutions(ref glyphs, ref glMap);
 
             return glyphs;
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -294,7 +288,6 @@ namespace Epsitec.Common.OpenType
         /// <c>null</c> if there are no attributes.</param>
         public void GenerateGlyphs(string text, out ushort[] glyphs, ref byte[] attributes)
         {
-            /*
             int length = text.Length;
             int[] glMap;
             int count;
@@ -307,7 +300,7 @@ namespace Epsitec.Common.OpenType
                 glyphs[i] = this.GetGlyphIndex(text[i]);
             }
 
-            this.ApplySubstitutions(ref glyphs, ref glMap);
+            //this.ApplySubstitutions(ref glyphs, ref glMap);
 
             if (attributes != null)
             {
@@ -331,8 +324,6 @@ namespace Epsitec.Common.OpenType
                     attributes[dst++] = attributes[src++];
                 }
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -357,7 +348,6 @@ namespace Epsitec.Common.OpenType
             ref byte[] attributes
         )
         {
-            /*
             int[] glMap;
             int count;
 
@@ -375,7 +365,7 @@ namespace Epsitec.Common.OpenType
                         : (ushort)code;
             }
 
-            this.ApplySubstitutions(ref glyphs, ref glMap);
+            //this.ApplySubstitutions(ref glyphs, ref glMap);
 
             if (attributes != null)
             {
@@ -400,8 +390,6 @@ namespace Epsitec.Common.OpenType
                     attributes[dst++] = attributes[src++];
                 }
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -426,7 +414,6 @@ namespace Epsitec.Common.OpenType
             ref short[] attributes
         )
         {
-            /*
             int[] glMap;
             int count;
 
@@ -444,7 +431,7 @@ namespace Epsitec.Common.OpenType
                         : (ushort)code;
             }
 
-            this.ApplySubstitutions(ref glyphs, ref glMap);
+            //this.ApplySubstitutions(ref glyphs, ref glMap);
 
             if (attributes != null)
             {
@@ -469,8 +456,6 @@ namespace Epsitec.Common.OpenType
                     attributes[dst++] = attributes[src++];
                 }
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -1861,9 +1846,10 @@ namespace Epsitec.Common.OpenType
         /// <returns>The glyph index or <c>0xffff</c> the mapping failed.</returns>
         public ushort GetGlyphIndex(int code)
         {
-            /*
+#if false
             ushort glyph;
 
+            /*
             if (code < Font.GlyphCacheSize)
             {
                 glyph = this.glyphCache[code];
@@ -1881,6 +1867,7 @@ namespace Epsitec.Common.OpenType
                     return glyph;
                 }
             }
+            */
 
             if ((code == 0) || (this.otIndexMapping == null))
             {
@@ -1972,6 +1959,7 @@ namespace Epsitec.Common.OpenType
                 }
             }
 
+            /*
             if (code < Font.GlyphCacheSize)
             {
                 this.glyphCache[code] = glyph;
@@ -1985,9 +1973,10 @@ namespace Epsitec.Common.OpenType
 
                 this.glyphCacheOthers[code] = glyph;
             }
+            */
 
             return glyph;
-            */
+#endif
             throw new System.NotImplementedException();
         }
 

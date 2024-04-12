@@ -54,7 +54,7 @@ namespace Epsitec.Common.OpenType
                     return face;
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.Name;
             }
         }
 
@@ -98,7 +98,7 @@ namespace Epsitec.Common.OpenType
                     return localeName;
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -112,7 +112,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.FullFontName);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.FullName;
             }
         }
 
@@ -141,7 +141,7 @@ namespace Epsitec.Common.OpenType
                     return face;
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.Name;
             }
         }
 
@@ -162,7 +162,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.FontSubfamily);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -182,7 +182,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.AdobeFontStyle);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -202,7 +202,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.PreferredFamily);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.Name;
             }
         }
 
@@ -222,7 +222,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.PreferredSubfamily);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -260,7 +260,7 @@ namespace Epsitec.Common.OpenType
 
                 return face;
                 */
-                throw new System.NotImplementedException();
+                return this.Name;
             }
         }
 
@@ -291,7 +291,7 @@ namespace Epsitec.Common.OpenType
 
                 return name;
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -312,7 +312,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.FullFontName, FontIdentity.InvariantLocale);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.FullName;
             }
         }
 
@@ -342,7 +342,7 @@ namespace Epsitec.Common.OpenType
                     return face;
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.Name;
             }
         }
 
@@ -364,7 +364,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.FontSubfamily, FontIdentity.InvariantLocale);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -384,7 +384,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.AdobeFontStyle, FontIdentity.InvariantLocale);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -413,7 +413,7 @@ namespace Epsitec.Common.OpenType
                     return face;
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.Name;
             }
         }
 
@@ -434,7 +434,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetMacName(NameId.FontSubfamily);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -455,7 +455,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.PreferredFamily, FontIdentity.InvariantLocale);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.Name;
             }
         }
 
@@ -476,7 +476,7 @@ namespace Epsitec.Common.OpenType
                     return this.GetName(NameId.PreferredSubfamily, FontIdentity.InvariantLocale);
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -505,7 +505,7 @@ namespace Epsitec.Common.OpenType
 
                 return this.styleHash;
                 */
-                throw new System.NotImplementedException();
+                return this.name.StyleName;
             }
         }
 
@@ -535,7 +535,7 @@ namespace Epsitec.Common.OpenType
 
                 return this.fullHash;
                 */
-                throw new System.NotImplementedException();
+                return this.FullName;
             }
         }
 
@@ -710,7 +710,7 @@ namespace Epsitec.Common.OpenType
 
                 return this.isSymbolFont;
                 */
-                throw new System.NotImplementedException();
+                return false;
             }
         }
 

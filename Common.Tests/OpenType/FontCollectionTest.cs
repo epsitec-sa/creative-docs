@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Epsitec.Common.Document.PDF;
 using Epsitec.Common.OpenType;
 using NUnit.Framework;
 

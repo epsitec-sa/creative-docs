@@ -94,21 +94,8 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                if (FontCollection.defaultCollection == null)
-                {
-                    lock (FontCollection.globalExclusion)
-                    {
-                        if (FontCollection.defaultCollection == null)
-                        {
-                            FontCollection.defaultCollection = new FontCollection();
-                        }
-                    }
-                }
-
+                FontCollection.defaultCollection ??= new FontCollection();
                 return FontCollection.defaultCollection;
-                */
-                throw new System.NotImplementedException();
             }
         }
 
@@ -118,20 +105,10 @@ namespace Epsitec.Common.OpenType
         public static System.Predicate<string> FontListFilter
         {
             get {
-                /*
-                
                 return FontCollection.fontListFilter;
-            
-                */
-                throw new System.NotImplementedException();
             }
             set {
-                /*
-                
                 FontCollection.fontListFilter = value;
-            
-                */
-                throw new System.NotImplementedException();
             }
         }
 
@@ -180,7 +157,7 @@ namespace Epsitec.Common.OpenType
                 }
             }
             */
-            throw new System.NotImplementedException();
+            return false;
         }
 
         /// <summary>
@@ -205,7 +182,7 @@ namespace Epsitec.Common.OpenType
                 return this.LockedSaveToCache(callback);
             }
             */
-            throw new System.NotImplementedException();
+            return true;
         }
 
         /// <summary>
@@ -219,7 +196,6 @@ namespace Epsitec.Common.OpenType
                 this.LockedLoadFromCache();
             }
             */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -520,18 +496,12 @@ namespace Epsitec.Common.OpenType
 
         public IEnumerator<FontIdentity> GetEnumerator()
         {
-            /*
-            return this.fullList.GetEnumerator();
-            */
-            throw new System.NotImplementedException();
+            return this.fontDict.Values.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            /*
-            return this.fullList.GetEnumerator();
-            */
-            throw new System.NotImplementedException();
+            return this.fontDict.Values.GetEnumerator();
         }
 
         #endregion
@@ -539,5 +509,7 @@ namespace Epsitec.Common.OpenType
         public event FontIdentityCallback FontIdentityDefined;
 
         private Dictionary<string, FontIdentity> fontDict;
+        private static FontCollection defaultCollection;
+        private static System.Predicate<string> fontListFilter;
     }
 }

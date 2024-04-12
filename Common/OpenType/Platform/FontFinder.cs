@@ -7,7 +7,7 @@ namespace Epsitec.Common.OpenType.Platform
 {
     public static class FontFinder
     {
-        public static IEnumerable<string> FindFonts()
+        public static IEnumerable<string> FindFontFiles()
         {
             var directories = FontFinder.GetFontDirectories();
             foreach (string directory in directories)
@@ -16,6 +16,19 @@ namespace Epsitec.Common.OpenType.Platform
                 {
                     yield return file;
                 }
+            }
+        }
+
+        public static IEnumerable<FontIdentity> FindFontIdentities()
+        {
+            var fonts = FontFinder.FindFontFiles();
+            foreach (string fontpath in fonts)
+            {
+                // TODO bl-net8-cross
+                // we should detect the font name and style using freetype
+                FontStyle fontStyle = FontStyle.Normal;
+                FontName fontName = new FontName(Path.GetFileName(fontpath), fontStyle);
+                yield return new FontIdentity(fontpath, fontName);
             }
         }
 
