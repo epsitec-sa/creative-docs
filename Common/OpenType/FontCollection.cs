@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Epsitec.Common.OpenType
 {
@@ -139,12 +141,10 @@ namespace Epsitec.Common.OpenType
         /// updated.
         /// </summary>
         /// <returns><c>true</c> if the font collection has changed; otherwise, <c>false</c>.</returns>
-        public void Initialize()
+        public void Initialize(IEnumerable<FontIdentity> fontIdentities)
         {
-            var fonts = Platform.FontFinder.FindFonts();
-            foreach (string fontpath in fonts)
+            foreach (FontIdentity fontIdentity in fontIdentities)
             {
-                FontIdentity fontIdentity = new FontIdentity(fontpath);
                 this.fontDict[fontIdentity.Name] = fontIdentity;
             }
         }
@@ -271,29 +271,18 @@ namespace Epsitec.Common.OpenType
         /// <returns>The font object or <c>null</c> if no font can be found.</returns>
         public Font CreateFont(string face, string style)
         {
-            Font font = this.TryCreateFont(face, style);
+            FontName fontName = new FontName(face, style);
+            FontIdentity fid = this[fontName];
 
-            font ??= this.TryCreateFont(face, string.Concat(style, " -Bold"));
-
-            font ??= this.TryCreateFont(face, string.Concat(style, " -Italic"));
-
-            font ??= this.TryCreateFont(face, string.Concat(style, " -Bold -Italic"));
-
-            font ??= this.TryCreateFont("Arial", style);
-
-            font ??= this.TryCreateFont("Arial", "Regular");
-
-            if (font == null)
+            var fallbackStyles = fontName.EnumerateWithFallbackStyles();
+            foreach (FontName fallback in fallbackStyles)
+            {
+                fid ??= this[fallback];
+            }
+            if (fid == null)
             {
                 throw new FontNotFoundException();
             }
-            return font;
-        }
-
-        private Font TryCreateFont(string face, string style)
-        {
-            FontName fontName = new FontName(face, style);
-            FontIdentity fid = this[fontName];
             return new Font(fid);
         }
 
@@ -304,7 +293,6 @@ namespace Epsitec.Common.OpenType
         /// <returns>The font object or <c>null</c> if no font can be found.</returns>
         public Font CreateFont(string font)
         {
-            //return this.CreateFont(this[font]);
             return this.CreateFont(font, "");
         }
 
@@ -313,17 +301,9 @@ namespace Epsitec.Common.OpenType
         /// </summary>
         /// <param name="font">The font identity.</param>
         /// <returns>The font object or <c>null</c> if no font can be found.</returns>
-        public Font CreateFont(FontIdentity font)
+        public Font CreateFont(FontIdentity fid)
         {
-            /*
-            if ((font == null) || (font.FontData == null))
-            {
-                return null;
-            }
-
-            return new Font(font);
-            */
-            throw new System.NotImplementedException();
+            return new Font(fid);
         }
 
         /// <summary>

@@ -114,6 +114,48 @@ namespace Epsitec.Common.OpenType
             return this.FullName.GetHashCode();
         }
 
+        public IEnumerable<FontName> EnumerateWithFallbackStyles()
+        {
+            var fallbackStyles = this.EnumerateFallbackStyles();
+            foreach (FontStyle style in fallbackStyles)
+            {
+                yield return new FontName(this.face, style);
+            }
+        }
+
+        private IEnumerable<FontStyle> EnumerateFallbackStyles()
+        {
+            // The order of preference for the fallback is as follows:
+            // - first the style that contains our style (e.g. BoldItalic when looking for Bold)
+            // - then the Normal type
+            // - at last, other styles
+
+            // As a tie-breaker rule, we prefer the Bold style over the Italic
+
+            switch (this.style) {
+                case FontStyle.Normal:
+                    yield return FontStyle.Bold;
+                    yield return FontStyle.Italic;
+                    yield return FontStyle.BoldItalic;
+                    yield break;
+                case FontStyle.Bold:
+                    yield return FontStyle.BoldItalic;
+                    yield return FontStyle.Normal;
+                    yield return FontStyle.Italic;
+                    yield break;
+                case FontStyle.Italic:
+                    yield return FontStyle.BoldItalic;
+                    yield return FontStyle.Normal;
+                    yield return FontStyle.Bold;
+                    yield break;
+                case FontStyle.BoldItalic:
+                    yield return FontStyle.Bold;
+                    yield return FontStyle.Italic;
+                    yield return FontStyle.Normal;
+                    yield break;
+            }
+        }
+
         /// <summary>
         /// Indicates whether this instance and a specified object are equal.
         /// </summary>
