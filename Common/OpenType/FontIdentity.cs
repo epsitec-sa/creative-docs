@@ -35,25 +35,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    string face = this.LocalePreferredFaceName ?? this.LocaleSimpleFaceName;
-                    string style = this.LocalePreferredStyleName ?? this.LocaleSimpleStyleName;
-
-                    face = FontIdentity.RepairBrokenFaceName(this.FullName, face);
-
-                    if (face != null)
-                    {
-                        if (face.EndsWith(style))
-                        {
-                            face = face.Substring(0, face.Length - style.Length).Trim();
-                        }
-                    }
-
-                    return face;
-                }
-                */
                 return this.Name;
             }
         }
@@ -69,35 +50,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                string preferred = this.LocalePreferredStyleName;
-                string simple = this.LocaleSimpleStyleName;
-                string adobe = this.LocaleAdobeStyleName;
-
-                string localeName = FontIdentity.ComposeStyleName(preferred, simple, adobe);
-
-                preferred = this.InvariantPreferredStyleName;
-                simple = this.InvariantSimpleStyleName;
-                adobe = this.InvariantAdobeStyleName;
-
-                string invariantName = FontIdentity.ComposeStyleName(preferred, simple, adobe);
-
-                if (localeName == invariantName)
-                {
-                    return this.InvariantStyleName;
-                }
-                else
-                {
-                    string full = this.LocaleFullName;
-
-                    if ((localeName != null) && (full != null))
-                    {
-                        localeName = FontIdentity.RepairBrokenStyleName(full, localeName);
-                    }
-
-                    return localeName;
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -106,12 +58,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.FullFontName);
-                }
-                */
                 return this.FullName;
             }
         }
@@ -127,20 +73,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    string face = this.GetName(NameId.FontFamily);
-                    string style = this.GetName(NameId.FontSubfamily);
-
-                    if (face.EndsWith(style))
-                    {
-                        face = face.Substring(0, face.Length - style.Length).Trim();
-                    }
-
-                    return face;
-                }
-                */
                 return this.Name;
             }
         }
@@ -156,12 +88,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.FontSubfamily);
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -176,12 +102,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.AdobeFontStyle);
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -196,12 +116,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.PreferredFamily);
-                }
-                */
                 return this.Name;
             }
         }
@@ -216,12 +130,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.PreferredSubfamily);
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -238,28 +146,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                string face =
-                    this.InvariantPreferredFaceName
-                    ?? this.MacintoshFaceName
-                    ?? this.InvariantSimpleFaceName;
-                string style =
-                    this.InvariantPreferredStyleName
-                    ?? this.MacintoshStyleName
-                    ?? this.InvariantSimpleStyleName;
-
-                face = FontIdentity.RepairBrokenFaceName(this.FullName, face);
-
-                if (face != null)
-                {
-                    if (face.EndsWith(style))
-                    {
-                        face = face.Substring(0, face.Length - style.Length).Trim();
-                    }
-                }
-
-                return face;
-                */
                 return this.Name;
             }
         }
@@ -276,21 +162,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                string preferred = this.InvariantPreferredStyleName;
-                string simple = this.InvariantSimpleStyleName;
-                string adobe = this.InvariantAdobeStyleName;
-
-                string name = FontIdentity.ComposeStyleName(preferred, simple, adobe);
-                string full = this.FullName;
-
-                if ((name != null) && (full != null))
-                {
-                    name = FontIdentity.RepairBrokenStyleName(full, name);
-                }
-
-                return name;
-                */
                 return this.name.StyleName;
             }
         }
@@ -306,12 +177,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.FullFontName, FontIdentity.InvariantLocale);
-                }
-                */
                 return this.FullName;
             }
         }
@@ -328,20 +193,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    string face = this.GetName(NameId.FontFamily, FontIdentity.InvariantLocale);
-                    string style = this.GetName(NameId.FontSubfamily, FontIdentity.InvariantLocale);
-
-                    if (face.EndsWith(style))
-                    {
-                        face = face.Substring(0, face.Length - style.Length).Trim();
-                    }
-
-                    return face;
-                }
-                */
                 return this.Name;
             }
         }
@@ -358,12 +209,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.FontSubfamily, FontIdentity.InvariantLocale);
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -378,12 +223,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.AdobeFontStyle, FontIdentity.InvariantLocale);
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -399,20 +238,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    string face = this.GetMacName(NameId.FontFamily);
-                    string style = this.GetMacName(NameId.FontSubfamily);
-
-                    if ((face != null) && (style != null) && (face.EndsWith(style)))
-                    {
-                        face = face.Substring(0, face.Length - style.Length).Trim();
-                    }
-
-                    return face;
-                }
-                */
                 return this.Name;
             }
         }
@@ -428,12 +253,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetMacName(NameId.FontSubfamily);
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -449,12 +268,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.PreferredFamily, FontIdentity.InvariantLocale);
-                }
-                */
                 return this.Name;
             }
         }
@@ -470,12 +283,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                lock (this.exclusion)
-                {
-                    return this.GetName(NameId.PreferredSubfamily, FontIdentity.InvariantLocale);
-                }
-                */
                 return this.name.StyleName;
             }
         }
@@ -491,20 +298,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                if (this.styleHash == null)
-                {
-                    lock (this.exclusion)
-                    {
-                        if (this.styleHash == null)
-                        {
-                            this.styleHash = FontCollection.GetStyleHash(this.InvariantStyleName);
-                        }
-                    }
-                }
-
-                return this.styleHash;
-                */
                 return this.name.StyleName;
             }
         }
@@ -521,20 +314,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                if (this.fullHash == null)
-                {
-                    lock (this.exclusion)
-                    {
-                        if (this.fullHash == null)
-                        {
-                            this.fullHash = FontName.GetFullHash(this.FullName);
-                        }
-                    }
-                }
-
-                return this.fullHash;
-                */
                 return this.FullName;
             }
         }
@@ -547,9 +326,6 @@ namespace Epsitec.Common.OpenType
         public int FontStyleCount
         {
             get { 
-                /*
-                return this.fontStyleCount; 
-                */
                 throw new System.NotImplementedException();
             }
         }
@@ -662,29 +438,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                if (Platform.Neutral.GetFontItalic(this.Record) == 0)
-                {
-                    return FontStyle.Normal;
-                }
-
-                string name = this.InvariantStyleName.ToLower(
-                    System.Globalization.CultureInfo.InvariantCulture
-                );
-
-                if (
-                    (name.IndexOf("italic") != -1)
-                    || (name.IndexOf("cursive") != -1)
-                    || (name.IndexOf("kursiv") != -1)
-                )
-                {
-                    return FontStyle.Italic;
-                }
-                else
-                {
-                    return FontStyle.Oblique;
-                }
-                */
                 return this.name.Style;
             }
         }
@@ -693,23 +446,6 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                /*
-                if (this.isSymbolFontDefined == false)
-                {
-                    lock (this.exclusion)
-                    {
-                        if (this.isSymbolFontDefined == false)
-                        {
-                            TableCmap cmap = this.InternalGetTableCmap();
-
-                            this.isSymbolFont = cmap.FindFormatSubTable(3, 0, 4) != null;
-                            this.isSymbolFontDefined = true;
-                        }
-                    }
-                }
-
-                return this.isSymbolFont;
-                */
                 return false;
             }
         }
