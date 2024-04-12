@@ -5,13 +5,13 @@ namespace Epsitec.Common.OpenType
 {
     /// <summary>
     /// The <c>FontStyle</c> enumeration describes the style of a font
-    /// (normal, oblique or italic).
     /// </summary>
-    public enum FontStyle
+    [System.Flags]
+    public enum FontStyle : int
     {
-        Normal, //	default style
-
-        Oblique, //	oblique (like in "Arial Oblique")
-        Italic, //	italic (like in "Times New Roman Italic")
+        Normal = 0,
+        Bold = 1,
+        Italic = 2,
+        BoldItalic = Bold | Italic,
     }
 }
