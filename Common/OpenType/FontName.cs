@@ -18,11 +18,13 @@ namespace Epsitec.Common.OpenType
         /// </summary>
         /// <param name="face">The font face.</param>
         /// <param name="style">The font style.</param>
-        public FontName(string face, string style)
-        {
+        public FontName(string face, FontStyle style) {
             this.face = face;
+            this.style = style;
+        }
 
-            this.style = FontStyle.Normal;
+        public FontName(string face, string style) : this(face, FontStyle.Normal)
+        {
             foreach (string styleElement in style.ToLower().Split(' '))
             {
                 switch (styleElement)
@@ -58,6 +60,11 @@ namespace Epsitec.Common.OpenType
         public string FaceName
         {
             get { return this.face; }
+        }
+
+        public FontStyle Style
+        {
+            get { return this.style; }
         }
 
         /// <summary>

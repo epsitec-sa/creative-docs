@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.IO;
 
 namespace Epsitec.Common.OpenType
 {
@@ -12,16 +11,16 @@ namespace Epsitec.Common.OpenType
     /// </summary>
     public sealed class FontIdentity
     {
-        internal FontIdentity(string fontFilePath) { 
+        internal FontIdentity(string fontFilePath, FontName fontName) { 
             this.filePath = fontFilePath;
-            this.name = Path.GetFileName(fontFilePath);
+            this.name = fontName;
         }
 
         public string Name
         {
             get
             {
-                return this.name;
+                return this.name.FaceName;
             }
         }
 
@@ -564,7 +563,7 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                return $"{this.Name}";
+                return this.name.FullName;
             }
         }
 
@@ -577,11 +576,8 @@ namespace Epsitec.Common.OpenType
         /// <value>The font unique id.</value>
         public string UniqueFontId
         {
-            get { 
-                /*
-                return this.otName.GetUniqueFontIdentifier(); 
-                */
-                throw new System.NotImplementedException();
+            get {
+                return this.FullName;
             }
         }
 
@@ -689,7 +685,7 @@ namespace Epsitec.Common.OpenType
                     return FontStyle.Oblique;
                 }
                 */
-                throw new System.NotImplementedException();
+                return this.name.Style;
             }
         }
 
@@ -727,32 +723,6 @@ namespace Epsitec.Common.OpenType
             throw new System.NotImplementedException();
             }
         }
-
-        //public FontData FontData
-        //{
-        //    get
-        //    {
-        //        if (this.fontData == null)
-        //        {
-        //            lock (this.exclusion)
-        //            {
-        //                if (this.fontData == null)
-        //                {
-        //                    byte[] data = Platform.Neutral.LoadFontData(this.Record);
-
-        //                    this.fontData = data == null ? null : new FontData(data, this.ttcIndex);
-        //                }
-        //            }
-        //        }
-
-        //        return this.fontData;
-        //    }
-        //}
-
-        //public TableName OpenTypeTableName
-        //{
-        //    get { return this.otName; }
-        //}
 
         public static IComparer<FontIdentity> Comparer
         {
@@ -792,11 +762,6 @@ namespace Epsitec.Common.OpenType
             throw new System.NotImplementedException();
         }
 
-        //public TableCmap InternalGetTableCmap()
-        //{
-        //    return new TableCmap(this.FontData["cmap"]);
-        //}
-
         public void InternalClearFontData()
         {
             /*
@@ -818,6 +783,6 @@ namespace Epsitec.Common.OpenType
         }
 
         private string filePath;
-        private string name;
+        private FontName name;
     }
 }
