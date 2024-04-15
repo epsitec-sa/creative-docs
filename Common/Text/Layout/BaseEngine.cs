@@ -213,7 +213,7 @@ namespace Epsitec.Common.Text.Layout
                 }
             }
 
-            font.GenerateGlyphs(temp, 0, length, out glyphs, ref attributes);
+            font.GenerateGlyphsWithMask(temp, 0, length, out glyphs, ref attributes);
 
             return special;
         }
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Text.Layout
                 }
             }
 
-            font.GenerateGlyphs(temp, 0, length, out glyphs, ref attributes);
+            font.GenerateGlyphsWithMask(temp, 0, length, out glyphs, ref attributes);
 
             return special;
         }
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Text.Layout
                 }
             }
 
-            font.GenerateGlyphs(temp, 0, length, out glyphs, ref attributes);
+            font.GenerateGlyphsWithMask(temp, 0, length, out glyphs, ref attributes);
 
             return special;
         }

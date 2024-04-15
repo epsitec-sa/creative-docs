@@ -213,8 +213,8 @@ namespace Epsitec.Common.OpenType
         /// <returns>The glyphs represented by 16-bit unsigned values.</returns>
         public ushort[] GenerateGlyphs(string text)
         {
-            int[] glMap = null;
-            return this.GenerateGlyphs(text, ref glMap);
+            int[] glMap;
+            return this.GenerateGlyphs(text, out glMap);
         }
 
         /// <summary>
@@ -227,9 +227,10 @@ namespace Epsitec.Common.OpenType
         /// <returns>
         /// The glyphs represented by 16-bit unsigned values.
         /// </returns>
-        public ushort[] GenerateGlyphs(string text, ref int[] glMap)
+        public ushort[] GenerateGlyphs(string text, out int[] glMap)
         {
             int length = text.Length;
+            glMap = null;
             ushort[] glyphs = new ushort[length];
 
             for (int i = 0; i < length; i++)
@@ -249,83 +250,19 @@ namespace Epsitec.Common.OpenType
         /// <param name="start">The start offset in the character array.</param>
         /// <param name="length">The length of the text.</param>
         /// <returns>The glyphs represented by 16-bit unsigned values.</returns>
-        public ushort[] GenerateGlyphs(ulong[] text, int start, int length)
+        public ushort[] GenerateGlyphsWithMask(ulong[] text, int start, int length)
         {
             ushort[] glyphs = new ushort[length];
-            int[] glMap = null;
-
-            for (int i = 0; i < length; i++)
-            {
-                ulong bits = text[start + i];
-                int code = Font.UnicodeMask & (int)bits;
-
-                glyphs[i] =
-                    (bits & Font.TransparentGlyphFlag) == 0
-                        ? this.GetGlyphIndex(code)
-                        : (ushort)code;
-            }
-
-            //this.ApplySubstitutions(ref glyphs, ref glMap);
+            int[] attributes = null;
+            this.GenerateGlyphsWithMask<int>(text, start, length, out glyphs, ref attributes);
 
             return glyphs;
         }
 
         /// <summary>
-        /// Generates the glyphs and adjusts the attributes for the specified text.
-        /// The caller can provide an array with one attribute for each input
-        /// character; <c>GenerateGlyphs</c> will adjust the contents of the attribute
-        /// array so that there is exactly one attribute for each output glyph. If
-        /// several characters map to a single glyph, the attribute of the first
-        /// character will be preserved and the others will be dropped.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="glyphs">The output glyphs array.</param>
-        /// <param name="attributes">The attributes array which must be adjusted or
-        /// <c>null</c> if there are no attributes.</param>
-        public void GenerateGlyphs(string text, out ushort[] glyphs, ref byte[] attributes)
-        {
-            int length = text.Length;
-            int[] glMap;
-            int count;
-
-            glyphs = new ushort[length];
-            glMap = new int[length];
-
-            for (int i = 0; i < length; i++)
-            {
-                glyphs[i] = this.GetGlyphIndex(text[i]);
-            }
-
-            //this.ApplySubstitutions(ref glyphs, ref glMap);
-
-            if (attributes != null)
-            {
-                length = glyphs.Length;
-                count = attributes.Length;
-
-                int src = 0;
-                int dst = 0;
-
-                //	TODO: handle cases where we produce more glyphs than there are characters in the text.
-
-                for (int i = 0; i < length; i++)
-                {
-                    attributes[dst] = attributes[src];
-
-                    dst += 1;
-                    src += glMap[i] + 1;
-                }
-                while (src < count)
-                {
-                    attributes[dst++] = attributes[src++];
-                }
-            }
-        }
-
-        /// <summary>
         /// Generates the glyphs.
         /// The caller can provide an array with one attribute for each input
-        /// character; <c>GenerateGlyphs</c> will adjust the contents of the attribute
+        /// character; <c>GenerateGlyphsWithMask</c> will adjust the contents of the attribute
         /// array so that there is exactly one attribute for each output glyph. If
         /// several characters map to a single glyph, the attribute of the first
         /// character will be preserved and the others will be dropped.
@@ -336,78 +273,12 @@ namespace Epsitec.Common.OpenType
         /// <param name="glyphs">The output glyphs array.</param>
         /// <param name="attributes">The attributes array which must be adjusted or
         /// <c>null</c> if there are no attributes.</param>
-        public void GenerateGlyphs(
+        public void GenerateGlyphsWithMask<AttrT>(
             ulong[] text,
             int start,
             int length,
             out ushort[] glyphs,
-            ref byte[] attributes
-        )
-        {
-            int[] glMap;
-            int count;
-
-            glyphs = new ushort[length];
-            glMap = new int[length];
-
-            for (int i = 0; i < length; i++)
-            {
-                ulong bits = text[start + i];
-                int code = Font.UnicodeMask & (int)bits;
-
-                glyphs[i] =
-                    (bits & Font.TransparentGlyphFlag) == 0
-                        ? this.GetGlyphIndex(code)
-                        : (ushort)code;
-            }
-
-            //this.ApplySubstitutions(ref glyphs, ref glMap);
-
-            if (attributes != null)
-            {
-                length = glyphs.Length;
-                count = attributes.Length;
-
-                int src = 0;
-                int dst = 0;
-
-                //	TODO: gérer le cas où il y a plus de glyphes en sortie qu'il n'y a de
-                //	place dans la table des attributs.
-
-                for (int i = 0; i < length; i++)
-                {
-                    attributes[dst] = attributes[src];
-
-                    dst += 1;
-                    src += glMap[i] + 1;
-                }
-                while (src < count)
-                {
-                    attributes[dst++] = attributes[src++];
-                }
-            }
-        }
-
-        /// <summary>
-        /// Generates the glyphs.
-        /// The caller can provide an array with one attribute for each input
-        /// character; <c>GenerateGlyphs</c> will adjust the contents of the attribute
-        /// array so that there is exactly one attribute for each output glyph. If
-        /// several characters map to a single glyph, the attribute of the first
-        /// character will be preserved and the others will be dropped.
-        /// </summary>
-        /// <param name="text">The text encoded as 32-bit Unicode characters.</param>
-        /// <param name="start">The start offset in the character array.</param>
-        /// <param name="length">The length of the text.</param>
-        /// <param name="glyphs">The output glyphs array.</param>
-        /// <param name="attributes">The attributes array which must be adjusted or
-        /// <c>null</c> if there are no attributes.</param>
-        public void GenerateGlyphs(
-            ulong[] text,
-            int start,
-            int length,
-            out ushort[] glyphs,
-            ref short[] attributes
+            ref AttrT[] attributes
         )
         {
             int[] glMap;

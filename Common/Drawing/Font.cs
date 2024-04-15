@@ -425,12 +425,11 @@ namespace Epsitec.Common.Drawing
 
         public void GetTextCharEndX(string text, out double[] xPos)
         {
-            int n = text.Length;
-            int[] glyphMap = new int[n];
+            int[] glyphMap;
 
-            xPos = new double[n];
+            xPos = new double[text.Length];
 
-            ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text, ref glyphMap);
+            ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text, out glyphMap);
             double[] tempX = new double[glyphs.Length + 1];
 
             tempX[glyphs.Length] = this.OpenTypeFont.GetPositions(glyphs, 1.0, 0.0, tempX);
@@ -564,9 +563,9 @@ namespace Epsitec.Common.Drawing
             out byte[] glyphCharCount
         )
         {
-            int[] glyphMap = new int[text.Length];
+            int[] glyphMap;
 
-            glyphs = this.OpenTypeFont.GenerateGlyphs(text, ref glyphMap);
+            glyphs = this.OpenTypeFont.GenerateGlyphs(text, out glyphMap);
             xPos = new double[glyphs.Length];
             glyphCharCount = new byte[glyphs.Length];
 
@@ -595,7 +594,7 @@ namespace Epsitec.Common.Drawing
                 return;
             }
 
-            ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text);
+            ushort[] glyphs = this.OpenTypeFont.GenerateGlyphsWithMask(text);
             AntigrainCPP.Font.PixelCache.Fill(this.Handle, glyphs, size, ox, oy);
             */
             throw new System.NotImplementedException();
@@ -625,7 +624,7 @@ namespace Epsitec.Common.Drawing
             }
             else
             {
-                ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text);
+                ushort[] glyphs = this.OpenTypeFont.GenerateGlyphsWithMask(text);
 
                 return AntigrainCPP.Font.PixelCache.Paint(
                     pixmapHandle,

@@ -227,7 +227,7 @@ namespace Epsitec.Common.Tests.Drawing
             font.SelectFeatures("liga", "dlig");
 
             System.IntPtr hfont = font.GetFontHandle(size);
-            ushort[] glyphs = font.GenerateGlyphs("Quelle affiche!");
+            ushort[] glyphs = font.GenerateGlyphsWithMask("Quelle affiche!");
 
             //-			graphics.AddText (10, 10, "Quelle affiche!", Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName), size);
             //-			graphics.RenderSolid (Color.FromName ("Red"));

@@ -361,7 +361,7 @@ namespace Epsitec.Common.Drawing
         )
         {
             /*
-            ushort[] glyphs = font.OpenTypeFont.GenerateGlyphs(text);
+            ushort[] glyphs = font.OpenTypeFont.GenerateGlyphsWithMask(text);
             double[] x = new double[glyphs.Length];
             double advance = font.OpenTypeFont.GetPositions(glyphs, 1.0, 0.0, x);
 
