@@ -368,21 +368,43 @@ namespace Epsitec.Common.Widgets
                 }
             }
 
-            if (font.FontManagerType == OpenType.FontManagerType.System)
+            Drawing.Font drawingFont = Drawing.Font.GetFont(
+                font.FontIdentity.InvariantFaceName,
+                font.FontIdentity.InvariantStyleName
+            );
+
+            if (drawingFont != null)
             {
-                Drawing.NativeTextRenderer.Draw(
-                    this.graphics.Pixmap,
-                    font,
-                    size,
-                    glyphs,
-                    x,
-                    y,
-                    Drawing.Color.FromName(color)
-                );
+                for (int i = 0; i < glyphs.Length; i++)
+                {
+                    if (glyphs[i] < 0xffff)
+                    {
+                        this.graphics.Rasterizer.AddGlyph(
+                            drawingFont,
+                            glyphs[i],
+                            x[i],
+                            y[i],
+                            size,
+                            sx == null ? 1.0 : sx[i],
+                            sy == null ? 1.0 : sy[i]
+                        );
+                    }
+                }
             }
-            else
+
+            this.graphics.RenderSolid(Drawing.Color.FromName(color));
+
+            if (selRectList != null)
             {
-                Drawing.Font drawingFont = Drawing.Font.GetFont(
+                this.hasSelection = true;
+
+                Drawing.Rectangle saveClip = this.graphics.SaveClippingRectangle();
+
+                this.graphics.SetClippingRectangles(selRectList);
+                this.graphics.AddFilledRectangle(selBbox);
+                this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
+
+                drawingFont = Drawing.Font.GetFont(
                     font.FontIdentity.InvariantFaceName,
                     font.FontIdentity.InvariantStyleName
                 );
@@ -406,59 +428,7 @@ namespace Epsitec.Common.Widgets
                     }
                 }
 
-                this.graphics.RenderSolid(Drawing.Color.FromName(color));
-            }
-
-            if (selRectList != null)
-            {
-                this.hasSelection = true;
-
-                Drawing.Rectangle saveClip = this.graphics.SaveClippingRectangle();
-
-                this.graphics.SetClippingRectangles(selRectList);
-                this.graphics.AddFilledRectangle(selBbox);
-                this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
-
-                if (font.FontManagerType == OpenType.FontManagerType.System)
-                {
-                    Drawing.NativeTextRenderer.Draw(
-                        this.graphics.Pixmap,
-                        font,
-                        size,
-                        glyphs,
-                        x,
-                        y,
-                        Drawing.Color.FromName(color)
-                    );
-                }
-                else
-                {
-                    Drawing.Font drawingFont = Drawing.Font.GetFont(
-                        font.FontIdentity.InvariantFaceName,
-                        font.FontIdentity.InvariantStyleName
-                    );
-
-                    if (drawingFont != null)
-                    {
-                        for (int i = 0; i < glyphs.Length; i++)
-                        {
-                            if (glyphs[i] < 0xffff)
-                            {
-                                this.graphics.Rasterizer.AddGlyph(
-                                    drawingFont,
-                                    glyphs[i],
-                                    x[i],
-                                    y[i],
-                                    size,
-                                    sx == null ? 1.0 : sx[i],
-                                    sy == null ? 1.0 : sy[i]
-                                );
-                            }
-                        }
-                    }
-
-                    this.graphics.RenderSolid(Drawing.Color.FromName("HighlightText"));
-                }
+                this.graphics.RenderSolid(Drawing.Color.FromName("HighlightText"));
 
                 this.graphics.RestoreClippingRectangle(saveClip);
             }
@@ -519,7 +489,7 @@ namespace Epsitec.Common.Widgets
                 }
             }
         }
-        #endregion
+#endregion
 
         private void HandleTextChanged(object sender)
         {

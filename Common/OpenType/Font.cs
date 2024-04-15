@@ -16,15 +16,6 @@ namespace Epsitec.Common.OpenType
             this.identity = identity;
         }
 
-        public FontManagerType FontManagerType
-        {
-            get
-            {
-                //return this.useSystemGlyphSize ? FontManagerType.System : FontManagerType.OpenType;
-                return FontManagerType.OpenType;
-            }
-        }
-
         public FontIdentity FontIdentity
         {
             get { return this.identity; }
@@ -1103,27 +1094,6 @@ namespace Epsitec.Common.OpenType
             if (this.otGSUB != null)
             {
                 this.GenerateSubstitutionLookups(activeFeatures);
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// Selects the font manager.
-        /// </summary>
-        /// <param name="manager">The font manager.</param>
-        public void SelectFontManager(FontManagerType manager)
-        {
-            /*
-            switch (manager)
-            {
-                case FontManagerType.OpenType:
-                    this.useSystemGlyphSize = false;
-                    break;
-
-                case FontManagerType.System:
-                    this.useSystemGlyphSize = true;
-                    break;
             }
             */
             throw new System.NotImplementedException();

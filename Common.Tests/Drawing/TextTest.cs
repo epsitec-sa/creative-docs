@@ -387,46 +387,31 @@ namespace Epsitec.Common.Tests.Drawing
 
                 //-				System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 
-                if (font.FontManagerType == Common.OpenType.FontManagerType.System)
-                {
-                    NativeTextRenderer.Draw(
-                        this.graphics.Pixmap,
-                        font,
-                        size,
-                        glyphs,
-                        x,
-                        y,
-                        Color.FromName(color)
-                    );
-                }
-                else
-                {
-                    Font drawing_font = Font.GetFont(
-                        font.FontIdentity.InvariantFaceName,
-                        font.FontIdentity.InvariantStyleName
-                    );
+                Font drawing_font = Font.GetFont(
+                    font.FontIdentity.InvariantFaceName,
+                    font.FontIdentity.InvariantStyleName
+                );
 
-                    if (drawing_font != null)
+                if (drawing_font != null)
+                {
+                    for (int i = 0; i < glyphs.Length; i++)
                     {
-                        for (int i = 0; i < glyphs.Length; i++)
+                        if (glyphs[i] < 0xffff)
                         {
-                            if (glyphs[i] < 0xffff)
-                            {
-                                this.graphics.Rasterizer.AddGlyph(
-                                    drawing_font,
-                                    glyphs[i],
-                                    x[i],
-                                    y[i],
-                                    size,
-                                    sx == null ? 1.0 : sx[i],
-                                    sy == null ? 1.0 : sy[i]
-                                );
-                            }
+                            this.graphics.Rasterizer.AddGlyph(
+                                drawing_font,
+                                glyphs[i],
+                                x[i],
+                                y[i],
+                                size,
+                                sx == null ? 1.0 : sx[i],
+                                sy == null ? 1.0 : sy[i]
+                            );
                         }
                     }
-
-                    this.graphics.RenderSolid(Color.FromName(color));
                 }
+
+                this.graphics.RenderSolid(Color.FromName(color));
             }
 
             public void Render(
