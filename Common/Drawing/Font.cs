@@ -40,11 +40,6 @@ namespace Epsitec.Common.Drawing
             get { return this.openTypeFontIdentity.InvariantFaceName; }
         }
 
-        public FontFaceInfo FaceInfo
-        {
-            get { return this.faceInfo; }
-        }
-
         public string StyleName
         {
             get { return this.syntheticStyle ?? this.openTypeFontIdentity.InvariantStyleName; }
@@ -741,17 +736,6 @@ namespace Epsitec.Common.Drawing
                 );
             }
 
-            if (Font.faceArray == null)
-            {
-                Font.faceArray = new List<FontFaceInfo>();
-                Font.faceHash = new Dictionary<string, FontFaceInfo>();
-
-                foreach (Font font in Font.fontArray)
-                {
-                    Font.AddFontFace(font);
-                }
-            }
-
             if (save)
             {
                 Font.fontCollection.SaveToCache();
@@ -764,7 +748,7 @@ namespace Epsitec.Common.Drawing
             OpenType.FontIdentity fontIdentity
         )
         {
-            Font.AddFontFace(Font.AddFont(fontIdentity));
+            Font.AddFont(fontIdentity);
         }
 
         private static Font AddFont(OpenType.FontIdentity fontIdentity)
@@ -787,25 +771,6 @@ namespace Epsitec.Common.Drawing
                 Font.fontHash[name] = font;
 
                 return font;
-            }
-        }
-
-        private static void AddFontFace(Font font)
-        {
-            if (font != null)
-            {
-                string face = font.FaceName;
-
-                FontFaceInfo info;
-
-                if (Font.faceHash.TryGetValue(face, out info) == false)
-                {
-                    info = new FontFaceInfo(face);
-                    Font.faceHash[face] = info;
-                    Font.faceArray.Add(info);
-                }
-
-                info.Add(font);
             }
         }
 
@@ -862,11 +827,6 @@ namespace Epsitec.Common.Drawing
             get { return 20.0; }
         }
 
-        public static FontFaceInfo[] Faces
-        {
-            get { return Font.faceArray.ToArray(); }
-        }
-
         public static Font GetFont(int rank)
         {
             if ((rank >= 0) && (rank < Font.fontArray.Count))
@@ -876,6 +836,10 @@ namespace Epsitec.Common.Drawing
 
             return null;
         }
+        public static Font GetFontFallback(string face)
+        {
+            return Font.GetFont(face, "");
+        }
 
         public static Font GetFont(string face, string style)
         {
@@ -884,104 +848,8 @@ namespace Epsitec.Common.Drawing
 
         public static Font GetFont(string face, string style, string optical)
         {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-
-            buffer.Append(face);
-
-            if (style != "")
-            {
-                buffer.Append(" ");
-                buffer.Append(style);
-            }
-
-            if (optical != "")
-            {
-                buffer.Append(" ");
-                buffer.Append(optical);
-            }
-
-            string key = buffer.ToString();
-
-            Font font;
-
-            if (Font.fontHash.TryGetValue(key, out font) == false)
-            {
-                int pos;
-
-                pos = style.IndexOf("Regular");
-
-                if (pos >= 0)
-                {
-                    font = Font.GetFont(face, style.Replace("Regular", "Normal"), optical);
-
-                    if (font == null)
-                    {
-                        font = Font.GetFont(face, style.Replace("Regular", "Roman"), optical);
-                    }
-                    if (font == null)
-                    {
-                        font = Font.GetFont(face, style.Replace("Regular", ""), optical);
-                    }
-
-                    return font;
-                }
-
-                pos = style.IndexOf("Italic");
-
-                if (pos >= 0)
-                {
-                    return Font.GetFont(face, style.Replace("Italic", "Oblique"), optical);
-                }
-
-                pos = style.IndexOf("Slanted");
-
-                if (pos >= 0)
-                {
-                    return Font.GetFont(face, style.Replace("Slanted", "Oblique"), optical);
-                }
-
-                pos = style.IndexOf("Oblique");
-
-                if (pos >= 0)
-                {
-                    //	Le style oblique n'existe pas pour cette fonte. Tentons de le synthétiser
-                    //	à partir de la version droite la plus approchante.
-
-                    string cleanStyle;
-
-                    cleanStyle = style.Replace("Oblique", "");
-                    cleanStyle = cleanStyle.Trim();
-
-                    if (cleanStyle == "")
-                    {
-                        cleanStyle = "Regular";
-                    }
-
-                    font = Font.GetFont(face, cleanStyle, optical);
-
-                    if (font != null)
-                    {
-                        //	La fonte de base (droite) existe. C'est une bonne nouvelle. On va créer
-                        //	une fonte synthétique oblique...
-
-                        Font synFont = new Font(font, style, SyntheticFontMode.Oblique);
-                        string synName = synFont.FullName;
-
-                        System.Diagnostics.Debug.Assert(synFont.StyleName == style);
-                        System.Diagnostics.Debug.Assert(synFont.IsSynthetic);
-                        System.Diagnostics.Debug.Assert(
-                            Font.fontHash.ContainsKey(synName) == false
-                        );
-
-                        Font.fontArray.Add(synFont);
-                        Font.fontHash[synName] = synFont;
-
-                        font = synFont;
-                    }
-                }
-            }
-
-            return font;
+            OpenType.Font font = Font.fontCollection.CreateFont(face, style);
+            return Font.GetFont(font);
         }
 
         public static Font GetFont(OpenType.Font font)
@@ -991,79 +859,17 @@ namespace Epsitec.Common.Drawing
 
         public static Font GetFont(OpenType.FontIdentity id)
         {
-            Font font = id.DrawingFont as Font;
-
-            if (font == null)
-            {
-                font = Font.GetFont(id.InvariantFaceName, id.InvariantStyleName);
-                id.DrawingFont = font;
-            }
-
-            return font;
+            return new Font(id);
         }
 
-        public static FontFaceInfo GetFaceInfo(string face)
-        {
-            FontFaceInfo info;
-            Font.faceHash.TryGetValue(face, out info);
-            return info;
-        }
-
-        public static Font GetFontFallback(string face)
-        {
-            FontFaceInfo info;
-
-            if (Font.faceHash.TryGetValue(face, out info))
-            {
-                Font[] fonts = info.GetFonts();
-
-                for (int i = 0; i < fonts.Length; i++)
-                {
-                    Font font = fonts[i];
-
-                    if ((font.IsStyleBold == false) && (font.IsStyleItalic == false))
-                    {
-                        return font;
-                    }
-                }
-
-                return fonts[0];
-            }
-
-            return null;
-        }
-
-        internal void DefineFaceInfo(FontFaceInfo info)
-        {
-            this.faceInfo = info;
-        }
-
-        #region NameId Enumeration
-
-        enum NameId
-        {
-            None,
-            Face = 1,
-            Style = 2,
-            StyleUserLocale = 3,
-            Optical = 4,
-            Unique = 5
-        }
-
-        #endregion
-
-        System.IntPtr handle;
         readonly string syntheticStyle;
         readonly SyntheticFontMode syntheticMode;
-        FontFaceInfo faceInfo;
         readonly OpenType.FontIdentity openTypeFontIdentity;
         OpenType.Font openTypeFont;
 
         static OpenType.FontCollection fontCollection;
         static List<Font> fontArray;
-        static List<FontFaceInfo> faceArray;
         static Dictionary<string, Font> fontHash;
-        static Dictionary<string, FontFaceInfo> faceHash;
         static Font defaultFont;
         static readonly bool useSegoe;
 

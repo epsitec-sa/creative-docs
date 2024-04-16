@@ -5959,26 +5959,10 @@ namespace Epsitec.Common.Widgets
 
             public Drawing.Font GetFont(bool bold, bool italic)
             {
-                Drawing.Font font = null;
                 string fontFace = TextLayout.GetFontFace(this.FontFace);
+                Drawing.Font font = Drawing.Font.GetFont(fontFace, "");
 
-                Drawing.FontFaceInfo face = Drawing.Font.GetFaceInfo(fontFace);
-
-                if (face != null)
-                {
-                    font = face.GetFont(bold, italic);
-                }
-
-                if (font == null)
-                {
-                    font = Drawing.Font.GetFontFallback(fontFace);
-                }
-
-                if (font == null)
-                {
-                    font = this.host.DefaultFont;
-                }
-
+                font ??= this.host.DefaultFont;
                 return font;
             }
 

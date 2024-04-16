@@ -1038,7 +1038,8 @@ namespace Epsitec.Common.Drawing
 
                 return null;
             }
-*/            return null;
+*/
+            return new Bitmap();
         }
 
 /*        private static System.Drawing.Bitmap DecompressBitmap(byte[] data)
@@ -1504,98 +1505,99 @@ namespace Epsitec.Common.Drawing
             base.Dispose(disposing);
 */        }
 
-/*        private static System.Drawing.Bitmap ConvertIcon(System.IntPtr hIcon, int dx, int dy)
-        {
-            BITMAPV5HEADER bmpInfo32 = new BITMAPV5HEADER();
-            const int BI_BITFIELDS = 3;
-
-            bmpInfo32.bV5Size = Marshal.SizeOf(bmpInfo32);
-            bmpInfo32.bV5Width = dx;
-            bmpInfo32.bV5Height = dy;
-            bmpInfo32.bV5Planes = 1;
-            bmpInfo32.bV5BitCount = 32;
-            bmpInfo32.bV5Compression = BI_BITFIELDS;
-            bmpInfo32.bV5RedMask = 0x00ff0000;
-            bmpInfo32.bV5GreenMask = 0x0000ff00;
-            bmpInfo32.bV5BlueMask = 0x000000ff;
-            bmpInfo32.bV5AlphaMask = 0xff000000;
-
-            System.IntPtr bits;
-            System.IntPtr dc = Bitmap.CreateCompatibleDC(System.IntPtr.Zero);
-            System.IntPtr bmp = Bitmap.CreateDIBSection(
-                dc,
-                ref bmpInfo32,
-                0,
-                out bits,
-                System.IntPtr.Zero,
-                0
-            );
-            System.IntPtr hbOld = Bitmap.SelectObject(dc, bmp);
-            System.IntPtr brush = Bitmap.CreateSolidBrush(0xffffff);
-
-            Bitmap.DrawIconEx(dc, 0, 0, hIcon, 0, 0, 0, brush, DI_NORMAL);
-            Bitmap.DeleteObject(brush);
-
-            System.Drawing.Bitmap bitmap = System.Drawing.Bitmap.FromHicon(hIcon);
-
-            System.Drawing.Imaging.ImageLockMode mode = System
-                .Drawing
-                .Imaging
-                .ImageLockMode
-                .ReadOnly;
-            System.Drawing.Imaging.PixelFormat format = System
-                .Drawing
-                .Imaging
-                .PixelFormat
-                .Format32bppArgb;
-            System.Drawing.Imaging.BitmapData data = bitmap.LockBits(
-                new System.Drawing.Rectangle(0, 0, dx, dy),
-                mode,
-                format
-            );
-
-            unsafe
-            {
-                byte* rawBytes = (byte*)bits.ToPointer();
-                byte* gdiBytes = (byte*)data.Scan0.ToPointer();
-
-                gdiBytes += data.Stride * dy;
-
-                for (int y = 0; y < dy; y++)
+        /*        private static System.Drawing.Bitmap ConvertIcon(System.IntPtr hIcon, int dx, int dy)
                 {
-                    gdiBytes -= data.Stride;
+                    BITMAPV5HEADER bmpInfo32 = new BITMAPV5HEADER();
+                    const int BI_BITFIELDS = 3;
 
-                    for (int x = 0; x < dx; x++)
+                    bmpInfo32.bV5Size = Marshal.SizeOf(bmpInfo32);
+                    bmpInfo32.bV5Width = dx;
+                    bmpInfo32.bV5Height = dy;
+                    bmpInfo32.bV5Planes = 1;
+                    bmpInfo32.bV5BitCount = 32;
+                    bmpInfo32.bV5Compression = BI_BITFIELDS;
+                    bmpInfo32.bV5RedMask = 0x00ff0000;
+                    bmpInfo32.bV5GreenMask = 0x0000ff00;
+                    bmpInfo32.bV5BlueMask = 0x000000ff;
+                    bmpInfo32.bV5AlphaMask = 0xff000000;
+
+                    System.IntPtr bits;
+                    System.IntPtr dc = Bitmap.CreateCompatibleDC(System.IntPtr.Zero);
+                    System.IntPtr bmp = Bitmap.CreateDIBSection(
+                        dc,
+                        ref bmpInfo32,
+                        0,
+                        out bits,
+                        System.IntPtr.Zero,
+                        0
+                    );
+                    System.IntPtr hbOld = Bitmap.SelectObject(dc, bmp);
+                    System.IntPtr brush = Bitmap.CreateSolidBrush(0xffffff);
+
+                    Bitmap.DrawIconEx(dc, 0, 0, hIcon, 0, 0, 0, brush, DI_NORMAL);
+                    Bitmap.DeleteObject(brush);
+
+                    System.Drawing.Bitmap bitmap = System.Drawing.Bitmap.FromHicon(hIcon);
+
+                    System.Drawing.Imaging.ImageLockMode mode = System
+                        .Drawing
+                        .Imaging
+                        .ImageLockMode
+                        .ReadOnly;
+                    System.Drawing.Imaging.PixelFormat format = System
+                        .Drawing
+                        .Imaging
+                        .PixelFormat
+                        .Format32bppArgb;
+                    System.Drawing.Imaging.BitmapData data = bitmap.LockBits(
+                        new System.Drawing.Rectangle(0, 0, dx, dy),
+                        mode,
+                        format
+                    );
+
+                    unsafe
                     {
-                        byte bB = gdiBytes[x * 4 + 0];
-                        byte bG = gdiBytes[x * 4 + 1];
-                        byte bR = gdiBytes[x * 4 + 2];
+                        byte* rawBytes = (byte*)bits.ToPointer();
+                        byte* gdiBytes = (byte*)data.Scan0.ToPointer();
 
-                        byte cB = *rawBytes++;
-                        byte cG = *rawBytes++;
-                        byte cR = *rawBytes++;
-                        byte cA = *rawBytes++;
+                        gdiBytes += data.Stride * dy;
 
-                        if (cA != 0)
+                        for (int y = 0; y < dy; y++)
                         {
-                            gdiBytes[x * 4 + 0] = cB;
-                            gdiBytes[x * 4 + 1] = cG;
-                            gdiBytes[x * 4 + 2] = cR;
-                            gdiBytes[x * 4 + 3] = cA;
+                            gdiBytes -= data.Stride;
+
+                            for (int x = 0; x < dx; x++)
+                            {
+                                byte bB = gdiBytes[x * 4 + 0];
+                                byte bG = gdiBytes[x * 4 + 1];
+                                byte bR = gdiBytes[x * 4 + 2];
+
+                                byte cB = *rawBytes++;
+                                byte cG = *rawBytes++;
+                                byte cR = *rawBytes++;
+                                byte cA = *rawBytes++;
+
+                                if (cA != 0)
+                                {
+                                    gdiBytes[x * 4 + 0] = cB;
+                                    gdiBytes[x * 4 + 1] = cG;
+                                    gdiBytes[x * 4 + 2] = cR;
+                                    gdiBytes[x * 4 + 3] = cA;
+                                }
+                            }
                         }
                     }
+
+                    bitmap.UnlockBits(data);
+
+                    Bitmap.SelectObject(dc, hbOld);
+                    Bitmap.DeleteObject(bmp);
+                    Bitmap.DeleteDC(dc);
+
+                    return bitmap;
                 }
-            }
-
-            bitmap.UnlockBits(data);
-
-            Bitmap.SelectObject(dc, hbOld);
-            Bitmap.DeleteObject(bmp);
-            Bitmap.DeleteDC(dc);
-
-            return bitmap;
-        }
-*/
+        */
+#if false
         private static class IconLoader
         {
 /*            public static System.Drawing.Icon LoadIcon(string path, int dx, int dy)
@@ -1756,6 +1758,7 @@ namespace Epsitec.Common.Drawing
 
         #endregion
 
+#endif
         #region ImageSeed Class
         private class ImageSeed
         {

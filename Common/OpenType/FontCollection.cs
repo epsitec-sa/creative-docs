@@ -28,6 +28,7 @@ namespace Epsitec.Common.OpenType
             this.fullList = new List<FontIdentity>();
             */
             this.fontDict = new Dictionary<string, FontIdentity>();
+            this.fallbackFontIdentity = null;
         }
 
         /// <summary>
@@ -123,6 +124,7 @@ namespace Epsitec.Common.OpenType
             foreach (FontIdentity fontIdentity in fontIdentities)
             {
                 this.fontDict[fontIdentity.Name] = fontIdentity;
+                this.fallbackFontIdentity ??= fontIdentity;
             }
         }
 
@@ -250,11 +252,12 @@ namespace Epsitec.Common.OpenType
             FontName fontName = new FontName(face, style);
             FontIdentity fid = this[fontName];
 
-            var fallbackStyles = fontName.EnumerateWithFallbackStyles();
-            foreach (FontName fallback in fallbackStyles)
+            var fallbacks = fontName.EnumerateWithFallbackStyles();
+            foreach (FontName fallback in fallbacks)
             {
                 fid ??= this[fallback];
             }
+            fid ??= this.fallbackFontIdentity;
             if (fid == null)
             {
                 throw new FontNotFoundException();
@@ -509,6 +512,7 @@ namespace Epsitec.Common.OpenType
         public event FontIdentityCallback FontIdentityDefined;
 
         private Dictionary<string, FontIdentity> fontDict;
+        private FontIdentity fallbackFontIdentity;
         private static FontCollection defaultCollection;
         private static System.Predicate<string> fontListFilter;
     }

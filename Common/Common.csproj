@@ -383,8 +383,10 @@
     <None   Include="Drawing\Font.cs" />
     <Compile Remove="Drawing\FontClassInfo.cs" />
     <None   Include="Drawing\FontClassInfo.cs" />
+    -->
     <Compile Remove="Drawing\FontFaceInfo.cs" />
     <None   Include="Drawing\FontFaceInfo.cs" />
+    <!--
     <Compile Remove="Drawing\GlyphClass.cs" />
     <None   Include="Drawing\GlyphClass.cs" />
     <Compile Remove="Drawing\GlyphPaintStyle.cs" />

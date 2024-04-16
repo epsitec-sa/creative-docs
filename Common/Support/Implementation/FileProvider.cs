@@ -20,7 +20,6 @@ namespace Epsitec.Common.Support.Implementation
         {
             foreach (var path in FileProvider.GetProbingPaths(manager).Distinct())
             {
-                System.Console.WriteLine($"try path: {path}");
                 if (this.SelectPath(path))
                 {
                     this.idRegex = RegexFactory.FileName;

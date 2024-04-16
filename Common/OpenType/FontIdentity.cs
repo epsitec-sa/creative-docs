@@ -406,22 +406,6 @@ namespace Epsitec.Common.OpenType
             }
         }
 
-        public object DrawingFont
-        {
-            get {
-                /*
-                return this.drawingFont;
-                */
-                throw new System.NotImplementedException();
-            }
-            set {
-                /*
-                this.drawingFont = value;
-                */
-                throw new System.NotImplementedException();
-            }
-        }
-
         public FontWeight FontWeight
         {
             get {
