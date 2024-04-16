@@ -193,7 +193,7 @@ namespace Epsitec.Common.Drawing.Renderers
         }
 
         readonly Graphics graphics;
-        readonly AntigrainCPP.Renderer.Gradient gradientRenderer;
+        readonly internal AntigrainCPP.Renderer.Gradient gradientRenderer;
         private Pixmap pixmap;
         private GradientFill fill;
         private Transform transform = Transform.Identity;

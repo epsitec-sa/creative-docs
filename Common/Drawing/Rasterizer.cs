@@ -216,11 +216,8 @@ namespace Epsitec.Common.Drawing
         /// <param name="renderer">The renderer.</param>
         public override void Render(Renderers.Solid renderer)
         {
-            /*
-            this.rasterizer.RenderSolid(renderer.Handle);
+            this.rasterizer.RenderSolid(renderer.solidRenderer);
             this.rasterizer.Clear();
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -230,11 +227,8 @@ namespace Epsitec.Common.Drawing
         /// <param name="renderer">The renderer.</param>
         public override void Render(Renderers.Image renderer)
         {
-            /*
-            this.rasterizer.RenderImage(renderer.Handle);
+            this.rasterizer.RenderImage(renderer.imageRenderer);
             this.rasterizer.Clear();
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -244,11 +238,8 @@ namespace Epsitec.Common.Drawing
         /// <param name="renderer">The renderer.</param>
         public override void Render(Renderers.Gradient renderer)
         {
-            /*
-            this.rasterizer.RenderGradient(renderer.Handle);
+            this.rasterizer.RenderGradient(renderer.gradientRenderer);
             this.rasterizer.Clear();
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>

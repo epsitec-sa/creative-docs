@@ -40,18 +40,12 @@ namespace Epsitec.Common.Drawing
             //	Malheureusement, ImageRenderer n'en tient pas compte, ce qui fait que les icônes ne sont
             //	pas influencées par la transparence.
             get { 
-                /*
                 return this.solidRenderer.AlphaMutiplier; 
-                */
-                throw new System.NotImplementedException();
             }
             set
             {
-                /*
                 this.solidRenderer.AlphaMutiplier = value;
                 this.gradientRenderer.AlphaMutiplier = value;
-                */
-                throw new System.NotImplementedException();
             }
         }
 
@@ -123,16 +117,10 @@ namespace Epsitec.Common.Drawing
         public Color FinalColor
         {
             get { 
-                /*
                 return this.SolidRenderer.Color; 
-                */
-                throw new System.NotImplementedException();
             }
             set {
-                /*
                 this.SolidRenderer.Color = value; 
-                */
-                throw new System.NotImplementedException();
             }
         }
 
@@ -208,10 +196,7 @@ namespace Epsitec.Common.Drawing
 
         public void RenderSolid()
         {
-            /*
             this.rasterizer.Render(this.solidRenderer);
-            */
-            throw new System.NotImplementedException();
         }
 
         public void RenderSolid(Color color)
@@ -222,32 +207,22 @@ namespace Epsitec.Common.Drawing
 
         public void FinalRenderSolid(Color color)
         {
-            /*
             this.FinalColor = color;
             this.rasterizer.Render(this.solidRenderer);
-            */
-            throw new System.NotImplementedException();
         }
 
         public void RenderImage()
         {
-            /*
             this.rasterizer.Render(this.imageRenderer);
-            */
-            throw new System.NotImplementedException();
         }
 
         public void RenderGradient()
         {
-            /*
             this.rasterizer.Render(this.gradientRenderer);
-            */
-            throw new System.NotImplementedException();
         }
 
         public void RenderGradient(Rectangle rect, Color color1, Color color2, GradientFill fill)
         {
-            /*
             this.GradientRenderer.Fill = fill;
             this.GradientRenderer.SetColors(color1, color2);
             this.GradientRenderer.SetParameters(-100, 100);
@@ -261,8 +236,6 @@ namespace Epsitec.Common.Drawing
             this.GradientRenderer.Transform = t;
             this.RenderGradient();
             this.GradientRenderer.Transform = ot;
-            */
-            throw new System.NotImplementedException();
         }
 
         public void ResetLineStyle()
@@ -676,11 +649,14 @@ namespace Epsitec.Common.Drawing
             double imageHeight
         )
         {
-            /*
-            if (bitmap == null)
-            {
-                return;
-            }
+            // TODO bl-net8-cross
+            // bitmap is always null
+
+            //if (bitmap == null)
+            //{
+            //    return;
+            //}
+
             double ix1 = imageOriginX;
             double iy1 = imageOriginY;
             double ix2 = imageOriginX + imageWidth;
@@ -755,24 +731,25 @@ namespace Epsitec.Common.Drawing
 			double sx = (ix2-ix1 < 1) ? (Graphics.AlmostInfinite) : ((fillWidth > 1)  ? (fill_width)  / (ix2-ix1) : 1.0);
 			double sy = (iy2-iy1 < 1) ? (Graphics.AlmostInfinite) : ((fillHeight > 1) ? (fill_height) / (iy2-iy1) : 1.0);
 #endif
-            Drawing.Bitmap bmi = bitmap.BitmapImage;
+            //Drawing.Bitmap bmi = bitmap.BitmapImage;
 
-            sx *= bitmap.Width / bmi.PixelWidth;
-            sy *= bitmap.Height / bmi.PixelHeight;
+            // TODO bl-net8-cross
+            //sx *= bitmap.Width / bmi.PixelWidth;
+            //sy *= bitmap.Height / bmi.PixelHeight;
 
             transform = transform.Translate(-ix1, -iy1);
             transform = transform.Scale(sx, sy);
             transform = transform.Translate(fillX, fillY);
 
             this.AddFilledRectangle(fillX, fillY, fillWidth, fillHeight);
-            this.ImageRenderer.BitmapImage = bitmap;
+            // TODO bl-net8-cross
+            //this.ImageRenderer.BitmapImage = bitmap;
             this.ImageRenderer.Transform = transform;
 
             this.ImageRenderer.SelectAdvancedFilter(this.imageFilter.Mode, this.imageFilter.Radius);
             this.RenderImage();
-            this.ImageRenderer.BitmapImage = null;
-            */
-            throw new System.NotImplementedException();
+            // TODO bl-net8-cross
+            //this.ImageRenderer.BitmapImage = null;
         }
 
         public void PaintVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)

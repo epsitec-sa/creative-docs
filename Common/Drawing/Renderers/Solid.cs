@@ -153,7 +153,7 @@ namespace Epsitec.Common.Drawing.Renderers
         //}
 
         private Color color;
-        private readonly AntigrainCPP.Renderer.Solid solidRenderer;
+        readonly internal AntigrainCPP.Renderer.Solid solidRenderer;
         private Pixmap pixmap;
     }
 }

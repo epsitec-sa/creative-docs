@@ -152,7 +152,7 @@ namespace Epsitec.Common.Drawing.Renderers
         }
 
         readonly Graphics graphics;
-        readonly AntigrainCPP.Renderer.Image imageRenderer;
+        readonly internal AntigrainCPP.Renderer.Image imageRenderer;
         private Pixmap pixmap;
         private Drawing.Image image;
         private Drawing.Bitmap bitmap;
