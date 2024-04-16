@@ -1,6 +1,7 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.OpenType
@@ -14,6 +15,8 @@ namespace Epsitec.Common.OpenType
         internal Font(FontIdentity identity)
         {
             this.identity = identity;
+            // TODO bl-net8-cross free the underlying freetype handle when done
+            this.fontHandle = AntigrainCPP.Font.LoadFromFile(identity.FilePath);
         }
 
         public FontIdentity FontIdentity
@@ -530,29 +533,6 @@ namespace Epsitec.Common.OpenType
         public double GetPositions(ushort[] glyphs, double size, double ox, double[] xPos)
         {
             /*
-            if (this.useSystemGlyphSize)
-            {
-                FontSizeInfo info = this.identity.GetSizeInfo((int)(size + 0.5));
-
-                int width = 0;
-
-                for (int i = 0; i < glyphs.Length; i++)
-                {
-                    xPos[i] = ox + width;
-
-                    if (glyphs[i] >= 0xff00)
-                    {
-                        width += (int)(this.GetSpaceGlyphWidth(glyphs[i]) * size + 0.5);
-                    }
-                    else
-                    {
-                        width += info.GetGlyphWidth(glyphs[i]);
-                    }
-                }
-
-                return width;
-            }
-
             int numGlyph = this.otMaxp.NumGlyphs;
             int numHMetrics = this.otHhea.NumHMetrics;
 
@@ -594,27 +574,27 @@ namespace Epsitec.Common.OpenType
 
             return advance * size / perEm;
             */
-            throw new System.NotImplementedException();
-        }
+                throw new System.NotImplementedException();
+            }
 
-        /// <summary>
-        /// Gets the individual glyph positions. The scale is used to modify the glyph
-        /// width (font glyph width + specified width adjustment); the glue is added
-        /// independently of the scale.
-        /// </summary>
-        /// <param name="glyphs">The glyphs.</param>
-        /// <param name="size">The font point size.</param>
-        /// <param name="ox">The x origin for the first glyph.</param>
-        /// <param name="xPos">The array of positions after every glyph which must
-        /// be allocated by the caller.</param>
-        /// <param name="xScale">The array of horizontal scales applied for every individual glyph or <c>null</c> if every glyph has a scale of <c>1</c>.</param>
-        /// <param name="xAdjust">The array of horizontal width adjustement for every individual glyph or <c>null</c> if every glyph has an adjustement of <c>0</c>.</param>
-        /// <param name="xGlue">The array of horizontal glue for every individual glyph or <c>null</c> if every glyph has a glue of <c>0</c>.</param>
-        /// <returns>The total width of the glyphs.</returns>
-        public double GetPositions(
-            ushort[] glyphs,
-            double size,
-            double ox,
+            /// <summary>
+            /// Gets the individual glyph positions. The scale is used to modify the glyph
+            /// width (font glyph width + specified width adjustment); the glue is added
+            /// independently of the scale.
+            /// </summary>
+            /// <param name="glyphs">The glyphs.</param>
+            /// <param name="size">The font point size.</param>
+            /// <param name="ox">The x origin for the first glyph.</param>
+            /// <param name="xPos">The array of positions after every glyph which must
+            /// be allocated by the caller.</param>
+            /// <param name="xScale">The array of horizontal scales applied for every individual glyph or <c>null</c> if every glyph has a scale of <c>1</c>.</param>
+            /// <param name="xAdjust">The array of horizontal width adjustement for every individual glyph or <c>null</c> if every glyph has an adjustement of <c>0</c>.</param>
+            /// <param name="xGlue">The array of horizontal glue for every individual glyph or <c>null</c> if every glyph has a glue of <c>0</c>.</param>
+            /// <returns>The total width of the glyphs.</returns>
+            public double GetPositions(
+                ushort[] glyphs,
+                double size,
+                double ox,
             double[] xPos,
             double[] xScale,
             double[] xAdjust,
@@ -622,42 +602,6 @@ namespace Epsitec.Common.OpenType
         )
         {
             /*
-            if (this.useSystemGlyphSize)
-            {
-                FontSizeInfo info = this.identity.GetSizeInfo((int)(size + 0.5));
-
-                int width = 0;
-
-                for (int i = 0; i < glyphs.Length; i++)
-                {
-                    xPos[i] = ox + width;
-
-                    double adjust = (xAdjust == null) ? 0 : xAdjust[i];
-
-                    int glyphWidth;
-
-                    if (glyphs[i] >= 0xff00)
-                    {
-                        glyphWidth = (int)(this.GetSpaceGlyphWidth(glyphs[i]) * size + 0.5);
-                    }
-                    else
-                    {
-                        glyphWidth = info.GetGlyphWidth(glyphs[i]);
-                    }
-
-                    if (xGlue == null)
-                    {
-                        width += (int)((glyphWidth + adjust) * xScale[i] + 0.5);
-                    }
-                    else
-                    {
-                        width += (int)((glyphWidth + adjust) * xScale[i] + xGlue[i] + 0.5);
-                    }
-                }
-
-                return width;
-            }
-
             int numGlyph = this.otMaxp.NumGlyphs;
             int numHMetrics = this.otHhea.NumHMetrics;
 
@@ -735,30 +679,6 @@ namespace Epsitec.Common.OpenType
         )
         {
             /*
-            if (this.useSystemGlyphSize)
-            {
-                FontSizeInfo info = this.identity.GetSizeInfo((int)(size + 0.5));
-
-                int width = 0;
-
-                for (int i = 0; i < glyphs.Length; i++)
-                {
-                    xPos[i] = ox + width;
-                    yPos[i] = oy;
-
-                    if (glyphs[i] >= 0xff00)
-                    {
-                        width += (int)(this.GetSpaceGlyphWidth(glyphs[i]) * size + 0.5);
-                    }
-                    else
-                    {
-                        width += info.GetGlyphWidth(glyphs[i]);
-                    }
-                }
-
-                return width;
-            }
-
             int numGlyph = this.otMaxp.NumGlyphs;
             int numHMetrics = this.otHhea.NumHMetrics;
 
@@ -1452,17 +1372,9 @@ namespace Epsitec.Common.OpenType
         public double GetAscender(double size)
         {
             /*
-            if (this.useSystemGlyphSize)
-            {
-                FontSizeInfo info = this.identity.GetSizeInfo((int)(size + 0.5));
-                return info.Ascender;
-            }
-            else
-            {
-                double scale = size / this.otHead.UnitsPerEm;
+            double scale = size / this.otHead.UnitsPerEm;
 
-                return this.otHhea.MacAscender * scale;
-            }
+            return this.otHhea.MacAscender * scale;
             */
             throw new System.NotImplementedException();
         }
@@ -1475,17 +1387,9 @@ namespace Epsitec.Common.OpenType
         public double GetDescender(double size)
         {
             /*
-            if (this.useSystemGlyphSize)
-            {
-                FontSizeInfo info = this.identity.GetSizeInfo((int)(size + 0.5));
-                return info.Descender;
-            }
-            else
-            {
-                double scale = size / this.otHead.UnitsPerEm;
+            double scale = size / this.otHead.UnitsPerEm;
 
-                return this.otHhea.MacDescender * scale;
-            }
+            return this.otHhea.MacDescender * scale;
             */
             throw new System.NotImplementedException();
         }
@@ -1683,8 +1587,7 @@ namespace Epsitec.Common.OpenType
         /// <returns>The glyph index or <c>0xffff</c> the mapping failed.</returns>
         public ushort GetGlyphIndex(int code)
         {
-#if false
-            ushort glyph;
+            ushort glyph = 0;
 
             /*
             if (code < Font.GlyphCacheSize)
@@ -1706,7 +1609,7 @@ namespace Epsitec.Common.OpenType
             }
             */
 
-            if ((code == 0) || (this.otIndexMapping == null))
+            if (code == 0)
             {
                 return 0xffff;
             }
@@ -1719,7 +1622,7 @@ namespace Epsitec.Common.OpenType
                 return 0x0000;
             }
 
-            glyph = this.otIndexMapping.GetGlyphIndex(code);
+            glyph = (ushort)this.fontHandle.GetCharIndex((ulong)code);
 
             if (glyph == 0x0000)
             {
@@ -1813,8 +1716,6 @@ namespace Epsitec.Common.OpenType
             */
 
             return glyph;
-#endif
-            throw new System.NotImplementedException();
         }
 
         public static bool IsStretchableSpaceCharacter(int code)
@@ -1866,6 +1767,7 @@ namespace Epsitec.Common.OpenType
         private const int TransparentGlyphFlag = 0x00800000;
 
         private FontIdentity identity;
+        private AntigrainCPP.Font fontHandle;
         //private FontData fontData;
 
         //private TableGSUB otGSUB;

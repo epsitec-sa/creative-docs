@@ -16,6 +16,8 @@ namespace Epsitec.Common.OpenType
             this.name = fontName;
         }
 
+        public string FilePath { get { return filePath; } }
+
         public string Name
         {
             get

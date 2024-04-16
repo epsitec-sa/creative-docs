@@ -262,7 +262,7 @@ namespace Epsitec.Common.OpenType
             {
                 throw new FontNotFoundException();
             }
-            return new Font(fid);
+            return this.CreateFont(fid);
         }
 
         /// <summary>
