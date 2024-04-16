@@ -14,6 +14,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
         public override void Show()
         {
+            /*
             //	Crée et montre la fenêtre du dialogue.
             if (this.window == null)
             {
@@ -82,6 +83,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             {
                 this.window.Show();
             }
+            */
         }
 
         public void StartTimer()
