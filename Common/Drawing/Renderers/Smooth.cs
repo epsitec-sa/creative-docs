@@ -5,9 +5,10 @@ namespace Epsitec.Common.Drawing.Renderers
 {
     public sealed class Smooth : IRenderer, System.IDisposable
     {
-        public Smooth(Graphics graphics)
+        public Smooth(Graphics graphics, AntigrainCPP.Renderer.Smooth smoothRenderer)
         {
             this.graphics = graphics;
+            this.smoothRenderer = smoothRenderer;
         }
 
         public Pixmap Pixmap

@@ -3,30 +3,31 @@
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-    public sealed class Solid : IRenderer, System.IDisposable
+    public sealed class Solid : IRenderer
     {
-        public Solid()
+        public Solid(AntigrainCPP.Renderer.Solid solidRenderer)
         {
+            this.solidRenderer = solidRenderer;
             this.AlphaMutiplier = 1.0;
         }
 
-        public Pixmap Pixmap
-        {
-            set
-            {
-                if (this.pixmap != value)
-                {
-                    if (value == null)
-                    {
-                        this.Detach();
-                    }
-                    else
-                    {
-                        this.Attach(value);
-                    }
-                }
-            }
-        }
+        //public Pixmap Pixmap
+        //{
+        //    set
+        //    {
+        //        if (this.pixmap != value)
+        //        {
+        //            if (value == null)
+        //            {
+        //                this.Detach();
+        //            }
+        //            else
+        //            {
+        //                this.Attach(value);
+        //            }
+        //        }
+        //    }
+        //}
 
         public Color Color
         {
@@ -128,28 +129,28 @@ namespace Epsitec.Common.Drawing.Renderers
             throw new System.NotImplementedException();
         }
 
-        #region IDisposable Members
-        public void Dispose()
-        {
-            this.Detach();
-        }
-        #endregion
+        //#region IDisposable Members
+        //public void Dispose()
+        //{
+        //    this.Detach();
+        //}
+        //#endregion
 
-        private void Attach(Pixmap pixmap)
-        {
-            this.Detach();
+        //private void Attach(Pixmap pixmap)
+        //{
+        //    this.Detach();
 
-            this.pixmap = pixmap;
-            this.color = new Color();
-        }
+        //    this.pixmap = pixmap;
+        //    this.color = new Color();
+        //}
 
-        private void Detach()
-        {
-            if (this.pixmap != null)
-            {
-                this.pixmap = null;
-            }
-        }
+        //private void Detach()
+        //{
+        //    if (this.pixmap != null)
+        //    {
+        //        this.pixmap = null;
+        //    }
+        //}
 
         private Color color;
         private readonly AntigrainCPP.Renderer.Solid solidRenderer;

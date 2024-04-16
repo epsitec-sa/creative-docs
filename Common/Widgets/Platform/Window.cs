@@ -54,27 +54,31 @@ namespace Epsitec.Common.Widgets.Platform
         }
 
         public override void OnDraw(AggUI.GraphicContext gctx)
-        {
-            AntigrainCPP.Path path = new AntigrainCPP.Path();
-            gctx.renderer_smooth.Color(0, 0, 0, 1);
-            gctx.renderer_smooth.Setup(7, 2,
-                1, 0,
-                0, 1,
-                0, 0
-            );
-            bool first = true;
-            foreach (var point in points){
-                (int x, int y, int r, int g, int b, int s) = point;
-                if (first) {
-                    path.MoveTo(x, y);
-                    first = false;
-                } else {
-                    path.LineTo(x, y);
-                }
-                gctx.SetColor(r, g, b);
-                gctx.DrawEllipse(x, y, s, s);
-            }
-            gctx.renderer_smooth.AddPath(path);
+        {   
+            Rectangle repaint = Rectangle.MaxValue;
+            this.graphics = new Graphics(gctx);
+            this.widgetWindow.RefreshGraphics(this.graphics, repaint, new Drawing.Rectangle[0]);
+            //AntigrainCPP.Path path = new AntigrainCPP.Path();
+            //gctx.RendererSmooth.Color(0, 0, 0, 1);
+            //gctx.RendererSmooth.Setup(7, 2,
+            //    1, 0,
+            //    0, 1,
+            //    0, 0
+            //);
+            //bool first = true;
+            //foreach (var point in points){
+            //    (int x, int y, int r, int g, int b, int s) = point;
+            //    if (first) {
+            //        path.MoveTo(x, y);
+            //        first = false;
+            //    } else {
+            //        path.LineTo(x, y);
+            //    }
+            //    gctx.SetColor(r, g, b);
+            //    gctx.DrawEllipse(x, y, s, s);
+            //}
+            //gctx.RendererSmooth.AddPath(path);
+            this.graphics = null;
         }
 
         public override void OnKey(int x, int y, uint key, uint flags){
@@ -201,6 +205,8 @@ namespace Epsitec.Common.Widgets.Platform
             this.isSyncUpdating = new SafeCounter();
             this.isWndProcHandlingRestricted = new SafeCounter();
 
+            this.clientSize = new System.Drawing.Size(800, 600);
+
         }
 
         internal Window(
@@ -229,7 +235,6 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.WindowType = WindowType.Document;
             this.widgetWindow.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 
-            this.graphics = new Epsitec.Common.Drawing.Graphics();
             //this.graphics.AllocatePixmap();
 
             Window.DummyHandleEater(this.Handle);
@@ -540,6 +545,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void AnimateHide(Animation animation, Drawing.Rectangle bounds)
         {
+            /*
             Drawing.Rectangle b1;
             Drawing.Rectangle b2;
             Drawing.Point o1;
@@ -618,6 +624,8 @@ namespace Epsitec.Common.Widgets.Platform
                     animator.Start();
                     break;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
@@ -903,7 +911,8 @@ namespace Epsitec.Common.Widgets.Platform
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
                 */
-                return Drawing.Rectangle.Empty;
+                throw new System.NotImplementedException();
+                //return Drawing.Rectangle.Empty;
             }
             set
             {
@@ -970,27 +979,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get
             {
-                /*
-                System.Drawing.Size clientSize = base.ClientSize;
-
-                if (this.formBoundsSet)
-                {
-                    int deltaWidth = this.formBounds.Width - this.Width;
-                    int deltaHeight = this.formBounds.Height - this.Height;
-
-                    clientSize.Width += deltaWidth;
-                    clientSize.Height += deltaHeight;
-                }
-
-                if (this.UseSpecialModeHack())
-                {
-                    clientSize.Width -= 16;
-                    clientSize.Height -= 16;
-                }
-
-                return clientSize;
-                */
-                return System.Drawing.Size.Empty;
+                return this.clientSize;
             }
         }
 
@@ -998,15 +987,6 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get { return this.minimumSize; }
             set { this.minimumSize = value; }
-        }
-
-        private bool UseSpecialModeHack()
-        {
-            return false;
-#if false
-			return (this.specialMode == SpecialMode.Titleless)
-				&& (this.NativeWindowPlacement.IsFullScreen);
-#endif
         }
 
         internal Drawing.Rectangle WindowPlacementNormalBounds
@@ -1368,7 +1348,8 @@ namespace Epsitec.Common.Widgets.Platform
 
                 return borderSize;
                 */
-                return System.Drawing.Size.Empty;
+                //return System.Drawing.Size.Empty;
+                throw new System.NotImplementedException();
             }
         }
 
@@ -1867,6 +1848,7 @@ namespace Epsitec.Common.Widgets.Platform
 */
         protected void ReallocatePixmap()
         {
+            /*
             if (this.IsFrozen)
             {
                 return;
@@ -1876,10 +1858,13 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 this.UpdateLayeredWindow();
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         private bool ReallocatePixmapLowLevel()
         {
+            /*
             bool changed = false;
 
             int width = this.ClientSize.Width;
@@ -1905,6 +1890,8 @@ namespace Epsitec.Common.Widgets.Platform
             this.isPixmapOk = true;
 
             return changed;
+            */
+            throw new System.NotImplementedException();
         }
 
         internal int MapToWinFormsX(double x)
@@ -1987,6 +1974,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void SynchronousRepaint()
         {
+            /*
             if (this.isLayoutInProgress)
             {
                 return;
@@ -2013,6 +2001,7 @@ namespace Epsitec.Common.Widgets.Platform
                     //this.Update(); // winforms: redraw the invalidated areas
                 }
             }
+            */
         }
 
         internal void SendQueueCommand()
@@ -2918,6 +2907,7 @@ namespace Epsitec.Common.Widgets.Platform
 */
         protected bool RefreshGraphics()
         {
+            /*
             if (this.isLayoutInProgress)
             {
                 return false;
@@ -2943,31 +2933,32 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return this.RefreshGraphicsLowLevel();
+            */
+            throw new System.NotImplementedException();
         }
 
         private bool RefreshGraphicsLowLevel()
         {
-            if (this.dirtyRectangle.IsValid)
+            /*
+            Drawing.Rectangle repaint = this.dirtyRectangle;
+            Drawing.Rectangle[] strips = this.dirtyRegion.GenerateStrips();
+
+            this.dirtyRectangle = Drawing.Rectangle.Empty;
+            this.dirtyRegion = new Drawing.DirtyRegion();
+
+            if (this.widgetWindow != null)
             {
-                Drawing.Rectangle repaint = this.dirtyRectangle;
-                Drawing.Rectangle[] strips = this.dirtyRegion.GenerateStrips();
-
-                this.dirtyRectangle = Drawing.Rectangle.Empty;
-                this.dirtyRegion = new Drawing.DirtyRegion();
-
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.RefreshGraphics(this.graphics, repaint, strips);
-                }
-
-                return true;
+                this.widgetWindow.RefreshGraphics(this.graphics, repaint, strips);
             }
 
-            return false;
+            return true;
+            */
+            throw new System.NotImplementedException();
         }
 
         protected bool UpdateLayeredWindow()
         {
+            /*
             bool paintNeeded = true;
 
             this.RefreshGraphics();
@@ -3034,7 +3025,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return paintNeeded;
             */
-            return paintNeeded;
+            return true;
         }
 
         internal static void ProcessException(System.Exception ex, string tag)
@@ -3146,7 +3137,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void ShowWindow()
         {
-            bool ok = this.Init(800, 600, AggUI.WindowFlags.Resize);
+            bool ok = this.Init((uint)this.clientSize.Width, (uint)this.clientSize.Height, AggUI.WindowFlags.Resize);
             if (!ok)
             {
                 throw new Exception("Failed to initialize antigrain window");
@@ -3212,7 +3203,7 @@ namespace Epsitec.Common.Widgets.Platform
         private Drawing.Rectangle windowBounds;
         private Drawing.Point paintOffset;
         private System.Drawing.Rectangle formBounds;
-        private System.Drawing.Size formMinSize;
+        private System.Drawing.Size clientSize;
         private System.Drawing.Size minimumSize;
         private bool formBoundsSet = false;
         private bool onResizeEvent = false;

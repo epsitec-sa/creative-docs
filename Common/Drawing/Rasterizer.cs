@@ -48,10 +48,7 @@ namespace Epsitec.Common.Drawing
         {
             if (path != null)
             {
-                /*
-                this.rasterizer.AddPath(path.Handle, path.ContainsCurves);
-                */
-                throw new System.NotImplementedException();
+                this.rasterizer.AddPath(path.path, path.ContainsCurves);
             }
         }
 
@@ -65,14 +62,11 @@ namespace Epsitec.Common.Drawing
         {
             if (path != null)
             {
-                /*
                 this.rasterizer.AddPathStroke1(
-                    path.Handle,
+                    path.path,
                     width,
                     path.ContainsCurves
                 );
-                */
-                throw new System.NotImplementedException();
             }
         }
 
@@ -95,17 +89,14 @@ namespace Epsitec.Common.Drawing
         {
             if (path != null)
             {
-                /*
                 this.rasterizer.AddPathStroke2(
-                    path.Handle,
+                    path.path,
                     width,
                     (int)cap,
                     (int)join,
                     miterLimit,
                     path.ContainsCurves
                 );
-                */
-                throw new System.NotImplementedException();
             }
         }
 

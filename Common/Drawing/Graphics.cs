@@ -10,8 +10,12 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public class Graphics : System.IDisposable, IPaintPort
     {
-
         public Graphics()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Graphics(AggUI.GraphicContext gctx)
         {
             this.ResetLineStyle();
 
@@ -21,10 +25,11 @@ namespace Epsitec.Common.Drawing
 
             this.colorModifierStack = new Stack<ColorModifierCallback>();
 
-            this.solidRenderer = new Common.Drawing.Renderers.Solid();
-            this.imageRenderer = new Common.Drawing.Renderers.Image(this);
-            this.gradientRenderer = new Common.Drawing.Renderers.Gradient(this);
-            this.smoothRenderer = new Common.Drawing.Renderers.Smooth(this);
+            this.context = gctx;
+            this.solidRenderer = new Common.Drawing.Renderers.Solid(gctx.RendererSolid);
+            this.imageRenderer = new Common.Drawing.Renderers.Image(this, gctx.RendererImage);
+            this.gradientRenderer = new Common.Drawing.Renderers.Gradient(this, gctx.RendererGradient);
+            this.smoothRenderer = new Common.Drawing.Renderers.Smooth(this, gctx.RendererSmooth);
 
             this.rasterizer.Gamma = 1.2;
         }
@@ -34,11 +39,19 @@ namespace Epsitec.Common.Drawing
             //	Facteur multiplicatif pour la transparence, valable pour SolidRenderer et GradientRenderer.
             //	Malheureusement, ImageRenderer n'en tient pas compte, ce qui fait que les icônes ne sont
             //	pas influencées par la transparence.
-            get { return this.solidRenderer.AlphaMutiplier; }
+            get { 
+                /*
+                return this.solidRenderer.AlphaMutiplier; 
+                */
+                throw new System.NotImplementedException();
+            }
             set
             {
+                /*
                 this.solidRenderer.AlphaMutiplier = value;
                 this.gradientRenderer.AlphaMutiplier = value;
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -109,8 +122,18 @@ namespace Epsitec.Common.Drawing
 
         public Color FinalColor
         {
-            get { return this.SolidRenderer.Color; }
-            set { this.SolidRenderer.Color = value; }
+            get { 
+                /*
+                return this.SolidRenderer.Color; 
+                */
+                throw new System.NotImplementedException();
+            }
+            set {
+                /*
+                this.SolidRenderer.Color = value; 
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         public ImageFilter ImageFilter
@@ -185,7 +208,10 @@ namespace Epsitec.Common.Drawing
 
         public void RenderSolid()
         {
+            /*
             this.rasterizer.Render(this.solidRenderer);
+            */
+            throw new System.NotImplementedException();
         }
 
         public void RenderSolid(Color color)
@@ -196,22 +222,32 @@ namespace Epsitec.Common.Drawing
 
         public void FinalRenderSolid(Color color)
         {
+            /*
             this.FinalColor = color;
             this.rasterizer.Render(this.solidRenderer);
+            */
+            throw new System.NotImplementedException();
         }
 
         public void RenderImage()
         {
+            /*
             this.rasterizer.Render(this.imageRenderer);
+            */
+            throw new System.NotImplementedException();
         }
 
         public void RenderGradient()
         {
+            /*
             this.rasterizer.Render(this.gradientRenderer);
+            */
+            throw new System.NotImplementedException();
         }
 
         public void RenderGradient(Rectangle rect, Color color1, Color color2, GradientFill fill)
         {
+            /*
             this.GradientRenderer.Fill = fill;
             this.GradientRenderer.SetColors(color1, color2);
             this.GradientRenderer.SetParameters(-100, 100);
@@ -225,6 +261,8 @@ namespace Epsitec.Common.Drawing
             this.GradientRenderer.Transform = t;
             this.RenderGradient();
             this.GradientRenderer.Transform = ot;
+            */
+            throw new System.NotImplementedException();
         }
 
         public void ResetLineStyle()
@@ -239,14 +277,15 @@ namespace Epsitec.Common.Drawing
         {
             this.pixmap.AllocatePixmap(new System.Drawing.Size(8, 8));
 
-            this.solidRenderer.Pixmap = this.pixmap;
-            this.imageRenderer.Pixmap = this.pixmap;
-            this.gradientRenderer.Pixmap = this.pixmap;
-            this.smoothRenderer.Pixmap = this.pixmap;
+            //this.solidRenderer.Pixmap = this.pixmap;
+            //this.imageRenderer.Pixmap = this.pixmap;
+            //this.gradientRenderer.Pixmap = this.pixmap;
+            //this.smoothRenderer.Pixmap = this.pixmap;
         }
 
-        public Epsitec.Common.Drawing.Graphics CreateAlphaMask()
+        public Graphics CreateAlphaMask()
         {
+            /*
             Graphics mask = new Graphics();
 
             mask.SetPixmapSize(this.pixmap.Size.Width, this.pixmap.Size.Height);
@@ -254,6 +293,8 @@ namespace Epsitec.Common.Drawing
             mask.Transform = this.Transform;
 
             return mask;
+            */
+            throw new System.NotImplementedException();
         }
 
         public void PushColorModifier(ColorModifierCallback method)
@@ -464,6 +505,7 @@ namespace Epsitec.Common.Drawing
 
         public double PaintText(double x, double y, string text, Font font, double size)
         {
+            /*
             if (string.IsNullOrEmpty(text))
             {
                 return 0;
@@ -489,6 +531,8 @@ namespace Epsitec.Common.Drawing
                 this.RenderSolid();
                 return advance;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public double PaintText(
@@ -632,6 +676,7 @@ namespace Epsitec.Common.Drawing
             double imageHeight
         )
         {
+            /*
             if (bitmap == null)
             {
                 return;
@@ -726,10 +771,13 @@ namespace Epsitec.Common.Drawing
             this.ImageRenderer.SelectAdvancedFilter(this.imageFilter.Mode, this.imageFilter.Radius);
             this.RenderImage();
             this.ImageRenderer.BitmapImage = null;
+            */
+            throw new System.NotImplementedException();
         }
 
         public void PaintVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)
         {
+            /*
             this.FillMode = FillMode.NonZero;
             this.GradientRenderer.Fill = GradientFill.Y;
             this.GradientRenderer.SetColors(bottomColor, topColor);
@@ -743,10 +791,13 @@ namespace Epsitec.Common.Drawing
             this.GradientRenderer.Transform = t;
             this.RenderGradient();
             this.GradientRenderer.Transform = ot;
+            */
+            throw new System.NotImplementedException();
         }
 
         public void PaintHorizontalGradient(Rectangle rect, Color leftColor, Color rightColor)
         {
+            /*
             this.FillMode = FillMode.NonZero;
             this.GradientRenderer.Fill = GradientFill.X;
             this.GradientRenderer.SetParameters(-100, 100);
@@ -760,10 +811,13 @@ namespace Epsitec.Common.Drawing
             this.GradientRenderer.Transform = t;
             this.RenderGradient(); // dégradé de gauche à droite
             this.GradientRenderer.Transform = ot;
+            */
+            throw new System.NotImplementedException();
         }
 
         public void PaintCircularGradient(Rectangle rect, Color borderColor, Color centerColor)
         {
+            /*
             Transform ot = this.GradientRenderer.Transform;
 
             this.GradientRenderer.Fill = GradientFill.Circle;
@@ -777,6 +831,8 @@ namespace Epsitec.Common.Drawing
             this.GradientRenderer.Transform = t;
             this.RenderGradient(); // dégradé circulaire
             this.GradientRenderer.Transform = ot;
+            */
+            throw new System.NotImplementedException();
         }
 
         public void AddLine(Point p1, Point p2)
@@ -1078,11 +1134,11 @@ namespace Epsitec.Common.Drawing
             //	Lorsque la matrice de transformation change, il faut aussi mettre à jour les
             //	transformations des renderers qui en ont...
 
-            Transform tImage = this.imageRenderer.Transform;
-            Transform tGradient = this.gradientRenderer.Transform;
+            //Transform tImage = this.imageRenderer.Transform;
+            //Transform tGradient = this.gradientRenderer.Transform;
 
-            this.imageRenderer.Transform = tImage;
-            this.gradientRenderer.Transform = tGradient;
+            //this.imageRenderer.Transform = tImage;
+            //this.gradientRenderer.Transform = tGradient;
         }
 
         private void SetClippingRectangle(double x, double y, double width, double height)
@@ -1251,15 +1307,15 @@ namespace Epsitec.Common.Drawing
 
             this.pixmap.Size = new System.Drawing.Size(width, height);
 
-            this.solidRenderer.Pixmap = null;
-            this.imageRenderer.Pixmap = null;
-            this.gradientRenderer.Pixmap = null;
-            this.smoothRenderer.Pixmap = null;
+            //this.solidRenderer.Pixmap = null;
+            //this.imageRenderer.Pixmap = null;
+            //this.gradientRenderer.Pixmap = null;
+            //this.smoothRenderer.Pixmap = null;
 
-            this.solidRenderer.Pixmap = this.pixmap;
-            this.imageRenderer.Pixmap = this.pixmap;
-            this.gradientRenderer.Pixmap = this.pixmap;
-            this.smoothRenderer.Pixmap = this.pixmap;
+            //this.solidRenderer.Pixmap = this.pixmap;
+            //this.imageRenderer.Pixmap = this.pixmap;
+            //this.gradientRenderer.Pixmap = this.pixmap;
+            //this.smoothRenderer.Pixmap = this.pixmap;
 
             return true;
         }
@@ -1280,33 +1336,33 @@ namespace Epsitec.Common.Drawing
                 {
                     this.pixmap.Dispose();
                 }
-                if (this.solidRenderer != null)
-                {
-                    this.solidRenderer.Pixmap = null;
-                    this.solidRenderer.Dispose();
-                }
-                if (this.imageRenderer != null)
-                {
-                    this.imageRenderer.Pixmap = null;
-                    this.imageRenderer.Dispose();
-                }
-                if (this.gradientRenderer != null)
-                {
-                    this.gradientRenderer.Pixmap = null;
-                    this.gradientRenderer.Dispose();
-                }
-                if (this.smoothRenderer != null)
-                {
-                    this.smoothRenderer.Pixmap = null;
-                    this.smoothRenderer.Dispose();
-                }
+                //if (this.solidRenderer != null)
+                //{
+                //    this.solidRenderer.Pixmap = null;
+                //    this.solidRenderer.Dispose();
+                //}
+                //if (this.imageRenderer != null)
+                //{
+                //    this.imageRenderer.Pixmap = null;
+                //    this.imageRenderer.Dispose();
+                //}
+                //if (this.gradientRenderer != null)
+                //{
+                //    this.gradientRenderer.Pixmap = null;
+                //    this.gradientRenderer.Dispose();
+                //}
+                //if (this.smoothRenderer != null)
+                //{
+                //    this.smoothRenderer.Pixmap = null;
+                //    this.smoothRenderer.Dispose();
+                //}
 
                 this.pixmap = null;
                 this.rasterizer = null;
-                this.solidRenderer = null;
-                this.imageRenderer = null;
-                this.gradientRenderer = null;
-                this.smoothRenderer = null;
+                //this.solidRenderer = null;
+                //this.imageRenderer = null;
+                //this.gradientRenderer = null;
+                //this.smoothRenderer = null;
             }
         }
 
@@ -1324,6 +1380,7 @@ namespace Epsitec.Common.Drawing
         private AbstractRasterizer rasterizer;
         private Transform transform;
 
+        private AggUI.GraphicContext context;
         private Renderers.Solid solidRenderer;
         private Renderers.Image imageRenderer;
         private Renderers.Gradient gradientRenderer;

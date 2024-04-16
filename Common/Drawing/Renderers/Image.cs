@@ -1,14 +1,16 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Runtime.CompilerServices;
+
 namespace Epsitec.Common.Drawing.Renderers
 {
     public sealed class Image : IRenderer, System.IDisposable
     {
-        public Image(Graphics graphics)
+        public Image(Graphics graphics, AntigrainCPP.Renderer.Image imageRenderer)
         {
             this.graphics = graphics;
-            //this.imageRenderer = new AntigrainCPP.Renderer.Image();
+            this.imageRenderer = imageRenderer;
         }
 
         public Transform Transform

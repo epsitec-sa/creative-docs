@@ -1502,7 +1502,7 @@ namespace Epsitec.Common.Drawing
 
         public const double Kappa = 0.552284749828;
 
-        protected AntigrainCPP.Path path;
+        protected internal AntigrainCPP.Path path;
         protected double defaultZoom = 1.0;
 
         private bool hasCurve = false;

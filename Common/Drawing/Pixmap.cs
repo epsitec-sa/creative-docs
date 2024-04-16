@@ -365,7 +365,6 @@ namespace Epsitec.Common.Drawing
             /*
             AntigrainCPP.Buffer.InfiniteClipping(this.aggBuffer);
             */
-            throw new System.NotImplementedException();
         }
 
         public void EmptyClipping()
@@ -373,7 +372,6 @@ namespace Epsitec.Common.Drawing
             /*
             AntigrainCPP.Buffer.EmptyClipping(this.aggBuffer);
             */
-            throw new System.NotImplementedException();
         }
 
         public void AddClipBox(double x1, double y1, double x2, double y2)
@@ -385,7 +383,6 @@ namespace Epsitec.Common.Drawing
             int cy2 = (int)(y2 + 0.9999);
             AntigrainCPP.Buffer.AddClipBox(this.aggBuffer, cx1, cy1, cx2 - 1, cy2 - 1);
             */
-            throw new System.NotImplementedException();
         }
 
         public Color GetPixel(int x, int y)

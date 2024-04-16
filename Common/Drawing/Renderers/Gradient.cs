@@ -9,9 +9,10 @@ namespace Epsitec.Common.Drawing.Renderers
     /// </summary>
     public sealed class Gradient : IRenderer, System.IDisposable
     {
-        public Gradient(Graphics graphics)
+        public Gradient(Graphics graphics, AntigrainCPP.Renderer.Gradient gradientRenderer)
         {
             this.graphics = graphics;
+            this.gradientRenderer = gradientRenderer;
             this.AlphaMutiplier = 1.0;
         }
 

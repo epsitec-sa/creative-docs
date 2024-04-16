@@ -8,12 +8,12 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public interface IRenderer
     {
-        /// <summary>
-        /// Attaches the pixmap to the renderer. All the rendering will go to
-        /// the specified pixmap. Setting it to <c>null</c> detaches the pixmap.
-        /// </summary>
-        /// <value>The pixmap.</value>
-        Pixmap Pixmap { set; }
+        ///// <summary>
+        ///// Attaches the pixmap to the renderer. All the rendering will go to
+        ///// the specified pixmap. Setting it to <c>null</c> detaches the pixmap.
+        ///// </summary>
+        ///// <value>The pixmap.</value>
+        //Pixmap Pixmap { set; }
 
         /// <summary>
         /// Sets the alpha mask using the specified 8-bit component of the
