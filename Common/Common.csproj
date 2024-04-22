@@ -313,20 +313,6 @@
     <None   Include="Dialogs\YesNoCancelDialog.cs" />
     <Compile Remove="Drawing\AbstractRasterizer.cs" />
     <None   Include="Drawing\AbstractRasterizer.cs" />
-    -->
-    <Compile Remove="Drawing\Agg\Library.cs" />
-    <None   Include="Drawing\Agg\Library.cs" />
-    <Compile Remove="Drawing\Agg\SafeGradientRendererHandle.cs" />
-    <None   Include="Drawing\Agg\SafeGradientRendererHandle.cs" />
-    <Compile Remove="Drawing\Agg\SafeImageRendererHandle.cs" />
-    <None   Include="Drawing\Agg\SafeImageRendererHandle.cs" />
-    <Compile Remove="Drawing\Agg\SafeRasterizerHandle.cs" />
-    <None   Include="Drawing\Agg\SafeRasterizerHandle.cs" />
-    <Compile Remove="Drawing\Agg\SafeSmoothRendererHandle.cs" />
-    <None   Include="Drawing\Agg\SafeSmoothRendererHandle.cs" />
-    <Compile Remove="Drawing\Agg\SafeSolidRendererHandle.cs" />
-    <None   Include="Drawing\Agg\SafeSolidRendererHandle.cs" />
-    <!--
     <Compile Remove="Drawing\Bitmap.cs" />
     <None Include="Drawing\Bitmap.cs" />
     <Compile Remove="Drawing\BitmapColorChannel.cs" />
