@@ -62,11 +62,7 @@ namespace Epsitec.Common.Drawing
         {
             if (path != null)
             {
-                this.rasterizer.AddPathStroke1(
-                    path.path,
-                    width,
-                    path.ContainsCurves
-                );
+                this.rasterizer.AddPathStroke1(path.path, width, path.ContainsCurves);
             }
         }
 

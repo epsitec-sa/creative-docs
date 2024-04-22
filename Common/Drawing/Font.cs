@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using AggUI;
 
 namespace Epsitec.Common.Drawing
 {
@@ -24,15 +25,14 @@ namespace Epsitec.Common.Drawing
 
         #endregion
 
-        public static void Initialize() { 
+        public static void Initialize()
+        {
             //Font.useSegoe = System.Environment.OSVersion.Version.Major > 5;
             Font.SetupFonts();
         }
 
         #region IDisposable members
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
         #endregion
 
         public string FaceName
@@ -595,8 +595,8 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public double PaintPixelCache(
-            Pixmap pixmap,
+        public double PaintText(
+            GraphicContext gctx,
             string text,
             double size,
             double ox,
@@ -604,42 +604,13 @@ namespace Epsitec.Common.Drawing
             Color color
         )
         {
-            /*
-            if (string.IsNullOrEmpty(text))
-            {
-                return 0.0;
-            }
-
-            var pixmapHandle = pixmap == null ? System.IntPtr.Zero : pixmap.Handle;
-            var fontHandle = this.Handle;
-
-            if ((fontHandle == System.IntPtr.Zero) || (pixmapHandle == System.IntPtr.Zero))
-            {
-                return 0.0;
-            }
-            else
-            {
-                ushort[] glyphs = this.OpenTypeFont.GenerateGlyphsWithMask(text);
-
-                return AntigrainCPP.Font.PixelCache.Paint(
-                    pixmapHandle,
-                    fontHandle,
-                    glyphs,
-                    size,
-                    ox,
-                    oy,
-                    color.R,
-                    color.G,
-                    color.B,
-                    color.A
-                );
-            }
-            */
-            throw new System.NotImplementedException();
+            gctx.SetColor(color.R, color.G, color.B, color.A);
+            gctx.FontManager.SetFontSize(size);
+            return gctx.DrawText(text, ox, oy);
         }
 
         public void PaintPixelGlyphs(
-            Pixmap pixmap,
+            GraphicContext gctx,
             double scale,
             ushort[] glyphs,
             double[] x,
@@ -652,26 +623,19 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
-            /*
-            AntigrainCPP.Font.PixelCache.Paint(
-                pixmap.Handle,
-                this.Handle,
-                scale,
-                glyphs,
-                x,
-                y,
-                sx,
-                color.R,
-                color.G,
-                color.B,
-                color.A,
-                xx,
-                yy,
-                tx,
-                ty
-            );
-            */
-            throw new System.NotImplementedException();
+            // TODO bl-net8-cross handle transform and scale parameters properly
+            gctx.FontManager.SetFont(this.openTypeFontIdentity.FilePath);
+            gctx.SetColor(color.R, color.G, color.B, color.A);
+            for (int i = 0; i < glyphs.Length; i++)
+            {
+                ushort glyph = glyphs[i];
+                double px = x[i];
+                double py = y[i];
+                double size = sx[i];
+                gctx.FontManager.SetFontSize(size);
+
+                gctx.DrawGlyph(glyph, px, py);
+            }
         }
 
         public static void RegisterResourceFont(
@@ -836,6 +800,7 @@ namespace Epsitec.Common.Drawing
 
             return null;
         }
+
         public static Font GetFontFallback(string face)
         {
             return Font.GetFont(face, "");

@@ -1,6 +1,6 @@
+using System.Runtime.Serialization;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Text;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -1266,24 +1266,15 @@ namespace Epsitec.Common.Document.Objects
                 {
                     if (sy == null)
                     {
-                        if (
-                            this.graphics.PaintCachedGlyphs(
-                                drawingFont,
-                                size,
-                                glyphs,
-                                x,
-                                y,
-                                sx,
-                                this.cachedColor.Basic
-                            )
-                        )
-                        {
-                            //	OK, pixels provenant du cache bitmap de la fonte.
-                        }
-                        else
-                        {
-                            this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
-                        }
+                        this.graphics.PaintGlyphs(
+                            drawingFont,
+                            size,
+                            glyphs,
+                            x,
+                            y,
+                            sx,
+                            this.cachedColor.Basic
+                        );
                     }
                     else
                     {

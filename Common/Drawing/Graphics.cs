@@ -28,7 +28,10 @@ namespace Epsitec.Common.Drawing
             this.context = gctx;
             this.solidRenderer = new Common.Drawing.Renderers.Solid(gctx.RendererSolid);
             this.imageRenderer = new Common.Drawing.Renderers.Image(this, gctx.RendererImage);
-            this.gradientRenderer = new Common.Drawing.Renderers.Gradient(this, gctx.RendererGradient);
+            this.gradientRenderer = new Common.Drawing.Renderers.Gradient(
+                this,
+                gctx.RendererGradient
+            );
             this.smoothRenderer = new Common.Drawing.Renderers.Smooth(this, gctx.RendererSmooth);
 
             this.rasterizer.Gamma = 1.2;
@@ -39,9 +42,7 @@ namespace Epsitec.Common.Drawing
             //	Facteur multiplicatif pour la transparence, valable pour SolidRenderer et GradientRenderer.
             //	Malheureusement, ImageRenderer n'en tient pas compte, ce qui fait que les icônes ne sont
             //	pas influencées par la transparence.
-            get { 
-                return this.solidRenderer.AlphaMutiplier; 
-            }
+            get { return this.solidRenderer.AlphaMutiplier; }
             set
             {
                 this.solidRenderer.AlphaMutiplier = value;
@@ -116,12 +117,8 @@ namespace Epsitec.Common.Drawing
 
         public Color FinalColor
         {
-            get { 
-                return this.SolidRenderer.Color; 
-            }
-            set {
-                this.SolidRenderer.Color = value; 
-            }
+            get { return this.SolidRenderer.Color; }
+            set { this.SolidRenderer.Color = value; }
         }
 
         public ImageFilter ImageFilter
@@ -365,21 +362,11 @@ namespace Epsitec.Common.Drawing
             double[] sy
         )
         {
-            for (int i = 0; i < glyphs.Length; i++)
-            {
-                this.Rasterizer.AddGlyph(
-                    font,
-                    glyphs[i],
-                    x[i],
-                    y[i],
-                    size,
-                    sx == null ? 1 : sx[i],
-                    sy == null ? 1 : sy[i]
-                );
-            }
+            // bl-net8-cross handle sy parameter
+            this.PaintGlyphs(font, size, glyphs, x, y, sx, null);
         }
 
-        public bool PaintCachedGlyphs(
+        public bool PaintGlyphs(
             Font font,
             double scale,
             ushort[] glyphs,
@@ -405,7 +392,7 @@ namespace Epsitec.Common.Drawing
                 }
 
                 font.PaintPixelGlyphs(
-                    this.pixmap,
+                    this.context,
                     scale,
                     glyphs,
                     x,
@@ -478,7 +465,6 @@ namespace Epsitec.Common.Drawing
 
         public double PaintText(double x, double y, string text, Font font, double size)
         {
-            /*
             if (string.IsNullOrEmpty(text))
             {
                 return 0;
@@ -489,14 +475,7 @@ namespace Epsitec.Common.Drawing
                 x += this.transform.TX;
                 y += this.transform.TY;
 
-                return font.PaintPixelCache(
-                    this.pixmap,
-                    text,
-                    size,
-                    x,
-                    y,
-                    this.SolidRenderer.Color
-                );
+                return font.PaintText(this.context, text, size, x, y, this.SolidRenderer.Color);
             }
             else
             {
@@ -504,8 +483,6 @@ namespace Epsitec.Common.Drawing
                 this.RenderSolid();
                 return advance;
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         public double PaintText(
@@ -970,7 +947,7 @@ namespace Epsitec.Common.Drawing
 
         public double AddText(double x, double y, string text, Font font, double size)
         {
-            return this.rasterizer.AddText(font, text, x, y, size);
+            return font.PaintText(this.context, text, size, x, y, this.Color);
         }
 
         public void AddFilledRectangle(double x, double y, double width, double height)

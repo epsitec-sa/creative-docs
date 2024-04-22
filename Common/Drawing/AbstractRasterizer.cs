@@ -360,16 +360,13 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
-            /*
-            ushort[] glyphs = font.OpenTypeFont.GenerateGlyphsWithMask(text);
+            ushort[] glyphs = font.OpenTypeFont.GenerateGlyphs(text);
             double[] x = new double[glyphs.Length];
             double advance = font.OpenTypeFont.GetPositions(glyphs, 1.0, 0.0, x);
 
             this.AddPlainGlyphs(font, glyphs, x, xx, xy, yx, yy, tx, ty);
 
             return advance;
-            */
-            throw new System.NotImplementedException();
         }
 
         protected abstract void SyncFillMode();
