@@ -4221,7 +4221,6 @@ namespace Epsitec.Common.Widgets
 
         private Stack<FontItem> CreateFontStack(out SupplItem supplItem)
         {
-            /*
             Stack<FontItem> stack = new Stack<FontItem>();
             FontItem font = new FontItem(this);
             Drawing.Font defaultFont = this.DefaultFont;
@@ -4238,9 +4237,6 @@ namespace Epsitec.Common.Widgets
 
             stack.Push(font); // push la fonte initiale (jamais de pop)
             return stack;
-            */
-            supplItem = null;
-            return new Stack<FontItem>();
         }
 
         private double ParseScale(string size)
@@ -4298,8 +4294,6 @@ namespace Epsitec.Common.Widgets
             Dictionary<string, string> parameters
         )
         {
-            // bl-net8-cross
-            /*
             switch (tag)
             {
                 case Tag.Font:
@@ -4370,8 +4364,6 @@ namespace Epsitec.Common.Widgets
                     return false;
             }
 
-            return true;
-            */
             return true;
         }
 
@@ -4481,8 +4473,6 @@ namespace Epsitec.Common.Widgets
             double imageHeight = 0
         )
         {
-            // bl-net8-cross
-            /*
             if (currentIndex - startIndex == 0)
                 return;
 
@@ -4501,7 +4491,6 @@ namespace Epsitec.Common.Widgets
             runList.Add(run);
 
             startIndex = currentIndex;
-            */
         }
 
         private void PutTab(

@@ -1120,8 +1120,8 @@ namespace Epsitec.Common.Drawing
             this.clipY2 = y2;
 
             this.rasterizer.SetClipBox(x1, y1, x2, y2);
-            this.pixmap.EmptyClipping();
-            this.pixmap.AddClipBox(x1, y1, x2, y2);
+            // this.pixmap.EmptyClipping();
+            // this.pixmap.AddClipBox(x1, y1, x2, y2);
         }
 
         public void SetClippingRectangles(Drawing.Rectangle[] rectangles)
@@ -1134,7 +1134,7 @@ namespace Epsitec.Common.Drawing
             Drawing.Rectangle clip = this.SaveClippingRectangle();
             Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 
-            this.pixmap.EmptyClipping();
+            // this.pixmap.EmptyClipping();
 
             for (int i = 0; i < rectangles.Length; i++)
             {
@@ -1142,12 +1142,12 @@ namespace Epsitec.Common.Drawing
 
                 if (!rect.IsEmpty)
                 {
-                    this.pixmap.AddClipBox(
-                        rect.Left + this.clipOx,
-                        rect.Bottom + this.clipOy,
-                        rect.Right + this.clipOx,
-                        rect.Top + this.clipOy
-                    );
+                    //this.pixmap.AddClipBox(
+                    //    rect.Left + this.clipOx,
+                    //    rect.Bottom + this.clipOy,
+                    //    rect.Right + this.clipOx,
+                    //    rect.Top + this.clipOy
+                    //);
                     bbox = Drawing.Rectangle.Union(bbox, rect);
                 }
             }
@@ -1166,7 +1166,7 @@ namespace Epsitec.Common.Drawing
             Drawing.Rectangle clip = this.SaveClippingRectangle();
             Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 
-            this.pixmap.EmptyClipping();
+            // this.pixmap.EmptyClipping();
 
             foreach (Drawing.Rectangle rectangle in rectangles)
             {
@@ -1174,12 +1174,12 @@ namespace Epsitec.Common.Drawing
 
                 if (!rect.IsEmpty)
                 {
-                    this.pixmap.AddClipBox(
-                        rect.Left + this.clipOx,
-                        rect.Bottom + this.clipOy,
-                        rect.Right + this.clipOx,
-                        rect.Top + this.clipOy
-                    );
+                    //this.pixmap.AddClipBox(
+                    //    rect.Left + this.clipOx,
+                    //    rect.Bottom + this.clipOy,
+                    //    rect.Right + this.clipOx,
+                    //    rect.Top + this.clipOy
+                    //);
                     bbox = Drawing.Rectangle.Union(bbox, rect);
                 }
             }
@@ -1219,15 +1219,15 @@ namespace Epsitec.Common.Drawing
                 this.hasClipRect = true;
 
                 this.rasterizer.SetClipBox(this.clipX1, this.clipY1, this.clipX2, this.clipY2);
-                this.pixmap.EmptyClipping();
-                this.pixmap.AddClipBox(this.clipX1, this.clipY1, this.clipX2, this.clipY2);
+                // this.pixmap.EmptyClipping();
+                // this.pixmap.AddClipBox(this.clipX1, this.clipY1, this.clipX2, this.clipY2);
             }
         }
 
         public void ResetClippingRectangle()
         {
             this.rasterizer.ResetClipBox();
-            this.pixmap.InfiniteClipping();
+            // this.pixmap.InfiniteClipping();
             this.hasClipRect = false;
         }
 

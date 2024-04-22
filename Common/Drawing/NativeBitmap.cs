@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+
 //using System.Windows.Media;
 //using System.Windows.Media.Imaging;
 
@@ -11,127 +12,136 @@ namespace Epsitec.Common.Drawing.Platform
     //using Color = System.Windows.Media.Color;
 
     public sealed class NativeBitmap : System.IDisposable
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - implement NativeBitmap (stub)
-        // ******************************************************************
+    // ******************************************************************
+    // TODO bl-net8-cross
+    // - implement NativeBitmap (stub)
+    // ******************************************************************
     {
-/*        internal NativeBitmap(
-            BitmapSource bitmapSource,
-            BitmapFileFormat fileFormat = null,
-            BitmapColorType? colorType = null
-        )
-        {
-            //	We really must create a copy of the bitmap source, and not just a
-            //	CachedBitmap, but really a WriteableBitmap, or else WPF will keep
-            //	alive the full bitmap chain, which rapidly leads to memory errors.
-
-            BitmapSource bitmapCopy = null;
-
-            for (int attempt = 0; ; attempt++)
-            {
-                try
+        /*        internal NativeBitmap(
+                    BitmapSource bitmapSource,
+                    BitmapFileFormat fileFormat = null,
+                    BitmapColorType? colorType = null
+                )
                 {
-                    bitmapCopy = new WriteableBitmap(bitmapSource);
-                    break;
-                }
-                catch (System.OutOfMemoryException)
-                {
-                    //	There is no memory available for System.Windows.Media.Imaging to operate
-                    //	properly.
-
-                    if (attempt >= 5)
+                    //	We really must create a copy of the bitmap source, and not just a
+                    //	CachedBitmap, but really a WriteableBitmap, or else WPF will keep
+                    //	alive the full bitmap chain, which rapidly leads to memory errors.
+        
+                    BitmapSource bitmapCopy = null;
+        
+                    for (int attempt = 0; ; attempt++)
                     {
-                        //	No need to try more; the situation is really catastrophic and nothing
-                        //	we can do will help.
-                        throw;
+                        try
+                        {
+                            bitmapCopy = new WriteableBitmap(bitmapSource);
+                            break;
+                        }
+                        catch (System.OutOfMemoryException)
+                        {
+                            //	There is no memory available for System.Windows.Media.Imaging to operate
+                            //	properly.
+        
+                            if (attempt >= 5)
+                            {
+                                //	No need to try more; the situation is really catastrophic and nothing
+                                //	we can do will help.
+                                throw;
+                            }
+        
+                            var handler = NativeBitmap.outOfMemoryHandler;
+        
+                            if (handler == null)
+                            {
+                                break;
+                            }
+        
+                            handler();
+                        }
                     }
-
-                    var handler = NativeBitmap.outOfMemoryHandler;
-
-                    if (handler == null)
+        
+                    this.bitmapSource = bitmapCopy;
+                    this.fileFormat = fileFormat;
+                    this.colorType = colorType;
+        
+                    if (this.bitmapSource.CanFreeze)
                     {
-                        break;
+                        this.bitmapSource.Freeze();
                     }
-
-                    handler();
                 }
-            }
-
-            this.bitmapSource = bitmapCopy;
-            this.fileFormat = fileFormat;
-            this.colorType = colorType;
-
-            if (this.bitmapSource.CanFreeze)
-            {
-                this.bitmapSource.Freeze();
-            }
-        }
-*/
+        */
         public int BitsPerPixel
         {
             //get { return this.bitmapSource == null ? 0 : this.bitmapSource.Format.BitsPerPixel; }
-            get { return 0; }
+            get { throw new System.NotImplementedException(); }
+            //get { return 0; }
         }
 
         public int Width
         {
             //get { return this.bitmapSource == null ? 0 : this.bitmapSource.PixelWidth; }
-            get { return 0; }
+            get { throw new System.NotImplementedException(); }
+            // get { return 0; }
         }
 
         public int Height
         {
             //get { return this.bitmapSource == null ? 0 : this.bitmapSource.PixelHeight; }
-            get { return 0; }
+            get { throw new System.NotImplementedException(); }
+            //get { return 0; }
         }
 
         public bool IsTransparent
         {
-/*            get
-            {
-                if (this.bitmapSource == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    var format = this.bitmapSource.Format;
-
-                    return NativeBitmap.GetRgbAlphaPixelFormats().Any(x => x == format);
-                }
-            }
-*/            get { return false; }
+            /*            get
+                        {
+                            if (this.bitmapSource == null)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                var format = this.bitmapSource.Format;
+            
+                                return NativeBitmap.GetRgbAlphaPixelFormats().Any(x => x == format);
+                            }
+                        }
+            */
+            //  get { return false; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public BitmapFileFormat FileFormat
         {
-            get { return this.fileFormat; }
+            get { throw new System.NotImplementedException(); }
+            //get { return this.fileFormat; }
         }
 
         public int MemorySize
         {
-/*            get
-            {
-                return this.bitmapSource == null ? 0 : this.bitmapSource.PixelHeight * this.Pitch;
-            }
-*/            get { return 0; }
+            /*            get
+                        {
+                            return this.bitmapSource == null ? 0 : this.bitmapSource.PixelHeight * this.Pitch;
+                        }
+            */
+            //  get { return 0; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public int Pitch
         {
-/*            get
-            {
-                if (this.bitmapSource == null)
-                {
-                    return 0;
-                }
-
-                int bytesPerPixel = (this.bitmapSource.Format.BitsPerPixel + 7) / 8;
-                return (this.bitmapSource.PixelWidth * bytesPerPixel + 3) & 0x0ffffffc;
-            }
-*/
-            get { return 0; }
+            /*            get
+                        {
+                            if (this.bitmapSource == null)
+                            {
+                                return 0;
+                            }
+            
+                            int bytesPerPixel = (this.bitmapSource.Format.BitsPerPixel + 7) / 8;
+                            return (this.bitmapSource.PixelWidth * bytesPerPixel + 3) & 0x0ffffffc;
+                        }
+            */
+            //get { return 0; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public string Information { get; set; }
@@ -139,85 +149,90 @@ namespace Epsitec.Common.Drawing.Platform
         public bool IsValid
         {
             //get { return this.bitmapSource != null; }
-            get { return true; }
+            // get { return true; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public BitmapColorType ColorType
         {
-/*            get
-            {
-                if (this.colorType.HasValue)
-                {
-                    return this.colorType.Value;
-                }
-                var format = this.bitmapSource.Format;
-
-                if (NativeBitmap.GetRgbAlphaPixelFormats().Any(x => x == format))
-                {
-                    return BitmapColorType.RgbAlpha;
-                }
-                if (NativeBitmap.GetGrayscalePixelFormats().Any(x => x == format))
-                {
-                    return BitmapColorType.MinIsBlack;
-                }
-                if (NativeBitmap.GetRgbPixelFormats().Any(x => x == format))
-                {
-                    return BitmapColorType.Rgb;
-                }
-                if (NativeBitmap.GetIndexedPixelFormats().Any(x => x == format))
-                {
-                    return BitmapColorType.Palette;
-                }
-                if (NativeBitmap.GetCmykPixelFormats().Any(x => x == format))
-                {
-                    return BitmapColorType.Cmyk;
-                }
-
-                try
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        string.Format(
-                            "ColorType: Format {0} could not be mapped to any type -- {1} bpp / Masks={2}",
-                            format.ToString(),
-                            format.BitsPerPixel,
-                            string.Join(
-                                "-",
-                                format
-                                    .Masks.SelectMany(x => x.Mask)
-                                    .Select(x => x.ToString("x"))
-                                    .ToArray()
-                            )
-                        )
-                    );
-                }
-                catch (System.Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        string.Format("ColorType: Exception {0}", ex.Message)
-                    );
-                }
-
-                return BitmapColorType.Unsupported;
-            }
-*/                
-            get { return BitmapColorType.Unsupported; }
+            /*            get
+                        {
+                            if (this.colorType.HasValue)
+                            {
+                                return this.colorType.Value;
+                            }
+                            var format = this.bitmapSource.Format;
+            
+                            if (NativeBitmap.GetRgbAlphaPixelFormats().Any(x => x == format))
+                            {
+                                return BitmapColorType.RgbAlpha;
+                            }
+                            if (NativeBitmap.GetGrayscalePixelFormats().Any(x => x == format))
+                            {
+                                return BitmapColorType.MinIsBlack;
+                            }
+                            if (NativeBitmap.GetRgbPixelFormats().Any(x => x == format))
+                            {
+                                return BitmapColorType.Rgb;
+                            }
+                            if (NativeBitmap.GetIndexedPixelFormats().Any(x => x == format))
+                            {
+                                return BitmapColorType.Palette;
+                            }
+                            if (NativeBitmap.GetCmykPixelFormats().Any(x => x == format))
+                            {
+                                return BitmapColorType.Cmyk;
+                            }
+            
+                            try
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    string.Format(
+                                        "ColorType: Format {0} could not be mapped to any type -- {1} bpp / Masks={2}",
+                                        format.ToString(),
+                                        format.BitsPerPixel,
+                                        string.Join(
+                                            "-",
+                                            format
+                                                .Masks.SelectMany(x => x.Mask)
+                                                .Select(x => x.ToString("x"))
+                                                .ToArray()
+                                        )
+                                    )
+                                );
+                            }
+                            catch (System.Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    string.Format("ColorType: Exception {0}", ex.Message)
+                                );
+                            }
+            
+                            return BitmapColorType.Unsupported;
+                        }
+            */
+            //get { return BitmapColorType.Unsupported; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public long ByteCount
         {
-            get { return this.Pitch * (long)this.Height; }
+            //get { return this.Pitch * (long)this.Height; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public double DpiX
         {
             //get { return this.bitmapSource == null ? 72 : this.bitmapSource.DpiX; }
-            get { return 72; }
+            //get { return 72; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public double DpiY
         {
             //get { return this.bitmapSource == null ? 72 : this.bitmapSource.DpiY; }
-            get { return 72; }
+            //get { return 72; }
+            get { throw new System.NotImplementedException(); }
         }
 
         #region IDisposable Members
@@ -245,7 +260,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(converter, this.fileFormat);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public NativeBitmap ConvertToRgb24()
@@ -257,7 +273,8 @@ namespace Epsitec.Common.Drawing.Platform
                         converter.EndInit();
 
                         return new NativeBitmap(converter, this.fileFormat);*/
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public NativeBitmap ConvertToGrayscale()
@@ -272,7 +289,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(bitmap, this.fileFormat, BitmapColorType.MinIsBlack);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public NativeBitmap ConvertToArgb32()
@@ -287,7 +305,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(bitmap, this.fileFormat);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public NativeBitmap ConvertToCmyk32()
@@ -302,7 +321,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(bitmap, this.fileFormat);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public NativeBitmap GetChannel(BitmapColorChannel channel)
@@ -346,6 +366,7 @@ namespace Epsitec.Common.Drawing.Platform
 
             temp.CopyPixels(sourceRect, bufferMemory, bufferSize, pitch);
             */
+            throw new System.NotImplementedException();
         }
 
         public byte[] GetRawImageDataInCompactFormFor8BitImage()
@@ -364,7 +385,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return buffer;
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public NativeBitmap Crop(int x, int y, int dx, int dy)
@@ -385,7 +407,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return NativeBitmap.CreateEmpty();
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public static NativeBitmap CreateEmpty()
@@ -455,7 +478,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(bitmap, this.fileFormat);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public NativeBitmap MakeThumbnail(int size)
@@ -488,7 +512,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(bitmap, this.fileFormat);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         public static NativeBitmap Load(string path)
@@ -540,7 +565,8 @@ namespace Epsitec.Common.Drawing.Platform
                 }
             }
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private static NativeBitmap LoadFromMemoryStream(
@@ -560,28 +586,29 @@ namespace Epsitec.Common.Drawing.Platform
             BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat(path);
             return new NativeBitmap(image, fileFormat);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
-/*        public static NativeBitmap Create(System.Drawing.Bitmap bitmap)
-        {
-            switch (bitmap.PixelFormat)
-            {
-                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-                    return SystemDrawingBitmapHelper.Create24bppImage(bitmap);
-
-                case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-                case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
-                    return SystemDrawingBitmapHelper.Create32bppImage(bitmap);
-
-                case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
-                    return SystemDrawingBitmapHelper.Create8bppImage(bitmap);
-
-                default:
-                    return null;
-            }
-        }
-*/
+        /*        public static NativeBitmap Create(System.Drawing.Bitmap bitmap)
+                {
+                    switch (bitmap.PixelFormat)
+                    {
+                        case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+                            return SystemDrawingBitmapHelper.Create24bppImage(bitmap);
+        
+                        case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+                        case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
+                            return SystemDrawingBitmapHelper.Create32bppImage(bitmap);
+        
+                        case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+                            return SystemDrawingBitmapHelper.Create8bppImage(bitmap);
+        
+                        default:
+                            return null;
+                    }
+                }
+        */
         public override string ToString()
         {
             return string.Format(
@@ -617,7 +644,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(bitmap, colorType: BitmapColorType.RgbAlpha);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private void SaveToMemoryJpeg(BitmapFileFormat fileFormat, System.IO.MemoryStream stream)
@@ -629,48 +657,56 @@ namespace Epsitec.Common.Drawing.Platform
             encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
             encoder.Save(stream);
             */
+            throw new System.NotImplementedException();
         }
 
         private void SaveToMemoryPng(BitmapFileFormat fileFormat, System.IO.MemoryStream stream)
         {
-/*            var encoder = new PngBitmapEncoder();
-
-            encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
-            encoder.Save(stream);
-*/        }
+            /*            var encoder = new PngBitmapEncoder();
+            
+                        encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
+                        encoder.Save(stream);
+            */
+            throw new System.NotImplementedException();
+        }
 
         private void SaveToMemoryTiff(BitmapFileFormat fileFormat, System.IO.MemoryStream stream)
         {
-/*            if ((this.ColorType != Platform.BitmapColorType.Cmyk) && (fileFormat.TiffCmyk))
-            {
-                this.ConvertToCmyk32().SaveToMemoryTiff(fileFormat, stream);
-            }
-            else
-            {
-                var encoder = new TiffBitmapEncoder();
-
-                encoder.Compression = (System.Windows.Media.Imaging.TiffCompressOption)
-                    (int)fileFormat.TiffCompression;
-                encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
-                encoder.Save(stream);
-            }
-*/        }
+            /*            if ((this.ColorType != Platform.BitmapColorType.Cmyk) && (fileFormat.TiffCmyk))
+                        {
+                            this.ConvertToCmyk32().SaveToMemoryTiff(fileFormat, stream);
+                        }
+                        else
+                        {
+                            var encoder = new TiffBitmapEncoder();
+            
+                            encoder.Compression = (System.Windows.Media.Imaging.TiffCompressOption)
+                                (int)fileFormat.TiffCompression;
+                            encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
+                            encoder.Save(stream);
+                        }
+            */
+            throw new System.NotImplementedException();
+        }
 
         private void SaveToMemoryBmp(BitmapFileFormat fileFormat, System.IO.MemoryStream stream)
         {
-/*            var encoder = new BmpBitmapEncoder();
-
-            encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
-            encoder.Save(stream);
-*/        }
+            /*            var encoder = new BmpBitmapEncoder();
+            
+                        encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
+                        encoder.Save(stream);
+            */
+        }
 
         private void SaveToMemoryGif(BitmapFileFormat fileFormat, System.IO.MemoryStream stream)
         {
-/*            var encoder = new GifBitmapEncoder();
-
-            encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
-            encoder.Save(stream);
-*/        }
+            /*            var encoder = new GifBitmapEncoder();
+            
+                        encoder.Frames.Add(BitmapFrame.Create(this.bitmapSource));
+                        encoder.Save(stream);
+            */
+            throw new System.NotImplementedException();
+        }
 
         private static BitmapFileFormat GuessFileFormat(string path)
         {
@@ -707,66 +743,66 @@ namespace Epsitec.Common.Drawing.Platform
             return fileFormat;
         }
 
-/*        private static IEnumerable<PixelFormat> GetCmykPixelFormats()
-        {
-            yield return PixelFormats.Cmyk32;
-        }
-
-        private static IEnumerable<PixelFormat> GetRgbAlphaPixelFormats()
-        {
-            yield return PixelFormats.Bgra32;
-
-            yield return PixelFormats.Pbgra32;
-            yield return PixelFormats.Prgba128Float;
-            yield return PixelFormats.Prgba64;
-
-            yield return PixelFormats.Rgba128Float;
-            yield return PixelFormats.Rgba64;
-        }
-
-        private static IEnumerable<PixelFormat> GetRgbPixelFormats()
-        {
-            yield return PixelFormats.Bgr101010;
-            yield return PixelFormats.Bgr24;
-            yield return PixelFormats.Bgr32;
-            yield return PixelFormats.Bgr555;
-            yield return PixelFormats.Bgr565;
-
-            yield return PixelFormats.BlackWhite;
-            yield return PixelFormats.Gray16;
-            yield return PixelFormats.Gray2;
-            yield return PixelFormats.Gray32Float;
-            yield return PixelFormats.Gray4;
-            yield return PixelFormats.Gray8;
-
-            yield return PixelFormats.Indexed1;
-            yield return PixelFormats.Indexed2;
-            yield return PixelFormats.Indexed4;
-            yield return PixelFormats.Indexed8;
-
-            yield return PixelFormats.Rgb128Float;
-            yield return PixelFormats.Rgb24;
-            yield return PixelFormats.Rgb48;
-        }
-
-        private static IEnumerable<PixelFormat> GetGrayscalePixelFormats()
-        {
-            yield return PixelFormats.BlackWhite;
-            yield return PixelFormats.Gray16;
-            yield return PixelFormats.Gray2;
-            yield return PixelFormats.Gray32Float;
-            yield return PixelFormats.Gray4;
-            yield return PixelFormats.Gray8;
-        }
-
-        private static IEnumerable<PixelFormat> GetIndexedPixelFormats()
-        {
-            yield return PixelFormats.Indexed1;
-            yield return PixelFormats.Indexed2;
-            yield return PixelFormats.Indexed4;
-            yield return PixelFormats.Indexed8;
-        }
-*/
+        /*        private static IEnumerable<PixelFormat> GetCmykPixelFormats()
+                {
+                    yield return PixelFormats.Cmyk32;
+                }
+        
+                private static IEnumerable<PixelFormat> GetRgbAlphaPixelFormats()
+                {
+                    yield return PixelFormats.Bgra32;
+        
+                    yield return PixelFormats.Pbgra32;
+                    yield return PixelFormats.Prgba128Float;
+                    yield return PixelFormats.Prgba64;
+        
+                    yield return PixelFormats.Rgba128Float;
+                    yield return PixelFormats.Rgba64;
+                }
+        
+                private static IEnumerable<PixelFormat> GetRgbPixelFormats()
+                {
+                    yield return PixelFormats.Bgr101010;
+                    yield return PixelFormats.Bgr24;
+                    yield return PixelFormats.Bgr32;
+                    yield return PixelFormats.Bgr555;
+                    yield return PixelFormats.Bgr565;
+        
+                    yield return PixelFormats.BlackWhite;
+                    yield return PixelFormats.Gray16;
+                    yield return PixelFormats.Gray2;
+                    yield return PixelFormats.Gray32Float;
+                    yield return PixelFormats.Gray4;
+                    yield return PixelFormats.Gray8;
+        
+                    yield return PixelFormats.Indexed1;
+                    yield return PixelFormats.Indexed2;
+                    yield return PixelFormats.Indexed4;
+                    yield return PixelFormats.Indexed8;
+        
+                    yield return PixelFormats.Rgb128Float;
+                    yield return PixelFormats.Rgb24;
+                    yield return PixelFormats.Rgb48;
+                }
+        
+                private static IEnumerable<PixelFormat> GetGrayscalePixelFormats()
+                {
+                    yield return PixelFormats.BlackWhite;
+                    yield return PixelFormats.Gray16;
+                    yield return PixelFormats.Gray2;
+                    yield return PixelFormats.Gray32Float;
+                    yield return PixelFormats.Gray4;
+                    yield return PixelFormats.Gray8;
+                }
+        
+                private static IEnumerable<PixelFormat> GetIndexedPixelFormats()
+                {
+                    yield return PixelFormats.Indexed1;
+                    yield return PixelFormats.Indexed2;
+                    yield return PixelFormats.Indexed4;
+                    yield return PixelFormats.Indexed8;
+                }
+        */
         private NativeBitmap GetChannelAlpha()
         {
             /*
@@ -779,7 +815,8 @@ namespace Epsitec.Common.Drawing.Platform
                 return this.ConvertToArgb32().GetChannelAlpha();
             }
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private NativeBitmap GetChannelGrayscale()
@@ -794,7 +831,8 @@ namespace Epsitec.Common.Drawing.Platform
                 return this.ConvertToGrayscale();
             }
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private NativeBitmap GetChannelCmyk(BitmapColorChannel channel)
@@ -821,7 +859,8 @@ namespace Epsitec.Common.Drawing.Platform
                 return this.ConvertToCmyk32().GetChannelCmyk(channel);
             }
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private NativeBitmap GetChannelRgb(BitmapColorChannel channel)
@@ -849,7 +888,8 @@ namespace Epsitec.Common.Drawing.Platform
                 return this.ConvertToArgb32().GetChannelRgb(channel);
             }
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private NativeBitmap ExtractChannelFrom32BitSource(int offset)
@@ -866,7 +906,8 @@ namespace Epsitec.Common.Drawing.Platform
                 offset
             );
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private static NativeBitmap ExtractChannelFrom32BitSource(
@@ -900,7 +941,8 @@ namespace Epsitec.Common.Drawing.Platform
 
             return new NativeBitmap(bitmap, colorType: BitmapColorType.MinIsBlack);
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         internal byte[] GetScanline(int y)
@@ -915,7 +957,8 @@ namespace Epsitec.Common.Drawing.Platform
             );
             return scanline;
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         internal NativeBitmap Palettize(IEnumerable<Color> palette)
@@ -931,7 +974,8 @@ namespace Epsitec.Common.Drawing.Platform
                 colorType: BitmapColorType.Palette
             );
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         internal NativeBitmap Quantize(int maxColors, int maxBitsPerPixel)
@@ -949,7 +993,8 @@ namespace Epsitec.Common.Drawing.Platform
                 );
             }
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         internal IEnumerable<Color> GetPalette()
@@ -957,7 +1002,8 @@ namespace Epsitec.Common.Drawing.Platform
             /*
             return this.bitmapSource.Palette.Colors;
             */
-            return null;
+            //return null;
+            throw new System.NotImplementedException();
         }
 
         private static System.Action outOfMemoryHandler;

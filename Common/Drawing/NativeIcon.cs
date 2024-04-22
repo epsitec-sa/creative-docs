@@ -164,7 +164,7 @@ namespace Epsitec.Common.Drawing.Platform
 
             return stream.ToArray();
             */
-            return null;
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -62,11 +62,6 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public System.IntPtr Handle
-        {
-            get { return this.aggBuffer; }
-        }
-
         public bool IsOSBitmap
         {
             get { return this.isOsBitmap; }
@@ -365,6 +360,7 @@ namespace Epsitec.Common.Drawing
             /*
             AntigrainCPP.Buffer.InfiniteClipping(this.aggBuffer);
             */
+            throw new System.NotImplementedException();
         }
 
         public void EmptyClipping()
@@ -372,6 +368,7 @@ namespace Epsitec.Common.Drawing
             /*
             AntigrainCPP.Buffer.EmptyClipping(this.aggBuffer);
             */
+            throw new System.NotImplementedException();
         }
 
         public void AddClipBox(double x1, double y1, double x2, double y2)
@@ -383,6 +380,7 @@ namespace Epsitec.Common.Drawing
             int cy2 = (int)(y2 + 0.9999);
             AntigrainCPP.Buffer.AddClipBox(this.aggBuffer, cx1, cy1, cx2 - 1, cy2 - 1);
             */
+            throw new System.NotImplementedException();
         }
 
         public Color GetPixel(int x, int y)
@@ -419,11 +417,11 @@ namespace Epsitec.Common.Drawing
             {
                 return;
             }
-                /*                
-                if (
-                    (pixFormat == PixelFormat.Format32bppArgb)
-                    || (pixFormat == PixelFormat.Format32bppPArgb)
-                ) */                
+            /*
+            if (
+                (pixFormat == PixelFormat.Format32bppArgb)
+                || (pixFormat == PixelFormat.Format32bppPArgb)
+            ) */
             unsafe
             {
                 byte* pixData = (byte*)pixScan0.ToPointer();
@@ -497,47 +495,47 @@ namespace Epsitec.Common.Drawing
                 */
             }
 
-/*            public RawData(System.Drawing.Bitmap bitmap)
-                : this(bitmap, System.Drawing.Imaging.PixelFormat.Format32bppArgb) { }
-*/
-/*            public RawData(System.Drawing.Bitmap bitmap, System.Drawing.Imaging.PixelFormat format)
-            {
-                System.Drawing.Rectangle clip = new System.Drawing.Rectangle(
-                    0,
-                    0,
-                    bitmap.Width,
-                    bitmap.Height
-                );
-                System.Drawing.Imaging.ImageLockMode mode = System
-                    .Drawing
-                    .Imaging
-                    .ImageLockMode
-                    .ReadWrite;
+            /*            public RawData(System.Drawing.Bitmap bitmap)
+                            : this(bitmap, System.Drawing.Imaging.PixelFormat.Format32bppArgb) { }
+            */
+            /*            public RawData(System.Drawing.Bitmap bitmap, System.Drawing.Imaging.PixelFormat format)
+                        {
+                            System.Drawing.Rectangle clip = new System.Drawing.Rectangle(
+                                0,
+                                0,
+                                bitmap.Width,
+                                bitmap.Height
+                            );
+                            System.Drawing.Imaging.ImageLockMode mode = System
+                                .Drawing
+                                .Imaging
+                                .ImageLockMode
+                                .ReadWrite;
+            
+                            this.bm = bitmap;
+                            this.bmData = bitmap.LockBits(clip, mode, format);
+            
+                            this.stride = this.bmData.Stride;
+                            this.pixels = this.bmData.Scan0;
+                            this.dx = this.bmData.Width;
+                            this.dy = this.bmData.Height;
+                            this.format = format;
+                        }
+            */
 
-                this.bm = bitmap;
-                this.bmData = bitmap.LockBits(clip, mode, format);
-
-                this.stride = this.bmData.Stride;
-                this.pixels = this.bmData.Scan0;
-                this.dx = this.bmData.Width;
-                this.dy = this.bmData.Height;
-                this.format = format;
-            }
-*/
-
-/*            public RawData(Image image)
-                : this(image.BitmapImage.NativeBitmap) { }
-*/
+            /*            public RawData(Image image)
+                            : this(image.BitmapImage.NativeBitmap) { }
+            */
             public RawData(Image image)
             {
                 throw new System.NotImplementedException();
             }
 
-/*            public PixelFormat PixelFormat
-            {
-                get { return this.format; }
-            }
-*/
+            /*            public PixelFormat PixelFormat
+                        {
+                            get { return this.format; }
+                        }
+            */
             public int Stride
             {
                 get { return this.stride; }
