@@ -1,14 +1,15 @@
 //	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUDinternal void MakeTitlelessResizableWindow()
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
     using Epsitec.Common.Types.Collections;
+
     //using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 
     /// <summary>
@@ -16,11 +17,7 @@ namespace Epsitec.Common.Widgets
     /// n'est pas un widget en tant que tel: Window.Root définit le widget à la
     /// racine de la fenêtre.
     /// </summary>
-    public class Window
-        : Types.DependencyObject,
-            Support.Data.IContainer,
-            Support.Platform.IFileOperationWindow,
-            Support.IIsDisposed
+    public class Window : Types.DependencyObject, Support.Data.IContainer, Support.IIsDisposed
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -142,15 +139,6 @@ namespace Epsitec.Common.Widgets
         public static Window FindFromText(string text)
         {
             return Window.windows.FindFirst(window => !window.IsDisposed && window.Text == text);
-        }
-
-        public static Window FindFromHandle(System.IntPtr handle)
-        {
-            return Window.windows.FindFirst(window =>
-                !window.IsDisposed
-                && !window.window.InvokeRequired
-                && window.window.Handle == handle
-            );
         }
 
         public static Window FindFromName(string name)
@@ -678,40 +666,42 @@ namespace Epsitec.Common.Widgets
 
         public bool IsFullScreen
         {
-/*            get
-            {
-                return (this.window != null)
-                    && (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized);
-            }
-*/            get { return true; }
+            /*            get
+                        {
+                            return (this.window != null)
+                                && (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized);
+                        }
+            */get { return true; }
             set
             {
-/*                if (this.window != null)
-                {
-                    this.window.WindowState = value
-                        ? System.Windows.Forms.FormWindowState.Maximized
-                        : System.Windows.Forms.FormWindowState.Normal;
-                }
-*/            }
+                /*                if (this.window != null)
+                                {
+                                    this.window.WindowState = value
+                                        ? System.Windows.Forms.FormWindowState.Maximized
+                                        : System.Windows.Forms.FormWindowState.Normal;
+                                }
+                */
+            }
         }
 
         public bool IsMinimized
         {
-/*            get
-            {
-                return (this.window != null)
-                    && (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized);
-            }
-*/            get { return true; }
+            /*            get
+                        {
+                            return (this.window != null)
+                                && (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized);
+                        }
+            */get { return true; }
             set
             {
-/*                if (this.window != null)
-                {
-                    this.window.WindowState = value
-                        ? System.Windows.Forms.FormWindowState.Minimized
-                        : System.Windows.Forms.FormWindowState.Normal;
-                }
-*/            }
+                /*                if (this.window != null)
+                                {
+                                    this.window.WindowState = value
+                                        ? System.Windows.Forms.FormWindowState.Minimized
+                                        : System.Windows.Forms.FormWindowState.Normal;
+                                }
+                */
+            }
         }
 
         public bool IsToolWindow
@@ -822,14 +812,6 @@ namespace Epsitec.Common.Widgets
             get { return Window.windows.ToArray(); }
         }
 
-        public string DebugWindowHandle
-        {
-            get
-            {
-                return this.window == null ? "<null>" : this.window.Handle.ToInt64().ToString("X");
-            }
-        }
-
         public Drawing.Rectangle PlatformBounds
         {
             get { return new Drawing.Rectangle(this.window.Bounds); }
@@ -848,16 +830,16 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-/*        internal Platform.Window PlatformWindow
-        {
-            get { return this.window; }
-        }
-*/
-/*        public System.Windows.Forms.IWin32Window PlatformWindowObject
-        {
-            get { return this.window; }
-        }
-*/
+        /*        internal Platform.Window PlatformWindow
+                {
+                    get { return this.window; }
+                }
+        */
+        /*        public System.Windows.Forms.IWin32Window PlatformWindowObject
+                {
+                    get { return this.window; }
+                }
+        */
         public Drawing.Point WindowLocation
         {
             get { return this.window.WindowLocation; }
@@ -985,20 +967,20 @@ namespace Epsitec.Common.Widgets
             */
         }
 
-/*        public static void RunInTestEnvironment(System.Windows.Forms.Form form)
-        {
-
-            if (Window.RunningInAutomatedTestEnvironment)
-            {
-                System.Windows.Forms.Application.DoEvents();
-            }
-            else
-            {
-                System.Windows.Forms.Application.Run(form);
-            }
-
-        }
-*/
+        /*        public static void RunInTestEnvironment(System.Windows.Forms.Form form)
+                {
+        
+                    if (Window.RunningInAutomatedTestEnvironment)
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+                    else
+                    {
+                        System.Windows.Forms.Application.Run(form);
+                    }
+        
+                }
+        */
         public System.IDisposable PushPaintFilter(IPaintFilter filter)
         {
             return new PushPaintFilterHelper(this, filter);
@@ -1056,22 +1038,6 @@ namespace Epsitec.Common.Widgets
             get { return this.components; }
         }
         #endregion
-
-        #region IFileOperationWindow Members
-
-        System.IntPtr Support.Platform.IFileOperationWindow.GetPlatformHandle()
-        {
-            //	Cheat: we know that if somebody asks us for the platform handle, then
-            //	this means that a modal dialog window will soon be opened; so, hide the
-            //	tool tips :
-
-            ToolTip.HideAllToolTips();
-
-            return this.window.Handle;
-        }
-
-        #endregion
-
 
         public void DetachDispatcher(CommandDispatcher value)
         {
@@ -1178,6 +1144,7 @@ namespace Epsitec.Common.Widgets
             //			placement = new WindowPlacement (placement.Bounds, !placement.IsFullScreen, placement.IsMinimized, placement.IsHidden);
             //			this.WindowPlacement = placement;
             */
+            throw new System.NotImplementedException();
         }
 
         public void ToggleMinimize()
@@ -1204,6 +1171,7 @@ namespace Epsitec.Common.Widgets
             //			placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, !placement.IsMinimized, placement.IsHidden);
             //			this.WindowPlacement = placement;
             */
+            throw new System.NotImplementedException();
         }
 
         public void SimulateCloseClick()
@@ -1396,7 +1364,8 @@ namespace Epsitec.Common.Widgets
 
         protected virtual void OnAboutToShowWindow()
         {
-            this.AssignWindowOwner();
+            // bl-net8-cross
+            //this.AssignWindowOwner();
             this.ForceLayout();
 
             if (this.AboutToShowWindow != null)
@@ -1422,6 +1391,7 @@ namespace Epsitec.Common.Widgets
                 }
             }
             */
+            throw new System.NotImplementedException();
         }
 
         protected virtual void OnAboutToHideWindow()
@@ -1475,6 +1445,7 @@ namespace Epsitec.Common.Widgets
             this.WindowHidden.Raise(this);
             Window.GlobalWindowHidden.Raise(this);
             */
+            throw new System.NotImplementedException();
         }
 
         internal void OnWindowClosed()
@@ -2101,6 +2072,7 @@ namespace Epsitec.Common.Widgets
 
         internal void DispatchQueuedCommands()
         {
+            /*
             if (Application.MainUIThread != System.Threading.Thread.CurrentThread)
             {
                 return;
@@ -2173,6 +2145,8 @@ namespace Epsitec.Common.Widgets
                 this.isAsyncNotificationQueued = false;
                 this.OnAsyncNotification();
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         internal void DispatchValidation()

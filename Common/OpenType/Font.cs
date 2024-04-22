@@ -1044,36 +1044,6 @@ namespace Epsitec.Common.OpenType
             throw new System.NotImplementedException();
         }
 
-#if false
-        /// <summary>
-        /// Gets the operating system font handle; this works only if the system
-        /// font manager is currently active.
-        /// </summary>
-        /// <param name="size">The font point size.</param>
-        /// <returns>The handle to the font or <c>System.IntPtr.Zero</c>.</returns>
-        public System.IntPtr GetFontHandle(double size)
-        {
-            if (this.useSystemGlyphSize)
-            {
-                FontSizeInfo info = this.identity.GetSizeInfo((int)(size + 0.5));
-                return info.Handle == null ? System.IntPtr.Zero : info.Handle.Handle;
-            }
-
-            return System.IntPtr.Zero;
-        }
-
-        /// <summary>
-        /// Gets the operating system font handle for the "em" size, which is the
-        /// natural size used when designing the font.
-        /// </summary>
-        /// <returns>The handle to the font or <c>System.IntPtr.Zero</c>.</returns>
-        public System.IntPtr GetFontHandleAtEmSize()
-        {
-            FontSizeInfo info = this.identity.GetSizeInfo(this.otHead.UnitsPerEm);
-            return info.Handle == null ? System.IntPtr.Zero : info.Handle.Handle;
-        }
-#endif
-
         /// <summary>
         /// Gets the font ascender.
         /// </summary>
@@ -1081,12 +1051,7 @@ namespace Epsitec.Common.OpenType
         /// <returns>The font ascender.</returns>
         public double GetAscender(double size)
         {
-            /*
-            double scale = size / this.otHead.UnitsPerEm;
-
-            return this.otHhea.MacAscender * scale;
-            */
-            throw new System.NotImplementedException();
+            return this.fontHandle.GetAscender(size);
         }
 
         /// <summary>
@@ -1096,12 +1061,7 @@ namespace Epsitec.Common.OpenType
         /// <returns>The font descender.</returns>
         public double GetDescender(double size)
         {
-            /*
-            double scale = size / this.otHead.UnitsPerEm;
-
-            return this.otHhea.MacDescender * scale;
-            */
-            throw new System.NotImplementedException();
+            return this.fontHandle.GetDescender(size);
         }
 
         /// <summary>
@@ -1111,11 +1071,7 @@ namespace Epsitec.Common.OpenType
         /// <returns>The font line gap.</returns>
         public double GetLineGap(double size)
         {
-            /*
-            double scale = size / this.otHead.UnitsPerEm;
-            return this.otHhea.MacLineGap * scale;
-            */
-            throw new System.NotImplementedException();
+            return this.fontHandle.GetHeight(size);
         }
 
         /// <summary>

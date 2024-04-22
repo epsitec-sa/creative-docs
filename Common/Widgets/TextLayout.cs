@@ -1,8 +1,8 @@
 //	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -4861,8 +4861,7 @@ namespace Epsitec.Common.Widgets
 
         private void GenerateBlocks()
         {
-            // bl-net8-cross
-            /*
+            // TODO please refactor me, I'm hideously long
             //	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
             this.blocks.Clear();
             int textLength = this.MaxTextOffset;
@@ -5208,7 +5207,6 @@ namespace Epsitec.Common.Widgets
                     this.blocks.Add(lb);
                 }
             }
-            */
         }
 
         private double DecimalTabLength(string text, Drawing.TextBreak.XRun[] runs)
