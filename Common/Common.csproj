@@ -7,6 +7,7 @@
   
   <!-- Binaries -->
   <ItemGroup>
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.6.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
   <ItemGroup>
@@ -301,9 +302,9 @@
     <None   Include="Dialogs\Platform\Beep.cs" />
     -->
     <Compile Remove="Dialogs\PrintDialog.cs" />
-    <None   Include="Dialogs\PrintDialog.cs" />
+    <None Include="Dialogs\PrintDialog.cs" />
     <Compile Remove="Dialogs\PrinterDocumentPropertiesDialog.cs" />
-    <None   Include="Dialogs\PrinterDocumentPropertiesDialog.cs" />
+    <None Include="Dialogs\PrinterDocumentPropertiesDialog.cs" />
     <!--
     <Compile Remove="Dialogs\SelectFromList.cs" />
     <None   Include="Dialogs\SelectFromList.cs" />
@@ -371,7 +372,7 @@
     <None   Include="Drawing\FontClassInfo.cs" />
     -->
     <Compile Remove="Drawing\FontFaceInfo.cs" />
-    <None   Include="Drawing\FontFaceInfo.cs" />
+    <None Include="Drawing\FontFaceInfo.cs" />
     <!--
     <Compile Remove="Drawing\GlyphClass.cs" />
     <None   Include="Drawing\GlyphClass.cs" />
@@ -395,55 +396,55 @@
     <None   Include="Drawing\ICanvasFactory.cs" />
     -->
     <Compile Remove="Drawing\IconLib\AuthorAttribute.cs" />
-    <None   Include="Drawing\IconLib\AuthorAttribute.cs" />
+    <None Include="Drawing\IconLib\AuthorAttribute.cs" />
     <Compile Remove="Drawing\IconLib\BitmapEncoders\BmpEncoder.cs" />
-    <None   Include="Drawing\IconLib\BitmapEncoders\BmpEncoder.cs" />
+    <None Include="Drawing\IconLib\BitmapEncoders\BmpEncoder.cs" />
     <Compile Remove="Drawing\IconLib\BitmapEncoders\ImageEncoder.cs" />
-    <None   Include="Drawing\IconLib\BitmapEncoders\ImageEncoder.cs" />
+    <None Include="Drawing\IconLib\BitmapEncoders\ImageEncoder.cs" />
     <Compile Remove="Drawing\IconLib\BitmapEncoders\PngEncoder.cs" />
-    <None   Include="Drawing\IconLib\BitmapEncoders\PngEncoder.cs" />
+    <None Include="Drawing\IconLib\BitmapEncoders\PngEncoder.cs" />
     <Compile Remove="Drawing\IconLib\Enums.cs" />
-    <None   Include="Drawing\IconLib\Enums.cs" />
+    <None Include="Drawing\IconLib\Enums.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\IconNameAlreadyExistException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\IconNameAlreadyExistException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\IconNameAlreadyExistException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\ImageAlreadyExistsException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\ImageAlreadyExistsException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\ImageAlreadyExistsException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\ImageTooBigException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\ImageTooBigException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\ImageTooBigException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\InvalidFileException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\InvalidFileException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\InvalidFileException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\InvalidICLFileException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\InvalidICLFileException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\InvalidICLFileException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\InvalidIconFormatSelectionException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\InvalidIconFormatSelectionException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\InvalidIconFormatSelectionException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\InvalidIconSelectionException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\InvalidIconSelectionException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\InvalidIconSelectionException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\InvalidMultiIconFileException.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\InvalidMultiIconFileException.cs" />
+    <None Include="Drawing\IconLib\Exceptions\InvalidMultiIconFileException.cs" />
     <Compile Remove="Drawing\IconLib\Exceptions\InvalidMultiIconMaskBitmap.cs" />
-    <None   Include="Drawing\IconLib\Exceptions\InvalidMultiIconMaskBitmap.cs" />
+    <None Include="Drawing\IconLib\Exceptions\InvalidMultiIconMaskBitmap.cs" />
     <Compile Remove="Drawing\IconLib\IconImage.cs" />
-    <None   Include="Drawing\IconLib\IconImage.cs" />
+    <None Include="Drawing\IconLib\IconImage.cs" />
     <Compile Remove="Drawing\IconLib\LibraryFormats\IconFormat.cs" />
-    <None   Include="Drawing\IconLib\LibraryFormats\IconFormat.cs" />
+    <None Include="Drawing\IconLib\LibraryFormats\IconFormat.cs" />
     <Compile Remove="Drawing\IconLib\LibraryFormats\ILibraryFormat.cs" />
-    <None   Include="Drawing\IconLib\LibraryFormats\ILibraryFormat.cs" />
+    <None Include="Drawing\IconLib\LibraryFormats\ILibraryFormat.cs" />
     <Compile Remove="Drawing\IconLib\LibraryFormats\NEFormat.cs" />
-    <None   Include="Drawing\IconLib\LibraryFormats\NEFormat.cs" />
+    <None Include="Drawing\IconLib\LibraryFormats\NEFormat.cs" />
     <Compile Remove="Drawing\IconLib\LibraryFormats\PEFormat.cs" />
-    <None   Include="Drawing\IconLib\LibraryFormats\PEFormat.cs" />
+    <None Include="Drawing\IconLib\LibraryFormats\PEFormat.cs" />
     <Compile Remove="Drawing\IconLib\MultiIcon.cs" />
-    <None   Include="Drawing\IconLib\MultiIcon.cs" />
+    <None Include="Drawing\IconLib\MultiIcon.cs" />
     <Compile Remove="Drawing\IconLib\Resource.Designer.cs" />
-    <None   Include="Drawing\IconLib\Resource.Designer.cs" />
+    <None Include="Drawing\IconLib\Resource.Designer.cs" />
     <Compile Remove="Drawing\IconLib\SingleIcon.cs" />
-    <None   Include="Drawing\IconLib\SingleIcon.cs" />
+    <None Include="Drawing\IconLib\SingleIcon.cs" />
     <Compile Remove="Drawing\IconLib\Structs.cs" />
-    <None   Include="Drawing\IconLib\Structs.cs" />
+    <None Include="Drawing\IconLib\Structs.cs" />
     <Compile Remove="Drawing\IconLib\Tools.cs" />
-    <None   Include="Drawing\IconLib\Tools.cs" />
+    <None Include="Drawing\IconLib\Tools.cs" />
     <Compile Remove="Drawing\IconLib\Win32.cs" />
-    <None   Include="Drawing\IconLib\Win32.cs" />
+    <None Include="Drawing\IconLib\Win32.cs" />
     <!--
     <Compile Remove="Drawing\IconSize.cs" />
     <None   Include="Drawing\IconSize.cs" />
@@ -551,7 +552,7 @@
     <None   Include="Drawing\SyntheticFontMode.cs" />
     -->
     <Compile Remove="Drawing\SystemDrawingBitmapHelper.cs" />
-    <None   Include="Drawing\SystemDrawingBitmapHelper.cs" />
+    <None Include="Drawing\SystemDrawingBitmapHelper.cs" />
     <!--
     <Compile Remove="Drawing\TextBreak.cs" />
     <None   Include="Drawing\TextBreak.cs" />
@@ -661,33 +662,33 @@
     <None   Include="IO\ZipFile.cs" />
     -->
     <Compile Remove="Printing\DuplexMode.cs" />
-    <None   Include="Printing\DuplexMode.cs" />
+    <None Include="Printing\DuplexMode.cs" />
     <Compile Remove="Printing\IPrintEngine.cs" />
-    <None   Include="Printing\IPrintEngine.cs" />
+    <None Include="Printing\IPrintEngine.cs" />
     <Compile Remove="Printing\PageSettings.cs" />
-    <None   Include="Printing\PageSettings.cs" />
+    <None Include="Printing\PageSettings.cs" />
     <Compile Remove="Printing\PaperKind.cs" />
-    <None   Include="Printing\PaperKind.cs" />
+    <None Include="Printing\PaperKind.cs" />
     <Compile Remove="Printing\PaperSize.cs" />
-    <None   Include="Printing\PaperSize.cs" />
+    <None Include="Printing\PaperSize.cs" />
     <Compile Remove="Printing\PaperSource.cs" />
-    <None   Include="Printing\PaperSource.cs" />
+    <None Include="Printing\PaperSource.cs" />
     <Compile Remove="Printing\PaperSourceKind.cs" />
-    <None   Include="Printing\PaperSourceKind.cs" />
+    <None Include="Printing\PaperSourceKind.cs" />
     <Compile Remove="Printing\PrintDocument.cs" />
-    <None   Include="Printing\PrintDocument.cs" />
+    <None Include="Printing\PrintDocument.cs" />
     <Compile Remove="Printing\PrinterResolution.cs" />
-    <None   Include="Printing\PrinterResolution.cs" />
+    <None Include="Printing\PrinterResolution.cs" />
     <Compile Remove="Printing\PrinterSettings.cs" />
-    <None   Include="Printing\PrinterSettings.cs" />
+    <None Include="Printing\PrinterSettings.cs" />
     <Compile Remove="Printing\PrintPort.cs" />
-    <None   Include="Printing\PrintPort.cs" />
+    <None Include="Printing\PrintPort.cs" />
     <Compile Remove="Printing\PrintRange.cs" />
-    <None   Include="Printing\PrintRange.cs" />
+    <None Include="Printing\PrintRange.cs" />
     <Compile Remove="Printing\Win32Caps.cs" />
-    <None   Include="Printing\Win32Caps.cs" />
+    <None Include="Printing\Win32Caps.cs" />
     <Compile Remove="Printing\XmlPort.cs" />
-    <None   Include="Printing\XmlPort.cs" />
+    <None Include="Printing\XmlPort.cs" />
     <!--
     <Compile Remove="Resources\Common.Dialogs\SourceCode\Entities.cs" />
     <None   Include="Resources\Common.Dialogs\SourceCode\Entities.cs" />
@@ -1039,7 +1040,7 @@
     <None   Include="Support\Platform\Shortcut.cs" />
     -->
     <Compile Remove="Support\Platform\StockIcons.cs" />
-    <None   Include="Support\Platform\StockIcons.cs" />
+    <None Include="Support\Platform\StockIcons.cs" />
     <!--
     <Compile Remove="Support\Platform\UserAccountApi.cs" />
     <None   Include="Support\Platform\UserAccountApi.cs" />
@@ -1071,7 +1072,7 @@
     <None   Include="Support\Platform\Win32\ShellShortcut.cs" />
     -->
     <Compile Remove="Support\Platform\Win32\StockIcons.cs" />
-    <None   Include="Support\Platform\Win32\StockIcons.cs" />
+    <None Include="Support\Platform\Win32\StockIcons.cs" />
     <!--
     <Compile Remove="Support\Platform\Win32\UserAccountApi.cs" />
     <None   Include="Support\Platform\Win32\UserAccountApi.cs" />
@@ -2647,7 +2648,7 @@
     <None   Include="Widgets\Platform\RestartManager.cs" />
     -->
     <Compile Remove="Widgets\Platform\Win32Api.cs" />
-    <None   Include="Widgets\Platform\Win32Api.cs" />
+    <None Include="Widgets\Platform\Win32Api.cs" />
     <!--
     <Compile Remove="Widgets\Platform\Win32Const.cs" />
     <None   Include="Widgets\Platform\Win32Const.cs" />

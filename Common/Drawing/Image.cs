@@ -11,10 +11,20 @@ namespace Epsitec.Common.Drawing
         public Image()
             : this(0L) { }
 
+        public Image(Point? origin, Size size)
+            : this(0L)
+        {
+            this.size = size;
+            if (origin != null)
+            {
+                this.origin = origin;
+            }
+        }
+
         public Image(long uniqueId)
         {
             this.size = Size.Empty;
-            this.origin = new Point();
+            this.origin = null;
             this.dpiX = 96;
             this.dpiY = 96;
 
@@ -61,12 +71,12 @@ namespace Epsitec.Common.Drawing
         {
             //	0 < origin < size: l'origine est dans l'image
 
-            get { return this.origin; }
+            get { return this.IsOriginDefined ? (Point)this.origin : new Point(); }
         }
 
         public virtual bool IsOriginDefined
         {
-            get { return this.isOriginDefined; }
+            get { return this.origin != null; }
         }
 
         public bool IsEmpty
@@ -123,12 +133,11 @@ namespace Epsitec.Common.Drawing
 
         public virtual void RemoveFromCache() { }
 
-        internal bool isOriginDefined;
         internal double dpiX;
         internal double dpiY;
 
         protected Size size;
-        protected Point origin;
+        protected Point? origin;
         private long uniqueId;
 
         private static long uniqueIdSeed = 1;

@@ -626,14 +626,6 @@ namespace Epsitec.Common.Drawing
             double imageHeight
         )
         {
-            // TODO bl-net8-cross
-            // bitmap is always null
-
-            //if (bitmap == null)
-            //{
-            //    return;
-            //}
-
             double ix1 = imageOriginX;
             double iy1 = imageOriginY;
             double ix2 = imageOriginX + imageWidth;
@@ -675,7 +667,6 @@ namespace Epsitec.Common.Drawing
 
             Transform transform = Transform.Identity;
 
-#if true
             Point vectorOo = new Point(0, 0);
             vectorOo = this.ApplyTransformDirect(vectorOo);
             Point vectorOx = new Point(1, 0);
@@ -704,29 +695,22 @@ namespace Epsitec.Common.Drawing
                             ? (fillHeight - adjust / fixY) / (iy2 - iy1 - adjust)
                             : 1.0
                     );
-#else
-			double sx = (ix2-ix1 < 1) ? (Graphics.AlmostInfinite) : ((fillWidth > 1)  ? (fill_width)  / (ix2-ix1) : 1.0);
-			double sy = (iy2-iy1 < 1) ? (Graphics.AlmostInfinite) : ((fillHeight > 1) ? (fill_height) / (iy2-iy1) : 1.0);
-#endif
-            //Drawing.Bitmap bmi = bitmap.BitmapImage;
+            Drawing.Bitmap bmi = bitmap.BitmapImage;
 
-            // TODO bl-net8-cross
-            //sx *= bitmap.Width / bmi.PixelWidth;
-            //sy *= bitmap.Height / bmi.PixelHeight;
+            sx *= bitmap.Width / bmi.PixelWidth;
+            sy *= bitmap.Height / bmi.PixelHeight;
 
             transform = transform.Translate(-ix1, -iy1);
             transform = transform.Scale(sx, sy);
             transform = transform.Translate(fillX, fillY);
 
             this.AddFilledRectangle(fillX, fillY, fillWidth, fillHeight);
-            // TODO bl-net8-cross
-            //this.ImageRenderer.BitmapImage = bitmap;
+            this.ImageRenderer.BitmapImage = bitmap;
             this.ImageRenderer.Transform = transform;
 
             this.ImageRenderer.SelectAdvancedFilter(this.imageFilter.Mode, this.imageFilter.Radius);
             this.RenderImage();
-            // TODO bl-net8-cross
-            //this.ImageRenderer.BitmapImage = null;
+            this.ImageRenderer.BitmapImage = null;
         }
 
         public void PaintVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)

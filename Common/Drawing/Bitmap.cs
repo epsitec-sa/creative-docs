@@ -1,9 +1,7 @@
 //	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Runtime.InteropServices;
 using Epsitec.Common.Drawing.Platform;
-using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.Drawing
 {
@@ -11,41 +9,39 @@ namespace Epsitec.Common.Drawing
     // TODO bl-net8-cross
     // - implement the Bitmap class (stub for now)
     // ******************************************************************
-    using Epsitec.Common.Widgets.Platform;
-
-    public class BitmapData { } // TODO bl-net8-cross move this to a separate file
 
     /// <summary>
     /// La classe Bitmap encapsule une image de type bitmap.
     /// </summary>
     public class Bitmap : Image
     {
-        public Bitmap() { }
+        public Bitmap(Point? origin, Size size)
+            : base(origin, size) { }
 
         public override Bitmap BitmapImage
         {
             get { return this; }
         }
 
-        public bool IsLocked
-        {
-            //get { return this.bitmapData != null; }
-            get { return false; }
-        }
+        //public bool IsLocked
+        //{
+        //    //get { return this.bitmapData != null; }
+        //    get { return false; }
+        //}
 
-        public System.IntPtr Scan0
-        {
-            /*            get
-                        {
-                            if (this.bitmapData == null)
-                            {
-                                return System.IntPtr.Zero;
-                            }
-            
-                            return this.bitmapData.Scan0;
-                        }
-            */get { return System.IntPtr.Zero; }
-        }
+        //public System.IntPtr Scan0
+        //{
+        //    /*            get
+        //                {
+        //                    if (this.bitmapData == null)
+        //                    {
+        //                        return System.IntPtr.Zero;
+        //                    }
+
+        //                    return this.bitmapData.Scan0;
+        //                }
+        //    */get { return System.IntPtr.Zero; }
+        //}
 
         public int Stride
         {
@@ -55,10 +51,12 @@ namespace Epsitec.Common.Drawing
                             {
                                 return 0;
                             }
-            
+
                             return this.bitmapData.Stride;
                         }
-            */get { return 0; }
+            */
+            //get { return 0; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public byte[] GetRawBitmapBytes()
@@ -85,13 +83,14 @@ namespace Epsitec.Common.Drawing
                             this.UnlockBits();
                         }
             */
-            return null;
+            throw new System.NotImplementedException();
         }
 
         public bool IsValid
         {
             //get { return this.bitmap != null; }
-            get { return true; }
+            //get { return true; }
+            get { throw new System.NotImplementedException(); }
         }
 
         public int PixelWidth
@@ -104,11 +103,11 @@ namespace Epsitec.Common.Drawing
             get { return this.bitmapDy; }
         }
 
-        public static ICanvasFactory CanvasFactory
-        {
-            get { return Bitmap.canvasFactory; }
-            set { Bitmap.canvasFactory = value; }
-        }
+        //public static ICanvasFactory CanvasFactory
+        //{
+        //    get { return Bitmap.canvasFactory; }
+        //    set { Bitmap.canvasFactory = value; }
+        //}
 
         public override void DefineZoom(double zoom)
         {
@@ -135,6 +134,7 @@ namespace Epsitec.Common.Drawing
             bool alphaPremultiplied
         )
         {
+            /*
             //	A partir de la même image, une fois sur fond noir et une fois sur
             //	fond blanc, on calcule les composantes rgb ainsi que la transparence,
             //	directement dans l'image blanche (pour éviter l'emploi d'un 3ème
@@ -180,6 +180,8 @@ namespace Epsitec.Common.Drawing
 
             bitmapBlack.UnlockBits();
             bitmapWhite.UnlockBits();
+            */
+            throw new System.NotImplementedException();
         }
 
         private static void MergePixel(
@@ -192,6 +194,7 @@ namespace Epsitec.Common.Drawing
             ref int aw
         )
         {
+            /*
             int ar = 255 - (rw - rb);
             int ag = 255 - (gw - gb);
             int ab = 255 - (bw - bb);
@@ -236,13 +239,18 @@ namespace Epsitec.Common.Drawing
             }
 
             aw = (ar + ag + ab) / 3;
+            */
+            throw new System.NotImplementedException();
         }
 
         private static void MultiplyAlpha(ref int r, ref int g, ref int b, ref int a)
         {
+            /*
             r = (r * a) / 256;
             g = (g * a) / 256;
             b = (b * a) / 256;
+            */
+            throw new System.NotImplementedException();
         }
 
         public bool LockBits()
@@ -434,114 +442,9 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        /*        public byte[] Save(
-                    ImageFormat format,
-                    int depth,
-                    int quality,
-                    ImageCompression compression,
-                    double dpi,
-                    System.Drawing.RotateFlipType rotateFlip =
-                        System.Drawing.RotateFlipType.RotateNoneFlipNone
-                )
-                {
-                    System.Collections.ArrayList list = new System.Collections.ArrayList();
-        
-                    if (format == ImageFormat.Jpeg)
-                    {
-                        System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Quality;
-                        System.Drawing.Imaging.EncoderParameter parameter =
-                            new System.Drawing.Imaging.EncoderParameter(encoder, (long)(quality));
-        
-                        list.Add(parameter);
-                    }
-        
-                    if (format == ImageFormat.Tiff)
-                    {
-                        System.Drawing.Imaging.EncoderValue value = System
-                            .Drawing
-                            .Imaging
-                            .EncoderValue
-                            .CompressionNone;
-        
-                        switch (compression)
-                        {
-                            case ImageCompression.Lzw:
-                                value = System.Drawing.Imaging.EncoderValue.CompressionLZW;
-                                break;
-                            case ImageCompression.FaxGroup3:
-                                value = System.Drawing.Imaging.EncoderValue.CompressionCCITT3;
-                                break;
-                            case ImageCompression.FaxGroup4:
-                                value = System.Drawing.Imaging.EncoderValue.CompressionCCITT4;
-                                break;
-                            case ImageCompression.Rle:
-                                value = System.Drawing.Imaging.EncoderValue.CompressionRle;
-                                break;
-                        }
-        
-                        System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Compression;
-                        System.Drawing.Imaging.EncoderParameter parameter =
-                            new System.Drawing.Imaging.EncoderParameter(encoder, (long)(value));
-        
-                        list.Add(parameter);
-                    }
-        
-                    if (
-                        (format == ImageFormat.Bmp)
-                        || (format == ImageFormat.Png)
-                        || (format == ImageFormat.Tiff)
-                    )
-                    {
-                        System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.ColorDepth;
-                        System.Drawing.Imaging.EncoderParameter parameter =
-                            new System.Drawing.Imaging.EncoderParameter(encoder, (long)(depth));
-        
-                        list.Add(parameter);
-                    }
-        
-                    if ((format == ImageFormat.WindowsIcon) || (format == ImageFormat.WindowsPngIcon))
-                    {
-                        return this.SaveIcon(format);
-                    }
-        
-                    System.Drawing.Imaging.ImageCodecInfo encoderInfo = Bitmap.GetCodecInfo(format);
-                    System.Drawing.Imaging.EncoderParameters encoderParams =
-                        new System.Drawing.Imaging.EncoderParameters(list.Count);
-        
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        encoderParams.Param[i] = list[i] as System.Drawing.Imaging.EncoderParameter;
-                    }
-        
-                    if (encoderInfo != null)
-                    {
-                        System.IO.MemoryStream stream = new System.IO.MemoryStream();
-                        System.Drawing.Bitmap bitmap = this.NativeBitmap;
-        
-                        if (rotateFlip != System.Drawing.RotateFlipType.RotateNoneFlipNone)
-                        {
-                            bitmap.RotateFlip(rotateFlip);
-                        }
-        
-                        bitmap.SetResolution((float)dpi, (float)dpi);
-                        bitmap.Save(stream, encoderInfo, encoderParams);
-                        stream.Close();
-        
-                        byte[] data = stream.ToArray();
-        
-                        if (data == null)
-                        {
-                            return null;
-                        }
-        
-                        return data;
-                    }
-        
-                    return null;
-                }
-        */
         private byte[] SaveIcon(ImageFormat format)
         {
+            /*
             byte[] imageBytes = this.GetRawBitmapBytes();
 
             switch (format)
@@ -565,10 +468,13 @@ namespace Epsitec.Common.Drawing
                 default:
                     return null;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public override Image GetImageForPaintStyle(GlyphPaintStyle style)
         {
+            /*
             switch (style)
             {
                 case GlyphPaintStyle.Normal:
@@ -578,10 +484,13 @@ namespace Epsitec.Common.Drawing
             }
 
             return null;
+            */
+            throw new System.NotImplementedException();
         }
 
         public static Image FromImage(NativeBitmap image)
         {
+            /*
             if ((image == null) || (image.IsValid == false))
             {
                 return null;
@@ -598,10 +507,13 @@ namespace Epsitec.Common.Drawing
             {
                 return null;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public static Image FromPixmap(Pixmap pixmap)
         {
+            /*
             Bitmap bitmap = new Bitmap();
 
             bitmap.pixmap = pixmap;
@@ -614,7 +526,7 @@ namespace Epsitec.Common.Drawing
             //	Prétend que le bitmap est verrouillé, puisqu'on a de toute façons déjà accès aux
             //	pixels (c'est d'ailleurs bien la seule chose qu'on a) :
 
-            bitmap.bitmapLockCount = 1;
+            //bitmap.bitmapLockCount = 1;
             bitmap.isOriginDefined = true;
 
             /*            int dx,
@@ -632,8 +544,10 @@ namespace Epsitec.Common.Drawing
                         bitmap.bitmapData.PixelFormat = format;
                         bitmap.bitmapData.Scan0 = pixels;
                         bitmap.bitmapData.Stride = stride;
-            */
+            //
             return bitmap;
+            */
+            throw new System.NotImplementedException();
         }
 
         public static Image FromNativeBitmap(int dx, int dy)
@@ -643,38 +557,6 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        /*        public static Image FromNativeBitmap(System.Drawing.Bitmap native)
-                {
-                    Image bitmap = Bitmap.FromNativeBitmap(native, new Point(0, 0));
-                    bitmap.isOriginDefined = false;
-                    return bitmap;
-                }
-        */
-        /*        public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin)
-                {
-                    return Bitmap.FromNativeBitmap(native, origin, Size.Empty);
-                }
-        */
-        /*        public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin, Size size)
-                {
-                    if (size == Size.Empty)
-                    {
-                        size = new Size(native.Width, native.Height);
-                    }
-        
-                    Bitmap bitmap = new Bitmap();
-        
-                    bitmap.bitmap = native;
-                    bitmap.bitmapDx = native.Width;
-                    bitmap.bitmapDy = native.Height;
-                    bitmap.size = size;
-                    bitmap.origin = origin;
-        
-                    bitmap.isOriginDefined = true;
-        
-                    return bitmap;
-                }
-        */
         public static Image FromNativeBitmap(byte[] data)
         {
             /*            var bitmap = Bitmap.DecompressBitmap(data);
@@ -796,41 +678,9 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        /*        public static Image FromNativeIcon(System.Drawing.Icon native)
-                {
-                    if (native == null)
-                    {
-                        return null;
-                    }
-        
-                    System.Drawing.Bitmap srcBitmap = native.ToBitmap();
-                    System.Drawing.Bitmap dstBitmap;
-        
-                    double dpiX = srcBitmap.HorizontalResolution;
-                    double dpiY = srcBitmap.VerticalResolution;
-        
-                    int dx = srcBitmap.Width;
-                    int dy = srcBitmap.Height;
-        
-                    dstBitmap = Bitmap.ConvertIcon(native.Handle, dx, dy);
-        
-                    Bitmap bitmap = new Bitmap();
-        
-                    bitmap.bitmap = dstBitmap;
-                    bitmap.bitmapDx = dx;
-                    bitmap.bitmapDy = dy;
-                    bitmap.size = new Size(dx, dy);
-                    bitmap.origin = new Point(0, 0);
-                    bitmap.isOriginDefined = false;
-        
-                    bitmap.dpiX = dpiX;
-                    bitmap.dpiY = dpiY;
-        
-                    return bitmap;
-                }
-        */
         public static Image FromData(byte[] data)
         {
+            /*
             Image bitmap = Bitmap.FromData(data, new Point(0, 0));
 
             if (bitmap == null)
@@ -842,288 +692,84 @@ namespace Epsitec.Common.Drawing
                 bitmap.isOriginDefined = false;
                 return bitmap;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
-        public static Image FromData(byte[] data, Point origin)
+        public static Image FromData(byte[] data, Point? origin)
         {
             return Bitmap.FromData(data, origin, Size.Empty);
         }
 
-        public static Image FromData(byte[] data, Point origin, Size size)
+        public static Image FromData(byte[] data, Point? origin, Size size)
         {
-            /*            //	Avant de passer les données brutes à .NET pour en extraire l'image de
-                        //	format PNG/TIFF/JPEG, on regarde s'il ne s'agit pas d'un format "maison".
-            
-                        if (data.Length > 40)
-                        {
-                            if ((data[0] == (byte)'<') && (data[1] == (byte)'?'))
-                            {
-                                //	Il y a de très fortes chances que ce soit une image vectorielle définie
-                                //	au moyen du format interne propre à EPSITEC.
-            
-                                if (Bitmap.canvasFactory != null)
-                                {
-                                    return Bitmap.canvasFactory.CreateCanvas(data);
-                                }
-                                else
-                                {
-                                    return null;
-                                }
-                            }
-                        }
-            
-                        //	If the data we get is an EMF/WMF file (it should have the D7CDC69A header),
-                        //	then use the dedicated Metafile class to read and render it. This preserves
-                        //	the resolution.
-            
-                        if (
-                            (data.Length > 4)
-                            && (data[0] == 0xD7)
-                            && (data[1] == 0xCD)
-                            && (data[2] == 0xC6)
-                            && (data[3] == 0x9A)
-                        )
-                        {
-                            using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data, false))
-                            {
-                                System.Drawing.Imaging.Metafile metafile = new System.Drawing.Imaging.Metafile(
-                                    stream
-                                );
-            
-                                double dpiX = metafile.HorizontalResolution;
-                                double dpiY = metafile.VerticalResolution;
-            
-                                int dx = metafile.Width;
-                                int dy = metafile.Height;
-            
-                                int bitmapWidth = dx;
-                                int bitmapHeight = dy;
-            
-                                //	Don't allocate a pixmap with more than 100 Mpixels... which is
-                                //	already really huge.
-            
-                                while (
-                                    (bitmapWidth * bitmapHeight > 100 * 1000 * 1000)
-                                    && (dpiX * dpiY > 100 * 100)
-                                )
-                                {
-                                    bitmapWidth /= 2;
-                                    bitmapHeight /= 2;
-                                    dpiX /= 2;
-                                    dpiY /= 2;
-                                }
-            
-                                if ((bitmapWidth != dx) || (bitmapHeight != dy))
-                                {
-                                    System.Diagnostics.Debug.WriteLine(
-                                        string.Format(
-                                            "Reduced WMF size from {0}x{1} to {2}x{3} pixels",
-                                            dx,
-                                            dy,
-                                            bitmapWidth,
-                                            bitmapHeight
-                                        )
-                                    );
-                                }
-            
-                                System.Drawing.Bitmap dstBitmap;
-            
-                                try
-                                {
-                                    dstBitmap = new System.Drawing.Bitmap(bitmapWidth, bitmapHeight);
-                                }
-                                catch
-                                {
-                                    dstBitmap = null;
-                                }
-            
-                                using (
-                                    System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(
-                                        dstBitmap
-                                    )
-                                )
-                                {
-                                    graphics.DrawImage(metafile, 0, 0, bitmapWidth, bitmapHeight);
-                                }
-            
-                                Image image = Bitmap.FromNativeBitmap(dstBitmap, origin, size);
-            
-                                if (image != null)
-                                {
-                                    image.dpiX = dpiX;
-                                    image.dpiY = dpiY;
-                                }
-            
-                                return image;
-                            }
-                        }
-                        else
-                        {
-                            for (int attempt = 0; attempt < 10; attempt++)
-                            {
-                                try
-                                {
-                                    System.Drawing.Bitmap srcBitmap = Bitmap.DecompressBitmap(data);
-                                    System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap(8, 8);
-            
-                                    double dpiX = srcBitmap.HorizontalResolution;
-                                    double dpiY = srcBitmap.VerticalResolution;
-            
-                                    srcBitmap.SetResolution(
-                                        dstBitmap.HorizontalResolution,
-                                        dstBitmap.VerticalResolution
-                                    );
-            
-                                    using (
-                                        System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(
-                                            dstBitmap
-                                        )
-                                    )
-                                    {
-                                        try
-                                        {
-                                            graphics.DrawImageUnscaled(srcBitmap, 0, 0);
-                                        }
-                                        catch
-                                        {
-                                            graphics.DrawImageUnscaled(srcBitmap, 0, 0);
-                                        }
-                                    }
-            
-                                    dstBitmap = srcBitmap;
-                                    Image image = Bitmap.FromNativeBitmap(dstBitmap, origin, size);
-            
-                                    if (image != null)
-                                    {
-                                        image.dpiX = dpiX;
-                                        image.dpiY = dpiY;
-                                    }
-            
-                                    return image;
-                                }
-                                catch
-                                {
-                                    System.Diagnostics.Debug.WriteLine(
-                                        "Out of memory in GDI - attempt " + attempt
-                                    );
-                                    Bitmap.NotifyMemoryExhauted();
-                                }
-                            }
-            
-                            return null;
-                        }
-            */
-            //return new Bitmap();
-            throw new System.NotImplementedException();
+            //	Avant de passer les données brutes à .NET pour en extraire l'image de
+            //	format PNG/TIFF/JPEG, on regarde s'il ne s'agit pas d'un format "maison".
+
+            if (data.Length > 40)
+            {
+                if ((data[0] == (byte)'<') && (data[1] == (byte)'?'))
+                {
+                    //	Il y a de très fortes chances que ce soit une image vectorielle définie
+                    //	au moyen du format interne propre à EPSITEC.
+
+                    if (Bitmap.canvasFactory != null)
+                    {
+                        return Bitmap.canvasFactory.CreateCanvas(data);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            using ImageMagick.MagickImage image = new ImageMagick.MagickImage(data);
+
+            if (size == Size.Empty)
+            {
+                size = new Size(image.Width, image.Height);
+            }
+            Bitmap bitmap = new Bitmap(origin, size);
+            bitmap.bitmapDx = image.Width;
+            bitmap.bitmapDy = image.Height;
+
+            return bitmap;
         }
 
-        /*        private static System.Drawing.Bitmap DecompressBitmap(byte[] data)
-                {
-                    try
-                    {
-                        if (Bitmap.IsPngHeader(data))
-                        {
-                            var bitmap = Bitmap.DecompressPngBitmap(data);
-        
-                            if (bitmap != null)
-                            {
-                                return bitmap;
-                            }
-                        }
-        
-                        using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data, false))
-                        {
-                            return new System.Drawing.Bitmap(stream);
-                        }
-                    }
-                    catch (ExternalException)
-                    {
-                        using (var native = Platform.NativeBitmap.Load(data))
-                        {
-                            var bytes = native.SaveToMemory(Platform.BitmapFileType.Bmp);
-        
-                            using (
-                                System.IO.MemoryStream stream2 = new System.IO.MemoryStream(bytes, false)
-                            )
-                            {
-                                return new System.Drawing.Bitmap(stream2);
-                            }
-                        }
-                    }
-                }
-        */
-        private static bool IsPngHeader(byte[] data)
-        {
-            return (data[0] == 0x89) && (data[1] == 0x50) && (data[2] == 0x4e) && (data[3] == 0x47);
-        }
-
-        /*        private static System.Drawing.Bitmap DecompressPngBitmap(byte[] data)
-                {
-                    using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data, false))
-                    {
-                        //	We have to use the WPF decompression code, since GDI+ 8-bit PNG palette handling
-                        //	is broken (an 8-bit PNG will always be loaded as 32-bit by GDI+)
-                        //	http://social.msdn.microsoft.com/Forums/vstudio/en-US/02b1caee-f26f-40e9-ba23-524e8bbf902e/gdi-or-net-bug-8bpp-png-loaded-as-32bpp
-        
-                        var pngDecoder = new System.Windows.Media.Imaging.PngBitmapDecoder(
-                            stream,
-                            System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat,
-                            System.Windows.Media.Imaging.BitmapCacheOption.OnDemand
-                        );
-                        var pngFrame = pngDecoder.Frames[0];
-                        var pngSource = pngFrame as System.Windows.Media.Imaging.BitmapSource;
-                        var pngFormat = pngSource.Format;
-        
-                        if (pngFormat.BitsPerPixel > 24)
-                        {
-                            return null;
-                        }
-        
-                        return Bitmap.CreateBmpBitmap(pngFrame);
-                    }
-                }
-        */
-        /*        private static System.Drawing.Bitmap CreateBmpBitmap(
-                    System.Windows.Media.Imaging.BitmapFrame pngFrame
-                )
-                {
-                    var bmpEncoder = new System.Windows.Media.Imaging.BmpBitmapEncoder();
-        
-                    bmpEncoder.Frames.Add(pngFrame);
-        
-                    using (var bmpStream = new System.IO.MemoryStream())
-                    {
-                        bmpEncoder.Save(bmpStream);
-                        bmpStream.Seek(0, System.IO.SeekOrigin.Begin);
-        
-                        return new System.Drawing.Bitmap(bmpStream);
-                    }
-                }
-        */
         private static void NotifyMemoryExhauted()
         {
+            /*
             Bitmap.OnOutOfMemoryEncountered();
             System.GC.Collect();
             System.Threading.Thread.Sleep(1);
+            */
+            throw new System.NotImplementedException();
         }
 
         private static void OnOutOfMemoryEncountered()
         {
+            /*
             var handler = Bitmap.OutOfMemoryEncountered;
 
             if (handler != null)
             {
                 handler(null);
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         public static event Support.EventHandler OutOfMemoryEncountered;
 
         public static Image FromFile(string fileName)
         {
+            /*
             Image bitmap = Bitmap.FromFile(fileName, new Point(0, 0));
             bitmap.isOriginDefined = false;
             return bitmap;
+            */
+            throw new System.NotImplementedException();
         }
 
         public static Image FromFile(string fileName, Point origin)
@@ -1176,12 +822,7 @@ namespace Epsitec.Common.Drawing
                 return null;
             }
 
-            Image bitmap = Bitmap.FromManifestResource(resourceName, assembly, new Point(0, 0));
-
-            if (bitmap != null)
-            {
-                bitmap.isOriginDefined = false;
-            }
+            Image bitmap = Bitmap.FromManifestResource(resourceName, assembly, null);
 
             return bitmap;
         }
@@ -1189,7 +830,7 @@ namespace Epsitec.Common.Drawing
         public static Image FromManifestResource(
             string resourceName,
             System.Reflection.Assembly assembly,
-            Point origin
+            Point? origin
         )
         {
             return Bitmap.FromManifestResource(resourceName, assembly, origin, Size.Empty);
@@ -1198,7 +839,7 @@ namespace Epsitec.Common.Drawing
         public static Image FromManifestResource(
             string resourceName,
             System.Reflection.Assembly assembly,
-            Point origin,
+            Point? origin,
             Size size
         )
         {
@@ -1305,12 +946,11 @@ namespace Epsitec.Common.Drawing
 
         public static Image FromLargerImage(Image image, Rectangle clip)
         {
-            Image bitmap = Bitmap.FromLargerImage(image, clip, Point.Zero);
-            bitmap.isOriginDefined = false;
+            Image bitmap = Bitmap.FromLargerImage(image, clip, null);
             return bitmap;
         }
 
-        public static Image FromLargerImage(Image image, Rectangle clip, Point origin)
+        public static Image FromLargerImage(Image image, Rectangle clip, Point? origin)
         {
             /*            if (image == null)
                         {
@@ -1356,103 +996,6 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        /*        public static ImageFormat MapFromMicrosoftImageFormat(
-                    System.Drawing.Imaging.ImageFormat format
-                )
-                {
-                    if (format == System.Drawing.Imaging.ImageFormat.Bmp)
-                        return ImageFormat.Bmp;
-                    if (format == System.Drawing.Imaging.ImageFormat.Gif)
-                        return ImageFormat.Gif;
-                    if (format == System.Drawing.Imaging.ImageFormat.Png)
-                        return ImageFormat.Png;
-                    if (format == System.Drawing.Imaging.ImageFormat.Tiff)
-                        return ImageFormat.Tiff;
-                    if (format == System.Drawing.Imaging.ImageFormat.Jpeg)
-                        return ImageFormat.Jpeg;
-                    if (format == System.Drawing.Imaging.ImageFormat.Exif)
-                        return ImageFormat.Exif;
-                    if (format == System.Drawing.Imaging.ImageFormat.Icon)
-                        return ImageFormat.WindowsIcon;
-                    if (format == System.Drawing.Imaging.ImageFormat.Emf)
-                        return ImageFormat.WindowsEmf;
-                    if (format == System.Drawing.Imaging.ImageFormat.Wmf)
-                        return ImageFormat.WindowsWmf;
-        
-                    return ImageFormat.Unknown;
-                }
-        
-                public static System.Drawing.Imaging.ImageFormat MapToMicrosoftImageFormat(
-                    ImageFormat format
-                )
-                {
-                    switch (format)
-                    {
-                        case ImageFormat.Bmp:
-                            return System.Drawing.Imaging.ImageFormat.Bmp;
-                        case ImageFormat.Gif:
-                            return System.Drawing.Imaging.ImageFormat.Gif;
-                        case ImageFormat.Png:
-                            return System.Drawing.Imaging.ImageFormat.Png;
-                        case ImageFormat.Tiff:
-                            return System.Drawing.Imaging.ImageFormat.Tiff;
-                        case ImageFormat.Jpeg:
-                            return System.Drawing.Imaging.ImageFormat.Jpeg;
-                        case ImageFormat.Exif:
-                            return System.Drawing.Imaging.ImageFormat.Exif;
-                        case ImageFormat.WindowsIcon:
-                            return System.Drawing.Imaging.ImageFormat.Icon;
-                        case ImageFormat.WindowsEmf:
-                            return System.Drawing.Imaging.ImageFormat.Emf;
-                        case ImageFormat.WindowsWmf:
-                            return System.Drawing.Imaging.ImageFormat.Wmf;
-                    }
-        
-                    return null;
-                }
-        */
-        /*        public static System.Drawing.Imaging.ImageCodecInfo GetCodecInfo(ImageFormat format)
-                {
-                    string mime = null;
-        
-                    switch (format)
-                    {
-                        case ImageFormat.Bmp:
-                            mime = "image/bmp";
-                            break;
-                        case ImageFormat.Gif:
-                            mime = "image/gif";
-                            break;
-                        case ImageFormat.Png:
-                            mime = "image/png";
-                            break;
-                        case ImageFormat.Tiff:
-                            mime = "image/tiff";
-                            break;
-                        case ImageFormat.Jpeg:
-                            mime = "image/jpeg";
-                            break;
-                    }
-        
-                    if (mime == null)
-                    {
-                        return null;
-                    }
-        
-                    System.Drawing.Imaging.ImageCodecInfo[] encoders =
-                        System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders();
-        
-                    for (int i = 0; i < encoders.Length; i++)
-                    {
-                        if (encoders[i].MimeType == mime)
-                        {
-                            return encoders[i];
-                        }
-                    }
-        
-                    return null;
-                }
-        */
         public static string[] GetFilenameExtensions(ImageFormat format)
         {
             /*            System.Drawing.Imaging.ImageCodecInfo info = Bitmap.GetCodecInfo(format);
@@ -1488,142 +1031,6 @@ namespace Epsitec.Common.Drawing
             */
         }
 
-        /*        private static System.Drawing.Bitmap ConvertIcon(System.IntPtr hIcon, int dx, int dy)
-                {
-                    BITMAPV5HEADER bmpInfo32 = new BITMAPV5HEADER();
-                    const int BI_BITFIELDS = 3;
-
-                    bmpInfo32.bV5Size = Marshal.SizeOf(bmpInfo32);
-                    bmpInfo32.bV5Width = dx;
-                    bmpInfo32.bV5Height = dy;
-                    bmpInfo32.bV5Planes = 1;
-                    bmpInfo32.bV5BitCount = 32;
-                    bmpInfo32.bV5Compression = BI_BITFIELDS;
-                    bmpInfo32.bV5RedMask = 0x00ff0000;
-                    bmpInfo32.bV5GreenMask = 0x0000ff00;
-                    bmpInfo32.bV5BlueMask = 0x000000ff;
-                    bmpInfo32.bV5AlphaMask = 0xff000000;
-
-                    System.IntPtr bits;
-                    System.IntPtr dc = Bitmap.CreateCompatibleDC(System.IntPtr.Zero);
-                    System.IntPtr bmp = Bitmap.CreateDIBSection(
-                        dc,
-                        ref bmpInfo32,
-                        0,
-                        out bits,
-                        System.IntPtr.Zero,
-                        0
-                    );
-                    System.IntPtr hbOld = Bitmap.SelectObject(dc, bmp);
-                    System.IntPtr brush = Bitmap.CreateSolidBrush(0xffffff);
-
-                    Bitmap.DrawIconEx(dc, 0, 0, hIcon, 0, 0, 0, brush, DI_NORMAL);
-                    Bitmap.DeleteObject(brush);
-
-                    System.Drawing.Bitmap bitmap = System.Drawing.Bitmap.FromHicon(hIcon);
-
-                    System.Drawing.Imaging.ImageLockMode mode = System
-                        .Drawing
-                        .Imaging
-                        .ImageLockMode
-                        .ReadOnly;
-                    System.Drawing.Imaging.PixelFormat format = System
-                        .Drawing
-                        .Imaging
-                        .PixelFormat
-                        .Format32bppArgb;
-                    System.Drawing.Imaging.BitmapData data = bitmap.LockBits(
-                        new System.Drawing.Rectangle(0, 0, dx, dy),
-                        mode,
-                        format
-                    );
-
-                    unsafe
-                    {
-                        byte* rawBytes = (byte*)bits.ToPointer();
-                        byte* gdiBytes = (byte*)data.Scan0.ToPointer();
-
-                        gdiBytes += data.Stride * dy;
-
-                        for (int y = 0; y < dy; y++)
-                        {
-                            gdiBytes -= data.Stride;
-
-                            for (int x = 0; x < dx; x++)
-                            {
-                                byte bB = gdiBytes[x * 4 + 0];
-                                byte bG = gdiBytes[x * 4 + 1];
-                                byte bR = gdiBytes[x * 4 + 2];
-
-                                byte cB = *rawBytes++;
-                                byte cG = *rawBytes++;
-                                byte cR = *rawBytes++;
-                                byte cA = *rawBytes++;
-
-                                if (cA != 0)
-                                {
-                                    gdiBytes[x * 4 + 0] = cB;
-                                    gdiBytes[x * 4 + 1] = cG;
-                                    gdiBytes[x * 4 + 2] = cR;
-                                    gdiBytes[x * 4 + 3] = cA;
-                                }
-                            }
-                        }
-                    }
-
-                    bitmap.UnlockBits(data);
-
-                    Bitmap.SelectObject(dc, hbOld);
-                    Bitmap.DeleteObject(bmp);
-                    Bitmap.DeleteDC(dc);
-
-                    return bitmap;
-                }
-        */
-#if false
-        private static class IconLoader
-        {
-/*            public static System.Drawing.Icon LoadIcon(string path, int dx, int dy)
-            {
-                uint mode = IconLoader.LR_LOADFROMFILE;
-
-                if ((dx == 0) || (dy == 0))
-                {
-                    dx = 0;
-                    dy = 0;
-                    mode |= IconLoader.LR_DEFAULTSIZE;
-                }
-
-                System.IntPtr hIcon = IconLoader.LoadImage(
-                    System.IntPtr.Zero,
-                    path,
-                    IconLoader.IMAGE_ICON,
-                    dx,
-                    dy,
-                    mode
-                );
-                string errorMessage = new System.ComponentModel.Win32Exception(
-                    Marshal.GetLastWin32Error()
-                ).Message;
-                return hIcon == System.IntPtr.Zero ? null : System.Drawing.Icon.FromHandle(hIcon);
-            }
-*/
-            const int IMAGE_ICON = 1;
-            const int LR_LOADFROMFILE = 0x0010;
-            const int LR_DEFAULTSIZE = 0x0040;
-
-            [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-            static extern System.IntPtr LoadImage(
-                System.IntPtr hinst,
-                string lpszName,
-                uint uType,
-                int cxDesired,
-                int cyDesired,
-                uint fuLoad
-            );
-        }
-
-#endif
         #region ImageSeed Class
         private class ImageSeed
         {
@@ -1667,11 +1074,10 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        //protected System.Drawing.Bitmap bitmap;
         protected int bitmapDx;
         protected int bitmapDy;
-        protected BitmapData bitmapData;
-        protected volatile int bitmapLockCount;
+
+        //protected volatile int bitmapLockCount;
         protected Pixmap pixmap;
 
         protected bool isDisposed;

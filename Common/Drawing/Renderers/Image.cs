@@ -21,11 +21,6 @@ namespace Epsitec.Common.Drawing.Renderers
                 //	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
                 //	Graphics.UpdateTransform...
 
-/*                if (this.handle.IsInvalid)
-                {
-                    return;
-                }
-*/
                 this.transform = value;
                 this.internalTransform = value.MultiplyBy(this.graphics.Transform);
 
@@ -67,47 +62,48 @@ namespace Epsitec.Common.Drawing.Renderers
             get { return this.image; }
             set
             {
-                /*
-                if (this.image != value)
-                {
-                    if (this.bitmap != null)
-                    {
-                        if (this.bitmapNeedsUnlock)
-                        {
-                            this.bitmap.UnlockBits();
-                        }
+                // bl-net8-cross
+                //if (this.image == value)
+                //{
+                //    return;
+                //}
+                //if (this.bitmap != null)
+                //{
+                //    if (this.bitmapNeedsUnlock)
+                //    {
+                //        this.bitmap.UnlockBits();
+                //    }
 
-                        this.bitmap = null;
-                        this.bitmapNeedsUnlock = false;
+                //    this.bitmap = null;
+                //    this.bitmapNeedsUnlock = false;
 
-                        this.imageRenderer.Source2(System.IntPtr.Zero, 0, 0, 0);
-                    }
+                //    this.imageRenderer.Source2(System.IntPtr.Zero, 0, 0, 0);
+                //}
 
-                    this.image = value;
+                //this.image = value;
 
-                    if (this.image != null)
-                    {
-                        this.bitmap = this.image.BitmapImage;
-                        this.bitmapNeedsUnlock = !this.bitmap.IsLocked;
+                //if (this.image == null)
+                //{
+                //    return;
+                //}
 
-                        int width = this.bitmap.PixelWidth;
-                        int height = this.bitmap.PixelHeight;
+                //this.bitmap = this.image.BitmapImage;
+                //this.bitmapNeedsUnlock = !this.bitmap.IsLocked;
 
-                        if (this.bitmapNeedsUnlock)
-                        {
-                            this.bitmap.LockBits();
-                        }
+                //int width = this.bitmap.PixelWidth;
+                //int height = this.bitmap.PixelHeight;
 
-                        this.imageRenderer.Source2(
-                            this.bitmap.Scan0,
-                            width,
-                            height,
-                            -this.bitmap.Stride
-                        );
-                    }
-                }
-                */
-                throw new System.NotImplementedException();
+                //if (this.bitmapNeedsUnlock)
+                //{
+                //    this.bitmap.LockBits();
+                //}
+
+                //this.imageRenderer.Source2(
+                //    this.bitmap.Scan0,
+                //    width,
+                //    height,
+                //    -this.bitmap.Stride
+                //);
             }
         }
 
@@ -152,7 +148,7 @@ namespace Epsitec.Common.Drawing.Renderers
         }
 
         readonly Graphics graphics;
-        readonly internal AntigrainCPP.Renderer.Image imageRenderer;
+        internal readonly AntigrainCPP.Renderer.Image imageRenderer;
         private Pixmap pixmap;
         private Drawing.Image image;
         private Drawing.Bitmap bitmap;
