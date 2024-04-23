@@ -36,22 +36,18 @@ namespace Epsitec.Common.OpenType.Platform
         {
             string fontDir = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string commonAppData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             if (FontFinder.IsWindows())
             {
                 yield return fontDir;
                 yield return Path.Join(localAppData, "Microsoft", "Windows", "Fonts");
                 yield break;
             }
-            // TODO bl-net8-cross
-            throw new NotImplementedException();
 
-            //yield return fontDir;
-            //yield return localAppData;
-            //yield return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            //yield return Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            //yield return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            //yield return "/usr/share/fonts";
-            //yield return "$HOME/.local/share/fonts";
+            // usually "/usr/share/fonts"
+            yield return Path.Join(commonAppData, "fonts");
+            // usually "~/.local/share/fonts"
+            yield return Path.Join(localAppData, "fonts");
         }
 
         private static bool IsWindows()
