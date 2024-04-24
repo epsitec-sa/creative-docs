@@ -12,6 +12,10 @@ namespace Epsitec.Common.OpenType.Platform
             var directories = FontFinder.GetFontDirectories();
             foreach (string directory in directories)
             {
+                if (!Directory.Exists(directory))
+                {
+                    continue;
+                }
                 foreach (string file in Directory.GetFiles(directory, "*.ttf"))
                 {
                     yield return file;
