@@ -5,14 +5,11 @@ using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Drawing
 {
-    //using BitmapData = System.Drawing.Imaging.BitmapData;
-    //using PixelFormat = System.Drawing.Imaging.PixelFormat;
-
     public class Pixmap : System.IDisposable
     {
         // ******************************************************************
         // TODO bl-net8-cross
-        // - implement Pixmap (stub)
+        // - implement this class 
         // ******************************************************************
         public Pixmap() { }
 
@@ -60,16 +57,6 @@ namespace Epsitec.Common.Drawing
                 */
                 throw new System.NotImplementedException();
             }
-        }
-
-        public bool IsOSBitmap
-        {
-            get { return this.isOsBitmap; }
-        }
-
-        public NativeBitmap AssociatedImage
-        {
-            get { return this.associatedImage; }
         }
 
         public void AllocatePixmap(System.Drawing.Size size)
@@ -153,58 +140,6 @@ namespace Epsitec.Common.Drawing
             */
             throw new System.NotImplementedException();
         }
-
-        /*
-        public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
-        {
-            System.IntPtr hdc = graphics.GetHdc();
-
-            try
-            {
-                this.Paint(hdc, clip);
-            }
-            finally
-            {
-                graphics.ReleaseHdc(hdc);
-            }
-        }
-
-        public void Paint(
-            System.Drawing.Graphics graphics,
-            System.Drawing.Point offset,
-            System.Drawing.Rectangle clip
-        )
-        {
-            System.IntPtr hdc = graphics.GetHdc();
-
-            try
-            {
-                this.Paint(hdc, offset, clip);
-            }
-            finally
-            {
-                graphics.ReleaseHdc(hdc);
-            }
-        }
-
-        public void Blend(
-            System.Drawing.Graphics graphics,
-            System.Drawing.Point offset,
-            System.Drawing.Rectangle clip
-        )
-        {
-            System.IntPtr hdc = graphics.GetHdc();
-
-            try
-            {
-                this.Blend(hdc, offset, clip);
-            }
-            finally
-            {
-                graphics.ReleaseHdc(hdc);
-            }
-        }
-        */
 
         public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
         {
@@ -739,9 +674,6 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        protected System.IntPtr aggBuffer;
         protected System.Drawing.Size size;
-        protected bool isOsBitmap;
-        protected NativeBitmap associatedImage;
     }
 }

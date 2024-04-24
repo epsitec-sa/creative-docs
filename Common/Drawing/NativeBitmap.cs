@@ -14,7 +14,7 @@ namespace Epsitec.Common.Drawing.Platform
     public sealed class NativeBitmap : System.IDisposable
     // ******************************************************************
     // TODO bl-net8-cross
-    // - implement NativeBitmap (stub)
+    // - implement NativeBitmap using ImageMagick (stub)
     // ******************************************************************
     {
         /*        internal NativeBitmap(

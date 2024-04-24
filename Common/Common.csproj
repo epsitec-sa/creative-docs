@@ -496,9 +496,9 @@
     <None Include="Drawing\NativeBitmap.cs" />
     <Compile Remove="Drawing\NativeIcon.cs" />
     <None   Include="Drawing\NativeIcon.cs" />
+    -->
     <Compile Remove="Drawing\NativeTextRenderer.cs" />
     <None   Include="Drawing\NativeTextRenderer.cs" />
-    -->
     <Compile Remove="Drawing\Octree.cs" />
     <None Include="Drawing\Octree.cs" />
     <Compile Remove="Drawing\OctreeQuantizer.cs" />
