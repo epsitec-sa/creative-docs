@@ -66,6 +66,26 @@ namespace Epsitec.Common.Widgets.Platform
 
         public override void OnMouseButtonDown(int x, int y, uint flags)
         {
+            Message msg = Message.FromMouseEvent(
+                MessageType.MouseDown,
+                this,
+                MouseButtons.Left, // bl-net8-cross remove hardcoded temp hack
+                x, y,
+                0
+            );
+            this.DispatchMessage(msg);
+            this.ForceRedraw();
+        }
+        public override void OnMouseButtonUp(int x, int y, uint flags)
+        {
+            Message msg = Message.FromMouseEvent(
+                MessageType.MouseUp,
+                this,
+                MouseButtons.Left, // bl-net8-cross remove hardcoded temp hack
+                x, y,
+                0
+            );
+            this.DispatchMessage(msg);
             this.ForceRedraw();
         }
 

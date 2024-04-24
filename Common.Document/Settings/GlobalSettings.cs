@@ -126,14 +126,15 @@ namespace Epsitec.Common.Document.Settings
             get
             {
                 Drawing.Rectangle rect = new Rectangle(this.windowLocation, this.windowSize);
-                if (this.windowLocation.IsZero)
-                {
-                    //	Lors de la première exécution, met l'application au centre
-                    //	de la fenêtre.
-                    ScreenInfo si = ScreenInfo.Find(Message.CurrentState.LastScreenPosition);
-                    Rectangle area = si.WorkingArea;
-                    rect = new Rectangle(area.Center - rect.Size / 2, area.Center + rect.Size / 2);
-                }
+                // bl-net8-cross
+                //if (this.windowLocation.IsZero)
+                //{
+                //    //	Lors de la première exécution, met l'application au centre
+                //    //	de la fenêtre.
+                //    ScreenInfo si = ScreenInfo.Find(Message.CurrentState.LastScreenPosition);
+                //    Rectangle area = si.WorkingArea;
+                //    rect = new Rectangle(area.Center - rect.Size / 2, area.Center + rect.Size / 2);
+                //}
                 return ScreenInfo.FitIntoWorkingArea(rect);
             }
             set
