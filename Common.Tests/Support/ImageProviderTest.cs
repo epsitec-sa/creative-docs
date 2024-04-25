@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -18,7 +18,6 @@ namespace Epsitec.Common.Tests.Support
         [Test]
         public void CheckGetImage()
         {
-            // See comment in ImageProvider for the issue
             Image im1 = ImageProvider.Instance.GetImage(
                 "file:images/open.png",
                 Resources.DefaultManager

@@ -19,37 +19,33 @@ namespace Epsitec.Common.Tests.OpenType
             FontCollection collection = new FontCollection();
             var fids = DummyFontIdentities();
             collection.Initialize(fids);
-            Font font = collection.CreateFont("AwesomeFont");
-            Assert.IsNotNull(font);
+            // In the tests, we don't have actual font files, so we still get an exception
+            // we can still distinguish a font missing from the database (NoMatchingFontException)
+            // from a font in the database that doesn't have a valid font file (FontFileNotFoundException)
+            Assert.Throws<FontFileNotFoundException>(() =>
+            {
+                Font font = collection.CreateFont("AwesomeFont");
+            });
         }
 
         [Test]
-        public void GetFontFallbackOnNonexistingFontName()
+        public void GetFontRaisesNoMatchingFontExceptionOnEmptyCollection()
         {
             FontCollection collection = new FontCollection();
             var fids = DummyFontIdentities();
-            collection.Initialize(fids);
-            Assert.Throws<FontNotFoundException>(() =>
+            Assert.Throws<NoMatchingFontException>(() =>
             {
-                Font font = collection.CreateFont("uaieteunnaiuietsanutnaetsra");
+                Font font = collection.CreateFont("AwesomeFont");
             });
         }
 
         public IEnumerable<FontIdentity> DummyFontIdentities()
         {
-            /*
-            var fonts = Platform.FontFinder.FindFonts();
-            foreach (string fontpath in fonts)
-            {
-                FontStyle fontStyle = fontStyleGetter(fontpath);
-                FontName fontName = new FontName(Path.GetFileName(fontpath), fontStyle);
-                FontIdentity fontIdentity = new FontIdentity(fontpath, fontName);
-                this.fontDict[fontIdentity.Name] = fontIdentity;
-            }
-            */
             yield return new FontIdentity("some/path/to/awesome.ttf", new FontName("AwesomeFont"));
-            yield return new FontIdentity("some/path/to/anotherfont.ttf", new FontName("AnotherFont"));
+            yield return new FontIdentity(
+                "some/path/to/anotherfont.ttf",
+                new FontName("AnotherFont")
+            );
         }
-
     }
 }

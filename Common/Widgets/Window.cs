@@ -857,7 +857,11 @@ namespace Epsitec.Common.Widgets
             get { return this.window.WindowSize; }
             set
             {
-                if (this.windowLocationSet == false)
+                if (this.windowLocationSet)
+                {
+                    this.window.WindowSize = value;
+                }
+                else
                 {
                     //	L'utilisateur n'a jamais positionné sa fenêtre et le système
                     //	dans son immense bonté nous a proposé une origine. Si nous
@@ -873,10 +877,6 @@ namespace Epsitec.Common.Widgets
 
                     this.WindowBounds = bounds;
                     this.windowLocationSet = false;
-                }
-                else
-                {
-                    this.window.WindowSize = value;
                 }
             }
         }

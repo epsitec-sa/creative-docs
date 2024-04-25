@@ -70,19 +70,22 @@ namespace Epsitec.Common.Widgets.Platform
                 MessageType.MouseDown,
                 this,
                 MouseButtons.Left, // bl-net8-cross remove hardcoded temp hack
-                x, y,
+                x,
+                y,
                 0
             );
             this.DispatchMessage(msg);
             this.ForceRedraw();
         }
+
         public override void OnMouseButtonUp(int x, int y, uint flags)
         {
             Message msg = Message.FromMouseEvent(
                 MessageType.MouseUp,
                 this,
                 MouseButtons.Left, // bl-net8-cross remove hardcoded temp hack
-                x, y,
+                x,
+                y,
                 0
             );
             this.DispatchMessage(msg);
@@ -940,13 +943,17 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
-        public new System.Drawing.Size ClientSize
+        public System.Drawing.Size ClientSize
         {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
             get { return this.clientSize; }
         }
 
-        public new System.Drawing.Size MinimumSize
+        public System.Drawing.Size MinimumSize
         {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
             get { return this.minimumSize; }
             set { this.minimumSize = value; }
         }
@@ -1137,9 +1144,11 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal Drawing.Size WindowSize
         {
-            get { return this.WindowBounds.Size; }
+            //get { return this.WindowBounds.Size; }
+            get { return new Drawing.Size(this.clientSize.Width, this.clientSize.Height); }
             set
             {
+                /*
                 Drawing.Rectangle bounds = this.WindowBounds;
 
                 if (bounds.Size != value)
@@ -1147,27 +1156,37 @@ namespace Epsitec.Common.Widgets.Platform
                     bounds.Size = value;
                     this.WindowBounds = bounds;
                 }
+                */
+                throw new System.NotImplementedException();
             }
         }
 
-        internal new string Text
+        internal string Text
         {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
+
             //get { return TextLayout.ConvertToTaggedText(base.Text); }
             get { return null; }
             //set { base.Text = TextLayout.ConvertToSimpleText(value); }
             set { }
         }
 
-        internal new string Name
+        internal string Name
         {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
+
             //get { return base.Name; }
             get { return null; }
             //set { base.Name = value; }
             set { }
         }
 
-        internal new Drawing.Image Icon
+        internal Drawing.Image Icon
         {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
             get
             {
                 /*
@@ -1337,16 +1356,21 @@ namespace Epsitec.Common.Widgets.Platform
             get { return Window.isAppActive; }
         }
 
-        internal static new bool UseWaitCursor
+        internal static bool UseWaitCursor
         {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
+
             //get { return System.Windows.Forms.Application.UseWaitCursor; }
             get { return true; }
             //set { System.Windows.Forms.Application.UseWaitCursor = value; }
             set { }
         }
 
-        internal new void Close()
+        internal void Close()
         {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
             /*
             try
             {

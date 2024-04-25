@@ -1,10 +1,10 @@
 //	Copyright © 2005-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Metadata.Ecma335;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.OpenType
 {
@@ -40,8 +40,9 @@ namespace Epsitec.Common.OpenType
         {
             get
             {
-                if (this.fontDict.ContainsKey(name)) { 
-                    return this.fontDict[name]; 
+                if (this.fontDict.ContainsKey(name))
+                {
+                    return this.fontDict[name];
                 }
                 return null;
             }
@@ -54,10 +55,7 @@ namespace Epsitec.Common.OpenType
         /// not exist in the collection.</value>
         public FontIdentity this[FontName name]
         {
-            get
-            {
-                return this[name.FullName];
-            }
+            get { return this[name.FullName]; }
         }
 
         /// <summary>
@@ -69,7 +67,8 @@ namespace Epsitec.Common.OpenType
         /// </value>
         public static bool LoadTrueTypeCollections
         {
-            get {
+            get
+            {
                 /*
                 
                 return FontCollection.loadTtc;
@@ -77,7 +76,8 @@ namespace Epsitec.Common.OpenType
                 */
                 throw new System.NotImplementedException();
             }
-            set {
+            set
+            {
                 /*
                 
                 FontCollection.loadTtc = value;
@@ -105,12 +105,8 @@ namespace Epsitec.Common.OpenType
         /// </summary>
         public static System.Predicate<string> FontListFilter
         {
-            get {
-                return FontCollection.fontListFilter;
-            }
-            set {
-                FontCollection.fontListFilter = value;
-            }
+            get { return FontCollection.fontListFilter; }
+            set { FontCollection.fontListFilter = value; }
         }
 
         /// <summary>
@@ -260,7 +256,7 @@ namespace Epsitec.Common.OpenType
             fid ??= this.fallbackFontIdentity;
             if (fid == null)
             {
-                throw new FontNotFoundException();
+                throw new NoMatchingFontException();
             }
             return this.CreateFont(fid);
         }
@@ -282,7 +278,14 @@ namespace Epsitec.Common.OpenType
         /// <returns>The font object or <c>null</c> if no font can be found.</returns>
         public Font CreateFont(FontIdentity fid)
         {
-            return new Font(fid);
+            try
+            {
+                return new Font(fid);
+            }
+            catch (FileNotFoundException)
+            {
+                throw new FontFileNotFoundException();
+            }
         }
 
         /// <summary>
