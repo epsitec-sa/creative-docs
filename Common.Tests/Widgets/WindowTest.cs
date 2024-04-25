@@ -897,11 +897,7 @@ namespace Epsitec.Common.Tests.Widgets
 
             text.SetParent(window.Root);
             text.Dock = DockStyle.Top;
-            text.Text =
-                window.DebugWindowHandle
-                + "  <font color=\"white\">"
-                + window.DebugWindowHandle
-                + "</font>";
+            text.Text = "Another test";
 
             window.Root.Invalidate();
         }

@@ -13,6 +13,7 @@ namespace Epsitec.Common.Drawing
         // ******************************************************************
 
         internal Canvas(byte[] data)
+            : base(Size.Empty)
         {
             this.data = new byte[data.Length];
             data.CopyTo(this.data, 0);
@@ -35,6 +36,7 @@ namespace Epsitec.Common.Drawing
         }
 
         protected Canvas(Canvas original, IconKey key)
+            : base(Size.Empty)
         {
             //	Version selon IconKey du même dessin.
             //	On partage les données avec le modèle original.
@@ -53,6 +55,7 @@ namespace Epsitec.Common.Drawing
         }
 
         protected Canvas(Canvas original, GlyphPaintStyle style)
+            : base(Size.Empty)
         {
             //	Version "normal", "disabled" ou "selected" du même dessin.
             //	On partage les données avec le modèle original.
@@ -295,7 +298,8 @@ namespace Epsitec.Common.Drawing
                             this.ValidateCache();
                             return this.cache;
                         }
-            */get { return null; }
+            */
+            get { throw new System.NotImplementedException(); }
         }
 
         public override Size Size

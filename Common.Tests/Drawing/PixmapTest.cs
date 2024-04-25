@@ -53,6 +53,7 @@ namespace Epsitec.Common.Tests.Drawing
         [Ignore("Reported broken by Marc Bettex")]
         public void CheckAllocatePixmapFromImageClient()
         {
+            /*
             string path = @"..\..\..\..\Images\picture.png";
 
             System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
@@ -126,6 +127,8 @@ namespace Epsitec.Common.Tests.Drawing
             pixmap0.Dispose();
             pixmap1.Dispose();
             pixmap2.Dispose();
+            */
+            throw new System.NotImplementedException();
         }
 
         private static Pixmap CreatePixmapUsingImageClient(string path, int size, bool copyBits)

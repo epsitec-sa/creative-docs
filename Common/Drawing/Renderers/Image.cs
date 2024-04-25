@@ -36,7 +36,7 @@ namespace Epsitec.Common.Drawing.Renderers
             }
         }
 
-        public void AttachBitmap(Drawing.Bitmap bitmap)
+        public void AttachBitmap(Bitmap bitmap)
         {
             this.imageRenderer.AttachSource(
                 bitmap.GetPixelBuffer(),

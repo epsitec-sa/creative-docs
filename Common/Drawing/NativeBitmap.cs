@@ -41,6 +41,15 @@ namespace Epsitec.Common.Drawing.Platform
         {
             get { return this.magicImage.Height; }
         }
+        public int PixelWidth
+        {
+            get { return this.magicImage.BaseWidth; }
+        }
+
+        public int PixelHeight
+        {
+            get { return this.magicImage.BaseHeight; }
+        }
 
         public bool IsTransparent
         {

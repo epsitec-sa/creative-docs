@@ -348,15 +348,17 @@ namespace Epsitec.Common.Support
                 byte[] buffer = new byte[length];
                 stream.Read(buffer, 0, (int)length);
 
+                Image outputImage;
                 if (name.EndsWith(".icon"))
                 {
                     // image au format vectoriel "maison" EPSITEC
-                    return Canvas.FromData(buffer);
+                    outputImage = Canvas.FromData(buffer);
                 }
                 else
                 {
-                    return Bitmap.FromData(buffer);
+                    outputImage = Bitmap.FromData(buffer);
                 }
+                return outputImage;
             }
         }
 

@@ -76,12 +76,12 @@ namespace Epsitec.Common.Drawing
 
         public int PixelWidth
         {
-            get { throw new System.NotImplementedException(); }
+            get { return this.nativeBitmap.PixelWidth; }
         }
 
         public int PixelHeight
         {
-            get { throw new System.NotImplementedException(); }
+            get { return this.nativeBitmap.PixelHeight; }
         }
 
         public static void Merge(
@@ -641,24 +641,6 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public static Bitmap FromData(byte[] data)
-        {
-            /*
-            Image bitmap = Bitmap.FromData(data, new Point(0, 0));
-
-            if (bitmap == null)
-            {
-                return null;
-            }
-            else
-            {
-                bitmap.isOriginDefined = false;
-                return bitmap;
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
         private static void NotifyMemoryExhauted()
         {
             /*
@@ -838,6 +820,11 @@ namespace Epsitec.Common.Drawing
         #endregion NotImplemented
 
         #region From.* converters
+        public static Bitmap FromData(byte[] data)
+        {
+            return Bitmap.FromData(data, null);
+        }
+
         public static Bitmap FromData(byte[] data, Point? origin)
         {
             NativeBitmap nativeBitmap = new NativeBitmap(data);

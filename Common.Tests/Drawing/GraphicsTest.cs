@@ -1398,14 +1398,13 @@ namespace Epsitec.Common.Tests.Drawing
                     size,
                     ContentAlignment.MiddleCenter
                 );
-                e.Graphics.ImageRenderer.BitmapImage = bitmap;
 
                 Transform t = Transform.Identity;
                 t = t.Scale(width / bitmap.Width, height / bitmap.Height);
                 t = t.Translate(x, y);
 
                 e.Graphics.ImageRenderer.Transform = t;
-                e.Graphics.RenderImage();
+                e.Graphics.RenderImage(bitmap);
 
                 x += width;
             }

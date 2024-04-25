@@ -8,30 +8,23 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public abstract class Image : System.IDisposable
     {
-        public Image()
-            : this(0L) { }
-
-        public Image(Point? origin, Size size)
-            : this(0L)
+        public Image(Size size)
         {
             this.size = size;
-            if (origin != null)
-            {
-                this.origin = origin;
-            }
-        }
-
-        public Image(long uniqueId)
-        {
-            this.size = Size.Empty;
             this.origin = null;
             this.dpiX = 96;
             this.dpiY = 96;
 
-            this.uniqueId =
-                uniqueId == 0
-                    ? System.Threading.Interlocked.Increment(ref Image.uniqueIdSeed)
-                    : uniqueId;
+            this.uniqueId = System.Threading.Interlocked.Increment(ref Image.uniqueIdSeed);
+        }
+
+        public Image(Point? origin, Size size)
+            : this(size)
+        {
+            if (origin != null)
+            {
+                this.origin = origin;
+            }
         }
 
         public abstract void DefineZoom(double zoom);

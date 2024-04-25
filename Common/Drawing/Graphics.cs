@@ -20,19 +20,16 @@ namespace Epsitec.Common.Drawing
             this.ResetLineStyle();
 
             this.pixmap = new Pixmap();
-            this.rasterizer = new Common.Drawing.Rasterizer();
+            this.rasterizer = new Rasterizer();
             this.transform = Transform.Identity;
 
             this.colorModifierStack = new Stack<ColorModifierCallback>();
 
             this.context = gctx;
-            this.solidRenderer = new Common.Drawing.Renderers.Solid(gctx.RendererSolid);
-            this.imageRenderer = new Common.Drawing.Renderers.Image(this, gctx.RendererImage);
-            this.gradientRenderer = new Common.Drawing.Renderers.Gradient(
-                this,
-                gctx.RendererGradient
-            );
-            this.smoothRenderer = new Common.Drawing.Renderers.Smooth(this, gctx.RendererSmooth);
+            this.solidRenderer = new Renderers.Solid(gctx.RendererSolid);
+            this.imageRenderer = new Renderers.Image(this, gctx.RendererImage);
+            this.gradientRenderer = new Renderers.Gradient(this, gctx.RendererGradient);
+            this.smoothRenderer = new Renderers.Smooth(this, gctx.RendererSmooth);
 
             this.rasterizer.Gamma = 1.2;
         }
@@ -208,9 +205,10 @@ namespace Epsitec.Common.Drawing
             this.rasterizer.Render(this.solidRenderer);
         }
 
-        public void RenderImage()
+        public void RenderImage(Bitmap bitmap)
         {
-            this.rasterizer.Render(this.imageRenderer);
+            this.ImageRenderer.AttachBitmap(bitmap.BitmapImage);
+            this.rasterizer.Render(this.ImageRenderer);
         }
 
         public void RenderGradient()
@@ -695,7 +693,7 @@ namespace Epsitec.Common.Drawing
                             ? (fillHeight - adjust / fixY) / (iy2 - iy1 - adjust)
                             : 1.0
                     );
-            Drawing.Bitmap bmi = bitmap.BitmapImage;
+            Bitmap bmi = bitmap.BitmapImage;
 
             sx *= bitmap.Width / bmi.PixelWidth;
             sy *= bitmap.Height / bmi.PixelHeight;
@@ -705,11 +703,10 @@ namespace Epsitec.Common.Drawing
             transform = transform.Translate(fillX, fillY);
 
             this.AddFilledRectangle(fillX, fillY, fillWidth, fillHeight);
-            this.ImageRenderer.AttachBitmap(bitmap.BitmapImage);
             this.ImageRenderer.Transform = transform;
 
             this.ImageRenderer.SelectAdvancedFilter(this.imageFilter.Mode, this.imageFilter.Radius);
-            this.RenderImage();
+            this.RenderImage(bitmap.BitmapImage);
         }
 
         public void PaintVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)
