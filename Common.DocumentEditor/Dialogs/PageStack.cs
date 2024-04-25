@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
@@ -28,7 +28,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
                 this.WindowInit("PageStack", 500, 300, true);
                 this.window.Text = Res.Strings.Dialog.PageStack.Title;
                 this.window.Owner = this.editor.Window;
-                this.window.Icon = Bitmap.FromManifestResource(
+                this.window.Icon = Support.ImageProvider.Instance.GetImageFromManifestResource(
                     "Epsitec.Common.DocumentEditor.Images.Application.icon",
                     this.GetType().Assembly
                 );

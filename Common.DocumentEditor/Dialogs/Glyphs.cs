@@ -39,7 +39,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
                 this.WindowInit("Glyphs", 300, 260, true);
                 this.window.Text = Res.Strings.Dialog.Glyphs.Title;
                 this.window.Owner = this.editor.Window;
-                this.window.Icon = Bitmap.FromManifestResource(
+                this.window.Icon = ImageProvider.Instance.GetImageFromManifestResource(
                     "Epsitec.Common.DocumentEditor.Images.Application.icon",
                     this.GetType().Assembly
                 );

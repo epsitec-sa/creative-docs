@@ -705,12 +705,11 @@ namespace Epsitec.Common.Drawing
             transform = transform.Translate(fillX, fillY);
 
             this.AddFilledRectangle(fillX, fillY, fillWidth, fillHeight);
-            this.ImageRenderer.BitmapImage = bitmap;
+            this.ImageRenderer.AttachBitmap(bitmap.BitmapImage);
             this.ImageRenderer.Transform = transform;
 
             this.ImageRenderer.SelectAdvancedFilter(this.imageFilter.Mode, this.imageFilter.Radius);
             this.RenderImage();
-            this.ImageRenderer.BitmapImage = null;
         }
 
         public void PaintVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)

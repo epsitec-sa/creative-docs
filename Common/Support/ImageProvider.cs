@@ -1,10 +1,11 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
+using static Epsitec.Common.Support.Res.Fields;
 
 namespace Epsitec.Common.Support
 {
@@ -23,7 +24,10 @@ namespace Epsitec.Common.Support
         {
             string path = System.IO.Directory.GetCurrentDirectory();
             string otherPath = IO.PathTools.RemoveUntilDir("Common.Tests", path);
-            string thirdPath = System.IO.Path.Join(IO.PathTools.RemoveUntilDir("cresus-core", path), "External");
+            string thirdPath = System.IO.Path.Join(
+                IO.PathTools.RemoveUntilDir("cresus-core", path),
+                "External"
+            );
 
             ImageProvider.defaultProvider = new ImageProvider();
             ImageProvider.defaultPaths = new string[5];
@@ -87,62 +91,26 @@ namespace Epsitec.Common.Support
 
             if (name.StartsWith("stockicon:"))
             {
-                switch (name)
-                {
-                    case "stockicon:shield":
-                        return PrivilegeManager.Current.GetShieldIcon(IconSize.Normal);
-                    case "stockicon:shield.small":
-                        return PrivilegeManager.Current.GetShieldIcon(IconSize.Small);
-
-                    default:
-                        break;
-                }
-
-                return null;
+                return this.GetImageFromStockIcon(name);
             }
 
             if (name.StartsWith("foldericon:"))
             {
-                long id = long.Parse(
-                    name.Substring(11),
-                    System.Globalization.CultureInfo.InvariantCulture
-                );
-
-                return FolderItemIconCache.Instance.Resolve(id);
+                return this.GetImageFromFolderIcon(name);
             }
 
             if (name.StartsWith("dyn:"))
             {
-                string fullName = name.Substring(4);
-
-                int pos = fullName.IndexOf('/');
-
-                if (pos < 0)
-                {
-                    return null;
-                }
-
-                string baseName = fullName.Substring(0, pos);
-                string argument = fullName.Substring(pos + 1);
-
-                DynamicImage image;
-
-                if (this.dynamicImages.TryGetValue(baseName, out image))
-                {
-                    image = image.GetImageForArgument(argument);
-                }
-
-                return image;
+                return this.GetDynamicImage(name);
             }
 
             if (this.images.ContainsKey(name))
             {
                 Weak<Image> weakRef = this.images[name];
-                Image image = weakRef.Target;
 
                 if (weakRef.IsAlive)
                 {
-                    return image;
+                    return weakRef.Target;
                 }
 
                 this.images.Remove(name);
@@ -150,172 +118,246 @@ namespace Epsitec.Common.Support
 
             if (name.StartsWith("file:"))
             {
-                //	TODO: vérifier le nom du fichier pour éviter de faire des bêtises ici
-                //	(pour améliorer la sécurité, mais ce n'est probablement pas un problème).
-
-                Image image = null;
-                string baseName = name.Remove(0, 5);
-                System.Collections.ArrayList attempts = new System.Collections.ArrayList();
-
-                if ((baseName.StartsWith("/")) || (!RegexFactory.PathName.IsMatch(baseName)))
-                {
-                    if (this.CheckFilePath)
-                    {
-                        throw new System.ArgumentException(
-                            string.Format("Illegal file name for image ({0}).", baseName)
-                        );
-                    }
-                }
-
-                for (int i = 0; i < ImageProvider.defaultPaths.Length; i++)
-                {
-                    string path = ImageProvider.defaultPaths[i];
-
-                    //	Il se peut que cette option ne soit pas définie :
-
-                    if (path == null)
-                    {
-                        continue;
-                    }
-
-                    //	Nom du chemin complet.
-
-                    string fileName;
-
-                    if (path.Length > 0)
-                    {
-                        fileName = path + System.IO.Path.DirectorySeparatorChar + baseName;
-                    }
-                    else
-                    {
-                        fileName = baseName;
-                    }
-
-                    try
-                    {
-                        image = Bitmap.FromFile(fileName);
-                        break;
-                    }
-                    catch
-                    {
-                        attempts.Add(fileName);
-                    }
-                }
-
-                if (image == null)
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        string.Format("Tried to resolve '{0}' and failed while checking", name)
-                    );
-
-                    foreach (string attempt in attempts)
-                    {
-                        System.Diagnostics.Debug.WriteLine(string.Format("  here: {0}", attempt));
-                    }
-                }
-                else
-                {
-                    this.images[name] = new Weak<Image>(image);
-
-                    if (this.keepAliveImages != null)
-                    {
-                        this.keepAliveImages.Add(image);
-                    }
-                }
-
-                return image;
+                return this.GetImageFromFile(name);
             }
 
             if ((name.StartsWith("res:")) && (resourceManager != null))
             {
-                //	L'image décrite par l'identificateur de ressources est définie au moyen
-                //	d'un bundle comportant au minimum le champ "image" et le champ spécifié
-                //	par le format "res:id#field".
-                //
-                //	Le champ "image" se réfère aux données binaires de l'image (par exemple
-                //	une image au format PNG).
-                //
-                //	Le champ spécifié décrit quant à lui quelques informations au sujet de
-                //	la partie de l'image qui nous intéresse ici. Dans la partie "id", il
-                //	faut en principe spécifier le provider à utiliser, sinon le provider
-                //	de ressources par défaut sera pris.
-
-                string resFull = name.Remove(0, 4);
-                string resBundle;
-                string resField;
-
-                if (resFull.IndexOf(':') < 0)
-                {
-                    resFull = this.providerPrefix + resFull;
-                }
-
-                Image image = null;
-
-                if (Resources.SplitFieldId(resFull, out resBundle, out resField))
-                {
-                    ResourceBundle bundle = resourceManager.GetBundle(resBundle);
-
-                    if (bundle != null)
-                    {
-                        image = this.CreateBitmapFromBundle(bundle, resField);
-                    }
-                }
-                else
-                {
-                    byte[] data = resourceManager.GetBinaryData(resFull);
-                    image = Bitmap.FromData(data);
-                }
-
-                if (image != null)
-                {
-                    this.images[name] = new Weak<Image>(image);
-
-                    if (this.keepAliveImages != null)
-                    {
-                        this.keepAliveImages.Add(image);
-                    }
-                }
-
-                return image;
+                return this.GetImageFromResourceManager(name, resourceManager);
             }
 
             if (name.StartsWith("manifest:"))
             {
-                //	L'image décrite est stockée dans les ressources du manifeste de l'assembly .NET.
-                //	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiés par
-                //	.NET et des transformations futures pourraient ne pas fonctionner.
-
-                var assemblies = ImageProvider.GetAssemblies();
-                var resourceName = name.Remove(0, 9).ToLowerInvariant();
-
-                Image image = null;
-
-                foreach (var assembly in assemblies)
-                {
-                    var resourceNames = assembly.GetManifestResourceNames();
-                    var matchingName = resourceNames
-                        .Where(x => x.ToLowerInvariant() == resourceName)
-                        .FirstOrDefault();
-
-                    image = Bitmap.FromManifestResource(matchingName, assembly);
-
-                    if (image != null)
-                    {
-                        this.images[name] = new Weak<Image>(image);
-
-                        if (this.keepAliveImages != null)
-                        {
-                            this.keepAliveImages.Add(image);
-                        }
-
-                        return image;
-                    }
-                }
-
-                return null;
+                return this.GetImageFromManifestResource(name);
             }
 
             return null;
+        }
+
+        public Image GetImageFromFolderIcon(string name)
+        {
+            long id = long.Parse(
+                name.Substring(11),
+                System.Globalization.CultureInfo.InvariantCulture
+            );
+
+            return FolderItemIconCache.Instance.Resolve(id);
+        }
+
+        public Image GetImageFromStockIcon(string name)
+        {
+            switch (name)
+            {
+                case "stockicon:shield":
+                    return PrivilegeManager.Current.GetShieldIcon(IconSize.Normal);
+                case "stockicon:shield.small":
+                    return PrivilegeManager.Current.GetShieldIcon(IconSize.Small);
+
+                default:
+                    break;
+            }
+
+            return null;
+        }
+
+        public Image GetDynamicImage(string name)
+        {
+            string fullName = name.Substring(4);
+
+            int pos = fullName.IndexOf('/');
+
+            if (pos < 0)
+            {
+                return null;
+            }
+
+            string baseName = fullName.Substring(0, pos);
+            string argument = fullName.Substring(pos + 1);
+
+            DynamicImage image;
+
+            if (this.dynamicImages.TryGetValue(baseName, out image))
+            {
+                image = image.GetImageForArgument(argument);
+            }
+
+            return image;
+        }
+
+        public Image GetImageFromFile(string name)
+        {
+            //	TODO: vérifier le nom du fichier pour éviter de faire des bêtises ici
+            //	(pour améliorer la sécurité, mais ce n'est probablement pas un problème).
+
+            Image image = null;
+            string baseName = name.Remove(0, 5);
+            System.Collections.ArrayList attempts = new System.Collections.ArrayList();
+
+            if ((baseName.StartsWith("/")) || (!RegexFactory.PathName.IsMatch(baseName)))
+            {
+                if (this.CheckFilePath)
+                {
+                    throw new System.ArgumentException(
+                        string.Format("Illegal file name for image ({0}).", baseName)
+                    );
+                }
+            }
+
+            for (int i = 0; i < ImageProvider.defaultPaths.Length; i++)
+            {
+                string path = ImageProvider.defaultPaths[i];
+
+                //	Il se peut que cette option ne soit pas définie :
+
+                if (path == null)
+                {
+                    continue;
+                }
+
+                //	Nom du chemin complet.
+
+                string fileName;
+
+                if (path.Length > 0)
+                {
+                    fileName = path + System.IO.Path.DirectorySeparatorChar + baseName;
+                }
+                else
+                {
+                    fileName = baseName;
+                }
+
+                try
+                {
+                    image = Bitmap.FromFile(fileName);
+                    break;
+                }
+                catch
+                {
+                    attempts.Add(fileName);
+                }
+            }
+
+            if (image == null)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    string.Format("Tried to resolve '{0}' and failed while checking", name)
+                );
+
+                foreach (string attempt in attempts)
+                {
+                    System.Diagnostics.Debug.WriteLine(string.Format("  here: {0}", attempt));
+                }
+            }
+
+            this.StoreImageToCache(name, image);
+
+            return image;
+        }
+
+        public Image GetImageFromResourceManager(string name, ResourceManager resourceManager)
+        {
+            //	L'image décrite par l'identificateur de ressources est définie au moyen
+            //	d'un bundle comportant au minimum le champ "image" et le champ spécifié
+            //	par le format "res:id#field".
+            //
+            //	Le champ "image" se réfère aux données binaires de l'image (par exemple
+            //	une image au format PNG).
+            //
+            //	Le champ spécifié décrit quant à lui quelques informations au sujet de
+            //	la partie de l'image qui nous intéresse ici. Dans la partie "id", il
+            //	faut en principe spécifier le provider à utiliser, sinon le provider
+            //	de ressources par défaut sera pris.
+
+            string resFull = name.Remove(0, 4);
+            string resBundle;
+            string resField;
+
+            if (resFull.IndexOf(':') < 0)
+            {
+                resFull = this.providerPrefix + resFull;
+            }
+
+            Image image = null;
+
+            if (Resources.SplitFieldId(resFull, out resBundle, out resField))
+            {
+                ResourceBundle bundle = resourceManager.GetBundle(resBundle);
+
+                if (bundle != null)
+                {
+                    image = this.CreateBitmapFromBundle(bundle, resField);
+                }
+            }
+            else
+            {
+                byte[] data = resourceManager.GetBinaryData(resFull);
+                image = Bitmap.FromData(data);
+            }
+
+            this.StoreImageToCache(name, image);
+
+            return image;
+        }
+
+        public Image GetImageFromManifestResource(string name)
+        {
+            //	L'image décrite est stockée dans les ressources du manifeste de l'assembly .NET.
+            //	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiés par
+            //	.NET et des transformations futures pourraient ne pas fonctionner.
+
+            var assemblies = ImageProvider.GetAssemblies();
+            var resourceName = name.Remove(0, 9).ToLowerInvariant();
+
+            Image image = null;
+
+            foreach (var assembly in assemblies)
+            {
+                var resourceNames = assembly.GetManifestResourceNames();
+                string matchingName = resourceNames
+                    .Where(x => x.ToLowerInvariant() == resourceName)
+                    .FirstOrDefault();
+
+                if (matchingName == null)
+                {
+                    continue;
+                }
+
+                image = this.GetImageFromManifestResource(matchingName, assembly);
+
+                this.StoreImageToCache(name, image);
+
+                if (image != null)
+                {
+                    return image;
+                }
+            }
+            return null;
+        }
+
+        public Image GetImageFromManifestResource(string name, System.Reflection.Assembly assembly)
+        {
+            using (System.IO.Stream stream = assembly.GetManifestResourceStream(name))
+            {
+                if (stream == null)
+                {
+                    return null;
+                }
+
+                long length = stream.Length;
+                byte[] buffer = new byte[length];
+                stream.Read(buffer, 0, (int)length);
+
+                if (name.EndsWith(".icon"))
+                {
+                    // image au format vectoriel "maison" EPSITEC
+                    return Canvas.FromData(buffer);
+                }
+                else
+                {
+                    return Bitmap.FromData(buffer);
+                }
+            }
         }
 
         public string[] GetImageNames(string provider, ResourceManager resourceManager)
@@ -440,36 +482,34 @@ namespace Epsitec.Common.Support
                 {
                     string name = string.Concat("manifest:", resName);
 
-                    if (this.images.ContainsKey(name))
+                    if (!this.images.ContainsKey(name))
                     {
-                        Weak<Image> weakRef = this.images[name];
+                        continue;
+                    }
 
-                        if (weakRef.IsAlive == false)
+                    Weak<Image> weakRef = this.images[name];
+
+                    if (weakRef.IsAlive)
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        Image image = this.GetImageFromManifestResource(resName, assemblyObject);
+
+                        if (image != null)
                         {
-                            try
-                            {
-                                Image image = Bitmap.FromManifestResource(resName, assemblyObject);
+                            System.Diagnostics.Debug.WriteLine(
+                                "Pre-loaded image "
+                                    + resName
+                                    + " from assembly "
+                                    + assemblyObject.GetName()
+                            );
 
-                                if (image != null)
-                                {
-                                    System.Diagnostics.Debug.WriteLine(
-                                        "Pre-loaded image "
-                                            + resName
-                                            + " from assembly "
-                                            + assemblyObject.GetName()
-                                    );
-
-                                    this.images[name] = new Weak<Image>(image);
-
-                                    if (this.keepAliveImages != null)
-                                    {
-                                        this.keepAliveImages.Add(image);
-                                    }
-                                }
-                            }
-                            catch { }
+                            this.StoreImageToCache(name, image);
                         }
                     }
+                    catch { }
                 }
             }
         }
@@ -520,6 +560,21 @@ namespace Epsitec.Common.Support
             return list.ToArray();
         }
 
+        private void StoreImageToCache(string name, Image image)
+        {
+            if (image == null)
+            {
+                return;
+            }
+
+            this.images[name] = new Weak<Image>(image);
+
+            if (this.keepAliveImages != null)
+            {
+                this.keepAliveImages.Add(image);
+            }
+        }
+
         private Image CreateBitmapFromBundle(ResourceBundle bundle, string imageName)
         {
             string fieldName = "i." + imageName;
@@ -538,7 +593,7 @@ namespace Epsitec.Common.Support
 
                 Size size = Size.Parse(imageArgs);
 
-                cache = Bitmap.FromData(imageData, Point.Zero, size);
+                cache = Bitmap.FromData(imageData, Point.Zero);
 
                 this.bundleImages[bundle] = cache;
             }

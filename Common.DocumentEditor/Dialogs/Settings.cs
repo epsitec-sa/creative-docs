@@ -26,7 +26,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
                 this.WindowInit("Settings", 300, 435);
                 this.window.Text = Res.Strings.Dialog.Settings.Title;
                 this.window.Owner = this.editor.Window;
-                this.window.Icon = Bitmap.FromManifestResource(
+                this.window.Icon = Support.ImageProvider.Instance.GetImageFromManifestResource(
                     "Epsitec.Common.DocumentEditor.Images.Settings.icon",
                     this.GetType().Assembly
                 );

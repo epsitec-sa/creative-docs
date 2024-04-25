@@ -7,10 +7,9 @@ namespace Epsitec.Common.Widgets.Adorners
     {
         public LookRoyale()
         {
-            this.bitmap = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "LookRoyale.png",
-                typeof(IAdorner)
+            this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.ResourcesLookRoyale.png",
+                typeof(IAdorner).Assembly
             );
         }
 

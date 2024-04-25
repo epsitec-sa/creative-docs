@@ -1,9 +1,9 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using System.Collections.Generic;
 
 /*
  *	Note: on ne doit pas faire de image.Dispose (cf. //!), car il se peut
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document
                 GlobalImageCache.ReadZippedDocument
             );
 
-            Bitmap.OutOfMemoryEncountered += sender => GlobalImageCache.FreeEverything();
+            //Bitmap.OutOfMemoryEncountered += sender => GlobalImageCache.FreeEverything();
         }
 
         private static void ShutDown()

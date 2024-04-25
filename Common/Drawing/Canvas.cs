@@ -11,10 +11,6 @@ namespace Epsitec.Common.Drawing
         // TODO bl-net8-cross
         // - reconnect the bitmap cache
         // ******************************************************************
-        static Canvas()
-        {
-            //Bitmap.CanvasFactory = new Canvas.Factory();
-        }
 
         internal Canvas(byte[] data)
         {
@@ -68,6 +64,11 @@ namespace Epsitec.Common.Drawing
 
             this.paintStyle = style;
             this.effects = original.effects;
+        }
+
+        public static Canvas FromData(byte[] buffer)
+        {
+            return new Canvas(buffer);
         }
 
         public int DebugDeep
@@ -675,16 +676,6 @@ namespace Epsitec.Common.Drawing
             #endregion
 
             protected System.Collections.Hashtable hash;
-        }
-
-        protected class Factory : ICanvasFactory
-        {
-            #region ICanvasFactory Members
-            public Image CreateCanvas(byte[] data)
-            {
-                return new Canvas(data);
-            }
-            #endregion
         }
 
         protected bool isDisposed;

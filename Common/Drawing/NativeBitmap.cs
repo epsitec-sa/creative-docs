@@ -4,90 +4,42 @@
 using System.Collections.Generic;
 using System.Linq;
 
-//using System.Windows.Media;
-//using System.Windows.Media.Imaging;
-
 namespace Epsitec.Common.Drawing.Platform
 {
-    //using Color = System.Windows.Media.Color;
-
     public sealed class NativeBitmap : System.IDisposable
     // ******************************************************************
     // TODO bl-net8-cross
     // - implement NativeBitmap using ImageMagick (stub)
     // ******************************************************************
     {
-        /*        internal NativeBitmap(
-                    BitmapSource bitmapSource,
-                    BitmapFileFormat fileFormat = null,
-                    BitmapColorType? colorType = null
-                )
-                {
-                    //	We really must create a copy of the bitmap source, and not just a
-                    //	CachedBitmap, but really a WriteableBitmap, or else WPF will keep
-                    //	alive the full bitmap chain, which rapidly leads to memory errors.
-        
-                    BitmapSource bitmapCopy = null;
-        
-                    for (int attempt = 0; ; attempt++)
-                    {
-                        try
-                        {
-                            bitmapCopy = new WriteableBitmap(bitmapSource);
-                            break;
-                        }
-                        catch (System.OutOfMemoryException)
-                        {
-                            //	There is no memory available for System.Windows.Media.Imaging to operate
-                            //	properly.
-        
-                            if (attempt >= 5)
-                            {
-                                //	No need to try more; the situation is really catastrophic and nothing
-                                //	we can do will help.
-                                throw;
-                            }
-        
-                            var handler = NativeBitmap.outOfMemoryHandler;
-        
-                            if (handler == null)
-                            {
-                                break;
-                            }
-        
-                            handler();
-                        }
-                    }
-        
-                    this.bitmapSource = bitmapCopy;
-                    this.fileFormat = fileFormat;
-                    this.colorType = colorType;
-        
-                    if (this.bitmapSource.CanFreeze)
-                    {
-                        this.bitmapSource.Freeze();
-                    }
-                }
-        */
+        internal NativeBitmap(string source)
+        {
+            this.magicImage = new ImageMagick.MagickImage(source);
+        }
+
+        internal NativeBitmap(byte[] buffer)
+        {
+            this.magicImage = new ImageMagick.MagickImage(buffer);
+        }
+
+        public int Stride
+        {
+            get { return this.Width * this.BitsPerPixel; }
+        }
+
         public int BitsPerPixel
         {
-            //get { return this.bitmapSource == null ? 0 : this.bitmapSource.Format.BitsPerPixel; }
-            get { throw new System.NotImplementedException(); }
-            //get { return 0; }
+            get { return this.magicImage.Depth; }
         }
 
         public int Width
         {
-            //get { return this.bitmapSource == null ? 0 : this.bitmapSource.PixelWidth; }
-            get { throw new System.NotImplementedException(); }
-            // get { return 0; }
+            get { return this.magicImage.Width; }
         }
 
         public int Height
         {
-            //get { return this.bitmapSource == null ? 0 : this.bitmapSource.PixelHeight; }
-            get { throw new System.NotImplementedException(); }
-            //get { return 0; }
+            get { return this.magicImage.Height; }
         }
 
         public bool IsTransparent
@@ -235,19 +187,21 @@ namespace Epsitec.Common.Drawing.Platform
             get { throw new System.NotImplementedException(); }
         }
 
+        public byte[] GetPixelBuffer()
+        {
+            // In the antigrain backend, we use the BGRA format for pixels, so we use the same format here
+            // See the definition in AggUI/aggcpp/pixelfmt.h
+            return this.magicImage.GetPixels().ToByteArray(ImageMagick.PixelMapping.BGRA);
+        }
+
         #region IDisposable Members
 
         public void Dispose()
         {
-            //this.bitmapSource = null;
+            this.magicImage.Dispose();
         }
 
         #endregion
-
-        public static void SetOutOfMemoryHandler(System.Action callback)
-        {
-            NativeBitmap.outOfMemoryHandler = callback;
-        }
 
         public NativeBitmap ConvertToPremultipliedArgb32()
         {
@@ -351,22 +305,6 @@ namespace Epsitec.Common.Drawing.Platform
                         "Unsupported color channel specified"
                     );
             }
-        }
-
-        public void CopyPixelsToBuffer(System.IntPtr bufferMemory, int bufferSize, int pitch)
-        {
-            /*
-            System.Windows.Int32Rect sourceRect = System.Windows.Int32Rect.Empty;
-
-            var temp = new TransformedBitmap();
-            temp.BeginInit();
-            temp.Source = this.bitmapSource;
-            temp.Transform = new System.Windows.Media.ScaleTransform(1, -1);
-            temp.EndInit();
-
-            temp.CopyPixels(sourceRect, bufferMemory, bufferSize, pitch);
-            */
-            throw new System.NotImplementedException();
         }
 
         public byte[] GetRawImageDataInCompactFormFor8BitImage()
@@ -520,95 +458,18 @@ namespace Epsitec.Common.Drawing.Platform
         {
             path = System.IO.Path.GetFullPath(path);
 
-            return NativeBitmap.Load(System.IO.File.ReadAllBytes(path), path);
+            return new NativeBitmap(path);
         }
 
         public static NativeBitmap Load(byte[] buffer, string path = null)
         {
-            /*
-            if (buffer == null)
+            if (path != null)
             {
-                return null;
+                return NativeBitmap.Load(path);
             }
-
-            try
-            {
-                using (var imageStreamSource = new System.IO.MemoryStream(buffer))
-                {
-                    return NativeBitmap.LoadFromMemoryStream(path, imageStreamSource);
-                }
-            }
-            catch
-            {
-                try
-                {
-                    System.Drawing.Image drawingImage;
-
-                    using (var imageStreamSource = new System.IO.MemoryStream(buffer))
-                    {
-                        drawingImage = System.Drawing.Image.FromStream(imageStreamSource);
-
-                        using (var memoryStream = new System.IO.MemoryStream())
-                        {
-                            drawingImage.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
-                            drawingImage.Dispose();
-
-                            memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
-
-                            return NativeBitmap.LoadFromMemoryStream(path, memoryStream);
-                        }
-                    }
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-            */
-            //return null;
-            throw new System.NotImplementedException();
+            return new NativeBitmap(buffer);
         }
 
-        private static NativeBitmap LoadFromMemoryStream(
-            string path,
-            System.IO.MemoryStream imageStreamSource
-        )
-        {
-            /*
-            BitmapImage image = new BitmapImage();
-
-            image.BeginInit();
-            image.StreamSource = imageStreamSource;
-            //-			image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.EndInit();
-
-            BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat(path);
-            return new NativeBitmap(image, fileFormat);
-            */
-            //return null;
-            throw new System.NotImplementedException();
-        }
-
-        /*        public static NativeBitmap Create(System.Drawing.Bitmap bitmap)
-                {
-                    switch (bitmap.PixelFormat)
-                    {
-                        case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-                            return SystemDrawingBitmapHelper.Create24bppImage(bitmap);
-        
-                        case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-                        case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
-                            return SystemDrawingBitmapHelper.Create32bppImage(bitmap);
-        
-                        case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
-                            return SystemDrawingBitmapHelper.Create8bppImage(bitmap);
-        
-                        default:
-                            return null;
-                    }
-                }
-        */
         public override string ToString()
         {
             return string.Format(
@@ -1006,10 +867,6 @@ namespace Epsitec.Common.Drawing.Platform
             throw new System.NotImplementedException();
         }
 
-        private static System.Action outOfMemoryHandler;
-
-        //private BitmapSource bitmapSource;
-        private BitmapFileFormat fileFormat;
-        private readonly BitmapColorType? colorType;
+        private ImageMagick.MagickImage magicImage;
     }
 }

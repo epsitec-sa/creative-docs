@@ -1,5 +1,6 @@
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.DocumentEditor
@@ -60,7 +61,7 @@ namespace Epsitec.Common.DocumentEditor
             this.Window = window;
 
             window.IsValidDropTarget = true;
-            window.Icon = Bitmap.FromManifestResource(
+            window.Icon = ImageProvider.Instance.GetImageFromManifestResource(
                 "Epsitec.Common.DocumentEditor.Images.Application.icon",
                 typeof(Application).Assembly
             );

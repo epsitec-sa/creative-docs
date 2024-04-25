@@ -4,7 +4,7 @@
 namespace Epsitec.Common.Drawing
 {
     /// <summary>
-    /// La classe Image permet de représenter une image de type bitmap.
+    /// La classe Image permet de représenter une image générique.
     /// </summary>
     public abstract class Image : System.IDisposable
     {
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Drawing
         {
             //	0 < origin < size: l'origine est dans l'image
 
-            get { return this.IsOriginDefined ? (Point)this.origin : new Point(); }
+            get { return this.origin ?? new Point(); }
         }
 
         public virtual bool IsOriginDefined

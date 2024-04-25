@@ -7,20 +7,17 @@ namespace Epsitec.Common.Widgets.Adorners
     {
         public LookAqua()
         {
-            this.bitmap = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "LookAqua.png",
-                typeof(IAdorner)
+            this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.ResourcesLookAqua.png",
+                typeof(IAdorner).Assembly
             );
-            this.metal1 = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "metal1.png",
-                typeof(IAdorner)
+            this.metal1 = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.Resourcesmetal1.png",
+                typeof(IAdorner).Assembly
             );
-            this.metal2 = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "metal2.png",
-                typeof(IAdorner)
+            this.metal2 = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.Resourcesmetal2.png",
+                typeof(IAdorner).Assembly
             );
             this.metalRenderer = false;
             this.dynamicReflect = false;

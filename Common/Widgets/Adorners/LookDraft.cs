@@ -7,15 +7,13 @@ namespace Epsitec.Common.Widgets.Adorners
     {
         public LookDraft()
         {
-            this.bitmap = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "LookDraft.png",
-                typeof(IAdorner)
+            this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.ResourcesLookDraft.png",
+                typeof(IAdorner).Assembly
             );
-            this.paper = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "paper1.png",
-                typeof(IAdorner)
+            this.paper = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.Resourcespaper1.png",
+                typeof(IAdorner).Assembly
             );
         }
 

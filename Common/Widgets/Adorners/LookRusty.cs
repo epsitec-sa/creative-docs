@@ -7,15 +7,13 @@ namespace Epsitec.Common.Widgets.Adorners
     {
         public LookRusty()
         {
-            this.bitmap = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "LookRusty.png",
-                typeof(IAdorner)
+            this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.ResourcesLookRusty.png",
+                typeof(IAdorner).Assembly
             );
-            this.metal3 = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "metal3.png",
-                typeof(IAdorner)
+            this.metal3 = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.Resourcesmetal3.png",
+                typeof(IAdorner).Assembly
             );
         }
 

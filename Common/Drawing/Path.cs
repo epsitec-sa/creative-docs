@@ -11,7 +11,8 @@ namespace Epsitec.Common.Drawing
         // TODO bl-net8-cross
         // - implement CreateSystemPath (removed)
         // ******************************************************************
-        public Path() : this(new AntigrainCPP.Path()) { }
+        public Path()
+            : this(new AntigrainCPP.Path()) { }
 
         internal Path(AntigrainCPP.Path path)
         {
@@ -19,6 +20,7 @@ namespace Epsitec.Common.Drawing
         }
 
         public Path(Rectangle rect)
+            : this()
         {
             this.AppendRectangle(rect);
         }
@@ -445,17 +447,7 @@ namespace Epsitec.Common.Drawing
         {
             this.hasCurve |= path.hasCurve;
             this.isEmpty &= path.isEmpty;
-            this.path.AppendPath(
-                path.path,
-                xx,
-                xy,
-                yx,
-                yy,
-                tx,
-                ty,
-                approximationZoom,
-                0
-            );
+            this.path.AppendPath(path.path, xx, xy, yx, yy, tx, ty, approximationZoom, 0);
         }
 
         public void Append(
@@ -472,34 +464,14 @@ namespace Epsitec.Common.Drawing
         {
             this.hasCurve |= path.hasCurve;
             this.isEmpty &= path.isEmpty;
-            this.path.AppendPath(
-                path.path,
-                xx,
-                xy,
-                yx,
-                yy,
-                tx,
-                ty,
-                approximationZoom,
-                boldWidth
-            );
+            this.path.AppendPath(path.path, xx, xy, yx, yy, tx, ty, approximationZoom, boldWidth);
         }
 
         public void Append(Path path, double approximationZoom, double boldWidth)
         {
             this.hasCurve |= path.hasCurve;
             this.isEmpty &= path.isEmpty;
-            this.path.AppendPath(
-                path.path,
-                1,
-                0,
-                0,
-                1,
-                0,
-                0,
-                approximationZoom,
-                boldWidth
-            );
+            this.path.AppendPath(path.path, 1, 0, 0, 1, 0, 0, approximationZoom, boldWidth);
         }
 
         public void Append(Font font, string text, double x, double y, double size)
@@ -571,17 +543,7 @@ namespace Epsitec.Common.Drawing
 
             if (glyph < 0xfff0)
             {
-                this.path.AppendGlyph(
-                    System.IntPtr.Zero,
-                    glyph,
-                    xx,
-                    xy,
-                    yx,
-                    yy,
-                    tx,
-                    ty,
-                    0
-                );
+                this.path.AppendGlyph(System.IntPtr.Zero, glyph, xx, xy, yx, yy, tx, ty, 0);
             }
         }
 
@@ -616,17 +578,7 @@ namespace Epsitec.Common.Drawing
 
             if (glyph < 0xfff0)
             {
-                this.path.AppendGlyph(
-                    System.IntPtr.Zero,
-                    glyph,
-                    xx,
-                    xy,
-                    yx,
-                    yy,
-                    tx,
-                    ty,
-                    boldWidth
-                );
+                this.path.AppendGlyph(System.IntPtr.Zero, glyph, xx, xy, yx, yy, tx, ty, boldWidth);
             }
         }
 
@@ -1138,111 +1090,108 @@ namespace Epsitec.Common.Drawing
             return buffer.ToString();
         }
 
-/*        public System.Drawing.Drawing2D.GraphicsPath CreateSystemPath()
-        {
-            PathElement[] elements;
-            Point[] points;
-
-            this.GetElements(out elements, out points);
-
-            System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-
-            int n = elements.Length;
-
-            float ox = 0;
-            float oy = 0;
-            float x1,
-                x2,
-                x3,
-                xc;
-            float y1,
-                y2,
-                y3,
-                yc;
-
-            for (int i = 0; i < n; i++)
-            {
-                switch (elements[i] & PathElement.MaskCommand)
+        /*        public System.Drawing.Drawing2D.GraphicsPath CreateSystemPath()
                 {
-                    case PathElement.MoveTo:
-                        ox = (float)points[i].X;
-                        oy = (float)points[i].Y;
-                        gp.StartFigure();
-                        break;
-
-                    case PathElement.LineTo:
-                        x1 = (float)points[i].X;
-                        y1 = (float)points[i].Y;
-                        gp.AddLine(ox, oy, x1, y1);
-                        ox = x1;
-                        oy = y1;
-                        break;
-
-                    case PathElement.Curve3:
-                        xc = (float)points[i + 0].X;
-                        yc = (float)points[i + 0].Y;
-                        x3 = (float)points[i + 1].X;
-                        y3 = (float)points[i + 1].Y;
-
-                        //	Formules de conversion trouvées ici: http://ungwe.org/blog/2004/02/22/15:50/
-
-                        x1 = (ox + 2 * xc) / 3;
-                        y1 = (oy + 2 * yc) / 3;
-                        x2 = (x3 + 2 * xc) / 3;
-                        y2 = (y3 + 2 * yc) / 3;
-
-                        gp.AddBezier(ox, oy, x1, y1, x2, y2, x3, y3);
-
-                        ox = x3;
-                        oy = y3;
-                        i += 1;
-                        break;
-
-                    case PathElement.Curve4:
-                        x1 = (float)points[i + 0].X;
-                        y1 = (float)points[i + 0].Y;
-                        x2 = (float)points[i + 1].X;
-                        y2 = (float)points[i + 1].Y;
-                        x3 = (float)points[i + 2].X;
-                        y3 = (float)points[i + 2].Y;
-                        gp.AddBezier(ox, oy, x1, y1, x2, y2, x3, y3);
-                        ox = x3;
-                        oy = y3;
-                        i += 2;
-                        break;
-
-                    case PathElement.Stop:
-                        break;
-
-                    default:
-                        if ((elements[i] & PathElement.MaskFlags) != PathElement.FlagClose)
+                    PathElement[] elements;
+                    Point[] points;
+        
+                    this.GetElements(out elements, out points);
+        
+                    System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
+        
+                    int n = elements.Length;
+        
+                    float ox = 0;
+                    float oy = 0;
+                    float x1,
+                        x2,
+                        x3,
+                        xc;
+                    float y1,
+                        y2,
+                        y3,
+                        yc;
+        
+                    for (int i = 0; i < n; i++)
+                    {
+                        switch (elements[i] & PathElement.MaskCommand)
                         {
-                            throw new System.InvalidOperationException(
-                                string.Format(
-                                    "Path cannot be converted, element {0} set to {1}.",
-                                    i,
-                                    elements[i]
-                                )
-                            );
+                            case PathElement.MoveTo:
+                                ox = (float)points[i].X;
+                                oy = (float)points[i].Y;
+                                gp.StartFigure();
+                                break;
+        
+                            case PathElement.LineTo:
+                                x1 = (float)points[i].X;
+                                y1 = (float)points[i].Y;
+                                gp.AddLine(ox, oy, x1, y1);
+                                ox = x1;
+                                oy = y1;
+                                break;
+        
+                            case PathElement.Curve3:
+                                xc = (float)points[i + 0].X;
+                                yc = (float)points[i + 0].Y;
+                                x3 = (float)points[i + 1].X;
+                                y3 = (float)points[i + 1].Y;
+        
+                                //	Formules de conversion trouvées ici: http://ungwe.org/blog/2004/02/22/15:50/
+        
+                                x1 = (ox + 2 * xc) / 3;
+                                y1 = (oy + 2 * yc) / 3;
+                                x2 = (x3 + 2 * xc) / 3;
+                                y2 = (y3 + 2 * yc) / 3;
+        
+                                gp.AddBezier(ox, oy, x1, y1, x2, y2, x3, y3);
+        
+                                ox = x3;
+                                oy = y3;
+                                i += 1;
+                                break;
+        
+                            case PathElement.Curve4:
+                                x1 = (float)points[i + 0].X;
+                                y1 = (float)points[i + 0].Y;
+                                x2 = (float)points[i + 1].X;
+                                y2 = (float)points[i + 1].Y;
+                                x3 = (float)points[i + 2].X;
+                                y3 = (float)points[i + 2].Y;
+                                gp.AddBezier(ox, oy, x1, y1, x2, y2, x3, y3);
+                                ox = x3;
+                                oy = y3;
+                                i += 2;
+                                break;
+        
+                            case PathElement.Stop:
+                                break;
+        
+                            default:
+                                if ((elements[i] & PathElement.MaskFlags) != PathElement.FlagClose)
+                                {
+                                    throw new System.InvalidOperationException(
+                                        string.Format(
+                                            "Path cannot be converted, element {0} set to {1}.",
+                                            i,
+                                            elements[i]
+                                        )
+                                    );
+                                }
+                                break;
                         }
-                        break;
+        
+                        if ((elements[i] & PathElement.FlagClose) != 0)
+                        {
+                            gp.CloseFigure();
+                        }
+                    }
+        
+                    return gp;
                 }
-
-                if ((elements[i] & PathElement.FlagClose) != 0)
-                {
-                    gp.CloseFigure();
-                }
-            }
-
-            return gp;
-        }
-*/
+        */
         public static Path Combine(Path a, Path b, PathOperation operation)
         {
-            AntigrainCPP.Path newPath = a.path.CombinePathUsingGpc(
-                b.path,
-                (int)operation
-            );
+            AntigrainCPP.Path newPath = a.path.CombinePathUsingGpc(b.path, (int)operation);
 
             Path result = new Path(newPath);
 

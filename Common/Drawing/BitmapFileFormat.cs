@@ -5,6 +5,7 @@ namespace Epsitec.Common.Drawing.Platform
 {
     public class BitmapFileFormat
     {
+        // TODO bl-net8-cross this class can probably be deleted
         public BitmapFileFormat()
         {
             this.Type = BitmapFileType.Unknown;

@@ -8,10 +8,9 @@ namespace Epsitec.Common.Widgets.Adorners
     {
         public LookBusiness()
         {
-            this.bitmap = Drawing.Bitmap.FromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resources",
-                "LookBusiness.png",
-                typeof(IAdorner)
+            this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
+                "Epsitec.Common.Widgets.Adorners.ResourcesLookBusiness.png",
+                typeof(IAdorner).Assembly
             );
         }
 
