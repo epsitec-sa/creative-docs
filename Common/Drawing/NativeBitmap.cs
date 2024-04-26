@@ -24,12 +24,16 @@ namespace Epsitec.Common.Drawing.Platform
 
         public int Stride
         {
-            get { return this.Width * this.BitsPerPixel; }
+            get
+            {
+                // divide by 8 to get the stride in byte
+                return this.Width * this.BitsPerPixel / 8;
+            }
         }
 
         public int BitsPerPixel
         {
-            get { return this.magicImage.Depth; }
+            get { return this.magicImage.Depth * this.magicImage.ChannelCount; }
         }
 
         public int Width

@@ -46,6 +46,16 @@ namespace Epsitec.Common.Drawing
 
         public override void DefineAdorner(object adorner) { }
 
+        public int PixelWidth
+        {
+            get { return this.nativeBitmap.PixelWidth; }
+        }
+
+        public int PixelHeight
+        {
+            get { return this.nativeBitmap.PixelHeight; }
+        }
+
         #region NotImplemented
         public byte[] GetRawBitmapBytes()
         {
@@ -72,16 +82,6 @@ namespace Epsitec.Common.Drawing
                         }
             */
             throw new System.NotImplementedException();
-        }
-
-        public int PixelWidth
-        {
-            get { return this.nativeBitmap.PixelWidth; }
-        }
-
-        public int PixelHeight
-        {
-            get { return this.nativeBitmap.PixelHeight; }
         }
 
         public static void Merge(
