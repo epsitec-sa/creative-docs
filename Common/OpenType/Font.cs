@@ -16,7 +16,7 @@ namespace Epsitec.Common.OpenType
         {
             this.identity = identity;
             // TODO bl-net8-cross free the underlying freetype handle when done
-            this.fontHandle = AntigrainCPP.Font.LoadFromFile(identity.FilePath);
+            this.fontHandle = AntigrainSharp.Font.LoadFromFile(identity.FilePath);
         }
 
         public FontIdentity FontIdentity
@@ -1433,7 +1433,7 @@ namespace Epsitec.Common.OpenType
         private const int TransparentGlyphFlag = 0x00800000;
 
         private FontIdentity identity;
-        private AntigrainCPP.Font fontHandle;
+        private AntigrainSharp.Font fontHandle;
 
         //private FontData fontData;
 

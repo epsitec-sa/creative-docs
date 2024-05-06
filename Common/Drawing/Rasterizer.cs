@@ -15,7 +15,7 @@ namespace Epsitec.Common.Drawing
         /// </summary>
         public Rasterizer()
         {
-            this.rasterizer = new AntigrainCPP.Rasterizer();
+            this.rasterizer = new AntigrainSharp.Rasterizer();
         }
 
         /// <summary>
@@ -357,6 +357,6 @@ namespace Epsitec.Common.Drawing
             );
         }
 
-        private readonly AntigrainCPP.Rasterizer rasterizer;
+        private readonly AntigrainSharp.Rasterizer rasterizer;
     }
 }

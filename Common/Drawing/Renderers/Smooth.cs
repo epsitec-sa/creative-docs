@@ -5,7 +5,7 @@ namespace Epsitec.Common.Drawing.Renderers
 {
     public sealed class Smooth : IRenderer, System.IDisposable
     {
-        public Smooth(Graphics graphics, AntigrainCPP.Renderer.Smooth smoothRenderer)
+        public Smooth(Graphics graphics, AntigrainSharp.Renderer.Smooth smoothRenderer)
         {
             this.graphics = graphics;
             this.smoothRenderer = smoothRenderer;
@@ -31,10 +31,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
         public Color Color
         {
-            set
-            {
-                this.smoothRenderer.Color(value.R, value.G, value.B, value.A);
-            }
+            set { this.smoothRenderer.Color(value.R, value.G, value.B, value.A); }
         }
 
         public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
@@ -42,7 +39,7 @@ namespace Epsitec.Common.Drawing.Renderers
             /*
             this.smoothRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntigrainCPP.Renderer.MaskComponent)component
+                (AntigrainSharp.Renderer.MaskComponent)component
             );
             */
             throw new System.NotImplementedException();
@@ -116,7 +113,7 @@ namespace Epsitec.Common.Drawing.Renderers
         }
 
         readonly Graphics graphics;
-        private readonly AntigrainCPP.Renderer.Smooth smoothRenderer;
+        private readonly AntigrainSharp.Renderer.Smooth smoothRenderer;
         private Pixmap pixmap;
         private Transform transform = Transform.Identity;
         private double r1;

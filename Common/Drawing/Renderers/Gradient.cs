@@ -9,7 +9,7 @@ namespace Epsitec.Common.Drawing.Renderers
     /// </summary>
     public sealed class Gradient : IRenderer, System.IDisposable
     {
-        public Gradient(Graphics graphics, AntigrainCPP.Renderer.Gradient gradientRenderer)
+        public Gradient(Graphics graphics, AntigrainSharp.Renderer.Gradient gradientRenderer)
         {
             this.graphics = graphics;
             this.gradientRenderer = gradientRenderer;
@@ -26,11 +26,11 @@ namespace Epsitec.Common.Drawing.Renderers
                 //	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
                 //	Graphics.UpdateTransform...
 
-/*                if (this.handle.IsInvalid)
-                {
-                    return;
-                }
-*/
+                /*                if (this.handle.IsInvalid)
+                                {
+                                    return;
+                                }
+                */
                 this.transform = value;
                 this.internalTransform = value.MultiplyBy(this.graphics.Transform);
 
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Drawing.Renderers
             /*
             this.gradientRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntigrainCPP.Renderer.MaskComponent)component
+                (AntigrainSharp.Renderer.MaskComponent)component
             );
             */
             throw new System.NotImplementedException();
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Drawing.Renderers
         }
 
         readonly Graphics graphics;
-        readonly internal AntigrainCPP.Renderer.Gradient gradientRenderer;
+        internal readonly AntigrainSharp.Renderer.Gradient gradientRenderer;
         private Pixmap pixmap;
         private GradientFill fill;
         private Transform transform = Transform.Identity;

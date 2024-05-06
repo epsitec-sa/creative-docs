@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using AggUI;
+using AntigrainSharp;
 
 namespace Epsitec.Common.Drawing
 {
@@ -590,7 +590,7 @@ namespace Epsitec.Common.Drawing
             }
 
             ushort[] glyphs = this.OpenTypeFont.GenerateGlyphsWithMask(text);
-            AntigrainCPP.Font.PixelCache.Fill(this.Handle, glyphs, size, ox, oy);
+            AntigrainSharp.Font.PixelCache.Fill(this.Handle, glyphs, size, ox, oy);
             */
             throw new System.NotImplementedException();
         }

@@ -5,7 +5,7 @@ namespace Epsitec.Common.Drawing.Renderers
 {
     public sealed class Solid : IRenderer
     {
-        public Solid(AntigrainCPP.Renderer.Solid solidRenderer)
+        public Solid(AntigrainSharp.Renderer.Solid solidRenderer)
         {
             this.solidRenderer = solidRenderer;
             this.AlphaMutiplier = 1.0;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Drawing.Renderers
         )
         {
             /*
-            AntigrainCPP.Renderer.Special.Fill4Colors(
+            AntigrainSharp.Renderer.Special.Fill4Colors(
                 x,
                 y,
                 dx,
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Drawing.Renderers
             /*
             this.solidRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntigrainCPP.Renderer.MaskComponent)component
+                (AntigrainSharp.Renderer.MaskComponent)component
             );
             */
             throw new System.NotImplementedException();
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Drawing.Renderers
         //}
 
         private Color color;
-        readonly internal AntigrainCPP.Renderer.Solid solidRenderer;
+        internal readonly AntigrainSharp.Renderer.Solid solidRenderer;
         private Pixmap pixmap;
     }
 }

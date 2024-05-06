@@ -11,7 +11,9 @@ namespace Epsitec.Common.Widgets.Platform
     /// <summary>
     /// La classe Platform.Window fait le lien avec les WinForms.
     /// </summary>
-    internal class Window : AggUI.AggWindow, Types.BindingAsyncOperation.IApplicationThreadInvoker
+    internal class Window
+        : AntigrainSharp.AggWindow,
+            Types.BindingAsyncOperation.IApplicationThreadInvoker
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -44,14 +46,14 @@ namespace Epsitec.Common.Widgets.Platform
         }
 
         // --------------------------------------------------------------------------------------------
-        //                             AggUI.AggWindow overrides
+        //                             AntigrainSharp.AggWindow overrides
         // --------------------------------------------------------------------------------------------
         ~Window()
         {
             System.Console.WriteLine("Delete window");
         }
 
-        public override void OnDraw(AggUI.GraphicContext gctx)
+        public override void OnDraw(AntigrainSharp.GraphicContext gctx)
         {
             Rectangle repaint = Rectangle.MaxValue;
             this.graphics = new Graphics(gctx);
@@ -1947,7 +1949,7 @@ namespace Epsitec.Common.Widgets.Platform
         internal void MarkForRepaint(Drawing.Rectangle rect)
         {
             // TODO bl-net8-cross
-            // since the drawing works differently with AggUI than with winforms,
+            // since the drawing works differently with AntigrainSharp than with winforms,
             // those Invalidate calls will probably not be needed anymore
             // If that turn out to be the case, we could delete them
 
@@ -3142,7 +3144,7 @@ namespace Epsitec.Common.Widgets.Platform
             bool ok = this.Init(
                 (uint)this.clientSize.Width,
                 (uint)this.clientSize.Height,
-                AggUI.WindowFlags.Resize
+                AntigrainSharp.WindowFlags.Resize
             );
             if (!ok)
             {

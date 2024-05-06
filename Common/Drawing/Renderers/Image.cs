@@ -6,7 +6,7 @@ namespace Epsitec.Common.Drawing.Renderers
 {
     public sealed class Image : IRenderer
     {
-        public Image(Graphics graphics, AntigrainCPP.Renderer.Image imageRenderer)
+        public Image(Graphics graphics, AntigrainSharp.Renderer.Image imageRenderer)
         {
             this.graphics = graphics;
             this.imageRenderer = imageRenderer;
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Drawing.Renderers
             /*
             this.imageRenderer.SetAlphaMask(
                 (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
-                (AntigrainCPP.Renderer.MaskComponent)component
+                (AntigrainSharp.Renderer.MaskComponent)component
             );
             */
             throw new System.NotImplementedException();
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Drawing.Renderers
         }
 
         readonly Graphics graphics;
-        internal readonly AntigrainCPP.Renderer.Image imageRenderer;
+        internal readonly AntigrainSharp.Renderer.Image imageRenderer;
 
         private Transform transform = Transform.Identity;
         private Transform internalTransform = Transform.Identity;

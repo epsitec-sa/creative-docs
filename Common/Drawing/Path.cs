@@ -12,9 +12,9 @@ namespace Epsitec.Common.Drawing
         // - implement CreateSystemPath (removed)
         // ******************************************************************
         public Path()
-            : this(new AntigrainCPP.Path()) { }
+            : this(new AntigrainSharp.Path()) { }
 
-        internal Path(AntigrainCPP.Path path)
+        internal Path(AntigrainSharp.Path path)
         {
             this.path = path;
         }
@@ -1191,7 +1191,7 @@ namespace Epsitec.Common.Drawing
         */
         public static Path Combine(Path a, Path b, PathOperation operation)
         {
-            AntigrainCPP.Path newPath = a.path.CombinePathUsingGpc(b.path, (int)operation);
+            AntigrainSharp.Path newPath = a.path.CombinePathUsingGpc(b.path, (int)operation);
 
             Path result = new Path(newPath);
 
@@ -1451,7 +1451,7 @@ namespace Epsitec.Common.Drawing
 
         public const double Kappa = 0.552284749828;
 
-        protected internal AntigrainCPP.Path path;
+        protected internal AntigrainSharp.Path path;
         protected double defaultZoom = 1.0;
 
         private bool hasCurve = false;

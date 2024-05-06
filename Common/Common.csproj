@@ -11,7 +11,7 @@
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\grafix\AggUI\AggUI.csproj" />
+    <ProjectReference Include="..\..\grafix\AggUI\AntigrainSharp.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\External\Clipboard.Win32.dll">

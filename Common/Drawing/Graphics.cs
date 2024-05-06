@@ -15,7 +15,7 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public Graphics(AggUI.GraphicContext gctx)
+        public Graphics(AntigrainSharp.GraphicContext gctx)
         {
             this.ResetLineStyle();
 
@@ -1314,7 +1314,7 @@ namespace Epsitec.Common.Drawing
         private AbstractRasterizer rasterizer;
         private Transform transform;
 
-        private AggUI.GraphicContext context;
+        private AntigrainSharp.GraphicContext context;
         private Renderers.Solid solidRenderer;
         private Renderers.Image imageRenderer;
         private Renderers.Gradient gradientRenderer;
