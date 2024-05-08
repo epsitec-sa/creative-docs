@@ -27,28 +27,11 @@ namespace Epsitec.Common.Drawing
         //    }
         //}
 
-        //public abstract void DefineZoom(double zoom);
-        //public abstract void DefineColor(Drawing.Color color);
-        //public abstract void DefineAdorner(object adorner);
-
-        //public virtual Image GetImageForPaintStyle(GlyphPaintStyle style)
-        //{
-        //    if (style == GlyphPaintStyle.Normal)
-        //    {
-        //        return this;
-        //    }
-
-        //    return null;
-        //}
-
         //public string Id {
         //    //	L'identificateur permet de retrouver l'image lors de la désérialisation du port graphique XmlPort.
         //    get; set; }
 
-        public abstract Size Size
-        {
-            get;
-        }
+        public abstract Size Size { get; }
 
         public double Width
         {
@@ -66,6 +49,26 @@ namespace Epsitec.Common.Drawing
 
         public abstract Bitmap BitmapImage { get; }
 
+        public abstract void DefineZoom(double zoom);
+
+        public abstract void DefineColor(Drawing.Color color);
+
+        public abstract void DefineAdorner(object adorner);
+
+        public virtual bool IsPaintStyleDefined(GlyphPaintStyle style)
+        {
+            return this.GetImageForPaintStyle(style) != null;
+        }
+
+        public virtual Image GetImageForPaintStyle(GlyphPaintStyle style)
+        {
+            if (style == GlyphPaintStyle.Normal)
+            {
+                return this;
+            }
+
+            return null;
+        }
         //public virtual Point Origin
         //{
         //    //	0 < origin < size: l'origine est dans l'image
@@ -117,11 +120,6 @@ namespace Epsitec.Common.Drawing
         //}
 
         //protected virtual void Dispose(bool disposing) { }
-
-        //public virtual bool IsPaintStyleDefined(GlyphPaintStyle style)
-        //{
-        //    return this.GetImageForPaintStyle(style) != null;
-        //}
 
         //public virtual void RemoveFromCache() { }
 

@@ -263,7 +263,7 @@ namespace Epsitec.Common.Drawing
         }
 
         #region Public Override Methods
-        public void DefineZoom(double zoom)
+        public override void DefineZoom(double zoom)
         {
             if (this.model == null)
             {
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public void DefineColor(Drawing.Color color)
+        public override void DefineColor(Drawing.Color color)
         {
             if (this.model == null)
             {
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public void DefineAdorner(object adorner)
+        public override void DefineAdorner(object adorner)
         {
             if (this.model == null)
             {
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Drawing
 
         #endregion
 
-        public Image GetImageForPaintStyle(GlyphPaintStyle style)
+        public override Image GetImageForPaintStyle(GlyphPaintStyle style)
         {
             //	Retourne l'image qui correspond au style de peinture de glyphe
             //	désiré. On réalise un clonage rapide. Afin d'éviter de devoir
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Drawing
             return this.GetImageForKey(new Key(style, this.Width, this.Height, this.Argument));
         }
 
-        public bool IsPaintStyleDefined(GlyphPaintStyle style)
+        public override bool IsPaintStyleDefined(GlyphPaintStyle style)
         {
             return this.PaintCallback(null, Size.Zero, this.Argument, style, Color.Empty, null);
         }

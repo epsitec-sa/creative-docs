@@ -84,7 +84,7 @@ namespace Epsitec.Common.Drawing
             get { return this.debugDeep; }
         }
 
-        public void DefineZoom(double zoom)
+        public override void DefineZoom(double zoom)
         {
             if (this.zoom != zoom)
             {
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public void DefineColor(Drawing.Color color)
+        public override void DefineColor(Drawing.Color color)
         {
             if (this.color != color)
             {
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public void DefineAdorner(object adorner)
+        public override void DefineAdorner(object adorner)
         {
             if (this.adorner != adorner)
             {

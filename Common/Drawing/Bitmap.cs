@@ -26,32 +26,19 @@ namespace Epsitec.Common.Drawing
             get { return this; }
         }
 
-        public abstract int Stride
-        {
-            get;
-        }
+        public abstract int Stride { get; }
 
         public abstract byte[] GetPixelBuffer();
 
-        //public override void DefineZoom(double zoom)
-        //{
-        //    //	Le zoom de l'appelant ne joue aucun rôle... La définition de
-        //    //	l'image est fixe.
-        //}
+        public override void DefineZoom(double zoom) { }
 
-        //public override void DefineColor(Drawing.Color color) { }
+        public override void DefineColor(Drawing.Color color) { }
 
-        //public override void DefineAdorner(object adorner) { }
+        public override void DefineAdorner(object adorner) { }
 
-        public abstract int PixelWidth
-        {
-            get;
-        }
+        public abstract int PixelWidth { get; }
 
-        public abstract int PixelHeight
-        {
-            get;
-        }
+        public abstract int PixelHeight { get; }
 
         #region NotImplemented
         public byte[] GetRawBitmapBytes()

@@ -1945,7 +1945,6 @@ namespace Epsitec.Common.Widgets
             Drawing.GlyphPaintStyle paintStyle
         )
         {
-            /*
             this.UpdateLayout();
 
             IAdorner adorner = Adorners.Factory.Active;
@@ -2191,8 +2190,6 @@ namespace Epsitec.Common.Widgets
                 graphics.Color = Drawing.Color.FromAlphaColor(0.5, adorner.ColorCaption);
                 graphics.PaintOutline(path);
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         private void UnderlinePoints(
@@ -4997,38 +4994,43 @@ namespace Epsitec.Common.Widgets
                 block.Text = TextLayout.CodeObject.ToString();
                 block.Width = dx;
 
-                // bl-net8-cross handle image with origin
-                throw new System.NotImplementedException();
-                //if (image.IsOriginDefined)
-                //{
-                //    block.ImageAscender = dy - image.Origin.Y;
-                //    block.ImageDescender = -image.Origin.Y;
-                //}
-                //else
-                //{
-                //    block.ImageAscender = dy * fontAscender / fontHeight;
-                //    block.ImageDescender = dy * fontDescender / fontHeight;
-                //}
+                if (image is Drawing.Canvas)
+                {
+                    Drawing.Canvas canvas = (Drawing.Canvas)image;
+                    block.ImageAscender = dy - canvas.Origin.Y;
+                    block.ImageDescender = -canvas.Origin.Y;
+                }
+                else if (image is Drawing.DynamicImage)
+                {
+                    Drawing.DynamicImage dynimage = (Drawing.DynamicImage)image;
+                    block.ImageAscender = dy - dynimage.Origin.Y;
+                    block.ImageDescender = -dynimage.Origin.Y;
+                }
+                else
+                {
+                    block.ImageAscender = dy * fontAscender / fontHeight;
+                    block.ImageDescender = dy * fontDescender / fontHeight;
+                }
 
-                //block.ImageAscender += run.VerticalOffset;
-                //block.ImageDescender += run.VerticalOffset;
+                block.ImageAscender += run.VerticalOffset;
+                block.ImageDescender += run.VerticalOffset;
 
                 //----								block.VerticalOffset = run.VerticalOffset;
 
-                //if (this.JustifMode != Drawing.TextJustifMode.None)
-                //{
-                //    double width = dx / run.FontSize;
-                //    block.Infos = new Drawing.FontClassInfo[1];
-                //    block.Infos[0] = new Drawing.FontClassInfo(
-                //        Drawing.GlyphClass.PlainText,
-                //        1,
-                //        width,
-                //        0.0
-                //    );
-                //    block.InfoWidth = width;
-                //    block.InfoElast = 0.0;
-                //}
-                //return block;
+                if (this.JustifMode != Drawing.TextJustifMode.None)
+                {
+                    double width = dx / run.FontSize;
+                    block.Infos = new Drawing.FontClassInfo[1];
+                    block.Infos[0] = new Drawing.FontClassInfo(
+                        Drawing.GlyphClass.PlainText,
+                        1,
+                        width,
+                        0.0
+                    );
+                    block.InfoWidth = width;
+                    block.InfoElast = 0.0;
+                }
+                return block;
             }
             if (this.JustifMode == Drawing.TextJustifMode.None)
             {
