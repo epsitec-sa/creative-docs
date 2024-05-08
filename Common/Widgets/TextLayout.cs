@@ -4851,335 +4851,408 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        private void GenerateBlocks()
+        private void GenerateEmptyBlock()
         {
-            /*
-            // TODO please refactor me, I'm hideously long
-            //	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
-            this.blocks.Clear();
-            int textLength = this.MaxTextOffset;
-            noText:
-            if (textLength == 0)
+            //	Si le texte n'existe pas, met quand même un bloc vide,
+            //	afin de voir apparaître le curseur (FindTextCursor).
+            FontItem fontItem = new FontItem(this);
+            fontItem.FontFace = TextLayout.CodeDefault + this.DefaultFont.FaceName;
+            fontItem.FontScale = 1; // 100%
+            fontItem.FontColor = Drawing.RichColor.Empty;
+            if (this.isPrepareDirty)
             {
-                //	Si le texte n'existe pas, met quand même un bloc vide,
-                //	afin de voir apparaître le curseur (FindTextCursor).
-                FontItem fontItem = new FontItem(this);
-                fontItem.FontFace = TextLayout.CodeDefault + this.DefaultFont.FaceName;
-                fontItem.FontScale = 1; // 100%
-                fontItem.FontColor = Drawing.RichColor.Empty;
-                if (this.isPrepareDirty)
-                {
-                    fontItem.FontScale = this.ScanFontScale(this.MaxTextOffset);
-                }
-                Drawing.Font font = fontItem.GetFont(false, false);
+                fontItem.FontScale = this.ScanFontScale(this.MaxTextOffset);
+            }
+            Drawing.Font font = fontItem.GetFont(false, false);
 
-                JustifBlock block = new JustifBlock(this);
-                block.BoL = true;
-                block.LineBreak = false;
-                block.Text = "";
-                block.IsDefaultFontFace = true;
-                block.Font = font;
-                block.FontScale = fontItem.FontScale;
-                block.FontColor = fontItem.FontColor;
-                this.blocks.Add(block);
-                return;
+            JustifBlock block = new JustifBlock(this);
+            block.BoL = true;
+            block.LineBreak = false;
+            block.Text = "";
+            block.IsDefaultFontFace = true;
+            block.Font = font;
+            block.FontScale = fontItem.FontScale;
+            block.FontColor = fontItem.FontColor;
+            this.blocks.Add(block);
+        }
+
+        private record struct TextPosition(
+            double Pos,
+            double Indent,
+            bool BeginOfText,
+            bool LineBreak,
+            bool ListEnding
+        );
+
+        private bool AddTabBlock(
+            ref Drawing.TextTabType tabType,
+            ref double tabWidth,
+            ref int tabIndex,
+            ref TextPosition textPos
+        )
+        {
+            System.Diagnostics.Debug.Assert(tabIndex < this.tabs.Count);
+            JustifBlock tb = this.tabs[tabIndex++];
+
+            Drawing.TextStyle.Tab tab;
+            if (textPos.ListEnding) // partie précédente terminée par <list/> ?
+            {
+                tab = new Drawing.TextStyle.Tab(
+                    textPos.Pos + tb.FontSize * this.ProcessNum(tb.Parameters, "width", 2.0),
+                    Drawing.TextTabType.Indent,
+                    Drawing.TextTabLine.None
+                );
+            }
+            else
+            {
+                tab = this.style.FindTabAfterPosition(textPos.Pos);
+            }
+            tabType = tab.Type;
+
+            if (tab.Pos > this.layoutSize.Width)
+            {
+                textPos.Pos = textPos.Indent;
+                textPos.LineBreak = true;
+                tab = this.style.FindTabAfterPosition(textPos.Pos);
+                if (tab.Pos > this.layoutSize.Width)
+                {
+                    return true;
+                }
             }
 
-            double pos = 0.0; // position horizontale dans la ligne
-            double indent = 0.0; // pas encore d'indentation
-            int tabIndex = 0; // index dans this.tabs
-            bool lineBreak = false; // bloc terminé par <br/> ?
-            bool beginOfText = true;
-            bool listEnding = false;
+            JustifBlock block = tb.Copy();
+            block.BoL = textPos.LineBreak; // dernier bloc terminé par <br/> ?
+            block.Indent = block.BoL ? textPos.Indent : 0.0;
+            block.Width = tab.Pos - textPos.Pos;
+            this.blocks.Add(block);
 
-            foreach (TabPart part in this.parts)
+            if (
+                tabType == Drawing.TextTabType.Right
+                || tabType == Drawing.TextTabType.Center
+                || tabType == Drawing.TextTabType.Decimal
+            )
             {
-                int partIndex = part.Index;
+                tabWidth = block.Width; // largeur év. "mangeable"
+            }
+            if (tabType == Drawing.TextTabType.Indent)
+            {
+                textPos.Indent = tab.Pos;
+            }
+            textPos.LineBreak = false;
+            textPos.Pos = tab.Pos;
+            return false;
+        }
 
-                Drawing.TextTabType tabType = Drawing.TextTabType.None;
-                double tabWidth = 0.0;
-                if (!beginOfText) // ajoute un bloc "tab" avant la partie ?
+        private JustifBlock MakeBlockFromRun(
+            Drawing.TextBreak.XRun run,
+            string text,
+            int beginIndex,
+            int endIndex,
+            bool beginOfLine,
+            TextPosition textPos
+        )
+        {
+            Drawing.Font font = run.Font;
+
+            JustifBlock block = new JustifBlock(this);
+            block.BoL = beginOfLine;
+            block.Indent = block.BoL ? textPos.Indent : 0.0;
+            block.LineBreak = textPos.LineBreak;
+            block.Text = text;
+            block.BeginIndex = beginIndex;
+            block.EndIndex = endIndex;
+            block.Width = font.GetTextAdvance(text) * run.FontSize;
+            block.IsDefaultFontFace = TextLayout.IsDefaultFontFace(run.FontFace);
+            block.Font = font;
+            block.FontScale = run.FontScale;
+            block.FontColor = run.FontColor;
+            block.Bold = run.Bold;
+            block.Italic = run.Italic;
+            block.Underline = run.Underline;
+            block.Anchor = run.Anchor;
+            block.Wave = run.Wave;
+            block.WaveColor = run.WaveColor;
+            block.BackColor = run.BackColor;
+
+            if (run.Replacement != null)
+            {
+                block.Text = run.Replacement;
+                block.HasReplacement = true;
+                block.Width = font.GetTextAdvance(block.Text) * run.FontSize;
+            }
+
+            if (run.Image != null)
+            {
+                Drawing.Image image = run.Image;
+                double dx = run.ImageWidth == 0 ? image.Width : run.ImageWidth;
+                double dy = run.ImageHeight == 0 ? image.Height : run.ImageHeight;
+
+                double fontAscender = font.Ascender;
+                double fontDescender = font.Descender;
+                double fontHeight = fontAscender - fontDescender;
+
+                block.Image = image;
+                block.ImageWidth = dx;
+                block.ImageHeight = dy;
+                block.Text = TextLayout.CodeObject.ToString();
+                block.Width = dx;
+
+                // bl-net8-cross handle image with origin
+                throw new System.NotImplementedException();
+                //if (image.IsOriginDefined)
+                //{
+                //    block.ImageAscender = dy - image.Origin.Y;
+                //    block.ImageDescender = -image.Origin.Y;
+                //}
+                //else
+                //{
+                //    block.ImageAscender = dy * fontAscender / fontHeight;
+                //    block.ImageDescender = dy * fontDescender / fontHeight;
+                //}
+
+                //block.ImageAscender += run.VerticalOffset;
+                //block.ImageDescender += run.VerticalOffset;
+
+                //----								block.VerticalOffset = run.VerticalOffset;
+
+                //if (this.JustifMode != Drawing.TextJustifMode.None)
+                //{
+                //    double width = dx / run.FontSize;
+                //    block.Infos = new Drawing.FontClassInfo[1];
+                //    block.Infos[0] = new Drawing.FontClassInfo(
+                //        Drawing.GlyphClass.PlainText,
+                //        1,
+                //        width,
+                //        0.0
+                //    );
+                //    block.InfoWidth = width;
+                //    block.InfoElast = 0.0;
+                //}
+                //return block;
+            }
+            if (this.JustifMode == Drawing.TextJustifMode.None)
+            {
+                block.Infos = null;
+                block.InfoWidth = 0;
+                block.InfoElast = 0;
+            }
+            else if (block.Text != "")
+            {
+                block.Font.GetTextClassInfos(
+                    block.Text,
+                    out block.Infos,
+                    out block.InfoWidth,
+                    out block.InfoElast
+                );
+            }
+            return block;
+        }
+
+        private void GenerateBlockFromLine(
+            Drawing.TextBreak.Line line,
+            ref TabPart part,
+            ref int runIndex,
+            bool beginOfLine,
+            int lineStart,
+            TextPosition textPos
+        )
+        {
+            int brutIndex = lineStart;
+            do
+            {
+                // find a run
+                Drawing.TextBreak.XRun run = part.Runs[runIndex];
+                while (brutIndex >= run.Start + run.Length)
                 {
-                    System.Diagnostics.Debug.Assert(tabIndex < this.tabs.Count);
-                    JustifBlock tb = this.tabs[tabIndex++];
-
-                    Drawing.TextStyle.Tab tab;
-                    if (listEnding) // partie précédente terminée par <list/> ?
-                    {
-                        tab = new Drawing.TextStyle.Tab(
-                            pos + tb.FontSize * this.ProcessNum(tb.Parameters, "width", 2.0),
-                            Drawing.TextTabType.Indent,
-                            Drawing.TextTabLine.None
-                        );
-                    }
-                    else
-                    {
-                        tab = this.style.FindTabAfterPosition(pos);
-                    }
-                    tabType = tab.Type;
-
-                    if (tab.Pos > this.layoutSize.Width)
-                    {
-                        pos = indent;
-                        lineBreak = true;
-                        tab = this.style.FindTabAfterPosition(pos);
-                        if (tab.Pos > this.layoutSize.Width)
-                        {
-                            textLength = 0;
-                            goto noText; // y'a plus rien à faire !
-                        }
-                    }
-
-                    JustifBlock block = tb.Copy();
-                    block.BoL = lineBreak; // dernier bloc terminé par <br/> ?
-                    block.Indent = block.BoL ? indent : 0.0;
-                    block.Width = tab.Pos - pos;
-                    this.blocks.Add(block);
-
-                    if (
-                        tabType == Drawing.TextTabType.Right
-                        || tabType == Drawing.TextTabType.Center
-                        || tabType == Drawing.TextTabType.Decimal
-                    )
-                    {
-                        tabWidth = block.Width; // largeur év. "mangeable"
-                    }
-                    if (tabType == Drawing.TextTabType.Indent)
-                    {
-                        indent = tab.Pos;
-                    }
-                    lineBreak = false;
-                    pos = tab.Pos;
+                    run = part.Runs[++runIndex] as Drawing.TextBreak.XRun;
                 }
 
-                listEnding = part.ListEnding;
-
-                if (part.Runs.Length == 0) // partie totalement vide ?
+                // check indices
+                int start = System.Math.Max(run.Start, lineStart);
+                int next = System.Math.Min(run.Start + run.Length, lineStart + line.Skip);
+                int end = System.Math.Min(run.Start + run.Length, lineStart + line.Text.Length);
+                if (end <= start)
                 {
-                    beginOfText = false;
                     continue;
                 }
 
-                bool beginOfPart = beginOfText;
+                // get text segment
+                string text = line.Text.Substring(start - lineStart, end - start);
 
-                Drawing.TextBreak textBreak = new Drawing.TextBreak();
-                textBreak.SetText(part.Text, this.BreakMode);
-                textBreak.SetRuns(part.Runs);
+                // handle begin and end of line
+                textPos.LineBreak = false;
+                if (text.Length > 0 && text[text.Length - 1] == TextLayout.CodeLineBreak)
+                {
+                    text = text.Substring(0, text.Length - 1);
+                    end--;
+                    textPos.LineBreak = true;
+                    textPos.Pos = textPos.Indent;
+                }
+                if (beginOfLine)
+                {
+                    textPos.Pos = textPos.Indent;
+                }
 
-                //	Essaie de caser le texte dans la largeur restante.
-                double restWidth = this.layoutSize.Width - pos + tabWidth;
-                Drawing.TextBreak.Line[] lines = textBreak.GetLines(
-                    restWidth,
-                    this.layoutSize.Width - indent,
-                    this.layoutSize.Width
+                int beginIndex = part.Index + start;
+                int endIndex = part.Index + System.Math.Min(end, next);
+
+                JustifBlock block = this.MakeBlockFromRun(
+                    run,
+                    text,
+                    beginIndex,
+                    endIndex,
+                    beginOfLine,
+                    textPos
                 );
 
+                this.blocks.Add(block);
+                brutIndex += next - start;
+                beginOfLine = false;
+            } while (brutIndex < lineStart + line.Skip);
+
+            if (textPos.LineBreak)
+            {
+                textPos.Indent = 0.0;
+                textPos.Pos = 0.0;
+            }
+        }
+
+        /// <summary>
+        /// GenerateBlockFromPart
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns>true if the block generation should stop</returns>
+        private bool GenerateBlockFromPart(TabPart part, ref int tabIndex, ref TextPosition textPos)
+        {
+            Drawing.TextTabType tabType = Drawing.TextTabType.None;
+            double tabWidth = 0.0;
+            if (!textPos.BeginOfText) // ajoute un bloc "tab" avant la partie ?
+            {
+                if (this.AddTabBlock(ref tabType, ref tabWidth, ref tabIndex, ref textPos))
+                {
+                    return true;
+                }
+            }
+            textPos.ListEnding = part.ListEnding;
+            if (part.Runs.Length == 0) // partie totalement vide ?
+            {
+                textPos.BeginOfText = false;
+                return false;
+            }
+            Drawing.TextBreak textBreak = new Drawing.TextBreak();
+            textBreak.SetText(part.Text, this.BreakMode);
+            textBreak.SetRuns(part.Runs);
+
+            //	Essaie de caser le texte dans la largeur restante.
+            double restWidth = this.layoutSize.Width - textPos.Pos + tabWidth;
+            Drawing.TextBreak.Line[] lines = textBreak.GetLines(
+                restWidth,
+                this.layoutSize.Width - textPos.Indent,
+                this.layoutSize.Width
+            );
+
+            bool beginOfPart = textPos.BeginOfText;
+            if (lines == null || lines.Length == 0)
+            {
+                //	Essaie de caser le texte dans la largeur totale.
+                textPos.Pos = textPos.Indent;
+                beginOfPart = true;
+                lines = textBreak.GetLines(
+                    this.layoutSize.Width - textPos.Indent,
+                    this.layoutSize.Width - textPos.Indent,
+                    this.layoutSize.Width
+                );
                 if (lines == null || lines.Length == 0)
                 {
-                    //	Essaie de caser le texte dans la largeur totale.
-                    pos = indent;
-                    beginOfPart = true;
-                    lines = textBreak.GetLines(
-                        this.layoutSize.Width - indent,
-                        this.layoutSize.Width - indent,
-                        this.layoutSize.Width
-                    );
-                    if (lines == null || lines.Length == 0)
-                    {
-                        textLength = 0;
-                        goto noText; // y'a plus rien à faire !
-                    }
-                    tabWidth = 0.0;
+                    return true;
                 }
+                tabWidth = 0.0;
+            }
 
-                if (tabWidth != 0.0) // est-on après un tabulateur spécial ?
+            if (tabWidth != 0.0) // est-on après un tabulateur spécial ?
+            {
+                JustifBlock block = this.blocks[this.blocks.Count - 1];
+                System.Diagnostics.Debug.Assert(block.Tab);
+                Drawing.TextBreak.Line line = lines[0] as Drawing.TextBreak.Line;
+                double dist = 0.0;
+                if (tabType == Drawing.TextTabType.Right)
                 {
-                    JustifBlock block = this.blocks[this.blocks.Count - 1];
-                    System.Diagnostics.Debug.Assert(block.Tab);
-                    Drawing.TextBreak.Line line = lines[0] as Drawing.TextBreak.Line;
-                    double dist = 0.0;
-                    if (tabType == Drawing.TextTabType.Right)
-                    {
-                        dist = line.Width;
-                    }
-                    if (tabType == Drawing.TextTabType.Center)
-                    {
-                        dist = line.Width / 2;
-                    }
-                    if (tabType == Drawing.TextTabType.Decimal)
-                    {
-                        dist = this.DecimalTabLength(part.Text, part.Runs);
-                    }
-                    dist = System.Math.Min(dist, block.Width - 0.1);
-                    block.Width -= dist; // diminue la largeur du tab précédent
-                    pos -= dist;
+                    dist = line.Width;
                 }
-
-                int lineStart = 0;
-                int runIndex = 0;
-                foreach (Drawing.TextBreak.Line line in lines)
+                if (tabType == Drawing.TextTabType.Center)
                 {
-                    int brutIndex = lineStart;
-                    bool beginOfLine = beginOfPart;
-                    beginOfPart = true;
-                    do
-                    {
-                        Drawing.TextBreak.XRun run = part.Runs[runIndex];
-                        while (brutIndex >= run.Start + run.Length)
-                        {
-                            run = part.Runs[++runIndex] as Drawing.TextBreak.XRun;
-                        }
-
-                        int start = System.Math.Max(run.Start, lineStart);
-                        int next = System.Math.Min(run.Start + run.Length, lineStart + line.Skip);
-                        int end = System.Math.Min(
-                            run.Start + run.Length,
-                            lineStart + line.Text.Length
-                        );
-
-                        if (end - start > 0)
-                        {
-                            string text = line.Text.Substring(start - lineStart, end - start);
-
-                            lineBreak = false;
-                            if (
-                                text.Length > 0
-                                && text[text.Length - 1] == TextLayout.CodeLineBreak
-                            )
-                            {
-                                text = text.Substring(0, text.Length - 1);
-                                end--;
-                                lineBreak = true;
-                                pos = indent;
-                            }
-                            if (beginOfLine)
-                            {
-                                pos = indent;
-                            }
-
-                            Drawing.Font font = run.Font;
-
-                            JustifBlock block = new JustifBlock(this);
-                            block.BoL = beginOfLine;
-                            block.Indent = block.BoL ? indent : 0.0;
-                            block.LineBreak = lineBreak;
-                            block.Text = text;
-                            block.BeginIndex = partIndex + start;
-                            block.EndIndex = partIndex + System.Math.Min(end, next);
-                            block.Width = font.GetTextAdvance(text) * run.FontSize;
-                            block.IsDefaultFontFace = TextLayout.IsDefaultFontFace(run.FontFace);
-                            block.Font = font;
-                            block.FontScale = run.FontScale;
-                            block.FontColor = run.FontColor;
-                            block.Bold = run.Bold;
-                            block.Italic = run.Italic;
-                            block.Underline = run.Underline;
-                            block.Anchor = run.Anchor;
-                            block.Wave = run.Wave;
-                            block.WaveColor = run.WaveColor;
-                            block.BackColor = run.BackColor;
-
-                            if (run.Replacement != null)
-                            {
-                                block.Text = run.Replacement;
-                                block.HasReplacement = true;
-                                block.Width = font.GetTextAdvance(block.Text) * run.FontSize;
-                            }
-
-                            if (run.Image != null)
-                            {
-                                Drawing.Image image = run.Image;
-                                double dx = run.ImageWidth == 0 ? image.Width : run.ImageWidth;
-                                double dy = run.ImageHeight == 0 ? image.Height : run.ImageHeight;
-
-                                double fontAscender = font.Ascender;
-                                double fontDescender = font.Descender;
-                                double fontHeight = fontAscender - fontDescender;
-
-                                block.Image = image;
-                                block.ImageWidth = dx;
-                                block.ImageHeight = dy;
-                                block.Text = TextLayout.CodeObject.ToString();
-                                block.Width = dx;
-
-                                if (image.IsOriginDefined)
-                                {
-                                    block.ImageAscender = dy - image.Origin.Y;
-                                    block.ImageDescender = -image.Origin.Y;
-                                }
-                                else
-                                {
-                                    block.ImageAscender = dy * fontAscender / fontHeight;
-                                    block.ImageDescender = dy * fontDescender / fontHeight;
-                                }
-
-                                block.ImageAscender += run.VerticalOffset;
-                                block.ImageDescender += run.VerticalOffset;
-
-                                //-								block.VerticalOffset = run.VerticalOffset;
-
-                                if (this.JustifMode != Drawing.TextJustifMode.None)
-                                {
-                                    double width = dx / run.FontSize;
-                                    block.Infos = new Drawing.FontClassInfo[1];
-                                    block.Infos[0] = new Drawing.FontClassInfo(
-                                        Drawing.GlyphClass.PlainText,
-                                        1,
-                                        width,
-                                        0.0
-                                    );
-                                    block.InfoWidth = width;
-                                    block.InfoElast = 0.0;
-                                }
-                            }
-                            else
-                            {
-                                if (this.JustifMode == Drawing.TextJustifMode.None)
-                                {
-                                    block.Infos = null;
-                                    block.InfoWidth = 0;
-                                    block.InfoElast = 0;
-                                }
-                                else if (block.Text != "")
-                                {
-                                    block.Font.GetTextClassInfos(
-                                        block.Text,
-                                        out block.Infos,
-                                        out block.InfoWidth,
-                                        out block.InfoElast
-                                    );
-                                }
-                            }
-
-                            this.blocks.Add(block);
-                        }
-                        brutIndex += next - start;
-                        beginOfLine = false;
-                    } while (brutIndex < lineStart + line.Skip);
-
-                    if (lineBreak)
-                    {
-                        indent = 0.0;
-                        pos = 0.0;
-                    }
-
-                    lineStart += line.Skip;
+                    dist = line.Width / 2;
                 }
-
-                if (!lineBreak && lines.Length > 0)
+                if (tabType == Drawing.TextTabType.Decimal)
                 {
-                    Drawing.TextBreak.Line lastLine =
-                        lines[lines.Length - 1] as Drawing.TextBreak.Line;
-                    pos += lastLine.Width;
+                    dist = this.DecimalTabLength(part.Text, part.Runs);
                 }
+                dist = System.Math.Min(dist, block.Width - 0.1);
+                block.Width -= dist; // diminue la largeur du tab précédent
+                textPos.Pos -= dist;
+            }
 
-                beginOfText = false;
+            int lineStart = 0;
+            int runIndex = 0;
+            int partIndex = part.Index;
+            foreach (Drawing.TextBreak.Line line in lines)
+            {
+                this.GenerateBlockFromLine(
+                    line,
+                    ref part,
+                    ref runIndex,
+                    beginOfPart,
+                    lineStart,
+                    textPos
+                );
+                beginOfPart = true;
+                lineStart += line.Skip;
+            }
+
+            if (!textPos.LineBreak && lines.Length > 0)
+            {
+                Drawing.TextBreak.Line lastLine = lines[lines.Length - 1] as Drawing.TextBreak.Line;
+                textPos.Pos += lastLine.Width;
+            }
+            textPos.BeginOfText = false;
+            return false;
+        }
+
+        private void GenerateBlocks()
+        {
+            // TODO please refactor me, I'm hideously long
+            //	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
+            this.blocks.Clear();
+
+            if (this.MaxTextOffset == 0)
+            {
+                this.GenerateEmptyBlock();
+                return;
+            }
+
+            int tabIndex = 0; // index dans this.tabs
+            TextPosition textPos = new TextPosition(
+                0.0, // position horizontale dans la ligne
+                0.0, // pas encore d'indentation
+                true, // au début du texte
+                false, // bloc terminé par <br/> ?
+                false
+            );
+
+            foreach (TabPart part in this.parts)
+            {
+                if (this.GenerateBlockFromPart(part, ref tabIndex, ref textPos))
+                {
+                    this.GenerateEmptyBlock();
+                    return;
+                }
+                ;
             }
 
             if (this.blocks.Count == 0) // texte totalement vide ?
             {
-                textLength = 0;
-                goto noText;
+                this.GenerateEmptyBlock();
+                return;
             }
 
             if (this.blocks.Count > 0)
@@ -5194,14 +5267,12 @@ namespace Epsitec.Common.Widgets
                     lb.EndIndex = block.EndIndex + 1;
                     lb.Text = "";
                     lb.BoL = true;
-                    lb.Indent = indent;
+                    lb.Indent = textPos.Indent;
                     lb.LineBreak = false;
                     lb.Width = 0.0;
                     this.blocks.Add(lb);
                 }
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         private double DecimalTabLength(string text, Drawing.TextBreak.XRun[] runs)
