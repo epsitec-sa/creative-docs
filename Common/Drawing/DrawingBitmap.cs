@@ -2,16 +2,29 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing.Platform;
+using Epsitec.Common.Text.Properties;
 
 namespace Epsitec.Common.Drawing
 {
+    /// <summary>
+    /// DrawingBitmap represents a bitmap in which we can draw
+    /// This implementation is using antigrain buffers
+    /// </summary>
     public class DrawingBitmap : Bitmap
     {
         // ******************************************************************
         // TODO bl-net8-cross
         // - implement this class
         // ******************************************************************
-        public DrawingBitmap() { }
+        public DrawingBitmap(uint width, uint height, AntigrainSharp.FontManager fm) {
+            int stride = (int)width * 4; // 4 bytes per pixel, one byte per color channel
+            this.buffer = new AntigrainSharp.GraphicBuffer(width, height, stride, fm);
+        }
+
+        public AntigrainSharp.GraphicContext GraphicContext
+        {
+            get { return this.buffer.GraphicContext; }
+        }
 
         public override Size Size
         {

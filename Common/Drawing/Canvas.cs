@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
@@ -5,7 +6,7 @@ namespace Epsitec.Common.Drawing
     /// <summary>
     /// La classe Canvas permet de représenter une image vectorielle.
     /// </summary>
-    public class Canvas : Image
+    public class Canvas : Image, IDisposable
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -328,7 +329,6 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-
         public GlyphPaintStyle PaintStyle
         {
             get { return this.paintStyle; }
@@ -337,90 +337,94 @@ namespace Epsitec.Common.Drawing
         protected void ValidateCache()
         {
             //	Met le bitmap de l'image en cache, à la taille selon les préférences.
-            if (this.cache == null)
+            if (this.cache != null)
             {
-                Size size = this.Size;
-                int dx = (int)(size.Width * this.zoom);
-                int dy = (int)(size.Height * this.zoom);
-                size = new Size(dx, dy);
+                return;
+            }
+            Size size = this.Size;
+            uint width = (uint)(size.Width * this.zoom);
+            uint height = (uint)(size.Height * this.zoom);
+            size = new Size(width, height);
 
-                ICanvasEngine engine = Canvas.FindEngine(this.data);
-                System.Diagnostics.Debug.Assert(engine != null);
+            ICanvasEngine engine = Canvas.FindEngine(this.data);
+            System.Diagnostics.Debug.Assert(engine != null);
 
-                using (Graphics graphics = new Graphics())
+            // bl-net8-cross pass FontManager
+            this.cache = new DrawingBitmap(width, height, null);
+
+            using (Graphics graphics = new Graphics(this.cache.GraphicContext))
+            {
+                //graphics.SetPixmapSize(width, height);
+                //Drawing.DrawingBitmap pixmap = graphics.Pixmap;
+                //pixmap.Clear();
+
+                int page = 0;
+                if (this.key != null)
                 {
-                    graphics.SetPixmapSize(dx, dy);
-                    Drawing.Pixmap pixmap = graphics.Pixmap;
-                    pixmap.Clear();
-
-                    int page = 0;
-                    if (this.key != null)
-                    {
-                        page = this.key.PageRank;
-                    }
-                    engine.Paint(
-                        graphics,
-                        size,
-                        this.data,
-                        this.paintStyle,
-                        this.color,
-                        page,
-                        this.adorner
-                    );
-
-                    int width,
-                        height,
-                        stride;
-                    System.Drawing.Imaging.PixelFormat format;
-                    System.IntPtr scan0;
-
-                    pixmap.GetMemoryLayout(
-                        out width,
-                        out height,
-                        out stride,
-                        out format,
-                        out scan0
-                    );
-                    System.Diagnostics.Debug.Assert(width == dx);
-                    System.Diagnostics.Debug.Assert(height == dy);
-
-                    System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(dx, dy, format);
-                    System.Drawing.Rectangle bbox = new System.Drawing.Rectangle(0, 0, dx, dy);
-                    System.Drawing.Imaging.ImageLockMode mode = System
-                        .Drawing
-                        .Imaging
-                        .ImageLockMode
-                        .WriteOnly;
-                    System.Drawing.Imaging.BitmapData data = bitmap.LockBits(bbox, mode, format);
-
-                    try
-                    {
-                        unsafe
-                        {
-                            int num = stride / 4;
-                            uint* src = (uint*)scan0.ToPointer();
-                            uint* buf = (uint*)data.Scan0.ToPointer() + dy * num;
-
-                            for (int line = 0; line < dy; line++)
-                            {
-                                buf -= num;
-
-                                uint* dst = buf;
-
-                                for (int i = 0; i < num; i++)
-                                {
-                                    *dst++ = *src++;
-                                }
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        bitmap.UnlockBits(data);
-                    }
-
-                    this.cache = Bitmap.FromNativeBitmap(bitmap, this.Origin, size).BitmapImage;
+                    page = this.key.PageRank;
                 }
+                engine.Paint(
+                    graphics,
+                    size,
+                    this.data,
+                    this.paintStyle,
+                    this.color,
+                    page,
+                    this.adorner
+                );
+
+                //int width,
+                //    height,
+                //    stride;
+                //System.Drawing.Imaging.PixelFormat format;
+                //System.IntPtr scan0;
+
+                //pixmap.GetMemoryLayout(
+                //    out width,
+                //    out height,
+                //    out stride,
+                //    out format,
+                //    out scan0
+                //);
+                //System.Diagnostics.Debug.Assert(width == width);
+                //System.Diagnostics.Debug.Assert(height == height);
+
+                //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, height, format);
+                //System.Drawing.Rectangle bbox = new System.Drawing.Rectangle(0, 0, width, height);
+                //System.Drawing.Imaging.ImageLockMode mode = System
+                //    .Drawing
+                //    .Imaging
+                //    .ImageLockMode
+                //    .WriteOnly;
+                //System.Drawing.Imaging.BitmapData data = bitmap.LockBits(bbox, mode, format);
+
+                //try
+                //{
+                //    unsafe
+                //    {
+                //        int num = stride / 4;
+                //        uint* src = (uint*)scan0.ToPointer();
+                //        uint* buf = (uint*)data.Scan0.ToPointer() + height * num;
+
+                //        for (int line = 0; line < height; line++)
+                //        {
+                //            buf -= num;
+
+                //            uint* dst = buf;
+
+                //            for (int i = 0; i < num; i++)
+                //            {
+                //                *dst++ = *src++;
+                //            }
+                //        }
+                //    }
+                //}
+                //finally
+                //{
+                //    bitmap.UnlockBits(data);
+                //}
+
+                //this.cache = Bitmap.FromNativeBitmap(bitmap, this.Origin, size).BitmapImage;
             }
         }
 
@@ -443,7 +447,7 @@ namespace Epsitec.Common.Drawing
         {
             if (this.cache != null)
             {
-                this.cache.Dispose();
+                //this.cache.Dispose();
                 this.cache = null;
             }
         }
@@ -677,6 +681,11 @@ namespace Epsitec.Common.Drawing
             protected System.Collections.Hashtable hash;
         }
 
+        public void Dispose()
+        {
+            this.cache.Dispose();
+        }
+
         protected bool isDisposed;
         protected bool isGeomOk;
 
@@ -694,7 +703,7 @@ namespace Epsitec.Common.Drawing
         protected Drawing.Color color = Drawing.Color.Empty;
         protected object adorner = null;
 
-        protected Bitmap cache;
+        protected DrawingBitmap cache;
         protected int debugDeep = -1;
 
         static ICanvasEngine[] engines = new ICanvasEngine[0];

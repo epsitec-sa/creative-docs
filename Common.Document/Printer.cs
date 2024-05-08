@@ -2020,6 +2020,7 @@ namespace Epsitec.Common.Document
             double backgroundIntensity
         )
         {
+            /*
             Rectangle pageBox;
             double zoom = dpi / (10.0 * 25.4); // 254 correspond à un zoom de 1
 
@@ -2113,6 +2114,7 @@ namespace Epsitec.Common.Document
             // bl-net8-cross
             //Bitmap bitmap = Bitmap.FromPixmap(gfx.DrawingBitmap) as Bitmap;
             //return bitmap;
+            */
             throw new System.NotImplementedException();
         }
 

@@ -376,7 +376,7 @@ namespace Epsitec.Common.Document
 
                 try
                 {
-                    image = Bitmap.FromData(this.data);
+                    image = Drawing.Platform.NativeBitmap.FromData(this.data);
                 }
                 catch (System.Exception ex)
                 {

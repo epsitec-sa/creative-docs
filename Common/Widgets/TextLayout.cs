@@ -5693,7 +5693,7 @@ namespace Epsitec.Common.Widgets
 
             if ((image == null) && (System.IO.File.Exists(imageName)))
             {
-                image = Drawing.Bitmap.FromFile(imageName);
+                image = Drawing.Platform.NativeBitmap.FromFile(imageName);
             }
 
             if (image == null)

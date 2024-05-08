@@ -1977,7 +1977,7 @@ namespace Epsitec.Common.Document
                 {
                     try
                     {
-                        Image loaded = Bitmap.FromData(dataImage);
+                        Image loaded = Drawing.Platform.NativeBitmap.FromData(dataImage);
                         image = loaded;
                     }
                     catch { }

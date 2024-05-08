@@ -1569,6 +1569,7 @@ namespace Epsitec.Common.Document.Objects
 
         public override Path[] GetPaths()
         {
+            /*
             //	Retourne les chemins géométriques de l'objet.
             Graphics port = new Graphics();
             Drawing.PathAccumulationRasterizer rasterizer = new PathAccumulationRasterizer();
@@ -1577,6 +1578,8 @@ namespace Epsitec.Common.Document.Objects
             this.DrawText(port, null, InternalOperation.GetPath);
 
             return rasterizer.GetPaths();
+            */
+            throw new System.NotImplementedException();
         }
 
         #region OpletTextFlow

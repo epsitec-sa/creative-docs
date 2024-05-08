@@ -2,10 +2,15 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.IO.Enumeration;
 using System.Linq;
 
 namespace Epsitec.Common.Drawing.Platform
 {
+    /// <summary>
+    /// NativeBitmap represents a bitmap that we can read/write to a file
+    /// This implementation is using ImageMagick for that purpose
+    /// </summary>
     public sealed class NativeBitmap : Bitmap
     // ******************************************************************
     // TODO bl-net8-cross
@@ -495,6 +500,14 @@ namespace Epsitec.Common.Drawing.Platform
                 this.BitsPerPixel,
                 this.MemorySize
             );
+        }
+        public static NativeBitmap FromData(byte[] data)
+        {
+            return new NativeBitmap(data);
+        }
+        public static NativeBitmap FromFile(string filename)
+        {
+            return new NativeBitmap(filename);
         }
 
         public static NativeBitmap CreateFromPremultipliedArgb32(

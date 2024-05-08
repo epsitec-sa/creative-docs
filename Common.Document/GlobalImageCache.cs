@@ -397,6 +397,7 @@ namespace Epsitec.Common.Document
 
         private static Drawing.Image ResizeImage(Drawing.Image image, int dx, int dy)
         {
+            /*
             //	Retourne une image redimensionnée.
             Graphics gfx = new Graphics();
             gfx.SetPixmapSize(dx, dy);
@@ -405,6 +406,7 @@ namespace Epsitec.Common.Document
 
             gfx.ImageFilter = new ImageFilter(ImageFilteringMode.Bilinear); // moche mais rapide
             gfx.PaintImage(image, new Rectangle(0, 0, dx, dy));
+            */
 
             // bl-net8-cross
             //return Bitmap.FromPixmap(gfx.DrawingBitmap) as Bitmap;

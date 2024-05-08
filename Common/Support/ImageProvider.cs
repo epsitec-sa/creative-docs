@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Types;
 using static Epsitec.Common.Support.Res.Fields;
 
@@ -229,7 +230,7 @@ namespace Epsitec.Common.Support
 
                 try
                 {
-                    image = Bitmap.FromFile(fileName);
+                    image = NativeBitmap.FromFile(fileName);
                     break;
                 }
                 catch
@@ -292,7 +293,7 @@ namespace Epsitec.Common.Support
             else
             {
                 byte[] data = resourceManager.GetBinaryData(resFull);
-                image = Bitmap.FromData(data);
+                image = NativeBitmap.FromData(data);
             }
 
             this.StoreImageToCache(name, image);
@@ -356,7 +357,7 @@ namespace Epsitec.Common.Support
                 }
                 else
                 {
-                    outputImage = Bitmap.FromData(buffer);
+                    outputImage = NativeBitmap.FromData(buffer);
                 }
                 return outputImage;
             }
@@ -596,7 +597,7 @@ namespace Epsitec.Common.Support
 
                 Size size = Size.Parse(imageArgs);
 
-                cache = Bitmap.FromData(imageData, Point.Zero);
+                cache = NativeBitmap.FromData(imageData);
 
                 this.bundleImages[bundle] = cache;
             }

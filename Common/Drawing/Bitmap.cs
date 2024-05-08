@@ -816,37 +816,6 @@ namespace Epsitec.Common.Drawing
         }
         #endregion NotImplemented
 
-        #region From.* converters
-        public static Bitmap FromData(byte[] data)
-        {
-            return Bitmap.FromData(data, null);
-        }
-
-        public static Bitmap FromData(byte[] data, Point? origin)
-        {
-            /*
-            NativeBitmap nativeBitmap = new NativeBitmap(data);
-            return new Bitmap(nativeBitmap, origin);
-            */
-            throw new System.NotImplementedException();
-        }
-
-        public static Bitmap FromFile(string fileName)
-        {
-            return Bitmap.FromFile(fileName, null);
-        }
-
-        public static Bitmap FromFile(string fileName, Point? origin)
-        {
-            //NativeBitmap nativeBitmap = new NativeBitmap(fileName);
-            //return new Bitmap(nativeBitmap, origin);
-            throw new System.NotImplementedException();
-        }
-
-        #endregion
-
         public abstract void Dispose();
-
-        //private NativeBitmap nativeBitmap;
     }
 }
