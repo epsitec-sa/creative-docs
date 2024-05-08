@@ -13,7 +13,6 @@ namespace Epsitec.Common.Drawing
         // ******************************************************************
 
         internal Canvas(byte[] data)
-            : base(Size.Empty)
         {
             this.data = new byte[data.Length];
             data.CopyTo(this.data, 0);
@@ -33,10 +32,11 @@ namespace Epsitec.Common.Drawing
             }
 
             Canvas.globalIconCache.Add(this);
+            this.size = Size.Empty;
+            this.origin = new Point(0, 0);
         }
 
         protected Canvas(Canvas original, IconKey key)
-            : base(Size.Empty)
         {
             //	Version selon IconKey du même dessin.
             //	On partage les données avec le modèle original.
@@ -52,10 +52,11 @@ namespace Epsitec.Common.Drawing
             this.effects[GlyphPaintStyle.Selected] = new Canvas(this, GlyphPaintStyle.Selected);
             this.effects[GlyphPaintStyle.Entered] = new Canvas(this, GlyphPaintStyle.Entered);
             this.effects[GlyphPaintStyle.Shadow] = new Canvas(this, GlyphPaintStyle.Shadow);
+            this.size = original.size;
+            this.origin = original.origin;
         }
 
         protected Canvas(Canvas original, GlyphPaintStyle style)
-            : base(Size.Empty)
         {
             //	Version "normal", "disabled" ou "selected" du même dessin.
             //	On partage les données avec le modèle original.
@@ -67,6 +68,8 @@ namespace Epsitec.Common.Drawing
 
             this.paintStyle = style;
             this.effects = original.effects;
+            this.size = original.size;
+            this.origin = original.origin;
         }
 
         public static Canvas FromData(byte[] buffer)
@@ -80,7 +83,7 @@ namespace Epsitec.Common.Drawing
             get { return this.debugDeep; }
         }
 
-        public override void DefineZoom(double zoom)
+        public void DefineZoom(double zoom)
         {
             if (this.zoom != zoom)
             {
@@ -89,7 +92,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public override void DefineColor(Drawing.Color color)
+        public void DefineColor(Drawing.Color color)
         {
             if (this.color != color)
             {
@@ -98,7 +101,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public override void DefineAdorner(object adorner)
+        public void DefineAdorner(object adorner)
         {
             if (this.adorner != adorner)
             {
@@ -260,7 +263,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public override Image GetImageForPaintStyle(GlyphPaintStyle style)
+        public Image GetImageForPaintStyle(GlyphPaintStyle style)
         {
             //	Cherche l'image correspondant à un style.
             System.Diagnostics.Debug.Assert(this.effects != null);
@@ -312,23 +315,19 @@ namespace Epsitec.Common.Drawing
                     return this.key.Size;
                 }
 
-                return base.Size;
+                return this.size;
             }
         }
 
-        public override Point Origin
+        public Point Origin
         {
             get
             {
                 this.ValidateGeometry();
-                return base.Origin;
+                return this.origin;
             }
         }
 
-        public override bool IsOriginDefined
-        {
-            get { return true; }
-        }
 
         public GlyphPaintStyle PaintStyle
         {
@@ -449,7 +448,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        protected override void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             System.Diagnostics.Debug.Assert(this.isDisposed == false);
             this.isDisposed = true;
@@ -460,10 +459,10 @@ namespace Epsitec.Common.Drawing
                 this.InvalidateCache();
             }
 
-            base.Dispose(disposing);
+            //base.Dispose(disposing);
         }
 
-        public override void RemoveFromCache()
+        public void RemoveFromCache()
         {
             System.Diagnostics.Debug.WriteLine("Removed image from cache.");
             Canvas.globalIconCache.Remove(this);
@@ -689,6 +688,8 @@ namespace Epsitec.Common.Drawing
         protected EffectTable effects;
 
         protected byte[] data;
+        protected Point origin;
+        protected Size size;
         protected double zoom = 1.0;
         protected Drawing.Color color = Drawing.Color.Empty;
         protected object adorner = null;

@@ -406,7 +406,9 @@ namespace Epsitec.Common.Document
             gfx.ImageFilter = new ImageFilter(ImageFilteringMode.Bilinear); // moche mais rapide
             gfx.PaintImage(image, new Rectangle(0, 0, dx, dy));
 
-            return Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+            // bl-net8-cross
+            //return Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+            throw new System.NotImplementedException();
         }
 
         private static string GetGlobalKeyName(string localKeyName, string zipFileName)

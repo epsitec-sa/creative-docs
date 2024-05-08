@@ -310,9 +310,10 @@ namespace Epsitec.Common.Document
                     }
                     else
                     {
-                        this.lowResImage.AssigneUniqueId(this.lowResUniqueId);
+                        // bl-net8-cross
+                        //this.lowResImage.AssigneUniqueId(this.lowResUniqueId);
                         this.lowResScale = (double)this.originalSize.Width / this.lowResImage.Width;
-                        this.lowResUniqueId = this.lowResImage.UniqueId;
+                        //this.lowResUniqueId = this.lowResImage.UniqueId;
                     }
                 }
 
@@ -356,8 +357,9 @@ namespace Epsitec.Common.Document
                 {
                     this.originalImage = new Weak<Image>(image);
                     this.originalSize = image.Size;
-                    image.AssigneUniqueId(this.originalUniqueId);
-                    this.originalUniqueId = image.UniqueId;
+                    // bl-net8-cross
+                    //image.AssigneUniqueId(this.originalUniqueId);
+                    //this.originalUniqueId = image.UniqueId;
                     this.SetRecentTimeStamp();
                 }
                 else
@@ -552,8 +554,8 @@ namespace Epsitec.Common.Document
             protected long timeStamp;
             protected bool locked;
 
-            private long originalUniqueId;
-            private long lowResUniqueId;
+            //private long originalUniqueId;
+            //private long lowResUniqueId;
         }
     }
 }

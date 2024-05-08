@@ -2832,8 +2832,8 @@ namespace Epsitec.Common.Document.PDF
                 var cropped = fi.Crop(
                     (int)crop.Left,
                     (int)crop.Top,
-                    fi.Width - (int)(crop.Left + crop.Right),
-                    fi.Height - (int)(crop.Top + crop.Bottom)
+                    (int)fi.Width - (int)(crop.Left + crop.Right),
+                    (int)fi.Height - (int)(crop.Top + crop.Bottom)
                 );
                 fi.Dispose();
                 fi = cropped;
@@ -2855,8 +2855,8 @@ namespace Epsitec.Common.Document.PDF
             out int dy
         )
         {
-            dx = fi.Width;
-            dy = fi.Height;
+            dx = (int)fi.Width;
+            dy = (int)fi.Height;
             //	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
             //	Une image sans filtrage n'est jamais mise à l'échelle !
             const double tenthMillimeterPerInch = 254;

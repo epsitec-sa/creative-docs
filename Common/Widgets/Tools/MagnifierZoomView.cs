@@ -177,7 +177,8 @@ namespace Epsitec.Common.Widgets.Tools
             double sx = dx / nx;
             double sy = dy / ny;
 
-            graphics.SolidRenderer.SetAlphaMask(this.mask.Pixmap, Drawing.MaskComponent.R);
+            // bl-net8-cross
+            //graphics.SolidRenderer.SetAlphaMask(this.mask.Pixmap, Drawing.MaskComponent.R);
 
             using (Drawing.Pixmap.RawData raw = new Drawing.Pixmap.RawData(bitmap))
             {

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Drawing.Platform
 {
-    public sealed class NativeBitmap : System.IDisposable
+    public sealed class NativeBitmap : Bitmap
     // ******************************************************************
     // TODO bl-net8-cross
     // - implement NativeBitmap using ImageMagick (stub)
@@ -22,12 +22,12 @@ namespace Epsitec.Common.Drawing.Platform
             this.magicImage = new ImageMagick.MagickImage(buffer);
         }
 
-        public int Stride
+        public override int Stride
         {
             get
             {
                 // divide by 8 to get the stride in byte
-                return this.Width * this.BitsPerPixel / 8;
+                return this.magicImage.Width * this.BitsPerPixel / 8;
             }
         }
 
@@ -36,21 +36,20 @@ namespace Epsitec.Common.Drawing.Platform
             get { return this.magicImage.Depth * this.magicImage.ChannelCount; }
         }
 
-        public int Width
+        public override Size Size
         {
-            get { return this.magicImage.Width; }
+            get
+            {
+                return new Size(this.magicImage.Width, this.magicImage.Height);
+            }
         }
 
-        public int Height
-        {
-            get { return this.magicImage.Height; }
-        }
-        public int PixelWidth
+        public override int PixelWidth
         {
             get { return this.magicImage.BaseWidth; }
         }
 
-        public int PixelHeight
+        public override int PixelHeight
         {
             get { return this.magicImage.BaseHeight; }
         }
@@ -200,7 +199,7 @@ namespace Epsitec.Common.Drawing.Platform
             get { throw new System.NotImplementedException(); }
         }
 
-        public byte[] GetPixelBuffer()
+        public override byte[] GetPixelBuffer()
         {
             // In the antigrain backend, we use the BGRA format for pixels, so we use the same format here
             // See the definition in AggUI/aggcpp/pixelfmt.h
@@ -209,7 +208,7 @@ namespace Epsitec.Common.Drawing.Platform
 
         #region IDisposable Members
 
-        public void Dispose()
+        public override void Dispose()
         {
             this.magicImage.Dispose();
         }

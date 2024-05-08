@@ -1945,6 +1945,7 @@ namespace Epsitec.Common.Widgets
             Drawing.GlyphPaintStyle paintStyle
         )
         {
+            /*
             this.UpdateLayout();
 
             IAdorner adorner = Adorners.Factory.Active;
@@ -2190,6 +2191,8 @@ namespace Epsitec.Common.Widgets
                 graphics.Color = Drawing.Color.FromAlphaColor(0.5, adorner.ColorCaption);
                 graphics.PaintOutline(path);
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         private void UnderlinePoints(
@@ -4850,6 +4853,7 @@ namespace Epsitec.Common.Widgets
 
         private void GenerateBlocks()
         {
+            /*
             // TODO please refactor me, I'm hideously long
             //	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
             this.blocks.Clear();
@@ -5196,6 +5200,8 @@ namespace Epsitec.Common.Widgets
                     this.blocks.Add(lb);
                 }
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         private double DecimalTabLength(string text, Drawing.TextBreak.XRun[] runs)

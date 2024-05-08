@@ -10,11 +10,6 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public class Graphics : System.IDisposable, IPaintPort
     {
-        public Graphics()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Graphics(AntigrainSharp.GraphicContext gctx)
         {
             this.ResetLineStyle();

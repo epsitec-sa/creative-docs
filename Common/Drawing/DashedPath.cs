@@ -42,7 +42,7 @@ namespace Epsitec.Common.Drawing
                 return null;
             }
 
-            AntigrainCPP.Path path = new AntigrainCPP.Path();
+            AntigrainSharp.Path path = new AntigrainSharp.Path();
 
             //path.InternalCreateNonEmpty();
 

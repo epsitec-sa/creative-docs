@@ -6,48 +6,48 @@ namespace Epsitec.Common.Drawing
     /// <summary>
     /// La classe Image permet de représenter une image générique.
     /// </summary>
-    public abstract class Image : System.IDisposable
+    public abstract class Image //: System.IDisposable
     {
-        public Image(Size size)
+        //public Image(Size size)
+        //{
+        //    this.size = size;
+        //    this.origin = null;
+        //    this.dpiX = 96;
+        //    this.dpiY = 96;
+
+        //    this.uniqueId = System.Threading.Interlocked.Increment(ref Image.uniqueIdSeed);
+        //}
+
+        //public Image(Point? origin, Size size)
+        //    : this(size)
+        //{
+        //    if (origin != null)
+        //    {
+        //        this.origin = origin;
+        //    }
+        //}
+
+        //public abstract void DefineZoom(double zoom);
+        //public abstract void DefineColor(Drawing.Color color);
+        //public abstract void DefineAdorner(object adorner);
+
+        //public virtual Image GetImageForPaintStyle(GlyphPaintStyle style)
+        //{
+        //    if (style == GlyphPaintStyle.Normal)
+        //    {
+        //        return this;
+        //    }
+
+        //    return null;
+        //}
+
+        //public string Id {
+        //    //	L'identificateur permet de retrouver l'image lors de la désérialisation du port graphique XmlPort.
+        //    get; set; }
+
+        public abstract Size Size
         {
-            this.size = size;
-            this.origin = null;
-            this.dpiX = 96;
-            this.dpiY = 96;
-
-            this.uniqueId = System.Threading.Interlocked.Increment(ref Image.uniqueIdSeed);
-        }
-
-        public Image(Point? origin, Size size)
-            : this(size)
-        {
-            if (origin != null)
-            {
-                this.origin = origin;
-            }
-        }
-
-        public abstract void DefineZoom(double zoom);
-        public abstract void DefineColor(Drawing.Color color);
-        public abstract void DefineAdorner(object adorner);
-
-        public virtual Image GetImageForPaintStyle(GlyphPaintStyle style)
-        {
-            if (style == GlyphPaintStyle.Normal)
-            {
-                return this;
-            }
-
-            return null;
-        }
-
-        public string Id {
-            //	L'identificateur permet de retrouver l'image lors de la désérialisation du port graphique XmlPort.
-            get; set; }
-
-        public virtual Size Size
-        {
-            get { return this.size; }
+            get;
         }
 
         public double Width
@@ -59,19 +59,6 @@ namespace Epsitec.Common.Drawing
         {
             get { return this.Size.Height; }
         }
-
-        public virtual Point Origin
-        {
-            //	0 < origin < size: l'origine est dans l'image
-
-            get { return this.origin ?? new Point(); }
-        }
-
-        public virtual bool IsOriginDefined
-        {
-            get { return this.origin != null; }
-        }
-
         public bool IsEmpty
         {
             get { return this.Size.IsEmpty; }
@@ -79,60 +66,72 @@ namespace Epsitec.Common.Drawing
 
         public abstract Bitmap BitmapImage { get; }
 
-        public long UniqueId
-        {
-            get { return this.uniqueId; }
-        }
+        //public virtual Point Origin
+        //{
+        //    //	0 < origin < size: l'origine est dans l'image
 
-        public double DpiX
-        {
-            get { return this.dpiX; }
-        }
+        //    get { return this.origin ?? new Point(); }
+        //}
 
-        public double DpiY
-        {
-            get { return this.dpiY; }
-        }
+        //public virtual bool IsOriginDefined
+        //{
+        //    get { return this.origin != null; }
+        //}
 
-        public static readonly Image Empty;
+        //public long UniqueId
+        //{
+        //    get { return this.uniqueId; }
+        //}
 
-        ~Image()
-        {
-            this.Dispose(false);
-        }
+        //public double DpiX
+        //{
+        //    get { return this.dpiX; }
+        //}
 
-        #region IDisposable Members
-        public void Dispose()
-        {
-            this.Dispose(true);
-            System.GC.SuppressFinalize(this);
-        }
-        #endregion
+        //public double DpiY
+        //{
+        //    get { return this.dpiY; }
+        //}
 
-        public void AssigneUniqueId(long uniqueId)
-        {
-            if (uniqueId != 0)
-            {
-                this.uniqueId = uniqueId;
-            }
-        }
+        //public static readonly Image Empty;
 
-        protected virtual void Dispose(bool disposing) { }
+        //~Image()
+        //{
+        //    this.Dispose(false);
+        //}
 
-        public virtual bool IsPaintStyleDefined(GlyphPaintStyle style)
-        {
-            return this.GetImageForPaintStyle(style) != null;
-        }
+        //#region IDisposable Members
+        //public void Dispose()
+        //{
+        //    this.Dispose(true);
+        //    System.GC.SuppressFinalize(this);
+        //}
+        //#endregion
 
-        public virtual void RemoveFromCache() { }
+        //public void AssigneUniqueId(long uniqueId)
+        //{
+        //    if (uniqueId != 0)
+        //    {
+        //        this.uniqueId = uniqueId;
+        //    }
+        //}
 
-        internal double dpiX;
-        internal double dpiY;
+        //protected virtual void Dispose(bool disposing) { }
 
-        protected Size size;
-        protected Point? origin;
-        private long uniqueId;
+        //public virtual bool IsPaintStyleDefined(GlyphPaintStyle style)
+        //{
+        //    return this.GetImageForPaintStyle(style) != null;
+        //}
 
-        private static long uniqueIdSeed = 1;
+        //public virtual void RemoveFromCache() { }
+
+        //internal double dpiX;
+        //internal double dpiY;
+
+        //protected Size size;
+        //protected Point? origin;
+        //private long uniqueId;
+
+        //private static long uniqueIdSeed = 1;
     }
 }

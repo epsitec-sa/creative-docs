@@ -13,47 +13,44 @@ namespace Epsitec.Common.Drawing
     /// <summary>
     /// La classe Bitmap encapsule une image de type bitmap.
     /// </summary>
-    public class Bitmap : Image
+    public abstract class Bitmap : Image, System.IDisposable
     {
-        public Bitmap(NativeBitmap nativeBitmap, Point? origin)
-            : base(origin, new Size(nativeBitmap.Width, nativeBitmap.Height))
-        {
-            this.nativeBitmap = nativeBitmap;
-        }
+        //public Bitmap(NativeBitmap nativeBitmap, Point? origin)
+        //    : base(origin, new Size(nativeBitmap.Width, nativeBitmap.Height))
+        //{
+        //    this.nativeBitmap = nativeBitmap;
+        //}
 
         public override Bitmap BitmapImage
         {
             get { return this; }
         }
 
-        public int Stride
+        public abstract int Stride
         {
-            get { return this.nativeBitmap.Stride; }
+            get;
         }
 
-        public byte[] GetPixelBuffer()
+        public abstract byte[] GetPixelBuffer();
+
+        //public override void DefineZoom(double zoom)
+        //{
+        //    //	Le zoom de l'appelant ne joue aucun rôle... La définition de
+        //    //	l'image est fixe.
+        //}
+
+        //public override void DefineColor(Drawing.Color color) { }
+
+        //public override void DefineAdorner(object adorner) { }
+
+        public abstract int PixelWidth
         {
-            return this.nativeBitmap.GetPixelBuffer();
+            get;
         }
 
-        public override void DefineZoom(double zoom)
+        public abstract int PixelHeight
         {
-            //	Le zoom de l'appelant ne joue aucun rôle... La définition de
-            //	l'image est fixe.
-        }
-
-        public override void DefineColor(Drawing.Color color) { }
-
-        public override void DefineAdorner(object adorner) { }
-
-        public int PixelWidth
-        {
-            get { return this.nativeBitmap.PixelWidth; }
-        }
-
-        public int PixelHeight
-        {
-            get { return this.nativeBitmap.PixelHeight; }
+            get;
         }
 
         #region NotImplemented
@@ -435,7 +432,7 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public override Bitmap GetImageForPaintStyle(GlyphPaintStyle style)
+        public Bitmap GetImageForPaintStyle(GlyphPaintStyle style)
         {
             /*
             switch (style)
@@ -827,8 +824,11 @@ namespace Epsitec.Common.Drawing
 
         public static Bitmap FromData(byte[] data, Point? origin)
         {
+            /*
             NativeBitmap nativeBitmap = new NativeBitmap(data);
             return new Bitmap(nativeBitmap, origin);
+            */
+            throw new System.NotImplementedException();
         }
 
         public static Bitmap FromFile(string fileName)
@@ -838,14 +838,15 @@ namespace Epsitec.Common.Drawing
 
         public static Bitmap FromFile(string fileName, Point? origin)
         {
-            NativeBitmap nativeBitmap = new NativeBitmap(fileName);
-            return new Bitmap(nativeBitmap, origin);
+            //NativeBitmap nativeBitmap = new NativeBitmap(fileName);
+            //return new Bitmap(nativeBitmap, origin);
+            throw new System.NotImplementedException();
         }
 
         #endregion
 
-        protected override void Dispose(bool disposing) { }
+        public abstract void Dispose();
 
-        private NativeBitmap nativeBitmap;
+        //private NativeBitmap nativeBitmap;
     }
 }

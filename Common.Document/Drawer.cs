@@ -517,7 +517,8 @@ namespace Epsitec.Common.Document
                 }
                 mask.RenderSolid(Drawing.Color.FromBrightness(1.0));
 
-                port.SolidRenderer.SetAlphaMask(mask.Pixmap, MaskComponent.R);
+                // bl-net8-cross
+                //port.SolidRenderer.SetAlphaMask(mask.Pixmap, MaskComponent.R);
 
                 Rectangle box = sa.BoundingBox;
                 box.Inflate(surface.Smooth);

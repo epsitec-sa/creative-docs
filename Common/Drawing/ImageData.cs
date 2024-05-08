@@ -440,8 +440,8 @@ namespace Epsitec.Common.Drawing
                         this.fullImage.Information =
                             "FULL:" + this.imageFilePath + "/" + System.Environment.TickCount;
 
-                        this.width = this.fullImage.Width;
-                        this.height = this.fullImage.Height;
+                        this.width = (int)this.fullImage.Width;
+                        this.height = (int)this.fullImage.Height;
 
                         int dx;
                         int dy;

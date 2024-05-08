@@ -1852,7 +1852,7 @@ namespace Epsitec.Common.Document
                     bitmap.PixelWidth,
                     bitmap.PixelHeight
                 );
-                return nb.Rescale(nb.Width, -nb.Height); // miroir vertical
+                return nb.Rescale((int)nb.Width, -(int)nb.Height); // miroir vertical
             }
         }
 
@@ -2110,8 +2110,10 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
-            return bitmap;
+            // bl-net8-cross
+            //Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+            //return bitmap;
+            throw new System.NotImplementedException();
         }
 
         protected Rectangle GetBoundingBox(int pageNumber, bool onlySelected)

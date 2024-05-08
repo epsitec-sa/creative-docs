@@ -380,14 +380,16 @@ namespace Epsitec.Common.Widgets
             {
                 if (this.BackColor.A != 1.0)
                 {
-                    graphics.Pixmap.Erase(
-                        new System.Drawing.Rectangle(
-                            (int)x1,
-                            (int)y1,
-                            (int)x2 - (int)x1,
-                            (int)y2 - (int)y1
-                        )
-                    );
+                    // bl-net8-cross
+                    //graphics.Pixmap.Erase(
+                    //    new System.Drawing.Rectangle(
+                    //        (int)x1,
+                    //        (int)y1,
+                    //        (int)x2 - (int)x1,
+                    //        (int)y2 - (int)y1
+                    //    )
+                    //);
+                    throw new System.NotImplementedException();
                 }
                 if (this.BackColor.A > 0.0)
                 {

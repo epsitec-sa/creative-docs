@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Drawing
 {
-    public class Pixmap : System.IDisposable
+    public class Pixmap : Bitmap
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -13,16 +13,10 @@ namespace Epsitec.Common.Drawing
         // ******************************************************************
         public Pixmap() { }
 
-        ~Pixmap()
+        public override Size Size
         {
-            this.Dispose(false);
+            get { return new Size(this.buffer.Height, this.buffer.Width); }
         }
-
-        public System.Drawing.Size Size
-        {
-            get { return this.size; }
-            set
-            {
                 /*
                 if (this.size != value)
                 {
@@ -55,8 +49,24 @@ namespace Epsitec.Common.Drawing
                     this.size = value;
                 }
                 */
-                throw new System.NotImplementedException();
-            }
+
+        public override int Stride
+        {
+            get { return (int)this.buffer.Stride; }
+        }
+
+        public override int PixelWidth
+        {
+            get { return (int)this.buffer.Width; }
+        }
+        public override int PixelHeight
+        {
+            get { return (int)this.buffer.Height; }
+        }
+
+        public override byte[] GetPixelBuffer()
+        {
+            return this.buffer.GetBufferData();
         }
 
         public void AllocatePixmap(System.Drawing.Size size)
@@ -390,10 +400,9 @@ namespace Epsitec.Common.Drawing
         }
 
         #region IDisposable Members
-        public void Dispose()
+        public override void Dispose()
         {
-            this.Dispose(true);
-            System.GC.SuppressFinalize(this);
+            this.buffer.Dispose();
         }
         #endregion
 
@@ -673,6 +682,6 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        protected System.Drawing.Size size;
+        private AntigrainSharp.GraphicBuffer buffer;
     }
 }

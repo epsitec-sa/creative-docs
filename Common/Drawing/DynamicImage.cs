@@ -114,29 +114,24 @@ namespace Epsitec.Common.Drawing
             get
             {
                 this.ValidateGeometry();
-                return base.Size;
+                return this.size;
             }
         }
 
-        public override Point Origin
+        public Point Origin
         {
             get
             {
                 if (this.model == null)
                 {
                     this.ValidateGeometry();
-                    return base.Origin;
+                    return this.origin;
                 }
                 else
                 {
                     return this.model.Origin;
                 }
             }
-        }
-
-        public override bool IsOriginDefined
-        {
-            get { return true; }
         }
 
         #endregion
@@ -268,7 +263,7 @@ namespace Epsitec.Common.Drawing
         }
 
         #region Public Override Methods
-        public override void DefineZoom(double zoom)
+        public void DefineZoom(double zoom)
         {
             if (this.model == null)
             {
@@ -284,7 +279,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public override void DefineColor(Drawing.Color color)
+        public void DefineColor(Drawing.Color color)
         {
             if (this.model == null)
             {
@@ -300,7 +295,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public override void DefineAdorner(object adorner)
+        public void DefineAdorner(object adorner)
         {
             if (this.model == null)
             {
@@ -318,7 +313,7 @@ namespace Epsitec.Common.Drawing
 
         #endregion
 
-        public override Image GetImageForPaintStyle(GlyphPaintStyle style)
+        public Image GetImageForPaintStyle(GlyphPaintStyle style)
         {
             //	Retourne l'image qui correspond au style de peinture de glyphe
             //	désiré. On réalise un clonage rapide. Afin d'éviter de devoir
@@ -327,7 +322,7 @@ namespace Epsitec.Common.Drawing
             return this.GetImageForKey(new Key(style, this.Width, this.Height, this.Argument));
         }
 
-        public override bool IsPaintStyleDefined(GlyphPaintStyle style)
+        public bool IsPaintStyleDefined(GlyphPaintStyle style)
         {
             return this.PaintCallback(null, Size.Zero, this.Argument, style, Color.Empty, null);
         }
@@ -352,24 +347,26 @@ namespace Epsitec.Common.Drawing
 
         #region Private Constructors
         private DynamicImage()
-            : base(Size.Empty)
         {
             this.variants = new System.Collections.Hashtable();
+            this.size = Size.Empty;
+            this.origin = new Point(0, 0);
         }
 
         private DynamicImage(DynamicImage model, Key key)
             : this(model, key.PaintStyle, new Drawing.Size(key.Width, key.Height), key.Argument) { }
 
         private DynamicImage(DynamicImage model, GlyphPaintStyle style, Size size, string argument)
-            : base(size)
         {
             this.model = model;
             this.paintStyle = style;
             this.argument = argument;
+            this.size = size;
+            this.origin = new Point(0, 0);
         }
         #endregion
 
-        protected override void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             System.Diagnostics.Debug.Assert(this.isDisposed == false);
 
@@ -383,7 +380,7 @@ namespace Epsitec.Common.Drawing
                 }
             }
 
-            base.Dispose(disposing);
+            //base.Dispose(disposing);
         }
 
         private DynamicImage GetImageForKey(Key key)
@@ -529,7 +526,7 @@ namespace Epsitec.Common.Drawing
 
             if (this.cache != null)
             {
-                this.cache.Dispose();
+                //this.cache.Dispose();
                 this.cache = null;
             }
         }
@@ -603,6 +600,8 @@ namespace Epsitec.Common.Drawing
         private double zoom = 1.0;
         private Drawing.Color color = Drawing.Color.Empty;
         private object adorner;
+        private Point origin;
+        private Size size;
         private Bitmap cache;
         private string argument;
     }

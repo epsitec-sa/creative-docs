@@ -159,7 +159,8 @@ namespace Epsitec.Common.Widgets.Tools
             {
                 if (this.bitmap != null)
                 {
-                    this.bitmap.Dispose();
+                    // bl-net8-cross
+                    //this.bitmap.Dispose();
                     this.bitmap = null;
                 }
 

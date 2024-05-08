@@ -536,10 +536,11 @@ namespace Epsitec.Common.Support
 
                 this.images.Remove(name);
 
-                if (image != null)
-                {
-                    image.RemoveFromCache();
-                }
+                // bl-net8-cross
+                //if (image != null)
+                //{
+                //    image.RemoveFromCache();
+                //}
             }
 
             if (this.keepAliveImages != null)
