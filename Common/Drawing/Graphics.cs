@@ -19,7 +19,7 @@ namespace Epsitec.Common.Drawing
         {
             this.ResetLineStyle();
 
-            this.pixmap = new Pixmap();
+            //this.pixmap = new Pixmap();
             this.rasterizer = new Rasterizer();
             this.transform = Transform.Identity;
 
@@ -157,10 +157,10 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public Drawing.Pixmap Pixmap
-        {
-            get { return this.pixmap; }
-        }
+        //public Drawing.Pixmap Pixmap
+        //{
+        //    get { return this.pixmap; }
+        //}
 
         public Renderers.Solid SolidRenderer
         {
@@ -243,12 +243,15 @@ namespace Epsitec.Common.Drawing
 
         public void AllocatePixmap()
         {
+            /*
             this.pixmap.AllocatePixmap(new System.Drawing.Size(8, 8));
 
             //this.solidRenderer.Pixmap = this.pixmap;
             //this.imageRenderer.Pixmap = this.pixmap;
             //this.gradientRenderer.Pixmap = this.pixmap;
             //this.smoothRenderer.Pixmap = this.pixmap;
+            */
+            throw new System.NotImplementedException();
         }
 
         public Graphics CreateAlphaMask()
@@ -628,6 +631,12 @@ namespace Epsitec.Common.Drawing
             double iy1 = imageOriginY;
             double ix2 = imageOriginX + imageWidth;
             double iy2 = imageOriginY + imageHeight;
+
+            // bl-net8-cross TEMP / remove it
+            if (bitmap == null)
+            {
+                return;
+            }
 
             double idx = bitmap.Width;
             double idy = bitmap.Height;
@@ -1234,6 +1243,7 @@ namespace Epsitec.Common.Drawing
 
         public bool SetPixmapSize(int width, int height)
         {
+            /*
             if ((this.pixmap.Size.Width == width) && (this.pixmap.Size.Height == height))
             {
                 return false;
@@ -1252,6 +1262,8 @@ namespace Epsitec.Common.Drawing
             //this.smoothRenderer.Pixmap = this.pixmap;
 
             return true;
+            */
+            throw new System.NotImplementedException();
         }
 
         #region IDisposable Members
@@ -1266,10 +1278,10 @@ namespace Epsitec.Common.Drawing
         {
             if (disposing)
             {
-                if (this.pixmap != null)
-                {
-                    this.pixmap.Dispose();
-                }
+                //if (this.pixmap != null)
+                //{
+                //    this.pixmap.Dispose();
+                //}
                 //if (this.solidRenderer != null)
                 //{
                 //    this.solidRenderer.Pixmap = null;
@@ -1291,7 +1303,7 @@ namespace Epsitec.Common.Drawing
                 //    this.smoothRenderer.Dispose();
                 //}
 
-                this.pixmap = null;
+                //this.pixmap = null;
                 this.rasterizer = null;
                 //this.solidRenderer = null;
                 //this.imageRenderer = null;
@@ -1310,7 +1322,7 @@ namespace Epsitec.Common.Drawing
         private CapStyle lineCap;
         private double lineMiterLimit;
 
-        private Pixmap pixmap;
+        //private Pixmap pixmap;
         private AbstractRasterizer rasterizer;
         private Transform transform;
 

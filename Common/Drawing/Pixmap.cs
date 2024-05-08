@@ -9,7 +9,7 @@ namespace Epsitec.Common.Drawing
     {
         // ******************************************************************
         // TODO bl-net8-cross
-        // - implement this class 
+        // - implement this class
         // ******************************************************************
         public Pixmap() { }
 
@@ -411,7 +411,6 @@ namespace Epsitec.Common.Drawing
                 this.aggBuffer = System.IntPtr.Zero;
             }
             */
-            throw new System.NotImplementedException();
         }
 
         #region RawData Class
