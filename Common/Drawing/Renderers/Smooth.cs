@@ -11,7 +11,7 @@ namespace Epsitec.Common.Drawing.Renderers
             this.smoothRenderer = smoothRenderer;
         }
 
-        public Pixmap Pixmap
+        public DrawingBitmap Pixmap
         {
             set
             {
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Drawing.Renderers
             set { this.smoothRenderer.Color(value.R, value.G, value.B, value.A); }
         }
 
-        public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+        public void SetAlphaMask(DrawingBitmap pixmap, MaskComponent component)
         {
             /*
             this.smoothRenderer.SetAlphaMask(
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Drawing.Renderers
             );
         }
 
-        private void Attach(Pixmap pixmap)
+        private void Attach(DrawingBitmap pixmap)
         {
             this.Detach();
             this.pixmap = pixmap;
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
         readonly Graphics graphics;
         private readonly AntigrainSharp.Renderer.Smooth smoothRenderer;
-        private Pixmap pixmap;
+        private DrawingBitmap pixmap;
         private Transform transform = Transform.Identity;
         private double r1;
         private double r2;

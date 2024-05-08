@@ -649,7 +649,7 @@ namespace Epsitec.Common.Tests.Drawing
             gfx.SolidRenderer.Color = Color.FromRgb(1, 0.2, 0);
             gfx.PaintText(2, 8, "@", Font.DefaultFont, 40);
 
-            using (Pixmap.RawData src = new Pixmap.RawData(gfx.Pixmap))
+            using (DrawingBitmap.RawData src = new DrawingBitmap.RawData(gfx.Pixmap))
             {
                 for (int y = 0; y < src.Height; y++)
                 {
@@ -1418,7 +1418,7 @@ namespace Epsitec.Common.Tests.Drawing
 
             draft_graphics.SetPixmapSize(40, 40);
 
-            Pixmap draft_pixmap = draft_graphics.Pixmap;
+            DrawingBitmap draft_pixmap = draft_graphics.Pixmap;
             Image draft_bitmap = Bitmap.FromPixmap(draft_pixmap);
 
             draft_graphics.SolidRenderer.ClearAlphaRgb(0.0, 1.0, 1.0, 1.0);

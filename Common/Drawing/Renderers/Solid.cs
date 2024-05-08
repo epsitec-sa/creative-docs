@@ -11,7 +11,7 @@ namespace Epsitec.Common.Drawing.Renderers
             this.AlphaMutiplier = 1.0;
         }
 
-        //public Pixmap Pixmap
+        //public DrawingBitmap DrawingBitmap
         //{
         //    set
         //    {
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Drawing.Renderers
             this.solidRenderer.Color(r, g, b, a * this.AlphaMutiplier);
         }
 
-        public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+        public void SetAlphaMask(DrawingBitmap pixmap, MaskComponent component)
         {
             /*
             this.solidRenderer.SetAlphaMask(
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Drawing.Renderers
         //}
         //#endregion
 
-        //private void Attach(Pixmap pixmap)
+        //private void Attach(DrawingBitmap pixmap)
         //{
         //    this.Detach();
 
@@ -154,6 +154,6 @@ namespace Epsitec.Common.Drawing.Renderers
 
         private Color color;
         internal readonly AntigrainSharp.Renderer.Solid solidRenderer;
-        private Pixmap pixmap;
+        private DrawingBitmap pixmap;
     }
 }

@@ -13,7 +13,7 @@ namespace Epsitec.Common.Drawing
         ///// the specified pixmap. Setting it to <c>null</c> detaches the pixmap.
         ///// </summary>
         ///// <value>The pixmap.</value>
-        //Pixmap Pixmap { set; }
+        //DrawingBitmap DrawingBitmap { set; }
 
         /// <summary>
         /// Sets the alpha mask using the specified 8-bit component of the
@@ -22,6 +22,6 @@ namespace Epsitec.Common.Drawing
         /// </summary>
         /// <param name="maskPixmap">The mask pixmap.</param>
         /// <param name="component">The component.</param>
-        void SetAlphaMask(Pixmap maskPixmap, MaskComponent component);
+        void SetAlphaMask(DrawingBitmap maskPixmap, MaskComponent component);
     }
 }

@@ -407,7 +407,7 @@ namespace Epsitec.Common.Document
             gfx.PaintImage(image, new Rectangle(0, 0, dx, dy));
 
             // bl-net8-cross
-            //return Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+            //return Bitmap.FromPixmap(gfx.DrawingBitmap) as Bitmap;
             throw new System.NotImplementedException();
         }
 

@@ -1096,7 +1096,7 @@ namespace Epsitec.Common.Document
 
             stop:
             port.ScaleTransform(0.1, 0.1, 0, 0);
-            Image bitmap = Bitmap.FromPixmap(gfx.Pixmap);
+            Image bitmap = Bitmap.FromPixmap(gfx.DrawingBitmap);
             Rectangle rect = clipRect;
             rect.Offset(offset);
             rect.Scale(autoZoom);
@@ -2111,7 +2111,7 @@ namespace Epsitec.Common.Document
             }
 
             // bl-net8-cross
-            //Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+            //Bitmap bitmap = Bitmap.FromPixmap(gfx.DrawingBitmap) as Bitmap;
             //return bitmap;
             throw new System.NotImplementedException();
         }

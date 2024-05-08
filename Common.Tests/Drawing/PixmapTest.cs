@@ -25,7 +25,7 @@ namespace Epsitec.Common.Tests.Drawing
         public void CheckPixmapNew()
         {
             /*
-            Pixmap pixmap = new Pixmap();
+            DrawingBitmap pixmap = new DrawingBitmap();
 
             pixmap.Size = new System.Drawing.Size(200, 100);
 
@@ -57,9 +57,9 @@ namespace Epsitec.Common.Tests.Drawing
             string path = @"..\..\..\..\Images\picture.png";
 
             System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-            Pixmap pixmap0;
-            Pixmap pixmap1;
-            Pixmap pixmap2;
+            DrawingBitmap pixmap0;
+            DrawingBitmap pixmap1;
+            DrawingBitmap pixmap2;
 
             watch.Start();
             pixmap0 = PixmapTest.CreatePixmapUsingImageClient(path, -1, true);
@@ -131,9 +131,9 @@ namespace Epsitec.Common.Tests.Drawing
             throw new System.NotImplementedException();
         }
 
-        private static Pixmap CreatePixmapUsingImageClient(string path, int size, bool copyBits)
+        private static DrawingBitmap CreatePixmapUsingImageClient(string path, int size, bool copyBits)
         {
-            Pixmap pixmap = new Pixmap();
+            DrawingBitmap pixmap = new DrawingBitmap();
             NativeBitmap image = null;
 
             try
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Tests.Drawing
         public void CheckAllocatePixmap()
         {
             /*
-            Pixmap pixmap = new Pixmap();
+            DrawingBitmap pixmap = new DrawingBitmap();
             System.IntPtr dc = System.IntPtr.Zero;
 
             pixmap.AllocatePixmap(new System.Drawing.Size(200, 100));
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Tests.Drawing
         {
             /*
             Graphics graphics = new Graphics();
-            Pixmap pixmap = graphics.Pixmap;
+            DrawingBitmap pixmap = graphics.DrawingBitmap;
 
             graphics.AllocatePixmap();
             graphics.SetPixmapSize(200, 100);
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Tests.Drawing
         public void CheckPixmapCopy()
         {
             Graphics cache = new Graphics();
-            Pixmap[] stack = new Pixmap[3];
+            DrawingBitmap[] stack = new DrawingBitmap[3];
 
             cache.SetPixmapSize(400, 400);
 
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Tests.Drawing
             cache.Color = Color.FromAlphaRgb(0.5, 0, 0, 1);
             cache.PaintSurface(Path.FromCircle(52, 48, 12));
 
-            stack[0] = new Pixmap();
+            stack[0] = new DrawingBitmap();
             stack[0].Size = new System.Drawing.Size(400, 400);
             stack[0].Copy(0, 0, cache.Pixmap, 0, 0, 400, 400);
 
@@ -342,7 +342,7 @@ namespace Epsitec.Common.Tests.Drawing
             System.Console.Out.WriteLine("Background: {0}", c1);
             System.Console.Out.WriteLine("Red 50%:    {0}", c2);
 
-            stack[1] = new Pixmap();
+            stack[1] = new DrawingBitmap();
             stack[1].Size = new System.Drawing.Size(400, 400);
             stack[1].Copy(0, 0, cache.Pixmap, 0, 0, 400, 400);
 
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Tests.Drawing
             System.Console.Out.WriteLine("Background: {0}", c1);
             System.Console.Out.WriteLine("Green 50%:  {0}", c2);
 
-            stack[2] = new Pixmap();
+            stack[2] = new DrawingBitmap();
             stack[2].Size = new System.Drawing.Size(400, 400);
             stack[2].Copy(0, 0, cache.Pixmap, 0, 0, 400, 400);
 
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Tests.Drawing
 
         protected class TestWidget : Widget
         {
-            public TestWidget(Pixmap[] stack)
+            public TestWidget(DrawingBitmap[] stack)
             {
                 this.stack = stack;
             }
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Tests.Drawing
                 }
             }
 
-            Pixmap[] stack;
+            DrawingBitmap[] stack;
         }
     }
 }

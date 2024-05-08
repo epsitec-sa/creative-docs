@@ -458,7 +458,7 @@ namespace Epsitec.Common.Drawing
 
             try
             {
-                Pixmap pixmap = new Pixmap();
+                DrawingBitmap pixmap = new DrawingBitmap();
                 pixmap.AllocatePixmap(image);
 
                 return Bitmap.FromPixmap(pixmap);
@@ -471,7 +471,7 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public static Bitmap FromPixmap(Pixmap pixmap)
+        public static Bitmap FromPixmap(DrawingBitmap pixmap)
         {
             /*
             Bitmap bitmap = new Bitmap();

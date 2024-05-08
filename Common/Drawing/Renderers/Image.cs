@@ -46,7 +46,7 @@ namespace Epsitec.Common.Drawing.Renderers
             );
         }
 
-        public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+        public void SetAlphaMask(DrawingBitmap pixmap, MaskComponent component)
         {
             /*
             this.imageRenderer.SetAlphaMask(

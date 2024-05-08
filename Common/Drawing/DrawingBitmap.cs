@@ -5,13 +5,13 @@ using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Drawing
 {
-    public class Pixmap : Bitmap
+    public class DrawingBitmap : Bitmap
     {
         // ******************************************************************
         // TODO bl-net8-cross
         // - implement this class
         // ******************************************************************
-        public Pixmap() { }
+        public DrawingBitmap() { }
 
         public override Size Size
         {
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Drawing
         public void Compose(
             int x,
             int y,
-            Pixmap source,
+            DrawingBitmap source,
             int xSource,
             int ySource,
             int width,
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Drawing
         public void Copy(
             int x,
             int y,
-            Pixmap source,
+            DrawingBitmap source,
             int xSource,
             int ySource,
             int width,
@@ -335,7 +335,7 @@ namespace Epsitec.Common.Drawing
                 return Color.Empty;
             }
 
-            using (Pixmap.RawData src = new Pixmap.RawData(this))
+            using (DrawingBitmap.RawData src = new DrawingBitmap.RawData(this))
             {
                 return src[x, y];
             }
@@ -425,7 +425,7 @@ namespace Epsitec.Common.Drawing
         #region RawData Class
         public class RawData : System.IDisposable
         {
-            public RawData(Pixmap pixmap)
+            public RawData(DrawingBitmap pixmap)
             {
                 /*
                 pixmap.GetMemoryLayout(

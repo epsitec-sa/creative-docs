@@ -14,7 +14,7 @@ namespace Epsitec.Common.Drawing
         {
             this.ResetLineStyle();
 
-            //this.pixmap = new Pixmap();
+            //this.pixmap = new DrawingBitmap();
             this.rasterizer = new Rasterizer();
             this.transform = Transform.Identity;
 
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        //public Drawing.Pixmap Pixmap
+        //public Drawing.DrawingBitmap DrawingBitmap
         //{
         //    get { return this.pixmap; }
         //}
@@ -241,10 +241,10 @@ namespace Epsitec.Common.Drawing
             /*
             this.pixmap.AllocatePixmap(new System.Drawing.Size(8, 8));
 
-            //this.solidRenderer.Pixmap = this.pixmap;
-            //this.imageRenderer.Pixmap = this.pixmap;
-            //this.gradientRenderer.Pixmap = this.pixmap;
-            //this.smoothRenderer.Pixmap = this.pixmap;
+            //this.solidRenderer.DrawingBitmap = this.pixmap;
+            //this.imageRenderer.DrawingBitmap = this.pixmap;
+            //this.gradientRenderer.DrawingBitmap = this.pixmap;
+            //this.smoothRenderer.DrawingBitmap = this.pixmap;
             */
             throw new System.NotImplementedException();
         }
@@ -1246,15 +1246,15 @@ namespace Epsitec.Common.Drawing
 
             this.pixmap.Size = new System.Drawing.Size(width, height);
 
-            //this.solidRenderer.Pixmap = null;
-            //this.imageRenderer.Pixmap = null;
-            //this.gradientRenderer.Pixmap = null;
-            //this.smoothRenderer.Pixmap = null;
+            //this.solidRenderer.DrawingBitmap = null;
+            //this.imageRenderer.DrawingBitmap = null;
+            //this.gradientRenderer.DrawingBitmap = null;
+            //this.smoothRenderer.DrawingBitmap = null;
 
-            //this.solidRenderer.Pixmap = this.pixmap;
-            //this.imageRenderer.Pixmap = this.pixmap;
-            //this.gradientRenderer.Pixmap = this.pixmap;
-            //this.smoothRenderer.Pixmap = this.pixmap;
+            //this.solidRenderer.DrawingBitmap = this.pixmap;
+            //this.imageRenderer.DrawingBitmap = this.pixmap;
+            //this.gradientRenderer.DrawingBitmap = this.pixmap;
+            //this.smoothRenderer.DrawingBitmap = this.pixmap;
 
             return true;
             */
@@ -1279,22 +1279,22 @@ namespace Epsitec.Common.Drawing
                 //}
                 //if (this.solidRenderer != null)
                 //{
-                //    this.solidRenderer.Pixmap = null;
+                //    this.solidRenderer.DrawingBitmap = null;
                 //    this.solidRenderer.Dispose();
                 //}
                 //if (this.imageRenderer != null)
                 //{
-                //    this.imageRenderer.Pixmap = null;
+                //    this.imageRenderer.DrawingBitmap = null;
                 //    this.imageRenderer.Dispose();
                 //}
                 //if (this.gradientRenderer != null)
                 //{
-                //    this.gradientRenderer.Pixmap = null;
+                //    this.gradientRenderer.DrawingBitmap = null;
                 //    this.gradientRenderer.Dispose();
                 //}
                 //if (this.smoothRenderer != null)
                 //{
-                //    this.smoothRenderer.Pixmap = null;
+                //    this.smoothRenderer.DrawingBitmap = null;
                 //    this.smoothRenderer.Dispose();
                 //}
 
@@ -1317,7 +1317,7 @@ namespace Epsitec.Common.Drawing
         private CapStyle lineCap;
         private double lineMiterLimit;
 
-        //private Pixmap pixmap;
+        //private DrawingBitmap pixmap;
         private AbstractRasterizer rasterizer;
         private Transform transform;
 

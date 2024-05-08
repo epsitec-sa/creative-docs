@@ -46,7 +46,7 @@ namespace Epsitec.Common.Drawing.Renderers
             }
         }
 
-        public Pixmap Pixmap
+        public DrawingBitmap Pixmap
         {
             set
             {
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Drawing.Renderers
             }
         }
 
-        public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+        public void SetAlphaMask(DrawingBitmap pixmap, MaskComponent component)
         {
             /*
             this.gradientRenderer.SetAlphaMask(
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Drawing.Renderers
         #endregion
 
 
-        private void Attach(Pixmap pixmap)
+        private void Attach(DrawingBitmap pixmap)
         {
             this.Detach();
             this.pixmap = pixmap;
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
         readonly Graphics graphics;
         internal readonly AntigrainSharp.Renderer.Gradient gradientRenderer;
-        private Pixmap pixmap;
+        private DrawingBitmap pixmap;
         private GradientFill fill;
         private Transform transform = Transform.Identity;
         private Transform internalTransform = Transform.Identity;

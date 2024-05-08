@@ -312,7 +312,7 @@ namespace Epsitec.Common.Tests.Widgets
 
                 graphics.SolidRenderer.SetAlphaMask(this.mask.Pixmap, MaskComponent.R);
 
-                using (Pixmap.RawData raw = new Pixmap.RawData(this.bitmap))
+                using (DrawingBitmap.RawData raw = new DrawingBitmap.RawData(this.bitmap))
                 {
                     int nx = (int)this.bitmap.Width;
                     int ny = (int)this.bitmap.Height;

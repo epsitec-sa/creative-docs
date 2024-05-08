@@ -1878,7 +1878,7 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 //				System.Diagnostics.Debug.WriteLine ("ReallocatePixmapLowLevel" + (this.isFrozen ? " (frozen)" : "") + " Size: " + width.ToString () + "," + height.ToString());
 
-                this.graphics.Pixmap.Clear();
+                this.graphics.DrawingBitmap.Clear();
 
                 if (this.widgetWindow != null)
                 {
@@ -2851,12 +2851,12 @@ namespace Epsitec.Common.Widgets.Platform
                     return msg;
                 }
         */
-        internal Drawing.Pixmap GetWindowPixmap()
+        internal Drawing.DrawingBitmap GetWindowPixmap()
         {
             /*
             if ((this.graphics != null) && (this.isPixmapOk))
             {
-                return this.graphics.Pixmap;
+                return this.graphics.DrawingBitmap;
             }
             else
             {
@@ -2889,7 +2889,7 @@ namespace Epsitec.Common.Widgets.Platform
         
                     if ((this.UpdateLayeredWindow()) && (this.graphics != null))
                     {
-                        Drawing.Pixmap pixmap = this.graphics.Pixmap;
+                        Drawing.DrawingBitmap pixmap = this.graphics.DrawingBitmap;
         
                         if (pixmap != null)
                         {
@@ -3002,8 +3002,8 @@ namespace Epsitec.Common.Widgets.Platform
 
                 using (bitmap)
                 {
-                    Drawing.Pixmap.RawData src = new Drawing.Pixmap.RawData(this.graphics.Pixmap);
-                    Drawing.Pixmap.RawData dst = new Drawing.Pixmap.RawData(
+                    Drawing.DrawingBitmap.RawData src = new Drawing.DrawingBitmap.RawData(this.graphics.DrawingBitmap);
+                    Drawing.DrawingBitmap.RawData dst = new Drawing.DrawingBitmap.RawData(
                         bitmap,
                         System.Drawing.Imaging.PixelFormat.Format32bppPArgb
                     );

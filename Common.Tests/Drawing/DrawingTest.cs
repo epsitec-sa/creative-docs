@@ -10,7 +10,7 @@ namespace Epsitec.Common.Tests.Drawing
         [Test]
         public void CheckPixmap()
         {
-            Pixmap pixmap = new Pixmap();
+            DrawingBitmap pixmap = new DrawingBitmap();
 
             pixmap.Size = new System.Drawing.Size(200, 100);
             pixmap.Size = new System.Drawing.Size(100, 50);
@@ -100,14 +100,14 @@ namespace Epsitec.Common.Tests.Drawing
         //[Test]
         //public void CheckRendererGradient()
         //{
-        //    Pixmap pixmap = new Pixmap();
+        //    DrawingBitmap pixmap = new DrawingBitmap();
         //    Common.Drawing.Graphics graphics = new Graphics();
         //    Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient(
         //        graphics
         //    );
 
         //    pixmap.Size = new System.Drawing.Size(200, 200);
-        //    gradient.Pixmap = pixmap;
+        //    gradient.DrawingBitmap = pixmap;
         //    gradient.Fill = Common.Drawing.GradientFill.Circle;
         //    gradient.SetColors(Color.FromBrightness(0.0), Color.FromBrightness(1.0));
         //    gradient.SetParameters(0, 100);

@@ -429,7 +429,7 @@ namespace Epsitec.Common.Drawing
                             using (Drawing.Graphics graphics = new Drawing.Graphics())
                             {
                                 graphics.SetPixmapSize(dx, dy);
-                                Drawing.Pixmap pixmap = graphics.Pixmap;
+                                Drawing.DrawingBitmap pixmap = graphics.DrawingBitmap;
                                 pixmap.Clear();
             
                                 if (
