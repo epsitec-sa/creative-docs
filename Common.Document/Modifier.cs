@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -2144,27 +2144,27 @@ namespace Epsitec.Common.Document
             return true;
         }
 
-/*        protected System.Drawing.Bitmap GetPastedBitmap()
-        {
-            //	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
-            ClipboardReadData clipboard = Clipboard.GetData();
-            System.Drawing.Bitmap bitmap;
-
-            bitmap = clipboard.Read("System.Drawing.Bitmap") as System.Drawing.Bitmap;
-            if (bitmap != null)
-            {
-                return bitmap;
-            }
-
-            bitmap = clipboard.Read("Bitmap") as System.Drawing.Bitmap;
-            if (bitmap != null)
-            {
-                return bitmap;
-            }
-
-            return null;
-        }
-*/
+        /*        protected System.Drawing.Bitmap GetPastedBitmap()
+                {
+                    //	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
+                    ClipboardReadData clipboard = Clipboard.GetData();
+                    System.Drawing.Bitmap bitmap;
+        
+                    bitmap = clipboard.Read("System.Drawing.Bitmap") as System.Drawing.Bitmap;
+                    if (bitmap != null)
+                    {
+                        return bitmap;
+                    }
+        
+                    bitmap = clipboard.Read("Bitmap") as System.Drawing.Bitmap;
+                    if (bitmap != null)
+                    {
+                        return bitmap;
+                    }
+        
+                    return null;
+                }
+        */
         protected string CreateBitmapFile(Drawing.Image image)
         {
             //	Crée un fichier image bitmap .png dans le dossier temporaire de Windows.

@@ -350,7 +350,7 @@ namespace Epsitec.Common.Drawing
             System.Diagnostics.Debug.Assert(engine != null);
 
             // bl-net8-cross pass FontManager
-            this.cache = new DrawingBitmap(width, height, null);
+            this.cache = new DrawingBitmap(width, height);
 
             using (Graphics graphics = new Graphics(this.cache.GraphicContext))
             {

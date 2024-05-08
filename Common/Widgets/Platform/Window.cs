@@ -177,6 +177,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.isWndProcHandlingRestricted = new SafeCounter();
 
             this.clientSize = new System.Drawing.Size(800, 600);
+            Font.SetFontManager(this.FontManager);
         }
 
         internal Window(

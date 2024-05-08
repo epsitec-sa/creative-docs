@@ -21,10 +21,7 @@ namespace Epsitec.Common.Drawing
         //    this.nativeBitmap = nativeBitmap;
         //}
 
-        public override Bitmap BitmapImage
-        {
-            get { return this; }
-        }
+        public override Bitmap BitmapImage => this;
 
         public abstract int Stride { get; }
 

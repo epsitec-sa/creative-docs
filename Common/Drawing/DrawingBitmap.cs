@@ -16,9 +16,10 @@ namespace Epsitec.Common.Drawing
         // TODO bl-net8-cross
         // - implement this class
         // ******************************************************************
-        public DrawingBitmap(uint width, uint height, AntigrainSharp.FontManager fm) {
+        public DrawingBitmap(uint width, uint height)
+        {
             int stride = (int)width * 4; // 4 bytes per pixel, one byte per color channel
-            this.buffer = new AntigrainSharp.GraphicBuffer(width, height, stride, fm);
+            this.buffer = new AntigrainSharp.GraphicBuffer(width, height, stride, Font.FontManager);
         }
 
         public AntigrainSharp.GraphicContext GraphicContext
@@ -30,38 +31,39 @@ namespace Epsitec.Common.Drawing
         {
             get { return new Size(this.buffer.Height, this.buffer.Width); }
         }
-                /*
-                if (this.size != value)
+
+        /*
+        if (this.size != value)
+        {
+            if (this.aggBuffer == System.IntPtr.Zero)
+            {
+                this.aggBuffer = AntigrainCPP.Buffer.New(value.Width, value.Height, 32);
+            }
+            else
+            {
+                bool ok = AntigrainCPP.Buffer.Resize(
+                    this.aggBuffer,
+                    value.Width,
+                    value.Height,
+                    32
+                );
+
+                if (ok == false)
                 {
-                    if (this.aggBuffer == System.IntPtr.Zero)
-                    {
-                        this.aggBuffer = AntigrainCPP.Buffer.New(value.Width, value.Height, 32);
-                    }
-                    else
-                    {
-                        bool ok = AntigrainCPP.Buffer.Resize(
-                            this.aggBuffer,
+                    System.Diagnostics.Trace.WriteLine(
+                        string.Format(
+                            "Could not allocate buffer for {0} x {1}",
                             value.Width,
-                            value.Height,
-                            32
-                        );
-
-                        if (ok == false)
-                        {
-                            System.Diagnostics.Trace.WriteLine(
-                                string.Format(
-                                    "Could not allocate buffer for {0} x {1}",
-                                    value.Width,
-                                    value.Height
-                                )
-                            );
-                            throw new System.Exception("Buffer could not be resized");
-                        }
-                    }
-
-                    this.size = value;
+                            value.Height
+                        )
+                    );
+                    throw new System.Exception("Buffer could not be resized");
                 }
-                */
+            }
+
+            this.size = value;
+        }
+        */
 
         public override int Stride
         {

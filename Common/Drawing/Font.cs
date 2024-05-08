@@ -827,6 +827,23 @@ namespace Epsitec.Common.Drawing
             return new Font(id);
         }
 
+        public static void SetFontManager(FontManager fontManager)
+        {
+            if (Font.fontManager == null)
+            {
+                Font.fontManager = fontManager;
+            }
+            else
+            {
+                throw new System.Exception("FontManager already set");
+            }
+        }
+
+        public static FontManager FontManager
+        {
+            get { return Font.fontManager; }
+        }
+
         readonly string syntheticStyle;
         readonly SyntheticFontMode syntheticMode;
         readonly OpenType.FontIdentity openTypeFontIdentity;
@@ -836,6 +853,7 @@ namespace Epsitec.Common.Drawing
         static List<Font> fontArray;
         static Dictionary<string, Font> fontHash;
         static Font defaultFont;
+        static FontManager fontManager;
         static readonly bool useSegoe;
 
         static readonly Dictionary<string, string> registeredFonts =
