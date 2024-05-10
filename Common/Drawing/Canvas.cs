@@ -349,15 +349,10 @@ namespace Epsitec.Common.Drawing
             ICanvasEngine engine = Canvas.FindEngine(this.data);
             System.Diagnostics.Debug.Assert(engine != null);
 
-            // bl-net8-cross pass FontManager
             this.cache = new DrawingBitmap(width, height);
 
             using (Graphics graphics = new Graphics(this.cache.GraphicContext))
             {
-                //graphics.SetPixmapSize(width, height);
-                //Drawing.DrawingBitmap pixmap = graphics.Pixmap;
-                //pixmap.Clear();
-
                 int page = 0;
                 if (this.key != null)
                 {
@@ -372,59 +367,6 @@ namespace Epsitec.Common.Drawing
                     page,
                     this.adorner
                 );
-
-                //int width,
-                //    height,
-                //    stride;
-                //System.Drawing.Imaging.PixelFormat format;
-                //System.IntPtr scan0;
-
-                //pixmap.GetMemoryLayout(
-                //    out width,
-                //    out height,
-                //    out stride,
-                //    out format,
-                //    out scan0
-                //);
-                //System.Diagnostics.Debug.Assert(width == width);
-                //System.Diagnostics.Debug.Assert(height == height);
-
-                //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, height, format);
-                //System.Drawing.Rectangle bbox = new System.Drawing.Rectangle(0, 0, width, height);
-                //System.Drawing.Imaging.ImageLockMode mode = System
-                //    .Drawing
-                //    .Imaging
-                //    .ImageLockMode
-                //    .WriteOnly;
-                //System.Drawing.Imaging.BitmapData data = bitmap.LockBits(bbox, mode, format);
-
-                //try
-                //{
-                //    unsafe
-                //    {
-                //        int num = stride / 4;
-                //        uint* src = (uint*)scan0.ToPointer();
-                //        uint* buf = (uint*)data.Scan0.ToPointer() + height * num;
-
-                //        for (int line = 0; line < height; line++)
-                //        {
-                //            buf -= num;
-
-                //            uint* dst = buf;
-
-                //            for (int i = 0; i < num; i++)
-                //            {
-                //                *dst++ = *src++;
-                //            }
-                //        }
-                //    }
-                //}
-                //finally
-                //{
-                //    bitmap.UnlockBits(data);
-                //}
-
-                //this.cache = Bitmap.FromNativeBitmap(bitmap, this.Origin, size).BitmapImage;
             }
         }
 
@@ -447,7 +389,7 @@ namespace Epsitec.Common.Drawing
         {
             if (this.cache != null)
             {
-                //this.cache.Dispose();
+                this.cache.Dispose();
                 this.cache = null;
             }
         }
