@@ -61,36 +61,56 @@ namespace Epsitec.Common.Widgets.Platform
             this.graphics = null;
         }
 
-        public override void OnKey(int x, int y, uint key, uint flags)
+        public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
         {
-            this.ForceRedraw();
-        }
-
-        public override void OnMouseButtonDown(int x, int y, uint flags)
-        {
-            Message msg = Message.FromMouseEvent(
-                MessageType.MouseDown,
-                this,
-                MouseButtons.Left, // bl-net8-cross remove hardcoded temp hack
-                x,
-                y,
-                0
-            );
+            KeyCode keyCode = (KeyCode)key;
+            ModifierKeys modifiers = ModifierKeys.None;
+            if (flags.HasFlag(AntigrainSharp.InputFlags.KbdShift))
+            {
+                modifiers |= ModifierKeys.Shift;
+            }
+            if (flags.HasFlag(AntigrainSharp.InputFlags.KbdCtrl))
+            {
+                modifiers |= ModifierKeys.Control;
+            }
+            Message msg = Message.FromKeyEvent(MessageType.KeyPress, keyCode, modifiers);
             this.DispatchMessage(msg);
             this.ForceRedraw();
         }
 
-        public override void OnMouseButtonUp(int x, int y, uint flags)
+        public override void OnMouseButtonDown(int x, int y, AntigrainSharp.InputFlags flags)
         {
-            Message msg = Message.FromMouseEvent(
-                MessageType.MouseUp,
-                this,
-                MouseButtons.Left, // bl-net8-cross remove hardcoded temp hack
-                x,
-                y,
-                0
-            );
+            MouseButtons btn = flags.HasFlag(AntigrainSharp.InputFlags.MouseLeft)
+                ? MouseButtons.Left
+                : MouseButtons.Right;
+            Message msg = Message.FromMouseEvent(MessageType.MouseDown, this, btn, x, y, 0);
             this.DispatchMessage(msg);
+            this.ForceRedraw();
+        }
+
+        public override void OnMouseButtonUp(int x, int y, AntigrainSharp.InputFlags flags)
+        {
+            MouseButtons btn = flags.HasFlag(AntigrainSharp.InputFlags.MouseLeft)
+                ? MouseButtons.Left
+                : MouseButtons.Right;
+            Message msg = Message.FromMouseEvent(MessageType.MouseUp, this, btn, x, y, 0);
+            this.DispatchMessage(msg);
+            this.ForceRedraw();
+        }
+
+        public override void OnMouseMove(int x, int y, AntigrainSharp.InputFlags flags)
+        {
+            MouseButtons btn = flags.HasFlag(AntigrainSharp.InputFlags.MouseLeft)
+                ? MouseButtons.Left
+                : MouseButtons.Right;
+            Message msg = Message.FromMouseEvent(MessageType.MouseMove, this, btn, x, y, 0);
+            this.DispatchMessage(msg);
+            this.ForceRedraw();
+        }
+
+        public override void OnResize(int sx, int sy)
+        {
+            this.clientSize = new System.Drawing.Size(sx, sy);
             this.ForceRedraw();
         }
 
@@ -116,8 +136,6 @@ namespace Epsitec.Common.Widgets.Platform
         public bool Focused { get; }
 
         public System.Drawing.Point Location { get; set; }
-
-        //public System.Windows.Forms.Form? Owner { get; set; }
 
         public bool ShowIcon { get; set; }
 
@@ -1688,14 +1706,6 @@ namespace Epsitec.Common.Widgets.Platform
         /*
                 }
         */
-        protected void OnResize(System.EventArgs e)
-        //protected override void OnResize(System.EventArgs e)
-        {
-            /*
-            //			System.Diagnostics.Debug.WriteLine ("OnResize");
-            base.OnResize(e);
-            */
-        }
 
         protected void OnResizeBegin(System.EventArgs e)
         //protected override void OnResizeBegin(System.EventArgs e)

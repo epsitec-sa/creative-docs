@@ -12,10 +12,10 @@ namespace Epsitec.Common.Widgets
     /// mouse click.
     /// </summary>
     public sealed class Message
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - handle mouse buttons in a cross-platform way
-        // ******************************************************************
+    // ******************************************************************
+    // TODO bl-net8-cross
+    // - handle mouse buttons in a cross-platform way
+    // ******************************************************************
     {
         public Message()
         {
@@ -23,9 +23,9 @@ namespace Epsitec.Common.Widgets
             this.messageId = System.Threading.Interlocked.Increment(ref Message.nextMessageId);
             this.userMessageId = Message.currentUserMessageId;
 
-/*            Message.state.buttons = (MouseButtons)(int)System.Windows.Forms.Control.MouseButtons;
-            Message.state.modifiers = (ModifierKeys)(int)System.Windows.Forms.Control.ModifierKeys;
-*/
+            /*            Message.state.buttons = (MouseButtons)(int)System.Windows.Forms.Control.MouseButtons;
+                        Message.state.modifiers = (ModifierKeys)(int)System.Windows.Forms.Control.ModifierKeys;
+            */
             this.modifiers = Message.state.modifiers;
 
             this.cursor = Message.state.windowCursor;
@@ -478,35 +478,35 @@ namespace Epsitec.Common.Widgets
             Message.state.window = null;
         }
 
-/*        internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr wParam)
-        {
-            System.Windows.Forms.MouseButtons buttons = System.Windows.Forms.MouseButtons.None;
-            int wp = (int)wParam;
-
-            if ((wp & Win32Const.MK_LBUTTON) != 0)
-            {
-                buttons |= System.Windows.Forms.MouseButtons.Left;
-            }
-            if ((wp & Win32Const.MK_RBUTTON) != 0)
-            {
-                buttons |= System.Windows.Forms.MouseButtons.Right;
-            }
-            if ((wp & Win32Const.MK_MBUTTON) != 0)
-            {
-                buttons |= System.Windows.Forms.MouseButtons.Middle;
-            }
-            if ((wp & Win32Const.MK_XBUTTON1) != 0)
-            {
-                buttons |= System.Windows.Forms.MouseButtons.XButton1;
-            }
-            if ((wp & Win32Const.MK_XBUTTON2) != 0)
-            {
-                buttons |= System.Windows.Forms.MouseButtons.XButton2;
-            }
-
-            return buttons;
-        }
-*/
+        /*        internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr wParam)
+                {
+                    System.Windows.Forms.MouseButtons buttons = System.Windows.Forms.MouseButtons.None;
+                    int wp = (int)wParam;
+        
+                    if ((wp & Win32Const.MK_LBUTTON) != 0)
+                    {
+                        buttons |= System.Windows.Forms.MouseButtons.Left;
+                    }
+                    if ((wp & Win32Const.MK_RBUTTON) != 0)
+                    {
+                        buttons |= System.Windows.Forms.MouseButtons.Right;
+                    }
+                    if ((wp & Win32Const.MK_MBUTTON) != 0)
+                    {
+                        buttons |= System.Windows.Forms.MouseButtons.Middle;
+                    }
+                    if ((wp & Win32Const.MK_XBUTTON1) != 0)
+                    {
+                        buttons |= System.Windows.Forms.MouseButtons.XButton1;
+                    }
+                    if ((wp & Win32Const.MK_XBUTTON2) != 0)
+                    {
+                        buttons |= System.Windows.Forms.MouseButtons.XButton2;
+                    }
+        
+                    return buttons;
+                }
+        */
         internal static int WheelDeltaFromWParam(System.IntPtr wParam)
         {
             int wp = (int)wParam;
@@ -519,83 +519,83 @@ namespace Epsitec.Common.Widgets
             y = (short)((((int)lParam) >> 16) & 0x0000ffff);
         }
 
-/*        internal static bool IsMouseMsg(System.Windows.Forms.Message msg)
-        {
-            switch (msg.Msg)
-            {
-                case Win32Const.WM_LBUTTONDOWN:
-                case Win32Const.WM_LBUTTONDBLCLK:
-                case Win32Const.WM_LBUTTONUP:
-                case Win32Const.WM_NCLBUTTONDOWN:
-
-                case Win32Const.WM_RBUTTONDOWN:
-                case Win32Const.WM_RBUTTONDBLCLK:
-                case Win32Const.WM_RBUTTONUP:
-                case Win32Const.WM_NCRBUTTONDOWN:
-
-                case Win32Const.WM_MBUTTONDOWN:
-                case Win32Const.WM_MBUTTONDBLCLK:
-                case Win32Const.WM_MBUTTONUP:
-                case Win32Const.WM_NCMBUTTONDOWN:
-
-                case Win32Const.WM_XBUTTONDOWN:
-                case Win32Const.WM_XBUTTONDBLCLK:
-                case Win32Const.WM_XBUTTONUP:
-                case Win32Const.WM_NCXBUTTONDOWN:
-
-                case Win32Const.WM_MOUSEMOVE:
-                case Win32Const.WM_MOUSEWHEEL:
-                case Win32Const.WM_MOUSEHWHEEL:
-
-                case Win32Const.WM_MOUSELEAVE:
-                    return true;
-            }
-
-            return false;
-        }
-*/
-/*        internal static System.Windows.Forms.MouseButtons ButtonFromMsg(
-            System.Windows.Forms.Message msg
-        )
-        {
-            switch (msg.Msg)
-            {
-                case Win32Const.WM_LBUTTONDOWN:
-                case Win32Const.WM_LBUTTONDBLCLK:
-                case Win32Const.WM_LBUTTONUP:
-                case Win32Const.WM_NCLBUTTONDOWN:
-                    return System.Windows.Forms.MouseButtons.Left;
-
-                case Win32Const.WM_RBUTTONDOWN:
-                case Win32Const.WM_RBUTTONDBLCLK:
-                case Win32Const.WM_RBUTTONUP:
-                case Win32Const.WM_NCRBUTTONDOWN:
-                    return System.Windows.Forms.MouseButtons.Right;
-
-                case Win32Const.WM_MBUTTONDOWN:
-                case Win32Const.WM_MBUTTONDBLCLK:
-                case Win32Const.WM_MBUTTONUP:
-                case Win32Const.WM_NCMBUTTONDOWN:
-                    return System.Windows.Forms.MouseButtons.Middle;
-
-                case Win32Const.WM_XBUTTONDOWN:
-                case Win32Const.WM_XBUTTONDBLCLK:
-                case Win32Const.WM_XBUTTONUP:
-                case Win32Const.WM_NCXBUTTONDOWN:
-                    int wParam = (int)msg.WParam;
-                    switch (wParam & 0x00ff0000)
+        /*        internal static bool IsMouseMsg(System.Windows.Forms.Message msg)
+                {
+                    switch (msg.Msg)
                     {
-                        case 0x00010000:
-                            return System.Windows.Forms.MouseButtons.XButton1;
-                        case 0x00020000:
-                            return System.Windows.Forms.MouseButtons.XButton2;
+                        case Win32Const.WM_LBUTTONDOWN:
+                        case Win32Const.WM_LBUTTONDBLCLK:
+                        case Win32Const.WM_LBUTTONUP:
+                        case Win32Const.WM_NCLBUTTONDOWN:
+        
+                        case Win32Const.WM_RBUTTONDOWN:
+                        case Win32Const.WM_RBUTTONDBLCLK:
+                        case Win32Const.WM_RBUTTONUP:
+                        case Win32Const.WM_NCRBUTTONDOWN:
+        
+                        case Win32Const.WM_MBUTTONDOWN:
+                        case Win32Const.WM_MBUTTONDBLCLK:
+                        case Win32Const.WM_MBUTTONUP:
+                        case Win32Const.WM_NCMBUTTONDOWN:
+        
+                        case Win32Const.WM_XBUTTONDOWN:
+                        case Win32Const.WM_XBUTTONDBLCLK:
+                        case Win32Const.WM_XBUTTONUP:
+                        case Win32Const.WM_NCXBUTTONDOWN:
+        
+                        case Win32Const.WM_MOUSEMOVE:
+                        case Win32Const.WM_MOUSEWHEEL:
+                        case Win32Const.WM_MOUSEHWHEEL:
+        
+                        case Win32Const.WM_MOUSELEAVE:
+                            return true;
                     }
-                    break;
-            }
-
-            return System.Windows.Forms.MouseButtons.None;
-        }
-*/
+        
+                    return false;
+                }
+        */
+        /*        internal static System.Windows.Forms.MouseButtons ButtonFromMsg(
+                    System.Windows.Forms.Message msg
+                )
+                {
+                    switch (msg.Msg)
+                    {
+                        case Win32Const.WM_LBUTTONDOWN:
+                        case Win32Const.WM_LBUTTONDBLCLK:
+                        case Win32Const.WM_LBUTTONUP:
+                        case Win32Const.WM_NCLBUTTONDOWN:
+                            return System.Windows.Forms.MouseButtons.Left;
+        
+                        case Win32Const.WM_RBUTTONDOWN:
+                        case Win32Const.WM_RBUTTONDBLCLK:
+                        case Win32Const.WM_RBUTTONUP:
+                        case Win32Const.WM_NCRBUTTONDOWN:
+                            return System.Windows.Forms.MouseButtons.Right;
+        
+                        case Win32Const.WM_MBUTTONDOWN:
+                        case Win32Const.WM_MBUTTONDBLCLK:
+                        case Win32Const.WM_MBUTTONUP:
+                        case Win32Const.WM_NCMBUTTONDOWN:
+                            return System.Windows.Forms.MouseButtons.Middle;
+        
+                        case Win32Const.WM_XBUTTONDOWN:
+                        case Win32Const.WM_XBUTTONDBLCLK:
+                        case Win32Const.WM_XBUTTONUP:
+                        case Win32Const.WM_NCXBUTTONDOWN:
+                            int wParam = (int)msg.WParam;
+                            switch (wParam & 0x00ff0000)
+                            {
+                                case 0x00010000:
+                                    return System.Windows.Forms.MouseButtons.XButton1;
+                                case 0x00020000:
+                                    return System.Windows.Forms.MouseButtons.XButton2;
+                            }
+                            break;
+                    }
+        
+                    return System.Windows.Forms.MouseButtons.None;
+                }
+        */
         internal static Message PostProcessMessage(Message message)
         {
             if (message == null)
@@ -603,37 +603,37 @@ namespace Epsitec.Common.Widgets
                 return null;
             }
 
-/*            //	Simulate Alt-Left and Alt-Right when the user clicks the special
-            //	<-- and --> buttons on the mouse; let's hope that this is indeed
-            //	what the mouse buttons are configured to do !
-
-            if (
-                (message.Button == MouseButtons.XButton1)
-                || (message.Button == MouseButtons.XButton2)
-            )
-            {
-                System.Windows.Forms.Keys alt = System.Windows.Forms.Keys.Alt;
-                System.Windows.Forms.Keys key =
-                    message.Button == MouseButtons.XButton1
-                        ? System.Windows.Forms.Keys.Left
-                        : System.Windows.Forms.Keys.Right;
-
-                switch (message.MessageType)
-                {
-                    case MessageType.MouseDown:
-                        return Message.FromKeyEvent(
-                            MessageType.KeyDown,
-                            new System.Windows.Forms.KeyEventArgs(alt | key)
-                        );
-
-                    case MessageType.MouseUp:
-                        return Message.FromKeyEvent(
-                            MessageType.KeyUp,
-                            new System.Windows.Forms.KeyEventArgs(alt | key)
-                        );
-                }
-            }
-*/
+            /*            //	Simulate Alt-Left and Alt-Right when the user clicks the special
+                        //	<-- and --> buttons on the mouse; let's hope that this is indeed
+                        //	what the mouse buttons are configured to do !
+            
+                        if (
+                            (message.Button == MouseButtons.XButton1)
+                            || (message.Button == MouseButtons.XButton2)
+                        )
+                        {
+                            System.Windows.Forms.Keys alt = System.Windows.Forms.Keys.Alt;
+                            System.Windows.Forms.Keys key =
+                                message.Button == MouseButtons.XButton1
+                                    ? System.Windows.Forms.Keys.Left
+                                    : System.Windows.Forms.Keys.Right;
+            
+                            switch (message.MessageType)
+                            {
+                                case MessageType.MouseDown:
+                                    return Message.FromKeyEvent(
+                                        MessageType.KeyDown,
+                                        new System.Windows.Forms.KeyEventArgs(alt | key)
+                                    );
+            
+                                case MessageType.MouseUp:
+                                    return Message.FromKeyEvent(
+                                        MessageType.KeyUp,
+                                        new System.Windows.Forms.KeyEventArgs(alt | key)
+                                    );
+                            }
+                        }
+            */
             return message;
         }
 
@@ -842,140 +842,131 @@ namespace Epsitec.Common.Widgets
             return message;
         }
 
-        /*        internal static Message FromKeyEvent(MessageType type, System.Windows.Forms.KeyEventArgs e)
-                {
-                    Message message = new Message(type);
-
-                    message.keyCode = (KeyCode)(int)e.KeyCode;
-
-                    message.filterNoChildren = false;
-                    message.filterOnlyFocused = true;
-                    message.filterOnlyOnHit = false;
-
-                    if (e.Alt)
-                    {
-                        message.modifiers |= ModifierKeys.Alt;
-                    }
-
-                    if (e.Shift)
-                    {
-                        message.modifiers |= ModifierKeys.Shift;
-                    }
-
-                    if (e.Control)
-                    {
-                        message.modifiers |= ModifierKeys.Control;
-                    }
-
-                    if (type == MessageType.KeyDown)
-                    {
-                        Message.state.keyDownCode = message.keyCode;
-                    }
-
-                    return message;
-                }
-        */
-        internal static Message FromKeyEvent(int msg, System.IntPtr wParam, System.IntPtr lParam)
-        {
-            MessageType messageType = MessageType.None;
-            Message message = new Message(messageType);
-/*            //	Synthétise un événement clavier à partir de la description de
-            //	très bas niveau...
-
-            MessageType messageType = MessageType.None;
-
-            switch (msg)
-            {
-                case Win32Const.WM_SYSKEYDOWN:
-                    messageType = MessageType.KeyDown;
-                    break;
-                case Win32Const.WM_SYSKEYUP:
-                    messageType = MessageType.KeyUp;
-                    break;
-                case Win32Const.WM_KEYDOWN:
-                    messageType = MessageType.KeyDown;
-                    break;
-                case Win32Const.WM_KEYUP:
-                    messageType = MessageType.KeyUp;
-                    break;
-                case Win32Const.WM_CHAR:
-                    messageType = MessageType.KeyPress;
-                    break;
-            }
-
-            Message message = new Message(messageType);
-
-            message.filterNoChildren = false;
-            message.filterOnlyFocused = true;
-            message.filterOnlyOnHit = false;
-
-            if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Alt) != 0)
-            {
-                message.modifiers |= ModifierKeys.Alt;
-            }
-
-            if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Shift) != 0)
-            {
-                message.modifiers |= ModifierKeys.Shift;
-            }
-
-            if (
-                (System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Control) != 0
-            )
-            {
-                message.modifiers |= ModifierKeys.Control;
-            }
-
-            int rawKeyChar = (int)wParam;
-            KeyCode rawKeyCode = (KeyCode)rawKeyChar;
-            int rawLParam = (int)lParam;
-
-            if ((rawLParam & (1 << 24)) != 0)
-            {
-                //	This is an extended key which might require some remapping to get the real.
-
-                switch (rawKeyCode)
-                {
-                    case KeyCode.Return:
-                        rawKeyCode = KeyCode.NumericEnter;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            if (message.messageType == MessageType.KeyPress)
-            {
-                message.keyCode = Message.lastCode;
-                message.keyChar = rawKeyChar;
-            }
-            else
-            {
-                Message.lastCode = rawKeyCode;
-                message.keyCode = Message.lastCode;
-            }
-*/
-            return message;
-        }
-
-/*        internal static Message FromKeyEvent(
+        internal static Message FromKeyEvent(
             MessageType type,
-            System.Windows.Forms.KeyPressEventArgs e
+            KeyCode keyCode,
+            ModifierKeys modifiers
         )
         {
             Message message = new Message(type);
 
-            message.keyChar = e.KeyChar;
-            message.keyCode = Message.state.keyDownCode;
+            message.keyCode = keyCode;
 
             message.filterNoChildren = false;
             message.filterOnlyFocused = true;
             message.filterOnlyOnHit = false;
 
+            message.modifiers = modifiers;
+
+            if (type == MessageType.KeyDown)
+            {
+                Message.state.keyDownCode = message.keyCode;
+            }
+
             return message;
         }
-*/
+
+        internal static Message FromKeyEvent(int msg, System.IntPtr wParam, System.IntPtr lParam)
+        {
+            MessageType messageType = MessageType.None;
+            Message message = new Message(messageType);
+            /*            //	Synthétise un événement clavier à partir de la description de
+                        //	très bas niveau...
+            
+                        MessageType messageType = MessageType.None;
+            
+                        switch (msg)
+                        {
+                            case Win32Const.WM_SYSKEYDOWN:
+                                messageType = MessageType.KeyDown;
+                                break;
+                            case Win32Const.WM_SYSKEYUP:
+                                messageType = MessageType.KeyUp;
+                                break;
+                            case Win32Const.WM_KEYDOWN:
+                                messageType = MessageType.KeyDown;
+                                break;
+                            case Win32Const.WM_KEYUP:
+                                messageType = MessageType.KeyUp;
+                                break;
+                            case Win32Const.WM_CHAR:
+                                messageType = MessageType.KeyPress;
+                                break;
+                        }
+            
+                        Message message = new Message(messageType);
+            
+                        message.filterNoChildren = false;
+                        message.filterOnlyFocused = true;
+                        message.filterOnlyOnHit = false;
+            
+                        if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Alt) != 0)
+                        {
+                            message.modifiers |= ModifierKeys.Alt;
+                        }
+            
+                        if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Shift) != 0)
+                        {
+                            message.modifiers |= ModifierKeys.Shift;
+                        }
+            
+                        if (
+                            (System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Control) != 0
+                        )
+                        {
+                            message.modifiers |= ModifierKeys.Control;
+                        }
+            
+                        int rawKeyChar = (int)wParam;
+                        KeyCode rawKeyCode = (KeyCode)rawKeyChar;
+                        int rawLParam = (int)lParam;
+            
+                        if ((rawLParam & (1 << 24)) != 0)
+                        {
+                            //	This is an extended key which might require some remapping to get the real.
+            
+                            switch (rawKeyCode)
+                            {
+                                case KeyCode.Return:
+                                    rawKeyCode = KeyCode.NumericEnter;
+                                    break;
+            
+                                default:
+                                    break;
+                            }
+                        }
+            
+                        if (message.messageType == MessageType.KeyPress)
+                        {
+                            message.keyCode = Message.lastCode;
+                            message.keyChar = rawKeyChar;
+                        }
+                        else
+                        {
+                            Message.lastCode = rawKeyCode;
+                            message.keyCode = Message.lastCode;
+                        }
+            */
+            return message;
+        }
+
+        /*        internal static Message FromKeyEvent(
+                    MessageType type,
+                    System.Windows.Forms.KeyPressEventArgs e
+                )
+                {
+                    Message message = new Message(type);
+        
+                    message.keyChar = e.KeyChar;
+                    message.keyCode = Message.state.keyDownCode;
+        
+                    message.filterNoChildren = false;
+                    message.filterOnlyFocused = true;
+                    message.filterOnlyOnHit = false;
+        
+                    return message;
+                }
+        */
         internal static Message CreateDummyMouseMoveEvent()
         {
             Message message = new Message(MessageType.MouseMove);
@@ -1143,6 +1134,7 @@ namespace Epsitec.Common.Widgets
             internal int buttonDownX;
             internal int buttonDownY;
             internal Drawing.Point windowCursor;
+
             //internal Drawing.Point screenCursor;
             internal Window window;
             internal Window windowMouseDown;
