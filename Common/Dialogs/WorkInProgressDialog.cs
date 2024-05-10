@@ -339,7 +339,7 @@ namespace Epsitec.Common.Dialogs
 
             SimpleCallback callback = this.CloseDialog;
 
-            Drawing.Platform.Dispatcher.Invoke(callback);
+            callback.DynamicInvoke();
         }
 
         [Command(Res.CommandIds.Dialog.Generic.Cancel)]

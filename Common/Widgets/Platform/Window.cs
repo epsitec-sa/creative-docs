@@ -34,8 +34,6 @@ namespace Epsitec.Common.Widgets.Platform
             Window.dispatchWindowHandle = Window.dispatchWindow.Handle;
             */
 
-            Epsitec.Common.Drawing.Platform.Dispatcher.Initialize();
-
             //	The asynchronous binding mechanisms need to be able to execute
             //	code on the main application thread. Thus, we have to register
             //	the special thread invoker interface :

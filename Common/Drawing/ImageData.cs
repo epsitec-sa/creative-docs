@@ -589,7 +589,7 @@ namespace Epsitec.Common.Drawing
 
         private void NotifyChanged(ImageDataEventArgs e)
         {
-            ImageManager.AsyncInvoke(() => this.OnChanged(e));
+            this.OnChanged(e);
         }
 
         private void OnChanged(ImageDataEventArgs e)

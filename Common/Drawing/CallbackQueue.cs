@@ -34,8 +34,7 @@ namespace Epsitec.Common.Drawing
                 this.exitRequested = true;
                 this.waitHandle.Set();
 
-                Platform.Dispatcher.Join(this.thread);
-
+                this.thread.Join();
                 this.thread = null;
             }
         }

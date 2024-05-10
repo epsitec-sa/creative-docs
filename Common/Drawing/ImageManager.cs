@@ -619,27 +619,7 @@ namespace Epsitec.Common.Drawing
 
         public static void SyncInvoke(Callback callback)
         {
-            Platform.Dispatcher.Invoke(callback);
-        }
-
-        public static void AsyncInvoke(Callback callback)
-        {
-            if (Platform.Dispatcher.InvokeRequired)
-            {
-                if (ImageManager.callbackQueue != null)
-                {
-                    ImageManager.callbackQueue.Queue(
-                        delegate()
-                        {
-                            Platform.Dispatcher.Invoke(callback);
-                        }
-                    );
-                }
-            }
-            else
-            {
-                callback();
-            }
+            callback.DynamicInvoke();
         }
 
         private void ProcessWorkQueueItem()
