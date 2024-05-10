@@ -42,7 +42,7 @@ namespace Epsitec.Common.Drawing.Renderers
                 bitmap.GetPixelBuffer(),
                 (int)bitmap.Width,
                 (int)bitmap.Height,
-                -bitmap.Stride // negative stride value flips the image
+                bitmap.Stride // negative stride value flips the image
             );
         }
 
