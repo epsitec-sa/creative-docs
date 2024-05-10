@@ -90,19 +90,20 @@ namespace Epsitec.Common.Drawing
         }
 
         #region Public Override Properties
-        public override Bitmap BitmapImage =>
-            /*
-if (this.IsCacheEnabled) { }
-else
-{
-this.ClearCache();
-}
+        public override Bitmap BitmapImage
+        {
+            get
+            {
+                if (!this.IsCacheEnabled)
+                {
+                    this.ClearCache();
+                }
 
-this.ValidateCache();
+                this.ValidateCache();
 
-return this.cache;
-*/
-            throw new System.NotImplementedException();
+                return this.cache;
+            }
+        }
 
         public override Size Size
         {

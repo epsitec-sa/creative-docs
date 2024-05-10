@@ -153,12 +153,14 @@ namespace Epsitec.Common.Widgets.Platform
 
         public System.Drawing.Point PointToClient(System.Drawing.Point p)
         {
-            throw new NotImplementedException();
+            // bl-net8-cross delete or implement this conversion
+            return p;
         }
 
         public System.Drawing.Point PointToScreen(System.Drawing.Point p)
         {
-            throw new NotImplementedException();
+            // bl-net8-cross delete or implement this conversion
+            return p;
         }
 
         // --------------------------------------------------------------------------------------------
@@ -168,25 +170,6 @@ namespace Epsitec.Common.Widgets.Platform
             //	This invokes the static constructor...
         }
 
-        /*        private static void HandleSystemEventsUserPreferenceChanged(
-                    object sender,
-                    Microsoft.Win32.UserPreferenceChangedEventArgs e
-                )
-                {
-                    //	TODO: notifier d'autres classes du changement des préférences
-        
-                    switch (e.Category)
-                    {
-                        case Microsoft.Win32.UserPreferenceCategory.Locale:
-                            System.Threading.Thread.CurrentThread.CurrentCulture.ClearCachedData();
-                            System.Threading.Thread.CurrentThread.CurrentUICulture.ClearCachedData();
-                            break;
-        
-                        default:
-                            break;
-                    }
-                }
-        */
         private Window()
             : base(true, Font.FontManager)
         {
@@ -1183,24 +1166,18 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal string Text
         {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
-
-            //get { return TextLayout.ConvertToTaggedText(base.Text); }
-            get { return null; }
-            //set { base.Text = TextLayout.ConvertToSimpleText(value); }
-            set { }
+            get { return this.windowTitle; }
+            set
+            {
+                this.windowTitle = value;
+                this.SetCaption(value);
+            }
         }
 
         internal string Name
         {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
-
-            //get { return base.Name; }
-            get { return null; }
-            //set { base.Name = value; }
-            set { }
+            get { return this.windowName; }
+            set { this.windowName = value; }
         }
 
         internal Drawing.Image Icon
@@ -3243,6 +3220,8 @@ namespace Epsitec.Common.Widgets.Platform
         private bool filterKeyMessages;
         private double alpha = 1.0;
 
+        private string windowTitle;
+        private string windowName;
         private WindowMode windowMode = WindowMode.Window;
         private WindowStyles windowStyles;
         private WindowType windowType;
