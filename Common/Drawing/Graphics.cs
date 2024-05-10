@@ -177,11 +177,6 @@ namespace Epsitec.Common.Drawing
             get { return this.smoothRenderer; }
         }
 
-        public AntigrainSharp.FontManager FontManager
-        {
-            get { return this.context.FontManager; }
-        }
-
         public void ReplaceRasterizer(AbstractRasterizer rasterizer)
         {
             this.rasterizer = rasterizer;

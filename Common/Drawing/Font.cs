@@ -605,7 +605,7 @@ namespace Epsitec.Common.Drawing
         )
         {
             gctx.SetColor(color.R, color.G, color.B, color.A);
-            gctx.FontManager.SetFontSize(size);
+            Font.FontManager.SetFontSize(size);
             return gctx.DrawText(text, ox, oy);
         }
 
@@ -624,7 +624,7 @@ namespace Epsitec.Common.Drawing
         )
         {
             // TODO bl-net8-cross handle transform and scale parameters properly
-            gctx.FontManager.SetFont(this.openTypeFontIdentity.FilePath);
+            Font.FontManager.SetFont(this.openTypeFontIdentity.FilePath);
             gctx.SetColor(color.R, color.G, color.B, color.A);
             for (int i = 0; i < glyphs.Length; i++)
             {
@@ -632,7 +632,7 @@ namespace Epsitec.Common.Drawing
                 double px = x[i];
                 double py = y[i];
                 double size = sx[i];
-                gctx.FontManager.SetFontSize(size);
+                Font.FontManager.SetFontSize(size);
 
                 gctx.DrawGlyph(glyph, px, py);
             }
@@ -671,6 +671,7 @@ namespace Epsitec.Common.Drawing
 
         private static void SetupFonts()
         {
+            Font.SetFontManager(new FontManager());
             bool save = false;
 
             if (Font.fontArray == null)
