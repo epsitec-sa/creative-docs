@@ -20,12 +20,8 @@ namespace Epsitec.Common.Drawing
     /// il sait retrouver le DynamicImage correspondant à partir de la paire nom
     /// "xyz" et argument "abc").
     /// </summary>
-    public sealed class DynamicImage : Image
+    public sealed class DynamicImage : Image, System.IDisposable
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - implement ValidateCache (stub)
-        // ******************************************************************
         public DynamicImage(Drawing.Size size, DynamicImagePaintCallback callback)
             : this()
         {
@@ -362,21 +358,18 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        protected void Dispose(bool disposing)
+        public void Dispose()
         {
             System.Diagnostics.Debug.Assert(this.isDisposed == false);
 
             this.isDisposed = true;
 
-            if (disposing)
+            if (this.model == null)
             {
-                if (this.model == null)
-                {
-                    this.InvalidateCache();
-                }
+                this.InvalidateCache();
             }
 
-            //base.Dispose(disposing);
+            this.cache.Dispose();
         }
 
         private DynamicImage GetImageForKey(Key key)
@@ -409,96 +402,26 @@ namespace Epsitec.Common.Drawing
 
         private void ValidateCache()
         {
-            /*            //	Construit l'image bitmap...
-            
-                        DynamicImagePaintCallback callback = this.PaintCallback;
-            
-                        if ((this.cache == null) && (callback != null))
-                        {
-                            Size size = this.Size;
-            
-                            int dx = (int)(size.Width * this.Zoom);
-                            int dy = (int)(size.Height * this.Zoom);
-            
-                            size = new Size(dx, dy);
-            
-                            using (Drawing.Graphics graphics = new Drawing.Graphics())
-                            {
-                                graphics.SetPixmapSize(dx, dy);
-                                Drawing.DrawingBitmap pixmap = graphics.DrawingBitmap;
-                                pixmap.Clear();
-            
-                                if (
-                                    callback(
-                                        graphics,
-                                        size,
-                                        this.Argument,
-                                        this.paintStyle,
-                                        this.Color,
-                                        this.Adorner
-                                    )
-                                )
-                                {
-                                    int width,
-                                        height,
-                                        stride;
-                                    System.Drawing.Imaging.PixelFormat format;
-                                    System.IntPtr scan0;
-            
-                                    pixmap.GetMemoryLayout(
-                                        out width,
-                                        out height,
-                                        out stride,
-                                        out format,
-                                        out scan0
-                                    );
-                                    System.Diagnostics.Debug.Assert(width == dx);
-                                    System.Diagnostics.Debug.Assert(height == dy);
-            
-                                    System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(dx, dy, format);
-                                    System.Drawing.Rectangle bbox = new System.Drawing.Rectangle(0, 0, dx, dy);
-                                    System.Drawing.Imaging.ImageLockMode mode = System
-                                        .Drawing
-                                        .Imaging
-                                        .ImageLockMode
-                                        .WriteOnly;
-                                    System.Drawing.Imaging.BitmapData data = bitmap.LockBits(
-                                        bbox,
-                                        mode,
-                                        format
-                                    );
-            
-                                    try
-                                    {
-                                        unsafe
-                                        {
-                                            int num = stride / 4;
-                                            uint* src = (uint*)scan0.ToPointer();
-                                            uint* buf = (uint*)data.Scan0.ToPointer() + dy * num;
-            
-                                            for (int line = 0; line < dy; line++)
-                                            {
-                                                buf -= num;
-            
-                                                uint* dst = buf;
-            
-                                                for (int i = 0; i < num; i++)
-                                                {
-                                                    *dst++ = *src++;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    finally
-                                    {
-                                        bitmap.UnlockBits(data);
-                                    }
-            
-                                    this.cache = Bitmap.FromNativeBitmap(bitmap, this.Origin, size).BitmapImage;
-                                }
-                            }
-                        }
-            */
+            //	Construit l'image bitmap...
+            DynamicImagePaintCallback callback = this.PaintCallback;
+
+            if (this.cache != null || callback == null)
+            {
+                return;
+            }
+            Size size = this.Size;
+
+            uint width = (uint)(size.Width * this.Zoom);
+            uint height = (uint)(size.Height * this.Zoom);
+
+            size = new Size(width, height);
+
+            this.cache = new DrawingBitmap(width, height);
+
+            using (Graphics graphics = new Graphics(this.cache.GraphicContext))
+            {
+                callback(graphics, size, this.Argument, this.paintStyle, this.Color, this.Adorner);
+            }
         }
 
         private void ValidateGeometry() { }
@@ -522,7 +445,7 @@ namespace Epsitec.Common.Drawing
 
             if (this.cache != null)
             {
-                //this.cache.Dispose();
+                this.cache.Dispose();
                 this.cache = null;
             }
         }
@@ -598,7 +521,7 @@ namespace Epsitec.Common.Drawing
         private object adorner;
         private Point origin;
         private Size size;
-        private Bitmap cache;
+        private DrawingBitmap cache;
         private string argument;
     }
 }
