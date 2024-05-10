@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Settings
     public class PrintInfo : ISerializable
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross printing
         // - implement PrintName property (stub)
         // ********************************************************************
         public PrintInfo(Document document)

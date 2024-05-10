@@ -4,8 +4,8 @@
 #define USE_SPAN
 #define SIMPLECOPYPASTE
 
-using Epsitec.Common.Text.Exchange.HtmlParser;
 using System.Collections.Generic;
+using Epsitec.Common.Text.Exchange.HtmlParser;
 
 // Il faudrait trouver comment accéder à Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0)
 //
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text.Exchange
     public class Rosetta
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement TogglePasteMode and CopyText (stub)
         // ********************************************************************
         public Rosetta() { }

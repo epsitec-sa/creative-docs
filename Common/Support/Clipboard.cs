@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
     public class Clipboard
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement Clipboard (stub)
         // ********************************************************************
 
@@ -426,11 +426,11 @@ namespace Epsitec.Common.Support
             return buffer.ToString();
         }
 
-/*        public static ClipboardReadData CreateReadDataFromIDataObject(IDataObject data)
-        {
-            return new ClipboardReadData(data);
-        }
-*/
+        /*        public static ClipboardReadData CreateReadDataFromIDataObject(IDataObject data)
+                {
+                    return new ClipboardReadData(data);
+                }
+        */
         #region Clipboard setup
 
         static Clipboard()

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
     public sealed class ClipboardWriteData
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement ClipboardWriteData (stub)
         // ********************************************************************
         public ClipboardWriteData()
@@ -22,11 +22,11 @@ namespace Epsitec.Common.Support
             */
         }
 
-/*        internal IDataObject Data
-        {
-            get { return this.data; }
-        }
-*/
+        /*        internal IDataObject Data
+                {
+                    get { return this.data; }
+                }
+        */
         public void WriteObject(string format, object value)
         {
             /*

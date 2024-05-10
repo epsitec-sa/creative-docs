@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Exchange
     public class ClipboardData
     {
         // ******************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement ClipboardData (stub)
         // ******************************************************************
         public void Clear()

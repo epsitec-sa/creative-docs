@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Exchange
     public static class NativeHtmlClipboardReader
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement NativeHtmlClipboardReader (stub)
         // ********************************************************************
         public static string Read()

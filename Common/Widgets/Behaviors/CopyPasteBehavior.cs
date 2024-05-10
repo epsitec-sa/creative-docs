@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets.Behaviors
     public sealed class CopyPasteBehavior : DependencyObject
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement CopyPasteBehavior (stub)
         // ********************************************************************
         public CopyPasteBehavior(Widget host)

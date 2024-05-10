@@ -1,11 +1,11 @@
 #define SIMPLECOPYPASTE		// copier/coller tout simple
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Objects
     public abstract class AbstractText : Objects.Abstract
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement EditPaste method (stub)
         // ********************************************************************
         protected enum InternalOperation
@@ -466,77 +466,77 @@ namespace Epsitec.Common.Document.Objects
             return true;
 #else
 #if false
-			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
-			bool textInserted = false;
+            Support.Clipboard.ReadData data = Support.Clipboard.GetData();
+            bool textInserted = false;
 
-			if (data.IsCompatible (Clipboard.Format.MicrosoftHtml))
-			{
-				// colle du texte Html
-				TextFlow flow = this.TextFlow;
-				Text.TextStory story = flow.TextStory;
-				Text.TextNavigator navigator = flow.TextNavigator;
+            if (data.IsCompatible (Clipboard.Format.MicrosoftHtml))
+            {
+                // colle du texte Html
+                TextFlow flow = this.TextFlow;
+                Text.TextStory story = flow.TextStory;
+                Text.TextNavigator navigator = flow.TextNavigator;
 
-				Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
-				textInserted = true;
-			}
-			else if (data.IsCompatible (Clipboard.Format.Text))
-			{
-				string text = data.ReadText();
-				if (text != null)
-				{
-					text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
-					text = text.Replace ("\n", "\u2028");		//	LineSeparator
-					text = text.Replace ("\r", "\u2028");		//	LineSeparator
+                Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
+                textInserted = true;
+            }
+            else if (data.IsCompatible (Clipboard.Format.Text))
+            {
+                string text = data.ReadText();
+                if (text != null)
+                {
+                    text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
+                    text = text.Replace ("\n", "\u2028");		//	LineSeparator
+                    text = text.Replace ("\r", "\u2028");		//	LineSeparator
 
-					this.MetaNavigator.Insert (text);
-					textInserted = true;
-				}
-			}
+                    this.MetaNavigator.Insert (text);
+                    textInserted = true;
+                }
+            }
 
-			if (textInserted)
-				this.textFlow.NotifyAreaFlow ();
+            if (textInserted)
+                this.textFlow.NotifyAreaFlow ();
 
-			return textInserted;
+            return textInserted;
 #else
-			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
-			bool textInserted = false;
+            System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
+            bool textInserted = false;
 
-			if (ido.GetDataPresent (Common.Text.Exchange.EpsitecFormat.Format.Name, false))
-			{
-				// colle du texte natif
-				TextFlow flow = this.TextFlow;
-				Text.TextStory story = flow.TextStory;
-				Text.TextNavigator navigator = flow.TextNavigator;
+            if (ido.GetDataPresent (Common.Text.Exchange.EpsitecFormat.Format.Name, false))
+            {
+                // colle du texte natif
+                TextFlow flow = this.TextFlow;
+                Text.TextStory story = flow.TextStory;
+                Text.TextNavigator navigator = flow.TextNavigator;
 
-				//	TODO: utiliser un texte des ressources
-				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
-				this.MetaNavigator.DeleteSelection (); // TODO: ATTENTION plante au undo suivant
-				Text.Exchange.Rosetta.PasteNativeText (story, navigator);
-				
-				// provoquer le raffichage de la liste des styles en haut dans l'onglet "Text"
-				this.document.Notifier.NotifyTextStyleListChanged ();
-				
-				this.document.Modifier.OpletQueueValidateAction ();
-				textInserted = true;
-			}
-			else if (ido.GetDataPresent(System.Windows.Forms.DataFormats.Text, false))
-			{
-				string text = ido.GetData (System.Windows.Forms.DataFormats.Text, false) as string;
-				if (text != null)
-				{
-					text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
-					text = text.Replace ("\n", "\u2028");		//	LineSeparator
-					text = text.Replace ("\r", "\u2028");		//	LineSeparator
+                //	TODO: utiliser un texte des ressources
+                this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
+                this.MetaNavigator.DeleteSelection (); // TODO: ATTENTION plante au undo suivant
+                Text.Exchange.Rosetta.PasteNativeText (story, navigator);
+                
+                // provoquer le raffichage de la liste des styles en haut dans l'onglet "Text"
+                this.document.Notifier.NotifyTextStyleListChanged ();
+                
+                this.document.Modifier.OpletQueueValidateAction ();
+                textInserted = true;
+            }
+            else if (ido.GetDataPresent(System.Windows.Forms.DataFormats.Text, false))
+            {
+                string text = ido.GetData (System.Windows.Forms.DataFormats.Text, false) as string;
+                if (text != null)
+                {
+                    text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
+                    text = text.Replace ("\n", "\u2028");		//	LineSeparator
+                    text = text.Replace ("\r", "\u2028");		//	LineSeparator
 
-					this.MetaNavigator.Insert (text);
-					textInserted = true;
-				}
-			}
+                    this.MetaNavigator.Insert (text);
+                    textInserted = true;
+                }
+            }
 
-			if (textInserted)
-				this.textFlow.NotifyAreaFlow ();
+            if (textInserted)
+                this.textFlow.NotifyAreaFlow ();
 
-			return textInserted;
+            return textInserted;
 
 #endif
 #endif

@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.Objects
     public class TextBox2 : Objects.AbstractText, Text.ITextRenderer
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross printing
         // - reimplement printing support (removed)
         // ********************************************************************
         public TextBox2(Document document, Objects.Abstract model)

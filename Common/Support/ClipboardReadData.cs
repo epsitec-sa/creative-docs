@@ -11,24 +11,24 @@ namespace Epsitec.Common.Support
     public sealed class ClipboardReadData
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross clipboard
         // - implement ClipboardReadData (stub)
         // ********************************************************************
 
-/*        internal ClipboardReadData(IDataObject data)
-        {
-            if (data == null)
-            {
-                this.data = System.Windows.Forms.Clipboard.GetDataObject();
-                this.html = Epsitec.Common.Support.Platform.Win32.Clipboard.ReadHtmlFormat();
-            }
-            else
-            {
-                this.data = data;
-                this.html = null;
-            }
-        }
-*/
+        /*        internal ClipboardReadData(IDataObject data)
+                {
+                    if (data == null)
+                    {
+                        this.data = System.Windows.Forms.Clipboard.GetDataObject();
+                        this.html = Epsitec.Common.Support.Platform.Win32.Clipboard.ReadHtmlFormat();
+                    }
+                    else
+                    {
+                        this.data = data;
+                        this.html = null;
+                    }
+                }
+        */
         public string[] NativeFormats
         {
             //get { return this.data.GetFormats(false); }

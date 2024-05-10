@@ -9,7 +9,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
     public class Print : Abstract
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross printing
         // - reimplement printing support (removed)
         // ********************************************************************
 
