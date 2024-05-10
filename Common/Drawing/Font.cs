@@ -28,6 +28,10 @@ namespace Epsitec.Common.Drawing
         public static void Initialize()
         {
             //Font.useSegoe = System.Environment.OSVersion.Version.Major > 5;
+        }
+
+        static Font()
+        {
             Font.SetupFonts();
         }
 

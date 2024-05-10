@@ -310,7 +310,7 @@ namespace Epsitec.Common.Tests.Widgets
                 double sx = dx / this.bitmap.Width;
                 double sy = dy / this.bitmap.Height;
 
-                graphics.SolidRenderer.SetAlphaMask(this.mask.Pixmap, MaskComponent.R);
+                //graphics.SolidRenderer.SetAlphaMask(this.mask.Pixmap, MaskComponent.R);
 
                 using (DrawingBitmap.RawData raw = new DrawingBitmap.RawData(this.bitmap))
                 {

@@ -217,7 +217,7 @@ namespace Epsitec.Common.Tests.Widgets
         [Test]
         public void CheckMouseCursor()
         {
-            Image image = Bitmap.FromFile(@"Images\cursor.png");
+            Image image = Common.Drawing.Platform.NativeBitmap.FromFile(@"Images\cursor.png");
 
             Window window = new Window();
             window.ClientSize = new Size(200, 200);

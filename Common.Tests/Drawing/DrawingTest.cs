@@ -1,6 +1,6 @@
+using System;
 using Epsitec.Common.Drawing;
 using NUnit.Framework;
-using System;
 
 namespace Epsitec.Common.Tests.Drawing
 {
@@ -10,11 +10,7 @@ namespace Epsitec.Common.Tests.Drawing
         [Test]
         public void CheckPixmap()
         {
-            DrawingBitmap pixmap = new DrawingBitmap();
-
-            pixmap.Size = new System.Drawing.Size(200, 100);
-            pixmap.Size = new System.Drawing.Size(100, 50);
-
+            DrawingBitmap pixmap = new DrawingBitmap(200, 100);
             pixmap.Dispose();
         }
 

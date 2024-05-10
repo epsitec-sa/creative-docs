@@ -44,7 +44,9 @@ namespace Epsitec.Common.Tests.Drawing
         [Ignore("Reported broken by Marc Bettex")]
         public void CheckBitmapSave()
         {
-            Bitmap bitmap = Bitmap.FromFile(@"..\..\..\..\Images\picture.png").BitmapImage;
+            Bitmap bitmap = Common
+                .Drawing.Platform.NativeBitmap.FromFile(@"..\..\..\..\Images\picture.png")
+                .BitmapImage;
 
             byte[] data;
             System.IO.FileStream stream;

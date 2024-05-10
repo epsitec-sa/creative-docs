@@ -644,12 +644,12 @@ namespace Epsitec.Common.Tests.Drawing
         {
             WindowRoot root = sender as WindowRoot;
 
-            Graphics gfx = new Graphics();
-            gfx.SetPixmapSize(40, 40);
+            DrawingBitmap drawingBitmap = new DrawingBitmap(40, 40);
+            Graphics gfx = new Graphics(drawingBitmap.GraphicContext);
             gfx.SolidRenderer.Color = Color.FromRgb(1, 0.2, 0);
             gfx.PaintText(2, 8, "@", Font.DefaultFont, 40);
 
-            using (DrawingBitmap.RawData src = new DrawingBitmap.RawData(gfx.Pixmap))
+            using (DrawingBitmap.RawData src = new DrawingBitmap.RawData(drawingBitmap))
             {
                 for (int y = 0; y < src.Height; y++)
                 {
@@ -729,6 +729,7 @@ namespace Epsitec.Common.Tests.Drawing
 
         private void AlphaMask_PaintForeground(object sender, PaintEventArgs e)
         {
+            /*
             WindowRoot root = sender as WindowRoot;
 
             double cx = root.Client.Size.Width / 2;
@@ -776,6 +777,8 @@ namespace Epsitec.Common.Tests.Drawing
             e.Graphics.RenderSolid(Color.FromAlphaRgb(1.0, 0, 1, 0));
 
             mask.Dispose();
+            */
+            throw new System.NotImplementedException("Alpha mask not implemented");
         }
 
         private void Curve_PaintForeground(object sender, PaintEventArgs e)
@@ -897,7 +900,8 @@ namespace Epsitec.Common.Tests.Drawing
             double cy = root.Client.Size.Height / 2;
 
             PathAccumulationRasterizer r = new PathAccumulationRasterizer();
-            Graphics g = new Graphics();
+            DrawingBitmap bitmap = new DrawingBitmap(500, 500);
+            Graphics g = new Graphics(bitmap.GraphicContext);
             g.ReplaceRasterizer(r);
 
             g.RotateTransformDeg(15, cx, cy);
@@ -1414,11 +1418,9 @@ namespace Epsitec.Common.Tests.Drawing
             e.Graphics.Color = Color.FromRgb(0.5, 0.5, 0.5);
             e.Graphics.PaintSurface(Path.FromRectangle(cx + 0, cy + 20, 120, 40));
 
-            Graphics draft_graphics = new Graphics();
+            DrawingBitmap draft_pixmap = new DrawingBitmap(40, 40);
+            Graphics draft_graphics = new Graphics(draft_pixmap.GraphicContext);
 
-            draft_graphics.SetPixmapSize(40, 40);
-
-            DrawingBitmap draft_pixmap = draft_graphics.Pixmap;
             Image draft_bitmap = Bitmap.FromPixmap(draft_pixmap);
 
             draft_graphics.SolidRenderer.ClearAlphaRgb(0.0, 1.0, 1.0, 1.0);
@@ -1559,6 +1561,7 @@ namespace Epsitec.Common.Tests.Drawing
 
         private void Image100dpi200dpi_PaintForeground(object sender, PaintEventArgs e)
         {
+            /*
             WindowRoot root = sender as WindowRoot;
 
             //	L'image fait 200 x 200 pixels
@@ -1586,6 +1589,8 @@ namespace Epsitec.Common.Tests.Drawing
             e.Graphics.SolidRenderer.Color = Color.FromBrightness(0);
             e.Graphics.PaintText(10, 10, string.Format("{0} dpi", bitmap_1.DpiX), font, 12);
             e.Graphics.PaintText(210, 10, string.Format("{0} dpi", bitmap_2.DpiX), font, 12);
+            */
+            throw new System.NotImplementedException("Bitmap dpi not implemented");
         }
 
         private void Special4Fill_PaintForeground(object sender, PaintEventArgs e)
