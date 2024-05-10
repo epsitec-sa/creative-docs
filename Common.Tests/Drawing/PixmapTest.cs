@@ -12,11 +12,6 @@ namespace Epsitec.Common.Tests.Drawing
         public void Initialization()
         {
             Epsitec.Common.Drawing.Font.Initialize();
-        }
-
-        [Test]
-        public void AutomatedTestEnvironment()
-        {
             Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
         }
 

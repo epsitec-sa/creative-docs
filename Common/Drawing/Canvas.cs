@@ -8,10 +8,6 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public class Canvas : Image, IDisposable
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - reconnect the bitmap cache
-        // ******************************************************************
 
         internal Canvas(byte[] data)
         {
@@ -264,7 +260,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public Image GetImageForPaintStyle(GlyphPaintStyle style)
+        public override Image GetImageForPaintStyle(GlyphPaintStyle style)
         {
             //	Cherche l'image correspondant à un style.
             System.Diagnostics.Debug.Assert(this.effects != null);
@@ -404,8 +400,6 @@ namespace Epsitec.Common.Drawing
                 Canvas.globalIconCache.Remove(this);
                 this.InvalidateCache();
             }
-
-            //base.Dispose(disposing);
         }
 
         public void RemoveFromCache()
