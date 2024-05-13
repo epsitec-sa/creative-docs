@@ -45,6 +45,7 @@ namespace Epsitec.Common.DocumentEditor
             }
 
             Application.application.Window.Run();
+            Application.application.Dispose();
         }
 
         public Application(DocumentType type)

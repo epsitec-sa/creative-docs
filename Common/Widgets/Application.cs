@@ -236,6 +236,7 @@ namespace Epsitec.Common.Widgets
 
         protected override void Dispose(bool disposing)
         {
+            this.window.Dispose();
             base.Dispose(disposing);
         }
 

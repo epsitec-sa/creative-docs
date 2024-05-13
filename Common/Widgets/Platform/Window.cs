@@ -9,10 +9,10 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets.Platform
 {
     /// <summary>
-    /// La classe Platform.Window fait le lien avec les WinForms.
+    /// La classe Platform.Window fait le lien avec la SDL
     /// </summary>
     internal class Window
-        : AntigrainSharp.AggWindow,
+        : SDLWrapper.SDLWindow,
             Types.BindingAsyncOperation.IApplicationThreadInvoker
     {
         // ******************************************************************
@@ -51,6 +51,7 @@ namespace Epsitec.Common.Widgets.Platform
             System.Console.WriteLine("Delete window");
         }
 
+        /*
         public override void OnDraw(AntigrainSharp.GraphicContext gctx)
         {
             Rectangle repaint = Rectangle.MaxValue;
@@ -111,6 +112,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.clientSize = new System.Drawing.Size(sx, sy);
             this.ForceRedraw();
         }
+        */
 
         // --------------------------------------------------------------------------------------------
         //                             System.Windows.Forms.Form stubs
@@ -169,7 +171,7 @@ namespace Epsitec.Common.Widgets.Platform
         }
 
         private Window()
-            : base(true, Font.FontManager)
+            : base("Creativedocs", 800, 600)
         {
             this.isSyncPaintDisabled = new SafeCounter();
             this.isSyncUpdating = new SafeCounter();
@@ -1168,7 +1170,8 @@ namespace Epsitec.Common.Widgets.Platform
             set
             {
                 this.windowTitle = value;
-                this.SetCaption(value);
+                // bl-net8-cross
+                //this.SetCaption(value);
             }
         }
 
@@ -3126,6 +3129,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void ShowWindow()
         {
+            /*
             bool ok = this.Init(
                 (uint)this.clientSize.Width,
                 (uint)this.clientSize.Height,
@@ -3135,6 +3139,8 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 throw new Exception("Failed to initialize antigrain window");
             }
+            */
+            this.Show();
             this.UpdateLayeredWindow();
         }
 

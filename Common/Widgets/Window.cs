@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
     /// n'est pas un widget en tant que tel: Window.Root définit le widget à la
     /// racine de la fenêtre.
     /// </summary>
-    public class Window : Types.DependencyObject, Support.Data.IContainer, Support.IIsDisposed
+    public class Window : Types.DependencyObject, Support.Data.IContainer, System.IDisposable
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -2694,6 +2694,12 @@ namespace Epsitec.Common.Widgets
                     this.window.MinimumSize = size;
                 }
             }
+        }
+
+        public new void Dispose()
+        {
+            base.Dispose();
+            this.window.Dispose();
         }
 
         #region PostPaint related definitions

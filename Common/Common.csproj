@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.6.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="Sayers.SDL2.Core" Version="1.0.11" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\grafix\AggUI\AntigrainSharp.csproj" />
@@ -498,7 +499,7 @@
     <None   Include="Drawing\NativeIcon.cs" />
     -->
     <Compile Remove="Drawing\NativeTextRenderer.cs" />
-    <None   Include="Drawing\NativeTextRenderer.cs" />
+    <None Include="Drawing\NativeTextRenderer.cs" />
     <Compile Remove="Drawing\Octree.cs" />
     <None Include="Drawing\Octree.cs" />
     <Compile Remove="Drawing\OctreeQuantizer.cs" />
