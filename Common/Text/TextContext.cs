@@ -308,8 +308,6 @@ namespace Epsitec.Common.Text
             {
                 OpenType.FontCollection.FontListFilter = null;
                 TextContext.fontCollection = OpenType.FontCollection.Default;
-                TextContext.fontCollection.RefreshCache(callback);
-                TextContext.fontCache = new Dictionary<string, OpenType.Font>();
             }
         }
 
@@ -370,7 +368,7 @@ namespace Epsitec.Common.Text
 
             if (id != null)
             {
-                TextContext.CreateOrGetFontFromCache(
+                TextContext.CreateOrGetFontFromFontCollection(
                     id.InvariantFaceName,
                     id.InvariantStyleName,
                     out font
@@ -384,7 +382,11 @@ namespace Epsitec.Common.Text
         {
             OpenType.Font font;
 
-            TextContext.CreateOrGetFontFromCache(invariantFaceName, invariantStyleName, out font);
+            TextContext.CreateOrGetFontFromFontCollection(
+                invariantFaceName,
+                invariantStyleName,
+                out font
+            );
 
             return font;
         }
@@ -453,7 +455,7 @@ namespace Epsitec.Common.Text
                 string fontFace = fontProperty.FaceName;
                 string fontStyle = fontProperty.StyleName;
 
-                TextContext.CreateOrGetFontFromCache(fontFace, fontStyle, out font);
+                TextContext.CreateOrGetFontFromFontCollection(fontFace, fontStyle, out font);
             }
             else
             {
@@ -2009,24 +2011,14 @@ namespace Epsitec.Common.Text
             this.layoutList.NewEngine("*", typeof(Layout.LineEngine));
         }
 
-        private static void CreateOrGetFontFromCache(
+        private static void CreateOrGetFontFromFontCollection(
             string fontFace,
             string fontStyle,
             out OpenType.Font font
         )
         {
             TextContext.InitializeFontCollection(null);
-
-            string fullName = OpenType.FontName.GetFullName(fontFace, fontStyle);
-
-            lock (TextContext.fontCache)
-            {
-                if (TextContext.fontCache.TryGetValue(fullName, out font) == false)
-                {
-                    font = TextContext.fontCollection.CreateFont(fontFace, fontStyle);
-                    TextContext.fontCache[fullName] = font;
-                }
-            }
+            font = TextContext.fontCollection.CreateFont(fontFace, fontStyle);
         }
 
         private void InternalGetFontAndSize(
@@ -2103,7 +2095,6 @@ namespace Epsitec.Common.Text
         private bool isPropertiesPropertyEnabled = true;
 
         static OpenType.FontCollection fontCollection;
-        static Dictionary<string, OpenType.Font> fontCache;
 
         private System.Collections.Hashtable resources;
 

@@ -677,7 +677,6 @@ namespace Epsitec.Common.Drawing
         private static void SetupFonts()
         {
             Font.SetFontManager(new FontManager());
-            bool save = false;
 
             if (Font.fontArray == null)
             {
@@ -687,7 +686,6 @@ namespace Epsitec.Common.Drawing
                 );
 
                 Font.fontCollection = OpenType.FontCollection.Default;
-                Font.fontCollection.LoadFromCache();
 
                 var fonts = OpenType.Platform.FontFinder.FindFontIdentities();
                 Font.fontCollection.Initialize(fonts);
@@ -705,12 +703,6 @@ namespace Epsitec.Common.Drawing
                     "Epsitec.Common.Drawing.Font"
                 );
             }
-
-            if (save)
-            {
-                Font.fontCollection.SaveToCache();
-            }
-
             Font.fontCollection.FontIdentityDefined += Font.HandleFontCollectionFontIdentityDefined;
         }
 

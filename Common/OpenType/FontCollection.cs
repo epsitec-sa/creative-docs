@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection.Metadata.Ecma335;
-using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.OpenType
 {
@@ -21,12 +19,6 @@ namespace Epsitec.Common.OpenType
         /// </summary>
         public FontCollection()
         {
-            /*
-            this.fontDict = new Dictionary<string, FontIdentity>();
-            this.fullDict = new Dictionary<string, FontIdentity>();
-            this.fuidDict = new Dictionary<string, FontIdentity>();
-            this.fullList = new List<FontIdentity>();
-            */
             this.fontDict = new Dictionary<string, FontIdentity>();
             this.fallbackFontIdentity = null;
         }
@@ -59,35 +51,6 @@ namespace Epsitec.Common.OpenType
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to load True Type Collections
-        /// (TTC files).
-        /// </summary>
-        /// <value>
-        ///		<c>true</c> if True Type Collections should be loaded; otherwise, <c>false</c>.
-        /// </value>
-        public static bool LoadTrueTypeCollections
-        {
-            get
-            {
-                /*
-                
-                return FontCollection.loadTtc;
-            
-                */
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-                /*
-                
-                FontCollection.loadTtc = value;
-            
-                */
-                throw new System.NotImplementedException();
-            }
-        }
-
-        /// <summary>
         /// Gets the default font collection object.
         /// </summary>
         /// <value>The default font collection object.</value>
@@ -109,12 +72,6 @@ namespace Epsitec.Common.OpenType
             set { FontCollection.fontListFilter = value; }
         }
 
-        /// <summary>
-        /// Initializes this font collection object. If font identities have
-        /// already been loaded by <see cref="LoadFromCache"/>, they will be
-        /// updated.
-        /// </summary>
-        /// <returns><c>true</c> if the font collection has changed; otherwise, <c>false</c>.</returns>
         public void Initialize(IEnumerable<FontIdentity> fontIdentities)
         {
             foreach (FontIdentity fontIdentity in fontIdentities)
@@ -155,86 +112,8 @@ namespace Epsitec.Common.OpenType
                 }
             }
             */
+            throw new System.NotImplementedException();
             return false;
-        }
-
-        /// <summary>
-        /// Saves the current state of the font collection to the disk cache.
-        /// </summary>
-        /// <returns><c>true</c> if the cache could be written; otherwise, <c>false</c>.</returns>
-        public bool SaveToCache()
-        {
-            return this.SaveToCache(null);
-        }
-
-        /// <summary>
-        /// Saves the current state of the font collection to the disk cache.
-        /// </summary>
-        /// <param name="callback">A callback called on every saved font identity.</param>
-        /// <returns><c>true</c> if the cache could be written; otherwise, <c>false</c>.</returns>
-        public bool SaveToCache(FontIdentityCallback callback)
-        {
-            /*
-            lock (this.localExclusion)
-            {
-                return this.LockedSaveToCache(callback);
-            }
-            */
-            return true;
-        }
-
-        /// <summary>
-        /// Loads the font identity information from the disk cache.
-        /// </summary>
-        public void LoadFromCache()
-        {
-            /*
-            lock (this.localExclusion)
-            {
-                this.LockedLoadFromCache();
-            }
-            */
-        }
-
-        /// <summary>
-        /// Enumerates the font families.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<string> GetFontFamilies()
-        {
-            /*
-            lock (this.localExclusion)
-            {
-                return (string[])this.families.Clone();
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets the <see cref="FontIdentity"/> with the specified unique font
-        /// identifier.
-        /// </summary>
-        /// <returns>The <see cref="FontIdentity"/> or <c>null</c> if it does
-        /// not exist in the collection.</returns>
-        public FontIdentity FindFontByUniqueFontIdentifier(string fuid)
-        {
-            /*
-            lock (this.localExclusion)
-            {
-                FontIdentity value;
-
-                if (this.fuidDict.TryGetValue(fuid, out value))
-                {
-                    return value;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
