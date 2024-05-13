@@ -1,13 +1,13 @@
-using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
-using Epsitec.Common.Support;
-using Epsitec.Common.Text;
-using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.IO;
+using Epsitec.Common.Support;
+using Epsitec.Common.Text;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document
 {
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document
     public class Document : ISerializable
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross printing
         // - reimplement printing in Document (removed)
         // ********************************************************************
         public enum IOType
@@ -250,12 +250,12 @@ namespace Epsitec.Common.Document
                 this.settings = null;
             }
 
-/*            if (this.printer != null)
-            {
-                this.printer.Dispose();
-                this.printer = null;
-            }
-*/
+            /*            if (this.printer != null)
+                        {
+                            this.printer.Dispose();
+                            this.printer = null;
+                        }
+            */
             if (this.exportPdf != null)
             {
                 this.exportPdf.Dispose();
@@ -2546,19 +2546,19 @@ namespace Epsitec.Common.Document
             }
         }
 
-/*        public void Print(Common.Dialogs.PrintDialog dp)
-        {
-            //	Imprime le document.
-            System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
-            this.Modifier.DeselectAll();
-
-            if (this.imageCache != null)
-            {
-                this.imageCache.SetResolution(ImageCacheResolution.High);
-            }
-            this.printer.Print(dp);
-        }
-*/
+        /*        public void Print(Common.Dialogs.PrintDialog dp)
+                {
+                    //	Imprime le document.
+                    System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+                    this.Modifier.DeselectAll();
+        
+                    if (this.imageCache != null)
+                    {
+                        this.imageCache.SetResolution(ImageCacheResolution.High);
+                    }
+                    this.printer.Print(dp);
+                }
+        */
         public string Export(string filename)
         {
             /*
@@ -3602,6 +3602,7 @@ namespace Epsitec.Common.Document
         protected Wrappers wrappers;
         protected Notifier notifier;
         protected Printer printer;
+
         //protected Common.Dialogs.PrintDialog printDialog;
         protected PDF.Export exportPdf;
         protected DocumentDialogs dialogs;
