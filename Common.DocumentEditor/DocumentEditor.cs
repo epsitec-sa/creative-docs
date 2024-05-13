@@ -1,12 +1,12 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Soap;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Soap;
 
 namespace Epsitec.Common.DocumentEditor
 {
@@ -150,7 +150,6 @@ namespace Epsitec.Common.DocumentEditor
             this.dlgReplace.Closed += this.HandleDlgClosed;
             this.dlgSettings.Closed += this.HandleDlgClosed;
 
-            this.StartCheck(false);
             this.InitCommands();
             this.CreateLayout();
 
@@ -334,8 +333,6 @@ namespace Epsitec.Common.DocumentEditor
             {
                 this.CurrentDocument.Notifier.NotifyOriginChanged();
             }
-
-            this.EndCheck(false);
         }
 
         public void AsyncNotify()
@@ -1787,6 +1784,8 @@ namespace Epsitec.Common.DocumentEditor
             }
             return true;
             */
+            // bl-net8-cross
+            throw new System.NotImplementedException();
             return false;
         }
         #endregion
@@ -1975,6 +1974,8 @@ namespace Epsitec.Common.DocumentEditor
 
             this.dlgPrint.Show();
             */
+            // bl-net8-cross printing
+            throw new System.NotImplementedException();
         }
 
         [Command("Export")]
@@ -2273,6 +2274,8 @@ namespace Epsitec.Common.DocumentEditor
             string err = this.PaletteRead(dialog.FileName);
             this.DialogError(err);
             */
+            // bl-net8-cross
+            throw new System.NotImplementedException();
         }
 
         [Command(Common.Widgets.Res.CommandIds.ColorPalette.Save)]
@@ -2302,6 +2305,8 @@ namespace Epsitec.Common.DocumentEditor
             string err = this.PaletteWrite(dialog.FileName);
             this.DialogError(err);
             */
+            // bl-net8-cross
+            throw new System.NotImplementedException();
         }
 
         public string PaletteRead(string filename)
