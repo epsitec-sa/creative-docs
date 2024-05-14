@@ -1,13 +1,13 @@
 //	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
-using System.Collections.Generic;
-using System.Linq;
 
 [assembly: DependencyClass(typeof(Widget))]
 
@@ -63,7 +63,6 @@ namespace Epsitec.Common.Widgets
                 {
                     FontPreviewer.Initialize();
 
-                    Platform.Window.Initialize();
                     //Res.Initialize(); (bl-net8-cross)
                     ApplicationCommands.Initialize();
 
@@ -3019,14 +3018,15 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine ("          widget ="+this.Bounds);
 			}
 #endif
-/*            if (this.DebugActive)
-            {
-                cycles = Drawing.Agg.Library.Cycles - cycles;
-                System.Diagnostics.Debug.WriteLine(
-                    string.Format("{0}: {1} us @ 1.7GHz", this.ToString(), cycles / 1700)
-                );
-            }
-*/        }
+            /*            if (this.DebugActive)
+                        {
+                            cycles = Drawing.Agg.Library.Cycles - cycles;
+                            System.Diagnostics.Debug.WriteLine(
+                                string.Format("{0}: {1} us @ 1.7GHz", this.ToString(), cycles / 1700)
+                            );
+                        }
+            */
+        }
 
         protected virtual WidgetPaintState GetPaintState()
         {

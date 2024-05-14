@@ -20,29 +20,6 @@ namespace Epsitec.Common.Widgets.Platform
         // TODO bl-net8-cross
         // implement Window (stub)
         // ******************************************************************
-        static Window()
-        {
-            //RestartManager.Setup();
-
-            /* REMOVED (bl-net-8-cross)
-            Microsoft.Win32.SystemEvents.UserPreferenceChanged +=
-                Window.HandleSystemEventsUserPreferenceChanged;
-            */
-
-            /* REMOVED (bl-net8-cross)
-            Window.dispatchWindow = new Window();
-            Window.dispatchWindow.CreateControl();
-            Window.dispatchWindowHandle = Window.dispatchWindow.Handle;
-            */
-
-            //	The asynchronous binding mechanisms need to be able to execute
-            //	code on the main application thread. Thus, we have to register
-            //	the special thread invoker interface :
-
-            /* REMOVED (bl-net8-cross)
-            Types.BindingAsyncOperation.DefineApplicationThreadInvoker(Window.dispatchWindow);
-            */
-        }
 
         // --------------------------------------------------------------------------------------------
         //                             SDLWindow overrides
@@ -157,17 +134,9 @@ namespace Epsitec.Common.Widgets.Platform
 
         public bool AllowDrop { get; set; }
 
-        public System.Drawing.Rectangle Bounds { get; set; }
-
         public bool Capture { get; set; }
 
         public bool Focused { get; }
-
-        public System.Drawing.Point Location { get; set; }
-
-        public bool ShowIcon { get; set; }
-
-        public System.Drawing.Size Size { get; set; }
 
         public bool Focus()
         {
@@ -192,11 +161,6 @@ namespace Epsitec.Common.Widgets.Platform
         }
 
         // --------------------------------------------------------------------------------------------
-
-        public static void Initialize()
-        {
-            //	This invokes the static constructor...
-        }
 
         private Window()
             : base("Creativedocs", 800, 600)
@@ -981,7 +945,7 @@ namespace Epsitec.Common.Widgets.Platform
             get { return new System.Drawing.Size(this.Width, this.Height); }
         }
 
-        public System.Drawing.Size MinimumSize
+        public Drawing.Size MinimumSize
         {
             // bl-net8-cross
             // old thing from winforms, see if still usefull
@@ -3231,7 +3195,7 @@ namespace Epsitec.Common.Widgets.Platform
         private Drawing.Rectangle windowBounds;
         private Drawing.Point paintOffset;
         private System.Drawing.Rectangle formBounds;
-        private System.Drawing.Size minimumSize;
+        private Drawing.Size minimumSize;
         private bool formBoundsSet = false;
         private bool onResizeEvent = false;
 

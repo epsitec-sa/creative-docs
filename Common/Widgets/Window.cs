@@ -736,12 +736,6 @@ namespace Epsitec.Common.Widgets
             set { this.window.Icon = value; }
         }
 
-        public bool ShowWindowIcon
-        {
-            get { return this.window.ShowIcon; }
-            set { this.window.ShowIcon = value; }
-        }
-
         /// <summary>
         /// Gets or sets the window styles. See <see cref="WindowRoot.WindowStyles"/>
         /// if you need to set this value.
@@ -812,34 +806,6 @@ namespace Epsitec.Common.Widgets
             get { return Window.windows.ToArray(); }
         }
 
-        public Drawing.Rectangle PlatformBounds
-        {
-            get { return new Drawing.Rectangle(this.window.Bounds); }
-        }
-
-        public Drawing.Point PlatformLocation
-        {
-            get { return new Drawing.Point(this.window.Location); }
-            set
-            {
-                this.windowLocationSet = true;
-                this.window.Location = new System.Drawing.Point(
-                    (int)(value.X + 0.5),
-                    (int)(value.Y + 0.5)
-                );
-            }
-        }
-
-        /*        internal Platform.Window PlatformWindow
-                {
-                    get { return this.window; }
-                }
-        */
-        /*        public System.Windows.Forms.IWin32Window PlatformWindowObject
-                {
-                    get { return this.window; }
-                }
-        */
         public Drawing.Point WindowLocation
         {
             get { return this.window.WindowLocation; }
@@ -2684,15 +2650,7 @@ namespace Epsitec.Common.Widgets
                 int width = (int)(this.root.RealMinSize.Width + 0.5);
                 int height = (int)(this.root.RealMinSize.Height + 0.5);
 
-                width += this.window.Size.Width - this.window.ClientSize.Width;
-                height += this.window.Size.Height - this.window.ClientSize.Height;
-
-                System.Drawing.Size size = new System.Drawing.Size(width, height);
-
-                if (this.window.MinimumSize != size)
-                {
-                    this.window.MinimumSize = size;
-                }
+                this.window.MinimumSize = new Drawing.Size(width, height);
             }
         }
 
