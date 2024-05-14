@@ -193,11 +193,6 @@ namespace Epsitec.Common.Widgets
             this.window.MakeButtonlessWindow();
         }
 
-        public void MakeTitlelessResizableWindow()
-        {
-            this.window.MakeTitlelessResizableWindow();
-        }
-
         public void MakeSecondaryWindow()
         {
             this.window.MakeSecondaryWindow();
@@ -587,7 +582,7 @@ namespace Epsitec.Common.Widgets
 
         public bool IsSyncPaintDisabled
         {
-            get { return (this.window == null) || (this.window.PreventSyncPaint); }
+            get { return (this.window == null); }
         }
 
         public bool IsVisible

@@ -2,9 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System;
-using System.Collections.Generic;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets.Platform
@@ -165,20 +163,11 @@ namespace Epsitec.Common.Widgets.Platform
 
         // --------------------------------------------------------------------------------------------
 
-        private Window()
-            : base("Creativedocs", 800, 600)
-        {
-            Console.WriteLine("private Window()");
-            this.isSyncPaintDisabled = new SafeCounter();
-            this.isSyncUpdating = new SafeCounter();
-            this.isWndProcHandlingRestricted = new SafeCounter();
-        }
-
         internal Window(
             Epsitec.Common.Widgets.Window window,
             System.Action<Window> platformWindowSetter
         )
-            : this()
+            : base("Creativedocs", 800, 600)
         {
             Console.WriteLine("internal Window()");
             this.widgetWindow = window;
@@ -221,21 +210,6 @@ namespace Epsitec.Common.Widgets.Platform
             //this.ReallocatePixmap();
 
             WindowList.Insert(this);
-        }
-
-        internal static bool IsInAnyWndProc
-        {
-            get
-            {
-                if (Window.globalWndProcDepth > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
         }
 
         internal void MakeTopLevelWindow()
@@ -341,11 +315,6 @@ namespace Epsitec.Common.Widgets.Platform
             throw new NotImplementedException();
         }
 
-        internal void MakeTitlelessResizableWindow()
-        {
-            this.specialMode = SpecialMode.Titleless;
-        }
-
         internal void MakeToolWindow()
         {
             /*
@@ -381,12 +350,6 @@ namespace Epsitec.Common.Widgets.Platform
         internal void ResetHostingWidgetWindow()
         {
             this.widgetWindowDisposed = true;
-        }
-
-        private enum SpecialMode
-        {
-            None,
-            Titleless,
         }
 
         internal void HideWindow()
@@ -686,7 +649,10 @@ namespace Epsitec.Common.Widgets.Platform
 
         private void UpdateWindowTypeAndStyles()
         {
-            /*
+            // bl-net8-cross
+            // refaire la gestion des fenêtres avec ou sans bordure
+            // il faut aussi refaire les Make______Window()
+
             var windowStyles = this.WindowStyles;
 
             switch (this.windowType)
@@ -694,67 +660,57 @@ namespace Epsitec.Common.Widgets.Platform
                 case WindowType.Document:
                     if ((windowStyles & WindowStyles.Frameless) != 0)
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                     }
                     else if ((windowStyles & WindowStyles.CanResize) == 0)
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
                     }
                     else
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     }
-                    this.ShowInTaskbar = true;
+                    // this.ShowInTaskbar = true;
                     break;
 
                 case WindowType.Dialog:
                     if ((windowStyles & WindowStyles.Frameless) != 0)
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                     }
                     else if ((windowStyles & WindowStyles.CanResize) == 0)
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
                     }
                     else
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     }
-                    this.ShowInTaskbar = false;
+                    // this.ShowInTaskbar = false;
                     break;
 
                 case WindowType.Palette:
                     if ((windowStyles & WindowStyles.Frameless) != 0)
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                     }
                     else if ((windowStyles & WindowStyles.CanResize) == 0)
                     {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
                     }
                     else
                     {
-                        this.FormBorderStyle = System
-                            .Windows
-                            .Forms
-                            .FormBorderStyle
-                            .SizableToolWindow;
+                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
                     }
-                    this.ShowInTaskbar = false;
+                    // this.ShowInTaskbar = false;
                     break;
             }
 
-            this.MinimizeBox = ((windowStyles & WindowStyles.CanMinimize) != 0);
-            this.MaximizeBox = ((windowStyles & WindowStyles.CanMaximize) != 0);
-            this.HelpButton = ((windowStyles & WindowStyles.HasHelpButton) != 0);
-            this.ControlBox = ((windowStyles & WindowStyles.HasCloseButton) != 0);
-            */
+            //this.MinimizeBox = ((windowStyles & WindowStyles.CanMinimize) != 0);
+            //this.MaximizeBox = ((windowStyles & WindowStyles.CanMaximize) != 0);
+            //this.HelpButton = ((windowStyles & WindowStyles.HasHelpButton) != 0);
+            //this.ControlBox = ((windowStyles & WindowStyles.HasCloseButton) != 0);
             throw new NotImplementedException();
-        }
-
-        internal bool PreventSyncPaint
-        {
-            get { return this.isSyncPaintDisabled.IsNotZero; }
         }
 
         internal bool PreventAutoClose
@@ -1326,11 +1282,6 @@ namespace Epsitec.Common.Widgets.Platform
             get { return this.widgetWindow; }
         }
 
-        internal static bool IsApplicationActive
-        {
-            get { return Window.isAppActive; }
-        }
-
         internal static bool UseWaitCursor
         {
             // bl-net8-cross
@@ -1898,18 +1849,6 @@ namespace Epsitec.Common.Widgets.Platform
             throw new System.NotImplementedException();
         }
 
-        internal void StartSizeMove()
-        {
-            this.IsSizeMoveInProgress = true;
-            this.isSyncPaintDisabled.Increment();
-        }
-
-        internal void StopSizeMove()
-        {
-            this.IsSizeMoveInProgress = false;
-            this.isSyncPaintDisabled.Decrement();
-        }
-
         internal static void SendSynchronizeCommandCache()
         {
             // bl-net8-cross
@@ -2051,19 +1990,6 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return false;
-        }
-
-        private void EnterWndProc()
-        {
-            this.wndProcDepth++;
-            System.Threading.Interlocked.Increment(ref Window.globalWndProcDepth);
-        }
-
-        private void ExitWndProc()
-        {
-            System.Diagnostics.Debug.Assert(this.wndProcDepth > 0);
-            this.wndProcDepth--;
-            System.Threading.Interlocked.Decrement(ref Window.globalWndProcDepth);
         }
 
         private void ReleaseCaptureAndSendMessage(uint ht)
@@ -2431,8 +2357,6 @@ namespace Epsitec.Common.Widgets.Platform
         private bool isNoActivate;
         private bool isToolWindow;
 
-        private SpecialMode specialMode;
-
         private bool preventClose;
         private bool preventQuit;
         private bool filterMouseMessages;
@@ -2445,17 +2369,8 @@ namespace Epsitec.Common.Widgets.Platform
         private WindowStyles windowStyles;
         private WindowType windowType;
 
-        private static int globalWndProcDepth;
-
-        private int wndProcDepth;
-
         private bool isSizeMoveInProgress;
-        private readonly SafeCounter isSyncPaintDisabled;
-        private readonly SafeCounter isSyncUpdating;
-        private readonly SafeCounter isWndProcHandlingRestricted;
 
         private WindowPlacement windowPlacement;
-
-        private static bool isAppActive;
     }
 }
