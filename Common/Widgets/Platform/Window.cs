@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets.Platform
@@ -44,22 +45,42 @@ namespace Epsitec.Common.Widgets.Platform
         }
 
         // --------------------------------------------------------------------------------------------
-        //                             AntigrainSharp.AggWindow overrides
+        //                             SDLWindow overrides
         // --------------------------------------------------------------------------------------------
         ~Window()
         {
             System.Console.WriteLine("Delete window");
         }
 
-        /*
-        public override void OnDraw(AntigrainSharp.GraphicContext gctx)
+        protected override void RecreateGraphicBuffer(
+            IntPtr pixels,
+            int width,
+            int height,
+            int stride
+        )
+        {
+            if (this.renderingBuffer != null)
+            {
+                this.renderingBuffer.Dispose();
+            }
+            this.renderingBuffer = new AntigrainSharp.GraphicBufferExternalData(
+                pixels,
+                (uint)width,
+                (uint)height,
+                -stride,
+                Font.FontManager
+            );
+        }
+
+        protected override void OnDraw()
         {
             Rectangle repaint = Rectangle.MaxValue;
-            this.graphics = new Graphics(gctx);
+            this.graphics = new Graphics(this.renderingBuffer.GraphicContext);
             this.widgetWindow.RefreshGraphics(this.graphics, repaint, new Drawing.Rectangle[0]);
             this.graphics = null;
         }
 
+        /*
         public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
         {
             KeyCode keyCode = (KeyCode)key;
@@ -173,6 +194,7 @@ namespace Epsitec.Common.Widgets.Platform
         private Window()
             : base("Creativedocs", 800, 600)
         {
+            Console.WriteLine("private Window()");
             this.isSyncPaintDisabled = new SafeCounter();
             this.isSyncUpdating = new SafeCounter();
             this.isWndProcHandlingRestricted = new SafeCounter();
@@ -186,6 +208,7 @@ namespace Epsitec.Common.Widgets.Platform
         )
             : this()
         {
+            Console.WriteLine("internal Window()");
             this.widgetWindow = window;
             platformWindowSetter(this);
 
@@ -3196,6 +3219,7 @@ namespace Epsitec.Common.Widgets.Platform
         private bool widgetWindowDisposed;
         private Epsitec.Common.Widgets.Window widgetWindow;
 
+        private AntigrainSharp.AbstractGraphicBuffer renderingBuffer;
         private Drawing.Graphics graphics;
         private Drawing.Rectangle dirtyRectangle;
         private Drawing.DirtyRegion dirtyRegion;

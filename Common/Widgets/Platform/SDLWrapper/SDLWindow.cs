@@ -1,5 +1,7 @@
 ﻿using System;
-using SDL2;
+using System.Runtime.InteropServices;
+using Epsitec.Common.Drawing;
+using static SDL2.SDL;
 
 namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 {
@@ -9,67 +11,86 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             : base(message) { }
     }
 
-    internal class SDLWindow : IDisposable
+    internal abstract class SDLWindow : IDisposable
     {
         static void InitSDL()
         {
-            // Initilizes SDL.
-            if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
+            if (SDL_Init(SDL_INIT_VIDEO) < 0)
             {
-                throw new SDLException(SDL.SDL_GetError());
+                throw new SDLException(SDL_GetError());
             }
         }
 
         static void QuitSDL()
         {
-            SDL.SDL_Quit();
+            SDL_Quit();
         }
 
         internal SDLWindow(string windowTitle, int width, int height)
         {
-            // Create a new window given a title, size, and passes it a flag indicating it should be shown.
-            var window = SDL.SDL_CreateWindow(
+            Console.WriteLine("internal SDLWindow()");
+            this.width = width;
+            this.height = height;
+
+            var window = SDL_CreateWindow(
                 windowTitle,
-                SDL.SDL_WINDOWPOS_UNDEFINED,
-                SDL.SDL_WINDOWPOS_UNDEFINED,
+                SDL_WINDOWPOS_UNDEFINED,
+                SDL_WINDOWPOS_UNDEFINED,
                 width,
                 height,
-                SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN
+                SDL_WindowFlags.SDL_WINDOW_HIDDEN
             );
             if (window == IntPtr.Zero)
             {
-                throw new SDLException(SDL.SDL_GetError());
+                throw new SDLException(SDL_GetError());
             }
             this.window = window;
 
-            // Creates a new SDL hardware renderer using the default graphics device with VSYNC enabled.
-            var renderer = SDL.SDL_CreateRenderer(
+            var renderer = SDL_CreateRenderer(
                 window,
                 -1,
-                SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED
-                    | SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
+                SDL_RendererFlags.SDL_RENDERER_ACCELERATED
+                    | SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
             );
 
             if (renderer == IntPtr.Zero)
             {
                 throw new InvalidOperationException(
-                    $"There was an issue creating the renderer. {SDL.SDL_GetError()}"
+                    $"There was an issue creating the renderer. {SDL_GetError()}"
                 );
             }
             this.renderer = renderer;
+            this.RecreateDrawingArea(width, height);
+        }
+
+        public int Width
+        {
+            get { return this.width; }
+        }
+        public int Height
+        {
+            get { return this.height; }
         }
 
         public void Show()
         {
-            SDL.SDL_ShowWindow(this.window);
+            SDL_ShowWindow(this.window);
         }
+
+        protected abstract void RecreateGraphicBuffer(
+            IntPtr pixels,
+            int width,
+            int height,
+            int stride
+        );
+
+        protected virtual void OnDraw() { }
 
         public void Run()
         {
             var running = true;
 
             Console.WriteLine("SDLWindow run");
-            // Main loop for the program
             while (running)
             {
                 if (!this.ProcessEvents())
@@ -77,49 +98,46 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                     break;
                 }
 
-                // Sets the color that the screen will be cleared with.
-                if (SDL.SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255) < 0)
-                {
-                    throw new InvalidOperationException(
-                        $"There was an issue with setting the render draw color. {SDL.SDL_GetError()}"
-                    );
-                }
-
-                // Clears the current render surface.
-                if (SDL.SDL_RenderClear(renderer) < 0)
-                {
-                    throw new InvalidOperationException(
-                        $"There was an issue with clearing the render surface. {SDL.SDL_GetError()}"
-                    );
-                }
-
-                // Sets the color that the screen will be cleared with.
-                if (SDL.SDL_SetRenderDrawColor(renderer, 250, 12, 50, 255) < 0)
-                {
-                    throw new InvalidOperationException(
-                        $"There was an issue with setting the render draw color. {SDL.SDL_GetError()}"
-                    );
-                }
-
-                var rect = new SDL.SDL_Rect
-                {
-                    x = rx,
-                    y = ry,
-                    w = 10,
-                    h = 10
-                };
-                SDL.SDL_RenderFillRect(renderer, ref rect);
-
-                // Switches out the currently presented render surface with the one we just did work on.
-                SDL.SDL_RenderPresent(renderer);
+                this.UpdateDrawing();
             }
             Console.WriteLine("SDLWindow run end");
         }
 
+        private void UpdateDrawing()
+        {
+            this.OnDraw();
+
+            // create rect with same dimensions
+            //var rect = new SDL_Rect
+            //{
+            //    x = 0,
+            //    y = 0,
+            //    w = this.width,
+            //    h = this.height
+            //};
+            //SDL_RenderFillRect(renderer, ref rect);
+
+            var surfaceObj = (SDL_Surface)Marshal.PtrToStructure(this.surface, typeof(SDL_Surface));
+            SDL_UpdateTexture(this.texture, IntPtr.Zero, surfaceObj.pixels, surfaceObj.pitch);
+
+            if (SDL_SetRenderDrawColor(this.renderer, 0, 0, 0, 255) < 0)
+            {
+                throw new InvalidOperationException(SDL_GetError());
+            }
+
+            if (SDL_RenderClear(this.renderer) < 0)
+            {
+                throw new InvalidOperationException(SDL_GetError());
+            }
+
+            SDL_RenderCopy(this.renderer, this.texture, IntPtr.Zero, IntPtr.Zero);
+
+            SDL_RenderPresent(this.renderer);
+        }
+
         private bool ProcessEvents()
         {
-            // Check to see if there are any events and continue to do so until the queue is empty.
-            while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1)
+            while (SDL_PollEvent(out SDL_Event e) == 1)
             {
                 if (!this.HandleEvent(e))
                 {
@@ -129,36 +147,80 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             return true;
         }
 
-        private bool HandleEvent(SDL.SDL_Event e)
+        private bool HandleEvent(SDL_Event e)
         {
             Console.WriteLine($"SDLWindow handle event {e.type}");
             switch (e.type)
             {
-                case SDL.SDL_EventType.SDL_WINDOWEVENT:
-                    if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
+                case SDL_EventType.SDL_WINDOWEVENT:
+                    if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
                     {
                         return false;
                     }
                     break;
-                case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                    rx = e.button.x;
-                    ry = e.button.y;
+                case SDL_EventType.SDL_MOUSEBUTTONDOWN:
                     break;
             }
             return true;
         }
 
+        private void RecreateDrawingArea(int width, int height)
+        {
+            this.DestroyDrawingArea();
+
+            // bl-net8-cross
+            // hardcoded pixelformat and stride value
+            var pixelformat = SDL_PIXELFORMAT_ARGB8888;
+            int stride = width * 4;
+
+            this.surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, pixelformat);
+            if (this.surface == 0)
+            {
+                throw new InvalidOperationException(SDL_GetError());
+            }
+            var surfaceObj = (SDL_Surface)Marshal.PtrToStructure(this.surface, typeof(SDL_Surface));
+            this.RecreateGraphicBuffer(surfaceObj.pixels, width, height, stride);
+            this.texture = SDL_CreateTexture(
+                this.renderer,
+                pixelformat,
+                (int)SDL_TextureAccess.SDL_TEXTUREACCESS_STREAMING,
+                width,
+                height
+            );
+            if (this.texture == 0)
+            {
+                throw new InvalidOperationException(SDL_GetError());
+            }
+        }
+
+        private void DestroyDrawingArea()
+        {
+            if (this.surface != IntPtr.Zero)
+            {
+                SDL_FreeSurface(this.surface);
+            }
+            this.surface = IntPtr.Zero;
+            if (this.texture != IntPtr.Zero)
+            {
+                SDL_DestroyTexture(this.texture);
+            }
+            this.texture = IntPtr.Zero;
+        }
+
         public void Dispose()
         {
             Console.WriteLine("SDL destroy window");
-            // Clean up the resources that were created.
-            SDL.SDL_DestroyRenderer(renderer);
-            SDL.SDL_DestroyWindow(window);
+            this.DestroyDrawingArea();
+            SDL_DestroyRenderer(this.renderer);
+            SDL_DestroyWindow(this.window);
         }
 
-        private IntPtr window;
-        private IntPtr renderer;
-        private int rx = 0; // TEMP
-        private int ry = 0; // TEMP
+        private readonly IntPtr window;
+        private readonly IntPtr renderer;
+        private IntPtr surface;
+        private IntPtr texture;
+
+        private int width;
+        private int height;
     }
 }
