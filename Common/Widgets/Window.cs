@@ -158,18 +158,6 @@ namespace Epsitec.Common.Widgets
             */
         }
 
-        public void Invoke(System.Action action)
-        {
-            if ((this.window != null) && (this.window.InvokeRequired))
-            {
-                this.window.Invoke(action);
-            }
-            else
-            {
-                action();
-            }
-        }
-
         public void MakeTopLevelWindow()
         {
             this.window.MakeTopLevelWindow();
@@ -232,7 +220,7 @@ namespace Epsitec.Common.Widgets
 
         public void MakeActive()
         {
-            if ((!this.IsDisposed) && (!this.window.InvokeRequired))
+            if (!this.IsDisposed)
             {
                 this.window.Activate();
             }
@@ -1509,11 +1497,7 @@ namespace Epsitec.Common.Widgets
 
                 this.OnWindowDefocused();
 
-                if (
-                    (this.owner != null)
-                    && (this.owner.window.InvokeRequired == false)
-                    && (this.owner.window.Focused == false)
-                )
+                if ((this.owner != null) && (this.owner.window.Focused == false))
                 {
                     this.owner.NotifyWindowDefocused();
                 }
@@ -1901,7 +1885,7 @@ namespace Epsitec.Common.Widgets
 
                 foreach (Window window in windows)
                 {
-                    if ((window.window != null) && (window.window.InvokeRequired == false))
+                    if (window.window != null)
                     {
                         window.window.SendQueueCommand();
                     }

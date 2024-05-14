@@ -12,9 +12,7 @@ namespace Epsitec.Common.Widgets.Platform
     /// <summary>
     /// La classe Platform.Window fait le lien avec la SDL
     /// </summary>
-    internal class Window
-        : SDLWrapper.SDLWindow,
-            Types.BindingAsyncOperation.IApplicationThreadInvoker
+    internal class Window : SDLWrapper.SDLWindow
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -125,25 +123,30 @@ namespace Epsitec.Common.Widgets.Platform
         // We are missing several properties by removing the inheritance from System.Windows.Forms.Form
         // We add them here as stubs
 
-        public bool InvokeRequired { get; }
-
+        /// <summary>
+        /// Activates the form and gives it focus.
+        /// </summary>
         public void Activate()
         {
             //throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// true if drag-and-drop operations are allowed in the control; otherwise, false. The default is false.
+        /// </summary>
         public bool AllowDrop { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the control has captured the mouse.
+        /// </summary>
         public bool Capture { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the control has input focus.
+        /// </summary>
         public bool Focused { get; }
 
         public bool Focus()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Invoke(Action method)
         {
             throw new NotImplementedException();
         }
@@ -241,6 +244,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.TopLevel = true;
             this.TopMost = true;
             */
+            throw new NotImplementedException();
         }
 
         internal void MakeFramelessWindow()
@@ -251,6 +255,7 @@ namespace Epsitec.Common.Widgets.Platform
             Window.DummyHandleEater(this.Handle);
             this.widgetWindow.WindowStyles = this.WindowStyles | (WindowStyles.Frameless);
             */
+            throw new NotImplementedException();
         }
 
         internal void MakeFixedSizeWindow()
@@ -265,6 +270,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.WindowStyles
                 & ~(WindowStyles.CanMaximize | WindowStyles.CanMinimize | WindowStyles.CanResize);
             */
+            throw new NotImplementedException();
         }
 
         internal void MakeMinimizableFixedSizeWindow()
@@ -278,6 +284,7 @@ namespace Epsitec.Common.Widgets.Platform
                 (this.WindowStyles & ~(WindowStyles.CanMaximize | WindowStyles.CanResize))
                 | WindowStyles.CanMinimize;
             */
+            throw new NotImplementedException();
         }
 
         internal void MakeButtonlessWindow()
@@ -295,6 +302,7 @@ namespace Epsitec.Common.Widgets.Platform
                     | WindowStyles.HasCloseButton
                 );
             */
+            throw new NotImplementedException();
         }
 
         internal bool IsFixedSize
@@ -319,6 +327,7 @@ namespace Epsitec.Common.Widgets.Platform
                     string.Format("{0} not supported", this.FormBorderStyle)
                 );
                 */
+                throw new NotImplementedException();
                 return false;
             }
         }
@@ -329,6 +338,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.ShowInTaskbar = false;
             Window.DummyHandleEater(this.Handle);
             */
+            throw new NotImplementedException();
         }
 
         internal void MakeTitlelessResizableWindow()
@@ -344,6 +354,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.isToolWindow = true;
             Window.DummyHandleEater(this.Handle);
             */
+            throw new NotImplementedException();
         }
 
         internal void MakeSizableToolWindow()
@@ -354,6 +365,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.isToolWindow = true;
             Window.DummyHandleEater(this.Handle);
             */
+            throw new NotImplementedException();
         }
 
         internal void MakeFloatingWindow()
@@ -363,6 +375,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.isToolWindow = true;
             Window.DummyHandleEater(this.Handle);
             */
+            throw new NotImplementedException();
         }
 
         internal void ResetHostingWidgetWindow()
@@ -384,6 +397,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.Hide();
             }
             */
+            throw new NotImplementedException();
         }
 
         static void DummyHandleEater(System.IntPtr handle) { }
@@ -504,6 +518,7 @@ namespace Epsitec.Common.Widgets.Platform
                     break;
             }
             */
+            throw new NotImplementedException();
         }
 
         internal void AnimateHide(Animation animation, Drawing.Rectangle bounds)
@@ -604,6 +619,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.Invalidate();
             this.Update();
             */
+            throw new NotImplementedException();
         }
 
         protected void AnimateAlpha(double alpha)
@@ -616,6 +632,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             this.Alpha = alpha;
             */
+            throw new NotImplementedException();
         }
 
         protected void AnimateCleanup(Animator animator)
@@ -638,6 +655,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.widgetWindow.OnWindowAnimationEnded();
             }
             */
+            throw new NotImplementedException();
         }
 
         internal WindowStyles WindowStyles
@@ -731,6 +749,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.HelpButton = ((windowStyles & WindowStyles.HasHelpButton) != 0);
             this.ControlBox = ((windowStyles & WindowStyles.HasCloseButton) != 0);
             */
+            throw new NotImplementedException();
         }
 
         internal bool PreventSyncPaint
@@ -781,6 +800,7 @@ namespace Epsitec.Common.Widgets.Platform
                     }
                 }
                 */
+                throw new NotImplementedException();
             }
         }
 
@@ -798,6 +818,7 @@ namespace Epsitec.Common.Widgets.Platform
                     return false;
                 }
                 */
+                throw new NotImplementedException();
                 return true;
             }
         }
@@ -935,6 +956,7 @@ namespace Epsitec.Common.Widgets.Platform
                     this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
                 }
                 */
+                throw new NotImplementedException();
             }
         }
 
@@ -984,53 +1006,10 @@ namespace Epsitec.Common.Widgets.Platform
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
                 */
+                throw new NotImplementedException();
                 return Drawing.Rectangle.Empty;
             }
         }
-
-        /*
-        private static void AdjustWindowPlacementOrigin(
-            Win32Api.WindowPlacement placement,
-            ref double ox,
-            ref double oy
-        )
-        {
-            //	La conversion entre "screen coordinates" et "workspace coordinates" est
-            //	théoriquement impossible avec les informations que fournit Windows mais
-            //	on peut s'arranger en créant une fenêtre temporaire pour déterminer son
-            //	offset par rapport à l'endroit désiré :
-
-            System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint(
-                new System.Drawing.Point(
-                    placement.NormalPosition.Left,
-                    placement.NormalPosition.Top
-                )
-            );
-
-            //				System.Diagnostics.Trace.WriteLine ("WorkingArea:  " + screen.WorkingArea);
-            //				System.Diagnostics.Trace.WriteLine ("ScreenBounds: " + screen.Bounds);
-
-            if (screen.WorkingArea != screen.Bounds)
-            {
-                using (System.Windows.Forms.Form f = new System.Windows.Forms.Form())
-                {
-                    f.Hide();
-                    f.Location = new System.Drawing.Point(
-                        placement.NormalPosition.Left,
-                        placement.NormalPosition.Bottom
-                    );
-
-                    Win32Api.GetWindowPlacement(f.Handle, ref placement);
-
-                    int placementOffsetX = placement.NormalPosition.Left - f.Location.X;
-                    int placementOffsetY = placement.NormalPosition.Top - f.Location.Y;
-
-                    ox -= placementOffsetX;
-                    oy += placementOffsetY;
-                }
-            }
-        }
-        */
 
         private WindowPlacement CurrentWindowPlacement
         {
@@ -1073,6 +1052,7 @@ namespace Epsitec.Common.Widgets.Platform
 
                 return new WindowPlacement(bounds, isMaximized, isMinimized, isHidden);
                 */
+                throw new NotImplementedException();
                 return new WindowPlacement(Drawing.Rectangle.Empty, false, false, false);
             }
             set
@@ -1119,6 +1099,7 @@ namespace Epsitec.Common.Widgets.Platform
                     this.ExitWndProc();
                 }
                 */
+                throw new NotImplementedException();
             }
         }
 
@@ -1187,6 +1168,7 @@ namespace Epsitec.Common.Widgets.Platform
 
                 return Drawing.Bitmap.FromNativeBitmap(base.Icon.ToBitmap());
                 */
+                throw new NotImplementedException();
                 return null;
             }
             set
@@ -1203,6 +1185,7 @@ namespace Epsitec.Common.Widgets.Platform
                     );
                 }
                 */
+                throw new NotImplementedException();
             }
         }
 
@@ -1212,6 +1195,7 @@ namespace Epsitec.Common.Widgets.Platform
             System.Drawing.Icon nativeIcon = new System.Drawing.Icon(iconStream);
             base.Icon = nativeIcon;
             */
+            throw new NotImplementedException();
         }
 
         internal void SetNativeIcon(System.IO.Stream iconStream, int dx, int dy)
@@ -1271,6 +1255,7 @@ namespace Epsitec.Common.Widgets.Platform
                 System.IO.File.Delete(path);
             }
             */
+            throw new NotImplementedException();
         }
 
         internal double Alpha
@@ -1372,6 +1357,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.forcedClose = false;
             }
             */
+            throw new NotImplementedException();
         }
 
         internal void SimulateCloseClick()
@@ -1379,6 +1365,7 @@ namespace Epsitec.Common.Widgets.Platform
             /*
             base.Close();
             */
+            throw new NotImplementedException();
         }
 
         internal void SetFrozen(bool frozen)
@@ -1428,6 +1415,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             base.Dispose(disposing);
             */
+            throw new NotImplementedException();
         }
 
         protected void OnClosed(System.EventArgs e)
@@ -1455,6 +1443,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             base.OnClosed(e);
             */
+            throw new NotImplementedException();
         }
 
         protected void OnGotFocus(System.EventArgs e)
@@ -1467,6 +1456,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.widgetWindow.NotifyWindowFocused();
             }
             */
+            throw new NotImplementedException();
         }
 
         protected void OnLostFocus(System.EventArgs e)
@@ -1479,26 +1469,9 @@ namespace Epsitec.Common.Widgets.Platform
                 this.widgetWindow.NotifyWindowDefocused();
             }
             */
+            throw new NotImplementedException();
         }
 
-        /*        protected override System.Windows.Forms.CreateParams CreateParams
-                {
-                    get
-                    {
-                        var parms = base.CreateParams;
-        
-                        switch (this.specialMode)
-                        {
-                            case SpecialMode.Titleless:
-                                parms.Style &= ~0x00C00000; //WS_CAPTION
-                                parms.Style |= 0x00040000; //WS_SIZEBOX
-                                break;
-                        }
-        
-                        return parms;
-                    }
-                }
-        */
         protected void OnClosing(System.ComponentModel.CancelEventArgs e)
         //protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
@@ -1550,61 +1523,9 @@ namespace Epsitec.Common.Widgets.Platform
                 this.DispatchMessage(message);
             }
             */
+            throw new NotImplementedException();
         }
 
-        /*        protected void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
-                //protected override void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
-                {
-                    */
-        /*
-                    base.OnKeyDown(e);
-        
-                    Message message = Message.FromKeyEvent(MessageType.KeyDown, e);
-                    this.DispatchMessage(message);
-                    e.Handled = message.Handled;
-                    */
-        /*
-                }
-        */
-        /*        protected void OnKeyUp(System.Windows.Forms.KeyEventArgs e)
-                //protected override void OnKeyUp(System.Windows.Forms.KeyEventArgs e)
-                {
-                    */
-        /*
-                    base.OnKeyUp(e);
-        
-                    Message message = Message.FromKeyEvent(MessageType.KeyUp, e);
-                    this.DispatchMessage(message);
-                    e.Handled = message.Handled;
-                    */
-        /*
-                }
-        */
-        /*        protected void OnKeyPress(System.Windows.Forms.KeyPressEventArgs e)
-                //protected override void OnKeyPress(System.Windows.Forms.KeyPressEventArgs e)
-                {
-                    */
-        /*
-                    base.OnKeyPress(e);
-        
-                    Message message = Message.FromKeyEvent(MessageType.KeyPress, e);
-                    this.DispatchMessage(message);
-                    e.Handled = message.Handled;
-                    */
-        /*
-                }
-        */
-        /*        protected void OnMouseWheel(System.Windows.Forms.MouseEventArgs e)
-                //protected override void OnMouseWheel(System.Windows.Forms.MouseEventArgs e)
-                {
-                    */
-        /*
-                    base.OnMouseWheel(e);
-                    this.DispatchMessage(Message.FromMouseEvent(MessageType.MouseWheel, this, e));
-                    */
-        /*
-                }
-        */
         protected void OnMouseEnter(System.EventArgs e)
         //protected override void OnMouseEnter(System.EventArgs e)
         {
@@ -1632,6 +1553,7 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
+            throw new NotImplementedException();
         }
 
         protected void OnMouseLeave(System.EventArgs e)
@@ -1650,32 +1572,8 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
+            throw new NotImplementedException();
         }
-
-        /*        protected void OnPaint(System.Windows.Forms.PaintEventArgs e)
-                //protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
-                {
-                    */
-        /*
-                    //			System.Diagnostics.Debug.WriteLine ("OnPaint");
-                    base.OnPaint(e);
-                    this.DispatchPaint(e.Graphics, e.ClipRectangle);
-                    */
-        /*
-                }
-        */
-        /*        protected void OnPaintBackground(System.Windows.Forms.PaintEventArgs e)
-                //protected override void OnPaintBackground(System.Windows.Forms.PaintEventArgs e)
-                {
-                    */
-        /*
-                    //			System.Diagnostics.Debug.WriteLine ("OnPaintBackground called");
-                    base.OnPaintBackground(e);
-                    this.DispatchPaint(e.Graphics, e.ClipRectangle);
-                    */
-        /*
-                }
-        */
 
         protected void OnResizeBegin(System.EventArgs e)
         //protected override void OnResizeBegin(System.EventArgs e)
@@ -1684,6 +1582,7 @@ namespace Epsitec.Common.Widgets.Platform
             base.OnResizeBegin(e);
             this.widgetWindow.OnWindowResizeBeginning();
             */
+            throw new NotImplementedException();
         }
 
         protected void OnResizeEnd(System.EventArgs e)
@@ -1693,6 +1592,7 @@ namespace Epsitec.Common.Widgets.Platform
             base.OnResizeEnd(e);
             this.widgetWindow.OnWindowResizeEnded();
             */
+            throw new NotImplementedException();
         }
 
         protected void OnSizeChanged(System.EventArgs e)
@@ -1732,6 +1632,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.formBoundsSet = false;
             }
             */
+            throw new NotImplementedException();
         }
 
         protected void OnActivated(System.EventArgs e)
@@ -1745,6 +1646,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.widgetWindow.OnWindowActivated();
             }
             */
+            throw new NotImplementedException();
         }
 
         protected void OnDeactivate(System.EventArgs e)
@@ -1758,6 +1660,7 @@ namespace Epsitec.Common.Widgets.Platform
                 this.widgetWindow.OnWindowDeactivated();
             }
             */
+            throw new NotImplementedException();
         }
 
         protected void OnVisibleChanged(System.EventArgs e)
@@ -1785,23 +1688,9 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
+            throw new NotImplementedException();
         }
 
-        /*        protected void OnDragEnter(System.Windows.Forms.DragEventArgs drgevent)
-                //protected override void OnDragEnter(System.Windows.Forms.DragEventArgs drgevent)
-                {
-                    */
-        /*
-                    base.OnDragEnter(drgevent);
-        
-                    if (this.widgetWindow != null)
-                    {
-                        this.widgetWindow.OnWindowDragEntered(new WindowDragEventArgs(drgevent));
-                    }
-                    */
-        /*
-                }
-        */
         protected void OnDragLeave(System.EventArgs e)
         //protected override void OnDragLeave(System.EventArgs e)
         {
@@ -1813,23 +1702,9 @@ namespace Epsitec.Common.Widgets.Platform
                 this.widgetWindow.OnWindowDragExited();
             }
             */
+            throw new NotImplementedException();
         }
 
-        /*        protected void OnDragDrop(System.Windows.Forms.DragEventArgs drgevent)
-                //protected override void OnDragDrop(System.Windows.Forms.DragEventArgs drgevent)
-                {
-                    */
-        /*
-                    base.OnDragDrop(drgevent);
-        
-                    if (this.widgetWindow != null)
-                    {
-                        this.widgetWindow.OnWindowDragDropped(new WindowDragEventArgs(drgevent));
-                    }
-                    */
-        /*
-                }
-        */
         protected void ReallocatePixmap()
         {
             /*
@@ -1954,6 +1829,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             this.Invalidate(new System.Drawing.Rectangle(x, y, width, height));
             */
+            throw new System.NotImplementedException();
         }
 
         internal void SynchronousRepaint()
@@ -1986,6 +1862,7 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
+            throw new System.NotImplementedException();
         }
 
         internal void SendQueueCommand()
@@ -2005,6 +1882,7 @@ namespace Epsitec.Common.Widgets.Platform
                 );
             }
             */
+            throw new System.NotImplementedException();
         }
 
         internal void SendValidation()
@@ -2017,6 +1895,7 @@ namespace Epsitec.Common.Widgets.Platform
                 System.IntPtr.Zero
             );
             */
+            throw new System.NotImplementedException();
         }
 
         internal void StartSizeMove()
@@ -2054,6 +1933,7 @@ namespace Epsitec.Common.Widgets.Platform
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
             */
+            throw new System.NotImplementedException();
         }
 
         internal static void SendAwakeEvent()
@@ -2091,469 +1971,9 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
+            throw new System.NotImplementedException();
         }
 
-        /*
-        protected override void WndProc(ref System.Windows.Forms.Message msg)
-        {
-            //System.Diagnostics.Debug.WriteLine (msg.ToString ());
-
-            if (this.isWndProcHandlingRestricted.IsNotZero)
-            {
-                base.WndProc(ref msg);
-                return;
-            }
-
-#if false
-            if ((this.specialMode == SpecialMode.Titleless) &&
-                (msg.Msg == Win32Const.WM_NCCALCSIZE))
-            {
-                msg.Result = System.IntPtr.Zero;
-                return;
-            }
-#endif
-
-            bool syncCommandCache = false;
-
-            lock (Window.dispatchWindow)
-            {
-                if (this.isSyncUpdating.IsZero)
-                {
-                    if (Window.isSyncRequested)
-                    {
-                        Window.isSyncRequested = false;
-                        syncCommandCache = true;
-                    }
-                }
-
-                if (Window.isAwakeRequested)
-                {
-                    Window.isAwakeRequested = false;
-                }
-            }
-
-            if (Window.IsInAnyWndProc == false)
-            {
-                Application.ExecuteAsyncCallbacks();
-            }
-
-            if (RestartManager.HandleWndProc(ref msg))
-            {
-                return;
-            }
-
-            if (syncCommandCache)
-            {
-                CommandCache.Instance.Synchronize();
-            }
-
-            if (Window.dispatchWindow == this)
-            {
-                base.WndProc(ref msg);
-                return;
-            }
-
-            if (msg.Msg == Win32Const.WM_GETMINMAXINFO)
-            {
-                //	Pour des raisons mystérieuses, WinForms (?) se croit obligé de touiller les positions
-                //	pour la fenêtre maximisée avec un résultat désastreux (si la barre des tâches est à
-                //	gauche ou en haut). On force la position maximisée à ce qu'elle devrait toujours être.
-
-                unsafe
-                {
-                    Win32Api.MinMaxInfo* mmi = (Win32Api.MinMaxInfo*)msg.LParam.ToPointer();
-                    mmi->MaxPosition.X = -4;
-                    mmi->MaxPosition.Y = -4;
-                }
-            }
-
-            if (msg.Msg == Win32Const.WM_SIZING)
-            {
-                //	Since the size returned by WM_GETMINMAXINFO seems to be cached by Windows when the
-                //	user drags a window border, we cannot use it. We must be able to update the Minimum
-                //	size constraint dynamically.
-
-                //	Handling WM_SIZING is the way to go: make sure the user does not reduce the window
-                //	size below the specified size.
-
-                unsafe
-                {
-                    Win32Api.Rect* rect = (Win32Api.Rect*)msg.LParam.ToPointer();
-                    int wParam = msg.WParam.ToInt32();
-
-                    //					System.Diagnostics.Debug.WriteLine (string.Format ("dx={0} MinWidth={1} MinimumSize={2}", rect->Right - rect->Left, this.minimumSize.Width, base.MinimumSize.Width));
-
-                    int dx = System.Math.Max(this.minimumSize.Width, rect->Right - rect->Left);
-                    int dy = System.Math.Max(this.minimumSize.Height, rect->Bottom - rect->Top);
-
-                    dx = System.Math.Max(dx, base.MinimumSize.Width);
-                    dy = System.Math.Max(dy, base.MinimumSize.Height);
-
-                    switch (wParam)
-                    {
-                        case Win32Const.WMSZ_LEFT:
-                        case Win32Const.WMSZ_BOTTOMLEFT:
-                        case Win32Const.WMSZ_TOPLEFT:
-                            rect->Left = rect->Right - dx;
-                            break;
-                        case Win32Const.WMSZ_RIGHT:
-                        case Win32Const.WMSZ_BOTTOMRIGHT:
-                        case Win32Const.WMSZ_TOPRIGHT:
-                            rect->Right = rect->Left + dx;
-                            break;
-                    }
-
-                    switch (wParam)
-                    {
-                        case Win32Const.WMSZ_BOTTOM:
-                        case Win32Const.WMSZ_BOTTOMLEFT:
-                        case Win32Const.WMSZ_BOTTOMRIGHT:
-                            rect->Bottom = rect->Top + dy;
-                            break;
-                        case Win32Const.WMSZ_TOP:
-                        case Win32Const.WMSZ_TOPLEFT:
-                        case Win32Const.WMSZ_TOPRIGHT:
-                            rect->Top = rect->Bottom - dy;
-                            break;
-                    }
-                }
-
-                msg.Result = new System.IntPtr(1);
-                return;
-            }
-
-            //			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGING)
-            //			{
-            //				unsafe
-            //				{
-            //					Win32Api.WindowPos* wp = (Win32Api.WindowPos*) msg.LParam.ToPointer ();
-            //					System.Diagnostics.Debug.WriteLine (" WINDOWPOSCHANGING: "+wp->X+", "+wp->Y+", "+wp->Width+", "+wp->Height+", flags="+wp->Flags.ToString("X8"));
-            //					System.Diagnostics.Debug.WriteLine (" WindowState: "+this.WindowState.ToString());
-            //				}
-            //			}
-            if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGED)
-            {
-                unsafe
-                {
-                    Win32Api.WindowPos* wp = (Win32Api.WindowPos*)msg.LParam.ToPointer();
-                    this.formBounds = new System.Drawing.Rectangle(
-                        wp->X,
-                        wp->Y,
-                        wp->Width,
-                        wp->Height
-                    );
-                }
-
-                this.CurrentWindowPlacement = this.NativeWindowPlacement;
-            }
-
-            if (msg.Msg == Win32Const.WM_APP_DISPOSE)
-            {
-                System.Diagnostics.Debug.Assert(this.wndProcDepth == 0);
-
-                //	L'appelant avait tenté de nous détruire alors qu'il était dans un WndProc,
-                //	on reçoint maintenant la commande explicite (asynchrone) qui nous autorise
-                //	à nous détruire réellement.
-
-                this.Dispose();
-                return;
-            }
-
-            if (msg.Msg == Win32Const.WM_APP_EXEC_CMD)
-            {
-                if (this.wndProcDepth == 0)
-                {
-                    try
-                    {
-                        if (this.widgetWindow != null)
-                        {
-                            this.widgetWindow.DispatchQueuedCommands();
-                        }
-                    }
-                    catch (System.Exception ex)
-                    {
-                        if (RestartManager.UseWindowsErrorReporting)
-                        {
-                            throw;
-                        }
-                        else
-                        {
-                            Window.ProcessException(ex, "WndProc/A");
-                        }
-                    }
-                }
-                else
-                {
-                    this.isDispatchPending = true;
-                }
-
-                return;
-            }
-
-            if (msg.Msg == Win32Const.WM_APP_VALIDATION)
-            {
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.DispatchValidation();
-                }
-            }
-
-            this.EnterWndProc();
-            try
-            {
-                if (this.WndProcActivation(ref msg))
-                {
-                    return;
-                }
-
-                //	Tente d'unifier tous les événements qui touchent au clavier, sans faire de traitement
-                //	spécial pour les touches pressées en même temps que ALT. Mais si l'on veut que le menu
-                //	système continue à fonctionner (ALT + ESPACE), il faut laisser transiter les événements
-                //	clavier qui ne concernent que ALT ou ALT + ESPACE sans modification.
-
-                int wParam = (int)msg.WParam;
-                int lParam = (int)msg.LParam;
-
-                if ((wParam != Win32Const.VK_SPACE) && (wParam != Win32Const.VK_MENU))
-                {
-                    switch (msg.Msg)
-                    {
-                        case Win32Const.WM_SYSKEYDOWN:
-                            msg.Msg = Win32Const.WM_KEYDOWN;
-                            break;
-                        case Win32Const.WM_SYSKEYUP:
-                            msg.Msg = Win32Const.WM_KEYUP;
-                            break;
-                        case Win32Const.WM_SYSCHAR:
-                            msg.Msg = Win32Const.WM_CHAR;
-                            break;
-                        case Win32Const.WM_SYSDEADCHAR:
-                            msg.Msg = Win32Const.WM_DEADCHAR;
-                            break;
-                    }
-                }
-
-                if (
-                    (Support.Globals.IsDebugBuild)
-                    && (msg.Msg == Win32Const.WM_KEYDOWN)
-                    && (((KeyCode)(int)msg.WParam) == KeyCode.ScrollLock)
-                )
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        string.Format("Window {0} :", this.widgetWindow.Text)
-                    );
-                    Helpers.VisualTree.DebugDump(this.widgetWindow.Root, 1);
-                }
-
-                //	Filtre les répétitions clavier des touches super-shift. Cela n'a, à mon avis, aucun
-                //	sens, puisqu'une touche super-shift est soit enfoncée, soit non enfoncée...
-
-                if ((msg.Msg == Win32Const.WM_KEYDOWN) || (msg.Msg == Win32Const.WM_SYSKEYDOWN))
-                {
-                    switch (wParam)
-                    {
-                        case Win32Const.VK_SHIFT:
-                        case Win32Const.VK_CONTROL:
-                        case Win32Const.VK_MENU:
-                            if ((lParam & 0x40000000) != 0)
-                            {
-                                return;
-                            }
-                            break;
-                    }
-                }
-
-                if (msg.Msg == Win32Const.WM_MOUSEACTIVATE)
-                {
-                    //	Si l'utilisateur clique dans la fenêtre, on veut recevoir l'événement d'activation
-                    //	dans tous les cas.
-
-                    msg.Result = (System.IntPtr)(
-                        this.isNoActivate ? Win32Const.MA_NOACTIVATE : Win32Const.MA_ACTIVATE
-                    );
-                    return;
-                }
-
-                if (msg.Msg == Win32Const.WM_ENTERSIZEMOVE)
-                {
-                    this.StartSizeMove();
-                }
-
-                if (msg.Msg == Win32Const.WM_EXITSIZEMOVE)
-                {
-                    this.StopSizeMove();
-                }
-
-                if (this.WndProcFiltering(ref msg))
-                {
-                    return;
-                }
-
-                base.WndProc(ref msg);
-            }
-            catch (System.Exception ex)
-            {
-                if (RestartManager.UseWindowsErrorReporting)
-                {
-                    throw;
-                }
-                else
-                {
-                    Window.ProcessException(ex, "WndProc/B");
-                }
-            }
-            finally
-            {
-                System.Diagnostics.Debug.Assert(this.IsDisposed == false);
-
-                this.ExitWndProc();
-
-                if (Window.IsInAnyWndProc == false)
-                {
-                    Application.ExecuteAsyncCallbacks();
-                }
-
-                if ((this.wndProcDepth == 0) && (this.isDispatchPending))
-                {
-                    this.isDispatchPending = false;
-                    if (this.widgetWindow != null)
-                    {
-                        this.widgetWindow.DispatchQueuedCommands();
-                    }
-                }
-            }
-        }*/
-
-        /*        protected bool WndProcActivation(ref System.Windows.Forms.Message msg)
-                {
-                    //	Top Level forms should keep their 'active' visual style as long as any top level
-                    //	form is active. This is implemented by faking WM_NCACTIVATE messages with the
-                    //	proper settings.
-        
-                    //	The condition for a top level form to be represented with the 'inactive' visual
-                    //	style is that a modal dialog is being shown; and class CommonDialogs keeps track
-                    //	of this, which makes it the ideal fake Message provider.
-        
-                    bool active = false;
-        
-                    switch (msg.Msg)
-                    {
-                        case Win32Const.WM_ACTIVATE:
-                            active = (((int)msg.WParam) != 0);
-        
-                            //					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATE {1}.", this.Name, active));
-        
-                            if (active)
-                            {
-                                //	Notre fenêtre vient d'être activée. Si c'est une fenêtre "flottante", alors il faut activer
-                                //	la fenêtre principale et les autres fenêtres "flottantes".
-        
-                                if (this.isToolWindow)
-                                {
-                                    Window owner = this.Owner as Window;
-        
-                                    if (owner != null)
-                                    {
-                                        owner.FakeActivateOwned(true);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //	Notre fenêtre vient d'être désactivée.
-        
-                                Widgets.Window window = Widgets.Window.FindFromHandle(msg.LParam);
-        
-                                if (window != null)
-                                {
-                                    if (this.IsOwnedWindow(window.PlatformWindow))
-                                    {
-                                        //	La fenêtre qui sera activée (et qui a causé notre désactivation) nous appartient.
-                                        //	Si cette fenêtre est "flottante", alors on doit s'assurer que notre état visuel
-                                        //	reste actif.
-        
-                                        if (window.PlatformWindow.isToolWindow)
-                                        {
-                                            active = true;
-                                        }
-                                    }
-                                    else if (this.isToolWindow)
-                                    {
-                                        if (this.FindRootOwner() == window.PlatformWindow)
-                                        {
-                                            //	La fenêtre qui va être activée est en fait la propriétaire de cette fenêtre
-                                            //	"flottante". On doit donc conserver l'activation.
-        
-                                            active = true;
-                                        }
-                                    }
-                                }
-                            }
-        
-                            if (this.isToolWindow)
-                            {
-                                //	Il ne faut touiller l'état d'activation des fenêtres que si la fenêtre
-                                //	actuelle est une palette...
-        
-                                this.FindRootOwner().FakeActivateOwned(active);
-                            }
-                            else
-                            {
-                                //	TODO: mieux gérer la question de l'affichage de l'état (activé ou non) des fenêtres
-                                //	de l'application... On aimerait pouvoir spécifier par programmation l'état à donner
-                                //	à chaque fenêtre, plus un état général lié à l'activation de l'application et aussi
-                                //	dépendant de la présence ou non d'un dialogue modal... Pfff...
-        
-                                this.FakeActivate(active);
-                            }
-        
-                            if ((Window.isAppActive == false) && (active == true))
-                            {
-                                Window.isAppActive = true;
-                                //						System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated (synthetic)");
-                                if (this.widgetWindow != null)
-                                {
-                                    this.widgetWindow.OnApplicationActivated();
-                                }
-                            }
-        
-                            break;
-        
-                        case Win32Const.WM_ACTIVATEAPP:
-                            active = (((int)msg.WParam) != 0);
-                            //					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATEAPP {1}.", this.Name, active));
-                            if (Window.isAppActive != active)
-                            {
-                                Window.isAppActive = active;
-                                if (active)
-                                {
-                                    //							System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated");
-                                    if (this.widgetWindow != null)
-                                    {
-                                        this.widgetWindow.OnApplicationActivated();
-                                    }
-                                }
-                                else
-                                {
-                                    //							System.Diagnostics.Debug.WriteLine ("Fire ApplicationDeactivated");
-                                    if (this.widgetWindow != null)
-                                    {
-                                        this.widgetWindow.OnApplicationDeactivated();
-                                    }
-                                }
-                            }
-                            break;
-        
-                        case Win32Const.WM_NCACTIVATE:
-                            active = (((int)msg.WParam) != 0);
-                            //					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_NCACTIVATE {1}.", this.Name, active));
-                            msg.Result = (System.IntPtr)1;
-                            return true;
-                    }
-        
-                    return false;
-                }
-        */
         internal Platform.Window FindRootOwner()
         {
             /*
@@ -2566,6 +1986,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return this;
             */
+            throw new System.NotImplementedException();
             return null;
         }
 
@@ -2582,6 +2003,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return windows;
             */
+            throw new System.NotImplementedException();
             return null;
         }
 
@@ -2655,6 +2077,7 @@ namespace Epsitec.Common.Widgets.Platform
                 (System.IntPtr)0
             );
             */
+            throw new System.NotImplementedException();
         }
 
         protected void FakeActivate(bool active)
@@ -2672,6 +2095,7 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
+            throw new System.NotImplementedException();
         }
 
         protected void FakeActivateOwned(bool active)
@@ -2694,6 +2118,7 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
+            throw new System.NotImplementedException();
         }
 
         protected bool IsOwnedWindow(Platform.Window find)
@@ -2716,121 +2141,10 @@ namespace Epsitec.Common.Widgets.Platform
 
             return false;
             */
+            throw new System.NotImplementedException();
             return true;
         }
 
-        /*        protected bool WndProcFiltering(ref System.Windows.Forms.Message msg)
-                {
-                    Message rawMessage = Message.FromWndProcMessage(this, ref msg);
-                    Message message = Message.PostProcessMessage(rawMessage);
-        
-                    bool enabled = Win32Api.IsWindowEnabled(this.Handle);
-        
-                    if (!enabled)
-                    {
-                        if (Message.IsMouseMsg(msg))
-                        {
-                            return true;
-                        }
-                        if ((message != null) && (message.IsKeyType))
-                        {
-                            return true;
-                        }
-                    }
-        
-                    if (this.filterMouseMessages)
-                    {
-                        //	Si le filtre des messages souris est actif, on mange absolument tous
-                        //	les événements relatifs à la souris, jusqu'à ce que tous les boutons
-                        //	aient été relâchés.
-        
-                        if (Message.IsMouseMsg(msg))
-                        {
-                            if (Message.CurrentState.Buttons == Widgets.MouseButtons.None)
-                            {
-                                this.filterMouseMessages = false;
-                            }
-        
-                            return true;
-                        }
-                    }
-        
-                    if (message != null)
-                    {
-                        if (this.filterKeyMessages)
-                        {
-                            if (message.IsKeyType)
-                            {
-                                if (message.MessageType != MessageType.KeyDown)
-                                {
-                                    return true;
-                                }
-        
-                                this.filterKeyMessages = false;
-                            }
-                        }
-        
-                        if (this.widgetWindow != null)
-                        {
-                            if (this.widgetWindow.FilterMessage(message))
-                            {
-                                return true;
-                            }
-                        }
-        
-                        if (message.NonClient)
-                        {
-                            //	Les messages "non-client" ne sont pas acheminés aux widgets normaux,
-                            //	car ils ne présentent aucun intérêt. Par contre, le filtre peut les
-                            //	voir.
-        
-                            return false;
-                        }
-        
-                        Widgets.Window wWindow = Message.CurrentState.LastWindow;
-                        Platform.Window pWindow = (wWindow != null) ? wWindow.PlatformWindow : null;
-        
-                        if (pWindow == null)
-                        {
-                            pWindow = this;
-                        }
-        
-                        if (pWindow.IsDisposed)
-                        {
-                            return true;
-                        }
-        
-                        pWindow.DispatchMessage(message);
-        
-                        return true;
-                    }
-        
-                    return false;
-                }
-        */
-        /*        protected static System.Windows.Forms.Message CreateNCActivate(
-                    System.Windows.Forms.Form form,
-                    bool activate
-                )
-                {
-                    System.Windows.Forms.Message msg;
-                    msg = System.Windows.Forms.Message.Create(
-                        form.Handle,
-                        Win32Const.WM_NCACTIVATE,
-                        System.IntPtr.Zero,
-                        System.IntPtr.Zero
-                    );
-        
-                    //	TODO: gère le cas où des fenêtres modales sont ouvertes... Cf. VirtualPen
-        
-                    if (activate)
-                    {
-                        msg.WParam = (System.IntPtr)(1);
-                    }
-        
-                    return msg;
-                }
-        */
         internal Drawing.DrawingBitmap GetWindowPixmap()
         {
             /*
@@ -2846,49 +2160,6 @@ namespace Epsitec.Common.Widgets.Platform
             throw new System.NotImplementedException();
         }
 
-        /*        protected void DispatchPaint(
-                    System.Drawing.Graphics winGraphics,
-                    System.Drawing.Rectangle winClipRect
-                )
-                {
-                    //	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reçoit un événement
-                    //	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
-                    //	contenu du pixmap servant de cache.
-        
-                    if (
-                        (this.widgetWindow == null)
-                        || (this.widgetWindow.Root == null)
-                        || (this.widgetWindow.Root.IsFrozen)
-                        || (this.IsDisposed)
-                        || (this.widgetWindow.IsDisposed)
-                        || (winGraphics == null)
-                    )
-                    {
-                        return;
-                    }
-        
-                    if ((this.UpdateLayeredWindow()) && (this.graphics != null))
-                    {
-                        Drawing.DrawingBitmap pixmap = this.graphics.DrawingBitmap;
-        
-                        if (pixmap != null)
-                        {
-                            System.Drawing.Point offset = new System.Drawing.Point(
-                                (int)(this.paintOffset.X),
-                                (int)(this.paintOffset.Y)
-                            );
-        
-                            if (this.UseSpecialModeHack())
-                            {
-                                offset.X += 4;
-                                offset.Y += 4;
-                            }
-        
-                            pixmap.Paint(winGraphics, offset, winClipRect);
-                        }
-                    }
-                }
-        */
         protected bool RefreshGraphics()
         {
             /*
@@ -3009,6 +2280,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return paintNeeded;
             */
+            throw new System.NotImplementedException();
             return true;
         }
 
@@ -3091,6 +2363,7 @@ namespace Epsitec.Common.Widgets.Platform
             System.Diagnostics.Debug.WriteLine(buffer.ToString());
             System.Windows.Forms.MessageBox.Show(null, message, title);
             */
+            throw new System.NotImplementedException();
         }
 
         internal static void ProcessCrossThreadOperation(System.Action action)
@@ -3109,6 +2382,7 @@ namespace Epsitec.Common.Widgets.Platform
                 System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = state;
             }
             */
+            throw new System.NotImplementedException();
         }
 
         internal void DispatchMessage(Message message)
@@ -3142,49 +2416,6 @@ namespace Epsitec.Common.Widgets.Platform
             ToolTip.HideAllToolTips();
         }
 
-        class WindowHandleWrapper //: System.Windows.Forms.IWin32Window
-        {
-            public WindowHandleWrapper(System.IntPtr handle)
-            {
-                this.handle = handle;
-            }
-
-            #region IWin32Window Members
-
-            /*            System.IntPtr System.Windows.Forms.IWin32Window.Handle
-                        {
-                            get { return this.handle; }
-                        }
-            */
-            #endregion
-
-            private readonly System.IntPtr handle;
-        }
-
-        #region IApplicationThreadInvoker Members
-
-        void Epsitec.Common.Types.BindingAsyncOperation.IApplicationThreadInvoker.Invoke(
-            SimpleCallback method
-        )
-        {
-            /*
-            //	Execute the method in the main UI thread. If the caller is
-            //	on another thread, we have to go through the not specially
-            //	pleasant WndProc-based "Invoke" mechanism :
-
-            if (this.InvokeRequired)
-            {
-                this.Invoke(method);
-            }
-            else
-            {
-                method();
-            }
-            */
-        }
-
-        #endregion
-
         private bool widgetWindowDisposed;
         private Epsitec.Common.Widgets.Window widgetWindow;
 
@@ -3192,26 +2423,18 @@ namespace Epsitec.Common.Widgets.Platform
         private Drawing.Graphics graphics;
         private Drawing.Rectangle dirtyRectangle;
         private Drawing.DirtyRegion dirtyRegion;
-        private Drawing.Rectangle windowBounds;
-        private Drawing.Point paintOffset;
-        private System.Drawing.Rectangle formBounds;
         private Drawing.Size minimumSize;
-        private bool formBoundsSet = false;
-        private bool onResizeEvent = false;
 
         private bool isLayered;
-        private bool isLayeredDirty;
         private bool isFrozen;
         private bool isAnimatingActiveWindow;
         private bool isNoActivate;
         private bool isToolWindow;
 
-        private bool hasActiveFrame;
         private SpecialMode specialMode;
 
         private bool preventClose;
         private bool preventQuit;
-        private bool forcedClose;
         private bool filterMouseMessages;
         private bool filterKeyMessages;
         private double alpha = 1.0;
@@ -3226,10 +2449,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private int wndProcDepth;
 
-        private bool isDispatchPending;
-        private bool isPixmapOk;
         private bool isSizeMoveInProgress;
-        private bool isLayoutInProgress;
         private readonly SafeCounter isSyncPaintDisabled;
         private readonly SafeCounter isSyncUpdating;
         private readonly SafeCounter isWndProcHandlingRestricted;
@@ -3237,9 +2457,5 @@ namespace Epsitec.Common.Widgets.Platform
         private WindowPlacement windowPlacement;
 
         private static bool isAppActive;
-        private static bool isSyncRequested;
-        private static bool isAwakeRequested;
-        private static readonly Window dispatchWindow;
-        private static readonly System.IntPtr dispatchWindowHandle;
     }
 }

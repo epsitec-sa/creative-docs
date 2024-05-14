@@ -2587,8 +2587,7 @@ namespace Epsitec.Common.Document
 
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
-            //	Exécute sur le processus principal (celui qui a accès à la fenêtre d'application)
-            this.mainWindow.Invoke(this.BeforeExportPdf);
+            this.BeforeExportPdf();
 
             if (this.imageCache != null)
             {
@@ -2601,8 +2600,7 @@ namespace Epsitec.Common.Document
             //	cela peut occuper pas loing d'un GB de RAM...
             GlobalImageCache.FreeEverything();
 
-            //	Exécute sur le processus principal (celui qui a accès à la fenêtre d'application)
-            this.mainWindow.Invoke(this.AfterExportPdf);
+            this.AfterExportPdf();
 
             return err;
         }
