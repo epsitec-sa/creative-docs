@@ -76,64 +76,71 @@ namespace Epsitec.Common.Widgets.Platform
         {
             Rectangle repaint = Rectangle.MaxValue;
             this.graphics = new Graphics(this.renderingBuffer.GraphicContext);
-            this.widgetWindow.RefreshGraphics(this.graphics, repaint, new Drawing.Rectangle[0]);
+            this.widgetWindow.RefreshGraphics(this.graphics, repaint, []);
             this.graphics = null;
         }
 
-        /*
-        public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
+        //public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
+        //{
+        //    KeyCode keyCode = (KeyCode)key;
+        //    ModifierKeys modifiers = ModifierKeys.None;
+        //    if (flags.HasFlag(AntigrainSharp.InputFlags.KbdShift))
+        //    {
+        //        modifiers |= ModifierKeys.Shift;
+        //    }
+        //    if (flags.HasFlag(AntigrainSharp.InputFlags.KbdCtrl))
+        //    {
+        //        modifiers |= ModifierKeys.Control;
+        //    }
+        //    Message msg = Message.FromKeyEvent(MessageType.KeyPress, keyCode, modifiers);
+        //    this.DispatchMessage(msg);
+        //    this.ForceRedraw();
+        //}
+
+        private MouseButtons ConvertMouseButton(int button)
         {
-            KeyCode keyCode = (KeyCode)key;
-            ModifierKeys modifiers = ModifierKeys.None;
-            if (flags.HasFlag(AntigrainSharp.InputFlags.KbdShift))
+            switch (button)
             {
-                modifiers |= ModifierKeys.Shift;
+                case 1:
+                    return MouseButtons.Left;
+                case 2:
+                    return MouseButtons.Middle;
+                case 3:
+                    return MouseButtons.Right;
+                default:
+                    return MouseButtons.None;
             }
-            if (flags.HasFlag(AntigrainSharp.InputFlags.KbdCtrl))
-            {
-                modifiers |= ModifierKeys.Control;
-            }
-            Message msg = Message.FromKeyEvent(MessageType.KeyPress, keyCode, modifiers);
-            this.DispatchMessage(msg);
-            this.ForceRedraw();
         }
 
-        public override void OnMouseButtonDown(int x, int y, AntigrainSharp.InputFlags flags)
+        public override void OnMouseButtonDown(int x, int y, int button)
         {
-            MouseButtons btn = flags.HasFlag(AntigrainSharp.InputFlags.MouseLeft)
-                ? MouseButtons.Left
-                : MouseButtons.Right;
+            Console.WriteLine($"MouseDown {button} {x} {y}");
+            MouseButtons btn = this.ConvertMouseButton(button);
             Message msg = Message.FromMouseEvent(MessageType.MouseDown, this, btn, x, y, 0);
             this.DispatchMessage(msg);
-            this.ForceRedraw();
         }
 
-        public override void OnMouseButtonUp(int x, int y, AntigrainSharp.InputFlags flags)
+        public override void OnMouseButtonUp(int x, int y, int button)
         {
-            MouseButtons btn = flags.HasFlag(AntigrainSharp.InputFlags.MouseLeft)
-                ? MouseButtons.Left
-                : MouseButtons.Right;
+            Console.WriteLine($"MouseUp {button} {x} {y}");
+            MouseButtons btn = this.ConvertMouseButton(button);
             Message msg = Message.FromMouseEvent(MessageType.MouseUp, this, btn, x, y, 0);
             this.DispatchMessage(msg);
-            this.ForceRedraw();
         }
 
-        public override void OnMouseMove(int x, int y, AntigrainSharp.InputFlags flags)
+        public override void OnMouseMove(int x, int y)
         {
-            MouseButtons btn = flags.HasFlag(AntigrainSharp.InputFlags.MouseLeft)
-                ? MouseButtons.Left
-                : MouseButtons.Right;
+            MouseButtons btn = MouseButtons.None;
             Message msg = Message.FromMouseEvent(MessageType.MouseMove, this, btn, x, y, 0);
             this.DispatchMessage(msg);
-            this.ForceRedraw();
         }
 
-        public override void OnResize(int sx, int sy)
+        protected override void OnResize(int sx, int sy)
         {
-            this.clientSize = new System.Drawing.Size(sx, sy);
-            this.ForceRedraw();
+            Console.WriteLine($"Resize {sx} {sy}");
+            //this.clientSize = new System.Drawing.Size(sx, sy);
+            //this.ForceRedraw();
         }
-        */
 
         // --------------------------------------------------------------------------------------------
         //                             System.Windows.Forms.Form stubs
@@ -198,8 +205,6 @@ namespace Epsitec.Common.Widgets.Platform
             this.isSyncPaintDisabled = new SafeCounter();
             this.isSyncUpdating = new SafeCounter();
             this.isWndProcHandlingRestricted = new SafeCounter();
-
-            this.clientSize = new System.Drawing.Size(800, 600);
         }
 
         internal Window(
@@ -973,7 +978,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             // bl-net8-cross
             // old thing from winforms, see if still usefull
-            get { return this.clientSize; }
+            get { return new System.Drawing.Size(this.Width, this.Height); }
         }
 
         public System.Drawing.Size MinimumSize
@@ -1171,7 +1176,7 @@ namespace Epsitec.Common.Widgets.Platform
         internal Drawing.Size WindowSize
         {
             //get { return this.WindowBounds.Size; }
-            get { return new Drawing.Size(this.clientSize.Width, this.clientSize.Height); }
+            get { return new Drawing.Size(this.Width, this.Height); }
             set
             {
                 /*
@@ -3226,7 +3231,6 @@ namespace Epsitec.Common.Widgets.Platform
         private Drawing.Rectangle windowBounds;
         private Drawing.Point paintOffset;
         private System.Drawing.Rectangle formBounds;
-        private System.Drawing.Size clientSize;
         private System.Drawing.Size minimumSize;
         private bool formBoundsSet = false;
         private bool onResizeEvent = false;

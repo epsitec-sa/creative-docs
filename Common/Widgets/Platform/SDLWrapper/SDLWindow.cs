@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 SDL_WINDOWPOS_UNDEFINED,
                 width,
                 height,
-                SDL_WindowFlags.SDL_WINDOW_HIDDEN
+                SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL_WindowFlags.SDL_WINDOW_RESIZABLE
             );
             if (window == IntPtr.Zero)
             {
@@ -86,12 +86,18 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         protected virtual void OnDraw() { }
 
+        protected virtual void OnResize(int sx, int sy) { }
+
+        public virtual void OnMouseButtonDown(int x, int y, int button) { }
+
+        public virtual void OnMouseButtonUp(int x, int y, int button) { }
+
+        public virtual void OnMouseMove(int x, int y) { }
+
         public void Run()
         {
-            var running = true;
-
             Console.WriteLine("SDLWindow run");
-            while (running)
+            while (true)
             {
                 if (!this.ProcessEvents())
                 {
@@ -147,26 +153,67 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             return true;
         }
 
+        /// <summary>
+        /// Handle all sdl events
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns>true if the application should continue normaly, false if it should terminate</returns>
         private bool HandleEvent(SDL_Event e)
         {
-            Console.WriteLine($"SDLWindow handle event {e.type}");
             switch (e.type)
             {
                 case SDL_EventType.SDL_WINDOWEVENT:
-                    if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
+                    if (!this.HandleWindowEvent(e.window))
                     {
                         return false;
                     }
                     break;
                 case SDL_EventType.SDL_MOUSEBUTTONDOWN:
+                    this.OnMouseButtonDown(e.button.x, FlipY(e.button.y), e.button.button);
+                    break;
+                case SDL_EventType.SDL_MOUSEBUTTONUP:
+                    this.OnMouseButtonUp(e.button.x, FlipY(e.button.y), e.button.button);
+                    break;
+                case SDL_EventType.SDL_MOUSEMOTION:
+                    this.OnMouseMove(e.button.x, FlipY(e.button.y));
+                    break;
+                default:
+                    Console.WriteLine($"SDLWindow handle event {e.type}");
                     break;
             }
             return true;
         }
 
+        private int FlipY(int y)
+        {
+            return this.height - y;
+        }
+
+        /// <summary>
+        /// Handle window manager related events (close, resize, maximized…)
+        /// </summary>
+        /// <param name="we"></param>
+        /// <returns>true if the application should continue normaly, false if it should terminate</returns>
+        private bool HandleWindowEvent(SDL_WindowEvent we)
+        {
+            switch (we.windowEvent)
+            {
+                case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
+                    return false;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
+                    this.RecreateDrawingArea(we.data1, we.data2);
+                    this.OnResize(we.data1, we.data2);
+                    return true;
+                default:
+                    return true;
+            }
+        }
+
         private void RecreateDrawingArea(int width, int height)
         {
             this.DestroyDrawingArea();
+            this.width = width;
+            this.height = height;
 
             // bl-net8-cross
             // hardcoded pixelformat and stride value
