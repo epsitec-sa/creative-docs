@@ -21,10 +21,6 @@ namespace Epsitec.Common.Widgets.Platform
         // --------------------------------------------------------------------------------------------
         //                             SDLWindow overrides
         // --------------------------------------------------------------------------------------------
-        ~Window()
-        {
-            System.Console.WriteLine("Delete window");
-        }
 
         protected override void RecreateGraphicBuffer(
             IntPtr pixels,
@@ -1417,48 +1413,6 @@ namespace Epsitec.Common.Widgets.Platform
             */
             throw new System.NotImplementedException();
         }
-
-        /*
-        internal int MapToWinFormsX(double x)
-        {
-            return (int)System.Math.Floor(x + 0.5);
-        }
-
-        internal int MapToWinFormsY(double y)
-        {
-            return (int)ScreenInfo.PrimaryHeight - (int)System.Math.Floor(y + 0.5);
-        }
-
-        internal int MapToWinFormsWidth(double width)
-        {
-            return (int)(width + 0.5);
-        }
-
-        internal int MapToWinFormsHeight(double height)
-        {
-            return (int)(height + 0.5);
-        }
-
-        internal double MapFromWinFormsX(int x)
-        {
-            return x;
-        }
-
-        internal double MapFromWinFormsY(int y)
-        {
-            return ScreenInfo.PrimaryHeight - y;
-        }
-
-        internal double MapFromWinFormsWidth(int width)
-        {
-            return width;
-        }
-
-        internal double MapFromWinFormsHeight(int height)
-        {
-            return height;
-        }
-        */
 
         internal void MarkForRepaint()
         {

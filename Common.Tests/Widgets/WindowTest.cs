@@ -39,32 +39,11 @@ namespace Epsitec.Common.Tests.Widgets
             System.Console.Out.WriteLine(
                 "(1) Common.Widgets says Window is at " + window.WindowBounds.ToString()
             );
-            System.Console.Out.WriteLine(
-                "    Windows.Forms says Window is at " + window.PlatformBounds.ToString()
-            );
 
             window.WindowLocation = new Point(50, 100);
 
             Assert.AreEqual(50.0, window.WindowLocation.X);
             Assert.AreEqual(100.0, window.WindowLocation.Y);
-
-            System.Console.Out.WriteLine(
-                "(2) Common.Widgets says Window is at " + window.WindowBounds.ToString()
-            );
-            System.Console.Out.WriteLine(
-                "    Windows.Forms says Window is at " + window.PlatformBounds.ToString()
-            );
-
-            window.PlatformLocation = new Point(0, 0);
-
-            System.Console.Out.WriteLine(
-                "(3) Common.Widgets says Window is at " + window.WindowBounds.ToString()
-            );
-            System.Console.Out.WriteLine(
-                "    Windows.Forms says Window is at " + window.PlatformBounds.ToString()
-            );
-
-            Assert.AreEqual(ScreenInfo.GlobalArea.Top, window.WindowBounds.Top);
         }
 
         [Test]
@@ -94,8 +73,7 @@ namespace Epsitec.Common.Tests.Widgets
             double oy = info.WorkingArea.Bottom;
             double ox = info.WorkingArea.Left;
 
-            Window window = new Window();
-            window.MakeFramelessWindow();
+            Window window = new Window(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar);
             window.WindowActivated += window_Activated;
             window.WindowDeactivated += window_Deactivated;
             window.WindowBounds = new Rectangle(ox + 10, oy + 30, 50, 10);
@@ -107,8 +85,7 @@ namespace Epsitec.Common.Tests.Widgets
         public void CheckMakeToolWindow()
         {
             Window owner = Window.FindFromName("CheckAdornerWidgets");
-            Window window = new Window();
-            window.MakeToolWindow();
+            Window window = new Window(WindowFlags.HideFromTaskbar);
             window.Name = "ToolWindow";
             window.Owner = owner;
             window.ClientSize = new Size(300, 50);
@@ -159,9 +136,8 @@ namespace Epsitec.Common.Tests.Widgets
         {
             double zoom = 2.0;
 
-            Window window = new Window();
+            Window window = new Window(WindowFlags.HideFromTaskbar | WindowFlags.NoBorder);
             window.Root.BackColor = Color.Transparent;
-            window.MakeFramelessWindow();
             window.MakeLayeredWindow();
             window.Alpha = 0.5;
             window.WindowBounds = new Rectangle(
@@ -230,7 +206,7 @@ namespace Epsitec.Common.Tests.Widgets
         [Test]
         public void CheckWindowPlacement()
         {
-            Window window = new Window();
+            Window window = new Window(WindowFlags.Resizable);
             Timer timer = new Timer();
 
             timer.AutoRepeat = 1.0;
@@ -240,7 +216,6 @@ namespace Epsitec.Common.Tests.Widgets
             timer.Start();
 
             window.Text = "CheckWindowPlacement";
-            window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
             window.Show();
             Window.RunInTestEnvironment(window);
         }
@@ -251,7 +226,6 @@ namespace Epsitec.Common.Tests.Widgets
             Window window = new Window();
             window.Text = "CheckTabNavigation";
             window.ClientSize = new Size(450, 230);
-            window.MakeFixedSizeWindow();
 
             //-			Assert.IsNotNull (window.CommandDispatchers[0]);
             //-			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
@@ -535,7 +509,6 @@ namespace Epsitec.Common.Tests.Widgets
             Window window = new Window();
             window.Text = "CheckTabNavigation";
             window.ClientSize = new Size(450, 230);
-            window.MakeFixedSizeWindow();
 
             CommandDispatcher dispatcher = new CommandDispatcher();
 
@@ -860,11 +833,9 @@ namespace Epsitec.Common.Tests.Widgets
         {
             Window window;
 
-            window = new Window();
+            window = new Window(WindowFlags.HideFromTaskbar | WindowFlags.NoBorder);
             window.ClientSize = new Size(300, 250);
             window.Text = "Informations";
-            window.MakeSecondaryWindow();
-            window.MakeButtonlessWindow();
             window.Root.MinSize = new Size(200, 100);
 
             window.Show();
@@ -874,13 +845,12 @@ namespace Epsitec.Common.Tests.Widgets
         [Test]
         public void CheckAlphaWindow()
         {
-            Window window = new Window();
+            Window window = new Window(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar);
             StaticText text = new StaticText();
             Button button = new Button();
 
             window.Text = "Layered";
             window.Root.BackColor = Color.Transparent;
-            window.MakeFramelessWindow();
             window.MakeLayeredWindow();
             window.Alpha = 0.75;
             window.WindowBounds = new Rectangle(ScreenInfo.GlobalArea.Left + 50, 200, 200, 200);

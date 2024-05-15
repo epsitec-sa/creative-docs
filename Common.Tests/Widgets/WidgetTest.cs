@@ -43,10 +43,7 @@ namespace Epsitec.Common.Tests.Widgets
             }
             long s2 = System.GC.GetTotalMemory(true);
 
-            System.Console.WriteLine(
-                "Using {0} bytes / empty Widget instance",
-                (s2 - s1) / runs
-            );
+            System.Console.WriteLine("Using {0} bytes / empty Widget instance", (s2 - s1) / runs);
         }
 
         [Test]
@@ -2309,7 +2306,6 @@ namespace Epsitec.Common.Tests.Widgets
             Window window = new Window();
             window.Text = "CheckSmartTagColor";
             window.ClientSize = new Size(510, 220);
-            window.MakeFixedSizeWindow();
 
             ColorSelector selector1,
                 selector2;

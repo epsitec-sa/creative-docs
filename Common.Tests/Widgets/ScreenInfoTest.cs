@@ -97,10 +97,8 @@ namespace Epsitec.Common.Tests.Widgets
         [Ignore("Broken under Vista")]
         public void CheckGrabScreen()
         {
-            Window window = new Window();
+            Window window = new Window(WindowFlags.AlwaysOnTop | WindowFlags.NoBorder);
 
-            window.MakeTopLevelWindow();
-            window.MakeFramelessWindow();
             window.MakeLayeredWindow();
 
             window.ClientSize = new Size(110, 110);

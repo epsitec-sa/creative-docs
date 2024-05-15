@@ -149,6 +149,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         private void UpdateDrawing()
         {
+            Console.WriteLine("Update drawing");
             this.OnDraw();
 
             var surfaceObj = (SDL_Surface)Marshal.PtrToStructure(this.surface, typeof(SDL_Surface));

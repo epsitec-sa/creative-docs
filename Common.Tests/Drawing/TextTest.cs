@@ -491,12 +491,8 @@ namespace Epsitec.Common.Tests.Drawing
 
             public void CreateWindow(Window owner)
             {
-                this.window = new Window();
+                this.window = new Window(WindowFlags.HideFromTaskbar | WindowFlags.NoBorder);
                 this.window.Text = "Réglages pour TextTest/CheckPainting";
-                this.window.MakeSecondaryWindow();
-                this.window.MakeFixedSizeWindow();
-                this.window.MakeToolWindow();
-                this.window.MakeButtonlessWindow();
 
                 StaticText st1 = new StaticText(this.window.Root);
                 CheckButton cb1 = new CheckButton(this.window.Root);
