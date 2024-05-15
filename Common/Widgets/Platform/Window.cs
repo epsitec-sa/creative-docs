@@ -235,146 +235,6 @@ namespace Epsitec.Common.Widgets.Platform
             return flags;
         }
 
-        internal void MakeTopLevelWindow()
-        {
-            /*
-            this.TopLevel = true;
-            this.TopMost = true;
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void MakeFramelessWindow()
-        {
-            /*
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.ShowInTaskbar = false;
-            Window.DummyHandleEater(this.Handle);
-            this.widgetWindow.WindowStyles = this.WindowStyles | (WindowStyles.Frameless);
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void MakeFixedSizeWindow()
-        {
-            /*
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            Window.DummyHandleEater(this.Handle);
-
-            this.widgetWindow.WindowStyles =
-                this.WindowStyles
-                & ~(WindowStyles.CanMaximize | WindowStyles.CanMinimize | WindowStyles.CanResize);
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void MakeMinimizableFixedSizeWindow()
-        {
-            /*
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = true;
-            Window.DummyHandleEater(this.Handle);
-            this.widgetWindow.WindowStyles =
-                (this.WindowStyles & ~(WindowStyles.CanMaximize | WindowStyles.CanResize))
-                | WindowStyles.CanMinimize;
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void MakeButtonlessWindow()
-        {
-            /*
-            this.ControlBox = false;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            Window.DummyHandleEater(this.Handle);
-            this.widgetWindow.WindowStyles =
-                this.WindowStyles
-                & ~(
-                    WindowStyles.CanMaximize
-                    | WindowStyles.CanMinimize
-                    | WindowStyles.HasCloseButton
-                );
-            */
-            throw new NotImplementedException();
-        }
-
-        internal bool IsFixedSize
-        {
-            get
-            {
-                /*
-                switch (this.FormBorderStyle)
-                {
-                    case System.Windows.Forms.FormBorderStyle.Fixed3D:
-                    case System.Windows.Forms.FormBorderStyle.FixedDialog:
-                    case System.Windows.Forms.FormBorderStyle.FixedSingle:
-                    case System.Windows.Forms.FormBorderStyle.FixedToolWindow:
-                    case System.Windows.Forms.FormBorderStyle.None:
-                        return true;
-                    case System.Windows.Forms.FormBorderStyle.Sizable:
-                    case System.Windows.Forms.FormBorderStyle.SizableToolWindow:
-                        return false;
-                }
-
-                throw new System.InvalidOperationException(
-                    string.Format("{0} not supported", this.FormBorderStyle)
-                );
-                */
-                throw new NotImplementedException();
-                return false;
-            }
-        }
-
-        internal void MakeSecondaryWindow()
-        {
-            /*
-            this.ShowInTaskbar = false;
-            Window.DummyHandleEater(this.Handle);
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void MakeToolWindow()
-        {
-            /*
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.ShowInTaskbar = false;
-            this.isToolWindow = true;
-            Window.DummyHandleEater(this.Handle);
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void MakeSizableToolWindow()
-        {
-            /*
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.ShowInTaskbar = false;
-            this.isToolWindow = true;
-            Window.DummyHandleEater(this.Handle);
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void MakeFloatingWindow()
-        {
-            /*
-            this.ShowInTaskbar = false;
-            this.isToolWindow = true;
-            Window.DummyHandleEater(this.Handle);
-            */
-            throw new NotImplementedException();
-        }
-
-        internal void ResetHostingWidgetWindow()
-        {
-            this.widgetWindowDisposed = true;
-        }
-
         internal void HideWindow()
         {
             /*
@@ -385,8 +245,6 @@ namespace Epsitec.Common.Widgets.Platform
             */
             throw new NotImplementedException();
         }
-
-        static void DummyHandleEater(System.IntPtr handle) { }
 
         internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
         {
@@ -773,89 +631,11 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal Drawing.Rectangle WindowBounds
         {
-            get
-            {
-                /*
-                System.Drawing.Rectangle rect;
-
-                if (this.formBoundsSet)
-                {
-                    rect = this.formBounds;
-                }
-                else
-                {
-                    rect = base.Bounds;
-                }
-
-                double ox = this.MapFromWinFormsX(rect.Left);
-                double oy = this.MapFromWinFormsY(rect.Bottom);
-                double dx = this.MapFromWinFormsWidth(rect.Width);
-                double dy = this.MapFromWinFormsHeight(rect.Height);
-
-                return new Drawing.Rectangle(ox, oy, dx, dy);
-                */
-                throw new System.NotImplementedException();
-                //return Drawing.Rectangle.Empty;
-            }
+            get { return new Rectangle(this.WindowLocation, this.WindowSize); }
             set
             {
-                /*
-                if (this.windowBounds != value)
-                {
-                    int ox = this.MapToWinFormsX(value.Left);
-                    int oy = this.MapToWinFormsY(value.Top);
-                    int dx = this.MapToWinFormsWidth(value.Width);
-                    int dy = this.MapToWinFormsHeight(value.Height);
-
-                    this.windowBounds = value;
-                    this.formBounds = new System.Drawing.Rectangle(ox, oy, dx, dy);
-                    this.formBoundsSet = true;
-                    this.onResizeEvent = true;
-
-                    if (this.isLayered)
-                    {
-                        //	Be very careful here: in order to avoid any jitter while
-                        //	moving & sizing the layered window, we must resize the
-                        //	suface pixmap first, update the layered window surface
-                        //	and only then move the window itself :
-
-                        this.ReallocatePixmapLowLevel();
-                        this.UpdateLayeredWindow();
-
-                        Win32Api.SetWindowPos(
-                            this.Handle,
-                            System.IntPtr.Zero,
-                            ox,
-                            oy,
-                            dx,
-                            dy,
-                            Win32Const.SWP_NOACTIVATE
-                                | Win32Const.SWP_NOCOPYBITS
-                                | Win32Const.SWP_NOOWNERZORDER
-                                | Win32Const.SWP_NOZORDER
-                                | Win32Const.SWP_NOREDRAW
-                        );
-                    }
-                    else
-                    {
-                        Win32Api.SetWindowPos(
-                            this.Handle,
-                            System.IntPtr.Zero,
-                            ox,
-                            oy,
-                            dx,
-                            dy,
-                            Win32Const.SWP_NOACTIVATE
-                                | Win32Const.SWP_NOCOPYBITS
-                                | Win32Const.SWP_NOOWNERZORDER
-                                | Win32Const.SWP_NOZORDER
-                        );
-                    }
-
-                    this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-                }
-                */
-                throw new NotImplementedException();
+                this.WindowLocation = value.Location;
+                this.WindowSize = value.Size;
             }
         }
 
@@ -1004,36 +784,14 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal Drawing.Point WindowLocation
         {
-            get { return this.WindowBounds.Location; }
-            set
-            {
-                Drawing.Rectangle bounds = this.WindowBounds;
-
-                if (bounds.Location != value)
-                {
-                    bounds.Offset(value.X - bounds.X, value.Y - bounds.Y);
-                    this.WindowBounds = bounds;
-                }
-            }
+            get { return new Point(this.WindowX, this.WindowY); }
+            set { this.SetPosition((int)value.X, (int)value.Y); }
         }
 
         internal Drawing.Size WindowSize
         {
-            //get { return this.WindowBounds.Size; }
             get { return new Drawing.Size(this.Width, this.Height); }
-            set
-            {
-                /*
-                Drawing.Rectangle bounds = this.WindowBounds;
-
-                if (bounds.Size != value)
-                {
-                    bounds.Size = value;
-                    this.WindowBounds = bounds;
-                }
-                */
-                throw new System.NotImplementedException();
-            }
+            set { this.SetSize((int)value.Width, (int)value.Height); }
         }
 
         internal string Text
@@ -1054,36 +812,12 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal Drawing.Image Icon
         {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
-            get
-            {
-                /*
-                if (base.Icon == null)
-                {
-                    return null;
-                }
-
-                return Drawing.Bitmap.FromNativeBitmap(base.Icon.ToBitmap());
-                */
-                throw new NotImplementedException();
-                return null;
-            }
+            get { return this.icon; }
             set
             {
-                /*
-                if (value == null)
-                {
-                    base.Icon = null;
-                }
-                else
-                {
-                    base.Icon = System.Drawing.Icon.FromHandle(
-                        value.BitmapImage.NativeBitmap.GetHicon()
-                    );
-                }
-                */
-                throw new NotImplementedException();
+                this.icon = value;
+                var pixels = value.BitmapImage.GetPixelBuffer();
+                this.CreateIconSurface(pixels, (int)value.Width, (int)value.Height);
             }
         }
 
@@ -1518,6 +1252,7 @@ namespace Epsitec.Common.Widgets.Platform
                     this.formBounds = this.Bounds;
                     this.windowBounds = this.WindowBounds;
 
+
                     base.OnSizeChanged(e);
                     this.ReallocatePixmap();
                 }
@@ -1722,11 +1457,14 @@ namespace Epsitec.Common.Widgets.Platform
 
             this.Invalidate(new System.Drawing.Rectangle(x, y, width, height));
             */
-            throw new System.NotImplementedException();
         }
 
         internal void SynchronousRepaint()
         {
+            // TODO bl-net8-cross
+            // since the drawing works differently with AntigrainSharp than with winforms,
+            // those Invalidate calls will probably not be needed anymore
+            // If that turn out to be the case, we could delete them
             /*
             if (this.isLayoutInProgress)
             {
@@ -1755,11 +1493,12 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
             */
-            throw new System.NotImplementedException();
         }
 
         internal void SendQueueCommand()
         {
+            // bl-net8-cross
+            // some kind of windows specific IPC, can maybe be deleted
             /*
             if (this.InvokeRequired)
             {
@@ -1775,11 +1514,12 @@ namespace Epsitec.Common.Widgets.Platform
                 );
             }
             */
-            throw new System.NotImplementedException();
         }
 
         internal void SendValidation()
         {
+            // bl-net8-cross
+            // some kind of windows specific IPC, can maybe be deleted
             /*
             Win32Api.PostMessage(
                 this.Handle,
@@ -1788,12 +1528,12 @@ namespace Epsitec.Common.Widgets.Platform
                 System.IntPtr.Zero
             );
             */
-            throw new System.NotImplementedException();
         }
 
         internal static void SendSynchronizeCommandCache()
         {
             // bl-net8-cross
+            // not sure what this is for, can maybe be deleted
             /*
             Window.isSyncRequested = true;
 
@@ -1814,7 +1554,6 @@ namespace Epsitec.Common.Widgets.Platform
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
             */
-            throw new System.NotImplementedException();
         }
 
         internal static void SendAwakeEvent()
@@ -2263,19 +2002,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void ShowWindow()
         {
-            /*
-            bool ok = this.Init(
-                (uint)this.clientSize.Width,
-                (uint)this.clientSize.Height,
-                AntigrainSharp.WindowFlags.Resize
-            );
-            if (!ok)
-            {
-                throw new Exception("Failed to initialize antigrain window");
-            }
-            */
             this.Show();
-            this.UpdateLayeredWindow();
         }
 
         internal void ShowDialogWindow()
@@ -2292,6 +2019,8 @@ namespace Epsitec.Common.Widgets.Platform
         private Drawing.Rectangle dirtyRectangle;
         private Drawing.DirtyRegion dirtyRegion;
         private Drawing.Size minimumSize;
+
+        private Drawing.Image icon;
 
         private bool isLayered;
         private bool isFrozen;

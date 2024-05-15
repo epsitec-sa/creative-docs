@@ -2568,7 +2568,7 @@ namespace Epsitec.Common.Widgets
 
         private void SyncMinSizeWithWindowRoot()
         {
-            if ((this.window != null) && (this.window.IsFixedSize == false))
+            if ((this.window != null))
             {
                 int width = (int)(this.root.RealMinSize.Width + 0.5);
                 int height = (int)(this.root.RealMinSize.Height + 0.5);

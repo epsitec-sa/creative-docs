@@ -39,6 +39,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 throw new SDLException(SDL_GetError());
             }
             this.window = window;
+            this.UpdateWindowPosition();
 
             var renderer = SDL_CreateRenderer(
                 window,
@@ -61,9 +62,36 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         {
             get { return this.width; }
         }
+
         public int Height
         {
             get { return this.height; }
+        }
+
+        public int WindowX
+        {
+            get { return this.x; }
+        }
+
+        public int WindowY
+        {
+            get { return this.y; }
+        }
+
+        public void SetPosition(int x, int y)
+        {
+            SDL_SetWindowPosition(this.window, x, y);
+            this.UpdateWindowPosition();
+        }
+
+        private void UpdateWindowPosition()
+        {
+            SDL_GetWindowPosition(this.window, out this.x, out this.y);
+        }
+
+        public void SetSize(int width, int height)
+        {
+            SDL_SetWindowSize(this.window, width, height);
         }
 
         public void SetBorder(bool border)
@@ -121,16 +149,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         private void UpdateDrawing()
         {
             this.OnDraw();
-
-            // create rect with same dimensions
-            //var rect = new SDL_Rect
-            //{
-            //    x = 0,
-            //    y = 0,
-            //    w = this.width,
-            //    h = this.height
-            //};
-            //SDL_RenderFillRect(renderer, ref rect);
 
             var surfaceObj = (SDL_Surface)Marshal.PtrToStructure(this.surface, typeof(SDL_Surface));
             SDL_UpdateTexture(this.texture, IntPtr.Zero, surfaceObj.pixels, surfaceObj.pitch);
@@ -218,6 +236,31 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             }
         }
 
+        protected void CreateIconSurface(byte[] pixels, int width, int height)
+        {
+            this.DestroyIconSurface();
+            // bl-net8-cross
+            // hardcoded pixelformat and stride value
+            var pixelformat = SDL_PIXELFORMAT_ARGB8888;
+            int stride = width * 4;
+
+            this.iconPixels = pixels;
+            this.iconPixelsHandle = GCHandle.Alloc(iconPixels, GCHandleType.Pinned);
+            this.iconSurface = SDL_CreateRGBSurfaceWithFormatFrom(
+                this.iconPixelsHandle.AddrOfPinnedObject(),
+                width,
+                height,
+                32,
+                stride,
+                pixelformat
+            );
+            if (this.iconSurface == 0)
+            {
+                throw new InvalidOperationException(SDL_GetError());
+            }
+            SDL_SetWindowIcon(this.window, this.iconSurface);
+        }
+
         private void RecreateDrawingArea(int width, int height)
         {
             this.DestroyDrawingArea();
@@ -249,6 +292,20 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             }
         }
 
+        private void DestroyIconSurface()
+        {
+            this.iconPixels = null;
+            if (this.iconPixelsHandle.IsAllocated)
+            {
+                this.iconPixelsHandle.Free();
+            }
+            if (this.iconSurface != IntPtr.Zero)
+            {
+                SDL_FreeSurface(this.iconSurface);
+            }
+            this.iconSurface = IntPtr.Zero;
+        }
+
         private void DestroyDrawingArea()
         {
             if (this.surface != IntPtr.Zero)
@@ -267,6 +324,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         {
             Console.WriteLine("SDL destroy window");
             this.DestroyDrawingArea();
+            this.DestroyIconSurface();
             SDL_DestroyRenderer(this.renderer);
             SDL_DestroyWindow(this.window);
         }
@@ -276,7 +334,13 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         private IntPtr surface;
         private IntPtr texture;
 
+        private IntPtr iconSurface;
+        private byte[] iconPixels;
+        private GCHandle iconPixelsHandle;
+
         private int width;
         private int height;
+        private int x;
+        private int y;
     }
 }

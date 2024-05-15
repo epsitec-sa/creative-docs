@@ -50,7 +50,7 @@ namespace Epsitec.Common.DocumentEditor
 
         public Application(DocumentType type)
         {
-            Window window = new Window();
+            Window window = new Window(WindowFlags.Resizable);
 
             this.editor = new DocumentEditor(
                 type,

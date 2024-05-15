@@ -18,7 +18,7 @@ namespace Epsitec.Common.Drawing
         // ******************************************************************
         public DrawingBitmap(uint width, uint height)
         {
-            int stride = (int)width * 4; // 4 bytes per pixel, one byte per color channel
+            int stride = -(int)width * 4; // 4 bytes per pixel, one byte per color channel
             this.buffer = new AntigrainSharp.GraphicBuffer(width, height, stride, Font.FontManager);
         }
 
