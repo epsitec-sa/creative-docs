@@ -88,32 +88,54 @@ namespace Epsitec.Common.Widgets.Platform
 
         public override void OnMouseButtonDown(int x, int y, int button)
         {
-            Console.WriteLine($"MouseDown {button} {x} {y}");
+            Point mouse = this.WindowPointFromSDL(x, y);
+            Console.WriteLine($"MouseDown {button} {mouse}");
             MouseButtons btn = this.ConvertMouseButton(button);
-            Message msg = Message.FromMouseEvent(MessageType.MouseDown, this, btn, x, y, 0);
+            Message msg = Message.FromMouseEvent(
+                MessageType.MouseDown,
+                this,
+                btn,
+                (int)mouse.X,
+                (int)mouse.Y,
+                0
+            );
             this.DispatchMessage(msg);
         }
 
         public override void OnMouseButtonUp(int x, int y, int button)
         {
-            Console.WriteLine($"MouseUp {button} {x} {y}");
+            Point mouse = this.WindowPointFromSDL(x, y);
+            Console.WriteLine($"MouseUp {button} {mouse}");
             MouseButtons btn = this.ConvertMouseButton(button);
-            Message msg = Message.FromMouseEvent(MessageType.MouseUp, this, btn, x, y, 0);
+            Message msg = Message.FromMouseEvent(
+                MessageType.MouseUp,
+                this,
+                btn,
+                (int)mouse.X,
+                (int)mouse.Y,
+                0
+            );
             this.DispatchMessage(msg);
         }
 
         public override void OnMouseMove(int x, int y)
         {
+            Point mouse = this.WindowPointFromSDL(x, y);
             MouseButtons btn = MouseButtons.None;
-            Message msg = Message.FromMouseEvent(MessageType.MouseMove, this, btn, x, y, 0);
+            Message msg = Message.FromMouseEvent(
+                MessageType.MouseMove,
+                this,
+                btn,
+                (int)mouse.X,
+                (int)mouse.Y,
+                0
+            );
             this.DispatchMessage(msg);
         }
 
         protected override void OnResize(int sx, int sy)
         {
             Console.WriteLine($"Resize {sx} {sy}");
-            //this.clientSize = new System.Drawing.Size(sx, sy);
-            //this.ForceRedraw();
         }
 
         // --------------------------------------------------------------------------------------------
@@ -150,16 +172,76 @@ namespace Epsitec.Common.Widgets.Platform
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Point PointToClient(System.Drawing.Point p)
+        private Point WindowPointFromSDL(int x, int y)
         {
-            // bl-net8-cross delete or implement this conversion
-            return p;
+            /*
+            The coordinate system used by SDL is oriented like this:
+
+               ───────────────────────────►x
+              ┌────────────────────────────┐
+            │ │                            │
+            │ │                            │
+            │ │            SDL             │
+            │ │                            │
+            │ │                            │
+            ▼ │                            │
+            y └────────────────────────────┘
+
+            The coordinate system used by Creativedocs has the y-axis flipped:
+
+            y ┌────────────────────────────┐
+            ▲ │                            │
+            │ │                            │
+            │ │       Creativedocs         │
+            │ │                            │
+            │ │                            │
+            │ │                            │
+              └────────────────────────────┘
+               ───────────────────────────►x
+            */
+            return new Point(x, this.Height - y);
         }
 
-        public System.Drawing.Point PointToScreen(System.Drawing.Point p)
+        public Point ScreenPointToWindowPoint(Point screenPoint)
         {
-            // bl-net8-cross delete or implement this conversion
-            return p;
+            // See comment in WindowPointToScreenPoint about the coordinate system used
+            return new Point(
+                screenPoint.X - this.WindowX,
+                this.WindowY + this.Height - screenPoint.Y
+            );
+        }
+
+        public Point WindowPointToScreenPoint(Point windowPoint)
+        {
+            /*
+            The coordinate system for the screen is the same as the one used by SDL:
+
+               ───────────────────────────►x
+              ┌────────────────────────────┐
+            │ │                            │
+            │ │                            │
+            │ │        Screen (SDL)        │
+            │ │                            │
+            │ │                            │
+            ▼ │                            │
+            y └────────────────────────────┘
+
+            The coordinate system used by Creativedocs has the y-axis flipped:
+
+            y ┌────────────────────────────┐
+            ▲ │                            │
+            │ │                            │
+            │ │       Creativedocs         │
+            │ │                            │
+            │ │                            │
+            │ │                            │
+              └────────────────────────────┘
+               ───────────────────────────►x
+            */
+            return new Point(
+                this.WindowX + windowPoint.X,
+                this.WindowY + this.Height - windowPoint.Y
+            );
         }
 
         // --------------------------------------------------------------------------------------------
@@ -639,13 +721,6 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
-        public System.Drawing.Size ClientSize
-        {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
-            get { return new System.Drawing.Size(this.Width, this.Height); }
-        }
-
         public Drawing.Size MinimumSize
         {
             // bl-net8-cross
@@ -900,44 +975,6 @@ namespace Epsitec.Common.Widgets.Platform
                     this.alpha = value;
                     this.UpdateLayeredWindow();
                 }
-            }
-        }
-
-        internal System.Drawing.Size BorderSize
-        {
-            get
-            {
-                /*
-                System.Drawing.Size borderSize = new System.Drawing.Size(0, 0);
-
-                switch (this.FormBorderStyle)
-                {
-                    case System.Windows.Forms.FormBorderStyle.Fixed3D:
-                        borderSize = System.Windows.Forms.SystemInformation.Border3DSize;
-                        break;
-
-                    case System.Windows.Forms.FormBorderStyle.Sizable:
-                    case System.Windows.Forms.FormBorderStyle.SizableToolWindow:
-                        borderSize = System.Windows.Forms.SystemInformation.FrameBorderSize;
-                        break;
-
-                    case System.Windows.Forms.FormBorderStyle.FixedDialog:
-                        borderSize = System.Windows.Forms.SystemInformation.FixedFrameBorderSize;
-                        break;
-
-                    case System.Windows.Forms.FormBorderStyle.FixedSingle:
-                    case System.Windows.Forms.FormBorderStyle.FixedToolWindow:
-                        borderSize = new System.Drawing.Size(1, 1);
-                        break;
-
-                    case System.Windows.Forms.FormBorderStyle.None:
-                        break;
-                }
-
-                return borderSize;
-                */
-                //return System.Drawing.Size.Empty;
-                throw new System.NotImplementedException();
             }
         }
 
@@ -1381,6 +1418,7 @@ namespace Epsitec.Common.Widgets.Platform
             throw new System.NotImplementedException();
         }
 
+        /*
         internal int MapToWinFormsX(double x)
         {
             return (int)System.Math.Floor(x + 0.5);
@@ -1420,13 +1458,12 @@ namespace Epsitec.Common.Widgets.Platform
         {
             return height;
         }
+        */
 
         internal void MarkForRepaint()
         {
             // repaint all
-            this.MarkForRepaint(
-                new Drawing.Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height)
-            );
+            this.MarkForRepaint(new Drawing.Rectangle(0, 0, this.Width, this.Height));
         }
 
         internal void MarkForRepaint(Drawing.Rectangle rect)

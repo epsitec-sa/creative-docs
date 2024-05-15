@@ -1655,14 +1655,14 @@ namespace Epsitec.Common.Widgets
 
         public virtual Drawing.Point MapScreenToClient(Drawing.Point point)
         {
-            point = this.Window.MapScreenToWindow(point);
+            point = this.Window.ScreenPointToWindowPoint(point);
             point = this.MapRootToClient(point);
             return point;
         }
 
         public virtual Drawing.Point MapScreenToParent(Drawing.Point point)
         {
-            point = this.Window.MapScreenToWindow(point);
+            point = this.Window.ScreenPointToWindowPoint(point);
             point = this.MapRootToClient(point);
             point = this.MapClientToParent(point);
 
@@ -1672,7 +1672,7 @@ namespace Epsitec.Common.Widgets
         public virtual Drawing.Point MapClientToScreen(Drawing.Point point)
         {
             point = this.MapClientToRoot(point);
-            point = this.Window.MapWindowToScreen(point);
+            point = this.Window.WindowPointToScreenPoint(point);
 
             return point;
         }
@@ -1681,7 +1681,7 @@ namespace Epsitec.Common.Widgets
         {
             point = this.MapParentToClient(point);
             point = this.MapClientToRoot(point);
-            point = this.Window.MapWindowToScreen(point);
+            point = this.Window.WindowPointToScreenPoint(point);
 
             return point;
         }

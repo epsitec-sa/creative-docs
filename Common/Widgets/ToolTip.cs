@@ -451,7 +451,7 @@ namespace Epsitec.Common.Widgets
                 this.birthPos =
                     (this.behaviour == ToolTipBehaviour.Manual)
                         /**/? this.initialPos
-                        /**/: Message.CurrentState.LastWindow.MapWindowToScreen(
+                        /**/: Message.CurrentState.LastWindow.WindowPointToScreenPoint(
                             Message.CurrentState.LastPosition
                         );
 

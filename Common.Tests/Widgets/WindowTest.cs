@@ -74,8 +74,8 @@ namespace Epsitec.Common.Tests.Widgets
             window.WindowLocation = new Point(10, 40);
 
             Point pt0 = new Point(0, 0);
-            Point pt1 = window.MapWindowToScreen(pt0);
-            Point pt2 = window.MapScreenToWindow(pt1);
+            Point pt1 = window.WindowPointToScreenPoint(pt0);
+            Point pt2 = window.ScreenPointToWindowPoint(pt1);
 
             System.Console.Out.WriteLine("Position in window is {0}", pt0);
             System.Console.Out.WriteLine("Position in screen is {0}", pt1);

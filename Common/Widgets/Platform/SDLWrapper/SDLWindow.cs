@@ -28,8 +28,8 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
             var window = SDL_CreateWindow(
                 windowTitle,
-                SDL_WINDOWPOS_UNDEFINED,
-                SDL_WINDOWPOS_UNDEFINED,
+                SDL_WINDOWPOS_CENTERED,
+                SDL_WINDOWPOS_CENTERED,
                 width,
                 height,
                 SDL_WindowFlags.SDL_WINDOW_HIDDEN | flags
@@ -80,6 +80,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         public void SetPosition(int x, int y)
         {
+            Console.WriteLine($"Set window position {x} {y}");
             SDL_SetWindowPosition(this.window, x, y);
             this.UpdateWindowPosition();
         }
@@ -196,24 +197,19 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                     }
                     break;
                 case SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                    this.OnMouseButtonDown(e.button.x, FlipY(e.button.y), e.button.button);
+                    this.OnMouseButtonDown(e.button.x, e.button.y, e.button.button);
                     break;
                 case SDL_EventType.SDL_MOUSEBUTTONUP:
-                    this.OnMouseButtonUp(e.button.x, FlipY(e.button.y), e.button.button);
+                    this.OnMouseButtonUp(e.button.x, e.button.y, e.button.button);
                     break;
                 case SDL_EventType.SDL_MOUSEMOTION:
-                    this.OnMouseMove(e.button.x, FlipY(e.button.y));
+                    this.OnMouseMove(e.button.x, e.button.y);
                     break;
                 default:
                     Console.WriteLine($"SDLWindow handle event {e.type}");
                     break;
             }
             return true;
-        }
-
-        private int FlipY(int y)
-        {
-            return this.height - y;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.DocumentEditor
@@ -79,7 +80,17 @@ namespace Epsitec.Common.DocumentEditor
                 window.Root.MinSize = new Size(430, 250);
             }
 
-            window.WindowBounds = this.editor.GlobalSettings.MainWindowBounds;
+            var windowBounds = this.editor.GlobalSettings.MainWindowBounds;
+            if (windowBounds.Location.IsZero)
+            {
+                // if the location is not set in GlobalSettings, we only set the size
+                // the location will default to the screen center
+                window.WindowSize = windowBounds.Size;
+            }
+            else
+            {
+                window.WindowBounds = windowBounds;
+            }
             window.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
 
             switch (type)

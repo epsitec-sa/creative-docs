@@ -1,8 +1,8 @@
 //	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
@@ -1269,7 +1269,7 @@ namespace Epsitec.Common.Widgets.Behaviors
             //foreach (Window window in windows)
             //{
             //    window.DispatchMessage(
-            //        Message.CreateDummyMouseMoveEvent(window.MapScreenToWindow(pos))
+            //        Message.CreateDummyMouseMoveEvent(window.ScreenPointToWindowPoint(pos))
             //    );
             //}
             throw new System.NotImplementedException();
@@ -1470,7 +1470,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
         private static void ProcessMouseEvent(Window window, Message message)
         {
-            Drawing.Point mouse = window.MapWindowToScreen(message.Cursor);
+            Drawing.Point mouse = window.WindowPointToScreenPoint(message.Cursor);
 
             MenuBehavior.lastMousePos = mouse;
 

@@ -115,7 +115,7 @@ namespace Epsitec.Common.Widgets.Helpers
         public static Drawing.Point MapScreenToVisual(Visual visual, Drawing.Point value)
         {
             Window window = VisualTree.GetWindow(visual);
-            return VisualTree.MapRootToVisual(visual, window.MapScreenToWindow(value));
+            return VisualTree.MapRootToVisual(visual, window.ScreenPointToWindowPoint(value));
         }
 
         public static Drawing.Point MapScreenToParent(Visual visual, Drawing.Point value)
@@ -123,20 +123,20 @@ namespace Epsitec.Common.Widgets.Helpers
             Window window = VisualTree.GetWindow(visual);
             return VisualTree.MapVisualToParent(
                 visual,
-                VisualTree.MapRootToVisual(visual, window.MapScreenToWindow(value))
+                VisualTree.MapRootToVisual(visual, window.ScreenPointToWindowPoint(value))
             );
         }
 
         public static Drawing.Point MapVisualToScreen(Visual visual, Drawing.Point value)
         {
             Window window = VisualTree.GetWindow(visual);
-            return window.MapWindowToScreen(VisualTree.MapVisualToRoot(visual, value));
+            return window.WindowPointToScreenPoint(VisualTree.MapVisualToRoot(visual, value));
         }
 
         public static Drawing.Point MapParentToScreen(Visual visual, Drawing.Point value)
         {
             Window window = VisualTree.GetWindow(visual);
-            return window.MapWindowToScreen(
+            return window.WindowPointToScreenPoint(
                 VisualTree.MapVisualToRoot(visual, VisualTree.MapParentToVisual(visual, value))
             );
         }

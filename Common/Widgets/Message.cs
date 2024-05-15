@@ -778,7 +778,7 @@ namespace Epsitec.Common.Widgets
             //Message.state.screenCursor =
             //    Message.CurrentState.window == null
             //        ? Drawing.Point.Zero
-            //        : Message.CurrentState.window.MapWindowToScreen(message.cursor);
+            //        : Message.CurrentState.window.WindowPointToScreenPoint(message.cursor);
 
             //	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.
 

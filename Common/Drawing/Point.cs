@@ -18,18 +18,6 @@ namespace Epsitec.Common.Drawing
             this.y = y;
         }
 
-        public Point(System.Drawing.Point pt)
-        {
-            this.x = pt.X;
-            this.y = pt.Y;
-        }
-
-        public Point(System.Drawing.PointF pt)
-        {
-            this.x = pt.X;
-            this.y = pt.Y;
-        }
-
         [XmlAttribute]
         public double X
         {

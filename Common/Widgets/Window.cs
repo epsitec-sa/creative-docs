@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets
             this.window = new Platform.Window(this, w => this.window = w, windowFlags);
             this.timer = new Timer();
 
-            Drawing.Size size = new Drawing.Size(this.window.ClientSize);
+            Drawing.Size size = this.window.WindowSize;
 
             this.root.NotifyWindowSizeChanged(size.Width, size.Height);
 
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Widgets
         {
             // bl-net8-cross
             //Drawing.Point pos = Message.CurrentState.LastScreenPosition;
-            //this.DispatchMessage(Message.CreateDummyMouseMoveEvent(this.MapScreenToWindow(pos)));
+            //this.DispatchMessage(Message.CreateDummyMouseMoveEvent(this.ScreenPointToWindowPoint(pos)));
             throw new System.NotImplementedException();
         }
 
@@ -793,7 +793,7 @@ namespace Epsitec.Common.Widgets
 
         public Drawing.Size ClientSize
         {
-            get { return new Drawing.Size(this.window.ClientSize); }
+            get { return this.window.WindowSize; }
             set
             {
                 if ((this.window != null) && (this.ClientSize != value))
@@ -2523,30 +2523,14 @@ namespace Epsitec.Common.Widgets
             this.postPaintQueue.Enqueue(new Window.PostPaintRecord(handler, graphics, repaint));
         }
 
-        public Drawing.Point MapWindowToScreen(Drawing.Point point)
+        public Drawing.Point WindowPointToScreenPoint(Drawing.Point point)
         {
-            int x = (int)(point.X + 0.5);
-            int y = this.window.ClientSize.Height - 1 - (int)(point.Y + 0.5);
-
-            System.Drawing.Point pt = this.window.PointToScreen(new System.Drawing.Point(x, y));
-
-            double xx = this.window.MapFromWinFormsX(pt.X);
-            double yy = this.window.MapFromWinFormsY(pt.Y) - 1;
-
-            return new Drawing.Point(xx, yy);
+            return this.window.WindowPointToScreenPoint(point);
         }
 
-        public Drawing.Point MapScreenToWindow(Drawing.Point point)
+        public Drawing.Point ScreenPointToWindowPoint(Drawing.Point point)
         {
-            int x = this.window.MapToWinFormsX(point.X);
-            int y = this.window.MapToWinFormsY(point.Y) - 1;
-
-            System.Drawing.Point pt = this.window.PointToClient(new System.Drawing.Point(x, y));
-
-            double xx = pt.X;
-            double yy = this.window.ClientSize.Height - 1 - pt.Y;
-
-            return new Drawing.Point(xx, yy);
+            return this.window.ScreenPointToWindowPoint(point);
         }
 
         protected void HandleTimeElapsed(object sender)

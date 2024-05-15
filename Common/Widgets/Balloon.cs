@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
             {
                 Window window = sender as Window;
 
-                Point mouse = window.MapWindowToScreen(message.Cursor);
+                Point mouse = window.WindowPointToScreenPoint(message.Cursor);
                 if (this.IsAway(mouse))
                 {
                     this.OnCloseNeeded();
