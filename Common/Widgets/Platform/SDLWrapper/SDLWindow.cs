@@ -5,12 +5,6 @@ using static SDL2.SDL;
 
 namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 {
-    internal class SDLException : Exception
-    {
-        public SDLException(string message)
-            : base(message) { }
-    }
-
     internal abstract class SDLWindow : IDisposable
     {
         static void InitSDL()
@@ -26,7 +20,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_Quit();
         }
 
-        internal SDLWindow(string windowTitle, int width, int height)
+        internal SDLWindow(string windowTitle, int width, int height, SDL_WindowFlags flags)
         {
             Console.WriteLine("internal SDLWindow()");
             this.width = width;
@@ -38,7 +32,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 SDL_WINDOWPOS_UNDEFINED,
                 width,
                 height,
-                SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL_WindowFlags.SDL_WINDOW_RESIZABLE
+                SDL_WindowFlags.SDL_WINDOW_HIDDEN | flags
             );
             if (window == IntPtr.Zero)
             {
@@ -70,6 +64,21 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         public int Height
         {
             get { return this.height; }
+        }
+
+        public void SetBorder(bool border)
+        {
+            SDL_SetWindowBordered(this.window, SDLUtils.ToSDLBool(border));
+        }
+
+        public void SetResizable(bool resizable)
+        {
+            SDL_SetWindowResizable(this.window, SDLUtils.ToSDLBool(resizable));
+        }
+
+        public void SetTitle(string title)
+        {
+            SDL_SetWindowTitle(this.window, title);
         }
 
         public void Show()

@@ -4,6 +4,7 @@
 using System;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using SDL2;
 
 namespace Epsitec.Common.Widgets.Platform
 {
@@ -164,10 +165,11 @@ namespace Epsitec.Common.Widgets.Platform
         // --------------------------------------------------------------------------------------------
 
         internal Window(
-            Epsitec.Common.Widgets.Window window,
-            System.Action<Window> platformWindowSetter
+            Widgets.Window window,
+            Action<Window> platformWindowSetter,
+            WindowFlags windowFlags
         )
-            : base("Creativedocs", 800, 600)
+            : base("Creativedocs", 800, 600, Window.MapToSDLWindowFlags(windowFlags))
         {
             Console.WriteLine("internal Window()");
             this.widgetWindow = window;
@@ -188,7 +190,6 @@ namespace Epsitec.Common.Widgets.Platform
             */
 
             this.widgetWindow.WindowType = WindowType.Document;
-            this.widgetWindow.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 
             //this.graphics.AllocatePixmap();
 
@@ -210,6 +211,28 @@ namespace Epsitec.Common.Widgets.Platform
             //this.ReallocatePixmap();
 
             WindowList.Insert(this);
+        }
+
+        private static SDL.SDL_WindowFlags MapToSDLWindowFlags(WindowFlags windowFlags)
+        {
+            SDL.SDL_WindowFlags flags = 0;
+            if (windowFlags.HasFlag(WindowFlags.NoBorder))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
+            }
+            if (windowFlags.HasFlag(WindowFlags.Resizable))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+            }
+            if (windowFlags.HasFlag(WindowFlags.AlwaysOnTop))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
+            }
+            if (windowFlags.HasFlag(WindowFlags.HideFromTaskbar))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_SKIP_TASKBAR;
+            }
+            return flags;
         }
 
         internal void MakeTopLevelWindow()
@@ -621,19 +644,6 @@ namespace Epsitec.Common.Widgets.Platform
             throw new NotImplementedException();
         }
 
-        internal WindowStyles WindowStyles
-        {
-            get { return this.windowStyles; }
-            set
-            {
-                if (this.windowStyles != value)
-                {
-                    this.windowStyles = value;
-                    this.UpdateWindowTypeAndStyles();
-                }
-            }
-        }
-
         internal WindowType WindowType
         {
             get { return this.windowType; }
@@ -642,75 +652,8 @@ namespace Epsitec.Common.Widgets.Platform
                 if (this.windowType != value)
                 {
                     this.windowType = value;
-                    this.UpdateWindowTypeAndStyles();
                 }
             }
-        }
-
-        private void UpdateWindowTypeAndStyles()
-        {
-            // bl-net8-cross
-            // refaire la gestion des fenêtres avec ou sans bordure
-            // il faut aussi refaire les Make______Window()
-
-            var windowStyles = this.WindowStyles;
-
-            switch (this.windowType)
-            {
-                case WindowType.Document:
-                    if ((windowStyles & WindowStyles.Frameless) != 0)
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                    }
-                    else if ((windowStyles & WindowStyles.CanResize) == 0)
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-                    }
-                    else
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-                    }
-                    // this.ShowInTaskbar = true;
-                    break;
-
-                case WindowType.Dialog:
-                    if ((windowStyles & WindowStyles.Frameless) != 0)
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                    }
-                    else if ((windowStyles & WindowStyles.CanResize) == 0)
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-                    }
-                    else
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-                    }
-                    // this.ShowInTaskbar = false;
-                    break;
-
-                case WindowType.Palette:
-                    if ((windowStyles & WindowStyles.Frameless) != 0)
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                    }
-                    else if ((windowStyles & WindowStyles.CanResize) == 0)
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-                    }
-                    else
-                    {
-                        // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-                    }
-                    // this.ShowInTaskbar = false;
-                    break;
-            }
-
-            //this.MinimizeBox = ((windowStyles & WindowStyles.CanMinimize) != 0);
-            //this.MaximizeBox = ((windowStyles & WindowStyles.CanMaximize) != 0);
-            //this.HelpButton = ((windowStyles & WindowStyles.HasHelpButton) != 0);
-            //this.ControlBox = ((windowStyles & WindowStyles.HasCloseButton) != 0);
-            throw new NotImplementedException();
         }
 
         internal bool PreventAutoClose
@@ -1099,8 +1042,7 @@ namespace Epsitec.Common.Widgets.Platform
             set
             {
                 this.windowTitle = value;
-                // bl-net8-cross
-                //this.SetCaption(value);
+                this.SetTitle(value);
             }
         }
 
@@ -2366,7 +2308,6 @@ namespace Epsitec.Common.Widgets.Platform
         private string windowTitle;
         private string windowName;
         private WindowMode windowMode = WindowMode.Window;
-        private WindowStyles windowStyles;
         private WindowType windowType;
 
         private bool isSizeMoveInProgress;

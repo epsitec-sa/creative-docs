@@ -18,9 +18,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             //	Crée et montre la fenêtre du dialogue.
             if (this.window == null)
             {
-                this.window = new Window();
-                this.window.MakeFixedSizeWindow();
-                this.window.MakeSecondaryWindow();
+                this.window = new Window(WindowFlags.HideFromTaskbar);
                 this.WindowInit("Update", 350, 210);
                 this.window.Text = Res.Strings.Dialog.Update.Title;
                 this.window.PreventAutoClose = true;

@@ -13,11 +13,11 @@ namespace Epsitec.Common.Widgets.Tools
     {
         public Magnifier()
         {
-            this.zoomWindow = new Window();
+            this.zoomWindow = new Window(
+                WindowFlags.NoBorder | WindowFlags.HideFromTaskbar | WindowFlags.AlwaysOnTop
+            );
             this.zoomView = new MagnifierZoomView(this);
 
-            this.zoomWindow.MakeTopLevelWindow();
-            this.zoomWindow.MakeFramelessWindow();
             this.zoomWindow.MakeLayeredWindow();
 
             this.zoomWindow.ClientSize = new Drawing.Size(111, 111);

@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -2885,9 +2885,9 @@ namespace Epsitec.Common.Document
         {
             this.ClosePopupInterface(obj);
 
-            this.popupInterfaceWindow = new Window();
-            this.popupInterfaceWindow.MakeFramelessWindow();
-            this.popupInterfaceWindow.MakeFloatingWindow();
+            this.popupInterfaceWindow = new Window(
+                WindowFlags.NoBorder | WindowFlags.HideFromTaskbar
+            );
             this.popupInterfaceWindow.DisableMouseActivation();
             this.popupInterfaceWindow.MakeLayeredWindow(true);
             this.popupInterfaceWindow.Root.SyncPaint = true;
@@ -3084,9 +3084,7 @@ namespace Epsitec.Common.Document
                 return;
             }
 
-            this.miniBar = new Window();
-            this.miniBar.MakeFramelessWindow();
-            this.miniBar.MakeFloatingWindow();
+            this.miniBar = new Window(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar);
             this.miniBar.DisableMouseActivation();
             this.miniBar.MakeLayeredWindow(true);
             this.miniBar.Root.SyncPaint = true;

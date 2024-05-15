@@ -1,11 +1,11 @@
 //	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Dialogs.Helpers;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -238,7 +238,6 @@ namespace Epsitec.Common.Dialogs
         {
             //	Crée la fenêtre et tous les widgets pour peupler le dialogue.
             this.window = new Window();
-            this.window.MakeFixedSizeWindow();
             this.window.PreventAutoClose = true;
             this.window.Name = "Options";
             this.window.Text = this.title;
@@ -341,23 +340,23 @@ namespace Epsitec.Common.Dialogs
         #endregion
 
 
-/*        private static DialogResult ConvertWindowsResult(
-            System.Windows.Forms.DialogResult windowsResult
-        )
-        {
-            switch (windowsResult)
-            {
-                case System.Windows.Forms.DialogResult.OK:
-                    return DialogResult.Accept;
-
-                case System.Windows.Forms.DialogResult.Cancel:
-                    return DialogResult.Cancel;
-
-                default:
-                    return DialogResult.None;
-            }
-        }
-*/
+        /*        private static DialogResult ConvertWindowsResult(
+                    System.Windows.Forms.DialogResult windowsResult
+                )
+                {
+                    switch (windowsResult)
+                    {
+                        case System.Windows.Forms.DialogResult.OK:
+                            return DialogResult.Accept;
+        
+                        case System.Windows.Forms.DialogResult.Cancel:
+                            return DialogResult.Cancel;
+        
+                        default:
+                            return DialogResult.None;
+                    }
+                }
+        */
         public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
 
         private readonly FilterCollection filters;

@@ -22,9 +22,12 @@ namespace Epsitec.Common.Widgets
         // implement Window (stub)
         // ******************************************************************
         public Window()
-            : this(null) { }
+            : this(null, WindowFlags.None) { }
 
-        internal Window(WindowRoot root)
+        public Window(WindowFlags windowFlags)
+            : this(null, windowFlags) { }
+
+        internal Window(WindowRoot root, WindowFlags windowFlags)
         {
             this.id = System.Threading.Interlocked.Increment(ref Window.nextWindowId);
             this.thread = System.Threading.Thread.CurrentThread;
@@ -34,7 +37,7 @@ namespace Epsitec.Common.Widgets
                 root = new WindowRoot(this);
             }
 
-            this.Initialize(root);
+            this.Initialize(root, windowFlags);
         }
 
         public long GetWindowSerialId()
@@ -42,12 +45,12 @@ namespace Epsitec.Common.Widgets
             return this.id;
         }
 
-        private void Initialize(WindowRoot root)
+        private void Initialize(WindowRoot root, WindowFlags windowFlags)
         {
             this.components = new Support.Data.ComponentCollection(this);
 
             this.root = root;
-            this.window = new Platform.Window(this, w => this.window = w);
+            this.window = new Platform.Window(this, w => this.window = w, windowFlags);
             this.timer = new Timer();
 
             Drawing.Size size = new Drawing.Size(this.window.ClientSize);
@@ -158,59 +161,15 @@ namespace Epsitec.Common.Widgets
             */
         }
 
-        public void MakeTopLevelWindow()
-        {
-            this.window.MakeTopLevelWindow();
-        }
-
-        public void MakeFramelessWindow()
-        {
-            this.window.MakeFramelessWindow();
-        }
-
         public void MakeLayeredWindow()
         {
-            this.window.IsLayered = true;
+            // this.window.IsLayered = true;
+            throw new System.NotImplementedException();
         }
 
         public void MakeLayeredWindow(bool layered)
         {
             this.window.IsLayered = layered;
-        }
-
-        public void MakeFixedSizeWindow()
-        {
-            this.window.MakeFixedSizeWindow();
-        }
-
-        public void MakeMinimizableFixedSizeWindow()
-        {
-            this.window.MakeMinimizableFixedSizeWindow();
-        }
-
-        public void MakeButtonlessWindow()
-        {
-            this.window.MakeButtonlessWindow();
-        }
-
-        public void MakeSecondaryWindow()
-        {
-            this.window.MakeSecondaryWindow();
-        }
-
-        public void MakeToolWindow()
-        {
-            this.window.MakeToolWindow();
-        }
-
-        public void MakeSizableToolWindow()
-        {
-            this.window.MakeSizableToolWindow();
-        }
-
-        public void MakeFloatingWindow()
-        {
-            this.window.MakeFloatingWindow();
         }
 
         public void MakeActive()
@@ -717,21 +676,6 @@ namespace Epsitec.Common.Widgets
         {
             get { return this.window.Icon; }
             set { this.window.Icon = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the window styles. See <see cref="WindowRoot.WindowStyles"/>
-        /// if you need to set this value.
-        /// </summary>
-        /// <value>The window styles.</value>
-        public WindowStyles WindowStyles
-        {
-            get { return this.window.WindowStyles; }
-            internal set
-            {
-                this.window.WindowStyles = value;
-                this.root.WindowStyles = value;
-            }
         }
 
         /// <summary>

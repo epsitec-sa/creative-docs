@@ -16,9 +16,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             //	Crée et montre la fenêtre du dialogue.
             if (this.window == null)
             {
-                this.window = new Window();
-                this.window.MakeFixedSizeWindow();
-                this.window.MakeSecondaryWindow();
+                this.window = new Window(WindowFlags.HideFromTaskbar);
                 this.WindowInit("ExportICO", 300, 220);
                 this.window.PreventAutoClose = true;
                 this.window.Owner = this.editor.Window;

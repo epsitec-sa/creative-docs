@@ -12,10 +12,8 @@ namespace Epsitec.Common.Widgets
     public class MenuWindow : Window
     {
         public MenuWindow()
+            : base(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar)
         {
-            this.MakeFramelessWindow();
-            this.MakeFloatingWindow();
-
             this.DisableMouseActivation();
         }
 

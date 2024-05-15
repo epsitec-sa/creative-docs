@@ -1,11 +1,11 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Daniel Roux
 
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -215,14 +215,24 @@ namespace Epsitec.Common.Dialogs
 
         protected override Window CreateWindow()
         {
-            Window dialogWindow = new Window();
+            var flags = WindowFlags.HideFromTaskbar;
+            if (!this.hasCancel)
+            {
+                flags |= WindowFlags.NoBorder;
+            }
+            Window dialogWindow = new Window(flags);
+            if (this.hasCancel)
+            {
+                dialogWindow.WindowCloseClicked += delegate
+                {
+                    this.Result = DialogResult.Cancel;
+                    this.CloseDialog();
+                };
+            }
 
             Widget body = this.CreateUI();
             double dx = body.PreferredWidth;
             double dy = body.PreferredHeight;
-
-            dialogWindow.MakeFixedSizeWindow();
-            dialogWindow.MakeSecondaryWindow();
 
             dialogWindow.Text = this.title;
             dialogWindow.Name = "Dialog";
@@ -233,19 +243,6 @@ namespace Epsitec.Common.Dialogs
             dialogWindow.PreventAutoClose = true;
 
             CommandDispatcher.SetDispatcher(dialogWindow, new CommandDispatcher());
-
-            if (this.hasCancel)
-            {
-                dialogWindow.WindowCloseClicked += delegate
-                {
-                    this.Result = DialogResult.Cancel;
-                    this.CloseDialog();
-                };
-            }
-            else
-            {
-                dialogWindow.MakeButtonlessWindow();
-            }
 
             this.SetupWindow(dialogWindow);
 

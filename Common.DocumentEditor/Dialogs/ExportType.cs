@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
@@ -54,9 +54,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             //	Crée et montre la fenêtre du dialogue.
             if (this.window == null)
             {
-                this.window = new Window();
-                this.window.MakeFixedSizeWindow();
-                this.window.MakeSecondaryWindow();
+                this.window = new Window(WindowFlags.HideFromTaskbar);
                 this.WindowInit("ExportType", 350, 310);
                 this.window.PreventAutoClose = true;
                 this.window.Owner = this.editor.Window;

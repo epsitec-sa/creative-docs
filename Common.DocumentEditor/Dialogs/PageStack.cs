@@ -21,9 +21,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             //	Crée et montre la fenêtre du dialogue.
             if (this.window == null)
             {
-                this.window = new Window();
-                //?this.window.MakeFixedSizeWindow();
-                this.window.MakeSecondaryWindow();
+                this.window = new Window(WindowFlags.HideFromTaskbar | WindowFlags.Resizable);
                 this.window.PreventAutoClose = true;
                 this.WindowInit("PageStack", 500, 300, true);
                 this.window.Text = Res.Strings.Dialog.PageStack.Title;

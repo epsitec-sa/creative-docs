@@ -1,8 +1,8 @@
 //	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using System.Collections.Generic;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -17,7 +17,6 @@ namespace Epsitec.Common.Widgets
             this.focusChain = new List<Visual>();
 
             this.WindowType = WindowType.Document;
-            this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 
             this.InternalState |= WidgetInternalState.PossibleContainer;
             this.AutoDoubleClick = true;
@@ -33,25 +32,6 @@ namespace Epsitec.Common.Widgets
         public override Window Window
         {
             get { return this.window; }
-        }
-
-        public WindowStyles WindowStyles
-        {
-            get { return this.windowStyles; }
-            set
-            {
-                if (this.windowStyles != value)
-                {
-                    this.windowStyles = value;
-
-                    if (this.window != null)
-                    {
-                        this.window.WindowStyles = value;
-                    }
-
-                    this.OnWindowStylesChanged();
-                }
-            }
         }
 
         public WindowType WindowType
@@ -486,7 +466,6 @@ namespace Epsitec.Common.Widgets
         public event EventHandler<MessageEventArgs> AltModifierChanged;
         public event EventHandler<MessageEventArgs> ControlModifierChanged;
 
-        private WindowStyles windowStyles;
         private WindowType windowType;
         private Window window;
         private readonly bool isReady;

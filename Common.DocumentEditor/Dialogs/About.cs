@@ -1,7 +1,7 @@
+using System.Reflection;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using System.Reflection;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
@@ -20,9 +20,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             //	Crée et montre la fenêtre du dialogue.
             if (this.window == null)
             {
-                this.window = new Window();
-                this.window.MakeFixedSizeWindow();
-                this.window.MakeSecondaryWindow();
+                this.window = new Window(WindowFlags.HideFromTaskbar);
                 this.WindowInit("About", 400, 243);
                 this.window.Text = Res.Strings.Dialog.About.Title;
                 this.window.PreventAutoClose = true;

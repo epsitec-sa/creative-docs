@@ -180,7 +180,7 @@ namespace Epsitec.Common.Dialogs
 
         protected override Window CreateWindow()
         {
-            Window dialogWindow = new Window();
+            Window dialogWindow = new Window(WindowFlags.HideFromTaskbar | WindowFlags.NoBorder);
 
             dialogWindow.Text = this.dialogTitle;
             dialogWindow.Name = "Dialog";
@@ -189,10 +189,6 @@ namespace Epsitec.Common.Dialogs
 
             CommandDispatcher.SetDispatcher(dialogWindow, this.privateDispatcher);
             CommandContext.SetContext(dialogWindow, this.privateContext);
-
-            dialogWindow.MakeFixedSizeWindow();
-            dialogWindow.MakeSecondaryWindow();
-            dialogWindow.MakeButtonlessWindow();
 
             FrameBox frame = new FrameBox(dialogWindow.Root);
             frame.DrawFullFrame = false;

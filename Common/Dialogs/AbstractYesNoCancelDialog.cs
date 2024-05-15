@@ -48,7 +48,7 @@ namespace Epsitec.Common.Dialogs
 
             dx = System.Math.Max(dx, 3 * 75 + 4 * 8);
 
-            Window dialogWindow = new Window();
+            Window dialogWindow = new Window(WindowFlags.HideFromTaskbar);
 
             dialogWindow.Text = this.dialogTitle;
             dialogWindow.Name = "Dialog";
@@ -58,9 +58,6 @@ namespace Epsitec.Common.Dialogs
             this.CommandContext.GetCommandState(Res.Commands.Dialog.Generic.Yes).Enable = true;
             this.CommandContext.GetCommandState(Res.Commands.Dialog.Generic.No).Enable = true;
             this.CommandContext.GetCommandState(Res.Commands.Dialog.Generic.Cancel).Enable = true;
-
-            dialogWindow.MakeFixedSizeWindow();
-            dialogWindow.MakeSecondaryWindow();
 
             body.SetParent(dialogWindow.Root);
             body.SetManualBounds(new Drawing.Rectangle(8, 16 + 24 + 16, dx, dy));

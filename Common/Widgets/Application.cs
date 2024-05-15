@@ -257,7 +257,6 @@ namespace Epsitec.Common.Widgets
             Support.ResourceManager.SetResourceManager(window, this.ResourceManager);
 
             window.Root.WindowType = WindowType.Document;
-            window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
             window.Name = "Application";
             window.PreventAutoClose = true;
             window.PreventAutoQuit = false;

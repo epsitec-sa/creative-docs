@@ -1,9 +1,9 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
-using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Widgets.ToolTip))]
 
@@ -19,9 +19,7 @@ namespace Epsitec.Common.Widgets
             this.hash = new Dictionary<long, object>();
             this.behaviour = ToolTipBehaviour.Normal;
 
-            this.window = new Window();
-            this.window.MakeFramelessWindow();
-            this.window.MakeFloatingWindow();
+            this.window = new Window(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar);
             this.window.Name = "$ToolTip";
             this.window.DisableMouseActivation();
             this.window.WindowBounds = new Drawing.Rectangle(0, 0, 8, 8);

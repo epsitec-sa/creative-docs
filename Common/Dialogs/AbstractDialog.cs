@@ -396,44 +396,36 @@ namespace Epsitec.Common.Dialogs
         {
             this.dialogWindow = this.CreateWindow();
 
-            if (this.dialogWindow != null)
+            if (this.dialogWindow == null)
             {
-                this.OnDialogWindowCreated();
+                return;
+            }
+            this.OnDialogWindowCreated();
 
-                this.dialogWindow.PreventAutoClose = true;
+            this.dialogWindow.PreventAutoClose = true;
 
-                if (this.IsApplicationWindow)
+            if (this.IsApplicationWindow)
+            {
+                this.dialogWindow.WindowCloseClicked += this.HandleWindowCloseClicked;
+                this.dialogWindow.Root.WindowType = WindowType.Document;
+            }
+            else
+            {
+                this.dialogWindow.Root.WindowType = WindowType.Dialog;
+
+                if (
+                    (this.ContainsCommand(Res.Commands.Dialog.Generic.Cancel))
+                    || (this.ContainsCommand(Res.Commands.Dialog.Generic.Close))
+                )
                 {
                     this.dialogWindow.WindowCloseClicked += this.HandleWindowCloseClicked;
-                    this.dialogWindow.Root.WindowType = WindowType.Document;
                 }
-                else
-                {
-                    this.dialogWindow.MakeSecondaryWindow();
-                    this.dialogWindow.Root.WindowType = WindowType.Dialog;
-
-                    if (
-                        (this.ContainsCommand(Res.Commands.Dialog.Generic.Cancel))
-                        || (this.ContainsCommand(Res.Commands.Dialog.Generic.Close))
-                    )
-                    {
-                        this.dialogWindow.WindowCloseClicked += this.HandleWindowCloseClicked;
-                    }
-                    else
-                    {
-                        WindowStyles styles = this.dialogWindow.Root.WindowStyles;
-
-                        styles &= ~WindowStyles.HasCloseButton;
-
-                        this.dialogWindow.Root.WindowStyles = styles;
-                    }
-                }
-
-                this.dialogWindow.Root.ValidationGroups = "Accept";
-
-                CommandDispatcher.SetDispatcher(this.dialogWindow, this.CommandDispatcher);
-                CommandContext.SetContext(this.dialogWindow, this.CommandContext);
             }
+
+            this.dialogWindow.Root.ValidationGroups = "Accept";
+
+            CommandDispatcher.SetDispatcher(this.dialogWindow, this.CommandDispatcher);
+            CommandContext.SetContext(this.dialogWindow, this.CommandContext);
         }
 
         private bool ContainsCommand(Command command)

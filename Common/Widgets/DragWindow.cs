@@ -15,11 +15,10 @@ namespace Epsitec.Common.Widgets
     public class DragWindow : Window
     {
         public DragWindow()
+            : base(null, WindowFlags.NoBorder | WindowFlags.HideFromTaskbar)
         {
             this.Root.BackColor = Drawing.Color.Transparent;
 
-            this.MakeFramelessWindow();
-            this.MakeFloatingWindow();
             this.MakeLayeredWindow();
             this.DisableMouseActivation();
 
