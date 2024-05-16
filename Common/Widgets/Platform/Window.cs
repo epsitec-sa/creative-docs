@@ -44,10 +44,8 @@ namespace Epsitec.Common.Widgets.Platform
 
         protected override void OnDraw()
         {
-            Rectangle repaint = Rectangle.MaxValue;
-            this.graphics = new Graphics(this.renderingBuffer.GraphicContext);
-            this.widgetWindow.RefreshGraphics(this.graphics, repaint, []);
-            this.graphics = null;
+            var graphics = new Graphics(this.renderingBuffer.GraphicContext);
+            this.RefreshGraphics(graphics);
         }
 
         //public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
@@ -326,9 +324,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
         {
-            /*
-            Window.DummyHandleEater(this.Handle);
-
             if (this.isLayered)
             {
                 switch (animation)
@@ -352,7 +347,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.isAnimatingActiveWindow = true;
             this.WindowBounds = bounds;
             this.MarkForRepaint();
-            this.RefreshGraphics();
+            //this.RefreshGraphics();
 
             Animator animator;
 
@@ -423,8 +418,7 @@ namespace Epsitec.Common.Widgets.Platform
                 case Animation.RollRight:
                 case Animation.RollLeft:
                     this.isFrozen = true;
-                    this.formMinSize = this.MinimumSize;
-                    this.MinimumSize = new System.Drawing.Size(1, 1);
+                    this.MinimumSize = new Size(1, 1);
                     this.WindowBounds = b1;
                     this.UpdateLayeredWindow();
 
@@ -439,13 +433,10 @@ namespace Epsitec.Common.Widgets.Platform
                     this.ShowWindow();
                     break;
             }
-            */
-            throw new NotImplementedException();
         }
 
         internal void AnimateHide(Animation animation, Drawing.Rectangle bounds)
         {
-            /*
             Drawing.Rectangle b1;
             Drawing.Rectangle b2;
             Drawing.Point o1;
@@ -455,7 +446,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             this.WindowBounds = bounds;
             this.MarkForRepaint();
-            this.RefreshGraphics();
+            //this.RefreshGraphics();
 
             Animator animator;
 
@@ -524,8 +515,6 @@ namespace Epsitec.Common.Widgets.Platform
                     animator.Start();
                     break;
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
@@ -607,36 +596,7 @@ namespace Epsitec.Common.Widgets.Platform
         internal bool IsLayered
         {
             get { return this.isLayered; }
-            set
-            {
-                /*
-                if (this.isLayered != value)
-                {
-                    if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
-                    {
-                        throw new System.Exception("A layered window may not have a border");
-                    }
-
-                    if (SystemInformation.SupportsLayeredWindows)
-                    {
-                        int exStyle = Win32Api.GetWindowExStyle(this.Handle);
-
-                        if (value)
-                        {
-                            exStyle |= Win32Const.WS_EX_LAYERED;
-                        }
-                        else
-                        {
-                            exStyle &= ~Win32Const.WS_EX_LAYERED;
-                        }
-
-                        Win32Api.SetWindowExStyle(this.Handle, exStyle);
-                        this.isLayered = value;
-                    }
-                }
-                */
-                throw new NotImplementedException();
-            }
+            set { this.isLayered = value; }
         }
 
         internal bool IsActive
@@ -966,11 +926,14 @@ namespace Epsitec.Common.Widgets.Platform
             get { return this.alpha; }
             set
             {
-                if (this.alpha != value)
+                if (value < 0 || value > 1.0)
                 {
-                    this.alpha = value;
-                    this.UpdateLayeredWindow();
+                    throw new ArgumentOutOfRangeException(
+                        $"Invalid alpha value {value}, should be between 0.0 and 1.0"
+                    );
                 }
+                this.SetWindowOpacity((float)value);
+                this.alpha = value;
             }
         }
 
@@ -1758,26 +1721,11 @@ namespace Epsitec.Common.Widgets.Platform
             throw new System.NotImplementedException();
         }
 
-        protected bool RefreshGraphics()
+        protected bool RefreshGraphics(Drawing.Graphics graphics)
         {
-            /*
-            if (this.isLayoutInProgress)
+            if (this.widgetWindow != null)
             {
-                return false;
-            }
-
-            this.isLayoutInProgress = true;
-
-            try
-            {
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.ForceLayout();
-                }
-            }
-            finally
-            {
-                this.isLayoutInProgress = false;
+                this.widgetWindow.ForceLayout();
             }
 
             if (this.IsFrozen)
@@ -1785,28 +1733,19 @@ namespace Epsitec.Common.Widgets.Platform
                 return false;
             }
 
-            return this.RefreshGraphicsLowLevel();
-            */
-            throw new System.NotImplementedException();
+            return this.RefreshGraphicsLowLevel(graphics);
         }
 
-        private bool RefreshGraphicsLowLevel()
+        private bool RefreshGraphicsLowLevel(Graphics graphics)
         {
-            /*
-            Drawing.Rectangle repaint = this.dirtyRectangle;
-            Drawing.Rectangle[] strips = this.dirtyRegion.GenerateStrips();
-
             this.dirtyRectangle = Drawing.Rectangle.Empty;
             this.dirtyRegion = new Drawing.DirtyRegion();
 
             if (this.widgetWindow != null)
             {
-                this.widgetWindow.RefreshGraphics(this.graphics, repaint, strips);
+                this.widgetWindow.RefreshGraphics(graphics, Rectangle.MaxValue, []);
             }
-
             return true;
-            */
-            throw new System.NotImplementedException();
         }
 
         protected bool UpdateLayeredWindow()
@@ -2006,7 +1945,6 @@ namespace Epsitec.Common.Widgets.Platform
         private Epsitec.Common.Widgets.Window widgetWindow;
 
         private AntigrainSharp.AbstractGraphicBuffer renderingBuffer;
-        private Drawing.Graphics graphics;
         private Drawing.Rectangle dirtyRectangle;
         private Drawing.DirtyRegion dirtyRegion;
         private Drawing.Size minimumSize;

@@ -1072,11 +1072,11 @@ namespace Epsitec.Common.Drawing
             //	Lorsque la matrice de transformation change, il faut aussi mettre à jour les
             //	transformations des renderers qui en ont...
 
-            //Transform tImage = this.imageRenderer.Transform;
-            //Transform tGradient = this.gradientRenderer.Transform;
+            Transform tImage = this.imageRenderer.Transform;
+            Transform tGradient = this.gradientRenderer.Transform;
 
-            //this.imageRenderer.Transform = tImage;
-            //this.gradientRenderer.Transform = tGradient;
+            this.imageRenderer.Transform = tImage;
+            this.gradientRenderer.Transform = tGradient;
         }
 
         private void SetClippingRectangle(double x, double y, double width, double height)

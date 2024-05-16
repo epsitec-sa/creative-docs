@@ -32,7 +32,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 SDL_WINDOWPOS_CENTERED,
                 width,
                 height,
-                SDL_WindowFlags.SDL_WINDOW_HIDDEN | flags
+                flags
             );
             if (window == IntPtr.Zero)
             {
@@ -110,6 +110,11 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_SetWindowTitle(this.window, title);
         }
 
+        public void SetWindowOpacity(float opacity)
+        {
+            SDL_SetWindowOpacity(this.window, opacity);
+        }
+
         public void Show()
         {
             SDL_ShowWindow(this.window);
@@ -149,7 +154,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         private void UpdateDrawing()
         {
-            Console.WriteLine("Update drawing");
             this.OnDraw();
 
             var surfaceObj = (SDL_Surface)Marshal.PtrToStructure(this.surface, typeof(SDL_Surface));

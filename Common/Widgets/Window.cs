@@ -163,8 +163,7 @@ namespace Epsitec.Common.Widgets
 
         public void MakeLayeredWindow()
         {
-            // this.window.IsLayered = true;
-            throw new System.NotImplementedException();
+            this.window.IsLayered = true;
         }
 
         public void MakeLayeredWindow(bool layered)
