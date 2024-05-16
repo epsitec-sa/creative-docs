@@ -901,62 +901,7 @@ namespace Epsitec.Common.Widgets
 
         private static string GetSimpleKeyName(KeyCode code)
         {
-            /*
-            string name;
-
-            if (code >= KeyCode.ExtendedKeys)
-            {
-                switch (code)
-                {
-                    case KeyCode.NumericEnter:
-                        return "Enter";
-
-                    default:
-                        break;
-                }
-            }
-
-            if (Win32Api.GetKeyName(code, out name))
-            {
-                System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-
-                string[] elems = name.Split('.');
-
-                for (int i = 0; i < elems.Length; i++)
-                {
-                    string upper = elems[i];
-                    string lower = upper.ToLower();
-
-                    if (i > 0)
-                    {
-                        buffer.Append(".");
-                    }
-
-                    if (upper.Length > 0)
-                    {
-                        buffer.Append(upper.Substring(0, 1));
-                        buffer.Append(lower.Substring(1));
-                    }
-                }
-
-                return buffer.ToString();
-            }
-
-            name = code.ToString();
-
-            if (name.StartsWith("Func"))
-            {
-                return name.Substring(4);
-            }
-            if (name.StartsWith("Alpha"))
-            {
-                return name.Substring(5);
-            }
-
-            return name;
-            */
-            throw new System.NotImplementedException();
-            return "";
+            return KeyCodeHelper.ConvertToString(code);
         }
 
         private static KeyCode lastCode;

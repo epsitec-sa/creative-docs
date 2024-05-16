@@ -1,6 +1,8 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
     /// <summary>
@@ -142,5 +144,127 @@ namespace Epsitec.Common.Widgets
 
         ExtendedKeys = 0x1000,
         NumericEnter = ExtendedKeys + 0,
+    }
+
+    class KeyCodeHelper
+    {
+        public static string ConvertToString(KeyCode keycode)
+        {
+            string keyname;
+            if (!KeyCodeHelper.keycodeToString.TryGetValue(keycode, out keyname))
+            {
+                return "";
+            }
+            return keyname;
+        }
+
+        private static readonly Dictionary<KeyCode, string> keycodeToString = new Dictionary<
+            KeyCode,
+            string
+        >()
+        {
+            { KeyCode.AlphaA, "A" },
+            { KeyCode.AlphaB, "B" },
+            { KeyCode.AlphaC, "C" },
+            { KeyCode.AlphaD, "D" },
+            { KeyCode.AlphaE, "E" },
+            { KeyCode.AlphaF, "F" },
+            { KeyCode.AlphaG, "G" },
+            { KeyCode.AlphaH, "H" },
+            { KeyCode.AlphaI, "I" },
+            { KeyCode.AlphaJ, "J" },
+            { KeyCode.AlphaK, "K" },
+            { KeyCode.AlphaL, "L" },
+            { KeyCode.AlphaM, "M" },
+            { KeyCode.AlphaN, "N" },
+            { KeyCode.AlphaO, "O" },
+            { KeyCode.AlphaP, "P" },
+            { KeyCode.AlphaQ, "Q" },
+            { KeyCode.AlphaR, "R" },
+            { KeyCode.AlphaS, "S" },
+            { KeyCode.AlphaT, "T" },
+            { KeyCode.AlphaU, "U" },
+            { KeyCode.AlphaV, "V" },
+            { KeyCode.AlphaW, "W" },
+            { KeyCode.AlphaX, "X" },
+            { KeyCode.AlphaY, "Y" },
+            { KeyCode.AlphaZ, "Z" },
+            { KeyCode.Digit0, "0" },
+            { KeyCode.Digit1, "1" },
+            { KeyCode.Digit2, "2" },
+            { KeyCode.Digit3, "3" },
+            { KeyCode.Digit4, "4" },
+            { KeyCode.Digit5, "5" },
+            { KeyCode.Digit6, "6" },
+            { KeyCode.Digit7, "7" },
+            { KeyCode.Digit8, "8" },
+            { KeyCode.Digit9, "9" },
+            { KeyCode.FuncF1, "F1" },
+            { KeyCode.FuncF2, "F2" },
+            { KeyCode.FuncF3, "F3" },
+            { KeyCode.FuncF4, "F4" },
+            { KeyCode.FuncF5, "F5" },
+            { KeyCode.FuncF6, "F6" },
+            { KeyCode.FuncF7, "F7" },
+            { KeyCode.FuncF8, "F8" },
+            { KeyCode.FuncF9, "F9" },
+            { KeyCode.FuncF10, "F10" },
+            { KeyCode.FuncF11, "F11" },
+            { KeyCode.FuncF12, "F12" },
+            { KeyCode.FuncF13, "F13" },
+            { KeyCode.FuncF14, "F14" },
+            { KeyCode.FuncF15, "F15" },
+            { KeyCode.FuncF16, "F16" },
+            { KeyCode.FuncF17, "F17" },
+            { KeyCode.FuncF18, "F18" },
+            { KeyCode.FuncF19, "F19" },
+            { KeyCode.FuncF20, "F20" },
+            { KeyCode.FuncF21, "F21" },
+            { KeyCode.FuncF22, "F22" },
+            { KeyCode.FuncF23, "F23" },
+            { KeyCode.FuncF24, "F24" },
+            { KeyCode.AltKey, "Alt" },
+            { KeyCode.AltKeyLeft, "LeftAlt" },
+            { KeyCode.AltKeyRight, "RightAlt" },
+            { KeyCode.ArrowDown, "Down" },
+            { KeyCode.ArrowLeft, "Left" },
+            { KeyCode.ArrowRight, "Right" },
+            { KeyCode.ArrowUp, "Up" },
+            { KeyCode.Back, "Back" },
+            { KeyCode.Clear, "Clear" },
+            { KeyCode.ControlKey, "Control" },
+            { KeyCode.ControlKeyLeft, "LeftControl" },
+            { KeyCode.ControlKeyRight, "RightControl" },
+            { KeyCode.Delete, "Delete" },
+            { KeyCode.End, "End" },
+            { KeyCode.Escape, "Escape" },
+            { KeyCode.Home, "Home" },
+            { KeyCode.Insert, "Insert" },
+            { KeyCode.PageDown, "PageDown" },
+            { KeyCode.PageUp, "PageUp" },
+            { KeyCode.Pause, "Pause" },
+            { KeyCode.Return, "Return" },
+            { KeyCode.NumericMultiply, "Multiply" },
+            { KeyCode.NumericAdd, "Add" },
+            { KeyCode.NumericSubtract, "Subtract" },
+            { KeyCode.NumericDecimal, "Decimal" },
+            { KeyCode.NumericDivide, "Divide" },
+            { KeyCode.ShiftKey, "Shift" },
+            { KeyCode.ShiftKeyLeft, "LeftShift" },
+            { KeyCode.ShiftKeyRight, "RightShift" },
+            { KeyCode.Space, "Space" },
+            { KeyCode.Tab, "Tab" },
+            { KeyCode.Comma, "Comma" },
+            { KeyCode.Dash, "Dash" },
+            { KeyCode.Dot, "Dot" },
+            { KeyCode.OemParaSign, "ParaSign" },
+            { KeyCode.OemApostrophe, "Apostrophe" },
+            { KeyCode.OemCircumflex, "Circumflex" },
+            { KeyCode.OemBackslash, "Backslash" },
+            { KeyCode.ContextualMenu, "ContextualMenu" },
+            { KeyCode.CapsLock, "CapsLock" },
+            { KeyCode.NumLock, "NumLock" },
+            { KeyCode.ScrollLock, "ScrollLock" },
+        };
     }
 }
