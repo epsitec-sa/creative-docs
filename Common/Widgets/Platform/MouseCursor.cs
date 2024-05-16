@@ -1,6 +1,7 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 using System;
+using System.Runtime.InteropServices;
 using static SDL2.SDL;
 
 namespace Epsitec.Common.Widgets.Platform
@@ -15,6 +16,11 @@ namespace Epsitec.Common.Widgets.Platform
             this.cursor = cursor;
         }
 
+        public void Use()
+        {
+            SDL_SetCursor(this.cursor);
+        }
+
         public static MouseCursor FromSystemCursor(SDL_SystemCursor systemCursor)
         {
             IntPtr cursor = SDL_CreateSystemCursor(systemCursor);
@@ -27,89 +33,44 @@ namespace Epsitec.Common.Widgets.Platform
 
         public static MouseCursor FromImage(Drawing.Image cursorImage, int xhot, int yhot)
         {
-            /*
-            Drawing.Image image = Drawing.Bitmap.CopyImage(cursorImage);
-            System.Drawing.Bitmap bitmap = image.BitmapImage.NativeBitmap;
-            System.IntPtr orgHandle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon();
-            Win32Api.IconInfo iconInfo = new Win32Api.IconInfo();
+            int width = (int)cursorImage.Width;
+            int height = (int)cursorImage.Height;
+            // bl-net8-cross
+            // hardcoded pixelformat and stride value
+            var pixelformat = SDL_PIXELFORMAT_ARGB8888;
+            int stride = width * 4;
 
-            if (orgHandle == System.IntPtr.Zero)
+            var cursorPixelsHandle = GCHandle.Alloc(
+                cursorImage.BitmapImage.GetPixelBuffer(),
+                GCHandleType.Pinned
+            );
+            var cursorSurface = SDL_CreateRGBSurfaceWithFormatFrom(
+                cursorPixelsHandle.AddrOfPinnedObject(),
+                width,
+                height,
+                32,
+                stride,
+                pixelformat
+            );
+            if (cursorSurface == 0)
             {
-                throw new System.NullReferenceException("FromImage cannot derive bitmap handle.");
+                throw new InvalidOperationException(SDL_GetError());
             }
 
-            Win32Api.GetIconInfo(orgHandle, out iconInfo);
-
-            if (
-                (iconInfo.BitmapColor == System.IntPtr.Zero)
-                || (iconInfo.BitmapMask == System.IntPtr.Zero)
-            )
+            IntPtr cursor = SDL_CreateColorCursor(cursorSurface, xhot, yhot);
+            if (cursor == IntPtr.Zero)
             {
-                throw new System.NullReferenceException("FromImage got empty IconInfo.");
+                throw new InvalidOperationException(SDL_GetError());
             }
-
-            iconInfo.FlagIcon = 0;
-            iconInfo.HotspotX = xhot;
-            iconInfo.HotspotY = (int)(image.Height) - yhot;
-
-            System.IntPtr newHandle = Win32Api.CreateIconIndirect(ref iconInfo);
-            System.Windows.Forms.Cursor winCursor = new System.Windows.Forms.Cursor(newHandle);
-
-            Win32Api.DeleteObject(iconInfo.BitmapColor);
-            Win32Api.DeleteObject(iconInfo.BitmapMask);
-            Win32Api.DestroyIcon(orgHandle);
-            image.Dispose();
-
-            return new MouseCursor(winCursor, newHandle);
-            */
-            throw new System.NotImplementedException();
-            return null;
+            // cleanup
+            cursorPixelsHandle.Free();
+            SDL_FreeSurface(cursorSurface);
+            return new MouseCursor(cursor);
         }
 
         public static MouseCursor FromImage(Drawing.Image cursorImage)
         {
-            /*
-            Drawing.Image image = Drawing.Bitmap.CopyImage(cursorImage);
-            System.Drawing.Bitmap bitmap = image.BitmapImage.NativeBitmap;
-            System.IntPtr orgHandle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon();
-            Win32Api.IconInfo iconInfo = new Win32Api.IconInfo();
-
-            if (orgHandle == System.IntPtr.Zero)
-            {
-                throw new System.NullReferenceException("FromImage cannot derive bitmap handle.");
-            }
-
-            Win32Api.GetIconInfo(orgHandle, out iconInfo);
-
-            if (
-                (iconInfo.BitmapColor == System.IntPtr.Zero)
-                || (iconInfo.BitmapMask == System.IntPtr.Zero)
-            )
-            {
-                throw new System.NullReferenceException("FromImage got empty IconInfo.");
-            }
-
-            double ox = image.Origin.X;
-            double oy = image.Height - image.Origin.Y;
-
-            iconInfo.FlagIcon = 0;
-            iconInfo.HotspotX = (int)System.Math.Floor(ox + 0.5);
-            ;
-            iconInfo.HotspotY = (int)System.Math.Floor(oy + 0.5);
-            ;
-
-            System.IntPtr newHandle = Win32Api.CreateIconIndirect(ref iconInfo);
-            System.Windows.Forms.Cursor winCursor = new System.Windows.Forms.Cursor(newHandle);
-
-            Win32Api.DeleteObject(iconInfo.BitmapColor);
-            Win32Api.DeleteObject(iconInfo.BitmapMask);
-            Win32Api.DestroyIcon(orgHandle);
-            image.Dispose();
-
-            return new MouseCursor(winCursor, newHandle);
-            */
-            throw new System.NotImplementedException();
-            return null;
+            return MouseCursor.FromImage(cursorImage, 0, 0);
         }
 
         public static void Hide()
