@@ -129,6 +129,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         protected override void OnResize(int sx, int sy)
         {
+            this.widgetWindow.OnResize(sx, sy);
             Console.WriteLine($"Resize {sx} {sy}");
         }
 
@@ -250,9 +251,6 @@ namespace Epsitec.Common.Widgets.Platform
             Console.WriteLine("internal Window()");
             this.widgetWindow = window;
             platformWindowSetter(this);
-
-            this.dirtyRectangle = Drawing.Rectangle.Empty;
-            this.dirtyRegion = new Drawing.DirtyRegion();
 
             /* //REMOVED (bl-net8-cross)
             base.MinimumSize = new System.Drawing.Size(1, 1);
@@ -420,7 +418,6 @@ namespace Epsitec.Common.Widgets.Platform
                     this.isFrozen = true;
                     this.MinimumSize = new Size(1, 1);
                     this.WindowBounds = b1;
-                    this.UpdateLayeredWindow();
 
                     animator = new Animator(SystemInformation.MenuAnimationRollTime);
                     animator.SetCallback<Drawing.Rectangle, Drawing.Point>(
@@ -503,7 +500,6 @@ namespace Epsitec.Common.Widgets.Platform
                     this.isFrozen = true;
                     this.isAnimatingActiveWindow = this.IsActive;
                     this.WindowBounds = b1;
-                    this.UpdateLayeredWindow();
 
                     animator = new Animator(SystemInformation.MenuAnimationRollTime);
                     animator.SetCallback<Drawing.Rectangle, Drawing.Point>(
@@ -626,6 +622,15 @@ namespace Epsitec.Common.Widgets.Platform
                     || (this.widgetWindow == null)
                     || (this.widgetWindow.Root == null)
                     || (this.widgetWindow.Root.IsFrozen);
+            }
+        }
+        internal bool IsFullScreen
+        {
+            get { return this.isFullscreen; }
+            set
+            {
+                this.SetFullscreen(value);
+                this.isFullscreen = value;
             }
         }
 
@@ -1738,86 +1743,10 @@ namespace Epsitec.Common.Widgets.Platform
 
         private bool RefreshGraphicsLowLevel(Graphics graphics)
         {
-            this.dirtyRectangle = Drawing.Rectangle.Empty;
-            this.dirtyRegion = new Drawing.DirtyRegion();
-
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.RefreshGraphics(graphics, Rectangle.MaxValue, []);
             }
-            return true;
-        }
-
-        protected bool UpdateLayeredWindow()
-        {
-            /*
-            bool paintNeeded = true;
-
-            this.RefreshGraphics();
-
-            /*
-            if (this.isLayered)
-            {
-                if (this.isLayeredDirty)
-                {
-                    this.isLayeredDirty = false;
-                }
-
-                //	UpdateLayeredWindow can be called as the result of setting a
-                //	new WindowBounds rectangle. If this is the case, the Bounds
-                //	property, inherited from WinForms, won't have been updated
-                //	yet, so use the cached value :
-
-                System.Drawing.Rectangle rect;
-
-                if (this.formBoundsSet)
-                {
-                    rect = this.formBounds;
-                }
-                else
-                {
-                    rect = this.Bounds;
-                }
-
-                //	Copy the bits from the source buffer to the destination buffer
-                //	which must be premultiplied AlphaRGB.
-
-                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(
-                    rect.Width,
-                    rect.Height,
-                    System.Drawing.Imaging.PixelFormat.Format32bppPArgb
-                );
-
-                using (bitmap)
-                {
-                    Drawing.DrawingBitmap.RawData src = new Drawing.DrawingBitmap.RawData(this.graphics.DrawingBitmap);
-                    Drawing.DrawingBitmap.RawData dst = new Drawing.DrawingBitmap.RawData(
-                        bitmap,
-                        System.Drawing.Imaging.PixelFormat.Format32bppPArgb
-                    );
-
-                    using (src)
-                    {
-                        using (dst)
-                        {
-                            src.CopyTo(dst);
-                        }
-                    }
-
-                    //					System.Diagnostics.Debug.WriteLine ("UpdateLayeredWindow" + (this.isFrozen ? " (frozen)" : "") + " Bounds: " + rect.ToString ());
-
-                    paintNeeded = !Win32Api.UpdateLayeredWindow(
-                        this.Handle,
-                        bitmap,
-                        rect,
-                        this.alpha
-                    );
-                }
-            }
-
-            return paintNeeded;
-            */
-            throw new System.NotImplementedException();
             return true;
         }
 
@@ -1945,12 +1874,11 @@ namespace Epsitec.Common.Widgets.Platform
         private Epsitec.Common.Widgets.Window widgetWindow;
 
         private AntigrainSharp.AbstractGraphicBuffer renderingBuffer;
-        private Drawing.Rectangle dirtyRectangle;
-        private Drawing.DirtyRegion dirtyRegion;
         private Drawing.Size minimumSize;
 
         private Drawing.Image icon;
 
+        private bool isFullscreen;
         private bool isLayered;
         private bool isFrozen;
         private bool isAnimatingActiveWindow;

@@ -53,16 +53,17 @@ namespace Epsitec.Common.Widgets
             this.window = new Platform.Window(this, w => this.window = w, windowFlags);
             this.timer = new Timer();
 
-            Drawing.Size size = this.window.WindowSize;
-
-            this.root.NotifyWindowSizeChanged(size.Width, size.Height);
-
             this.root.Name = "Root";
 
             this.timer.TimeElapsed += this.HandleTimeElapsed;
             this.timer.AutoRepeat = 0.050;
 
             Window.windows.Add(this);
+        }
+
+        public void OnResize(int width, int height)
+        {
+            this.root.NotifyWindowSizeChanged(width, height);
         }
 
         public void Run()
@@ -375,6 +376,7 @@ namespace Epsitec.Common.Widgets
             get { return null; }
             set
             {
+                // bl-net8-cross implement the ownership system
                 /*
                 if (this.owner != value)
                 {
@@ -406,6 +408,7 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
+                // bl-net8-cross implement the ownership system
                 /*
                 List<Window> list = new List<Window>();
 
@@ -607,22 +610,8 @@ namespace Epsitec.Common.Widgets
 
         public bool IsFullScreen
         {
-            /*            get
-                        {
-                            return (this.window != null)
-                                && (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized);
-                        }
-            */get { return true; }
-            set
-            {
-                /*                if (this.window != null)
-                                {
-                                    this.window.WindowState = value
-                                        ? System.Windows.Forms.FormWindowState.Maximized
-                                        : System.Windows.Forms.FormWindowState.Normal;
-                                }
-                */
-            }
+            get { return this.window.IsFullScreen; }
+            set { this.window.IsFullScreen = value; }
         }
 
         public bool IsMinimized
@@ -632,7 +621,11 @@ namespace Epsitec.Common.Widgets
                             return (this.window != null)
                                 && (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized);
                         }
-            */get { return true; }
+            */get
+            {
+                throw new System.NotImplementedException();
+                return true;
+            }
             set
             {
                 /*                if (this.window != null)
@@ -642,6 +635,7 @@ namespace Epsitec.Common.Widgets
                                         : System.Windows.Forms.FormWindowState.Normal;
                                 }
                 */
+                throw new System.NotImplementedException();
             }
         }
 

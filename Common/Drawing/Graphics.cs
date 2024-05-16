@@ -152,11 +152,6 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        //public Drawing.DrawingBitmap DrawingBitmap
-        //{
-        //    get { return this.pixmap; }
-        //}
-
         public Renderers.Solid SolidRenderer
         {
             get { return this.solidRenderer; }
@@ -234,19 +229,6 @@ namespace Epsitec.Common.Drawing
             this.LineJoin = JoinStyle.Miter;
             this.LineCap = CapStyle.Square;
             this.LineMiterLimit = 4.0;
-        }
-
-        public void AllocatePixmap()
-        {
-            /*
-            this.pixmap.AllocatePixmap(new System.Drawing.Size(8, 8));
-
-            //this.solidRenderer.DrawingBitmap = this.pixmap;
-            //this.imageRenderer.DrawingBitmap = this.pixmap;
-            //this.gradientRenderer.DrawingBitmap = this.pixmap;
-            //this.smoothRenderer.DrawingBitmap = this.pixmap;
-            */
-            throw new System.NotImplementedException();
         }
 
         public Graphics CreateAlphaMask()
@@ -1234,31 +1216,6 @@ namespace Epsitec.Common.Drawing
         public void SetClippingRectangle(Rectangle rect)
         {
             this.SetClippingRectangle(rect.X, rect.Y, rect.Width, rect.Height);
-        }
-
-        public bool SetPixmapSize(int width, int height)
-        {
-            /*
-            if ((this.pixmap.Size.Width == width) && (this.pixmap.Size.Height == height))
-            {
-                return false;
-            }
-
-            this.pixmap.Size = new System.Drawing.Size(width, height);
-
-            //this.solidRenderer.DrawingBitmap = null;
-            //this.imageRenderer.DrawingBitmap = null;
-            //this.gradientRenderer.DrawingBitmap = null;
-            //this.smoothRenderer.DrawingBitmap = null;
-
-            //this.solidRenderer.DrawingBitmap = this.pixmap;
-            //this.imageRenderer.DrawingBitmap = this.pixmap;
-            //this.gradientRenderer.DrawingBitmap = this.pixmap;
-            //this.smoothRenderer.DrawingBitmap = this.pixmap;
-
-            return true;
-            */
-            throw new System.NotImplementedException();
         }
 
         #region IDisposable Members

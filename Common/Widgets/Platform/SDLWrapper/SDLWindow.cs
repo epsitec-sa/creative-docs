@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Epsitec.Common.Drawing;
 using static SDL2.SDL;
 
 namespace Epsitec.Common.Widgets.Platform.SDLWrapper
@@ -32,7 +31,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 SDL_WINDOWPOS_CENTERED,
                 width,
                 height,
-                flags
+                flags | SDL_WindowFlags.SDL_WINDOW_HIDDEN
             );
             if (window == IntPtr.Zero)
             {
@@ -103,6 +102,14 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         public void SetResizable(bool resizable)
         {
             SDL_SetWindowResizable(this.window, SDLUtils.ToSDLBool(resizable));
+        }
+
+        public void SetFullscreen(bool fullscreen)
+        {
+            SDL_SetWindowFullscreen(
+                this.window,
+                fullscreen ? (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : 0
+            );
         }
 
         public void SetTitle(string title)
@@ -232,7 +239,11 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                     this.RecreateDrawingArea(we.data1, we.data2);
                     this.OnResize(we.data1, we.data2);
                     return true;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED:
+                    this.UpdateDrawing();
+                    return true;
                 default:
+                    Console.WriteLine($"SDLWindow handle window event {we.windowEvent}");
                     return true;
             }
         }
