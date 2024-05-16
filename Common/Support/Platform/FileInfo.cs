@@ -7,15 +7,12 @@ namespace Epsitec.Common.Support.Platform
 {
     public static class FileInfo
     {
-        // ********************************************************************
-        // TODO bl-net8-cross
-        // - implement FileInfo (stub)
-        // ********************************************************************
         public static FolderItem CreateFolderItem(FolderId file, FolderQueryMode mode)
         {
             /*
             return Win32.FileInfo.CreateFolderItem(file, mode);
             */
+            throw new System.NotImplementedException();
             return FolderItem.Empty;
         }
 
@@ -24,6 +21,7 @@ namespace Epsitec.Common.Support.Platform
             /*
             return Win32.FileInfo.CreateFolderItem(path, mode);
             */
+            throw new System.NotImplementedException();
             return FolderItem.Empty;
         }
 
@@ -32,6 +30,7 @@ namespace Epsitec.Common.Support.Platform
             /*
             return Win32.FileInfo.CreateFolderItem(handle, mode);
             */
+            throw new System.NotImplementedException();
             return FolderItem.Empty;
         }
 
@@ -47,6 +46,7 @@ namespace Epsitec.Common.Support.Platform
             /*
             return Win32.FileInfo.GetFolderItems(path, mode, filter);
             */
+            throw new System.NotImplementedException();
             return null;
         }
 
@@ -55,6 +55,7 @@ namespace Epsitec.Common.Support.Platform
             /*
             return Win32.FileInfo.GetParentFolderItem(path, mode);
             */
+            throw new System.NotImplementedException();
             return FolderItem.Empty;
         }
     }

@@ -14,7 +14,6 @@ namespace Epsitec.Common.Drawing
         {
             this.ResetLineStyle();
 
-            //this.pixmap = new DrawingBitmap();
             this.rasterizer = new Rasterizer();
             this.transform = Transform.Identity;
 
@@ -609,7 +608,6 @@ namespace Epsitec.Common.Drawing
             double ix2 = imageOriginX + imageWidth;
             double iy2 = imageOriginY + imageHeight;
 
-            // bl-net8-cross TEMP / remove it
             if (bitmap == null)
             {
                 return;
@@ -1274,7 +1272,6 @@ namespace Epsitec.Common.Drawing
         private CapStyle lineCap;
         private double lineMiterLimit;
 
-        //private DrawingBitmap pixmap;
         private AbstractRasterizer rasterizer;
         private Transform transform;
 

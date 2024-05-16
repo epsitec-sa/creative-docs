@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -10,11 +10,6 @@ namespace Epsitec.Common.Document
     /// </summary>
     public class DocumentDialogs
     {
-        // ********************************************************************
-        // TODO bl-net8-cross
-        // - implement DocumentDialogs (stub)
-        // ********************************************************************
-
         public DocumentDialogs(Document document)
         {
             this.document = document;
@@ -1493,6 +1488,7 @@ namespace Epsitec.Common.Document
             this.document.Settings.PrintInfo.PrintToFile = true;
             this.UpdatePrint(false);
             */
+            throw new System.NotImplementedException();
         }
         #endregion
 
@@ -1875,6 +1871,7 @@ namespace Epsitec.Common.Document
                 field.Items.Add(Types.FormattedText.Escape(name));
             }
             */
+            throw new System.NotImplementedException();
         }
 
         private void HandlePrinterComboClosed(object sender)
@@ -1904,6 +1901,7 @@ namespace Epsitec.Common.Document
                 this.UpdatePrint(false);
             }
             */
+            throw new System.NotImplementedException();
         }
 
         protected void UpdatePrinter(string name)
@@ -1920,6 +1918,7 @@ namespace Epsitec.Common.Document
             TextFieldCombo field = this.WidgetsTableSearch(name, "") as TextFieldCombo;
             field.Text = Types.FormattedText.Escape(this.document.Settings.PrintInfo.PrintName);
             */
+            throw new System.NotImplementedException();
         }
         #endregion
 

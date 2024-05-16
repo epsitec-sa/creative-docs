@@ -9,15 +9,6 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public sealed class WindowDragEventArgs : Support.EventArgs
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // implement WindowDragEventArg (stub)
-        // ******************************************************************
-        /*        internal WindowDragEventArgs(System.Windows.Forms.DragEventArgs args)
-                {
-                    this.original = args;
-                }
-        */
         /// <summary>
         /// Gets the associated clipboard data.
         /// </summary>
@@ -25,7 +16,11 @@ namespace Epsitec.Common.Widgets
         public Support.ClipboardReadData Data
         {
             //get { return Support.Clipboard.CreateReadDataFromIDataObject(this.original.Data); }
-            get { return new Support.ClipboardReadData(); }
+            get
+            {
+                throw new System.NotImplementedException();
+                return new Support.ClipboardReadData();
+            }
         }
 
         /// <summary>
@@ -51,8 +46,12 @@ namespace Epsitec.Common.Widgets
                 }
             }
             */
-            get { return true; }
-            set { }
+            get
+            {
+                throw new System.NotImplementedException();
+                return true;
+            }
+            set { throw new System.NotImplementedException(); }
         }
 
         //private readonly System.Windows.Forms.DragEventArgs original;

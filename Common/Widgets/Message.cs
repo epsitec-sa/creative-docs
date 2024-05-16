@@ -4,7 +4,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-    //using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
     using Win32Const = Epsitec.Common.Widgets.Platform.Win32Const;
 
     /// <summary>
@@ -12,10 +11,6 @@ namespace Epsitec.Common.Widgets
     /// mouse click.
     /// </summary>
     public sealed class Message
-    // ******************************************************************
-    // TODO bl-net8-cross
-    // - handle mouse buttons in a cross-platform way
-    // ******************************************************************
     {
         public Message()
         {
@@ -478,35 +473,6 @@ namespace Epsitec.Common.Widgets
             Message.state.window = null;
         }
 
-        /*        internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr wParam)
-                {
-                    System.Windows.Forms.MouseButtons buttons = System.Windows.Forms.MouseButtons.None;
-                    int wp = (int)wParam;
-        
-                    if ((wp & Win32Const.MK_LBUTTON) != 0)
-                    {
-                        buttons |= System.Windows.Forms.MouseButtons.Left;
-                    }
-                    if ((wp & Win32Const.MK_RBUTTON) != 0)
-                    {
-                        buttons |= System.Windows.Forms.MouseButtons.Right;
-                    }
-                    if ((wp & Win32Const.MK_MBUTTON) != 0)
-                    {
-                        buttons |= System.Windows.Forms.MouseButtons.Middle;
-                    }
-                    if ((wp & Win32Const.MK_XBUTTON1) != 0)
-                    {
-                        buttons |= System.Windows.Forms.MouseButtons.XButton1;
-                    }
-                    if ((wp & Win32Const.MK_XBUTTON2) != 0)
-                    {
-                        buttons |= System.Windows.Forms.MouseButtons.XButton2;
-                    }
-        
-                    return buttons;
-                }
-        */
         internal static int WheelDeltaFromWParam(System.IntPtr wParam)
         {
             int wp = (int)wParam;
@@ -519,85 +485,9 @@ namespace Epsitec.Common.Widgets
             y = (short)((((int)lParam) >> 16) & 0x0000ffff);
         }
 
-        /*        internal static bool IsMouseMsg(System.Windows.Forms.Message msg)
-                {
-                    switch (msg.Msg)
-                    {
-                        case Win32Const.WM_LBUTTONDOWN:
-                        case Win32Const.WM_LBUTTONDBLCLK:
-                        case Win32Const.WM_LBUTTONUP:
-                        case Win32Const.WM_NCLBUTTONDOWN:
-        
-                        case Win32Const.WM_RBUTTONDOWN:
-                        case Win32Const.WM_RBUTTONDBLCLK:
-                        case Win32Const.WM_RBUTTONUP:
-                        case Win32Const.WM_NCRBUTTONDOWN:
-        
-                        case Win32Const.WM_MBUTTONDOWN:
-                        case Win32Const.WM_MBUTTONDBLCLK:
-                        case Win32Const.WM_MBUTTONUP:
-                        case Win32Const.WM_NCMBUTTONDOWN:
-        
-                        case Win32Const.WM_XBUTTONDOWN:
-                        case Win32Const.WM_XBUTTONDBLCLK:
-                        case Win32Const.WM_XBUTTONUP:
-                        case Win32Const.WM_NCXBUTTONDOWN:
-        
-                        case Win32Const.WM_MOUSEMOVE:
-                        case Win32Const.WM_MOUSEWHEEL:
-                        case Win32Const.WM_MOUSEHWHEEL:
-        
-                        case Win32Const.WM_MOUSELEAVE:
-                            return true;
-                    }
-        
-                    return false;
-                }
-        */
-        /*        internal static System.Windows.Forms.MouseButtons ButtonFromMsg(
-                    System.Windows.Forms.Message msg
-                )
-                {
-                    switch (msg.Msg)
-                    {
-                        case Win32Const.WM_LBUTTONDOWN:
-                        case Win32Const.WM_LBUTTONDBLCLK:
-                        case Win32Const.WM_LBUTTONUP:
-                        case Win32Const.WM_NCLBUTTONDOWN:
-                            return System.Windows.Forms.MouseButtons.Left;
-        
-                        case Win32Const.WM_RBUTTONDOWN:
-                        case Win32Const.WM_RBUTTONDBLCLK:
-                        case Win32Const.WM_RBUTTONUP:
-                        case Win32Const.WM_NCRBUTTONDOWN:
-                            return System.Windows.Forms.MouseButtons.Right;
-        
-                        case Win32Const.WM_MBUTTONDOWN:
-                        case Win32Const.WM_MBUTTONDBLCLK:
-                        case Win32Const.WM_MBUTTONUP:
-                        case Win32Const.WM_NCMBUTTONDOWN:
-                            return System.Windows.Forms.MouseButtons.Middle;
-        
-                        case Win32Const.WM_XBUTTONDOWN:
-                        case Win32Const.WM_XBUTTONDBLCLK:
-                        case Win32Const.WM_XBUTTONUP:
-                        case Win32Const.WM_NCXBUTTONDOWN:
-                            int wParam = (int)msg.WParam;
-                            switch (wParam & 0x00ff0000)
-                            {
-                                case 0x00010000:
-                                    return System.Windows.Forms.MouseButtons.XButton1;
-                                case 0x00020000:
-                                    return System.Windows.Forms.MouseButtons.XButton2;
-                            }
-                            break;
-                    }
-        
-                    return System.Windows.Forms.MouseButtons.None;
-                }
-        */
         internal static Message PostProcessMessage(Message message)
         {
+            // bl-net8-cross maybedelete
             if (message == null)
             {
                 return null;
@@ -637,123 +527,6 @@ namespace Epsitec.Common.Widgets
             return message;
         }
 
-        /*        internal static Message FromWndProcMessage(
-                    Platform.Window form,
-                    ref System.Windows.Forms.Message msg
-                )
-                {
-                    System.Threading.Interlocked.Increment(ref Message.currentUserMessageId);
-
-                    Message message = null;
-                    System.Windows.Forms.MouseButtons buttons;
-
-                    int x;
-                    int y;
-                    int wheel;
-
-                    System.Drawing.Point point;
-
-                    switch (msg.Msg)
-                    {
-                        case Win32Const.WM_APPCOMMAND:
-                            message = Message.FromApplicationCommand((msg.LParam.ToInt32() >> 16) & 0x0fff);
-                            break;
-
-                        case Win32Const.WM_KEYDOWN:
-                        case Win32Const.WM_SYSKEYDOWN:
-                        case Win32Const.WM_SYSKEYUP:
-                        case Win32Const.WM_KEYUP:
-                        case Win32Const.WM_CHAR:
-                            message = Message.FromKeyEvent(msg.Msg, msg.WParam, msg.LParam);
-                            break;
-
-                        case Win32Const.WM_MOUSEMOVE:
-                            Message.XYFromLParam(msg.LParam, out x, out y);
-                            buttons = Message.ButtonsFromWParam(msg.WParam);
-                            message = Message.FromMouseEvent(
-                                MessageType.MouseMove,
-                                form,
-                                new System.Windows.Forms.MouseEventArgs(buttons, 0, x, y, 0)
-                            );
-                            break;
-
-                        case Win32Const.WM_NCLBUTTONDOWN:
-                        case Win32Const.WM_NCRBUTTONDOWN:
-                        case Win32Const.WM_NCMBUTTONDOWN:
-                        case Win32Const.WM_NCXBUTTONDOWN:
-
-                            //	Spécial : événement bouton pressé dans la partie non-client (barre de titre ou cadre).
-                            //	En principe, l'application ne doit pas traiter cet événement !
-
-                            Message.XYFromLParam(msg.LParam, out x, out y);
-                            point = form.PointToClient(new System.Drawing.Point(x, y));
-                            x = point.X;
-                            y = point.Y;
-                            buttons = Message.ButtonFromMsg(msg);
-                            message = Message.FromMouseEvent(
-                                MessageType.MouseDown,
-                                form,
-                                new System.Windows.Forms.MouseEventArgs(buttons, 0, x, y, 0)
-                            );
-                            message.isNonClient = true;
-                            break;
-
-                        case Win32Const.WM_LBUTTONDOWN:
-                        case Win32Const.WM_RBUTTONDOWN:
-                        case Win32Const.WM_MBUTTONDOWN:
-                        case Win32Const.WM_XBUTTONDOWN:
-                        case Win32Const.WM_LBUTTONDBLCLK:
-                        case Win32Const.WM_RBUTTONDBLCLK:
-                        case Win32Const.WM_MBUTTONDBLCLK:
-                        case Win32Const.WM_XBUTTONDBLCLK:
-                            Message.XYFromLParam(msg.LParam, out x, out y);
-                            buttons = Message.ButtonFromMsg(msg);
-                            message = Message.FromMouseEvent(
-                                MessageType.MouseDown,
-                                form,
-                                new System.Windows.Forms.MouseEventArgs(buttons, 0, x, y, 0)
-                            );
-                            break;
-
-                        case Win32Const.WM_LBUTTONUP:
-                        case Win32Const.WM_RBUTTONUP:
-                        case Win32Const.WM_MBUTTONUP:
-                        case Win32Const.WM_XBUTTONUP:
-                            Message.XYFromLParam(msg.LParam, out x, out y);
-                            buttons = Message.ButtonFromMsg(msg);
-                            message = Message.FromMouseEvent(
-                                MessageType.MouseUp,
-                                form,
-                                new System.Windows.Forms.MouseEventArgs(buttons, 0, x, y, 0)
-                            );
-                            break;
-
-                        case Win32Const.WM_MOUSEWHEEL:
-                            point = form.PointToClient(System.Windows.Forms.Control.MousePosition);
-                            x = point.X;
-                            y = point.Y;
-                            buttons = Message.ButtonsFromWParam(msg.WParam);
-                            wheel = Message.WheelDeltaFromWParam(msg.WParam);
-                            message = Message.FromMouseEvent(
-                                MessageType.MouseWheel,
-                                form,
-                                new System.Windows.Forms.MouseEventArgs(buttons, 0, x, y, wheel)
-                            );
-                            break;
-
-                        case Win32Const.WM_MOUSELEAVE:
-                            message = new Message(MessageType.MouseLeave);
-                            break;
-                    }
-
-                    if (message != null)
-                    {
-                        Message.state.window = form.HostingWidgetWindow;
-                    }
-
-                    return message;
-                }
-        */
         internal static Message FromMouseEvent(
             MessageType type,
             Platform.Window window,
@@ -947,26 +720,10 @@ namespace Epsitec.Common.Widgets
                             message.keyCode = Message.lastCode;
                         }
             */
+            throw new System.NotImplementedException();
             return message;
         }
 
-        /*        internal static Message FromKeyEvent(
-                    MessageType type,
-                    System.Windows.Forms.KeyPressEventArgs e
-                )
-                {
-                    Message message = new Message(type);
-        
-                    message.keyChar = e.KeyChar;
-                    message.keyCode = Message.state.keyDownCode;
-        
-                    message.filterNoChildren = false;
-                    message.filterOnlyFocused = true;
-                    message.filterOnlyOnHit = false;
-        
-                    return message;
-                }
-        */
         internal static Message CreateDummyMouseMoveEvent()
         {
             Message message = new Message(MessageType.MouseMove);
@@ -1144,7 +901,6 @@ namespace Epsitec.Common.Widgets
 
         private static string GetSimpleKeyName(KeyCode code)
         {
-            // bl-net8-cross
             /*
             string name;
 
@@ -1199,6 +955,7 @@ namespace Epsitec.Common.Widgets
 
             return name;
             */
+            throw new System.NotImplementedException();
             return "";
         }
 

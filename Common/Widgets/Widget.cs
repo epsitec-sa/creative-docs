@@ -63,16 +63,12 @@ namespace Epsitec.Common.Widgets
                 {
                     FontPreviewer.Initialize();
 
-                    //Res.Initialize(); (bl-net8-cross)
+                    Res.Initialize();
                     ApplicationCommands.Initialize();
 
                     Support.ImageProvider.Initialize();
                 }
             );
-
-            //System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
-            //System.Globalization.CultureInfo culture = thread.CurrentCulture;
-            //thread.CurrentUICulture = culture;
         }
 
         public static void Initialize()

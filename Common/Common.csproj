@@ -2645,11 +2645,9 @@
     <None   Include="Widgets\PanePage.cs" />
     <Compile Remove="Widgets\Platform\AppSupport.cs" />
     <None   Include="Widgets\Platform\AppSupport.cs" />
+    -->
     <Compile Remove="Widgets\Platform\RestartManager.cs" />
     <None   Include="Widgets\Platform\RestartManager.cs" />
-    -->
-    <Compile Remove="Widgets\Platform\Win32Api.cs" />
-    <None Include="Widgets\Platform\Win32Api.cs" />
     <!--
     <Compile Remove="Widgets\Platform\Win32Const.cs" />
     <None   Include="Widgets\Platform\Win32Const.cs" />

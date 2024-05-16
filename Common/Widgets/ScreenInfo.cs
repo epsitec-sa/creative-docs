@@ -13,10 +13,6 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public class ScreenInfo
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - implement ScreenInfo (stub)
-        // ******************************************************************
         public static double PrimaryHeight
         {
             get { return ScreenInfo.MainScreen.Bounds.Height; }

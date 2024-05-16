@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Platform
     public class WindowList
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross maybedelete
         // - implement WindowList (stub)
         // ********************************************************************
         private WindowList() { }
@@ -82,6 +82,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             return array;
             */
+            throw new System.NotImplementedException();
             return null;
         }
     }

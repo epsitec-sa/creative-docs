@@ -25,10 +25,6 @@ namespace Epsitec.Common.DocumentEditor
     /// </summary>
     public class DocumentEditor : Widget
     {
-        // ********************************************************************
-        // TODO bl-net8-cross
-        // - implement DocumentEditor (stub)
-        // ********************************************************************
         public DocumentEditor(DocumentType type)
             : this(
                 type,
@@ -1784,7 +1780,6 @@ namespace Epsitec.Common.DocumentEditor
             }
             return true;
             */
-            // bl-net8-cross
             throw new System.NotImplementedException();
             return false;
         }
@@ -2274,7 +2269,6 @@ namespace Epsitec.Common.DocumentEditor
             string err = this.PaletteRead(dialog.FileName);
             this.DialogError(err);
             */
-            // bl-net8-cross
             throw new System.NotImplementedException();
         }
 
@@ -2305,7 +2299,6 @@ namespace Epsitec.Common.DocumentEditor
             string err = this.PaletteWrite(dialog.FileName);
             this.DialogError(err);
             */
-            // bl-net8-cross
             throw new System.NotImplementedException();
         }
 

@@ -180,6 +180,7 @@ namespace Epsitec.Common.Dialogs
                 return this.result;
             }
             */
+            throw new System.NotImplementedException();
             return DialogResult.None;
         }
 
@@ -340,23 +341,6 @@ namespace Epsitec.Common.Dialogs
         #endregion
 
 
-        /*        private static DialogResult ConvertWindowsResult(
-                    System.Windows.Forms.DialogResult windowsResult
-                )
-                {
-                    switch (windowsResult)
-                    {
-                        case System.Windows.Forms.DialogResult.OK:
-                            return DialogResult.Accept;
-        
-                        case System.Windows.Forms.DialogResult.Cancel:
-                            return DialogResult.Cancel;
-        
-                        default:
-                            return DialogResult.None;
-                    }
-                }
-        */
         public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
 
         private readonly FilterCollection filters;

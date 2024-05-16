@@ -1262,7 +1262,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 
         private static void GenerateDummyMouseMoveEvents()
         {
-            // bl-net8-cross
             //Drawing.Point pos = Message.CurrentState.LastScreenPosition;
             //Window[] windows = Window.FindFromPosition(pos);
 

@@ -235,6 +235,9 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             {
                 case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
                     return false;
+                // TODO  bl-net8-cross the resize events are only fired when we release the mouse
+                // see how we could have a dynamic resize
+                case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
                 case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
                     this.RecreateDrawingArea(we.data1, we.data2);
                     this.OnResize(we.data1, we.data2);

@@ -11,10 +11,6 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public sealed class Timer : System.IDisposable, IIsDisposed
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - implement Timer (stub)
-        // ******************************************************************
         public Timer() { }
 
         public bool HigherAccuracy
@@ -102,6 +98,7 @@ namespace Epsitec.Common.Widgets
                 this.timer.Tick += this.HandleTimerTick;
             }
             */
+            throw new System.NotImplementedException();
         }
 
         private void CleanupTimerIfNeeded()
@@ -121,6 +118,7 @@ namespace Epsitec.Common.Widgets
                 timer.Dispose();
             }
             */
+            throw new System.NotImplementedException();
         }
 
         private void UpdateTimerSettings()
@@ -162,6 +160,7 @@ namespace Epsitec.Common.Widgets
                     break;
             }
             */
+            throw new System.NotImplementedException();
         }
 
         public void Start()
@@ -238,6 +237,7 @@ namespace Epsitec.Common.Widgets
                 this.state = TimerState.Suspended;
             }
             */
+            throw new System.NotImplementedException();
         }
 
         public void Stop()
@@ -267,6 +267,7 @@ namespace Epsitec.Common.Widgets
             this.timer.Stop();
             this.OnTimeElapsed();
             */
+            throw new System.NotImplementedException();
         }
 
         private void OnTimeElapsed()

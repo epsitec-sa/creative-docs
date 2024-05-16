@@ -585,20 +585,6 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public void FillPixelCache(string text, double size, double ox, double oy)
-        {
-            /*
-            if (string.IsNullOrEmpty(text))
-            {
-                return;
-            }
-
-            ushort[] glyphs = this.OpenTypeFont.GenerateGlyphsWithMask(text);
-            AntigrainSharp.Font.PixelCache.Fill(this.Handle, glyphs, size, ox, oy);
-            */
-            throw new System.NotImplementedException();
-        }
-
         public double PaintText(
             GraphicContext gctx,
             string text,
@@ -628,7 +614,8 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
-            // TODO bl-net8-cross handle transform and scale parameters properly
+            // TODO bl-net8-cross
+            // handle transform and scale parameters properly
             Font.FontManager.SetFont(this.openTypeFontIdentity.FilePath);
             gctx.SetColor(color.R, color.G, color.B, color.A);
             for (int i = 0; i < glyphs.Length; i++)

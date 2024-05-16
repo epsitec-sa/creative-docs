@@ -13,10 +13,6 @@ namespace Epsitec.Common.Support
     /// </summary>
     public sealed class Globals
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // implement Globals (stub)
-        // ******************************************************************
         private Globals()
         {
             this.propertyHash = new Dictionary<string, object>();
@@ -41,6 +37,7 @@ namespace Epsitec.Common.Support
                 string name = System.Windows.Forms.Application.ExecutablePath;
                 return System.IO.Path.GetFileName(name);
                 */
+                throw new System.NotImplementedException();
                 return null;
             }
         }
@@ -53,6 +50,7 @@ namespace Epsitec.Common.Support
                 string name = System.Windows.Forms.Application.ExecutablePath;
                 return name;
                 */
+                throw new System.NotImplementedException();
                 return null;
             }
         }
@@ -60,7 +58,11 @@ namespace Epsitec.Common.Support
         public static string ExecutableDirectory
         {
             //get { return System.Windows.Forms.Application.StartupPath; }
-            get { return null; }
+            get
+            {
+                throw new System.NotImplementedException();
+                return null;
+            }
         }
 
         public object this[string key]

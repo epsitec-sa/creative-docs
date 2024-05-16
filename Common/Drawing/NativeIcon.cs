@@ -12,8 +12,7 @@ namespace Epsitec.Common.Drawing.Platform
     public static class NativeIcon
     {
         // ********************************************************************
-        // TODO bl-net8-cross
-        // - implement NativeIcon (stub)
+        // bl-net8-cross maybedelete IGNOREFILE
         // ********************************************************************
         public static byte[] CreateIcon(byte[] imageBytes, int pitch, int dx, int dy)
         {

@@ -8,10 +8,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
     internal sealed class ShellShortcut : System.IDisposable
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - some methods removed
-        // ******************************************************************
+        // bl-net8-cross maybedelete IGNOREFILE
         public ShellShortcut(string path)
         {
             IPersistFile pf;
@@ -145,42 +142,6 @@ namespace Epsitec.Common.Support.Platform.Win32
             set { this.link.SetIconLocation(this.IconPath, value); }
         }
 
-/*        public System.Drawing.Icon Icon
-        {
-            get
-            {
-                int iconIndex;
-                System.Text.StringBuilder buffer = new System.Text.StringBuilder(
-                    Win32Const.MAX_PATH
-                );
-                System.IntPtr hIcon;
-                System.IntPtr hInst;
-                System.Drawing.Icon icon;
-                System.Drawing.Icon iconCopy;
-
-                this.link.GetIconLocation(buffer, buffer.Capacity, out iconIndex);
-
-                string location = buffer.ToString();
-
-                hInst = System.Runtime.InteropServices.Marshal.GetHINSTANCE(
-                    typeof(ShellShortcut).Module
-                );
-                hIcon = ShellApi.ExtractIcon(hInst, location, iconIndex);
-
-                if (hIcon == System.IntPtr.Zero)
-                {
-                    return null;
-                }
-
-                // Return a cloned Icon, because we have to free the original ourselves.
-                icon = System.Drawing.Icon.FromHandle(hIcon);
-                iconCopy = (System.Drawing.Icon)icon.Clone();
-                icon.Dispose();
-                ShellApi.DestroyIcon(hIcon);
-                return iconCopy;
-            }
-        }
-*/
         public ProcessWindowStyle WindowStyle
         {
             get
@@ -226,37 +187,6 @@ namespace Epsitec.Common.Support.Platform.Win32
             }
         }
 
-/*        public System.Windows.Forms.Keys Hotkey
-        {
-            get
-            {
-                ushort hotkey;
-
-                this.link.GetHotkey(out hotkey);
-
-                //	Convert from IShellLink 16-bit format ([MM][VK]) to the 32-bit Keys
-                //	enumeration format (00[MM]00[VK]), where [MM] encodes the modifiers
-                //	and [VK] maps to the virtual key code.
-
-                int modifiers = (hotkey & 0xff00) >> 8;
-                int virtualKey = (hotkey & 0x00ff) >> 0;
-
-                return (System.Windows.Forms.Keys)(modifiers << 16 + virtualKey);
-            }
-            set
-            {
-                int modifiers = ((int)value & 0x00ff0000) >> 16;
-                int virtualKey = ((int)value & 0x000000ff) >> 0;
-
-                if (modifiers == 0)
-                {
-                    throw new System.ArgumentException("Shortcut Hotkey must include a modifier");
-                }
-
-                this.link.SetHotkey((ushort)(modifiers << 8 + virtualKey));
-            }
-        }
-*/
         public void Save()
         {
             IPersistFile pf = (IPersistFile)this.link;

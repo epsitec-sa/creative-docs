@@ -639,6 +639,8 @@ namespace Epsitec.Common.OpenType
         /// to select one of the font managers).</param>
         public void SelectFeatures(params string[] features)
         {
+            // TODO bl-net8-cross implement or delete SelectFeatures
+            // for now, we have kerning by default
             /*
             System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
@@ -726,7 +728,6 @@ namespace Epsitec.Common.OpenType
                 this.GenerateSubstitutionLookups(activeFeatures);
             }
             */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>

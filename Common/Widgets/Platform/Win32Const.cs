@@ -7,6 +7,8 @@ namespace Epsitec.Common.Widgets.Platform
     /// The <c>Win32Const</c> class exports the Window constants used by the
     /// framework.
     /// </summary>
+
+    // bl-net8-cross maybedelete
     internal class Win32Const
     {
         public const int INFOTIPSIZE = 1024;

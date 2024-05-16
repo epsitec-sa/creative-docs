@@ -360,7 +360,6 @@ namespace Epsitec.Common.Widgets
             {
                 if (this.BackColor.A != 1.0)
                 {
-                    // bl-net8-cross
                     //graphics.DrawingBitmap.Erase(
                     //    new System.Drawing.Rectangle(
                     //        (int)x1,

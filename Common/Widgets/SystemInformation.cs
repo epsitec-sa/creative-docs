@@ -6,8 +6,8 @@ namespace Epsitec.Common.Widgets
     public class SystemInformation
     {
         // ********************************************************************
-        // TODO bl-net8-cross
-        // - implement SystemInformation (stub)
+        // TODO bl-net8-cross maybedelete
+        // Does this work on multiplatform , with the Microsoft.Win32 things ?
         // ********************************************************************
         public enum Animation
         {
@@ -199,6 +199,7 @@ namespace Epsitec.Common.Widgets
                         System.Windows.Forms.OSFeature.LayeredWindows
                     ) != null;
                 */
+                throw new System.NotImplementedException();
                 return true;
             }
         }
@@ -206,13 +207,21 @@ namespace Epsitec.Common.Widgets
         public static bool PreferRightAlignedMenus
         {
             //get { return System.Windows.Forms.SystemInformation.RightAlignedMenus; }
-            get { return true; }
+            get
+            {
+                throw new System.NotImplementedException();
+                return true;
+            }
         }
 
         public static double DoubleClickDelay
         {
             //get { return System.Windows.Forms.SystemInformation.DoubleClickTime / 1000.0; }
-            get { return 0.1; }
+            get
+            {
+                throw new System.NotImplementedException();
+                return 0.1;
+            }
         }
 
         public static int DoubleClickRadius2
@@ -227,6 +236,7 @@ namespace Epsitec.Common.Widgets
 
                 return dx * dx + dy * dy;
                 */
+                throw new System.NotImplementedException();
                 return 50;
             }
         }

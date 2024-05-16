@@ -12,10 +12,6 @@ namespace Epsitec.Common.Drawing.Platform
     /// This implementation is using ImageMagick for that purpose
     /// </summary>
     public sealed class NativeBitmap : Bitmap
-    // ******************************************************************
-    // TODO bl-net8-cross
-    // - implement NativeBitmap using ImageMagick (stub)
-    // ******************************************************************
     {
         internal NativeBitmap(string source)
         {
@@ -43,10 +39,7 @@ namespace Epsitec.Common.Drawing.Platform
 
         public override Size Size
         {
-            get
-            {
-                return new Size(this.magicImage.Width, this.magicImage.Height);
-            }
+            get { return new Size(this.magicImage.Width, this.magicImage.Height); }
         }
 
         public override int PixelWidth
@@ -501,10 +494,12 @@ namespace Epsitec.Common.Drawing.Platform
                 this.MemorySize
             );
         }
+
         public static NativeBitmap FromData(byte[] data)
         {
             return new NativeBitmap(data);
         }
+
         public static NativeBitmap FromFile(string filename)
         {
             return new NativeBitmap(filename);

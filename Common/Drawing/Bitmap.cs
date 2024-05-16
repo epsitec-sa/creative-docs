@@ -5,22 +5,11 @@ using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Drawing
 {
-    // ******************************************************************
-    // TODO bl-net8-cross
-    // - implement the Bitmap class (stub for now)
-    // ******************************************************************
-
     /// <summary>
     /// La classe Bitmap encapsule une image de type bitmap.
     /// </summary>
     public abstract class Bitmap : Image, System.IDisposable
     {
-        //public Bitmap(NativeBitmap nativeBitmap, Point? origin)
-        //    : base(origin, new Size(nativeBitmap.Width, nativeBitmap.Height))
-        //{
-        //    this.nativeBitmap = nativeBitmap;
-        //}
-
         public override Bitmap BitmapImage => this;
 
         public abstract int Stride { get; }
@@ -524,7 +513,6 @@ namespace Epsitec.Common.Drawing
         */
         public static int GetIconWidth(IconSize iconSize)
         {
-            // bl-net8-cross
             /*
             switch (iconSize)
             {
@@ -544,7 +532,6 @@ namespace Epsitec.Common.Drawing
 
         public static int GetIconHeight(IconSize iconSize)
         {
-            // bl-net8-cross
             /*
             switch (iconSize)
             {

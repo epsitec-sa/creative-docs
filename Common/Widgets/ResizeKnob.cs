@@ -9,10 +9,6 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public class ResizeKnob : Button
     {
-        // ********************************************************
-        // TODO bl-net8-cross
-        // - implement ProcessMessage (stub)
-        // ********************************************************
         public ResizeKnob()
         {
             this.ButtonStyle = ButtonStyle.Icon;
@@ -107,6 +103,7 @@ namespace Epsitec.Common.Widgets
                     break;
             }
             */
+            throw new System.NotImplementedException();
         }
 
         protected override void PaintBackgroundImplementation(

@@ -12,10 +12,6 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public class DrawingBitmap : Bitmap
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // - implement this class
-        // ******************************************************************
         public DrawingBitmap(uint width, uint height)
         {
             int stride = -(int)width * 4; // 4 bytes per pixel, one byte per color channel
@@ -31,39 +27,6 @@ namespace Epsitec.Common.Drawing
         {
             get { return new Size(this.buffer.Height, this.buffer.Width); }
         }
-
-        /*
-        if (this.size != value)
-        {
-            if (this.aggBuffer == System.IntPtr.Zero)
-            {
-                this.aggBuffer = AntigrainCPP.Buffer.New(value.Width, value.Height, 32);
-            }
-            else
-            {
-                bool ok = AntigrainCPP.Buffer.Resize(
-                    this.aggBuffer,
-                    value.Width,
-                    value.Height,
-                    32
-                );
-
-                if (ok == false)
-                {
-                    System.Diagnostics.Trace.WriteLine(
-                        string.Format(
-                            "Could not allocate buffer for {0} x {1}",
-                            value.Width,
-                            value.Height
-                        )
-                    );
-                    throw new System.Exception("Buffer could not be resized");
-                }
-            }
-
-            this.size = value;
-        }
-        */
 
         public override int Stride
         {
@@ -84,21 +47,7 @@ namespace Epsitec.Common.Drawing
             return this.buffer.GetBufferData();
         }
 
-        public void AllocatePixmap(System.Drawing.Size size)
-        {
-            /*
-            if ((this.size.IsEmpty) && (this.aggBuffer == System.IntPtr.Zero))
-            {
-                this.aggBuffer = AntigrainCPP.Buffer.New(size.Width, size.Height, 32);
-                this.size = size;
-                this.isOsBitmap = true;
-                return;
-            }
-
-            throw new System.InvalidOperationException("Cannot re-allocate pixmap.");
-            */
-            throw new System.NotImplementedException();
-        }
+        #region NotImplemented
 
         /// <summary>
         /// Allocates a pixmap based on a FreeImage image instance.
@@ -413,6 +362,7 @@ namespace Epsitec.Common.Drawing
                 }
             }
         }
+        #endregion
 
         #region IDisposable Members
         public override void Dispose()

@@ -11,10 +11,6 @@ namespace Epsitec.Common.Document
     /// </summary>
     public class Modifier
     {
-        // ********************************************************************
-        // TODO bl-net8-cross
-        // - reimplement PasteBitmap (stub)
-        // ********************************************************************
         public Modifier(Document document)
         {
             this.document = document;
@@ -2097,6 +2093,7 @@ namespace Epsitec.Common.Document
 
             return true;
             */
+            throw new System.NotImplementedException();
             return false;
         }
 

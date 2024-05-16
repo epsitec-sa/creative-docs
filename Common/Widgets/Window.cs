@@ -118,8 +118,8 @@ namespace Epsitec.Common.Widgets
 
         public static void GrabScreen(Drawing.Image bitmap, int x, int y)
         {
-            // bl-net8-cross
             // Win32Api.GrabScreen(bitmap, x, y);
+            throw new System.NotImplementedException();
         }
 
         public static Window FindFirstLiveWindow()
@@ -339,7 +339,6 @@ namespace Epsitec.Common.Widgets
 
         public void GenerateDummyMouseMoveEvent()
         {
-            // bl-net8-cross
             //Drawing.Point pos = Message.CurrentState.LastScreenPosition;
             //this.DispatchMessage(Message.CreateDummyMouseMoveEvent(this.ScreenPointToWindowPoint(pos)));
             throw new System.NotImplementedException();
@@ -399,6 +398,7 @@ namespace Epsitec.Common.Widgets
                     Helpers.VisualTree.InvalidateCommandDispatcher(this);
                 }
                 */
+                throw new System.NotImplementedException();
             }
         }
 

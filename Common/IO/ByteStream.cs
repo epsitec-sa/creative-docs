@@ -7,6 +7,8 @@ namespace Epsitec.Common.IO
 {
     public sealed class ByteStream : System.IO.Stream
     {
+        // bl-net8-cross IGNOREFILE
+        // those NotImplementedException where originally here, they are not stubs
         public ByteStream(long length, IEnumerable<byte> source)
         {
             this.length = length;

@@ -11,19 +11,20 @@ namespace Epsitec.Common.OpenType
     /// </summary>
     public sealed class FontIdentity
     {
-        internal FontIdentity(string fontFilePath, FontName fontName) { 
+        internal FontIdentity(string fontFilePath, FontName fontName)
+        {
             this.filePath = fontFilePath;
             this.name = fontName;
         }
 
-        public string FilePath { get { return filePath; } }
+        public string FilePath
+        {
+            get { return filePath; }
+        }
 
         public string Name
         {
-            get
-            {
-                return this.name.FaceName;
-            }
+            get { return this.name.FaceName; }
         }
 
         /// <summary>
@@ -35,10 +36,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font face name.</value>
         public string LocaleFaceName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return this.Name; }
         }
 
         /// <summary>
@@ -50,18 +48,12 @@ namespace Epsitec.Common.OpenType
         /// <value>The font style name.</value>
         public string LocaleStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         public string LocaleFullName
         {
-            get
-            {
-                return this.FullName;
-            }
+            get { return this.FullName; }
         }
 
         /// <summary>
@@ -73,10 +65,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font face name.</value>
         public string LocaleSimpleFaceName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return this.Name; }
         }
 
         /// <summary>
@@ -88,10 +77,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font style name.</value>
         public string LocaleSimpleStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -102,10 +88,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The Adobe font style name.</value>
         public string LocaleAdobeStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -116,10 +99,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The preferred font face name or <c>null</c>.</value>
         public string LocalePreferredFaceName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return this.Name; }
         }
 
         /// <summary>
@@ -130,10 +110,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font style name or <c>null</c>.</value>
         public string LocalePreferredStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -146,10 +123,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font face name.</value>
         public string InvariantFaceName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return this.Name; }
         }
 
         /// <summary>
@@ -162,10 +136,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font style name.</value>
         public string InvariantStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -177,10 +148,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font full name.</value>
         public string InvariantFullName
         {
-            get
-            {
-                return this.FullName;
-            }
+            get { return this.FullName; }
         }
 
         /// <summary>
@@ -193,10 +161,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font face name.</value>
         public string InvariantSimpleFaceName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return this.Name; }
         }
 
         /// <summary>
@@ -209,10 +174,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font style name.</value>
         public string InvariantSimpleStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -223,10 +185,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The Adobe font style name.</value>
         public string InvariantAdobeStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -238,10 +197,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font face name.</value>
         public string MacintoshFaceName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return this.Name; }
         }
 
         /// <summary>
@@ -253,10 +209,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font style name.</value>
         public string MacintoshStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -268,10 +221,7 @@ namespace Epsitec.Common.OpenType
         /// preferred font face associated with this font.</value>
         public string InvariantPreferredFaceName
         {
-            get
-            {
-                return this.Name;
-            }
+            get { return this.Name; }
         }
 
         /// <summary>
@@ -283,10 +233,7 @@ namespace Epsitec.Common.OpenType
         /// preferred font style associated with this font.</value>
         public string InvariantPreferredStyleName
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -298,10 +245,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The simplified font style name.</value>
         public string InvariantStyleHash
         {
-            get
-            {
-                return this.name.StyleName;
-            }
+            get { return this.name.StyleName; }
         }
 
         /// <summary>
@@ -314,10 +258,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The simplified version of the full font name.</value>
         public string FullHash
         {
-            get
-            {
-                return this.FullName;
-            }
+            get { return this.FullName; }
         }
 
         /// <summary>
@@ -327,9 +268,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The number of font styles.</value>
         public int FontStyleCount
         {
-            get { 
-                throw new System.NotImplementedException();
-            }
+            get { throw new System.NotImplementedException(); }
         }
 
         /// <summary>
@@ -339,10 +278,7 @@ namespace Epsitec.Common.OpenType
         /// </summary>
         public string FullName
         {
-            get
-            {
-                return this.name.FullName;
-            }
+            get { return this.name.FullName; }
         }
 
         /// <summary>
@@ -354,9 +290,7 @@ namespace Epsitec.Common.OpenType
         /// <value>The font unique id.</value>
         public string UniqueFontId
         {
-            get {
-                return this.FullName;
-            }
+            get { return this.FullName; }
         }
 
         public byte[] AssociatedBlob1
@@ -375,9 +309,10 @@ namespace Epsitec.Common.OpenType
                 */
                 throw new System.NotImplementedException();
             }
-            set { 
+            set
+            {
                 /*
-                this.blob1 = value; 
+                this.blob1 = value;
                 */
                 throw new System.NotImplementedException();
             }
@@ -399,10 +334,10 @@ namespace Epsitec.Common.OpenType
                 */
                 throw new System.NotImplementedException();
             }
-
-            set { 
+            set
+            {
                 /*
-                this.blob2 = value; 
+                this.blob2 = value;
                 */
                 throw new System.NotImplementedException();
             }
@@ -410,45 +345,38 @@ namespace Epsitec.Common.OpenType
 
         public FontWeight FontWeight
         {
-            get {
-                /*
-                
-                return (FontWeight)Platform.Neutral.GetFontWeight(this.Record);
-            
-                */
-                throw new System.NotImplementedException();
+            get
+            {
+                // TODO bl-net8-cross implement or remove FontWeight
+                return FontWeight.Normal;
             }
         }
 
         public FontStyle FontStyle
         {
-            get
-            {
-                return this.name.Style;
-            }
+            get { return this.name.Style; }
         }
 
         public bool IsSymbolFont
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         public bool IsDynamicFont
         {
-            get {
-            /*
-            return this.isDynamicFont;
-            */
-            throw new System.NotImplementedException();
+            get
+            {
+                /*
+                return this.isDynamicFont;
+                */
+                throw new System.NotImplementedException();
             }
         }
 
         public static IComparer<FontIdentity> Comparer
         {
-            get {
+            get
+            {
                 /*
                 
                 return new FontComparer();

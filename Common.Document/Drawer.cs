@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document
     public class Drawer
     {
         // ********************************************************************
-        // TODO bl-net8-cross
+        // TODO bl-net8-cross printing
         // - reimplement printing in Drawer (removed)
         // ********************************************************************
         public enum DrawShapesMode
@@ -81,11 +81,12 @@ namespace Epsitec.Common.Document
                     {
                         this.DrawSurface(port as Graphics, drawingContext, shape, obj);
                     }
-/*                    else if (port is Printing.PrintPort)
-                    {
-                        this.DrawSurface(port as Printing.PrintPort, drawingContext, shape, obj);
-                    }
-*/
+                    // bl-net8-cross printing
+                    /*                    else if (port is Printing.PrintPort)
+                                        {
+                                            this.DrawSurface(port as Printing.PrintPort, drawingContext, shape, obj);
+                                        }
+                    */
                     else if (port is PDF.Port)
                     {
                         this.DrawSurface(port as PDF.Port, drawingContext, shape, obj);
@@ -103,11 +104,12 @@ namespace Epsitec.Common.Document
                     {
                         this.DrawStroke(port as Graphics, drawingContext, shape, obj);
                     }
-/*                    else if (port is Printing.PrintPort)
-                    {
-                        this.DrawStroke(port as Printing.PrintPort, drawingContext, shape, obj);
-                    }
-*/
+                    // bl-net8-cross printing
+                    /*                    else if (port is Printing.PrintPort)
+                                        {
+                                            this.DrawStroke(port as Printing.PrintPort, drawingContext, shape, obj);
+                                        }
+                    */
                     else if (port is PDF.Port)
                     {
                         this.DrawStroke(port as PDF.Port, drawingContext, shape, obj);
@@ -983,93 +985,94 @@ namespace Epsitec.Common.Document
 
 
         #region Printer
-/*        protected void DrawSurface(
-            Printing.PrintPort port,
-            DrawingContext drawingContext,
-            Shape shape,
-            Objects.Abstract obj
-        )
-        {
-            //	Dessine une surface sur l'imprimante.
-            if (!this.PrinterSurface(port, drawingContext, shape))
-                return;
-            port.PaintSurface(shape.Path);
-        }
-
-        protected void DrawStroke(
-            Printing.PrintPort port,
-            DrawingContext drawingContext,
-            Shape shape,
-            Objects.Abstract obj
-        )
-        {
-            //	Dessine un chemin sur l'imprimante.
-            if (!this.PrinterSurface(port, drawingContext, shape))
-                return;
-
-            Properties.Line stroke = shape.PropertyStroke;
-
-            if (stroke.Dash) // traitillé ?
-            {
-                DashedPath dp = new DashedPath();
-                dp.DefaultZoom = drawingContext.ScaleX;
-                dp.Append(shape.Path);
-
-                for (int i = 0; i < Properties.Line.DashMax; i++)
+        // bl-net8-cross printing
+        /*        protected void DrawSurface(
+                    Printing.PrintPort port,
+                    DrawingContext drawingContext,
+                    Shape shape,
+                    Objects.Abstract obj
+                )
                 {
-                    if (stroke.GetDashGap(i) == 0.0)
-                        continue;
-                    double pen,
-                        gap;
-                    stroke.GetPenGap(i, true, out pen, out gap);
-                    dp.AddDash(pen, gap);
+                    //	Dessine une surface sur l'imprimante.
+                    if (!this.PrinterSurface(port, drawingContext, shape))
+                        return;
+                    port.PaintSurface(shape.Path);
                 }
-
-                port.LineWidth = stroke.Width;
-                port.LineCap = stroke.Cap;
-                port.LineJoin = stroke.EffectiveJoin;
-                port.LineMiterLimit = stroke.Limit;
-
-                using (Path temp = dp.GenerateDashedPath())
+        
+                protected void DrawStroke(
+                    Printing.PrintPort port,
+                    DrawingContext drawingContext,
+                    Shape shape,
+                    Objects.Abstract obj
+                )
                 {
-                    port.PaintOutline(temp);
+                    //	Dessine un chemin sur l'imprimante.
+                    if (!this.PrinterSurface(port, drawingContext, shape))
+                        return;
+        
+                    Properties.Line stroke = shape.PropertyStroke;
+        
+                    if (stroke.Dash) // traitillé ?
+                    {
+                        DashedPath dp = new DashedPath();
+                        dp.DefaultZoom = drawingContext.ScaleX;
+                        dp.Append(shape.Path);
+        
+                        for (int i = 0; i < Properties.Line.DashMax; i++)
+                        {
+                            if (stroke.GetDashGap(i) == 0.0)
+                                continue;
+                            double pen,
+                                gap;
+                            stroke.GetPenGap(i, true, out pen, out gap);
+                            dp.AddDash(pen, gap);
+                        }
+        
+                        port.LineWidth = stroke.Width;
+                        port.LineCap = stroke.Cap;
+                        port.LineJoin = stroke.EffectiveJoin;
+                        port.LineMiterLimit = stroke.Limit;
+        
+                        using (Path temp = dp.GenerateDashedPath())
+                        {
+                            port.PaintOutline(temp);
+                        }
+                    }
+                    else // trait continu ?
+                    {
+                        port.LineWidth = stroke.Width;
+                        port.LineCap = stroke.Cap;
+                        port.LineJoin = stroke.EffectiveJoin;
+                        port.LineMiterLimit = stroke.Limit;
+                        port.PaintOutline(shape.Path);
+                    }
                 }
-            }
-            else // trait continu ?
-            {
-                port.LineWidth = stroke.Width;
-                port.LineCap = stroke.Cap;
-                port.LineJoin = stroke.EffectiveJoin;
-                port.LineMiterLimit = stroke.Limit;
-                port.PaintOutline(shape.Path);
-            }
-        }
-
-        protected bool PrinterSurface(
-            Printing.PrintPort port,
-            DrawingContext drawingContext,
-            Shape shape
-        )
-        {
-            //	Choix de la couleur de la surface.
-            Color color = Color.Empty;
-            if (shape.PropertySurface is Properties.Gradient)
-            {
-                Properties.Gradient surface = shape.PropertySurface as Properties.Gradient;
-                color = surface.Color1.Basic;
-            }
-            if (shape.PropertySurface is Properties.Font)
-            {
-                Properties.Font font = shape.PropertySurface as Properties.Font;
-                color = font.FontColor.Basic;
-            }
-            if (color.IsEmpty || !color.IsOpaque)
-                return false;
-
-            port.Color = color;
-            return true;
-        }
-*/        
+        
+                protected bool PrinterSurface(
+                    Printing.PrintPort port,
+                    DrawingContext drawingContext,
+                    Shape shape
+                )
+                {
+                    //	Choix de la couleur de la surface.
+                    Color color = Color.Empty;
+                    if (shape.PropertySurface is Properties.Gradient)
+                    {
+                        Properties.Gradient surface = shape.PropertySurface as Properties.Gradient;
+                        color = surface.Color1.Basic;
+                    }
+                    if (shape.PropertySurface is Properties.Font)
+                    {
+                        Properties.Font font = shape.PropertySurface as Properties.Font;
+                        color = font.FontColor.Basic;
+                    }
+                    if (color.IsEmpty || !color.IsOpaque)
+                        return false;
+        
+                    port.Color = color;
+                    return true;
+                }
+        */
         #endregion
 
 

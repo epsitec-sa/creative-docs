@@ -1,8 +1,8 @@
 //	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
 using System.Collections.Generic;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Support
 {
@@ -12,10 +12,6 @@ namespace Epsitec.Common.Support
     /// </summary>
     public sealed class PrivilegeManager
     {
-        // ********************************************************************
-        // TODO bl-net8-cross
-        // - implement GetShieldIcon (stub)
-        // ********************************************************************
         private PrivilegeManager()
         {
             this.shieldIcons = new Dictionary<IconSize, Image>();
@@ -85,6 +81,7 @@ namespace Epsitec.Common.Support
 
             return bitmap;
             */
+            throw new System.NotImplementedException();
             return null;
         }
 
