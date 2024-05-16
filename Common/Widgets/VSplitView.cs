@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 
 [assembly: DependencyClass(typeof(VSplitView))]
 
@@ -24,7 +25,7 @@ namespace Epsitec.Common.Widgets
                 Dock = DockStyle.Bottom,
                 PreferredHeight = 8,
                 BackColor = Color.FromRgb(0, 0, 0.4),
-                MouseCursor = MouseCursor.AsHSplit,
+                MouseCursor = MouseCursor.Default,
                 MinHeight = 0,
             };
 

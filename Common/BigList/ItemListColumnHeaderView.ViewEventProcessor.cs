@@ -1,14 +1,15 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.BigList;
 using Epsitec.Common.BigList.Processors;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
-using System.Collections.Generic;
-using System.Linq;
+using Epsitec.Common.Widgets.Platform;
 
 [assembly: DependencyClass(typeof(ItemListColumnHeaderView))]
 
@@ -56,7 +57,6 @@ namespace Epsitec.Common.BigList
                         break;
 
                     case MessageType.MouseMove:
-                        this.ProcessMouseMove(message, pos);
                         break;
                 }
 
@@ -68,20 +68,6 @@ namespace Epsitec.Common.BigList
                 if (this.processor != null)
                 {
                     this.processor.PaintOverlay(graphics, clipRect);
-                }
-            }
-
-            private void ProcessMouseMove(Message message, Point pos)
-            {
-                var policy = this.view.GetPolicy<MouseDragProcessorPolicy>();
-
-                if (policy.Filter(this.DetectDrag(pos)).Any())
-                {
-                    this.view.MouseCursor = MouseCursor.AsVSplit;
-                }
-                else
-                {
-                    this.view.MouseCursor = MouseCursor.Default;
                 }
             }
 

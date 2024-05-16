@@ -1,8 +1,9 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Widgets
 {
@@ -16,7 +17,7 @@ namespace Epsitec.Common.Widgets
             this.InternalState &= ~WidgetInternalState.Engageable;
             this.InternalState &= ~WidgetInternalState.Focusable;
 
-            this.MouseCursor = this.IsVertical ? MouseCursor.AsVSplit : MouseCursor.AsHSplit;
+            this.MouseCursor = MouseCursor.Default;
             this.dragBehavior = new Behaviors.DragBehavior(this, false, false);
         }
 
@@ -229,7 +230,6 @@ namespace Epsitec.Common.Widgets
             Drawing.Rectangle clipRect
         )
         {
-            this.MouseCursor = this.IsVertical ? MouseCursor.AsVSplit : MouseCursor.AsHSplit;
             IAdorner adorner = Widgets.Adorners.Factory.Active;
 
             Drawing.Rectangle rect = this.Client.Bounds;

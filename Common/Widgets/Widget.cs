@@ -8,6 +8,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
+using Epsitec.Common.Widgets.Platform;
 
 [assembly: DependencyClass(typeof(Widget))]
 

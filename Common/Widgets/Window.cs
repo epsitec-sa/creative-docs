@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
     using Epsitec.Common.Types.Collections;
+    using Epsitec.Common.Widgets.Platform;
 
     /// <summary>
     /// La classe Window représente une fenêtre du système d'exploitation. Ce

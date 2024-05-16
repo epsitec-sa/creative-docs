@@ -7,6 +7,7 @@ using Epsitec.Common.IO;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.DocumentEditor
 {

@@ -276,7 +276,7 @@ namespace Epsitec.Common.Dialogs
                 Window.SuspendAsyncNotify();
                 Application.SetWaitCursor();
 
-                this.DialogWindow.MouseCursor = MouseCursor.AsWait;
+                this.DialogWindow.MouseCursor = Widgets.Platform.MouseCursor.AsWait;
 
                 System.Threading.Thread thread = new System.Threading.Thread(this.ProcessAction);
 

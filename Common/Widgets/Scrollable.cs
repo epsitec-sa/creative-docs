@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Widgets
 {

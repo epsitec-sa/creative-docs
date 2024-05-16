@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Document
 {
@@ -4264,11 +4265,11 @@ namespace Epsitec.Common.Document
                     break;
 
                 case MouseCursorType.HSplit:
-                    this.MouseCursor = MouseCursor.AsHSplit;
+                    this.MouseCursor = MouseCursor.Default;
                     break;
 
                 case MouseCursorType.VSplit:
-                    this.MouseCursor = MouseCursor.AsVSplit;
+                    this.MouseCursor = MouseCursor.Default;
                     break;
 
                 case MouseCursorType.Hand:

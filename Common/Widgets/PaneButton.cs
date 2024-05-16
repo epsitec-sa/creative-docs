@@ -1,3 +1,5 @@
+using Epsitec.Common.Widgets.Platform;
+
 namespace Epsitec.Common.Widgets
 {
     public enum PaneButtonStyle
@@ -22,7 +24,7 @@ namespace Epsitec.Common.Widgets
             this.color[2] = Drawing.Color.FromName("ControlDark");
             this.color[3] = Drawing.Color.FromName("ControlDarkDark");
 
-            this.MouseCursor = MouseCursor.AsVSplit;
+            this.MouseCursor = MouseCursor.Default;
         }
 
         public PaneButton(Widget embedder)
@@ -40,15 +42,6 @@ namespace Epsitec.Common.Widgets
                 if (this.paneButtonStyle != value)
                 {
                     this.paneButtonStyle = value;
-
-                    if (this.paneButtonStyle == PaneButtonStyle.Vertical)
-                    {
-                        this.MouseCursor = MouseCursor.AsVSplit;
-                    }
-                    if (this.paneButtonStyle == PaneButtonStyle.Horizontal)
-                    {
-                        this.MouseCursor = MouseCursor.AsHSplit;
-                    }
 
                     this.Invalidate();
                 }

@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Widgets.Tools
 {

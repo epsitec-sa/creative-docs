@@ -563,11 +563,11 @@ namespace Epsitec.Common.UI
                 {
                     if (message.MessageType == Widgets.MessageType.MouseLeave)
                     {
-                        window.MouseCursor = Widgets.MouseCursor.Default;
+                        window.MouseCursor = Widgets.Platform.MouseCursor.Default;
                     }
                     else if (message.IsMouseType)
                     {
-                        window.MouseCursor = Widgets.MouseCursor.AsIBeam;
+                        window.MouseCursor = Widgets.Platform.MouseCursor.AsIBeam;
                     }
                     else if (message.IsKeyType)
                     {

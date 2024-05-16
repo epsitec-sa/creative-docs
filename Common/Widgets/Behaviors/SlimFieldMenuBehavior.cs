@@ -1,10 +1,11 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-using System.Linq;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {

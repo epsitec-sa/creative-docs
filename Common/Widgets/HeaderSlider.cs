@@ -1,3 +1,5 @@
+using Epsitec.Common.Widgets.Platform;
+
 namespace Epsitec.Common.Widgets
 {
     public enum HeaderSliderStyle
@@ -16,7 +18,7 @@ namespace Epsitec.Common.Widgets
         {
             this.InternalState &= ~WidgetInternalState.Engageable;
             this.headerSliderStyle = HeaderSliderStyle.Top;
-            this.MouseCursor = MouseCursor.AsVSplit;
+            this.MouseCursor = MouseCursor.Default;
         }
 
         public HeaderSlider(Widget embedder)
@@ -34,17 +36,6 @@ namespace Epsitec.Common.Widgets
                 if (this.headerSliderStyle != value)
                 {
                     this.headerSliderStyle = value;
-
-                    switch (this.headerSliderStyle)
-                    {
-                        case HeaderSliderStyle.Left:
-                            this.MouseCursor = MouseCursor.AsHSplit;
-                            break;
-
-                        case HeaderSliderStyle.Top:
-                            this.MouseCursor = MouseCursor.AsVSplit;
-                            break;
-                    }
                     this.Invalidate();
                 }
             }

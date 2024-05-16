@@ -1,5 +1,6 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Widgets
