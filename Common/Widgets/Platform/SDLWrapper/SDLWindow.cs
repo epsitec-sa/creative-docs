@@ -57,6 +57,11 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.RecreateDrawingArea(width, height);
         }
 
+        ~SDLWindow()
+        {
+            this.Dispose();
+        }
+
         /// <summary>
         /// Called on window creation and when the window size changes.
         /// </summary>
@@ -421,6 +426,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.renderer = IntPtr.Zero;
             SDL_DestroyWindow(this.window);
             this.window = IntPtr.Zero;
+            GC.SuppressFinalize(this);
         }
         #endregion
 
