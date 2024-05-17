@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets.Platform
         // implement PlatformWindow (stub)
         // ******************************************************************
         internal PlatformWindow(Window window, WindowFlags windowFlags)
-            : base("Creativedocs", 800, 600, PlatformWindow.MapToSDLWindowFlags(windowFlags))
+            : base("Creativedocs", 100, 100, PlatformWindow.MapToSDLWindowFlags(windowFlags))
         {
             Console.WriteLine("internal Window()");
             this.widgetWindow = window;
@@ -473,7 +473,8 @@ namespace Epsitec.Common.Widgets.Platform
                         $"Invalid alpha value {value}, should be between 0.0 and 1.0"
                     );
                 }
-                this.SetWindowOpacity((float)value);
+                Console.WriteLine($"Set opacity {value}");
+                //this.SetWindowOpacity((float)value);
                 this.alpha = value;
             }
         }
@@ -568,7 +569,9 @@ namespace Epsitec.Common.Widgets.Platform
                     animator = new Animator(SystemInformation.MenuAnimationFadeInTime);
                     animator.SetCallback<double>(this.AnimateAlpha, this.AnimateCleanup);
                     animator.SetValue(0.0, startAlpha);
+                    Console.WriteLine("start animator");
                     animator.Start();
+                    Console.WriteLine("show window");
                     this.Show();
                     return;
 
@@ -1379,38 +1382,20 @@ namespace Epsitec.Common.Widgets.Platform
 
         protected void AnimateAlpha(double alpha)
         {
-            /*
-            if (this.IsDisposed)
-            {
-                return;
-            }
-
             this.Alpha = alpha;
-            */
-            throw new NotImplementedException();
         }
 
         protected void AnimateCleanup(Animator animator)
         {
-            /*
             animator.Dispose();
 
-            if (this.IsDisposed)
-            {
-                return;
-            }
-
-            this.MinimumSize = this.formMinSize;
             this.isFrozen = false;
             this.isAnimatingActiveWindow = false;
-            this.Invalidate();
 
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.OnWindowAnimationEnded();
             }
-            */
-            throw new NotImplementedException();
         }
 
         internal void SetNativeIcon(System.IO.Stream iconStream)
@@ -1484,20 +1469,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void Close()
         {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
-            /*
-            try
-            {
-                this.forcedClose = true;
-                base.Close();
-            }
-            finally
-            {
-                this.forcedClose = false;
-            }
-            */
-            throw new NotImplementedException();
+            this.Dispose();
         }
 
         internal void SimulateCloseClick()

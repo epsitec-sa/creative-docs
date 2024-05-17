@@ -6,19 +6,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 {
     internal abstract class SDLWindow : IDisposable
     {
-        static void InitSDL()
-        {
-            if (SDL_Init(SDL_INIT_VIDEO) < 0)
-            {
-                throw new SDLException(SDL_GetError());
-            }
-        }
-
-        static void QuitSDL()
-        {
-            SDL_Quit();
-        }
-
         internal SDLWindow(string windowTitle, int width, int height, SDL_WindowFlags flags)
         {
             Console.WriteLine("internal SDLWindow()");
@@ -38,6 +25,8 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 throw new SDLException(SDL_GetError());
             }
             this.window = window;
+            this.windowID = SDL_GetWindowID(window);
+            SDLWindowManager.AddWindow(this);
             this.UpdateWindowPosition();
 
             var renderer = SDL_CreateRenderer(
@@ -213,25 +202,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         #endregion
 
         #region Public methods
-        /// <summary>
-        /// Run the window event loop.
-        /// This function is blocking for the entire lifetime of the window.
-        /// </summary>
-        public void Run()
-        {
-            this.RequireNotDisposed();
-            Console.WriteLine("SDLWindow run");
-            while (true)
-            {
-                if (!this.ProcessEvents())
-                {
-                    break;
-                }
-
-                this.UpdateDrawing();
-            }
-            Console.WriteLine("SDLWindow run end");
-        }
 
         public void Show()
         {
@@ -242,13 +212,13 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         #region Private methods
 
-        private void UpdateWindowPosition()
+        internal void UpdateWindowPosition()
         {
             this.RequireNotDisposed();
             SDL_GetWindowPosition(this.window, out this.x, out this.y);
         }
 
-        private void UpdateDrawing()
+        internal void UpdateDrawing()
         {
             this.OnDraw();
 
@@ -270,73 +240,31 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_RenderPresent(this.renderer);
         }
 
-        private bool ProcessEvents()
-        {
-            while (SDL_PollEvent(out SDL_Event e) == 1)
-            {
-                if (!this.HandleEvent(e))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Handle all sdl events
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns>true if the application should continue normaly, false if it should terminate</returns>
-        private bool HandleEvent(SDL_Event e)
-        {
-            switch (e.type)
-            {
-                case SDL_EventType.SDL_WINDOWEVENT:
-                    if (!this.HandleWindowEvent(e.window))
-                    {
-                        return false;
-                    }
-                    break;
-                case SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                    this.OnMouseButtonDown(e.button.x, e.button.y, e.button.button);
-                    break;
-                case SDL_EventType.SDL_MOUSEBUTTONUP:
-                    this.OnMouseButtonUp(e.button.x, e.button.y, e.button.button);
-                    break;
-                case SDL_EventType.SDL_MOUSEMOTION:
-                    this.OnMouseMove(e.button.x, e.button.y);
-                    break;
-                default:
-                    Console.WriteLine($"SDLWindow handle event {e.type}");
-                    break;
-            }
-            return true;
-        }
-
         /// <summary>
         /// Handle window manager related events (close, resize, maximized…)
         /// </summary>
         /// <param name="we"></param>
         /// <returns>true if the application should continue normaly, false if it should terminate</returns>
-        private bool HandleWindowEvent(SDL_WindowEvent we)
+        internal void HandleWindowEvent(SDL_WindowEvent we)
         {
             switch (we.windowEvent)
             {
                 case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
-                    return false;
+                    this.Dispose();
+                    return;
                 // TODO  bl-net8-cross the resize events are only fired when we release the mouse
                 // see how we could have a dynamic resize
                 case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
                 case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
                     this.RecreateDrawingArea(we.data1, we.data2);
                     this.OnResize(we.data1, we.data2);
-                    return true;
+                    break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED:
                     this.UpdateDrawing();
-                    return true;
+                    break;
                 default:
                     Console.WriteLine($"SDLWindow handle window event {we.windowEvent}");
-                    return true;
+                    break;
             }
         }
 
@@ -416,6 +344,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             {
                 return;
             }
+            SDLWindowManager.RemoveWindow(this);
             Console.WriteLine("SDL destroy window");
             this.DestroyDrawingArea();
             this.DestroyIconSurface();
@@ -429,6 +358,8 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             GC.SuppressFinalize(this);
         }
         #endregion
+
+        internal readonly uint windowID;
 
         private IntPtr window;
         private IntPtr renderer;

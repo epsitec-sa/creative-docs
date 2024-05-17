@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
     using System.Linq;
     using Epsitec.Common.Types.Collections;
     using Epsitec.Common.Widgets.Platform;
+    using Epsitec.Common.Widgets.Platform.SDLWrapper;
 
     /// <summary>
     /// La classe Window représente une fenêtre du système d'exploitation. Ce
@@ -61,8 +62,7 @@ namespace Epsitec.Common.Widgets
 
         public void Run()
         {
-            System.Console.WriteLine("Run window");
-            this.window.Run();
+            SDLWindowManager.RunApplicationEventLoop();
         }
 
         public static void Quit()
