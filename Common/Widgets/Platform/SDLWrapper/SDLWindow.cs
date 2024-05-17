@@ -20,6 +20,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 height,
                 flags | SDL_WindowFlags.SDL_WINDOW_HIDDEN
             );
+            this.isVisible = false;
             if (window == IntPtr.Zero)
             {
                 throw new SDLException(SDL_GetError());
@@ -100,6 +101,11 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 this.RequireNotDisposed();
                 return this.y;
             }
+        }
+
+        public bool IsVisible
+        {
+            get { return this.isVisible; }
         }
 
         public void SetPosition(int x, int y)
@@ -374,5 +380,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         private int height;
         private int x;
         private int y;
+        private bool isVisible;
     }
 }

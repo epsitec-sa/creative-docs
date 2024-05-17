@@ -275,6 +275,7 @@ namespace Epsitec.Common.Widgets
                 this.OnAboutToHideWindow();
             }
 
+            // FIXME there seem to be an infinite when we try to close a popup window
             this.window.Close();
         }
 
@@ -527,9 +528,9 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                if ((this.window != null) && (this.windowIsVisible))
+                if (this.window != null)
                 {
-                    return true;
+                    return this.window.IsVisible;
                 }
 
                 return false;
@@ -1042,8 +1043,6 @@ namespace Epsitec.Common.Widgets
             this.window.SimulateCloseClick();
         }
 
-        protected override void Dispose(bool disposing) { }
-
         protected void OnAsyncNotification()
         {
             if (this.AsyncNotification != null)
@@ -1095,9 +1094,6 @@ namespace Epsitec.Common.Widgets
 
         internal void OnWindowShown()
         {
-            System.Diagnostics.Debug.Assert(!this.windowIsVisible);
-
-            this.windowIsVisible = true;
             this.root.NotifyWindowIsVisibleChanged();
 
             this.WindowShown.Raise(this);
@@ -2414,7 +2410,6 @@ namespace Epsitec.Common.Widgets
             this.capturingButton = MouseButtons.None;
             this.focusedWidget = null;
             this.engagedWidget = null;
-            ;
 
             if (this.components.Count > 0)
             {
@@ -2547,7 +2542,6 @@ namespace Epsitec.Common.Widgets
         private Window owner;
         private HashSet<Window> ownedWindows;
         private WindowRoot root;
-        private bool windowIsVisible;
         private bool windowIsFocused;
         private bool windowLocationSet;
 
