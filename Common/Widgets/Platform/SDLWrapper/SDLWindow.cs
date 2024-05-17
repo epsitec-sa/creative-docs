@@ -57,55 +57,86 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.RecreateDrawingArea(width, height);
         }
 
+        /// <summary>
+        /// Called on window creation and when the window size changes.
+        /// </summary>
+        /// <param name="pixels">A handle to the pixel buffer that can be used for drawing</param>
+        /// <param name="width">Width of the pixel buffer</param>
+        /// <param name="height">Height of the pixel buffer</param>
+        /// <param name="stride">Length of one row of the pixel buffer in bytes</param>
+        protected abstract void RecreateGraphicBuffer(
+            IntPtr pixels,
+            int width,
+            int height,
+            int stride
+        );
+
+        #region Window properies
         public int Width
         {
-            get { return this.width; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.width;
+            }
         }
 
         public int Height
         {
-            get { return this.height; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.height;
+            }
         }
 
         public int WindowX
         {
-            get { return this.x; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.x;
+            }
         }
 
         public int WindowY
         {
-            get { return this.y; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.y;
+            }
         }
 
         public void SetPosition(int x, int y)
         {
+            this.RequireNotDisposed();
             Console.WriteLine($"Set window position {x} {y}");
             SDL_SetWindowPosition(this.window, x, y);
             this.UpdateWindowPosition();
         }
 
-        private void UpdateWindowPosition()
-        {
-            SDL_GetWindowPosition(this.window, out this.x, out this.y);
-        }
-
         public void SetSize(int width, int height)
         {
+            this.RequireNotDisposed();
             SDL_SetWindowSize(this.window, width, height);
         }
 
         public void SetBorder(bool border)
         {
+            this.RequireNotDisposed();
             SDL_SetWindowBordered(this.window, SDLUtils.ToSDLBool(border));
         }
 
         public void SetResizable(bool resizable)
         {
+            this.RequireNotDisposed();
             SDL_SetWindowResizable(this.window, SDLUtils.ToSDLBool(resizable));
         }
 
         public void SetFullscreen(bool fullscreen)
         {
+            this.RequireNotDisposed();
             SDL_SetWindowFullscreen(
                 this.window,
                 fullscreen ? (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : 0
@@ -114,26 +145,57 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         public void SetTitle(string title)
         {
+            this.RequireNotDisposed();
             SDL_SetWindowTitle(this.window, title);
         }
 
         public void SetWindowOpacity(float opacity)
         {
+            this.RequireNotDisposed();
             SDL_SetWindowOpacity(this.window, opacity);
         }
 
-        public void Show()
+        /// <summary>
+        /// Set the window icon from raw pixel data
+        /// </summary>
+        /// <param name="pixels">a buffer of pixels for the icon</param>
+        /// <param name="width">Width of the icon</param>
+        /// <param name="height">Height of the icon</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        protected void SetCustomIcon(byte[] pixels, int width, int height)
         {
-            SDL_ShowWindow(this.window);
+            this.RequireNotDisposed();
+            this.DestroyIconSurface();
+            // bl-net8-cross
+            // hardcoded pixelformat and stride value
+            var pixelformat = SDL_PIXELFORMAT_ARGB8888;
+            int stride = width * 4;
+
+            this.iconPixels = pixels;
+            this.iconPixelsHandle = GCHandle.Alloc(iconPixels, GCHandleType.Pinned);
+            this.iconSurface = SDL_CreateRGBSurfaceWithFormatFrom(
+                this.iconPixelsHandle.AddrOfPinnedObject(),
+                width,
+                height,
+                32,
+                stride,
+                pixelformat
+            );
+            if (this.iconSurface == 0)
+            {
+                throw new InvalidOperationException(SDL_GetError());
+            }
+            SDL_SetWindowIcon(this.window, this.iconSurface);
         }
 
-        protected abstract void RecreateGraphicBuffer(
-            IntPtr pixels,
-            int width,
-            int height,
-            int stride
-        );
+        #endregion
 
+        #region Window events
+
+        /// <summary>
+        /// Called when the window needs to be redrawn.
+        /// Drawing should be done in the pixelbuffer created by <c>RecreateGraphicBuffer</c>
+        /// </summary>
         protected virtual void OnDraw() { }
 
         protected virtual void OnResize(int sx, int sy) { }
@@ -143,9 +205,16 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         public virtual void OnMouseButtonUp(int x, int y, int button) { }
 
         public virtual void OnMouseMove(int x, int y) { }
+        #endregion
 
+        #region Public methods
+        /// <summary>
+        /// Run the window event loop.
+        /// This function is blocking for the entire lifetime of the window.
+        /// </summary>
         public void Run()
         {
+            this.RequireNotDisposed();
             Console.WriteLine("SDLWindow run");
             while (true)
             {
@@ -157,6 +226,21 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 this.UpdateDrawing();
             }
             Console.WriteLine("SDLWindow run end");
+        }
+
+        public void Show()
+        {
+            this.RequireNotDisposed();
+            SDL_ShowWindow(this.window);
+        }
+        #endregion
+
+        #region Private methods
+
+        private void UpdateWindowPosition()
+        {
+            this.RequireNotDisposed();
+            SDL_GetWindowPosition(this.window, out this.x, out this.y);
         }
 
         private void UpdateDrawing()
@@ -251,31 +335,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             }
         }
 
-        protected void CreateIconSurface(byte[] pixels, int width, int height)
-        {
-            this.DestroyIconSurface();
-            // bl-net8-cross
-            // hardcoded pixelformat and stride value
-            var pixelformat = SDL_PIXELFORMAT_ARGB8888;
-            int stride = width * 4;
-
-            this.iconPixels = pixels;
-            this.iconPixelsHandle = GCHandle.Alloc(iconPixels, GCHandleType.Pinned);
-            this.iconSurface = SDL_CreateRGBSurfaceWithFormatFrom(
-                this.iconPixelsHandle.AddrOfPinnedObject(),
-                width,
-                height,
-                32,
-                stride,
-                pixelformat
-            );
-            if (this.iconSurface == 0)
-            {
-                throw new InvalidOperationException(SDL_GetError());
-            }
-            SDL_SetWindowIcon(this.window, this.iconSurface);
-        }
-
         private void RecreateDrawingArea(int width, int height)
         {
             this.DestroyDrawingArea();
@@ -306,6 +365,9 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 throw new InvalidOperationException(SDL_GetError());
             }
         }
+        #endregion
+
+        #region Memory management
 
         private void DestroyIconSurface()
         {
@@ -335,17 +397,35 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.texture = IntPtr.Zero;
         }
 
+        private void RequireNotDisposed()
+        {
+            if (this.window == IntPtr.Zero)
+            {
+                throw new ObjectDisposedException(this.GetType().FullName);
+            }
+        }
+
         public void Dispose()
         {
+            if (this.window == IntPtr.Zero)
+            {
+                return;
+            }
             Console.WriteLine("SDL destroy window");
             this.DestroyDrawingArea();
             this.DestroyIconSurface();
-            SDL_DestroyRenderer(this.renderer);
+            if (this.renderer != IntPtr.Zero)
+            {
+                SDL_DestroyRenderer(this.renderer);
+            }
+            this.renderer = IntPtr.Zero;
             SDL_DestroyWindow(this.window);
+            this.window = IntPtr.Zero;
         }
+        #endregion
 
-        private readonly IntPtr window;
-        private readonly IntPtr renderer;
+        private IntPtr window;
+        private IntPtr renderer;
         private IntPtr surface;
         private IntPtr texture;
 

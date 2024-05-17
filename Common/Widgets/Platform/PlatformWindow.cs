@@ -848,7 +848,7 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 this.icon = value;
                 var pixels = value.BitmapImage.GetPixelBuffer();
-                this.CreateIconSurface(pixels, (int)value.Width, (int)value.Height);
+                this.SetCustomIcon(pixels, (int)value.Width, (int)value.Height);
             }
         }
 
