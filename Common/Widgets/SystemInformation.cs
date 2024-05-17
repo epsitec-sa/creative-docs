@@ -192,53 +192,22 @@ namespace Epsitec.Common.Widgets
 
         public static bool SupportsLayeredWindows
         {
-            get
-            {
-                /*
-                return System.Windows.Forms.OSFeature.Feature.GetVersionPresent(
-                        System.Windows.Forms.OSFeature.LayeredWindows
-                    ) != null;
-                */
-                throw new System.NotImplementedException();
-                return true;
-            }
+            get { return true; }
         }
 
         public static bool PreferRightAlignedMenus
         {
-            //get { return System.Windows.Forms.SystemInformation.RightAlignedMenus; }
-            get
-            {
-                throw new System.NotImplementedException();
-                return true;
-            }
+            get { return true; }
         }
 
         public static double DoubleClickDelay
         {
-            //get { return System.Windows.Forms.SystemInformation.DoubleClickTime / 1000.0; }
-            get
-            {
-                throw new System.NotImplementedException();
-                return 0.1;
-            }
+            get { return 0.1; }
         }
 
         public static int DoubleClickRadius2
         {
-            get
-            {
-                /*
-                System.Drawing.Size size = System.Windows.Forms.SystemInformation.DoubleClickSize;
-
-                int dx = size.Width;
-                int dy = size.Height;
-
-                return dx * dx + dy * dy;
-                */
-                throw new System.NotImplementedException();
-                return 50;
-            }
+            get { return 50; }
         }
 
         internal static int[] UserPreferenceMask
