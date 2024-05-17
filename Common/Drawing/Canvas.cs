@@ -6,9 +6,8 @@ namespace Epsitec.Common.Drawing
     /// <summary>
     /// La classe Canvas permet de représenter une image vectorielle.
     /// </summary>
-    public class Canvas : Image, IDisposable
+    public class Canvas : Image
     {
-
         internal Canvas(byte[] data)
         {
             this.data = new byte[data.Length];
@@ -390,16 +389,16 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        protected void Dispose(bool disposing)
+        public override void Dispose()
         {
-            System.Diagnostics.Debug.Assert(this.isDisposed == false);
+            if (this.isDisposed)
+            {
+                return;
+            }
             this.isDisposed = true;
 
-            if (disposing)
-            {
-                Canvas.globalIconCache.Remove(this);
-                this.InvalidateCache();
-            }
+            Canvas.globalIconCache.Remove(this);
+            this.InvalidateCache();
         }
 
         public void RemoveFromCache()
@@ -615,11 +614,6 @@ namespace Epsitec.Common.Drawing
             #endregion
 
             protected System.Collections.Hashtable hash;
-        }
-
-        public void Dispose()
-        {
-            this.cache.Dispose();
         }
 
         protected bool isDisposed;

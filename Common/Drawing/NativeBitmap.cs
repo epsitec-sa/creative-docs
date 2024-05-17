@@ -208,7 +208,12 @@ namespace Epsitec.Common.Drawing.Platform
 
         public override void Dispose()
         {
+            if (this.magicImage == null)
+            {
+                return;
+            }
             this.magicImage.Dispose();
+            this.magicImage = null;
         }
 
         #endregion

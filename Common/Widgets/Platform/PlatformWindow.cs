@@ -3,7 +3,6 @@
 
 using System;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using SDL2;
 
 namespace Epsitec.Common.Widgets.Platform
@@ -17,11 +16,48 @@ namespace Epsitec.Common.Widgets.Platform
         // TODO bl-net8-cross
         // implement PlatformWindow (stub)
         // ******************************************************************
+        internal PlatformWindow(Window window, WindowFlags windowFlags)
+            : base("Creativedocs", 800, 600, PlatformWindow.MapToSDLWindowFlags(windowFlags))
+        {
+            Console.WriteLine("internal Window()");
+            this.widgetWindow = window;
 
-        // --------------------------------------------------------------------------------------------
-        //                             SDLWindow overrides
-        // --------------------------------------------------------------------------------------------
+            /* //REMOVED (bl-net8-cross)
+            base.MinimumSize = new System.Drawing.Size(1, 1);
 
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+
+            this.SetStyle(System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(System.Windows.Forms.ControlStyles.Opaque, true);
+            this.SetStyle(System.Windows.Forms.ControlStyles.ResizeRedraw, true);
+            this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint, true);
+            */
+
+            this.WindowType = WindowType.Document;
+
+            //this.graphics.AllocatePixmap();
+
+            //PlatformWindow.DummyHandleEater(this.Handle);
+
+            /*
+            //	Fait en sorte que les changements de dimensions en [x] et en [y] provoquent un
+            //	redessin complet de la fenêtre, sinon Windows tente de recopier l'ancien contenu
+            //	en le décalant, ce qui donne des effets bizarres :
+
+            int classWindowStyle = Win32Api.GetClassLong(this.Handle, Win32Const.GCL_STYLE);
+
+            classWindowStyle |= Win32Const.CS_HREDRAW;
+            classWindowStyle |= Win32Const.CS_VREDRAW;
+
+            Win32Api.SetClassLong(this.Handle, Win32Const.GCL_STYLE, classWindowStyle);
+            */
+
+            //this.ReallocatePixmap();
+
+            WindowList.Insert(this);
+        }
+
+        #region SDLWindow overrides
         protected override void RecreateGraphicBuffer(
             IntPtr pixels,
             int width,
@@ -46,38 +82,6 @@ namespace Epsitec.Common.Widgets.Platform
         {
             var graphics = new Graphics(this.renderingBuffer.GraphicContext);
             this.RefreshGraphics(graphics);
-        }
-
-        //public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
-        //{
-        //    KeyCode keyCode = (KeyCode)key;
-        //    ModifierKeys modifiers = ModifierKeys.None;
-        //    if (flags.HasFlag(AntigrainSharp.InputFlags.KbdShift))
-        //    {
-        //        modifiers |= ModifierKeys.Shift;
-        //    }
-        //    if (flags.HasFlag(AntigrainSharp.InputFlags.KbdCtrl))
-        //    {
-        //        modifiers |= ModifierKeys.Control;
-        //    }
-        //    Message msg = Message.FromKeyEvent(MessageType.KeyPress, keyCode, modifiers);
-        //    this.DispatchMessage(msg);
-        //    this.ForceRedraw();
-        //}
-
-        private MouseButtons ConvertMouseButton(int button)
-        {
-            switch (button)
-            {
-                case 1:
-                    return MouseButtons.Left;
-                case 2:
-                    return MouseButtons.Middle;
-                case 3:
-                    return MouseButtons.Right;
-                default:
-                    return MouseButtons.None;
-            }
         }
 
         public override void OnMouseButtonDown(int x, int y, int button)
@@ -132,39 +136,60 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.OnResize(sx, sy);
             Console.WriteLine($"Resize {sx} {sy}");
         }
+        //public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
+        //{
+        //    KeyCode keyCode = (KeyCode)key;
+        //    ModifierKeys modifiers = ModifierKeys.None;
+        //    if (flags.HasFlag(AntigrainSharp.InputFlags.KbdShift))
+        //    {
+        //        modifiers |= ModifierKeys.Shift;
+        //    }
+        //    if (flags.HasFlag(AntigrainSharp.InputFlags.KbdCtrl))
+        //    {
+        //        modifiers |= ModifierKeys.Control;
+        //    }
+        //    Message msg = Message.FromKeyEvent(MessageType.KeyPress, keyCode, modifiers);
+        //    this.DispatchMessage(msg);
+        //    this.ForceRedraw();
+        //}
+        #endregion
 
-        // --------------------------------------------------------------------------------------------
-        //                             System.Windows.Forms.Form stubs
-        // --------------------------------------------------------------------------------------------
-        // We are missing several properties by removing the inheritance from System.Windows.Forms.Form
-        // We add them here as stubs
-
-        /// <summary>
-        /// Activates the form and gives it focus.
-        /// </summary>
-        public void Activate()
+        #region SDL <-> Creativedocs conversions
+        private static SDL.SDL_WindowFlags MapToSDLWindowFlags(WindowFlags windowFlags)
         {
-            //throw new NotImplementedException();
+            SDL.SDL_WindowFlags flags = 0;
+            if (windowFlags.HasFlag(WindowFlags.NoBorder))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
+            }
+            if (windowFlags.HasFlag(WindowFlags.Resizable))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+            }
+            if (windowFlags.HasFlag(WindowFlags.AlwaysOnTop))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
+            }
+            if (windowFlags.HasFlag(WindowFlags.HideFromTaskbar))
+            {
+                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_SKIP_TASKBAR;
+            }
+            return flags;
         }
 
-        /// <summary>
-        /// true if drag-and-drop operations are allowed in the control; otherwise, false. The default is false.
-        /// </summary>
-        public bool AllowDrop { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the control has captured the mouse.
-        /// </summary>
-        public bool Capture { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether the control has input focus.
-        /// </summary>
-        public bool Focused { get; }
-
-        public bool Focus()
+        private MouseButtons ConvertMouseButton(int button)
         {
-            throw new NotImplementedException();
+            switch (button)
+            {
+                case 1:
+                    return MouseButtons.Left;
+                case 2:
+                    return MouseButtons.Middle;
+                case 3:
+                    return MouseButtons.Right;
+                default:
+                    return MouseButtons.None;
+            }
         }
 
         private Point WindowPointFromSDL(int x, int y)
@@ -238,81 +263,236 @@ namespace Epsitec.Common.Widgets.Platform
                 this.WindowY + this.Height - windowPoint.Y
             );
         }
+        #endregion
+
+        #region old WinForms compatibility
+        // --------------------------------------------------------------------------------------------
+        //                             System.Windows.Forms.Form stubs
+        // --------------------------------------------------------------------------------------------
+        // We are missing several properties by removing the inheritance from System.Windows.Forms.Form
+        // We add them here as stubs
+
+        /// <summary>
+        /// Activates the form and gives it focus.
+        /// </summary>
+        public void Activate()
+        {
+            //throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// true if drag-and-drop operations are allowed in the control; otherwise, false. The default is false.
+        /// </summary>
+        public bool AllowDrop { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the control has captured the mouse.
+        /// </summary>
+        public bool Capture { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the control has input focus.
+        /// </summary>
+        public bool Focused { get; }
+
+        public bool Focus()
+        {
+            throw new NotImplementedException();
+        }
 
         // --------------------------------------------------------------------------------------------
+        #endregion
 
-        internal PlatformWindow(Widgets.Window window, WindowFlags windowFlags)
-            : base("Creativedocs", 800, 600, PlatformWindow.MapToSDLWindowFlags(windowFlags))
+        #region properties and methods
+        internal WindowType WindowType
         {
-            Console.WriteLine("internal Window()");
-            this.widgetWindow = window;
-
-            /* //REMOVED (bl-net8-cross)
-            base.MinimumSize = new System.Drawing.Size(1, 1);
-
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-
-            this.SetStyle(System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(System.Windows.Forms.ControlStyles.Opaque, true);
-            this.SetStyle(System.Windows.Forms.ControlStyles.ResizeRedraw, true);
-            this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint, true);
-            */
-
-            this.widgetWindow.WindowType = WindowType.Document;
-
-            //this.graphics.AllocatePixmap();
-
-            //PlatformWindow.DummyHandleEater(this.Handle);
-
-            /*
-            //	Fait en sorte que les changements de dimensions en [x] et en [y] provoquent un
-            //	redessin complet de la fenêtre, sinon Windows tente de recopier l'ancien contenu
-            //	en le décalant, ce qui donne des effets bizarres :
-
-            int classWindowStyle = Win32Api.GetClassLong(this.Handle, Win32Const.GCL_STYLE);
-
-            classWindowStyle |= Win32Const.CS_HREDRAW;
-            classWindowStyle |= Win32Const.CS_VREDRAW;
-
-            Win32Api.SetClassLong(this.Handle, Win32Const.GCL_STYLE, classWindowStyle);
-            */
-
-            //this.ReallocatePixmap();
-
-            WindowList.Insert(this);
+            get { return this.windowType; }
+            set
+            {
+                if (this.windowType != value)
+                {
+                    this.windowType = value;
+                }
+            }
         }
 
-        private static SDL.SDL_WindowFlags MapToSDLWindowFlags(WindowFlags windowFlags)
+        internal bool PreventAutoClose
         {
-            SDL.SDL_WindowFlags flags = 0;
-            if (windowFlags.HasFlag(WindowFlags.NoBorder))
-            {
-                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
-            }
-            if (windowFlags.HasFlag(WindowFlags.Resizable))
-            {
-                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
-            }
-            if (windowFlags.HasFlag(WindowFlags.AlwaysOnTop))
-            {
-                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
-            }
-            if (windowFlags.HasFlag(WindowFlags.HideFromTaskbar))
-            {
-                flags |= SDL.SDL_WindowFlags.SDL_WINDOW_SKIP_TASKBAR;
-            }
-            return flags;
+            get { return this.preventClose; }
+            set { this.preventClose = value; }
         }
 
-        internal void HideWindow()
+        internal bool PreventAutoQuit
         {
-            /*
-            using (this.isWndProcHandlingRestricted.Enter())
+            get { return this.preventQuit; }
+            set { this.preventQuit = value; }
+        }
+
+        internal bool IsLayered
+        {
+            get { return this.isLayered; }
+            set { this.isLayered = value; }
+        }
+
+        internal bool IsFrozen
+        {
+            get
             {
-                this.Hide();
+                return (this.isFrozen)
+                    || (this.widgetWindow == null)
+                    || (this.widgetWindow.Root == null)
+                    || (this.widgetWindow.Root.IsFrozen);
             }
-            */
-            throw new NotImplementedException();
+        }
+        internal bool IsFullScreen
+        {
+            get { return this.isFullscreen; }
+            set
+            {
+                this.SetFullscreen(value);
+                this.isFullscreen = value;
+            }
+        }
+
+        internal bool IsAnimatingActiveWindow
+        {
+            get { return this.isAnimatingActiveWindow; }
+        }
+
+        internal bool IsMouseActivationEnabled
+        {
+            get { return !this.isNoActivate; }
+            set { this.isNoActivate = !value; }
+        }
+
+        internal bool IsToolWindow
+        {
+            get { return this.isToolWindow; }
+        }
+
+        internal bool IsSizeMoveInProgress
+        {
+            get { return this.isSizeMoveInProgress; }
+            set
+            {
+                if (this.isSizeMoveInProgress != value)
+                {
+                    this.isSizeMoveInProgress = value;
+                    if (this.widgetWindow != null)
+                    {
+                        this.widgetWindow.OnWindowSizeMoveStatusChanged();
+                    }
+                }
+            }
+        }
+
+        internal WindowMode WindowMode
+        {
+            get { return this.windowMode; }
+            set { this.windowMode = value; }
+        }
+
+        internal Drawing.Rectangle WindowBounds
+        {
+            get { return new Rectangle(this.WindowLocation, this.WindowSize); }
+            set
+            {
+                this.WindowLocation = value.Location;
+                this.WindowSize = value.Size;
+            }
+        }
+
+        public Drawing.Size MinimumSize
+        {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
+            get { return this.minimumSize; }
+            set { this.minimumSize = value; }
+        }
+        private WindowPlacement CurrentWindowPlacement
+        {
+            set
+            {
+                if (!this.windowPlacement.Equals(value))
+                {
+                    this.windowPlacement = value;
+
+                    if (this.widgetWindow != null)
+                    {
+                        this.widgetWindow.OnWindowPlacementChanged();
+                    }
+                }
+            }
+        }
+        internal Drawing.Point WindowLocation
+        {
+            get { return new Point(this.WindowX, this.WindowY); }
+            set { this.SetPosition((int)value.X, (int)value.Y); }
+        }
+
+        internal Drawing.Size WindowSize
+        {
+            get { return new Drawing.Size(this.Width, this.Height); }
+            set { this.SetSize((int)value.Width, (int)value.Height); }
+        }
+
+        internal string Text
+        {
+            get { return this.windowTitle; }
+            set
+            {
+                this.windowTitle = value;
+                this.SetTitle(value);
+            }
+        }
+
+        internal string Name
+        {
+            get { return this.windowName; }
+            set { this.windowName = value; }
+        }
+
+        internal Drawing.Image Icon
+        {
+            get { return this.icon; }
+            set
+            {
+                this.icon = value;
+                var pixels = value.BitmapImage.GetPixelBuffer();
+                this.SetCustomIcon(pixels, (int)value.Width, (int)value.Height);
+            }
+        }
+        internal double Alpha
+        {
+            get { return this.alpha; }
+            set
+            {
+                if (value < 0 || value > 1.0)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        $"Invalid alpha value {value}, should be between 0.0 and 1.0"
+                    );
+                }
+                this.SetWindowOpacity((float)value);
+                this.alpha = value;
+            }
+        }
+
+        internal bool FilterMouseMessages
+        {
+            get { return this.filterMouseMessages; }
+            set { this.filterMouseMessages = value; }
+        }
+
+        internal bool FilterKeyMessages
+        {
+            get { return this.filterKeyMessages; }
+            set { this.filterKeyMessages = value; }
+        }
+
+        internal Window HostingWidgetWindow
+        {
+            get { return this.widgetWindow; }
         }
 
         internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
@@ -348,7 +528,7 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 default:
                 case Animation.None:
-                    this.ShowWindow();
+                    this.Show();
                     this.isAnimatingActiveWindow = false;
                     return;
 
@@ -389,7 +569,7 @@ namespace Epsitec.Common.Widgets.Platform
                     animator.SetCallback<double>(this.AnimateAlpha, this.AnimateCleanup);
                     animator.SetValue(0.0, startAlpha);
                     animator.Start();
-                    this.ShowWindow();
+                    this.Show();
                     return;
 
                 case Animation.FadeOut:
@@ -422,7 +602,7 @@ namespace Epsitec.Common.Widgets.Platform
                     animator.SetValue(0, b1, b2);
                     animator.SetValue(1, o1, o2);
                     animator.Start();
-                    this.ShowWindow();
+                    this.Show();
                     break;
             }
         }
@@ -508,88 +688,97 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
-        protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
+        protected bool RefreshGraphics(Drawing.Graphics graphics)
         {
-            /*
-            if (this.IsDisposed)
-            {
-                return;
-            }
-
-            this.WindowBounds = bounds;
-            this.paintOffset = offset;
-            this.Invalidate();
-            this.Update();
-            */
-            throw new NotImplementedException();
-        }
-
-        protected void AnimateAlpha(double alpha)
-        {
-            /*
-            if (this.IsDisposed)
-            {
-                return;
-            }
-
-            this.Alpha = alpha;
-            */
-            throw new NotImplementedException();
-        }
-
-        protected void AnimateCleanup(Animator animator)
-        {
-            /*
-            animator.Dispose();
-
-            if (this.IsDisposed)
-            {
-                return;
-            }
-
-            this.MinimumSize = this.formMinSize;
-            this.isFrozen = false;
-            this.isAnimatingActiveWindow = false;
-            this.Invalidate();
-
             if (this.widgetWindow != null)
             {
-                this.widgetWindow.OnWindowAnimationEnded();
+                this.widgetWindow.ForceLayout();
             }
-            */
-            throw new NotImplementedException();
-        }
 
-        internal WindowType WindowType
-        {
-            get { return this.windowType; }
-            set
+            if (this.IsFrozen)
             {
-                if (this.windowType != value)
-                {
-                    this.windowType = value;
-                }
+                return false;
+            }
+
+            return this.RefreshGraphicsLowLevel(graphics);
+        }
+
+        private bool RefreshGraphicsLowLevel(Graphics graphics)
+        {
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.RefreshGraphics(graphics, Rectangle.MaxValue, []);
+            }
+            return true;
+        }
+
+        internal void DispatchMessage(Message message)
+        {
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.DispatchMessage(message);
             }
         }
 
-        internal bool PreventAutoClose
+        internal void ShowDialogWindow()
         {
-            get { return this.preventClose; }
-            set { this.preventClose = value; }
+            this.Show();
+            ToolTip.HideAllToolTips();
         }
 
-        internal bool PreventAutoQuit
+        internal bool StartWindowManagerOperation(WindowManagerOperation op)
         {
-            get { return this.preventQuit; }
-            set { this.preventQuit = value; }
+            //	Documentation sur WM_NCHITTEST et les modes HT...
+            //	Cf http://blogs.msdn.com/jfoscoding/archive/2005/07/28/444647.aspx
+            //	Cf http://msdn.microsoft.com/netframework/default.aspx?pull=/libarary/en-us/dndotnet/html/automationmodel.asp
+
+            switch (op)
+            {
+                case Platform.WindowManagerOperation.ResizeLeft:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_LEFT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeRight:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_RIGHT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeBottom:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOM);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeBottomRight:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMRIGHT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeBottomLeft:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMLEFT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeTop:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOP);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeTopRight:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPRIGHT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeTopLeft:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPLEFT);
+                    return true;
+                case Platform.WindowManagerOperation.MoveWindow:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_CAPTION);
+                    return true;
+                case Platform.WindowManagerOperation.PressMinimizeButton:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MINBUTTON);
+                    return true;
+                case Platform.WindowManagerOperation.PressMaximizeButton:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MAXBUTTON);
+                    return true;
+            }
+
+            return false;
         }
 
-        internal bool IsLayered
+        internal void SetFrozen(bool frozen)
         {
-            get { return this.isLayered; }
-            set { this.isLayered = value; }
+            this.isFrozen = frozen;
         }
+        #endregion
 
+        #region NotImplemented
         internal bool IsActive
         {
             get
@@ -608,81 +797,15 @@ namespace Epsitec.Common.Widgets.Platform
                 return true;
             }
         }
-
-        internal bool IsFrozen
-        {
-            get
-            {
-                return (this.isFrozen)
-                    || (this.widgetWindow == null)
-                    || (this.widgetWindow.Root == null)
-                    || (this.widgetWindow.Root.IsFrozen);
-            }
-        }
-        internal bool IsFullScreen
-        {
-            get { return this.isFullscreen; }
-            set
-            {
-                this.SetFullscreen(value);
-                this.isFullscreen = value;
-            }
-        }
-
-        internal bool IsAnimatingActiveWindow
-        {
-            get { return this.isAnimatingActiveWindow; }
-        }
-
-        internal bool IsMouseActivationEnabled
-        {
-            get { return !this.isNoActivate; }
-            set { this.isNoActivate = !value; }
-        }
-
-        internal bool IsToolWindow
-        {
-            get { return this.isToolWindow; }
-        }
-
-        internal bool IsSizeMoveInProgress
-        {
-            get { return this.isSizeMoveInProgress; }
-            set
-            {
-                if (this.isSizeMoveInProgress != value)
-                {
-                    this.isSizeMoveInProgress = value;
-                    if (this.widgetWindow != null)
-                    {
-                        this.widgetWindow.OnWindowSizeMoveStatusChanged();
-                    }
-                }
-            }
-        }
-
-        internal WindowMode WindowMode
-        {
-            get { return this.windowMode; }
-            set { this.windowMode = value; }
-        }
-
-        internal Drawing.Rectangle WindowBounds
-        {
-            get { return new Rectangle(this.WindowLocation, this.WindowSize); }
-            set
-            {
-                this.WindowLocation = value.Location;
-                this.WindowSize = value.Size;
-            }
-        }
-
-        public Drawing.Size MinimumSize
+        internal static bool UseWaitCursor
         {
             // bl-net8-cross
             // old thing from winforms, see if still usefull
-            get { return this.minimumSize; }
-            set { this.minimumSize = value; }
+
+            //get { return System.Windows.Forms.Application.UseWaitCursor; }
+            get { return true; }
+            //set { System.Windows.Forms.Application.UseWaitCursor = value; }
+            set { }
         }
 
         internal Drawing.Rectangle WindowPlacementNormalBounds
@@ -718,22 +841,6 @@ namespace Epsitec.Common.Widgets.Platform
                 */
                 throw new NotImplementedException();
                 return Drawing.Rectangle.Empty;
-            }
-        }
-
-        private WindowPlacement CurrentWindowPlacement
-        {
-            set
-            {
-                if (!this.windowPlacement.Equals(value))
-                {
-                    this.windowPlacement = value;
-
-                    if (this.widgetWindow != null)
-                    {
-                        this.widgetWindow.OnWindowPlacementChanged();
-                    }
-                }
             }
         }
 
@@ -813,43 +920,497 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
-        internal Drawing.Point WindowLocation
+        internal static void ProcessException(System.Exception ex, string tag)
         {
-            get { return new Point(this.WindowX, this.WindowY); }
-            set { this.SetPosition((int)value.X, (int)value.Y); }
-        }
+            /*
+            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
-        internal Drawing.Size WindowSize
-        {
-            get { return new Drawing.Size(this.Width, this.Height); }
-            set { this.SetSize((int)value.Width, (int)value.Height); }
-        }
+            buffer.Append("------------------------------------------------------------");
+            buffer.Append("\r\n");
+            buffer.Append(tag);
+            buffer.Append("\r\n");
+            buffer.Append(
+                System.Diagnostics.Process.GetCurrentProcess().MainModule.FileVersionInfo.ToString()
+            );
+            buffer.Append("\r\n");
+            buffer.Append("PlatformWindow: ");
+            buffer.Append(System.Diagnostics.Process.GetCurrentProcess().MainWindowTitle);
+            buffer.Append("\r\n");
+            buffer.Append("Thread: ");
+            buffer.Append(System.Threading.Thread.CurrentThread.Name);
+            buffer.Append("\r\n");
+            buffer.Append("\r\n");
 
-        internal string Text
-        {
-            get { return this.windowTitle; }
-            set
+            while (ex != null)
             {
-                this.windowTitle = value;
-                this.SetTitle(value);
+                buffer.Append("Exception type: ");
+                buffer.Append(ex.GetType().Name);
+                buffer.Append("\r\n");
+                buffer.Append("Message:        ");
+                buffer.Append(ex.Message);
+                buffer.Append("\r\n");
+                buffer.Append("Stack:\r\n");
+                buffer.Append(ex.StackTrace);
+
+                ex = ex.InnerException;
+
+                if (ex != null)
+                {
+                    buffer.Append("\r\nInner Exception found.\r\n\r\n");
+                }
             }
+
+            buffer.Append("\r\n");
+            buffer.Append("------------------------------------------------------------");
+            buffer.Append("\r\n");
+
+            Support.ClipboardWriteData data = new Epsitec.Common.Support.ClipboardWriteData();
+            data.WriteText(buffer.ToString());
+            Support.Clipboard.SetData(data);
+
+            string key = "Bug report e-mail";
+            string email = Globals.Properties.GetProperty(key, "bugs@opac.ch");
+
+            string msgFr =
+                "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n"
+                + "description de ce que vous étiez en train de faire au moment où ce message\n"
+                + "est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n"
+                + "Envoyez s'il-vous-plaît ces informations à "
+                + email
+                + "\n\n"
+                + "Merci pour votre aide.";
+
+            string msgEn =
+                "An internal error occurred. Please send an e-mail with a short description\n"
+                + "of what you were doing when this message appeared and include (press CTRL+V)\n"
+                + "contents of the clipboard, which contains useful debugging information.\n\n"
+                + "Please send these informations to "
+                + email
+                + "\n\n"
+                + "Thank you very much for your help.";
+
+            bool isFrench = (
+                System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr"
+            );
+
+            string title = isFrench ? "Erreur interne" : "Internal error";
+            string message = isFrench ? msgFr : msgEn;
+
+            System.Diagnostics.Debug.WriteLine(buffer.ToString());
+            System.Windows.Forms.MessageBox.Show(null, message, title);
+            */
+            throw new System.NotImplementedException();
         }
 
-        internal string Name
+        internal static void ProcessCrossThreadOperation(System.Action action)
         {
-            get { return this.windowName; }
-            set { this.windowName = value; }
-        }
+            /*
+            bool state = System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls;
 
-        internal Drawing.Image Icon
-        {
-            get { return this.icon; }
-            set
+            try
             {
-                this.icon = value;
-                var pixels = value.BitmapImage.GetPixelBuffer();
-                this.SetCustomIcon(pixels, (int)value.Width, (int)value.Height);
+                System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
+
+                action();
             }
+            finally
+            {
+                System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = state;
+            }
+            */
+            throw new System.NotImplementedException();
+        }
+
+        private void ReleaseCaptureAndSendMessage(uint ht)
+        {
+            /*
+            Win32Api.ReleaseCapture();
+            Win32Api.SendMessage(
+                this.Handle,
+                Platform.Win32Const.WM_NCLBUTTONDOWN,
+                (System.IntPtr)ht,
+                (System.IntPtr)0
+            );
+            */
+            throw new System.NotImplementedException();
+        }
+
+        protected void FakeActivate(bool active)
+        {
+            /*
+            if (this.hasActiveFrame != active)
+            {
+                this.hasActiveFrame = active;
+
+                if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
+                {
+                    System.Windows.Forms.Message message = PlatformWindow.CreateNCActivate(this, active);
+                    //					System.Diagnostics.Debug.WriteLine (string.Format ("PlatformWindow {0} faking WM_NCACTIVATE {1}.", this.Name, active));
+                    base.WndProc(ref message);
+                }
+            }
+            */
+            throw new System.NotImplementedException();
+        }
+
+        protected void FakeActivateOwned(bool active)
+        {
+            /*
+            this.FakeActivate(active);
+
+            System.Windows.Forms.Form[] forms = this.OwnedForms;
+
+            for (int i = 0; i < forms.Length; i++)
+            {
+                PlatformWindow window = forms[i] as PlatformWindow;
+
+                if (window != null)
+                {
+                    if (window.isToolWindow)
+                    {
+                        window.FakeActivate(active);
+                    }
+                }
+            }
+            */
+            throw new System.NotImplementedException();
+        }
+
+        protected bool IsOwnedWindow(Platform.PlatformWindow find)
+        {
+            /*
+            System.Windows.Forms.Form[] forms = this.OwnedForms;
+
+            for (int i = 0; i < forms.Length; i++)
+            {
+                PlatformWindow window = forms[i] as PlatformWindow;
+
+                if (window != null)
+                {
+                    if (window == find)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+            */
+            throw new System.NotImplementedException();
+            return true;
+        }
+
+        internal Drawing.DrawingBitmap GetWindowPixmap()
+        {
+            /*
+            if ((this.graphics != null) && (this.isPixmapOk))
+            {
+                return this.graphics.DrawingBitmap;
+            }
+            else
+            {
+                return null;
+            }
+            */
+            throw new System.NotImplementedException();
+        }
+
+        protected void ReallocatePixmap()
+        {
+            /*
+            if (this.IsFrozen)
+            {
+                return;
+            }
+
+            if (this.ReallocatePixmapLowLevel())
+            {
+                this.UpdateLayeredWindow();
+            }
+            */
+            throw new System.NotImplementedException();
+        }
+
+        private bool ReallocatePixmapLowLevel()
+        {
+            /*
+            bool changed = false;
+
+            int width = this.ClientSize.Width;
+            int height = this.ClientSize.Height;
+
+            if (this.graphics.SetPixmapSize(width, height))
+            {
+                //				System.Diagnostics.Debug.WriteLine ("ReallocatePixmapLowLevel" + (this.isFrozen ? " (frozen)" : "") + " Size: " + width.ToString () + "," + height.ToString());
+
+                this.graphics.DrawingBitmap.Clear();
+
+                if (this.widgetWindow != null)
+                {
+                    this.widgetWindow.Root.NotifyWindowSizeChanged(width, height);
+                }
+                this.dirtyRectangle = new Drawing.Rectangle(0, 0, width, height);
+                this.dirtyRegion = new Drawing.DirtyRegion();
+                this.dirtyRegion.Add(this.dirtyRectangle);
+
+                changed = true;
+            }
+
+            this.isPixmapOk = true;
+
+            return changed;
+            */
+            throw new System.NotImplementedException();
+        }
+
+        internal void MarkForRepaint()
+        {
+            // repaint all
+            this.MarkForRepaint(new Drawing.Rectangle(0, 0, this.Width, this.Height));
+        }
+
+        internal void MarkForRepaint(Drawing.Rectangle rect)
+        {
+            // TODO bl-net8-cross
+            // since the drawing works differently with AntigrainSharp than with winforms,
+            // those Invalidate calls will probably not be needed anymore
+            // If that turn out to be the case, we could delete them
+
+            /*
+            rect.RoundInflate();
+
+            this.dirtyRectangle.MergeWith(rect);
+            this.dirtyRegion.Add(rect);
+
+            int top = (int)(rect.Top);
+            int bottom = (int)(rect.Bottom);
+
+            int width = (int)(rect.Width);
+            int height = top - bottom + 1;
+            int x = (int)(rect.Left);
+            int y = this.ClientSize.Height - top;
+
+            if (this.isLayered)
+            {
+                this.isLayeredDirty = true;
+            }
+
+            this.Invalidate(new System.Drawing.Rectangle(x, y, width, height));
+            */
+        }
+
+        internal void SynchronousRepaint()
+        {
+            // TODO bl-net8-cross
+            // since the drawing works differently with AntigrainSharp than with winforms,
+            // those Invalidate calls will probably not be needed anymore
+            // If that turn out to be the case, we could delete them
+            /*
+            if (this.isLayoutInProgress)
+            {
+                return;
+            }
+
+            this.isLayoutInProgress = true;
+
+            try
+            {
+                if (this.widgetWindow != null)
+                {
+                    this.widgetWindow.ForceLayout();
+                }
+            }
+            finally
+            {
+                this.isLayoutInProgress = false;
+            }
+
+            if (this.dirtyRectangle.IsValid)
+            {
+                using (this.isSyncUpdating.Enter())
+                {
+                    //this.Update(); // winforms: redraw the invalidated areas
+                }
+            }
+            */
+        }
+
+        internal void SendQueueCommand()
+        {
+            // bl-net8-cross
+            // some kind of windows specific IPC, can maybe be deleted
+            /*
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new SimpleCallback(this.SendQueueCommand));
+            }
+            else
+            {
+                Win32Api.PostMessage(
+                    this.Handle,
+                    Win32Const.WM_APP_EXEC_CMD,
+                    System.IntPtr.Zero,
+                    System.IntPtr.Zero
+                );
+            }
+            */
+        }
+
+        internal void SendValidation()
+        {
+            // bl-net8-cross
+            // some kind of windows specific IPC, can maybe be deleted
+            /*
+            Win32Api.PostMessage(
+                this.Handle,
+                Win32Const.WM_APP_VALIDATION,
+                System.IntPtr.Zero,
+                System.IntPtr.Zero
+            );
+            */
+        }
+
+        internal static void SendSynchronizeCommandCache()
+        {
+            // bl-net8-cross
+            // not sure what this is for, can maybe be deleted
+            /*
+            PlatformWindow.isSyncRequested = true;
+
+            try
+            {
+                Win32Api.PostMessage(
+                    PlatformWindow.dispatchWindowHandle,
+                    Win32Const.WM_APP_SYNCMDCACHE,
+                    System.IntPtr.Zero,
+                    System.IntPtr.Zero
+                );
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "Exception thrown in Platform.PlatformWindow.SendSynchronizeCommandCache :"
+                );
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+            */
+        }
+
+        internal static void SendAwakeEvent()
+        {
+            // bl-net8-cross
+            /*
+            bool awake = false;
+
+            lock (PlatformWindow.dispatchWindow)
+            {
+                if (PlatformWindow.isAwakeRequested == false)
+                {
+                    PlatformWindow.isAwakeRequested = true;
+                    awake = true;
+                }
+            }
+
+            if (awake)
+            {
+                try
+                {
+                    Win32Api.PostMessage(
+                        PlatformWindow.dispatchWindowHandle,
+                        Win32Const.WM_APP_AWAKE,
+                        System.IntPtr.Zero,
+                        System.IntPtr.Zero
+                    );
+                }
+                catch (System.Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Exception thrown in Platform.PlatformWindow.SendAwakeEvent:"
+                    );
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
+            }
+            */
+            throw new System.NotImplementedException();
+        }
+
+        internal Platform.PlatformWindow FindRootOwner()
+        {
+            /*
+            PlatformWindow owner = this.Owner as PlatformWindow;
+
+            if (owner != null)
+            {
+                return owner.FindRootOwner();
+            }
+
+            return this;
+            */
+            throw new System.NotImplementedException();
+            return null;
+        }
+
+        internal void HideWindow()
+        {
+            /*
+            using (this.isWndProcHandlingRestricted.Enter())
+            {
+                this.Hide();
+            }
+            */
+            throw new NotImplementedException();
+        }
+
+        protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
+        {
+            /*
+            if (this.IsDisposed)
+            {
+                return;
+            }
+
+            this.WindowBounds = bounds;
+            this.paintOffset = offset;
+            this.Invalidate();
+            this.Update();
+            */
+            throw new NotImplementedException();
+        }
+
+        protected void AnimateAlpha(double alpha)
+        {
+            /*
+            if (this.IsDisposed)
+            {
+                return;
+            }
+
+            this.Alpha = alpha;
+            */
+            throw new NotImplementedException();
+        }
+
+        protected void AnimateCleanup(Animator animator)
+        {
+            /*
+            animator.Dispose();
+
+            if (this.IsDisposed)
+            {
+                return;
+            }
+
+            this.MinimumSize = this.formMinSize;
+            this.isFrozen = false;
+            this.isAnimatingActiveWindow = false;
+            this.Invalidate();
+
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.OnWindowAnimationEnded();
+            }
+            */
+            throw new NotImplementedException();
         }
 
         internal void SetNativeIcon(System.IO.Stream iconStream)
@@ -921,50 +1482,6 @@ namespace Epsitec.Common.Widgets.Platform
             throw new NotImplementedException();
         }
 
-        internal double Alpha
-        {
-            get { return this.alpha; }
-            set
-            {
-                if (value < 0 || value > 1.0)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        $"Invalid alpha value {value}, should be between 0.0 and 1.0"
-                    );
-                }
-                this.SetWindowOpacity((float)value);
-                this.alpha = value;
-            }
-        }
-
-        internal bool FilterMouseMessages
-        {
-            get { return this.filterMouseMessages; }
-            set { this.filterMouseMessages = value; }
-        }
-
-        internal bool FilterKeyMessages
-        {
-            get { return this.filterKeyMessages; }
-            set { this.filterKeyMessages = value; }
-        }
-
-        internal Epsitec.Common.Widgets.Window HostingWidgetWindow
-        {
-            get { return this.widgetWindow; }
-        }
-
-        internal static bool UseWaitCursor
-        {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
-
-            //get { return System.Windows.Forms.Application.UseWaitCursor; }
-            get { return true; }
-            //set { System.Windows.Forms.Application.UseWaitCursor = value; }
-            set { }
-        }
-
         internal void Close()
         {
             // bl-net8-cross
@@ -990,36 +1507,9 @@ namespace Epsitec.Common.Widgets.Platform
             */
             throw new NotImplementedException();
         }
+        #endregion NotImplemented
 
-        internal void SetFrozen(bool frozen)
-        {
-            this.isFrozen = frozen;
-        }
-
-        public new void Dispose()
-        {
-            if (this.widgetWindow == null)
-            {
-                return;
-            }
-            WindowList.Remove(this);
-
-            if (this.renderingBuffer != null)
-            {
-                this.renderingBuffer.Dispose();
-            }
-            this.renderingBuffer = null;
-
-            base.Dispose();
-            Widgets.Window oldWindow = this.widgetWindow;
-            // Since widgetWindow also has a reference to us, we need to make
-            // sure we don't end up in an infinite Dispose() loop.
-            // We first set our widgetWindow attribute to null before calling
-            // Dispose on the widgetWindow.
-            this.widgetWindow = null;
-            oldWindow.Dispose();
-        }
-
+        #region NotImplemented event handlers
         protected void OnClosed(System.EventArgs e)
         //protected override void OnClosed(System.EventArgs e)
         {
@@ -1307,549 +1797,47 @@ namespace Epsitec.Common.Widgets.Platform
             */
             throw new NotImplementedException();
         }
+        #endregion
 
-        protected void ReallocatePixmap()
+        #region Memory management
+        public new void Dispose()
         {
-            /*
-            if (this.IsFrozen)
+            if (this.widgetWindow == null)
             {
                 return;
             }
+            WindowList.Remove(this);
 
-            if (this.ReallocatePixmapLowLevel())
+            if (this.renderingBuffer != null)
             {
-                this.UpdateLayeredWindow();
+                this.renderingBuffer.Dispose();
             }
-            */
-            throw new System.NotImplementedException();
+            this.renderingBuffer = null;
+
+            if (this.icon != null)
+            {
+                this.icon.Dispose();
+            }
+            this.icon = null;
+
+            base.Dispose();
+
+            Window oldWindow = this.widgetWindow;
+            // Since widgetWindow also has a reference to us, we need to make
+            // sure we don't end up in an infinite Dispose() loop.
+            // We first set our widgetWindow attribute to null before calling
+            // Dispose on the widgetWindow.
+            this.widgetWindow = null;
+            oldWindow.Dispose();
         }
+        #endregion
 
-        private bool ReallocatePixmapLowLevel()
-        {
-            /*
-            bool changed = false;
-
-            int width = this.ClientSize.Width;
-            int height = this.ClientSize.Height;
-
-            if (this.graphics.SetPixmapSize(width, height))
-            {
-                //				System.Diagnostics.Debug.WriteLine ("ReallocatePixmapLowLevel" + (this.isFrozen ? " (frozen)" : "") + " Size: " + width.ToString () + "," + height.ToString());
-
-                this.graphics.DrawingBitmap.Clear();
-
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.Root.NotifyWindowSizeChanged(width, height);
-                }
-                this.dirtyRectangle = new Drawing.Rectangle(0, 0, width, height);
-                this.dirtyRegion = new Drawing.DirtyRegion();
-                this.dirtyRegion.Add(this.dirtyRectangle);
-
-                changed = true;
-            }
-
-            this.isPixmapOk = true;
-
-            return changed;
-            */
-            throw new System.NotImplementedException();
-        }
-
-        internal void MarkForRepaint()
-        {
-            // repaint all
-            this.MarkForRepaint(new Drawing.Rectangle(0, 0, this.Width, this.Height));
-        }
-
-        internal void MarkForRepaint(Drawing.Rectangle rect)
-        {
-            // TODO bl-net8-cross
-            // since the drawing works differently with AntigrainSharp than with winforms,
-            // those Invalidate calls will probably not be needed anymore
-            // If that turn out to be the case, we could delete them
-
-            /*
-            rect.RoundInflate();
-
-            this.dirtyRectangle.MergeWith(rect);
-            this.dirtyRegion.Add(rect);
-
-            int top = (int)(rect.Top);
-            int bottom = (int)(rect.Bottom);
-
-            int width = (int)(rect.Width);
-            int height = top - bottom + 1;
-            int x = (int)(rect.Left);
-            int y = this.ClientSize.Height - top;
-
-            if (this.isLayered)
-            {
-                this.isLayeredDirty = true;
-            }
-
-            this.Invalidate(new System.Drawing.Rectangle(x, y, width, height));
-            */
-        }
-
-        internal void SynchronousRepaint()
-        {
-            // TODO bl-net8-cross
-            // since the drawing works differently with AntigrainSharp than with winforms,
-            // those Invalidate calls will probably not be needed anymore
-            // If that turn out to be the case, we could delete them
-            /*
-            if (this.isLayoutInProgress)
-            {
-                return;
-            }
-
-            this.isLayoutInProgress = true;
-
-            try
-            {
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.ForceLayout();
-                }
-            }
-            finally
-            {
-                this.isLayoutInProgress = false;
-            }
-
-            if (this.dirtyRectangle.IsValid)
-            {
-                using (this.isSyncUpdating.Enter())
-                {
-                    //this.Update(); // winforms: redraw the invalidated areas
-                }
-            }
-            */
-        }
-
-        internal void SendQueueCommand()
-        {
-            // bl-net8-cross
-            // some kind of windows specific IPC, can maybe be deleted
-            /*
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new SimpleCallback(this.SendQueueCommand));
-            }
-            else
-            {
-                Win32Api.PostMessage(
-                    this.Handle,
-                    Win32Const.WM_APP_EXEC_CMD,
-                    System.IntPtr.Zero,
-                    System.IntPtr.Zero
-                );
-            }
-            */
-        }
-
-        internal void SendValidation()
-        {
-            // bl-net8-cross
-            // some kind of windows specific IPC, can maybe be deleted
-            /*
-            Win32Api.PostMessage(
-                this.Handle,
-                Win32Const.WM_APP_VALIDATION,
-                System.IntPtr.Zero,
-                System.IntPtr.Zero
-            );
-            */
-        }
-
-        internal static void SendSynchronizeCommandCache()
-        {
-            // bl-net8-cross
-            // not sure what this is for, can maybe be deleted
-            /*
-            PlatformWindow.isSyncRequested = true;
-
-            try
-            {
-                Win32Api.PostMessage(
-                    PlatformWindow.dispatchWindowHandle,
-                    Win32Const.WM_APP_SYNCMDCACHE,
-                    System.IntPtr.Zero,
-                    System.IntPtr.Zero
-                );
-            }
-            catch (System.Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    "Exception thrown in Platform.PlatformWindow.SendSynchronizeCommandCache :"
-                );
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-            }
-            */
-        }
-
-        internal static void SendAwakeEvent()
-        {
-            // bl-net8-cross
-            /*
-            bool awake = false;
-
-            lock (PlatformWindow.dispatchWindow)
-            {
-                if (PlatformWindow.isAwakeRequested == false)
-                {
-                    PlatformWindow.isAwakeRequested = true;
-                    awake = true;
-                }
-            }
-
-            if (awake)
-            {
-                try
-                {
-                    Win32Api.PostMessage(
-                        PlatformWindow.dispatchWindowHandle,
-                        Win32Const.WM_APP_AWAKE,
-                        System.IntPtr.Zero,
-                        System.IntPtr.Zero
-                    );
-                }
-                catch (System.Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "Exception thrown in Platform.PlatformWindow.SendAwakeEvent:"
-                    );
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                }
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
-        internal Platform.PlatformWindow FindRootOwner()
-        {
-            /*
-            PlatformWindow owner = this.Owner as PlatformWindow;
-
-            if (owner != null)
-            {
-                return owner.FindRootOwner();
-            }
-
-            return this;
-            */
-            throw new System.NotImplementedException();
-            return null;
-        }
-
-        internal Platform.PlatformWindow[] FindOwnedWindows()
-        {
-            /*
-            System.Windows.Forms.Form[] forms = this.OwnedForms;
-            Platform.PlatformWindow[] windows = new Platform.PlatformWindow[forms.Length];
-
-            for (int i = 0; i < forms.Length; i++)
-            {
-                windows[i] = forms[i] as Platform.PlatformWindow;
-            }
-
-            return windows;
-            */
-            throw new System.NotImplementedException();
-            return null;
-        }
-
-        internal bool StartWindowManagerOperation(WindowManagerOperation op)
-        {
-            //	Documentation sur WM_NCHITTEST et les modes HT...
-            //	Cf http://blogs.msdn.com/jfoscoding/archive/2005/07/28/444647.aspx
-            //	Cf http://msdn.microsoft.com/netframework/default.aspx?pull=/libarary/en-us/dndotnet/html/automationmodel.asp
-
-            switch (op)
-            {
-                case Platform.WindowManagerOperation.ResizeLeft:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_LEFT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeRight:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_RIGHT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeBottom:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOM);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeBottomRight:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMRIGHT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeBottomLeft:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMLEFT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeTop:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOP);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeTopRight:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPRIGHT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeTopLeft:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPLEFT);
-                    return true;
-                case Platform.WindowManagerOperation.MoveWindow:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_CAPTION);
-                    return true;
-                case Platform.WindowManagerOperation.PressMinimizeButton:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MINBUTTON);
-                    return true;
-                case Platform.WindowManagerOperation.PressMaximizeButton:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MAXBUTTON);
-                    return true;
-            }
-
-            return false;
-        }
-
-        private void ReleaseCaptureAndSendMessage(uint ht)
-        {
-            /*
-            Win32Api.ReleaseCapture();
-            Win32Api.SendMessage(
-                this.Handle,
-                Platform.Win32Const.WM_NCLBUTTONDOWN,
-                (System.IntPtr)ht,
-                (System.IntPtr)0
-            );
-            */
-            throw new System.NotImplementedException();
-        }
-
-        protected void FakeActivate(bool active)
-        {
-            /*
-            if (this.hasActiveFrame != active)
-            {
-                this.hasActiveFrame = active;
-
-                if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
-                {
-                    System.Windows.Forms.Message message = PlatformWindow.CreateNCActivate(this, active);
-                    //					System.Diagnostics.Debug.WriteLine (string.Format ("PlatformWindow {0} faking WM_NCACTIVATE {1}.", this.Name, active));
-                    base.WndProc(ref message);
-                }
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
-        protected void FakeActivateOwned(bool active)
-        {
-            /*
-            this.FakeActivate(active);
-
-            System.Windows.Forms.Form[] forms = this.OwnedForms;
-
-            for (int i = 0; i < forms.Length; i++)
-            {
-                PlatformWindow window = forms[i] as PlatformWindow;
-
-                if (window != null)
-                {
-                    if (window.isToolWindow)
-                    {
-                        window.FakeActivate(active);
-                    }
-                }
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
-        protected bool IsOwnedWindow(Platform.PlatformWindow find)
-        {
-            /*
-            System.Windows.Forms.Form[] forms = this.OwnedForms;
-
-            for (int i = 0; i < forms.Length; i++)
-            {
-                PlatformWindow window = forms[i] as PlatformWindow;
-
-                if (window != null)
-                {
-                    if (window == find)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-            */
-            throw new System.NotImplementedException();
-            return true;
-        }
-
-        internal Drawing.DrawingBitmap GetWindowPixmap()
-        {
-            /*
-            if ((this.graphics != null) && (this.isPixmapOk))
-            {
-                return this.graphics.DrawingBitmap;
-            }
-            else
-            {
-                return null;
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
-        protected bool RefreshGraphics(Drawing.Graphics graphics)
-        {
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.ForceLayout();
-            }
-
-            if (this.IsFrozen)
-            {
-                return false;
-            }
-
-            return this.RefreshGraphicsLowLevel(graphics);
-        }
-
-        private bool RefreshGraphicsLowLevel(Graphics graphics)
-        {
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.RefreshGraphics(graphics, Rectangle.MaxValue, []);
-            }
-            return true;
-        }
-
-        internal static void ProcessException(System.Exception ex, string tag)
-        {
-            /*
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-
-            buffer.Append("------------------------------------------------------------");
-            buffer.Append("\r\n");
-            buffer.Append(tag);
-            buffer.Append("\r\n");
-            buffer.Append(
-                System.Diagnostics.Process.GetCurrentProcess().MainModule.FileVersionInfo.ToString()
-            );
-            buffer.Append("\r\n");
-            buffer.Append("PlatformWindow: ");
-            buffer.Append(System.Diagnostics.Process.GetCurrentProcess().MainWindowTitle);
-            buffer.Append("\r\n");
-            buffer.Append("Thread: ");
-            buffer.Append(System.Threading.Thread.CurrentThread.Name);
-            buffer.Append("\r\n");
-            buffer.Append("\r\n");
-
-            while (ex != null)
-            {
-                buffer.Append("Exception type: ");
-                buffer.Append(ex.GetType().Name);
-                buffer.Append("\r\n");
-                buffer.Append("Message:        ");
-                buffer.Append(ex.Message);
-                buffer.Append("\r\n");
-                buffer.Append("Stack:\r\n");
-                buffer.Append(ex.StackTrace);
-
-                ex = ex.InnerException;
-
-                if (ex != null)
-                {
-                    buffer.Append("\r\nInner Exception found.\r\n\r\n");
-                }
-            }
-
-            buffer.Append("\r\n");
-            buffer.Append("------------------------------------------------------------");
-            buffer.Append("\r\n");
-
-            Support.ClipboardWriteData data = new Epsitec.Common.Support.ClipboardWriteData();
-            data.WriteText(buffer.ToString());
-            Support.Clipboard.SetData(data);
-
-            string key = "Bug report e-mail";
-            string email = Globals.Properties.GetProperty(key, "bugs@opac.ch");
-
-            string msgFr =
-                "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n"
-                + "description de ce que vous étiez en train de faire au moment où ce message\n"
-                + "est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n"
-                + "Envoyez s'il-vous-plaît ces informations à "
-                + email
-                + "\n\n"
-                + "Merci pour votre aide.";
-
-            string msgEn =
-                "An internal error occurred. Please send an e-mail with a short description\n"
-                + "of what you were doing when this message appeared and include (press CTRL+V)\n"
-                + "contents of the clipboard, which contains useful debugging information.\n\n"
-                + "Please send these informations to "
-                + email
-                + "\n\n"
-                + "Thank you very much for your help.";
-
-            bool isFrench = (
-                System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr"
-            );
-
-            string title = isFrench ? "Erreur interne" : "Internal error";
-            string message = isFrench ? msgFr : msgEn;
-
-            System.Diagnostics.Debug.WriteLine(buffer.ToString());
-            System.Windows.Forms.MessageBox.Show(null, message, title);
-            */
-            throw new System.NotImplementedException();
-        }
-
-        internal static void ProcessCrossThreadOperation(System.Action action)
-        {
-            /*
-            bool state = System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls;
-
-            try
-            {
-                System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
-
-                action();
-            }
-            finally
-            {
-                System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = state;
-            }
-            */
-            throw new System.NotImplementedException();
-        }
-
-        internal void DispatchMessage(Message message)
-        {
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.DispatchMessage(message);
-            }
-        }
-
-        internal void ShowWindow()
-        {
-            this.Show();
-        }
-
-        internal void ShowDialogWindow()
-        {
-            this.ShowWindow();
-            ToolTip.HideAllToolTips();
-        }
-
-        private Epsitec.Common.Widgets.Window widgetWindow;
+        private Window widgetWindow;
 
         private AntigrainSharp.AbstractGraphicBuffer renderingBuffer;
-        private Drawing.Size minimumSize;
+        private Size minimumSize;
 
-        private Drawing.Image icon;
+        private Image icon;
 
         private bool isFullscreen;
         private bool isLayered;

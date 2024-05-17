@@ -20,7 +20,7 @@ namespace Epsitec.Common.Drawing
     /// il sait retrouver le DynamicImage correspondant à partir de la paire nom
     /// "xyz" et argument "abc").
     /// </summary>
-    public sealed class DynamicImage : Image, System.IDisposable
+    public sealed class DynamicImage : Image
     {
         public DynamicImage(Drawing.Size size, DynamicImagePaintCallback callback)
             : this()
@@ -358,9 +358,12 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
-            System.Diagnostics.Debug.Assert(this.isDisposed == false);
+            if (this.isDisposed)
+            {
+                return;
+            }
 
             this.isDisposed = true;
 
@@ -368,8 +371,6 @@ namespace Epsitec.Common.Drawing
             {
                 this.InvalidateCache();
             }
-
-            this.cache.Dispose();
         }
 
         private DynamicImage GetImageForKey(Key key)

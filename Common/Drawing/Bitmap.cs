@@ -8,7 +8,7 @@ namespace Epsitec.Common.Drawing
     /// <summary>
     /// La classe Bitmap encapsule une image de type bitmap.
     /// </summary>
-    public abstract class Bitmap : Image, System.IDisposable
+    public abstract class Bitmap : Image
     {
         public override Bitmap BitmapImage => this;
 
@@ -787,6 +787,6 @@ namespace Epsitec.Common.Drawing
         }
         #endregion NotImplemented
 
-        public abstract void Dispose();
+        public abstract override void Dispose();
     }
 }

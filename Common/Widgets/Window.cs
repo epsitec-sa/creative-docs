@@ -8,19 +8,20 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
+    using System.Linq;
     using Epsitec.Common.Types.Collections;
     using Epsitec.Common.Widgets.Platform;
 
     /// <summary>
-    /// La classe PlatformWindow représente une fenêtre du système d'exploitation. Ce
-    /// n'est pas un widget en tant que tel: PlatformWindow.Root définit le widget à la
+    /// La classe Window représente une fenêtre du système d'exploitation. Ce
+    /// n'est pas un widget en tant que tel: Window.Root définit le widget à la
     /// racine de la fenêtre.
     /// </summary>
     public class Window : Types.DependencyObject, Support.Data.IContainer, System.IDisposable
     {
         // ******************************************************************
         // TODO bl-net8-cross
-        // implement PlatformWindow (stub)
+        // implement Window (stub)
         // ******************************************************************
         public Window()
             : this(null, WindowFlags.None) { }
@@ -34,9 +35,10 @@ namespace Epsitec.Common.Widgets
             this.thread = System.Threading.Thread.CurrentThread;
 
             this.components = new Support.Data.ComponentCollection(this);
+            this.ownedWindows = new HashSet<Window>();
 
             this.root = root ?? new WindowRoot(this);
-            this.window = new Platform.PlatformWindow(this, windowFlags);
+            this.window = new PlatformWindow(this, windowFlags);
             this.timer = new Timer();
 
             this.root.Name = "Root";
@@ -233,7 +235,7 @@ namespace Epsitec.Common.Widgets
                 this.OnAboutToShowWindow();
             }
 
-            this.window.ShowWindow();
+            this.window.Show();
         }
 
         public virtual void ShowDialog()
@@ -360,20 +362,28 @@ namespace Epsitec.Common.Widgets
             get { return this.root; }
         }
 
+        #region Ownership system
         public Window Owner
         {
             get { return this.owner; }
             set
             {
+                if (value == null)
+                {
+                    throw new System.ArgumentException("Window owner cannot be set to null");
+                }
+                if (this.owner != null)
+                {
+                    throw new System.InvalidOperationException("Window owner already set");
+                }
                 if (this.owner != value)
                 {
                     this.owner = value;
+                    this.owner.RegisterOwnedWindow(this);
                     Helpers.VisualTree.InvalidateCommandDispatcher(this);
                 }
             }
         }
-
-        public Window Parent { get; set; }
 
         public Window[] OwnedWindows
         {
@@ -383,20 +393,20 @@ namespace Epsitec.Common.Widgets
                 {
                     return [];
                 }
-
-                List<Window> list = new List<Window>();
-
-                foreach (PlatformWindow owned in this.window.FindOwnedWindows())
-                {
-                    if ((owned != null) && (owned.HostingWidgetWindow != null))
-                    {
-                        list.Add(owned.HostingWidgetWindow);
-                    }
-                }
-
-                return list.ToArray();
+                return this.ownedWindows.ToArray();
             }
         }
+
+        private void RegisterOwnedWindow(Window child)
+        {
+            this.ownedWindows.Add(child);
+        }
+
+        private void RemoveOwnedWindow(Window child)
+        {
+            this.ownedWindows.Remove(child);
+        }
+        #endregion
 
         public Widget FocusedWidget
         {
@@ -1032,150 +1042,7 @@ namespace Epsitec.Common.Widgets
             this.window.SimulateCloseClick();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            /*
-            if (this.isDisposed)
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    string.Format("Disposing window {0} which has already been disposed", this.Name)
-                );
-                return;
-            }
-
-            this.isDisposed = true;
-
-            if (Widget.DebugDispose)
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    string.Format(
-                        "Disposing window {0}, still {1} windows alive",
-                        this.Name,
-                        PlatformWindow.DebugAliveWindowsCount
-                    )
-                );
-            }
-
-            if (disposing)
-            {
-                this.OnWindowDisposing();
-
-                if (this.IsVisible)
-                {
-                    this.OnAboutToHideWindow();
-                }
-
-                if (this.cmdQueue.Count > 0)
-                {
-                    //	Il y a encore des commandes dans la queue d'exécution. Il faut soit les transmettre
-                    //	à une autre fenêtre encore en vie, soit les exécuter tout de suite.
-
-                    PlatformWindow helper = this.Owner;
-
-                    if (helper == null)
-                    {
-                        helper = PlatformWindow.FindFirstLiveWindow();
-                    }
-
-                    if (helper == null)
-                    {
-                        this.DispatchQueuedCommands();
-                    }
-                    else
-                    {
-                        while (this.cmdQueue.Count > 0)
-                        {
-                            QueueItem item = this.cmdQueue.Dequeue();
-                            helper.QueueCommand(item);
-                        }
-                    }
-                }
-
-                CommandDispatcher.ClearDispatcher(this);
-
-                if (this.root != null)
-                {
-                    this.root.Dispose();
-                }
-
-                if (this.window != null)
-                {
-                    Platform.PlatformWindow[] owned = this.window.FindOwnedWindows();
-
-                    for (int i = 0; i < owned.Length; i++)
-                    {
-                        owned[i].HostingWidgetWindow.Dispose();
-                    }
-
-                    if (this.window.IsActive && PlatformWindow.IsApplicationActive)
-                    {
-                        //	Si la fenêtre est active au moment de sa destruction, Windows a tendance
-                        //	à se comporter de manière étrange. On va donc se dépêcher d'activer une
-                        //	autre fenêtre (le propriétaire fera l'affaire) :
-
-                        Platform.PlatformWindow owner = this.window.Owner as Platform.PlatformWindow;
-
-                        if (owner != null)
-                        {
-                            if (Widget.DebugDispose)
-                            {
-                                System.Diagnostics.Debug.WriteLine("Disposing active window.");
-                            }
-
-                            owner.Activate();
-                        }
-                    }
-
-                    this.window.ResetHostingWidgetWindow();
-                    this.window.Dispose();
-                }
-
-                this.timer.TimeElapsed -= this.HandleTimeElapsed;
-                this.timer.Dispose();
-
-                this.timer = null;
-                this.root = null;
-                this.window = null;
-                this.owner = null;
-
-                this.lastInWidget = null;
-                this.capturingWidget = null;
-                this.capturingButton = MouseButtons.None;
-                this.focusedWidget = null;
-                this.engagedWidget = null;
-                ;
-
-                if (this.components.Count > 0)
-                {
-                    Support.Data.IComponent[] components = new Support.Data.IComponent[
-                        this.components.Count
-                    ];
-                    this.components.CopyTo(components, 0);
-
-                    //	S'il y a des composants attachés, on les détruit aussi. Si l'utilisateur
-                    //	ne désire pas que ses composants soient détruits, il doit les détacher
-                    //	avant de faire le Dispose de la fenêtre !
-
-                    for (int i = 0; i < components.Length; i++)
-                    {
-                        Support.Data.IComponent component = components[i];
-                        this.components.Remove(component);
-                        component.Dispose();
-                    }
-                }
-
-                this.components.Dispose();
-                this.components = null;
-
-                if (Message.CurrentState.LastWindow == this)
-                {
-                    Message.ClearLastWindow();
-                }
-
-                this.OnWindowDisposed();
-            }
-            */
-        }
+        protected override void Dispose(bool disposing) { }
 
         protected void OnAsyncNotification()
         {
@@ -1193,44 +1060,14 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        protected virtual void OnWindowDisposed()
-        {
-            if (this.WindowDisposed != null)
-            {
-                this.WindowDisposed(this);
-            }
-        }
-
         protected virtual void OnAboutToShowWindow()
         {
-            // bl-net8-cross
-            //this.AssignWindowOwner();
             this.ForceLayout();
 
             if (this.AboutToShowWindow != null)
             {
                 this.AboutToShowWindow(this);
             }
-        }
-
-        private void AssignWindowOwner()
-        {
-            /*
-            if ((this.owner != null) && (this.window != null) && (this.window.Owner == null))
-            {
-                if ((this.owner.window.InvokeRequired) || (this.window.InvokeRequired))
-                {
-                    //	Don't set the owner... it won't work ! Even if we first turn off the cross-thread
-                    //	checking, things degenerate afterwards. The owner is anyways set by calling the
-                    //	ShowDialog(owner) method.
-                }
-                else
-                {
-                    this.window.Owner = this.owner.window;
-                }
-            }
-            */
-            throw new System.NotImplementedException();
         }
 
         protected virtual void OnAboutToHideWindow()
@@ -1261,7 +1098,6 @@ namespace Epsitec.Common.Widgets
             System.Diagnostics.Debug.Assert(!this.windowIsVisible);
 
             this.windowIsVisible = true;
-            this.AssignWindowOwner();
             this.root.NotifyWindowIsVisibleChanged();
 
             this.WindowShown.Raise(this);
@@ -2513,14 +2349,109 @@ namespace Epsitec.Common.Widgets
             {
                 return;
             }
+
+            this.OnWindowDisposing();
+
+            if (this.IsVisible)
+            {
+                this.OnAboutToHideWindow();
+            }
+
             base.Dispose();
-            Platform.PlatformWindow oldWindow = this.window;
+
+            foreach (Window child in this.OwnedWindows)
+            {
+                child.Dispose();
+            }
+            this.ownedWindows = null;
+
+            this.Owner?.RemoveOwnedWindow(this);
+
+            if (this.cmdQueue.Count > 0)
+            {
+                //	Il y a encore des commandes dans la queue d'exécution. Il faut soit les transmettre
+                //	à une autre fenêtre encore en vie, soit les exécuter tout de suite.
+
+                Window helper = this.Owner ?? Window.FindFirstLiveWindow();
+                if (helper == null)
+                {
+                    this.DispatchQueuedCommands();
+                }
+                else
+                {
+                    while (this.cmdQueue.Count > 0)
+                    {
+                        QueueItem item = this.cmdQueue.Dequeue();
+                        helper.QueueCommand(item);
+                    }
+                }
+            }
+
+            CommandDispatcher.ClearDispatcher(this);
+
+            if (this.root != null)
+            {
+                this.root.Dispose();
+                this.root = null;
+            }
+
+            PlatformWindow oldWindow = this.window;
             // Since the platform window also has a reference to us, we need to
             // make sure we don't end up in an infinite Dispose() loop.
             // We first set our window attribute to null before calling Dispose
             // on the platform window.
             this.window = null;
             oldWindow.Dispose();
+
+            this.timer.TimeElapsed -= this.HandleTimeElapsed;
+            this.timer.Dispose();
+            this.timer = null;
+
+            this.owner = null;
+
+            this.lastInWidget = null;
+            this.capturingWidget = null;
+            this.capturingButton = MouseButtons.None;
+            this.focusedWidget = null;
+            this.engagedWidget = null;
+            ;
+
+            if (this.components.Count > 0)
+            {
+                Support.Data.IComponent[] components = new Support.Data.IComponent[
+                    this.components.Count
+                ];
+                this.components.CopyTo(components, 0);
+
+                //	S'il y a des composants attachés, on les détruit aussi. Si l'utilisateur
+                //	ne désire pas que ses composants soient détruits, il doit les détacher
+                //	avant de faire le Dispose de la fenêtre !
+
+                for (int i = 0; i < components.Length; i++)
+                {
+                    Support.Data.IComponent component = components[i];
+                    this.components.Remove(component);
+                    component.Dispose();
+                }
+            }
+
+            this.components.Dispose();
+            this.components = null;
+
+            if (Message.CurrentState.LastWindow == this)
+            {
+                Message.ClearLastWindow();
+            }
+        }
+
+        public bool Equals(Window otherWindow)
+        {
+            return otherWindow.id == this.id;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)this.id;
         }
 
         #region PostPaint related definitions
@@ -2612,8 +2543,9 @@ namespace Epsitec.Common.Widgets
         private readonly long id;
         private readonly System.Threading.Thread thread;
 
-        private Platform.PlatformWindow window;
+        private PlatformWindow window;
         private Window owner;
+        private HashSet<Window> ownedWindows;
         private WindowRoot root;
         private bool windowIsVisible;
         private bool windowIsFocused;

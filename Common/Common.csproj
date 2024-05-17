@@ -4,7 +4,11 @@
     <RootNamespace>Epsitec.Common</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  
+  <PropertyGroup>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+  </PropertyGroup>
+
   <!-- Binaries -->
   <ItemGroup>
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.6.0" />

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Drawing
     /// <summary>
     /// La classe Image permet de représenter une image générique.
     /// </summary>
-    public abstract class Image //: System.IDisposable
+    public abstract class Image : System.IDisposable
     {
         //public Image(Size size)
         //{
@@ -69,6 +69,7 @@ namespace Epsitec.Common.Drawing
 
             return null;
         }
+
         //public virtual Point Origin
         //{
         //    //	0 < origin < size: l'origine est dans l'image
@@ -103,13 +104,9 @@ namespace Epsitec.Common.Drawing
         //    this.Dispose(false);
         //}
 
-        //#region IDisposable Members
-        //public void Dispose()
-        //{
-        //    this.Dispose(true);
-        //    System.GC.SuppressFinalize(this);
-        //}
-        //#endregion
+        #region IDisposable Members
+        public abstract void Dispose();
+        #endregion
 
         //public void AssigneUniqueId(long uniqueId)
         //{
