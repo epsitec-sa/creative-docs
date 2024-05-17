@@ -1892,7 +1892,7 @@ namespace Epsitec.Common.Document
                 dialog.Document.SelectPrinter(pi.PrintName);
             }
 
-            dialog.Owner = button.Window;
+            dialog.Owner = button.PlatformWindow;
             dialog.OpenDialog();
 
             if (dialog.Result == Common.Dialogs.DialogResult.Accept)

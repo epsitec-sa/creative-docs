@@ -14,12 +14,12 @@ namespace Epsitec.Common.Widgets.Platform
 
         static System.Collections.ArrayList windows = new System.Collections.ArrayList();
 
-        internal static void Insert(Platform.Window window)
+        internal static void Insert(Platform.PlatformWindow window)
         {
             WindowList.windows.Add(window);
         }
 
-        internal static void Remove(Platform.Window window)
+        internal static void Remove(Platform.PlatformWindow window)
         {
             WindowList.windows.Remove(window);
         }
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets.Platform
 
                         if ((pid == myPid) && (visible))
                         {
-                            foreach (Platform.Window window in WindowList.windows)
+                            foreach (Platform.PlatformWindow window in WindowList.windows)
                             {
                                 if (window.Handle == handle)
                                 {
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
 
-            Epsitec.Common.Widgets.Window[] array = new Epsitec.Common.Widgets.Window[list.Count];
+            Epsitec.Common.Widgets.PlatformWindow[] array = new Epsitec.Common.Widgets.PlatformWindow[list.Count];
             list.CopyTo(array);
 
             return array;

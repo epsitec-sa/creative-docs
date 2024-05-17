@@ -12,15 +12,15 @@ namespace Epsitec.Common.Widgets
     using Epsitec.Common.Widgets.Platform;
 
     /// <summary>
-    /// La classe Window représente une fenêtre du système d'exploitation. Ce
-    /// n'est pas un widget en tant que tel: Window.Root définit le widget à la
+    /// La classe PlatformWindow représente une fenêtre du système d'exploitation. Ce
+    /// n'est pas un widget en tant que tel: PlatformWindow.Root définit le widget à la
     /// racine de la fenêtre.
     /// </summary>
     public class Window : Types.DependencyObject, Support.Data.IContainer, System.IDisposable
     {
         // ******************************************************************
         // TODO bl-net8-cross
-        // implement Window (stub)
+        // implement PlatformWindow (stub)
         // ******************************************************************
         public Window()
             : this(null, WindowFlags.None) { }
@@ -33,25 +33,10 @@ namespace Epsitec.Common.Widgets
             this.id = System.Threading.Interlocked.Increment(ref Window.nextWindowId);
             this.thread = System.Threading.Thread.CurrentThread;
 
-            if (root == null)
-            {
-                root = new WindowRoot(this);
-            }
-
-            this.Initialize(root, windowFlags);
-        }
-
-        public long GetWindowSerialId()
-        {
-            return this.id;
-        }
-
-        private void Initialize(WindowRoot root, WindowFlags windowFlags)
-        {
             this.components = new Support.Data.ComponentCollection(this);
 
-            this.root = root;
-            this.window = new Platform.Window(this, w => this.window = w, windowFlags);
+            this.root = root ?? new WindowRoot(this);
+            this.window = new Platform.PlatformWindow(this, windowFlags);
             this.timer = new Timer();
 
             this.root.Name = "Root";
@@ -60,6 +45,11 @@ namespace Epsitec.Common.Widgets
             this.timer.AutoRepeat = 0.050;
 
             Window.windows.Add(this);
+        }
+
+        public long GetWindowSerialId()
+        {
+            return this.id;
         }
 
         public void OnResize(int width, int height)
@@ -372,34 +362,14 @@ namespace Epsitec.Common.Widgets
 
         public Window Owner
         {
-            //get { return this.owner; }
-            get { return null; }
+            get { return this.owner; }
             set
             {
-                // bl-net8-cross implement the ownership system
-                /*
                 if (this.owner != value)
                 {
                     this.owner = value;
-
-                    if (value == null)
-                    {
-                        this.window.Owner = null;
-                    }
-                    else
-                    {
-                        this.window.Owner = null;
-
-                        if (this.IsVisible)
-                        {
-                            this.window.Owner = this.owner.window;
-                        }
-                    }
-
                     Helpers.VisualTree.InvalidateCommandDispatcher(this);
                 }
-                */
-                throw new System.NotImplementedException();
             }
         }
 
@@ -409,24 +379,22 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                // bl-net8-cross implement the ownership system
-                /*
+                if (this.window == null)
+                {
+                    return [];
+                }
+
                 List<Window> list = new List<Window>();
 
-                if ((this.window != null) && (this.window.IsDisposed == false))
+                foreach (PlatformWindow owned in this.window.FindOwnedWindows())
                 {
-                    foreach (Platform.Window owned in this.window.FindOwnedWindows())
+                    if ((owned != null) && (owned.HostingWidgetWindow != null))
                     {
-                        if ((owned.IsDisposed == false) && (owned.HostingWidgetWindow != null))
-                        {
-                            list.Add(owned.HostingWidgetWindow);
-                        }
+                        list.Add(owned.HostingWidgetWindow);
                     }
                 }
 
                 return list.ToArray();
-                */
-                return null;
             }
         }
 
@@ -711,7 +679,7 @@ namespace Epsitec.Common.Widgets
 
         public static bool IsApplicationActive
         {
-            //get { return Platform.Window.IsApplicationActive; }
+            //get { return Platform.PlatformWindow.IsApplicationActive; }
             get { return true; }
         }
 
@@ -841,7 +809,7 @@ namespace Epsitec.Common.Widgets
             //	exécute un test global (Run sans avoir sélectionné de test spécifique),
             //	RunInTestEnvironment ne bloquera pas.
 
-            if (Window.RunningInAutomatedTestEnvironment)
+            if (PlatformWindow.RunningInAutomatedTestEnvironment)
             {
                 System.Windows.Forms.Application.DoEvents();
             }
@@ -855,7 +823,7 @@ namespace Epsitec.Common.Widgets
         /*        public static void RunInTestEnvironment(System.Windows.Forms.Form form)
                 {
         
-                    if (Window.RunningInAutomatedTestEnvironment)
+                    if (PlatformWindow.RunningInAutomatedTestEnvironment)
                     {
                         System.Windows.Forms.Application.DoEvents();
                     }
@@ -1064,15 +1032,6 @@ namespace Epsitec.Common.Widgets
             this.window.SimulateCloseClick();
         }
 
-        internal void PlatformWindowDisposing()
-        {
-            if (this.isDisposed == false)
-            {
-                this.window = null;
-                this.Dispose();
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
             /*
@@ -1092,7 +1051,7 @@ namespace Epsitec.Common.Widgets
                     string.Format(
                         "Disposing window {0}, still {1} windows alive",
                         this.Name,
-                        Window.DebugAliveWindowsCount
+                        PlatformWindow.DebugAliveWindowsCount
                     )
                 );
             }
@@ -1111,11 +1070,11 @@ namespace Epsitec.Common.Widgets
                     //	Il y a encore des commandes dans la queue d'exécution. Il faut soit les transmettre
                     //	à une autre fenêtre encore en vie, soit les exécuter tout de suite.
 
-                    Window helper = this.Owner;
+                    PlatformWindow helper = this.Owner;
 
                     if (helper == null)
                     {
-                        helper = Window.FindFirstLiveWindow();
+                        helper = PlatformWindow.FindFirstLiveWindow();
                     }
 
                     if (helper == null)
@@ -1141,20 +1100,20 @@ namespace Epsitec.Common.Widgets
 
                 if (this.window != null)
                 {
-                    Platform.Window[] owned = this.window.FindOwnedWindows();
+                    Platform.PlatformWindow[] owned = this.window.FindOwnedWindows();
 
                     for (int i = 0; i < owned.Length; i++)
                     {
                         owned[i].HostingWidgetWindow.Dispose();
                     }
 
-                    if (this.window.IsActive && Window.IsApplicationActive)
+                    if (this.window.IsActive && PlatformWindow.IsApplicationActive)
                     {
                         //	Si la fenêtre est active au moment de sa destruction, Windows a tendance
                         //	à se comporter de manière étrange. On va donc se dépêcher d'activer une
                         //	autre fenêtre (le propriétaire fera l'affaire) :
 
-                        Platform.Window owner = this.window.Owner as Platform.Window;
+                        Platform.PlatformWindow owner = this.window.Owner as Platform.PlatformWindow;
 
                         if (owner != null)
                         {
@@ -1216,11 +1175,6 @@ namespace Epsitec.Common.Widgets
                 this.OnWindowDisposed();
             }
             */
-        }
-
-        internal void ResetWindow()
-        {
-            this.window = null;
         }
 
         protected void OnAsyncNotification()
@@ -1328,7 +1282,7 @@ namespace Epsitec.Common.Widgets
 
             this.root.NotifyWindowIsVisibleChanged();
             this.WindowHidden.Raise(this);
-            Window.GlobalWindowHidden.Raise(this);
+            PlatformWindow.GlobalWindowHidden.Raise(this);
             */
             throw new System.NotImplementedException();
         }
@@ -1394,7 +1348,7 @@ namespace Epsitec.Common.Widgets
 
         internal void NotifyWindowFocused()
         {
-            //-			System.Diagnostics.Debug.WriteLine ("Window focused");
+            //-			System.Diagnostics.Debug.WriteLine ("PlatformWindow focused");
             if (this.windowIsFocused == false)
             {
                 if (this.focusedWidget != null)
@@ -1413,7 +1367,7 @@ namespace Epsitec.Common.Widgets
 
         internal void NotifyWindowDefocused()
         {
-            //-			System.Diagnostics.Debug.WriteLine ("Window de-focused");
+            //-			System.Diagnostics.Debug.WriteLine ("PlatformWindow de-focused");
             if ((this.windowIsFocused == true) && (this.IsSubmenuOpen == false))
             {
                 if (this.focusedWidget != null)
@@ -1737,7 +1691,7 @@ namespace Epsitec.Common.Widgets
         public void AsyncDispose()
         {
             /*
-            Platform.Window.ProcessCrossThreadOperation(() => this.window.Owner = null);
+            Platform.PlatformWindow.ProcessCrossThreadOperation(() => this.window.Owner = null);
 
             if (Application.MainUIThread == System.Threading.Thread.CurrentThread)
             {
@@ -1989,7 +1943,7 @@ namespace Epsitec.Common.Widgets
                     //	See also DispatchCommandLineCommands.
 
                     string args = string.Concat(
-                        Window.DispatchCommandIdOption,
+                        PlatformWindow.DispatchCommandIdOption,
                         commandObject.CommandId
                     );
 
@@ -2555,8 +2509,18 @@ namespace Epsitec.Common.Widgets
 
         public new void Dispose()
         {
+            if (this.window == null)
+            {
+                return;
+            }
             base.Dispose();
-            this.window.Dispose();
+            Platform.PlatformWindow oldWindow = this.window;
+            // Since the platform window also has a reference to us, we need to
+            // make sure we don't end up in an infinite Dispose() loop.
+            // We first set our window attribute to null before calling Dispose
+            // on the platform window.
+            this.window = null;
+            oldWindow.Dispose();
         }
 
         #region PostPaint related definitions
@@ -2648,7 +2612,7 @@ namespace Epsitec.Common.Widgets
         private readonly long id;
         private readonly System.Threading.Thread thread;
 
-        private Platform.Window window;
+        private Platform.PlatformWindow window;
         private Window owner;
         private WindowRoot root;
         private bool windowIsVisible;

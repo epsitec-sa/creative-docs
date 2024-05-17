@@ -304,7 +304,7 @@ namespace Epsitec.Common.Tests.Widgets
                 int pix_x = (int)(pos.X - this.bitmap.Width / 2);
                 int pix_y = (int)(pos.Y - this.bitmap.Height / 2);
 
-                Window.GrabScreen(bitmap, pix_x, pix_y);
+                base.Window.GrabScreen(bitmap, pix_x, pix_y);
 
                 double sx = dx / this.bitmap.Width;
                 double sy = dy / this.bitmap.Height;

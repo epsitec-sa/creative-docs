@@ -97,7 +97,7 @@ namespace Epsitec.Common.Support.Platform.Win32
             public uint fMask; // Array of flags that indicate the content and validity of the
 
             // other structure members.
-            public System.IntPtr hwnd; // Window handle to any message boxes that the system might produce
+            public System.IntPtr hwnd; // PlatformWindow handle to any message boxes that the system might produce
 
             // while executing this function.
             [MarshalAs(UnmanagedType.LPWStr)]
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Support.Platform.Win32
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct SHFILEOPSTRUCT
         {
-            public System.IntPtr hwnd; // Window handle to the dialog box to display information about the
+            public System.IntPtr hwnd; // PlatformWindow handle to the dialog box to display information about the
 
             // status of the file operation.
             public uint wFunc; // Value that indicates which operation to perform.

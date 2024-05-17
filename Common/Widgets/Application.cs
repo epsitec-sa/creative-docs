@@ -146,7 +146,7 @@ namespace Epsitec.Common.Widgets
         public static void SetWaitCursor()
         {
             System.Threading.Interlocked.Increment(ref Application.waitCursorCount);
-            Platform.Window.UseWaitCursor = true;
+            Platform.PlatformWindow.UseWaitCursor = true;
         }
 
         public static void ClearWaitCursor()
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets
                 throw new System.InvalidOperationException("WaitCursor count < 0");
             }
 
-            Platform.Window.UseWaitCursor = (Application.waitCursorCount > 0);
+            Platform.PlatformWindow.UseWaitCursor = (Application.waitCursorCount > 0);
         }
 
         public void SetEnable(Command command, bool enable)
@@ -311,11 +311,11 @@ namespace Epsitec.Common.Widgets
 
                     if (Application.mainApplicationThread != System.Threading.Thread.CurrentThread)
                     {
-                        Platform.Window.SendAwakeEvent();
+                        Platform.PlatformWindow.SendAwakeEvent();
                     }
                     else
                     {
-                        Platform.Window.SendAwakeEvent();
+                        Platform.PlatformWindow.SendAwakeEvent();
                     }
                 }
             }

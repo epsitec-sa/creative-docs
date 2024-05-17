@@ -479,7 +479,7 @@ namespace Epsitec.Common.Widgets
             if (!this.synchronizationRequired)
             {
                 this.synchronizationRequired = true;
-                Platform.Window.SendSynchronizeCommandCache();
+                Platform.PlatformWindow.SendSynchronizeCommandCache();
             }
         }
 

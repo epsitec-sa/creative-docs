@@ -1263,9 +1263,9 @@ namespace Epsitec.Common.Widgets.Behaviors
         private static void GenerateDummyMouseMoveEvents()
         {
             //Drawing.Point pos = Message.CurrentState.LastScreenPosition;
-            //Window[] windows = Window.FindFromPosition(pos);
+            //PlatformWindow[] windows = PlatformWindow.FindFromPosition(pos);
 
-            //foreach (Window window in windows)
+            //foreach (PlatformWindow window in windows)
             //{
             //    window.DispatchMessage(
             //        Message.CreateDummyMouseMoveEvent(window.ScreenPointToWindowPoint(pos))

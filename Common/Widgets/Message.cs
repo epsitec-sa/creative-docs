@@ -529,7 +529,7 @@ namespace Epsitec.Common.Widgets
 
         internal static Message FromMouseEvent(
             MessageType type,
-            Platform.Window window,
+            Platform.PlatformWindow window,
             MouseButtons button,
             int x,
             int y,

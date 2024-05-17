@@ -87,7 +87,7 @@ namespace Epsitec.Common.Tests.Drawing
             Assert.IsNotNull(pixmap1.AssociatedImage);
             Assert.IsNull(pixmap2.AssociatedImage);
 
-            Window window = new Window();
+            PlatformWindow window = new PlatformWindow();
             window.ClientSize = new Size(640, 220);
             window.Text = "CheckAllocatePixmapFromImageClient";
             window.Root.PaintForeground += delegate(object sender, PaintEventArgs e)
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Tests.Drawing
 
             window.Root.Invalidate();
             window.Show();
-            Window.RunInTestEnvironment(window);
+            PlatformWindow.RunInTestEnvironment(window);
 
             pixmap1.AssociatedImage.Dispose();
 
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Tests.Drawing
             stack[2].Size = new System.Drawing.Size(400, 400);
             stack[2].Copy(0, 0, cache.Pixmap, 0, 0, 400, 400);
 
-            Window window = new Window();
+            PlatformWindow window = new PlatformWindow();
             window.ClientSize = new Size(400, 400);
             Widget widget = new TestWidget(stack);
 
@@ -348,7 +348,7 @@ namespace Epsitec.Common.Tests.Drawing
             widget.SetParent(window.Root);
 
             window.Show();
-            Window.RunInTestEnvironment(window);
+            PlatformWindow.RunInTestEnvironment(window);
             */
             throw new System.NotImplementedException();
         }

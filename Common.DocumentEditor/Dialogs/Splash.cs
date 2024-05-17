@@ -35,14 +35,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
                     dy
                 );
 
-                this.window = new Window();
+                this.window = new PlatformWindow();
                 this.window.MakeFramelessWindow();
                 this.window.MakeTopLevelWindow();
                 this.window.ClientSize = wrect.Size;
                 this.window.WindowLocation = wrect.Location;
                 this.window.PreventAutoClose = true;
                 this.window.Root.PaintForeground += this.HandleSplashPaintForeground;
-                this.window.Owner = this.editor.Window;
+                this.window.Owner = this.editor.PlatformWindow;
 
                 StaticText image = About.CreateWidgetSplash(
                     this.window.Root,
@@ -63,7 +63,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
                 this.workInProgress.SyncPaint = true;
 
                 this.window.Show();
-                Window.PumpEvents();
+                PlatformWindow.PumpEvents();
 
                 Common.OpenType.FontIdentityCallback callback =
                     new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
@@ -77,7 +77,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
                 this.splashTimer.Delay = 10.0;
 
                 this.window.MakeLayeredWindow();
-                Window.PumpEvents();
+                PlatformWindow.PumpEvents();
             }
             else
             {

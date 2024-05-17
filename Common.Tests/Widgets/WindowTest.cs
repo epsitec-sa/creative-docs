@@ -942,7 +942,7 @@ namespace Epsitec.Common.Tests.Widgets
         {
             //		[Test] public void Zzz()
             //		{
-            //			Window window = new Window ();
+            //			PlatformWindow window = new PlatformWindow ();
             //			window.Text = "Zzz...";
             //			StaticText text = new StaticText ("Close this window to stop test");
             //			text.Parent = window.Root;

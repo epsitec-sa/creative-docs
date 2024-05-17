@@ -28,14 +28,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             //	Crée et montre la fenêtre du dialogue.
             if (this.window == null)
             {
-                this.window = new Window();
+                this.window = new PlatformWindow();
                 this.window.MakeFixedSizeWindow();
                 this.window.MakeSecondaryWindow();
                 this.WindowInit("Download", 250, 120);
                 this.window.Text = Res.Strings.Dialog.Download.Title;
                 this.window.PreventAutoClose = true;
-                this.window.Owner = this.editor.Window;
-                this.window.Icon = this.editor.Window.Icon;
+                this.window.Owner = this.editor.PlatformWindow;
+                this.window.Icon = this.editor.PlatformWindow.Icon;
                 this.window.WindowCloseClicked += this.HandleWindowDownloadCloseClicked;
 
                 StaticText title = new StaticText(this.window.Root);

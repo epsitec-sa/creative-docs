@@ -1762,7 +1762,7 @@ namespace Epsitec.Common.DocumentEditor
                 dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
             }
             dialog.AcceptMultipleSelection = true;
-            dialog.OwnerWindow = this.Window;
+            dialog.OwnerWindow = this.PlatformWindow;
             dialog.OpenDialog();
             if (dialog.Result != Common.Dialogs.DialogResult.Accept)
             {
@@ -1966,7 +1966,7 @@ namespace Epsitec.Common.DocumentEditor
             dialog.Document.DocumentName = Common.Support.Utilities.XmlToText(
                 Common.Document.Misc.FullName(document.Filename, false)
             );
-            dialog.Owner = this.Window;
+            dialog.Owner = this.PlatformWindow;
 
             this.dlgPrint.Show();
             */
@@ -2257,7 +2257,7 @@ namespace Epsitec.Common.DocumentEditor
             dialog.Title = Res.Strings.Dialog.Open.TitleCol;
             dialog.Filters.Add("crcolors", Res.Strings.Dialog.FileCol, "*.crcolors");
             dialog.FilterIndex = 0;
-            dialog.OwnerWindow = this.Window;
+            dialog.OwnerWindow = this.PlatformWindow;
             dialog.OpenDialog();
             if (dialog.Result != Common.Dialogs.DialogResult.Accept)
                 return;
@@ -2287,7 +2287,7 @@ namespace Epsitec.Common.DocumentEditor
             dialog.Filters.Add("crcolors", Res.Strings.Dialog.FileCol, "*.crcolors");
             dialog.FilterIndex = 0;
             dialog.PromptForOverwriting = true;
-            dialog.OwnerWindow = this.Window;
+            dialog.OwnerWindow = this.PlatformWindow;
             dialog.OpenDialog();
             if (dialog.Result != Common.Dialogs.DialogResult.Accept)
                 return;

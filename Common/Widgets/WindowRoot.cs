@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 {
     /// <summary>
     /// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
-    /// en général une instance de WindowRoot en appelant Window.Root.
+    /// en général une instance de WindowRoot en appelant PlatformWindow.Root.
     /// </summary>
     public sealed class WindowRoot : AbstractGroup
     {

@@ -4,7 +4,7 @@
 namespace Epsitec.Common.Widgets.Platform
 {
     /// <summary>
-    /// The <c>Win32Const</c> class exports the Window constants used by the
+    /// The <c>Win32Const</c> class exports the PlatformWindow constants used by the
     /// framework.
     /// </summary>
 

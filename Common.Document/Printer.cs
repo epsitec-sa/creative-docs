@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document
 
         /*        public void Print(Epsitec.Common.Dialogs.PrintDialog dp)
                 {
-                    //	Imprime le document selon les choix faits dans le dialogue Window (dp)
+                    //	Imprime le document selon les choix faits dans le dialogue PlatformWindow (dp)
                     //	ainsi que dans le dialogue des réglages (PrintInfo).
                     PrintEngine printEngine = new PrintEngine();
                     if (printEngine.Initialize(this, dp))
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Document
 
                 int totalPages = toPage - fromPage + 1;
 
-                //	Reprend ici tous les choix effectués dans le dialogue Window
+                //	Reprend ici tous les choix effectués dans le dialogue PlatformWindow
                 //	de l'impression. Même s'il semble possible de les atteindre
                 //	plus tard avec port.PageSettings.PrinterSettings, cela
                 //	fonctionne mal.

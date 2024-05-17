@@ -9,13 +9,13 @@ using SDL2;
 namespace Epsitec.Common.Widgets.Platform
 {
     /// <summary>
-    /// La classe Platform.Window fait le lien avec la SDL
+    /// La classe Platform.PlatformWindow fait le lien avec la SDL
     /// </summary>
-    internal class Window : SDLWrapper.SDLWindow
+    internal class PlatformWindow : SDLWrapper.SDLWindow
     {
         // ******************************************************************
         // TODO bl-net8-cross
-        // implement Window (stub)
+        // implement PlatformWindow (stub)
         // ******************************************************************
 
         // --------------------------------------------------------------------------------------------
@@ -241,16 +241,11 @@ namespace Epsitec.Common.Widgets.Platform
 
         // --------------------------------------------------------------------------------------------
 
-        internal Window(
-            Widgets.Window window,
-            Action<Window> platformWindowSetter,
-            WindowFlags windowFlags
-        )
-            : base("Creativedocs", 800, 600, Window.MapToSDLWindowFlags(windowFlags))
+        internal PlatformWindow(Widgets.Window window, WindowFlags windowFlags)
+            : base("Creativedocs", 800, 600, PlatformWindow.MapToSDLWindowFlags(windowFlags))
         {
             Console.WriteLine("internal Window()");
             this.widgetWindow = window;
-            platformWindowSetter(this);
 
             /* //REMOVED (bl-net8-cross)
             base.MinimumSize = new System.Drawing.Size(1, 1);
@@ -267,7 +262,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             //this.graphics.AllocatePixmap();
 
-            //Window.DummyHandleEater(this.Handle);
+            //PlatformWindow.DummyHandleEater(this.Handle);
 
             /*
             //	Fait en sorte que les changements de dimensions en [x] et en [y] provoquent un
@@ -717,7 +712,7 @@ namespace Epsitec.Common.Widgets.Platform
 
                 //	Cf. http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/windows/windowreference/windowstructures/windowplacement.asp
 
-                Window.AdjustWindowPlacementOrigin(placement, ref ox, ref oy);
+                PlatformWindow.AdjustWindowPlacementOrigin(placement, ref ox, ref oy);
 
                 return new Drawing.Rectangle(ox, oy, dx, dy);
                 */
@@ -1001,49 +996,28 @@ namespace Epsitec.Common.Widgets.Platform
             this.isFrozen = frozen;
         }
 
-        protected void Dispose(bool disposing)
-        //protected override void Dispose(bool disposing)
+        public new void Dispose()
         {
-            /*
-            if (disposing)
+            if (this.widgetWindow == null)
             {
-                WindowList.Remove(this);
-
-                //	Attention: il n'est pas permis de faire un Dispose si l'appelant provient d'une
-                //	WndProc, car cela perturbe le bon acheminement des messages dans Windows. On
-                //	préfère donc remettre la destruction à plus tard si on détecte cette condition.
-
-                if (this.wndProcDepth > 0)
-                {
-                    Win32Api.PostMessage(
-                        this.Handle,
-                        Win32Const.WM_APP_DISPOSE,
-                        System.IntPtr.Zero,
-                        System.IntPtr.Zero
-                    );
-                    return;
-                }
-
-                if (this.graphics != null)
-                {
-                    this.graphics.Dispose();
-                }
-
-                this.graphics = null;
-
-                if (this.widgetWindow != null)
-                {
-                    if (this.widgetWindowDisposed == false)
-                    {
-                        this.widgetWindow.PlatformWindowDisposing();
-                        this.widgetWindowDisposed = true;
-                    }
-                }
+                return;
             }
+            WindowList.Remove(this);
 
-            base.Dispose(disposing);
-            */
-            throw new NotImplementedException();
+            if (this.renderingBuffer != null)
+            {
+                this.renderingBuffer.Dispose();
+            }
+            this.renderingBuffer = null;
+
+            base.Dispose();
+            Widgets.Window oldWindow = this.widgetWindow;
+            // Since widgetWindow also has a reference to us, we need to make
+            // sure we don't end up in an infinite Dispose() loop.
+            // We first set our widgetWindow attribute to null before calling
+            // Dispose on the widgetWindow.
+            this.widgetWindow = null;
+            oldWindow.Dispose();
         }
 
         protected void OnClosed(System.EventArgs e)
@@ -1494,12 +1468,12 @@ namespace Epsitec.Common.Widgets.Platform
             // bl-net8-cross
             // not sure what this is for, can maybe be deleted
             /*
-            Window.isSyncRequested = true;
+            PlatformWindow.isSyncRequested = true;
 
             try
             {
                 Win32Api.PostMessage(
-                    Window.dispatchWindowHandle,
+                    PlatformWindow.dispatchWindowHandle,
                     Win32Const.WM_APP_SYNCMDCACHE,
                     System.IntPtr.Zero,
                     System.IntPtr.Zero
@@ -1508,7 +1482,7 @@ namespace Epsitec.Common.Widgets.Platform
             catch (System.Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(
-                    "Exception thrown in Platform.Window.SendSynchronizeCommandCache :"
+                    "Exception thrown in Platform.PlatformWindow.SendSynchronizeCommandCache :"
                 );
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
@@ -1521,11 +1495,11 @@ namespace Epsitec.Common.Widgets.Platform
             /*
             bool awake = false;
 
-            lock (Window.dispatchWindow)
+            lock (PlatformWindow.dispatchWindow)
             {
-                if (Window.isAwakeRequested == false)
+                if (PlatformWindow.isAwakeRequested == false)
                 {
-                    Window.isAwakeRequested = true;
+                    PlatformWindow.isAwakeRequested = true;
                     awake = true;
                 }
             }
@@ -1535,7 +1509,7 @@ namespace Epsitec.Common.Widgets.Platform
                 try
                 {
                     Win32Api.PostMessage(
-                        Window.dispatchWindowHandle,
+                        PlatformWindow.dispatchWindowHandle,
                         Win32Const.WM_APP_AWAKE,
                         System.IntPtr.Zero,
                         System.IntPtr.Zero
@@ -1544,7 +1518,7 @@ namespace Epsitec.Common.Widgets.Platform
                 catch (System.Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine(
-                        "Exception thrown in Platform.Window.SendAwakeEvent:"
+                        "Exception thrown in Platform.PlatformWindow.SendAwakeEvent:"
                     );
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
@@ -1553,10 +1527,10 @@ namespace Epsitec.Common.Widgets.Platform
             throw new System.NotImplementedException();
         }
 
-        internal Platform.Window FindRootOwner()
+        internal Platform.PlatformWindow FindRootOwner()
         {
             /*
-            Window owner = this.Owner as Window;
+            PlatformWindow owner = this.Owner as PlatformWindow;
 
             if (owner != null)
             {
@@ -1569,15 +1543,15 @@ namespace Epsitec.Common.Widgets.Platform
             return null;
         }
 
-        internal Platform.Window[] FindOwnedWindows()
+        internal Platform.PlatformWindow[] FindOwnedWindows()
         {
             /*
             System.Windows.Forms.Form[] forms = this.OwnedForms;
-            Platform.Window[] windows = new Platform.Window[forms.Length];
+            Platform.PlatformWindow[] windows = new Platform.PlatformWindow[forms.Length];
 
             for (int i = 0; i < forms.Length; i++)
             {
-                windows[i] = forms[i] as Platform.Window;
+                windows[i] = forms[i] as Platform.PlatformWindow;
             }
 
             return windows;
@@ -1655,8 +1629,8 @@ namespace Epsitec.Common.Widgets.Platform
 
                 if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
                 {
-                    System.Windows.Forms.Message message = Window.CreateNCActivate(this, active);
-                    //					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} faking WM_NCACTIVATE {1}.", this.Name, active));
+                    System.Windows.Forms.Message message = PlatformWindow.CreateNCActivate(this, active);
+                    //					System.Diagnostics.Debug.WriteLine (string.Format ("PlatformWindow {0} faking WM_NCACTIVATE {1}.", this.Name, active));
                     base.WndProc(ref message);
                 }
             }
@@ -1673,7 +1647,7 @@ namespace Epsitec.Common.Widgets.Platform
 
             for (int i = 0; i < forms.Length; i++)
             {
-                Window window = forms[i] as Window;
+                PlatformWindow window = forms[i] as PlatformWindow;
 
                 if (window != null)
                 {
@@ -1687,14 +1661,14 @@ namespace Epsitec.Common.Widgets.Platform
             throw new System.NotImplementedException();
         }
 
-        protected bool IsOwnedWindow(Platform.Window find)
+        protected bool IsOwnedWindow(Platform.PlatformWindow find)
         {
             /*
             System.Windows.Forms.Form[] forms = this.OwnedForms;
 
             for (int i = 0; i < forms.Length; i++)
             {
-                Window window = forms[i] as Window;
+                PlatformWindow window = forms[i] as PlatformWindow;
 
                 if (window != null)
                 {
@@ -1763,7 +1737,7 @@ namespace Epsitec.Common.Widgets.Platform
                 System.Diagnostics.Process.GetCurrentProcess().MainModule.FileVersionInfo.ToString()
             );
             buffer.Append("\r\n");
-            buffer.Append("Window: ");
+            buffer.Append("PlatformWindow: ");
             buffer.Append(System.Diagnostics.Process.GetCurrentProcess().MainWindowTitle);
             buffer.Append("\r\n");
             buffer.Append("Thread: ");
@@ -1870,7 +1844,6 @@ namespace Epsitec.Common.Widgets.Platform
             ToolTip.HideAllToolTips();
         }
 
-        private bool widgetWindowDisposed;
         private Epsitec.Common.Widgets.Window widgetWindow;
 
         private AntigrainSharp.AbstractGraphicBuffer renderingBuffer;

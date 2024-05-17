@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
             {
                 case MessageType.MouseDown:
                     if (
-                        this.Window.StartWindowManagerOperation(
+                        this.PlatformWindow.StartWindowManagerOperation(
                             Platform.WindowManagerOperation.ResizeBottomRight
                         )
                     )
@@ -71,8 +71,8 @@ namespace Epsitec.Common.Widgets
 
                     this.isDragging = true;
                     this.initialPos = this.MapClientToScreen(pos);
-                    this.initialBounds = this.Window.WindowBounds;
-                    this.Window.PlatformWindow.StartSizeMove();
+                    this.initialBounds = this.PlatformWindow.WindowBounds;
+                    this.PlatformWindow.PlatformWindow.StartSizeMove();
                     message.Consumer = this;
                     break;
 
@@ -82,13 +82,13 @@ namespace Epsitec.Common.Widgets
                         Drawing.Rectangle rect = this.initialBounds;
                         Drawing.Point move = this.MapClientToScreen(pos) - this.initialPos;
                         rect.BottomRight += move;
-                        this.Window.WindowBounds = rect;
+                        this.PlatformWindow.WindowBounds = rect;
 
-                        this.Window.PlatformWindow.Update();
+                        this.PlatformWindow.PlatformWindow.Update();
 
-                        if (this.Window.Owner != null)
+                        if (this.PlatformWindow.Owner != null)
                         {
-                            this.Window.Owner.PlatformWindow.Update();
+                            this.PlatformWindow.Owner.PlatformWindow.Update();
                         }
 
                         message.Consumer = this;
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Widgets
                 case MessageType.MouseUp:
                     if (this.isDragging)
                     {
-                        this.Window.PlatformWindow.StopSizeMove();
+                        this.PlatformWindow.PlatformWindow.StopSizeMove();
                         this.isDragging = false;
                     }
                     message.Consumer = this;
