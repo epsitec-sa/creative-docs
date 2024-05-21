@@ -11,19 +11,42 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public sealed class Timer : System.IDisposable, IIsDisposed
     {
-        public Timer() { }
+        public Timer()
+        {
+            this.timer = new System.Timers.Timer();
+            // /!\ THREAD SAFETY Timer.Elapsed can fire and interupt anytime !
+            this.timer.Elapsed += this.HandleTimerTick;
+        }
+
+        private void HandleTimerTick(object sender, System.EventArgs e)
+        {
+            // this is our safe event handler
+            lock (this)
+            {
+                this.timer.Stop();
+                this.OnTimeElapsed();
+            }
+        }
+
+        #region public thread-safe api
 
         public bool HigherAccuracy
         {
             get
             {
-                this.RequireNotDisposed();
-                return this.higherAccuracy;
+                lock (this)
+                {
+                    this.RequireNotDisposed();
+                    return this.higherAccuracy;
+                }
             }
             set
             {
-                this.RequireNotDisposed();
-                this.higherAccuracy = value;
+                lock (this)
+                {
+                    this.RequireNotDisposed();
+                    this.higherAccuracy = value;
+                }
             }
         }
 
@@ -31,21 +54,23 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                this.RequireNotDisposed();
-                return this.delaySeconds;
+                lock (this)
+                {
+                    this.RequireNotDisposed();
+                    return this.delaySeconds;
+                }
             }
             set
             {
-                this.RequireNotDisposed();
-                //	Change le délai. Le temps de référence est soit le moment où le
-                //	timer est démarré pour la première fois, soit maintenant si le
-                //	timer est déjà démarré.
+                lock (this)
+                {
+                    this.RequireNotDisposed();
+                    //	Change le délai. Le temps de référence est soit le moment où le
+                    //	timer est démarré pour la première fois, soit maintenant si le
+                    //	timer est déjà démarré.
 
-                this.delaySeconds = value;
-                this.expirationDate = System.DateTime.Now.AddSeconds(value);
-                this.remainingTime = this.expirationDate.Subtract(System.DateTime.Now);
-
-                this.UpdateTimerSettings();
+                    this.SetDelay(value);
+                }
             }
         }
 
@@ -53,17 +78,23 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                this.RequireNotDisposed();
-                return this.expirationDate;
+                lock (this)
+                {
+                    this.RequireNotDisposed();
+                    return this.expirationDate;
+                }
             }
             set
             {
-                this.RequireNotDisposed();
-                if (this.expirationDate != value)
+                lock (this)
                 {
-                    this.expirationDate = value;
-                    this.delaySeconds = 0;
-                    this.UpdateTimerSettings();
+                    this.RequireNotDisposed();
+                    if (this.expirationDate != value)
+                    {
+                        this.expirationDate = value;
+                        this.delaySeconds = 0;
+                        this.UpdateTimerSettings();
+                    }
                 }
             }
         }
@@ -72,8 +103,11 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                this.RequireNotDisposed();
-                return this.state;
+                lock (this)
+                {
+                    this.RequireNotDisposed();
+                    return this.state;
+                }
             }
         }
 
@@ -81,16 +115,22 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                this.RequireNotDisposed();
-                return this.delaySecondsAutoRepeat;
+                lock (this)
+                {
+                    this.RequireNotDisposed();
+                    return this.delaySecondsAutoRepeat;
+                }
             }
             set
             {
-                this.RequireNotDisposed();
-                if (this.delaySecondsAutoRepeat != value)
+                lock (this)
                 {
-                    this.delaySecondsAutoRepeat = value;
-                    this.Delay = value;
+                    this.RequireNotDisposed();
+                    if (this.delaySecondsAutoRepeat != value)
+                    {
+                        this.delaySecondsAutoRepeat = value;
+                        this.SetDelay(value);
+                    }
                 }
             }
         }
@@ -99,7 +139,13 @@ namespace Epsitec.Common.Widgets
 
         public bool IsDisposed
         {
-            get { return this.state == TimerState.Disposed; }
+            get
+            {
+                lock (this)
+                {
+                    return this.state == TimerState.Disposed;
+                }
+            }
         }
 
         #endregion
@@ -108,38 +154,133 @@ namespace Epsitec.Common.Widgets
 
         public void Dispose()
         {
-            this.CleanupTimerIfNeeded();
-            this.state = TimerState.Disposed;
-            this.delaySecondsAutoRepeat = 0;
+            lock (this)
+            {
+                this.timer.Stop();
+                this.timer.Elapsed -= this.HandleTimerTick;
+                this.timer.Dispose();
+                this.state = TimerState.Disposed;
+                this.delaySecondsAutoRepeat = 0;
+            }
         }
 
         #endregion
 
-
-        private void SetupTimerIfNeeded()
+        public void Start()
         {
-            if (this.timer == null)
+            lock (this)
             {
-                this.timer = new System.Timers.Timer();
-                this.timer.Elapsed += this.HandleTimerTick;
+                this.RequireNotDisposed();
+                this.UnsafeStart();
             }
         }
 
-        private void CleanupTimerIfNeeded()
+        public void Suspend()
         {
-            var timer = this.timer;
-
-            //	Work on a copy of the timer variable, since the internal field
-            //	could change inexpectedly (this has been observed by YR).
-
-            this.timer = null;
-
-            if (timer != null)
+            lock (this)
             {
-                timer.Stop();
-                timer.Elapsed -= this.HandleTimerTick;
-                timer.Dispose();
+                this.RequireNotDisposed();
+                this.UnsafeSuspend();
             }
+        }
+
+        public void Stop()
+        {
+            lock (this)
+            {
+                this.RequireNotDisposed();
+                this.UnsafeStop();
+            }
+        }
+
+        public void Restart()
+        {
+            lock (this)
+            {
+                this.UnsafeStop();
+                this.UnsafeStart();
+            }
+        }
+        #endregion
+
+        #region private unsafe implementation
+
+        private void UnsafeStart()
+        {
+            //	Démarre le timer s'il était arrêté. Un timer suspendu reprend là où
+            //	il en était.
+
+            switch (this.state)
+            {
+                case TimerState.Invalid:
+                case TimerState.Elapsed:
+
+                    //	Le timer n'a jamais servi, ou alors, le timer a déjà atteint la
+                    //	fin de la période de comptage.
+
+                    this.state = TimerState.Stopped;
+                    break;
+
+                case TimerState.Stopped:
+                    break;
+
+                case TimerState.Running:
+
+                    //	Le timer tourne, on n'a pas besoin de faire quoi que ce soit.
+
+                    return;
+
+                case TimerState.Suspended:
+
+                    //	Le timer est actuellement arrêté. Il suffit de mettre à jour la
+                    //	date de fin et de le relancer.
+
+                    this.expirationDate = System.DateTime.Now.Add(this.remainingTime);
+                    break;
+            }
+
+            if (this.state == TimerState.Stopped)
+            {
+                //	Si le délai en secondes est spécifé, alors on l'utilise pour réinitialiser
+                //	la date d'expiration. Utile si on a utilisé la propriété Delay pour définir
+                //	le délai, puis fait un Start plus tard.
+
+                if (this.delaySeconds > 0)
+                {
+                    this.expirationDate = System.DateTime.Now.AddSeconds(this.delaySeconds);
+                }
+            }
+
+            this.state = TimerState.Running;
+
+            this.UpdateTimerSettings();
+        }
+
+        private void UnsafeStop()
+        {
+            this.state = TimerState.Stopped;
+        }
+
+        private void UnsafeSuspend()
+        {
+            //	Suspend le timer (le temps restant est conservé jusqu'au prochain démarrage
+            //	du timer).
+
+            if (this.state == TimerState.Running)
+            {
+                this.timer.Stop();
+                this.remainingTime = this.expirationDate.Subtract(System.DateTime.Now);
+                this.state = TimerState.Suspended;
+            }
+        }
+
+        private void SetDelay(double delay)
+        {
+            this.delaySeconds = delay;
+            this.expirationDate = System.DateTime.Now.AddSeconds(delay);
+            this.remainingTime = this.expirationDate.Subtract(System.DateTime.Now);
+
+            this.UpdateTimerSettings();
         }
 
         private void UpdateTimerSettings()
@@ -181,153 +322,40 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        public void Start()
-        {
-            this.RequireNotDisposed();
-            //	Démarre le timer s'il était arrêté. Un timer suspendu reprend là où
-            //	il en était.
-
-            switch (this.state)
-            {
-                case TimerState.Invalid:
-                case TimerState.Elapsed:
-
-                    //	Le timer n'a jamais servi, ou alors, le timer a déjà atteint la
-                    //	fin de la période de comptage.
-
-                    this.state = TimerState.Stopped;
-                    break;
-
-                case TimerState.Stopped:
-                    break;
-
-                case TimerState.Running:
-
-                    //	Le timer tourne, on n'a pas besoin de faire quoi que ce soit.
-
-                    return;
-
-                case TimerState.Suspended:
-
-                    //	Le timer est actuellement arrêté. Il suffit de mettre à jour la
-                    //	date de fin et de le relancer.
-
-                    this.expirationDate = System.DateTime.Now.Add(this.remainingTime);
-                    break;
-            }
-
-            this.SetupTimerIfNeeded();
-
-            if (this.state == TimerState.Stopped)
-            {
-                //	Si le délai en secondes est spécifé, alors on l'utilise pour réinitialiser
-                //	la date d'expiration. Utile si on a utilisé la propriété Delay pour définir
-                //	le délai, puis fait un Start plus tard.
-
-                if (this.delaySeconds > 0)
-                {
-                    this.expirationDate = System.DateTime.Now.AddSeconds(this.delaySeconds);
-                }
-            }
-
-            this.state = TimerState.Running;
-
-            this.UpdateTimerSettings();
-        }
-
-        public void Suspend()
-        {
-            //	Suspend le timer (le temps restant est conservé jusqu'au prochain démarrage
-            //	du timer).
-
-            this.RequireNotDisposed();
-
-            if (this.state == TimerState.Running)
-            {
-                this.timer.Stop();
-                this.remainingTime = this.expirationDate.Subtract(System.DateTime.Now);
-                this.state = TimerState.Suspended;
-            }
-        }
-
-        public void Stop()
-        {
-            //	Arrête le timer. Ceci va aussi libérer les ressources associées
-            //	au timer interne.
-
-            this.RequireNotDisposed();
-
-            this.CleanupTimerIfNeeded();
-
-            this.state = TimerState.Stopped;
-        }
-
-        public void Restart()
-        {
-            this.Stop();
-            this.Start();
-        }
-
-        private void HandleTimerTick(object sender, System.EventArgs e)
-        {
-            this.timer.Stop();
-            this.OnTimeElapsed();
-        }
-
         private void OnTimeElapsed()
         {
-            if (this.notifyingTimeElapsed)
+            switch (this.state)
             {
-                this.notifyTimeElapsedMissed = true;
-                return;
+                case TimerState.Disposed:
+                    return;
+
+                case TimerState.Invalid:
+                case TimerState.Elapsed:
+                case TimerState.Suspended:
+                    throw new System.InvalidOperationException(
+                        string.Format("Timer got event while in {0} state.", this.state)
+                    );
+
+                case TimerState.Stopped:
+                case TimerState.Running:
+                    this.state = TimerState.Elapsed;
+                    break;
             }
 
-            do
+            this.state = TimerState.Elapsed;
+
+            if (this.TimeElapsed != null)
             {
-                this.notifyTimeElapsedMissed = false;
+                this.TimeElapsed(this);
+            }
 
-                try
-                {
-                    this.notifyingTimeElapsed = true;
-
-                    switch (this.state)
-                    {
-                        case TimerState.Disposed:
-                            return;
-
-                        case TimerState.Invalid:
-                        case TimerState.Elapsed:
-                        case TimerState.Suspended:
-                            throw new System.InvalidOperationException(
-                                string.Format("Timer got event while in {0} state.", this.state)
-                            );
-
-                        case TimerState.Stopped:
-                        case TimerState.Running:
-                            this.state = TimerState.Elapsed;
-                            break;
-                    }
-
-                    this.state = TimerState.Elapsed;
-
-                    if (this.TimeElapsed != null)
-                    {
-                        this.TimeElapsed(this);
-                    }
-
-                    if ((this.delaySecondsAutoRepeat > 0) && (this.state == TimerState.Elapsed))
-                    {
-                        this.ExpirationDate = this.ExpirationDate.AddSeconds(
-                            this.delaySecondsAutoRepeat
-                        );
-                        this.Start();
-                    }
-                }
-                finally
-                {
-                    this.notifyingTimeElapsed = false;
-                }
-            } while (this.notifyTimeElapsedMissed);
+            if ((this.delaySecondsAutoRepeat > 0) && (this.state == TimerState.Elapsed))
+            {
+                //this.ExpirationDate = this.ExpirationDate.AddSeconds(
+                //    this.delaySecondsAutoRepeat
+                //);
+                this.UnsafeStart();
+            }
         }
 
         private void RequireNotDisposed()
@@ -337,17 +365,17 @@ namespace Epsitec.Common.Widgets
                 throw new System.ObjectDisposedException(this.GetType().FullName);
             }
         }
+        #endregion
 
         public event Support.EventHandler TimeElapsed;
 
-        private System.Timers.Timer timer;
+        private readonly System.Timers.Timer timer;
+
         private TimerState state;
         private System.DateTime expirationDate;
         private System.TimeSpan remainingTime;
         private double delaySeconds;
         private double delaySecondsAutoRepeat;
         private bool higherAccuracy;
-        private bool notifyingTimeElapsed;
-        private bool notifyTimeElapsedMissed;
     }
 }
