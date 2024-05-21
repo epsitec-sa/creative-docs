@@ -108,6 +108,16 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             get { return this.isVisible; }
         }
 
+        public bool Focused
+        {
+            get
+            {
+                this.RequireNotDisposed();
+                SDL_WindowFlags flags = (SDL_WindowFlags)SDL_GetWindowFlags(this.window);
+                return flags.HasFlag(SDL_WindowFlags.SDL_WINDOW_INPUT_FOCUS);
+            }
+        }
+
         public void SetPosition(int x, int y)
         {
             this.RequireNotDisposed();
@@ -224,6 +234,13 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.RequireNotDisposed();
             SDL_HideWindow(this.window);
         }
+
+        public void Focus()
+        {
+            this.RequireNotDisposed();
+            SDL_RaiseWindow(this.window);
+        }
+
         #endregion
 
         #region Private methods

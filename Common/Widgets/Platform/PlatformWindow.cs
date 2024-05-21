@@ -310,16 +310,6 @@ namespace Epsitec.Common.Widgets.Platform
         /// </summary>
         public bool Capture { get; set; }
 
-        /// <summary>
-        /// Gets a value indicating whether the control has input focus.
-        /// </summary>
-        public bool Focused { get; }
-
-        public bool Focus()
-        {
-            throw new NotImplementedException();
-        }
-
         // --------------------------------------------------------------------------------------------
         #endregion
 
