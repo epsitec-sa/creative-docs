@@ -1550,17 +1550,10 @@ namespace Epsitec.Common.Widgets
         {
             if (this.IsVisible)
             {
-                if (Application.MainUIThread == System.Threading.Thread.CurrentThread)
+                if (this.isAsyncLayoutQueued == false)
                 {
-                    if (this.isAsyncLayoutQueued == false)
-                    {
-                        this.isAsyncLayoutQueued = true;
-                        this.SendQueueCommand();
-                    }
-                }
-                else
-                {
-                    this.ForceLayout();
+                    this.isAsyncLayoutQueued = true;
+                    this.SendQueueCommand();
                 }
             }
         }
@@ -1739,12 +1732,6 @@ namespace Epsitec.Common.Widgets
 
         internal void DispatchQueuedCommands()
         {
-            /*
-            if (Application.MainUIThread != System.Threading.Thread.CurrentThread)
-            {
-                return;
-            }
-
             while (this.cmdQueue.Count > 0)
             {
                 QueueItem item = this.cmdQueue.Dequeue();
@@ -1774,12 +1761,13 @@ namespace Epsitec.Common.Widgets
 
                     //	See also DispatchCommandLineCommands.
 
-                    string args = string.Concat(
-                        PlatformWindow.DispatchCommandIdOption,
-                        commandObject.CommandId
-                    );
+                    //string args = string.Concat(
+                    //    PlatformWindow.DispatchCommandIdOption,
+                    //    commandObject.CommandId
+                    //);
 
-                    Support.PrivilegeManager.Current.LaunchElevated(this.window.Handle, args);
+                    //Support.PrivilegeManager.Current.LaunchElevated(this.window.Handle, args);
+                    throw new System.NotImplementedException();
                 }
                 else
                 {
@@ -1812,8 +1800,6 @@ namespace Epsitec.Common.Widgets
                 this.isAsyncNotificationQueued = false;
                 this.OnAsyncNotification();
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         internal void DispatchValidation()

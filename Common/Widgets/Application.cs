@@ -85,37 +85,12 @@ namespace Epsitec.Common.Widgets
         }
 
         /// <summary>
-        /// Gets the main application thread.
-        /// </summary>
-        /// <value>
-        /// The main application thread.
-        /// </value>
-        public System.Threading.Thread ApplicationThread
-        {
-            get { return this.applicationThread; }
-        }
-
-        /// <summary>
-        /// Gets the global application thread (i.e. the one which first accessed the
-        /// <see cref="Application"/> class). This is the main UI thread for the process.
-        /// </summary>
-        public static System.Threading.Thread MainUIThread
-        {
-            get { return Application.mainApplicationThread; }
-        }
-
-        /// <summary>
         /// Gets the synchronization context used for the application UI.
         /// </summary>
         /// <value>The synchronization context.</value>
         public static SynchronizationContext SynchronizationContext
         {
             get { return Application.synchronizationContext; }
-        }
-
-        public static bool IsRunningOnMainUIThread
-        {
-            get { return Application.MainUIThread == System.Threading.Thread.CurrentThread; }
         }
 
         public static bool DisableAsyncCallbackExecution
@@ -309,14 +284,7 @@ namespace Epsitec.Common.Widgets
                 {
                     Application.pendingCallbacks.Enqueue(callback);
 
-                    if (Application.mainApplicationThread != System.Threading.Thread.CurrentThread)
-                    {
-                        Platform.PlatformWindow.SendAwakeEvent();
-                    }
-                    else
-                    {
-                        Platform.PlatformWindow.SendAwakeEvent();
-                    }
+                    Platform.PlatformWindow.SendAwakeEvent();
                 }
             }
         }
@@ -414,7 +382,6 @@ namespace Epsitec.Common.Widgets
                 typeof(Application)
             );
 
-        private static readonly System.Threading.Thread mainApplicationThread;
         private static readonly SynchronizationContext synchronizationContext;
         private static readonly object queueExclusion = new object();
         private static Queue<Support.SimpleCallback> pendingCallbacks =

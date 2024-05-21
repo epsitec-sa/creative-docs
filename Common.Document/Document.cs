@@ -2607,8 +2607,6 @@ namespace Epsitec.Common.Document
 
         private void BeforeExportPdf()
         {
-            System.Diagnostics.Debug.Assert(Application.IsRunningOnMainUIThread);
-
             this.Modifier.DeselectAll();
 
             //	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
@@ -2619,8 +2617,6 @@ namespace Epsitec.Common.Document
 
         private void AfterExportPdf()
         {
-            System.Diagnostics.Debug.Assert(Application.IsRunningOnMainUIThread);
-
             this.MainWindowClearFrozen();
         }
 

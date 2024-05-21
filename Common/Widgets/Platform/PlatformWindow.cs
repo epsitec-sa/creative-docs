@@ -1257,6 +1257,10 @@ namespace Epsitec.Common.Widgets.Platform
                 );
             }
             */
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.DispatchQueuedCommands();
+            }
         }
 
         internal void SendValidation()
@@ -1271,6 +1275,10 @@ namespace Epsitec.Common.Widgets.Platform
                 System.IntPtr.Zero
             );
             */
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.DispatchValidation();
+            }
         }
 
         internal static void SendSynchronizeCommandCache()
@@ -1794,13 +1802,8 @@ namespace Epsitec.Common.Widgets.Platform
 
             base.Dispose();
 
-            Window oldWindow = this.widgetWindow;
-            // Since widgetWindow also has a reference to us, we need to make
-            // sure we don't end up in an infinite Dispose() loop.
-            // We first set our widgetWindow attribute to null before calling
-            // Dispose on the widgetWindow.
+            // We do not call Dispose on our widgetWindow since it could still live without us.
             this.widgetWindow = null;
-            oldWindow.Dispose();
         }
         #endregion
 

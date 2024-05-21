@@ -448,12 +448,19 @@ namespace Epsitec.Common.Widgets
         {
             if ((this.widget != null) && (this.caption != null))
             {
-                this.birthPos =
-                    (this.behaviour == ToolTipBehaviour.Manual)
-                        /**/? this.initialPos
-                        /**/: Message.CurrentState.LastWindow.WindowPointToScreenPoint(
-                            Message.CurrentState.LastPosition
-                        );
+                try
+                {
+                    this.birthPos =
+                        (this.behaviour == ToolTipBehaviour.Manual)
+                            /**/? this.initialPos
+                            /**/: Message.CurrentState.LastWindow.WindowPointToScreenPoint(
+                                Message.CurrentState.LastPosition
+                            );
+                }
+                catch (System.ObjectDisposedException)
+                {
+                    return;
+                }
 
                 this.ShowToolTip(
                     this.birthPos,
@@ -477,12 +484,11 @@ namespace Epsitec.Common.Widgets
 
         private void ShowToolTip(Drawing.Point mouse, object caption, Color color)
         {
-            if (Application.IsRunningOnMainUIThread == false)
+            if (this.widget == null)
             {
                 return;
             }
-
-            Widget tip = null;
+            Widget tip;
 
             Caption realCaption = caption as Caption;
             string textCaption = caption as string;
@@ -578,11 +584,6 @@ namespace Epsitec.Common.Widgets
 
         private void HideToolTip()
         {
-            if (Application.IsRunningOnMainUIThread == false)
-            {
-                return;
-            }
-
             this.timer.Stop();
 
             if (this.isDisplayed)

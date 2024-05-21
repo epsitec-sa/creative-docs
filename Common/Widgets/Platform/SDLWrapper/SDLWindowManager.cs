@@ -72,25 +72,30 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             switch (e.type)
             {
                 case SDL_EventType.SDL_WINDOWEVENT:
-                    window = openWindows[e.window.windowID];
-                    window.HandleWindowEvent(e.window);
+                    window = SDLWindowManager.GetWindowFromId(e.window.windowID);
+                    window?.HandleWindowEvent(e.window);
                     break;
                 case SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                    window = openWindows[e.button.windowID];
-                    window.OnMouseButtonDown(e.button.x, e.button.y, e.button.button);
+                    window = SDLWindowManager.GetWindowFromId(e.button.windowID);
+                    window?.OnMouseButtonDown(e.button.x, e.button.y, e.button.button);
                     break;
                 case SDL_EventType.SDL_MOUSEBUTTONUP:
-                    window = openWindows[e.button.windowID];
-                    window.OnMouseButtonUp(e.button.x, e.button.y, e.button.button);
+                    window = SDLWindowManager.GetWindowFromId(e.button.windowID);
+                    window?.OnMouseButtonUp(e.button.x, e.button.y, e.button.button);
                     break;
                 case SDL_EventType.SDL_MOUSEMOTION:
-                    window = openWindows[e.motion.windowID];
-                    window.OnMouseMove(e.motion.x, e.motion.y);
+                    window = SDLWindowManager.GetWindowFromId(e.motion.windowID);
+                    window?.OnMouseMove(e.motion.x, e.motion.y);
                     break;
                 default:
                     Console.WriteLine($"SDLWindow handle event {e.type}");
                     break;
             }
+        }
+
+        private static SDLWindow GetWindowFromId(uint winId)
+        {
+            return openWindows.GetValueOrDefault(winId, null);
         }
 
         static void QuitSDL()
