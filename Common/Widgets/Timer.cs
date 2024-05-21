@@ -15,15 +15,28 @@ namespace Epsitec.Common.Widgets
 
         public bool HigherAccuracy
         {
-            get { return this.higherAccuracy; }
-            set { this.higherAccuracy = value; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.higherAccuracy;
+            }
+            set
+            {
+                this.RequireNotDisposed();
+                this.higherAccuracy = value;
+            }
         }
 
         public double Delay
         {
-            get { return this.delaySeconds; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.delaySeconds;
+            }
             set
             {
+                this.RequireNotDisposed();
                 //	Change le délai. Le temps de référence est soit le moment où le
                 //	timer est démarré pour la première fois, soit maintenant si le
                 //	timer est déjà démarré.
@@ -38,9 +51,14 @@ namespace Epsitec.Common.Widgets
 
         public System.DateTime ExpirationDate
         {
-            get { return this.expirationDate; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.expirationDate;
+            }
             set
             {
+                this.RequireNotDisposed();
                 if (this.expirationDate != value)
                 {
                     this.expirationDate = value;
@@ -52,14 +70,23 @@ namespace Epsitec.Common.Widgets
 
         public TimerState State
         {
-            get { return this.state; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.state;
+            }
         }
 
         public double AutoRepeat
         {
-            get { return this.delaySecondsAutoRepeat; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.delaySecondsAutoRepeat;
+            }
             set
             {
+                this.RequireNotDisposed();
                 if (this.delaySecondsAutoRepeat != value)
                 {
                     this.delaySecondsAutoRepeat = value;
@@ -156,6 +183,7 @@ namespace Epsitec.Common.Widgets
 
         public void Start()
         {
+            this.RequireNotDisposed();
             //	Démarre le timer s'il était arrêté. Un timer suspendu reprend là où
             //	il en était.
 
@@ -178,9 +206,6 @@ namespace Epsitec.Common.Widgets
                     //	Le timer tourne, on n'a pas besoin de faire quoi que ce soit.
 
                     return;
-
-                case TimerState.Disposed:
-                    throw new System.InvalidOperationException("Timer has been disposed");
 
                 case TimerState.Suspended:
 
@@ -215,10 +240,7 @@ namespace Epsitec.Common.Widgets
             //	Suspend le timer (le temps restant est conservé jusqu'au prochain démarrage
             //	du timer).
 
-            if (this.state == TimerState.Disposed)
-            {
-                throw new System.InvalidOperationException("Timer has been disposed");
-            }
+            this.RequireNotDisposed();
 
             if (this.state == TimerState.Running)
             {
@@ -233,10 +255,7 @@ namespace Epsitec.Common.Widgets
             //	Arrête le timer. Ceci va aussi libérer les ressources associées
             //	au timer interne.
 
-            if (this.state == TimerState.Disposed)
-            {
-                throw new System.InvalidOperationException("Timer has been disposed");
-            }
+            this.RequireNotDisposed();
 
             this.CleanupTimerIfNeeded();
 
@@ -309,6 +328,14 @@ namespace Epsitec.Common.Widgets
                     this.notifyingTimeElapsed = false;
                 }
             } while (this.notifyTimeElapsedMissed);
+        }
+
+        private void RequireNotDisposed()
+        {
+            if (this.state == TimerState.Disposed)
+            {
+                throw new System.ObjectDisposedException(this.GetType().FullName);
+            }
         }
 
         public event Support.EventHandler TimeElapsed;
