@@ -62,7 +62,8 @@ namespace Epsitec.Common.DocumentEditor
 
             this.Window = window;
 
-            window.IsValidDropTarget = true;
+            // bl-net8-cross draganddrop
+            // window.IsValidDropTarget = true;
             window.Icon = ImageProvider.Instance.GetImageFromManifestResource(
                 "Epsitec.Common.DocumentEditor.Images.Application.icon",
                 typeof(Application).Assembly

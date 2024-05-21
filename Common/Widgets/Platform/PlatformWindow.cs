@@ -293,23 +293,22 @@ namespace Epsitec.Common.Widgets.Platform
         // We add them here as stubs
 
         /// <summary>
-        /// Activates the form and gives it focus.
-        /// </summary>
-        public void Activate()
-        {
-            //throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// true if drag-and-drop operations are allowed in the control; otherwise, false. The default is false.
         /// </summary>
-        public bool AllowDrop { get; set; }
+        public bool AllowDrop
+        {
+            get { return false; }
+            set { throw new System.NotImplementedException(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the control has captured the mouse.
         /// </summary>
-        public bool Capture { get; set; }
-
+        public bool Capture
+        {
+            get { throw new System.NotImplementedException(); }
+            set { throw new System.NotImplementedException(); }
+        }
         // --------------------------------------------------------------------------------------------
         #endregion
 

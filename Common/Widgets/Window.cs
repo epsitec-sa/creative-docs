@@ -169,7 +169,7 @@ namespace Epsitec.Common.Widgets
         {
             if (!this.IsDisposed)
             {
-                this.window.Activate();
+                this.window.Flash();
             }
         }
 

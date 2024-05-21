@@ -241,6 +241,12 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_RaiseWindow(this.window);
         }
 
+        public void Flash()
+        {
+            this.RequireNotDisposed();
+            SDL_FlashWindow(this.window, SDL_FlashOperation.SDL_FLASH_UNTIL_FOCUSED);
+        }
+
         #endregion
 
         #region Private methods
