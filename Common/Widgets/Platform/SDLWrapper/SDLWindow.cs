@@ -205,6 +205,10 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         public virtual void OnMouseButtonUp(int x, int y, int button) { }
 
         public virtual void OnMouseMove(int x, int y) { }
+
+        protected virtual void OnFocusGained() { }
+
+        protected virtual void OnFocusLost() { }
         #endregion
 
         #region Public methods
@@ -264,6 +268,12 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
                     this.RecreateDrawingArea(we.data1, we.data2);
                     this.OnResize(we.data1, we.data2);
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED:
+                    this.OnFocusGained();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST:
+                    this.OnFocusLost();
                     break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED:
                     this.UpdateDrawing();

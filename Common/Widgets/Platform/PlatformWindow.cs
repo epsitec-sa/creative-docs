@@ -152,6 +152,25 @@ namespace Epsitec.Common.Widgets.Platform
         //    this.DispatchMessage(msg);
         //    this.ForceRedraw();
         //}
+
+        protected override void OnFocusGained()
+        {
+            if (this.widgetWindow == null)
+            {
+                return;
+            }
+            this.widgetWindow.NotifyWindowFocused();
+        }
+
+        protected override void OnFocusLost()
+        {
+            if (this.widgetWindow == null)
+            {
+                return;
+            }
+            this.widgetWindow.NotifyWindowDefocused();
+        }
+
         #endregion
 
         #region SDL <-> Creativedocs conversions
@@ -1514,32 +1533,6 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             base.OnClosed(e);
-            */
-            throw new NotImplementedException();
-        }
-
-        protected void OnGotFocus(System.EventArgs e)
-        //protected override void OnGotFocus(System.EventArgs e)
-        {
-            /*
-            base.OnGotFocus(e);
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.NotifyWindowFocused();
-            }
-            */
-            throw new NotImplementedException();
-        }
-
-        protected void OnLostFocus(System.EventArgs e)
-        //protected override void OnLostFocus(System.EventArgs e)
-        {
-            /*
-            base.OnLostFocus(e);
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.NotifyWindowDefocused();
-            }
             */
             throw new NotImplementedException();
         }
