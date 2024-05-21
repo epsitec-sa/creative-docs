@@ -289,7 +289,7 @@ namespace Epsitec.Common.Dialogs
 
             if (window != null)
             {
-                if (window.IsActive)
+                if (window.IsFocused)
                 {
                     //	Si la fenêtre est active, il faut faire attention à rendre d'abord
                     //	le parent actif, avant de cacher la fenêtre, pour éviter que le focus
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Dialogs
 
                     if (owner != null)
                     {
-                        owner.MakeActive();
+                        owner.MakeFocused();
                     }
                 }
 

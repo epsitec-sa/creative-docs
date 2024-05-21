@@ -510,11 +510,6 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        public bool IsActive
-        {
-            get { return this.window.IsActive; }
-        }
-
         public bool IsFrozen
         {
             get { return (this.window == null) || this.window.IsFrozen; }

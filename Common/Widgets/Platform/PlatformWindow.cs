@@ -699,7 +699,7 @@ namespace Epsitec.Common.Widgets.Platform
                 case Animation.RollRight:
                 case Animation.RollLeft:
                     this.isFrozen = true;
-                    this.isAnimatingActiveWindow = this.IsActive;
+                    this.isAnimatingActiveWindow = this.Focused;
                     this.WindowBounds = b1;
 
                     animator = new Animator(SystemInformation.MenuAnimationRollTime);
@@ -802,27 +802,25 @@ namespace Epsitec.Common.Widgets.Platform
         {
             this.isFrozen = frozen;
         }
+
+        internal void SendQueueCommand()
+        {
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.DispatchQueuedCommands();
+            }
+        }
+
+        internal void SendValidation()
+        {
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.DispatchValidation();
+            }
+        }
         #endregion
 
         #region NotImplemented
-        internal bool IsActive
-        {
-            get
-            {
-                /*
-                if (this.Handle == Win32Api.GetActiveWindow())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                */
-                throw new NotImplementedException();
-                return true;
-            }
-        }
         internal static bool UseWaitCursor
         {
             // bl-net8-cross
@@ -1261,49 +1259,6 @@ namespace Epsitec.Common.Widgets.Platform
             */
         }
 
-        internal void SendQueueCommand()
-        {
-            // bl-net8-cross
-            // some kind of windows specific IPC, can maybe be deleted
-            /*
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new SimpleCallback(this.SendQueueCommand));
-            }
-            else
-            {
-                Win32Api.PostMessage(
-                    this.Handle,
-                    Win32Const.WM_APP_EXEC_CMD,
-                    System.IntPtr.Zero,
-                    System.IntPtr.Zero
-                );
-            }
-            */
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.DispatchQueuedCommands();
-            }
-        }
-
-        internal void SendValidation()
-        {
-            // bl-net8-cross
-            // some kind of windows specific IPC, can maybe be deleted
-            /*
-            Win32Api.PostMessage(
-                this.Handle,
-                Win32Const.WM_APP_VALIDATION,
-                System.IntPtr.Zero,
-                System.IntPtr.Zero
-            );
-            */
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.DispatchValidation();
-            }
-        }
-
         internal static void SendSynchronizeCommandCache()
         {
             // bl-net8-cross
@@ -1332,7 +1287,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal static void SendAwakeEvent()
         {
-            // bl-net8-cross
             /*
             bool awake = false;
 
