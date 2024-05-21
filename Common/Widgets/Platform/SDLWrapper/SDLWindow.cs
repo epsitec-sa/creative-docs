@@ -8,7 +8,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
     {
         internal SDLWindow(string windowTitle, int width, int height, SDL_WindowFlags flags)
         {
-            Console.WriteLine("internal SDLWindow()");
             this.width = width;
             this.height = height;
 
@@ -121,7 +120,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         public void SetPosition(int x, int y)
         {
             this.RequireNotDisposed();
-            Console.WriteLine($"Set window position {x} {y}");
             SDL_SetWindowPosition(this.window, x, y);
             this.UpdateWindowPosition();
         }
@@ -392,7 +390,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 return;
             }
             SDLWindowManager.RemoveWindow(this);
-            Console.WriteLine("SDL destroy window");
             this.DestroyDrawingArea();
             this.DestroyIconSurface();
             if (this.renderer != IntPtr.Zero)

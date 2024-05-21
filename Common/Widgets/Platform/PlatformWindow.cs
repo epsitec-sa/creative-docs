@@ -19,7 +19,6 @@ namespace Epsitec.Common.Widgets.Platform
         internal PlatformWindow(Window window, WindowFlags windowFlags)
             : base("Creativedocs", 100, 100, PlatformWindow.MapToSDLWindowFlags(windowFlags))
         {
-            Console.WriteLine("internal Window()");
             this.widgetWindow = window;
 
             /* //REMOVED (bl-net8-cross)
@@ -87,7 +86,6 @@ namespace Epsitec.Common.Widgets.Platform
         public override void OnMouseButtonDown(int x, int y, int button)
         {
             Point mouse = this.WindowPointFromSDL(x, y);
-            Console.WriteLine($"MouseDown {button} {mouse}");
             MouseButtons btn = this.ConvertMouseButton(button);
             Message msg = Message.FromMouseEvent(
                 MessageType.MouseDown,
@@ -103,7 +101,6 @@ namespace Epsitec.Common.Widgets.Platform
         public override void OnMouseButtonUp(int x, int y, int button)
         {
             Point mouse = this.WindowPointFromSDL(x, y);
-            Console.WriteLine($"MouseUp {button} {mouse}");
             MouseButtons btn = this.ConvertMouseButton(button);
             Message msg = Message.FromMouseEvent(
                 MessageType.MouseUp,
@@ -134,7 +131,6 @@ namespace Epsitec.Common.Widgets.Platform
         protected override void OnResize(int sx, int sy)
         {
             this.widgetWindow.OnResize(sx, sy);
-            Console.WriteLine($"Resize {sx} {sy}");
         }
 
         //public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
