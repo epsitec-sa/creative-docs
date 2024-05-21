@@ -227,12 +227,14 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         {
             this.RequireNotDisposed();
             SDL_ShowWindow(this.window);
+            this.isVisible = true;
         }
 
         public void Hide()
         {
             this.RequireNotDisposed();
             SDL_HideWindow(this.window);
+            this.isVisible = false;
         }
 
         public void Focus()
