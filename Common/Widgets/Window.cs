@@ -181,30 +181,6 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        public void SetNativeIconFromManifest(
-            System.Reflection.Assembly assembly,
-            string resourceName
-        )
-        {
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                this.window.SetNativeIcon(stream);
-            }
-        }
-
-        public void SetNativeIconFromManifest(
-            System.Reflection.Assembly assembly,
-            string resourceName,
-            int dx,
-            int dy
-        )
-        {
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                this.window.SetNativeIcon(stream, dx, dy);
-            }
-        }
-
         public void DisableMouseActivation()
         {
             this.window.IsMouseActivationEnabled = false;
@@ -373,10 +349,7 @@ namespace Epsitec.Common.Widgets
                 {
                     throw new System.ArgumentException("Window owner cannot be set to null");
                 }
-                if (this.owner != null)
-                {
-                    throw new System.InvalidOperationException("Window owner already set");
-                }
+                this.owner?.RemoveOwnedWindow(this);
                 if (this.owner != value)
                 {
                     this.owner = value;
@@ -1036,11 +1009,6 @@ namespace Epsitec.Common.Widgets
             //			this.WindowPlacement = placement;
             */
             throw new System.NotImplementedException();
-        }
-
-        public void SimulateCloseClick()
-        {
-            this.window.SimulateCloseClick();
         }
 
         protected void OnAsyncNotification()
