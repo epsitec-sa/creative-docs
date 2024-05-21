@@ -264,7 +264,7 @@ namespace Epsitec.Common.Widgets
             if (this.IsVisible)
             {
                 this.OnAboutToHideWindow();
-                this.window.HideWindow();
+                this.window.Hide();
             }
         }
 

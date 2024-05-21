@@ -128,7 +128,7 @@ namespace Epsitec.Common.Widgets
             {
                 this.ProcessToolTipHost(this.widget as Helpers.IToolTipHost, mouse);
 
-                if ((!this.isDisplayed) && (this.hostProvidedCaption != this.refreshedCaption))
+                if ((!this.IsDisplayed) && (this.hostProvidedCaption != this.refreshedCaption))
                 {
                     this.refreshedCaption = this.hostProvidedCaption;
                     this.ShowToolTip();
@@ -187,15 +187,11 @@ namespace Epsitec.Common.Widgets
             }
 
             if (
-                (caption is string)
-                || (caption is Caption)
-                || (caption is FormattedText)
-                || (caption is Widget)
+                caption is not string
+                && caption is not Caption
+                && caption is not FormattedText
+                && caption is not Widget
             )
-            {
-                //	OK.
-            }
-            else
             {
                 throw new System.ArgumentException(
                     "Specified tool tip caption is of type " + caption.GetType().FullName
@@ -206,7 +202,7 @@ namespace Epsitec.Common.Widgets
 
             this.hash[widget.GetVisualSerialId()] = caption;
 
-            if ((this.widget == widget) && (this.isDisplayed))
+            if ((this.widget == widget) && (this.IsDisplayed))
             {
                 this.caption = caption;
                 this.ShowToolTip(
@@ -321,7 +317,7 @@ namespace Epsitec.Common.Widgets
                 this.hostProvidedCaption = caption;
                 this.caption = caption;
 
-                if ((caption != null) && (this.isDisplayed))
+                if ((caption != null) && (this.IsDisplayed))
                 {
                     Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen(this.widget, pos);
                     this.ShowToolTip(mouse, caption, ToolTip.GetDefaultToolTipColor(this.widget));
@@ -382,7 +378,7 @@ namespace Epsitec.Common.Widgets
                 return;
             }
 
-            if ((this.isDisplayed) && (e.Message.MessageType == MessageType.MouseMove))
+            if ((this.IsDisplayed) && (e.Message.MessageType == MessageType.MouseMove))
             {
                 Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen(this.widget, e.Point);
 
@@ -429,10 +425,10 @@ namespace Epsitec.Common.Widgets
 
         private void HandleTimerTimeElapsed(object sender)
         {
-            if (this.isDisplayed)
+            if (this.IsDisplayed)
             {
                 this.HideToolTip();
-                System.Diagnostics.Debug.Assert(this.isDisplayed == false);
+                System.Diagnostics.Debug.Assert(this.IsDisplayed == false);
             }
             else
             {
@@ -573,10 +569,9 @@ namespace Epsitec.Common.Widgets
                 this.window.Root.Children.Add(tip);
             }
 
-            if (this.isDisplayed == false)
+            if (this.IsDisplayed == false)
             {
                 this.window.Show();
-                this.isDisplayed = true;
             }
 
             this.lastChangeTime = System.DateTime.Now;
@@ -586,10 +581,9 @@ namespace Epsitec.Common.Widgets
         {
             this.timer.Stop();
 
-            if (this.isDisplayed)
+            if (this.IsDisplayed)
             {
                 this.window.Hide();
-                this.isDisplayed = false;
                 this.lastChangeTime = System.DateTime.Now;
             }
         }
@@ -797,6 +791,18 @@ namespace Epsitec.Common.Widgets
             }
         }
 
+        private bool IsDisplayed
+        {
+            get
+            {
+                if (this.window == null)
+                {
+                    return false;
+                }
+                return this.window.IsVisible;
+            }
+        }
+
         public static readonly DependencyProperty ToolTipTextProperty =
             DependencyProperty<ToolTip>.RegisterAttached<string>(
                 "ToolTipText",
@@ -822,7 +828,6 @@ namespace Epsitec.Common.Widgets
         private ToolTipBehaviour behaviour;
 
         private Window window;
-        private bool isDisplayed;
         private Timer timer;
         private System.DateTime lastChangeTime;
 

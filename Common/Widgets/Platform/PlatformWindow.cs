@@ -647,7 +647,7 @@ namespace Epsitec.Common.Widgets.Platform
             switch (animation)
             {
                 case Animation.None:
-                    this.HideWindow();
+                    this.Hide();
                     return;
 
                 case Animation.RollDown:
@@ -684,7 +684,7 @@ namespace Epsitec.Common.Widgets.Platform
                     return;
 
                 default:
-                    this.HideWindow();
+                    this.Hide();
                     return;
             }
 
@@ -1378,17 +1378,6 @@ namespace Epsitec.Common.Widgets.Platform
             */
             throw new System.NotImplementedException();
             return null;
-        }
-
-        internal void HideWindow()
-        {
-            /*
-            using (this.isWndProcHandlingRestricted.Enter())
-            {
-                this.Hide();
-            }
-            */
-            throw new NotImplementedException();
         }
 
         protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)

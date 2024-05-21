@@ -218,6 +218,12 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.RequireNotDisposed();
             SDL_ShowWindow(this.window);
         }
+
+        public void Hide()
+        {
+            this.RequireNotDisposed();
+            SDL_HideWindow(this.window);
+        }
         #endregion
 
         #region Private methods
