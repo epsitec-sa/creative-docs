@@ -297,8 +297,15 @@ namespace Epsitec.Common.Widgets.Platform
         /// </summary>
         public bool AllowDrop
         {
+            // bl-net8-cross draganddrop
             get { return false; }
-            set { throw new System.NotImplementedException(); }
+            set
+            {
+                if (value == true)
+                {
+                    throw new System.NotImplementedException();
+                }
+            }
         }
 
         /// <summary>
@@ -306,8 +313,15 @@ namespace Epsitec.Common.Widgets.Platform
         /// </summary>
         public bool Capture
         {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
+            // bl-net8-cross draganddrop
+            get { return false; }
+            set
+            {
+                if (value == true)
+                {
+                    throw new System.NotImplementedException();
+                }
+            }
         }
         // --------------------------------------------------------------------------------------------
         #endregion
