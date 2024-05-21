@@ -737,7 +737,7 @@ namespace Epsitec.Common.Widgets.Platform
         internal void ShowDialogWindow()
         {
             this.Show();
-            ToolTip.HideAllToolTips();
+            ToolTip.Default.HideToolTip();
         }
 
         internal bool StartWindowManagerOperation(WindowManagerOperation op)

@@ -25,43 +25,161 @@ namespace Epsitec.Common.Widgets
             this.window.WindowBounds = new Drawing.Rectangle(0, 0, 8, 8);
             this.window.Root.SyncPaint = true;
 
+            // /!\ DATA RACE Timer.TimeElapsed can be called anytime, we need to make sure it doesn't corrupt our state
             this.timer = new Timer();
             this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
         }
 
+        private void HandleTimerTimeElapsed(object sender)
+        {
+            lock (this)
+            {
+                if (this.IsDisplayed)
+                {
+                    this.UnsafeHideToolTip();
+                    System.Diagnostics.Debug.Assert(this.IsDisplayed == false);
+                }
+                else
+                {
+                    this.ShowToolTip();
+                    if (this.widget != null)
+                    {
+                        this.RestartTimer(this.GetTooltipAutoCloseDelay(this.widget));
+                    }
+                }
+            }
+        }
+
+        #region public safe API
         public ToolTipBehaviour Behaviour
         {
-            get { return this.behaviour; }
-            set { this.behaviour = value; }
+            get
+            {
+                lock (this)
+                {
+                    return this.behaviour;
+                }
+            }
+            set
+            {
+                lock (this)
+                {
+                    this.behaviour = value;
+                }
+            }
         }
 
         public Drawing.Point InitialLocation
         {
-            get { return this.initialPos; }
-            set { this.initialPos = value; }
+            get
+            {
+                lock (this)
+                {
+                    return this.initialPos;
+                }
+            }
+            set
+            {
+                lock (this)
+                {
+                    this.initialPos = value;
+                }
+            }
         }
 
-        public static readonly ToolTip Default = new ToolTip();
-
-        public static void HideAllToolTips()
+        public void HideToolTip()
         {
-            ToolTip.Default.HideToolTip();
+            lock (this)
+            {
+                this.UnsafeHideToolTip();
+            }
         }
 
-        public static bool HasToolTip(DependencyObject obj)
+        public void SetToolTip(Widget widget, string caption)
         {
-            if (
-                (obj.ContainsValue(ToolTip.ToolTipTextProperty))
-                || (obj.ContainsValue(ToolTip.ToolTipWidgetProperty))
-                || (obj.ContainsValue(ToolTip.ToolTipCaptionProperty))
-            )
+            lock (this)
             {
-                return true;
+                this.SetToolTipText(widget, caption);
+                this.DefineToolTip(widget, caption);
             }
-            else
+        }
+
+        public void SetToolTip(Widget widget, FormattedText caption)
+        {
+            lock (this)
             {
-                return false;
+                this.SetToolTipText(widget, caption.ToString());
+                this.DefineToolTip(widget, caption);
             }
+        }
+
+        public void SetToolTip(Widget widget, Widget caption)
+        {
+            lock (this)
+            {
+                this.SetToolTipWidget(widget, caption);
+                this.DefineToolTip(widget, caption);
+            }
+        }
+
+        public void SetToolTip(Widget widget, Caption caption)
+        {
+            lock (this)
+            {
+                this.SetToolTipCaption(widget, caption);
+                this.DefineToolTip(widget, caption);
+            }
+        }
+
+        public void ClearToolTip(Widget widget)
+        {
+            lock (this)
+            {
+                this.SetToolTipText(widget, null);
+                this.UnregisterWidget(widget);
+            }
+        }
+
+        public void SetToolTipColor(DependencyObject obj, Color value)
+        {
+            lock (this)
+            {
+                obj.SetValue(ToolTip.ToolTipColorProperty, value);
+            }
+        }
+
+        public void ClearToolTipColor(DependencyObject obj)
+        {
+            lock (this)
+            {
+                obj.ClearValue(ToolTip.ToolTipColorProperty);
+            }
+        }
+
+        /*
+        public static bool HasToolTipText(DependencyObject obj)
+        {
+            return obj.ContainsValue(ToolTip.ToolTipTextProperty);
+        }
+
+        public static Widget GetToolTipWidget(DependencyObject obj)
+        {
+            return obj.GetValue(ToolTip.ToolTipWidgetProperty) as Widget;
+        }
+
+        public static bool HasToolTipWidget(DependencyObject obj)
+        {
+            return obj.ContainsValue(ToolTip.ToolTipWidgetProperty);
+        }
+
+        public static Caption GetToolTipCaption(DependencyObject obj)
+        {
+            return obj.GetValue(ToolTip.ToolTipCaptionProperty) as Caption;
+        }
+
+        public static bool HasToolTipCaption(DependencyObject obj)
+        {
+            return obj.ContainsValue(ToolTip.ToolTipCaptionProperty);
         }
 
         public void ShowToolTipForWidget(Widget widget)
@@ -136,35 +254,31 @@ namespace Epsitec.Common.Widgets
                 }
             }
         }
+        */
+        #endregion
 
-        public void SetToolTip(Widget widget, string caption)
+        #region private unsafe implementation
+        private bool IsDisplayed
         {
-            ToolTip.SetToolTipText(widget, caption);
-            this.DefineToolTip(widget, caption);
+            get
+            {
+                if (this.window == null)
+                {
+                    return false;
+                }
+                return this.window.IsVisible;
+            }
         }
 
-        public void SetToolTip(Widget widget, FormattedText caption)
+        private void UnsafeHideToolTip()
         {
-            ToolTip.SetToolTipText(widget, caption.ToString());
-            this.DefineToolTip(widget, caption);
-        }
+            this.timer.Stop();
 
-        public void SetToolTip(Widget widget, Widget caption)
-        {
-            ToolTip.SetToolTipWidget(widget, caption);
-            this.DefineToolTip(widget, caption);
-        }
-
-        public void SetToolTip(Widget widget, Caption caption)
-        {
-            ToolTip.SetToolTipCaption(widget, caption);
-            this.DefineToolTip(widget, caption);
-        }
-
-        public void ClearToolTip(Widget widget)
-        {
-            ToolTip.SetToolTipText(widget, null);
-            this.UnregisterWidget(widget);
+            if (this.IsDisplayed)
+            {
+                this.window.Hide();
+                this.lastChangeTime = System.DateTime.Now;
+            }
         }
 
         private void DefineToolTip(Widget widget, object caption)
@@ -311,7 +425,7 @@ namespace Epsitec.Common.Widgets
                 }
                 else if (caption == null)
                 {
-                    this.HideToolTip();
+                    this.UnsafeHideToolTip();
                 }
 
                 this.hostProvidedCaption = caption;
@@ -321,7 +435,7 @@ namespace Epsitec.Common.Widgets
                 {
                     Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen(this.widget, pos);
                     this.ShowToolTip(mouse, caption, ToolTip.GetDefaultToolTipColor(this.widget));
-                    this.RestartTimer(ToolTip.GetTooltipAutoCloseDelay(this.widget));
+                    this.RestartTimer(this.GetTooltipAutoCloseDelay(this.widget));
                 }
 
                 return true;
@@ -362,7 +476,7 @@ namespace Epsitec.Common.Widgets
                 //-				System.Diagnostics.Debug.WriteLine ("HandleWidgetExited: " + widget.ToString ());
                 if (this.widget == widget)
                 {
-                    this.HideToolTip();
+                    this.UnsafeHideToolTip();
                     this.DetachFromWidget(widget);
                 }
             }
@@ -387,7 +501,7 @@ namespace Epsitec.Common.Widgets
                     case ToolTipBehaviour.Normal:
                         if (Drawing.Point.Distance(mouse, this.birthPos) > ToolTip.hideDistance)
                         {
-                            this.HideToolTip();
+                            this.UnsafeHideToolTip();
                             this.RestartTimer(SystemInformation.ToolTipShowDelay);
                         }
                         break;
@@ -416,27 +530,26 @@ namespace Epsitec.Common.Widgets
             System.Diagnostics.Debug.Assert(this.widget != widget);
             //-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget.GetVisualSerialId ()));
 
-            if (ToolTip.HasToolTip(widget))
+            if (this.HasToolTip(widget))
             {
-                ToolTip.SetToolTipText(widget, null);
+                this.SetToolTipText(widget, null);
             }
             this.DefineToolTip(widget, null);
         }
 
-        private void HandleTimerTimeElapsed(object sender)
+        private bool HasToolTip(DependencyObject obj)
         {
-            if (this.IsDisplayed)
+            if (
+                (obj.ContainsValue(ToolTip.ToolTipTextProperty))
+                || (obj.ContainsValue(ToolTip.ToolTipWidgetProperty))
+                || (obj.ContainsValue(ToolTip.ToolTipCaptionProperty))
+            )
             {
-                this.HideToolTip();
-                System.Diagnostics.Debug.Assert(this.IsDisplayed == false);
+                return true;
             }
             else
             {
-                this.ShowToolTip();
-                if (this.widget != null)
-                {
-                    this.RestartTimer(ToolTip.GetTooltipAutoCloseDelay(this.widget));
-                }
+                return false;
             }
         }
 
@@ -577,18 +690,7 @@ namespace Epsitec.Common.Widgets
             this.lastChangeTime = System.DateTime.Now;
         }
 
-        private void HideToolTip()
-        {
-            this.timer.Stop();
-
-            if (this.IsDisplayed)
-            {
-                this.window.Hide();
-                this.lastChangeTime = System.DateTime.Now;
-            }
-        }
-
-        internal void AttachToolTipSource(DependencyObject sender)
+        private void AttachToolTipSource(DependencyObject sender)
         {
             Widget widget = sender as Widget;
 
@@ -598,7 +700,7 @@ namespace Epsitec.Common.Widgets
             );
         }
 
-        internal void DetachToolTipSource(DependencyObject sender)
+        private void DetachToolTipSource(DependencyObject sender)
         {
             Widget widget = sender as Widget;
 
@@ -607,6 +709,89 @@ namespace Epsitec.Common.Widgets
                 this.hash.ContainsKey(widget.GetVisualSerialId()) == true
             );
         }
+
+        private double GetTooltipAutoCloseDelay(DependencyObject obj)
+        {
+            //	Retourne le délai de fermeture pour le tooltip, en se basant sur une vitesse de lecture
+            //	de 40 caractères/seconde. Le délai est toujours compris entre 5 et 20 secondes.
+            //	Si le tooltip n'est pas défini avec un texte (par exemple un Caption ou un Widget), le délai
+            //	est de 5 secondes.
+            int length = this.GetTooltipTextLength(obj);
+            return System.Math.Min(
+                System.Math.Max(length / 40, SystemInformation.ToolTipAutoCloseDelay),
+                SystemInformation.ToolTipAutoCloseDelay * 4
+            );
+        }
+
+        private int GetTooltipTextLength(DependencyObject obj)
+        {
+            //	Retourne le nombre de caractères du texte, ou zéro si ce n'est pas un texte.
+            string text = this.GetToolTipText(obj);
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return 0;
+            }
+            else
+            {
+                return text.Length;
+            }
+        }
+
+        private string GetToolTipText(DependencyObject obj)
+        {
+            return obj.GetValue(ToolTip.ToolTipTextProperty) as string;
+        }
+
+        private void SetToolTipText(DependencyObject obj, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
+                obj.ClearValue(ToolTip.ToolTipTextProperty);
+                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
+            }
+            else
+            {
+                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
+                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
+                obj.SetValue(ToolTip.ToolTipTextProperty, value);
+            }
+        }
+
+        private void SetToolTipWidget(DependencyObject obj, Widget value)
+        {
+            if (value == null)
+            {
+                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
+                obj.ClearValue(ToolTip.ToolTipTextProperty);
+                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
+            }
+            else
+            {
+                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
+                obj.ClearValue(ToolTip.ToolTipTextProperty);
+                obj.SetValue(ToolTip.ToolTipWidgetProperty, value);
+            }
+        }
+
+        private void SetToolTipCaption(DependencyObject obj, Caption value)
+        {
+            if (value == null)
+            {
+                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
+                obj.ClearValue(ToolTip.ToolTipTextProperty);
+                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
+            }
+            else
+            {
+                obj.SetValue(ToolTip.ToolTipCaptionProperty, value);
+                obj.ClearValue(ToolTip.ToolTipTextProperty);
+                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
+            }
+        }
+
+        #endregion
 
         #region Contents Class
         public sealed class Contents : Widget
@@ -675,134 +860,6 @@ namespace Epsitec.Common.Widgets
 
         #endregion
 
-        public static string GetToolTipText(DependencyObject obj)
-        {
-            return obj.GetValue(ToolTip.ToolTipTextProperty) as string;
-        }
-
-        public static bool HasToolTipText(DependencyObject obj)
-        {
-            return obj.ContainsValue(ToolTip.ToolTipTextProperty);
-        }
-
-        public static Widget GetToolTipWidget(DependencyObject obj)
-        {
-            return obj.GetValue(ToolTip.ToolTipWidgetProperty) as Widget;
-        }
-
-        public static bool HasToolTipWidget(DependencyObject obj)
-        {
-            return obj.ContainsValue(ToolTip.ToolTipWidgetProperty);
-        }
-
-        public static Caption GetToolTipCaption(DependencyObject obj)
-        {
-            return obj.GetValue(ToolTip.ToolTipCaptionProperty) as Caption;
-        }
-
-        public static bool HasToolTipCaption(DependencyObject obj)
-        {
-            return obj.ContainsValue(ToolTip.ToolTipCaptionProperty);
-        }
-
-        public static void SetToolTipText(DependencyObject obj, string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
-                obj.ClearValue(ToolTip.ToolTipTextProperty);
-                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
-            }
-            else
-            {
-                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
-                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
-                obj.SetValue(ToolTip.ToolTipTextProperty, value);
-            }
-        }
-
-        public static void SetToolTipColor(DependencyObject obj, Color value)
-        {
-            obj.SetValue(ToolTip.ToolTipColorProperty, value);
-        }
-
-        public static void ClearToolTipColor(DependencyObject obj)
-        {
-            obj.ClearValue(ToolTip.ToolTipColorProperty);
-        }
-
-        public static void SetToolTipWidget(DependencyObject obj, Widget value)
-        {
-            if (value == null)
-            {
-                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
-                obj.ClearValue(ToolTip.ToolTipTextProperty);
-                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
-            }
-            else
-            {
-                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
-                obj.ClearValue(ToolTip.ToolTipTextProperty);
-                obj.SetValue(ToolTip.ToolTipWidgetProperty, value);
-            }
-        }
-
-        public static void SetToolTipCaption(DependencyObject obj, Caption value)
-        {
-            if (value == null)
-            {
-                obj.ClearValue(ToolTip.ToolTipCaptionProperty);
-                obj.ClearValue(ToolTip.ToolTipTextProperty);
-                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
-            }
-            else
-            {
-                obj.SetValue(ToolTip.ToolTipCaptionProperty, value);
-                obj.ClearValue(ToolTip.ToolTipTextProperty);
-                obj.ClearValue(ToolTip.ToolTipWidgetProperty);
-            }
-        }
-
-        private static double GetTooltipAutoCloseDelay(DependencyObject obj)
-        {
-            //	Retourne le délai de fermeture pour le tooltip, en se basant sur une vitesse de lecture
-            //	de 40 caractères/seconde. Le délai est toujours compris entre 5 et 20 secondes.
-            //	Si le tooltip n'est pas défini avec un texte (par exemple un Caption ou un Widget), le délai
-            //	est de 5 secondes.
-            int length = ToolTip.GetTooltipTextLength(obj);
-            return System.Math.Min(
-                System.Math.Max(length / 40, SystemInformation.ToolTipAutoCloseDelay),
-                SystemInformation.ToolTipAutoCloseDelay * 4
-            );
-        }
-
-        private static int GetTooltipTextLength(DependencyObject obj)
-        {
-            //	Retourne le nombre de caractères du texte, ou zéro si ce n'est pas un texte.
-            string text = ToolTip.GetToolTipText(obj);
-
-            if (string.IsNullOrEmpty(text))
-            {
-                return 0;
-            }
-            else
-            {
-                return text.Length;
-            }
-        }
-
-        private bool IsDisplayed
-        {
-            get
-            {
-                if (this.window == null)
-                {
-                    return false;
-                }
-                return this.window.IsVisible;
-            }
-        }
-
         public static readonly DependencyProperty ToolTipTextProperty =
             DependencyProperty<ToolTip>.RegisterAttached<string>(
                 "ToolTipText",
@@ -834,7 +891,8 @@ namespace Epsitec.Common.Widgets
         private Widget widget;
         private object caption;
         private object hostProvidedCaption;
-        private object refreshedCaption;
+
+        //private object refreshedCaption;
 
         private Drawing.Point birthPos;
         private Drawing.Point initialPos;
@@ -842,5 +900,12 @@ namespace Epsitec.Common.Widgets
         private static readonly double hideDistance = 24;
         private static readonly Drawing.Point margin = new Drawing.Point(3, 2);
         private static readonly Drawing.Point offset = new Drawing.Point(8, -16);
+
+        private static readonly ToolTip defaultToolTip = new ToolTip();
+
+        public static ToolTip Default
+        {
+            get { return ToolTip.defaultToolTip; }
+        }
     }
 }

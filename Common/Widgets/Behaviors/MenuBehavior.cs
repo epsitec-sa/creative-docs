@@ -374,7 +374,7 @@ namespace Epsitec.Common.Widgets.Behaviors
                     break;
             }
 
-            ToolTip.HideAllToolTips();
+            ToolTip.Default.HideToolTip();
 
             window.WindowSize = size;
             window.WindowLocation = location;

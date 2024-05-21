@@ -1103,7 +1103,10 @@ namespace Epsitec.Common.Widgets
 
                     if (!error.IsNullOrWhiteSpace())
                     {
-                        ToolTip.SetToolTipColor(this, Widgets.Adorners.Factory.Active.ColorError);
+                        ToolTip.Default.SetToolTipColor(
+                            this,
+                            Widgets.Adorners.Factory.Active.ColorError
+                        );
                         ToolTip.Default.SetToolTip(this, error);
                     }
                 }
@@ -2769,7 +2772,7 @@ namespace Epsitec.Common.Widgets
 
                     string description = this.GetCaptionDescription(caption);
 
-                    ToolTip.ClearToolTipColor(this);
+                    ToolTip.Default.ClearToolTipColor(this);
 
                     if (!string.IsNullOrEmpty(description))
                     {
