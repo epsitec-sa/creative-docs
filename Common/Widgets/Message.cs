@@ -4,8 +4,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-    using Win32Const = Epsitec.Common.Widgets.Platform.Win32Const;
-
     /// <summary>
     /// The <c>Message</c> class describes a user event, such as a key press or a
     /// mouse click.
@@ -201,7 +199,7 @@ namespace Epsitec.Common.Widgets
                     return (double)(this.wheel) * 3 / Win32Const.WHEEL_DELTA;
                 }
                 */
-                return (double)(this.wheel) * 3 / Win32Const.WHEEL_DELTA;
+                return (double)(this.wheel) * 3 / 120;
             }
         }
 
@@ -762,6 +760,7 @@ namespace Epsitec.Common.Widgets
 
         internal static Message FromApplicationCommand(int cmd)
         {
+            /*
             Message message = new Message(MessageType.ApplicationCommand);
 
             switch (cmd)
@@ -776,6 +775,8 @@ namespace Epsitec.Common.Widgets
             }
 
             return message;
+            */
+            throw new System.NotImplementedException();
         }
 
         public static class ApplicationCommands

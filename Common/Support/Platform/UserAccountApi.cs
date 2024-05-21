@@ -17,7 +17,8 @@ namespace Epsitec.Common.Support.Platform
         /// </value>
         public static bool IsUserAnAdministrator
         {
-            get { return Win32.UserAccountApi.IsUserAnAdministrator; }
+            //get { return Win32.UserAccountApi.IsUserAnAdministrator; }
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

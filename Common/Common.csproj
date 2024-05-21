@@ -1054,7 +1054,6 @@
     <None Include="Support\Platform\Win32\Clipboard.cs" />
     <Compile Remove="Support\Platform\Win32\FileInfo.cs" />
     <None Include="Support\Platform\Win32\FileInfo.cs" />
-    <!--
     <Compile Remove="Support\Platform\Win32\IEnumIDList.cs" />
     <None   Include="Support\Platform\Win32\IEnumIDList.cs" />
     <Compile Remove="Support\Platform\Win32\IPersistFile.cs" />
@@ -1075,12 +1074,11 @@
     <None   Include="Support\Platform\Win32\ShellLink.cs" />
     <Compile Remove="Support\Platform\Win32\ShellShortcut.cs" />
     <None   Include="Support\Platform\Win32\ShellShortcut.cs" />
-    -->
     <Compile Remove="Support\Platform\Win32\StockIcons.cs" />
     <None Include="Support\Platform\Win32\StockIcons.cs" />
-    <!--
     <Compile Remove="Support\Platform\Win32\UserAccountApi.cs" />
     <None   Include="Support\Platform\Win32\UserAccountApi.cs" />
+    <!--
     <Compile Remove="Support\PlugIns\IPlugInAttribute.cs" />
     <None   Include="Support\PlugIns\IPlugInAttribute.cs" />
     <Compile Remove="Support\PlugIns\PlugInFactory.cs" />

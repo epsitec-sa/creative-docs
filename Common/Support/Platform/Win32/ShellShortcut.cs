@@ -40,11 +40,14 @@ namespace Epsitec.Common.Support.Platform.Win32
         {
             get
             {
+                /*
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder(
                     Win32Const.INFOTIPSIZE
                 );
                 this.link.GetArguments(buffer, buffer.Capacity);
                 return buffer.ToString();
+                */
+                throw new System.NotImplementedException();
             }
             set { this.link.SetArguments(value); }
         }
@@ -53,11 +56,14 @@ namespace Epsitec.Common.Support.Platform.Win32
         {
             get
             {
+                /*
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder(
                     Win32Const.INFOTIPSIZE
                 );
                 this.link.GetDescription(buffer, buffer.Capacity);
                 return buffer.ToString();
+                */
+                throw new System.NotImplementedException();
             }
             set { this.link.SetDescription(value); }
         }
@@ -66,11 +72,14 @@ namespace Epsitec.Common.Support.Platform.Win32
         {
             get
             {
+                /*
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder(
                     Win32Const.MAX_PATH
                 );
                 this.link.GetWorkingDirectory(buffer, buffer.Capacity);
                 return buffer.ToString();
+                */
+                throw new System.NotImplementedException();
             }
             set { this.link.SetWorkingDirectory(value); }
         }
@@ -79,6 +88,7 @@ namespace Epsitec.Common.Support.Platform.Win32
         {
             get
             {
+                /*
                 ShellApi.WIN32_FIND_DATAW fd = new ShellApi.WIN32_FIND_DATAW();
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder(
                     Win32Const.MAX_PATH
@@ -91,6 +101,8 @@ namespace Epsitec.Common.Support.Platform.Win32
                     ShellApi.SLGP_FLAGS.SLGP_UNCPRIORITY
                 );
                 return buffer.ToString();
+                */
+                throw new System.NotImplementedException();
             }
             set { this.link.SetPath(value); }
         }
@@ -118,12 +130,15 @@ namespace Epsitec.Common.Support.Platform.Win32
         {
             get
             {
+                /*
                 int iconIndex;
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder(
                     Win32Const.MAX_PATH
                 );
                 this.link.GetIconLocation(buffer, buffer.Capacity, out iconIndex);
                 return buffer.ToString();
+                */
+                throw new System.NotImplementedException();
             }
             set { this.link.SetIconLocation(value, this.IconIndex); }
         }
@@ -132,12 +147,15 @@ namespace Epsitec.Common.Support.Platform.Win32
         {
             get
             {
+                /*
                 int iconIndex;
                 System.Text.StringBuilder buffer = new System.Text.StringBuilder(
                     Win32Const.MAX_PATH
                 );
                 this.link.GetIconLocation(buffer, buffer.Capacity, out iconIndex);
                 return iconIndex;
+                */
+                throw new System.NotImplementedException();
             }
             set { this.link.SetIconLocation(this.IconPath, value); }
         }
@@ -146,6 +164,7 @@ namespace Epsitec.Common.Support.Platform.Win32
         {
             get
             {
+                /*
                 int windowStyle;
                 this.link.GetShowCmd(out windowStyle);
 
@@ -160,9 +179,12 @@ namespace Epsitec.Common.Support.Platform.Win32
                     default:
                         return ProcessWindowStyle.Normal;
                 }
+                */
+                throw new System.NotImplementedException();
             }
             set
             {
+                /*
                 int windowStyle;
 
                 switch (value)
@@ -184,6 +206,8 @@ namespace Epsitec.Common.Support.Platform.Win32
                 }
 
                 this.link.SetShowCmd(windowStyle);
+                */
+                throw new System.NotImplementedException();
             }
         }
 

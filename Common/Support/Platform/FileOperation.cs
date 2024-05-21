@@ -9,6 +9,7 @@ namespace Epsitec.Common.Support.Platform
     {
         public static bool DeleteFiles(FileOperationMode mode, IEnumerable<string> files)
         {
+            /*
             Platform.Win32.ShellFileOperation fo = new Win32.ShellFileOperation();
 
             fo.Operation = Win32.ShellFileOperation.FileOperations.FO_DELETE;
@@ -17,6 +18,8 @@ namespace Epsitec.Common.Support.Platform
             fo.DestFiles = null;
 
             return fo.DoOperation();
+            */
+            throw new System.NotImplementedException();
         }
 
         public static bool CopyFiles(
@@ -25,6 +28,7 @@ namespace Epsitec.Common.Support.Platform
             IEnumerable<string> destinationFiles
         )
         {
+            /*
             Platform.Win32.ShellFileOperation fo = new Win32.ShellFileOperation();
 
             fo.Operation = Win32.ShellFileOperation.FileOperations.FO_COPY;
@@ -37,6 +41,8 @@ namespace Epsitec.Common.Support.Platform
             fo.DestFiles = Types.Collection.ToArray(destinationFiles);
 
             return fo.DoOperation();
+            */
+            throw new System.NotImplementedException();
         }
 
         public static bool CopyFilesToFolder(
@@ -45,6 +51,7 @@ namespace Epsitec.Common.Support.Platform
             string destinationFolder
         )
         {
+            /*
             Platform.Win32.ShellFileOperation fo = new Win32.ShellFileOperation();
 
             fo.Operation = Win32.ShellFileOperation.FileOperations.FO_COPY;
@@ -57,6 +64,8 @@ namespace Epsitec.Common.Support.Platform
             fo.DestFiles = new string[] { destinationFolder };
 
             return fo.DoOperation();
+            */
+            throw new System.NotImplementedException();
         }
 
         public static bool MoveFiles(
@@ -65,6 +74,7 @@ namespace Epsitec.Common.Support.Platform
             IEnumerable<string> destinationFiles
         )
         {
+            /*
             Platform.Win32.ShellFileOperation fo = new Win32.ShellFileOperation();
 
             fo.Operation = Win32.ShellFileOperation.FileOperations.FO_MOVE;
@@ -77,6 +87,8 @@ namespace Epsitec.Common.Support.Platform
             fo.DestFiles = Types.Collection.ToArray(destinationFiles);
 
             return fo.DoOperation();
+            */
+            throw new System.NotImplementedException();
         }
 
         public static bool MoveFilesToFolder(
@@ -85,6 +97,7 @@ namespace Epsitec.Common.Support.Platform
             string destinationFolder
         )
         {
+            /*
             Platform.Win32.ShellFileOperation fo = new Win32.ShellFileOperation();
 
             fo.Operation = Win32.ShellFileOperation.FileOperations.FO_MOVE;
@@ -97,6 +110,8 @@ namespace Epsitec.Common.Support.Platform
             fo.DestFiles = new string[] { destinationFolder };
 
             return fo.DoOperation();
+            */
+            throw new System.NotImplementedException();
         }
 
         public static bool RenameFiles(
@@ -105,6 +120,7 @@ namespace Epsitec.Common.Support.Platform
             IEnumerable<string> destinationFiles
         )
         {
+            /*
             Platform.Win32.ShellFileOperation fo = new Win32.ShellFileOperation();
 
             fo.Operation = Win32.ShellFileOperation.FileOperations.FO_RENAME;
@@ -117,17 +133,25 @@ namespace Epsitec.Common.Support.Platform
             fo.DestFiles = Types.Collection.ToArray(destinationFiles);
 
             return fo.DoOperation();
+            */
+            throw new System.NotImplementedException();
         }
 
         public static void AddToRecentDocuments(FolderItem item)
         {
+            /*
             Win32.PidlHandle handle = item.Handle as Win32.PidlHandle;
             Win32.ShellApi.SHAddToRecentDocs(Win32.ShellApi.SHARD_PIDL, handle.Pidl);
+            */
+            throw new System.NotImplementedException();
         }
 
         public static void AddToRecentDocuments(string path)
         {
+            /*
             Win32.ShellApi.SHAddToRecentDocs(Win32.ShellApi.SHARD_PATHW, path);
+            */
+            throw new System.NotImplementedException();
         }
     }
 }

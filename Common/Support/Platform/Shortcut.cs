@@ -18,6 +18,7 @@ namespace Epsitec.Common.Support.Platform
         /// <returns>The <c>FolderItem</c> if the shortcut could be resolved; otherwise, <c>null</c>.</returns>
         public static FolderItem Resolve(string path, FolderQueryMode mode)
         {
+            /*
             using (Win32.ShellShortcut shortcut = new Win32.ShellShortcut(path))
             {
                 FolderItemHandle handle = shortcut.TargetPidl;
@@ -26,6 +27,8 @@ namespace Epsitec.Common.Support.Platform
                     ? FolderItem.Empty
                     : FileInfo.CreateFolderItem(handle, mode);
             }
+            */
+            throw new System.NotImplementedException();
         }
     }
 }

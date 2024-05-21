@@ -299,13 +299,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             // bl-net8-cross draganddrop
             get { return false; }
-            set
-            {
-                if (value == true)
-                {
-                    throw new System.NotImplementedException();
-                }
-            }
+            set { }
         }
 
         /// <summary>
@@ -315,13 +309,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             // bl-net8-cross draganddrop
             get { return false; }
-            set
-            {
-                if (value == true)
-                {
-                    throw new System.NotImplementedException();
-                }
-            }
+            set { }
         }
         // --------------------------------------------------------------------------------------------
         #endregion
@@ -754,6 +742,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal bool StartWindowManagerOperation(WindowManagerOperation op)
         {
+            /*
             //	Documentation sur WM_NCHITTEST et les modes HT...
             //	Cf http://blogs.msdn.com/jfoscoding/archive/2005/07/28/444647.aspx
             //	Cf http://msdn.microsoft.com/netframework/default.aspx?pull=/libarary/en-us/dndotnet/html/automationmodel.asp
@@ -796,6 +785,8 @@ namespace Epsitec.Common.Widgets.Platform
             }
 
             return false;
+            */
+            throw new System.NotImplementedException();
         }
 
         internal void SetFrozen(bool frozen)
