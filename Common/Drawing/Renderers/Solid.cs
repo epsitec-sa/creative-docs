@@ -3,12 +3,17 @@
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-    public sealed class Solid : IRenderer
+    public sealed class Solid : IRenderer, System.IDisposable
     {
         public Solid(AntigrainSharp.Renderer.Solid solidRenderer)
         {
             this.solidRenderer = solidRenderer;
             this.AlphaMutiplier = 1.0;
+        }
+
+        ~Solid()
+        {
+            this.Dispose();
         }
 
         //public DrawingBitmap DrawingBitmap
@@ -118,23 +123,34 @@ namespace Epsitec.Common.Drawing.Renderers
             this.solidRenderer.Color(r, g, b, a * this.AlphaMutiplier);
         }
 
-        public void SetAlphaMask(DrawingBitmap pixmap, MaskComponent component)
+        public void SetAlphaMask(DrawingBitmap mask, MaskComponent component)
         {
-            /*
+            this.DestroyAlphaMask();
+            System.Console.WriteLine($"SetAlphaMask {mask}");
+            this.alphaMask = mask;
             this.solidRenderer.SetAlphaMask(
-                (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle,
+                this.alphaMask.buffer,
                 (AntigrainSharp.Renderer.MaskComponent)component
             );
-            */
-            throw new System.NotImplementedException();
         }
 
-        //#region IDisposable Members
-        //public void Dispose()
-        //{
-        //    this.Detach();
-        //}
-        //#endregion
+        private void DestroyAlphaMask()
+        {
+            if (this.alphaMask != null)
+            {
+                System.Console.WriteLine($"DestroyAlphaMask {this.alphaMask}");
+                this.alphaMask.Dispose();
+                this.alphaMask = null;
+            }
+        }
+
+        #region IDisposable Members
+        public void Dispose()
+        {
+            this.DestroyAlphaMask();
+            System.GC.SuppressFinalize(this);
+        }
+        #endregion
 
         //private void Attach(DrawingBitmap pixmap)
         //{
@@ -154,6 +170,6 @@ namespace Epsitec.Common.Drawing.Renderers
 
         private Color color;
         internal readonly AntigrainSharp.Renderer.Solid solidRenderer;
-        private DrawingBitmap pixmap;
+        private DrawingBitmap alphaMask;
     }
 }

@@ -5,8 +5,6 @@ using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Widgets.Tools
 {
-    //using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
-
     /// <summary>
     /// The <c>Magnifier</c> class manages the rounded magnifier window
     /// which is used by the color picker.
@@ -154,14 +152,15 @@ namespace Epsitec.Common.Widgets.Tools
                     this.mask = null;
                 }
 
-                this.mask = graphics.CreateAlphaMask();
+                this.mask = new Drawing.DrawingBitmap((uint)dx, (uint)dy);
+                var maskGraphics = graphics.CreateAlphaMask(this.mask);
                 this.maskDx = dx;
                 this.maskDy = dy;
 
                 path = Drawing.Path.FromCircle(cx, cy, cx, cy);
 
-                this.mask.Color = Drawing.Color.FromRgb(1, 0, 0);
-                this.mask.PaintSurface(path);
+                maskGraphics.Color = Drawing.Color.FromRgb(1, 0, 0);
+                maskGraphics.PaintSurface(path);
             }
 
             Drawing.Point pos = this.MapClientToScreen(new Drawing.Point(cx, cy));
@@ -173,14 +172,12 @@ namespace Epsitec.Common.Widgets.Tools
             int px = (int)(pos.X) - nx / 2;
             int py = (int)(pos.Y) - ny / 2;
 
-            // bl-net8-cross
-            // Win32Api.GrabScreen(bitmap, px, py);
+            Window.GrabScreen(bitmap, px, py);
 
             double sx = dx / nx;
             double sy = dy / ny;
 
-            // bl-net8-cross
-            //graphics.SolidRenderer.SetAlphaMask(this.mask.DrawingBitmap, Drawing.MaskComponent.R);
+            graphics.SolidRenderer.SetAlphaMask(this.mask, Drawing.MaskComponent.R);
 
             using (Drawing.DrawingBitmap.RawData raw = new Drawing.DrawingBitmap.RawData(bitmap))
             {
@@ -369,7 +366,7 @@ namespace Epsitec.Common.Widgets.Tools
         private Drawing.Point origin;
         private double maskDx,
             maskDy;
-        private Drawing.Graphics mask;
+        private Drawing.DrawingBitmap mask;
 
         private Timer timer;
     }

@@ -647,6 +647,6 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        private AntigrainSharp.GraphicBuffer buffer;
+        internal AntigrainSharp.GraphicBuffer buffer;
     }
 }

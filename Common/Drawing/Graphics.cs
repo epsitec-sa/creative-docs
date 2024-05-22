@@ -8,6 +8,8 @@ namespace Epsitec.Common.Drawing
     /// <summary>
     /// La classe Graphics encapsule le contexte graphique utilisé pour peindre.
     /// </summary>
+
+    // bl-net8-cross cleanup
     public class Graphics : System.IDisposable, IPaintPort
     {
         public Graphics(AntigrainSharp.GraphicContext gctx)
@@ -171,6 +173,16 @@ namespace Epsitec.Common.Drawing
             get { return this.smoothRenderer; }
         }
 
+        public uint Width
+        {
+            get { return this.context.Width; }
+        }
+
+        public uint Height
+        {
+            get { return this.context.Height; }
+        }
+
         public void ReplaceRasterizer(AbstractRasterizer rasterizer)
         {
             this.rasterizer = rasterizer;
@@ -230,18 +242,12 @@ namespace Epsitec.Common.Drawing
             this.LineMiterLimit = 4.0;
         }
 
-        public Graphics CreateAlphaMask()
+        public Graphics CreateAlphaMask(DrawingBitmap bitmap)
         {
-            /*
-            Graphics mask = new Graphics();
-
-            mask.SetPixmapSize(this.pixmap.Size.Width, this.pixmap.Size.Height);
+            Graphics mask = new Graphics(bitmap.GraphicContext);
             mask.SolidRenderer.ClearAlphaRgb(0, 0, 0, 0);
             mask.Transform = this.Transform;
-
             return mask;
-            */
-            throw new System.NotImplementedException();
         }
 
         public void PushColorModifier(ColorModifierCallback method)

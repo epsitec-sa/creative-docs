@@ -4,7 +4,7 @@ namespace Epsitec.Common.Document
 {
     /// <summary>
     /// La classe Drawer contient le dessinateur universel, pour dessiner sur
-    /// l'écran ou dans un bitmap avec AGG, pour imprimer ou pour exporter en PDF.
+    /// l'écran ou dans un maskBitmap avec AGG, pour imprimer ou pour exporter en PDF.
     /// </summary>
     public class Drawer
     {
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document
             Objects.Abstract obj
         )
         {
-            //	Dessine une surface à l'écran ou dans un bitmap.
+            //	Dessine une surface à l'écran ou dans un maskBitmap.
             this.DrawShape(port, drawingContext, shape, obj);
         }
 
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document
             Objects.Abstract obj
         )
         {
-            //	Dessine un chemin à l'écran ou dans un bitmap.
+            //	Dessine un chemin à l'écran ou dans un maskBitmap.
             Properties.Line stroke = shape.PropertyStroke;
 
             if (
@@ -348,7 +348,7 @@ namespace Epsitec.Common.Document
             Objects.Abstract obj
         )
         {
-            //	Dessine une forme à l'écran ou dans un bitmap.
+            //	Dessine une forme à l'écran ou dans un maskBitmap.
             SurfaceAnchor sa = obj.SurfaceAnchor;
             if (sa.IsSurfaceZero && shape.Aspect != Aspect.Support)
                 return;
@@ -458,7 +458,6 @@ namespace Epsitec.Common.Document
                 return;
             }
 
-            Graphics mask = null;
             double lineWidth = 0.0;
 
             if (shape.PropertyStroke != null)
@@ -495,32 +494,39 @@ namespace Epsitec.Common.Document
                     sy = drawingContext.ScaleY;
                 }
 
-                mask = port.CreateAlphaMask();
-
-                int step = (int)(surface.Smooth * sx);
-                if (step > 20)
-                    step = 20;
-                if (drawingContext != null && !drawingContext.PreviewActive)
-                    step /= 4; // brouillon
-                if (drawingContext != null && drawingContext.IsBitmap)
-                    step *= 2; // qualité supérieure
-                if (step < 2)
-                    step = 2;
-                for (int i = 0; i < step; i++)
+                var maskBitmap = new DrawingBitmap(port.Width, port.Height);
+                using (Graphics maskGraphics = port.CreateAlphaMask(maskBitmap))
                 {
-                    double w = surface.Smooth - i * surface.Smooth / step;
-                    mask.Rasterizer.AddOutline(shape.Path, lineWidth + w * 2.0, cap, join, limit);
-                    double intensity = (i + 1.0) / step;
-                    mask.RenderSolid(Drawing.Color.FromBrightness(intensity));
+                    int step = (int)(surface.Smooth * sx);
+                    if (step > 20)
+                        step = 20;
+                    if (drawingContext != null && !drawingContext.PreviewActive)
+                        step /= 4; // brouillon
+                    if (drawingContext != null && drawingContext.IsBitmap)
+                        step *= 2; // qualité supérieure
+                    if (step < 2)
+                        step = 2;
+                    for (int i = 0; i < step; i++)
+                    {
+                        double w = surface.Smooth - i * surface.Smooth / step;
+                        maskGraphics.Rasterizer.AddOutline(
+                            shape.Path,
+                            lineWidth + w * 2.0,
+                            cap,
+                            join,
+                            limit
+                        );
+                        double intensity = (i + 1.0) / step;
+                        maskGraphics.RenderSolid(Drawing.Color.FromBrightness(intensity));
+                    }
+                    if (shape.Type == Type.Surface)
+                    {
+                        maskGraphics.Rasterizer.AddSurface(shape.Path);
+                    }
+                    maskGraphics.RenderSolid(Drawing.Color.FromBrightness(1.0));
                 }
-                if (shape.Type == Type.Surface)
-                {
-                    mask.Rasterizer.AddSurface(shape.Path);
-                }
-                mask.RenderSolid(Drawing.Color.FromBrightness(1.0));
 
-                // bl-net8-cross
-                //port.SolidRenderer.SetAlphaMask(mask.DrawingBitmap, MaskComponent.R);
+                port.SolidRenderer.SetAlphaMask(maskBitmap, MaskComponent.R);
 
                 Rectangle box = sa.BoundingBox;
                 box.Inflate(surface.Smooth);
@@ -653,7 +659,6 @@ namespace Epsitec.Common.Document
             if (surface != null && surface.Smooth > 0) // flou ?
             {
                 port.SolidRenderer.SetAlphaMask(null, MaskComponent.None);
-                mask.Dispose();
             }
         }
 
