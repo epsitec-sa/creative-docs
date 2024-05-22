@@ -424,37 +424,9 @@ namespace Epsitec.Common.Drawing
 
         public void GetTextCharEndX(string text, out double[] xPos)
         {
-            int[] glyphMap;
-
             xPos = new double[text.Length];
-
-            ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text, out glyphMap);
-            double[] tempX = new double[glyphs.Length + 1];
-
-            tempX[glyphs.Length] = this.OpenTypeFont.GetPositions(glyphs, 1.0, 0.0, tempX);
-
-            int index = 0;
-
-            for (int i = 0; i < glyphs.Length; i++)
-            {
-                int mapped = glyphMap[i] + 1;
-
-                if (mapped > 1)
-                {
-                    double dx = tempX[i + 1] - tempX[i];
-
-                    for (int j = 0; j < mapped; j++)
-                    {
-                        xPos[index] = tempX[i] + dx * (j + 1) / mapped;
-                        index++;
-                    }
-                }
-                else
-                {
-                    xPos[index] = tempX[i + 1];
-                    index++;
-                }
-            }
+            ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs(text);
+            this.OpenTypeFont.GetPositions(glyphs, 1.0, 0.0, xPos);
         }
 
         public void GetTextCharEndX(string text, FontClassInfo[] infos, out double[] xArray)
@@ -555,25 +527,12 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        public void GetGlyphsEndX(
-            string text,
-            out double[] xPos,
-            out ushort[] glyphs,
-            out byte[] glyphCharCount
-        )
+        public void GetGlyphsEndX(string text, out double[] xPos, out ushort[] glyphs)
         {
-            int[] glyphMap;
-
-            glyphs = this.OpenTypeFont.GenerateGlyphs(text, out glyphMap);
+            glyphs = this.OpenTypeFont.GenerateGlyphs(text);
             xPos = new double[glyphs.Length];
-            glyphCharCount = new byte[glyphs.Length];
 
             this.OpenTypeFont.GetPositions(glyphs, 1.0, 0.0, xPos);
-
-            for (int i = 0; i < glyphs.Length; i++)
-            {
-                glyphCharCount[i] = (byte)(glyphMap[i] + 1);
-            }
         }
 
         public void ClearOpenTypeFont()

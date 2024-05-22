@@ -191,24 +191,7 @@ namespace Epsitec.Common.OpenType
         /// <returns>The glyphs represented by 16-bit unsigned values.</returns>
         public ushort[] GenerateGlyphs(string text)
         {
-            int[] glMap;
-            return this.GenerateGlyphs(text, out glMap);
-        }
-
-        /// <summary>
-        /// Generates the glyphs for the specified text. Fills the glyph length
-        /// map, if provided, with a character count per glyph, for each output
-        /// glyph.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="glMap">The glyph length map array or <c>null</c>.</param>
-        /// <returns>
-        /// The glyphs represented by 16-bit unsigned values.
-        /// </returns>
-        public ushort[] GenerateGlyphs(string text, out int[] glMap)
-        {
             int length = text.Length;
-            glMap = null;
             ushort[] glyphs = new ushort[length];
 
             for (int i = 0; i < length; i++)

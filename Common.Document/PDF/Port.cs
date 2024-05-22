@@ -1,8 +1,8 @@
 //	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
 using System.Collections.Generic;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.PDF
 {
@@ -496,12 +496,10 @@ namespace Epsitec.Common.Document.PDF
                 double ox = 0.0;
                 double[] glyphX;
                 ushort[] glyph;
-                byte[] glyphN;
 
-                font.GetGlyphsEndX(text, out glyphX, out glyph, out glyphN);
+                font.GetGlyphsEndX(text, out glyphX, out glyph);
                 System.Diagnostics.Debug.Assert(glyphX.Length == n);
                 System.Diagnostics.Debug.Assert(glyph.Length == n);
-                System.Diagnostics.Debug.Assert(glyphN.Length == n);
 
                 Drawing.Transform ft = font.SyntheticTransform;
                 ft = ft.Scale(size);
@@ -533,12 +531,10 @@ namespace Epsitec.Common.Document.PDF
 
                 double[] glyphX;
                 ushort[] glyph;
-                byte[] glyphN;
 
-                font.GetGlyphsEndX(text, out glyphX, out glyph, out glyphN);
+                font.GetGlyphsEndX(text, out glyphX, out glyph);
                 System.Diagnostics.Debug.Assert(glyphX.Length == n);
                 System.Diagnostics.Debug.Assert(glyph.Length == n);
-                System.Diagnostics.Debug.Assert(glyphN.Length == n);
 
                 this.SetTransform(this.transform);
                 this.SetFillColor(this.color);
