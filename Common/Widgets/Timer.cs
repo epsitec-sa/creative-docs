@@ -324,22 +324,11 @@ namespace Epsitec.Common.Widgets
 
         private void OnTimeElapsed()
         {
-            switch (this.state)
+            // the system timer could fire while we are changing our timer state
+            // if that happens, we simply ignore the event here
+            if (this.state != TimerState.Running)
             {
-                case TimerState.Disposed:
-                    return;
-
-                case TimerState.Invalid:
-                case TimerState.Elapsed:
-                case TimerState.Suspended:
-                    throw new System.InvalidOperationException(
-                        string.Format("Timer got event while in {0} state.", this.state)
-                    );
-
-                case TimerState.Stopped:
-                case TimerState.Running:
-                    this.state = TimerState.Elapsed;
-                    break;
+                return;
             }
 
             this.state = TimerState.Elapsed;
