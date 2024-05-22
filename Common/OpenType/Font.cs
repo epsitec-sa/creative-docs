@@ -10,13 +10,18 @@ namespace Epsitec.Common.OpenType
     /// The <c>Font</c> class maps the low-level OpenType font description to
     /// the real needs of an application which has to manipulate glyphs.
     /// </summary>
-    public sealed class Font
+    public sealed class Font : IDisposable
     {
         internal Font(FontIdentity identity)
         {
             this.identity = identity;
             // TODO bl-net8-cross free the underlying freetype handle when done
             this.fontHandle = AntigrainSharp.Font.LoadFromFile(identity.FilePath);
+        }
+
+        ~Font()
+        {
+            this.Dispose();
         }
 
         public FontIdentity FontIdentity
@@ -72,7 +77,7 @@ namespace Epsitec.Common.OpenType
 
         public char EllipsisChar
         {
-            get { return (char)0x2026; }
+            get { return '…'; }
         }
 
         public char PeriodChar
@@ -134,38 +139,17 @@ namespace Epsitec.Common.OpenType
 
         public double HyphenWidth
         {
-            get
-            {
-                //                double perEm = this.otHead.UnitsPerEm;
-                //                return this.GetAdvance(this.HyphenGlyph) / perEm;
-                throw new System.NotImplementedException();
-            }
+            get { return this.GetGlyphWidth(this.HyphenGlyph, 1.0); }
         }
 
         public double EllipsisWidth
         {
-            get
-            {
-                /*
-                double perEm = this.otHead.UnitsPerEm;
-                return this.GetAdvance(this.EllipsisGlyph) / perEm};
-                */
-                throw new System.NotImplementedException();
-            }
+            get { return this.GetGlyphWidth(this.EllipsisGlyph, 1.0); }
         }
 
         public double PeriodWidth
         {
-            get
-            {
-                /*
-                double perEm = this.otHead.UnitsPerEm;
-                ushort glyph = this.PeriodGlyph;
-
-                return glyph == 0xffff ? 0.5 : (this.GetAdvance(this.PeriodGlyph) / perEm);
-                */
-                throw new System.NotImplementedException();
-            }
+            get { return this.GetGlyphWidth(this.PeriodGlyph, 1.0); }
         }
 
         //public FontType FontType
@@ -1081,13 +1065,17 @@ namespace Epsitec.Common.OpenType
         /// <returns>The font caret angle in radians.</returns>
         public double GetCaretAngleRad()
         {
+            // bl-net8-cross
+            // I did not managed yet to get this information with freetype
+            // For now, we just pretend the angle is always 0
+
             /*
             double dx = this.otHhea.CaretSlopeRun;
             double dy = this.otHhea.CaretSlopeRise;
 
             return System.Math.Atan2(dy, dx);
             */
-            throw new System.NotImplementedException();
+            return 0;
         }
 
         /// <summary>
@@ -1428,6 +1416,17 @@ namespace Epsitec.Common.OpenType
             }
 
             return false;
+        }
+
+        public void Dispose()
+        {
+            if (this.fontHandle == null)
+            {
+                return;
+            }
+            this.fontHandle.Dispose();
+            this.fontHandle = null;
+            GC.SuppressFinalize(this);
         }
 
         private const int UnicodeMask = 0x001fffff;
