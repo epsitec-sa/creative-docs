@@ -1,11 +1,11 @@
 //	Copyright © 2005-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
-using System.Collections.Generic;
 
 [assembly: DependencyClass(typeof(Visual))]
 
@@ -433,21 +433,15 @@ namespace Epsitec.Common.Widgets
             {
                 if (this.Visibility != value)
                 {
+                    // bl-net8-cross double_visibility_property
+                    if (this.IsVisible)
+                    {
+                        this.Invalidate();
+                    }
+
+                    // This is not beautiful
                     this.SetValueBase(Visual.VisibilityProperty, value);
-
-                    if (value)
-                    {
-                        this.ClearValue(Visual.IsVisibleProperty);
-                    }
-                    else
-                    {
-                        if (this.IsVisible)
-                        {
-                            this.Invalidate();
-                        }
-
-                        this.SetValueBase(Visual.IsVisibleProperty, false);
-                    }
+                    this.SetValueBase(Visual.IsVisibleProperty, value);
                 }
             }
         }
@@ -475,7 +469,8 @@ namespace Epsitec.Common.Widgets
 
         public bool IsVisible
         {
-            get { return (bool)this.GetValue(Visual.IsVisibleProperty); }
+            // bl-net8-cross double_visibility_property
+            get { return (bool)this.GetValue(Visual.VisibilityProperty); }
         }
 
         public bool IsEnabled
@@ -1812,6 +1807,7 @@ namespace Epsitec.Common.Widgets
             remove { this.RemoveUserEventHandler("ChildrenChanged", value); }
         }
 
+        // bl-net8-cross double_visibility_property
         public event PropertyChangedEventHandler IsVisibleChanged
         {
             add { this.AddEventHandler(Visual.IsVisibleProperty, value); }
@@ -2069,7 +2065,7 @@ namespace Epsitec.Common.Widgets
             typeof(bool),
             typeof(Visual),
             new VisualPropertyMetadata(
-                true,
+                true, // bl-net8-cross double_visibility_property
                 new SetValueOverrideCallback(Visual.SetVisibilityValue),
                 VisualPropertyMetadataOptions.None
             )
@@ -2178,7 +2174,12 @@ namespace Epsitec.Common.Widgets
                 typeof(bool),
                 typeof(Visual),
                 new VisualPropertyMetadata(
-                    false,
+                    true, /* 
+                    bl-net8-cross double_visibility_property
+                    HACK: default to true to match VisibilityProperty
+                    TODO: we should probably have only one property
+                    They do differ in their metadata, though…
+                    */
                     VisualPropertyMetadataOptions.InheritsValue
                         | VisualPropertyMetadataOptions.AffectsArrange
                         | VisualPropertyMetadataOptions.AffectsDisplay
