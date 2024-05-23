@@ -483,7 +483,11 @@ namespace Epsitec.Common.Document
                 lineWidth = 1.0 / drawingContext.ScaleX;
             }
 
-            if (surface != null && surface.Smooth > 0) // flou ?
+            // bl-net8-cross implement blur (maybe AlphaMask is not needed for this)
+            bool doBlur = false;
+            // bool doBlur = surface != null && surface.Smooth > 0;
+
+            if (doBlur) // flou ?
             {
                 double sx = 1;
                 double sy = 1;
@@ -656,7 +660,7 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            if (surface != null && surface.Smooth > 0) // flou ?
+            if (doBlur) // flou ?
             {
                 port.SolidRenderer.SetAlphaMask(null, MaskComponent.None);
             }
