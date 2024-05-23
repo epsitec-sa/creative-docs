@@ -1073,13 +1073,13 @@ namespace Epsitec.Common.Widgets.Platform
 
             for (int i = 0; i < forms.Length; i++)
             {
-                PlatformWindow window = forms[i] as PlatformWindow;
+                PlatformWindow platformWindow = forms[i] as PlatformWindow;
 
-                if (window != null)
+                if (platformWindow != null)
                 {
-                    if (window.isToolWindow)
+                    if (platformWindow.isToolWindow)
                     {
-                        window.FakeActivate(active);
+                        platformWindow.FakeActivate(active);
                     }
                 }
             }
@@ -1094,11 +1094,11 @@ namespace Epsitec.Common.Widgets.Platform
 
             for (int i = 0; i < forms.Length; i++)
             {
-                PlatformWindow window = forms[i] as PlatformWindow;
+                PlatformWindow platformWindow = forms[i] as PlatformWindow;
 
-                if (window != null)
+                if (platformWindow != null)
                 {
-                    if (window == find)
+                    if (platformWindow == find)
                     {
                         return true;
                     }

@@ -1262,16 +1262,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 
         private static void GenerateDummyMouseMoveEvents()
         {
-            //Drawing.Point pos = Message.CurrentState.LastScreenPosition;
-            //PlatformWindow[] windows = PlatformWindow.FindFromPosition(pos);
+            Drawing.Point pos = Message.CurrentState.LastScreenPosition;
+            Window[] windows = Window.FindFromPosition(pos);
 
-            //foreach (PlatformWindow window in windows)
-            //{
-            //    window.DispatchMessage(
-            //        Message.CreateDummyMouseMoveEvent(window.ScreenPointToWindowPoint(pos))
-            //    );
-            //}
-            throw new System.NotImplementedException();
+            foreach (Window window in windows)
+            {
+                window.DispatchMessage(
+                    Message.CreateDummyMouseMoveEvent(window.ScreenPointToWindowPoint(pos))
+                );
+            }
         }
 
         private static MenuBehavior[] GetActiveMenuBehaviors()

@@ -18,7 +18,11 @@ namespace Epsitec.Common.Widgets
     /// n'est pas un widget en tant que tel: Window.Root définit le widget à la
     /// racine de la fenêtre.
     /// </summary>
-    public class Window : Types.DependencyObject, Support.Data.IContainer, System.IDisposable
+    public class Window
+        : Types.DependencyObject,
+            Support.Data.IContainer,
+            System.IDisposable,
+            IIsDisposed
     {
         // ******************************************************************
         // TODO bl-net8-cross
@@ -39,7 +43,7 @@ namespace Epsitec.Common.Widgets
             this.ownedWindows = new HashSet<Window>();
 
             this.root = root ?? new WindowRoot(this);
-            this.window = new PlatformWindow(this, windowFlags);
+            this.platformWindow = new PlatformWindow(this, windowFlags);
             this.timer = new Timer();
 
             this.root.Name = "Root";
@@ -125,7 +129,7 @@ namespace Epsitec.Common.Widgets
             List<Window> list = new List<Window>();
             list.AddRange(
                 Window.windows.FindAll(window =>
-                    !window.IsDisposed && window.WindowBounds.Contains(pos) && window.IsVisible
+                    !window.IsDisposed && window.IsVisible && window.WindowBounds.Contains(pos)
                 )
             );
             return list.ToArray();
@@ -157,40 +161,34 @@ namespace Epsitec.Common.Widgets
 
         public void MakeLayeredWindow()
         {
-            this.window.IsLayered = true;
+            this.PlatformWindow.IsLayered = true;
         }
 
         public void MakeLayeredWindow(bool layered)
         {
-            this.window.IsLayered = layered;
+            this.PlatformWindow.IsLayered = layered;
         }
 
         public void MakeActive()
         {
-            if (!this.IsDisposed)
-            {
-                this.window.Flash();
-            }
+            this.PlatformWindow.Flash();
         }
 
         public void MakeFocused()
         {
-            if (!this.IsDisposed)
-            {
-                this.window.Focus();
-            }
+            this.PlatformWindow.Focus();
         }
 
         public void DisableMouseActivation()
         {
-            this.window.IsMouseActivationEnabled = false;
+            this.PlatformWindow.IsMouseActivationEnabled = false;
         }
 
         public bool StartWindowManagerOperation(Platform.WindowManagerOperation op)
         {
-            if (this.window != null)
+            if (this.platformWindow != null)
             {
-                return this.window.StartWindowManagerOperation(op);
+                return this.platformWindow.StartWindowManagerOperation(op);
             }
             return false;
         }
@@ -211,7 +209,7 @@ namespace Epsitec.Common.Widgets
                 this.OnAboutToShowWindow();
             }
 
-            this.window.Show();
+            this.PlatformWindow.Show();
         }
 
         public virtual void ShowDialog()
@@ -231,7 +229,7 @@ namespace Epsitec.Common.Widgets
                 this.OnAboutToShowWindow();
             }
 
-            this.window.ShowDialogWindow();
+            this.PlatformWindow.ShowDialogWindow();
             this.DispatchQueuedCommands();
         }
 
@@ -240,7 +238,7 @@ namespace Epsitec.Common.Widgets
             if (this.IsVisible)
             {
                 this.OnAboutToHideWindow();
-                this.window.Hide();
+                this.PlatformWindow.Hide();
             }
         }
 
@@ -250,9 +248,8 @@ namespace Epsitec.Common.Widgets
             {
                 this.OnAboutToHideWindow();
             }
-
-            // FIXME there seem to be an infinite when we try to close a popup window
-            this.window.Close();
+            this.PlatformWindow.Close();
+            this.platformWindow = null;
         }
 
         public void AdjustWindowSize()
@@ -274,9 +271,9 @@ namespace Epsitec.Common.Widgets
 
         public void SynchronousRepaint()
         {
-            if (this.window != null)
+            if (this.platformWindow != null)
             {
-                this.window.SynchronousRepaint();
+                this.platformWindow.SynchronousRepaint();
             }
         }
 
@@ -286,7 +283,7 @@ namespace Epsitec.Common.Widgets
             {
                 this.OnAboutToShowWindow();
             }
-            this.window.AnimateShow(animation, this.WindowBounds);
+            this.PlatformWindow.AnimateShow(animation, this.WindowBounds);
         }
 
         public void AnimateShow(Animation animation, Drawing.Rectangle bounds)
@@ -295,7 +292,7 @@ namespace Epsitec.Common.Widgets
             {
                 this.OnAboutToShowWindow();
             }
-            this.window.AnimateShow(animation, bounds);
+            this.PlatformWindow.AnimateShow(animation, bounds);
         }
 
         public void AnimateHide(Animation animation)
@@ -304,7 +301,7 @@ namespace Epsitec.Common.Widgets
             {
                 this.OnAboutToHideWindow();
             }
-            this.window.AnimateHide(animation, this.WindowBounds);
+            this.PlatformWindow.AnimateHide(animation, this.WindowBounds);
         }
 
         public void GenerateDummyMouseMoveEvent()
@@ -316,14 +313,14 @@ namespace Epsitec.Common.Widgets
         }
 
         /// <summary>
-        /// Gets the bitmap of the (repainted) window contents.
+        /// Gets the bitmap of the (repainted) platformWindow contents.
         /// </summary>
         /// <returns>The bitmap.</returns>
         public Drawing.Bitmap GetWindowBitmap()
         {
             this.SynchronousRepaint();
 
-            var pixmap = this.window.GetWindowPixmap();
+            var pixmap = this.PlatformWindow.GetWindowPixmap();
 
             if (pixmap == null)
             {
@@ -364,7 +361,7 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                if (this.window == null)
+                if (this.platformWindow == null)
                 {
                     return [];
                 }
@@ -484,7 +481,7 @@ namespace Epsitec.Common.Widgets
         {
             set
             {
-                if (this.window == null)
+                if (this.platformWindow == null)
                 {
                     return;
                 }
@@ -495,16 +492,16 @@ namespace Epsitec.Common.Widgets
 
         public bool IsSyncPaintDisabled
         {
-            get { return (this.window == null); }
+            get { return (this.platformWindow == null); }
         }
 
         public bool IsVisible
         {
             get
             {
-                if (this.window != null)
+                if (this.platformWindow != null)
                 {
-                    return this.window.IsVisible;
+                    return this.platformWindow.IsVisible;
                 }
 
                 return false;
@@ -513,12 +510,12 @@ namespace Epsitec.Common.Widgets
 
         public bool IsFrozen
         {
-            get { return (this.window == null) || this.window.IsFrozen; }
+            get { return (this.platformWindow == null) || this.platformWindow.IsFrozen; }
             set
             {
-                if (this.window != null)
+                if (this.platformWindow != null)
                 {
-                    this.window.SetFrozen(value);
+                    this.platformWindow.SetFrozen(value);
                 }
             }
         }
@@ -532,7 +529,7 @@ namespace Epsitec.Common.Widgets
 
         public bool IsDisposed
         {
-            get { return (this.window == null); }
+            get { return this.isDisposed; }
         }
 
         #endregion
@@ -541,7 +538,7 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                if ((this.window != null) && (this.window.IsAnimatingActiveWindow))
+                if ((this.platformWindow != null) && (this.platformWindow.IsAnimatingActiveWindow))
                 {
                     return true;
                 }
@@ -557,27 +554,28 @@ namespace Epsitec.Common.Widgets
 
         public bool IsFullScreen
         {
-            get { return this.window.IsFullScreen; }
-            set { this.window.IsFullScreen = value; }
+            get { return this.PlatformWindow.IsFullScreen; }
+            set { this.PlatformWindow.IsFullScreen = value; }
         }
 
         public bool IsMinimized
         {
             /*            get
                         {
-                            return (this.window != null)
-                                && (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized);
+                            return (this.latformWindow != null)
+                                && (this.platformWindow.WindowState == System.Windows.Forms.FormWindowState.Minimized);
                         }
-            */get
+            */
+            get
             {
                 throw new System.NotImplementedException();
                 return true;
             }
             set
             {
-                /*                if (this.window != null)
+                /*                if (this.platformWindow != null)
                                 {
-                                    this.window.WindowState = value
+                                    this.platformWindow.WindowState = value
                                         ? System.Windows.Forms.FormWindowState.Minimized
                                         : System.Windows.Forms.FormWindowState.Normal;
                                 }
@@ -588,73 +586,76 @@ namespace Epsitec.Common.Widgets
 
         public bool IsToolWindow
         {
-            get { return this.window.IsToolWindow; }
+            get { return this.PlatformWindow.IsToolWindow; }
         }
 
         public bool IsSizeMoveInProgress
         {
-            get { return (this.window != null) && (this.window.IsSizeMoveInProgress); }
+            get
+            {
+                return (this.platformWindow != null) && (this.platformWindow.IsSizeMoveInProgress);
+            }
         }
 
         public double Alpha
         {
-            get { return this.window.Alpha; }
-            set { this.window.Alpha = value; }
+            get { return this.PlatformWindow.Alpha; }
+            set { this.PlatformWindow.Alpha = value; }
         }
 
         public Drawing.Rectangle WindowBounds
         {
-            get { return this.window.WindowBounds; }
+            get { return this.PlatformWindow.WindowBounds; }
             set
             {
                 this.windowLocationSet = true;
-                this.window.WindowBounds = value;
+                this.PlatformWindow.WindowBounds = value;
             }
         }
 
         public Drawing.Image Icon
         {
-            get { return this.window.Icon; }
-            set { this.window.Icon = value; }
+            get { return this.PlatformWindow.Icon; }
+            set { this.PlatformWindow.Icon = value; }
         }
 
         /// <summary>
-        /// Gets or sets the type of the window. See <see cref="WindowRoot.WindowType"/>
+        /// Gets or sets the type of the platformWindow. See <see cref="WindowRoot.WindowType"/>
         /// if you need to set this value.
         /// </summary>
-        /// <value>The type of the window.</value>
+        /// <value>The type of the platformWindow.</value>
         public WindowType WindowType
         {
-            get { return this.window.WindowType; }
+            get { return this.PlatformWindow.WindowType; }
             internal set
             {
-                this.window.WindowType = value;
+                this.PlatformWindow.WindowType = value;
                 this.root.WindowType = value;
             }
         }
 
         internal WindowMode WindowMode
         {
-            get { return this.window.WindowMode; }
-            set { this.window.WindowMode = value; }
+            get { return this.PlatformWindow.WindowMode; }
+            set { this.PlatformWindow.WindowMode = value; }
         }
 
         public bool PreventAutoClose
         {
-            get { return this.window.PreventAutoClose; }
-            set { this.window.PreventAutoClose = value; }
+            get { return this.PlatformWindow.PreventAutoClose; }
+            set { this.PlatformWindow.PreventAutoClose = value; }
         }
 
         public bool PreventAutoQuit
         {
-            get { return this.window.PreventAutoQuit; }
-            set { this.window.PreventAutoQuit = value; }
+            get { return this.PlatformWindow.PreventAutoQuit; }
+            set { this.PlatformWindow.PreventAutoQuit = value; }
         }
 
         public bool IsValidDropTarget
         {
-            get { return this.window.AllowDrop; }
-            set { this.window.AllowDrop = value; }
+            get { return this.PlatformWindow.AllowDrop; }
+            set { this.PlatformWindow.AllowDrop = value; }
         }
 
         public static bool IsApplicationActive
@@ -675,22 +676,22 @@ namespace Epsitec.Common.Widgets
 
         public Drawing.Point WindowLocation
         {
-            get { return this.window.WindowLocation; }
+            get { return this.PlatformWindow.WindowLocation; }
             set
             {
                 this.windowLocationSet = true;
-                this.window.WindowLocation = value;
+                this.PlatformWindow.WindowLocation = value;
             }
         }
 
         public Drawing.Size WindowSize
         {
-            get { return this.window.WindowSize; }
+            get { return this.PlatformWindow.WindowSize; }
             set
             {
                 if (this.windowLocationSet)
                 {
-                    this.window.WindowSize = value;
+                    this.PlatformWindow.WindowSize = value;
                 }
                 else
                 {
@@ -716,29 +717,29 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                if (this.window == null)
+                if (this.platformWindow == null)
                 {
                     return Drawing.Rectangle.Empty;
                 }
 
-                return this.window.WindowPlacementNormalBounds;
+                return this.platformWindow.WindowPlacementNormalBounds;
             }
         }
 
         public WindowPlacement WindowPlacement
         {
-            get { return this.window.NativeWindowPlacement; }
-            set { this.window.NativeWindowPlacement = value; }
+            get { return this.PlatformWindow.NativeWindowPlacement; }
+            set { this.PlatformWindow.NativeWindowPlacement = value; }
         }
 
         public Drawing.Size ClientSize
         {
-            get { return this.window.WindowSize; }
+            get { return this.PlatformWindow.WindowSize; }
             set
             {
-                if ((this.window != null) && (this.ClientSize != value))
+                if ((this.platformWindow != null) && (this.ClientSize != value))
                 {
-                    Drawing.Size windowSize = this.window.WindowSize;
+                    Drawing.Size windowSize = this.platformWindow.WindowSize;
                     Drawing.Size clientSize = this.ClientSize;
 
                     this.WindowSize = new Drawing.Size(
@@ -751,14 +752,14 @@ namespace Epsitec.Common.Widgets
 
         public string Text
         {
-            get { return this.text ?? ""; }
-            set { this.window.Text = this.text = value; }
+            get { return this.PlatformWindow.Text; }
+            set { this.PlatformWindow.Text = value; }
         }
 
         public string Name
         {
-            get { return this.name ?? ""; }
-            set { this.window.Name = this.name = value; }
+            get { return this.PlatformWindow.Name; }
+            set { this.PlatformWindow.Name = value; }
         }
 
         public static bool RunningInAutomatedTestEnvironment
@@ -775,6 +776,20 @@ namespace Epsitec.Common.Widgets
                 {
                     Window.isRunningInAutomatedTestEnvironment = value;
                 }
+            }
+        }
+
+        private PlatformWindow PlatformWindow
+        {
+            get
+            {
+                if (this.platformWindow == null)
+                {
+                    throw new System.InvalidOperationException(
+                        $"No PlatformWindow associated with window {this.id}"
+                    );
+                }
+                return this.platformWindow;
             }
         }
 
@@ -795,7 +810,7 @@ namespace Epsitec.Common.Widgets
             }
             else
             {
-                System.Windows.Forms.Application.Run(window.PlatformWindow);
+                System.Windows.Forms.Application.Run(platformWindow.PlatformWindow);
             }
             */
         }
@@ -964,13 +979,13 @@ namespace Epsitec.Common.Widgets
         public void ToggleMaximize()
         {
             /*
-            if (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized)
+            if (this.platformWindow.WindowState == System.Windows.Forms.FormWindowState.Maximized)
             {
-                this.window.WindowState = System.Windows.Forms.FormWindowState.Normal;
+                this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Normal;
             }
             else
             {
-                this.window.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+                this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             }
 
             //			var placement = this.WindowPlacement;
@@ -985,20 +1000,20 @@ namespace Epsitec.Common.Widgets
             /*
             var placement = this.WindowPlacement;
 
-            if (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized)
+            if (this.platformWindow.WindowState == System.Windows.Forms.FormWindowState.Minimized)
             {
                 if (placement.IsFullScreen)
                 {
-                    this.window.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+                    this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Maximized;
                 }
                 else
                 {
-                    this.window.WindowState = System.Windows.Forms.FormWindowState.Normal;
+                    this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Normal;
                 }
             }
             else
             {
-                this.window.WindowState = System.Windows.Forms.FormWindowState.Minimized;
+                this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             }
 
             //			placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, !placement.IsMinimized, placement.IsHidden);
@@ -1071,9 +1086,9 @@ namespace Epsitec.Common.Widgets
 
             this.windowIsVisible = false;
 
-            if ((this.owner != null) && (this.window != null) && (this.window.Owner != null))
+            if ((this.owner != null) && (this.platformWindow != null) && (this.platformWindow.Owner != null))
             {
-                this.window.Owner = null;
+                this.platformWindow.Owner = null;
             }
 
             this.root.NotifyWindowIsVisibleChanged();
@@ -1178,7 +1193,7 @@ namespace Epsitec.Common.Widgets
 
                 this.OnWindowDefocused();
 
-                if ((this.owner != null) && (this.owner.window.Focused == false))
+                if ((this.owner != null) && (this.owner.platformWindow.Focused == false))
                 {
                     this.owner.NotifyWindowDefocused();
                 }
@@ -1261,11 +1276,11 @@ namespace Epsitec.Common.Widgets
                         switch (message.MessageType)
                         {
                             case MessageType.MouseDown:
-                                this.window.FilterMouseMessages = true;
+                                this.PlatformWindow.FilterMouseMessages = true;
                                 break;
 
                             case MessageType.KeyDown:
-                                this.window.FilterKeyMessages = true;
+                                this.PlatformWindow.FilterKeyMessages = true;
                                 break;
                         }
                     }
@@ -1470,15 +1485,12 @@ namespace Epsitec.Common.Widgets
         {
             this.cmdQueue.Enqueue(item);
 
-            if (this.cmdQueue.Count == 1)
+            if (this.cmdQueue.Count == 1 && this.platformWindow != null)
             {
-                if (this.window != null)
-                {
-                    this.SendQueueCommand();
-                }
+                this.SendQueueCommand();
             }
 
-            if (this.window == null)
+            if (this.platformWindow == null)
             {
                 this.DispatchQueuedCommands();
             }
@@ -1486,8 +1498,9 @@ namespace Epsitec.Common.Widgets
 
         public void AsyncDispose()
         {
+            // bl-net8-cross
             /*
-            Platform.PlatformWindow.ProcessCrossThreadOperation(() => this.window.Owner = null);
+            Platform.PlatformWindow.ProcessCrossThreadOperation(() => this.platformWindow.Owner = null);
 
             if (Application.MainUIThread == System.Threading.Thread.CurrentThread)
             {
@@ -1527,7 +1540,7 @@ namespace Epsitec.Common.Widgets
             if (this.pendingValidation == false)
             {
                 this.pendingValidation = true;
-                this.window.SendValidation();
+                this.PlatformWindow.SendValidation();
             }
         }
 
@@ -1559,9 +1572,9 @@ namespace Epsitec.Common.Widgets
 
                 foreach (Window window in windows)
                 {
-                    if (window.window != null)
+                    if (window.platformWindow != null)
                     {
-                        window.window.SendQueueCommand();
+                        window.platformWindow.SendQueueCommand();
                     }
                 }
             }
@@ -1571,7 +1584,7 @@ namespace Epsitec.Common.Widgets
         {
             if (Window.asyncSuspendCount == 0)
             {
-                this.window.SendQueueCommand();
+                this.PlatformWindow.SendQueueCommand();
             }
             else
             {
@@ -1649,7 +1662,10 @@ namespace Epsitec.Common.Widgets
         {
             this.capturingWidget = null;
             this.capturingButton = MouseButtons.None;
-            this.window.Capture = false;
+            if (this.platformWindow != null)
+            {
+                this.PlatformWindow.Capture = false;
+            }
         }
 
         /// <summary>
@@ -1730,7 +1746,7 @@ namespace Epsitec.Common.Widgets
                     //    commandObject.CommandId
                     //);
 
-                    //Support.PrivilegeManager.Current.LaunchElevated(this.window.Handle, args);
+                    //Support.PrivilegeManager.Current.LaunchElevated(this.platformWindow.Handle, args);
                     throw new System.NotImplementedException();
                 }
                 else
@@ -1873,7 +1889,10 @@ namespace Epsitec.Common.Widgets
                     root.MessageHandler(message, pos);
                 }
 
-                this.window.Capture = false;
+                if (this.platformWindow != null)
+                {
+                    this.platformWindow.Capture = false;
+                }
             }
             else
             {
@@ -1924,7 +1943,7 @@ namespace Epsitec.Common.Widgets
             window.capturingWidget = widget;
             window.capturingButton = message.Button;
             window.capturingCursor = message.Cursor;
-            window.window.Capture = true;
+            window.platformWindow.Capture = true;
 
             message.Captured = true;
             message.Retired = true;
@@ -2059,11 +2078,11 @@ namespace Epsitec.Common.Widgets
                             this.capturingWidget = consumer;
                             this.capturingButton = message.Button;
                             this.capturingCursor = message.Cursor;
-                            this.window.Capture = true;
+                            this.PlatformWindow.Capture = true;
                         }
                         else
                         {
-                            this.window.Capture = false;
+                            this.PlatformWindow.Capture = false;
                         }
 
                         if ((consumer.AutoFocus) && (message.CancelFocus == false))
@@ -2158,13 +2177,13 @@ namespace Epsitec.Common.Widgets
                 switch (message.MessageType)
                 {
                     case MessageType.MouseDown:
-                        this.window.FilterMouseMessages = true;
+                        this.PlatformWindow.FilterMouseMessages = true;
                         this.capturingWidget = null;
                         this.capturingButton = MouseButtons.None;
                         break;
 
                     case MessageType.KeyDown:
-                        this.window.FilterKeyMessages = true;
+                        this.PlatformWindow.FilterKeyMessages = true;
                         break;
                 }
             }
@@ -2228,17 +2247,17 @@ namespace Epsitec.Common.Widgets
 
         public void MarkForRepaint()
         {
-            if (this.window != null)
+            if (this.platformWindow != null)
             {
-                this.window.MarkForRepaint();
+                this.platformWindow.MarkForRepaint();
             }
         }
 
         public void MarkForRepaint(Drawing.Rectangle rect)
         {
-            if (this.window != null)
+            if (this.platformWindow != null)
             {
-                this.window.MarkForRepaint(rect);
+                this.platformWindow.MarkForRepaint(rect);
             }
         }
 
@@ -2253,12 +2272,12 @@ namespace Epsitec.Common.Widgets
 
         public Drawing.Point WindowPointToScreenPoint(Drawing.Point point)
         {
-            return this.window.WindowPointToScreenPoint(point);
+            return this.PlatformWindow.WindowPointToScreenPoint(point);
         }
 
         public Drawing.Point ScreenPointToWindowPoint(Drawing.Point point)
         {
-            return this.window.ScreenPointToWindowPoint(point);
+            return this.PlatformWindow.ScreenPointToWindowPoint(point);
         }
 
         protected void HandleTimeElapsed(object sender)
@@ -2280,23 +2299,24 @@ namespace Epsitec.Common.Widgets
 
         private void SyncMinSizeWithWindowRoot()
         {
-            if ((this.window != null))
+            if ((this.platformWindow != null))
             {
                 int width = (int)(this.root.RealMinSize.Width + 0.5);
                 int height = (int)(this.root.RealMinSize.Height + 0.5);
 
-                this.window.MinimumSize = new Drawing.Size(width, height);
+                this.platformWindow.MinimumSize = new Drawing.Size(width, height);
             }
         }
 
         public new void Dispose()
         {
-            if (this.window == null)
+            if (this.isDisposed)
             {
                 return;
             }
-
             this.OnWindowDisposing();
+
+            this.isDisposed = true;
 
             if (this.IsVisible)
             {
@@ -2341,13 +2361,11 @@ namespace Epsitec.Common.Widgets
                 this.root = null;
             }
 
-            PlatformWindow oldWindow = this.window;
-            // Since the platform window also has a reference to us, we need to
-            // make sure we don't end up in an infinite Dispose() loop.
-            // We first set our window attribute to null before calling Dispose
-            // on the platform window.
-            this.window = null;
-            oldWindow.Dispose();
+            if (this.platformWindow != null)
+            {
+                this.platformWindow.Dispose();
+                this.platformWindow = null;
+            }
 
             this.timer.TimeElapsed -= this.HandleTimeElapsed;
             this.timer.Dispose();
@@ -2482,13 +2500,10 @@ namespace Epsitec.Common.Widgets
         private static long nextWindowId;
         private static Window focusedWindow;
 
-        private string name;
-        private string text;
-
         private readonly long id;
         private readonly System.Threading.Thread thread;
 
-        private PlatformWindow window;
+        private PlatformWindow platformWindow;
         private Window owner;
         private HashSet<Window> ownedWindows;
         private WindowRoot root;

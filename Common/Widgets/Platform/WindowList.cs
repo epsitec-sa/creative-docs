@@ -58,16 +58,16 @@ namespace Epsitec.Common.Widgets.Platform
 
                         if ((pid == myPid) && (visible))
                         {
-                            foreach (Platform.PlatformWindow window in WindowList.windows)
+                            foreach (Platform.PlatformWindow platformWindow in WindowList.windows)
                             {
-                                if (window.Handle == handle)
+                                if (platformWindow.Handle == handle)
                                 {
                                     if (
-                                        window.WindowState
+                                        platformWindow.WindowState
                                         != System.Windows.Forms.FormWindowState.Minimized
                                     )
                                     {
-                                        list.Add(window.HostingWidgetWindow);
+                                        list.Add(platformWindow.HostingWidgetWindow);
                                     }
                                     break;
                                 }
