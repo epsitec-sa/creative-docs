@@ -309,9 +309,10 @@ namespace Epsitec.Common.Widgets
 
         public void GenerateDummyMouseMoveEvent()
         {
-            //Drawing.Point pos = Message.CurrentState.LastScreenPosition;
-            //this.DispatchMessage(Message.CreateDummyMouseMoveEvent(this.ScreenPointToWindowPoint(pos)));
-            throw new System.NotImplementedException();
+            Drawing.Point pos = Message.CurrentState.LastScreenPosition;
+            this.DispatchMessage(
+                Message.CreateDummyMouseMoveEvent(this.ScreenPointToWindowPoint(pos))
+            );
         }
 
         /// <summary>

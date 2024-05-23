@@ -546,10 +546,10 @@ namespace Epsitec.Common.Widgets
 
             Message.state.window = window.HostingWidgetWindow;
             Message.state.windowCursor = message.cursor;
-            //Message.state.screenCursor =
-            //    Message.CurrentState.window == null
-            //        ? Drawing.Point.Zero
-            //        : Message.CurrentState.window.WindowPointToScreenPoint(message.cursor);
+            Message.state.screenCursor =
+                Message.CurrentState.window == null
+                    ? Drawing.Point.Zero
+                    : Message.CurrentState.window.WindowPointToScreenPoint(message.cursor);
 
             //	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.
 
@@ -859,10 +859,10 @@ namespace Epsitec.Common.Widgets
                 get { return this.windowCursor; }
             }
 
-            //public Drawing.Point LastScreenPosition
-            //{
-            //    get { return this.screenCursor; }
-            //}
+            public Drawing.Point LastScreenPosition
+            {
+                get { return this.screenCursor; }
+            }
 
             public Window LastWindow
             {
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Widgets
             internal int buttonDownY;
             internal Drawing.Point windowCursor;
 
-            //internal Drawing.Point screenCursor;
+            internal Drawing.Point screenCursor;
             internal Window window;
             internal Window windowMouseDown;
             #endregion
