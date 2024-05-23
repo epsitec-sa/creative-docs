@@ -332,24 +332,7 @@ namespace Epsitec.Common.Widgets.Collections
 
         private void UpdateLayoutStatistics(Visual visual, int increment)
         {
-            switch (Layouts.LayoutEngine.GetLayoutMode(visual))
-            {
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Docked:
-                    this.dockLayoutCount += increment;
-                    break;
-
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
-                    this.anchorLayoutCount += increment;
-                    break;
-
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Stacked:
-                    this.stackLayoutCount += increment;
-                    break;
-
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Grid:
-                    this.gridLayoutCount += increment;
-                    break;
-            }
+            this.IncrementLayoutCount(Layouts.LayoutEngine.GetLayoutMode(visual), increment);
         }
 
         private void UpdateLayoutStatistics(
@@ -359,21 +342,29 @@ namespace Epsitec.Common.Widgets.Collections
             int increment
         )
         {
-            switch (Layouts.LayoutEngine.GetLayoutMode(visual, dock, anchor))
+            this.IncrementLayoutCount(
+                Layouts.LayoutEngine.GetLayoutMode(visual, dock, anchor),
+                increment
+            );
+        }
+
+        private void IncrementLayoutCount(Layouts.LayoutMode layoutMode, int increment)
+        {
+            switch (layoutMode)
             {
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Docked:
+                case Layouts.LayoutMode.Docked:
                     this.dockLayoutCount += increment;
                     break;
 
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
+                case Layouts.LayoutMode.Anchored:
                     this.anchorLayoutCount += increment;
                     break;
 
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Stacked:
+                case Layouts.LayoutMode.Stacked:
                     this.stackLayoutCount += increment;
                     break;
 
-                case Epsitec.Common.Widgets.Layouts.LayoutMode.Grid:
+                case Layouts.LayoutMode.Grid:
                     this.gridLayoutCount += increment;
                     break;
             }
