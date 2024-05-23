@@ -214,9 +214,15 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         public virtual void OnMouseMove(int x, int y) { }
 
+        public virtual void OnMouseWheel(int x, int y) { }
+
         protected virtual void OnFocusGained() { }
 
         protected virtual void OnFocusLost() { }
+
+        protected virtual void OnWindowShown() { }
+
+        protected virtual void OnWindowHidden() { }
         #endregion
 
         #region Public methods
@@ -287,6 +293,12 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         {
             switch (we.windowEvent)
             {
+                case SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN:
+                    this.OnWindowShown();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN:
+                    this.OnWindowHidden();
+                    break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
                     this.Dispose();
                     return;

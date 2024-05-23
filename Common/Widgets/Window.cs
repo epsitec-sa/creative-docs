@@ -1081,21 +1081,9 @@ namespace Epsitec.Common.Widgets
 
         internal void OnWindowHidden()
         {
-            /*
-            System.Diagnostics.Debug.Assert(this.windowIsVisible);
-
-            this.windowIsVisible = false;
-
-            if ((this.owner != null) && (this.platformWindow != null) && (this.platformWindow.Owner != null))
-            {
-                this.platformWindow.Owner = null;
-            }
-
             this.root.NotifyWindowIsVisibleChanged();
             this.WindowHidden.Raise(this);
-            PlatformWindow.GlobalWindowHidden.Raise(this);
-            */
-            throw new System.NotImplementedException();
+            Window.GlobalWindowHidden.Raise(this);
         }
 
         internal void OnWindowClosed()

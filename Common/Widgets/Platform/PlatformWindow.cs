@@ -150,6 +150,24 @@ namespace Epsitec.Common.Widgets.Platform
         //    this.ForceRedraw();
         //}
 
+        protected override void OnWindowShown()
+        {
+            if (this.widgetWindow == null)
+            {
+                return;
+            }
+            this.widgetWindow.OnWindowShown();
+        }
+
+        protected override void OnWindowHidden()
+        {
+            if (this.widgetWindow == null)
+            {
+                return;
+            }
+            this.widgetWindow.OnWindowHidden();
+        }
+
         protected override void OnFocusGained()
         {
             if (this.widgetWindow == null)
@@ -1582,34 +1600,6 @@ namespace Epsitec.Common.Widgets.Platform
             if (this.widgetWindow != null)
             {
                 this.widgetWindow.OnWindowDeactivated();
-            }
-            */
-            throw new NotImplementedException();
-        }
-
-        protected void OnVisibleChanged(System.EventArgs e)
-        //protected override void OnVisibleChanged(System.EventArgs e)
-        {
-            /*
-            base.OnVisibleChanged(e);
-
-            if (this.Visible)
-            {
-                if (!this.isPixmapOk)
-                {
-                    this.ReallocatePixmap();
-                }
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.OnWindowShown();
-                }
-            }
-            else
-            {
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.OnWindowHidden();
-                }
             }
             */
             throw new NotImplementedException();

@@ -87,6 +87,10 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                     window = SDLWindowManager.GetWindowFromId(e.motion.windowID);
                     window?.OnMouseMove(e.motion.x, e.motion.y);
                     break;
+                case SDL_EventType.SDL_MOUSEWHEEL:
+                    window = SDLWindowManager.GetWindowFromId(e.wheel.windowID);
+                    window?.OnMouseWheel(e.wheel.x, e.wheel.y);
+                    break;
                 default:
                     Console.WriteLine($"SDLWindow handle event {e.type}");
                     break;
