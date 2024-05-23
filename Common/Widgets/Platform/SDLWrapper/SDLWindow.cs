@@ -253,7 +253,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         internal void UpdateWindowPosition()
         {
-            this.RequireNotDisposed();
             SDL_GetWindowPosition(this.window, out this.x, out this.y);
         }
 
@@ -291,6 +290,10 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
                     this.Dispose();
                     return;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_MOVED:
+                    this.x = we.data1;
+                    this.y = we.data2;
+                    break;
                 // TODO  bl-net8-cross the resize events are only fired when we release the mouse
                 // see how we could have a dynamic resize
                 case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
