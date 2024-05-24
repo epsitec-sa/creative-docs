@@ -33,6 +33,9 @@ namespace Epsitec.Common.Widgets.Platform
 
         public static MouseCursor FromImage(Drawing.Image cursorImage, int xhot, int yhot)
         {
+            System.Console.WriteLine(
+                $"Cursor from image {cursorImage.Width}x{cursorImage.Height} hot {xhot} {yhot}"
+            );
             int width = (int)cursorImage.Width;
             int height = (int)cursorImage.Height;
             // bl-net8-cross
@@ -57,7 +60,9 @@ namespace Epsitec.Common.Widgets.Platform
                 throw new InvalidOperationException(SDL_GetError());
             }
 
-            IntPtr cursor = SDL_CreateColorCursor(cursorSurface, xhot, yhot);
+            int xhotClamp = System.Math.Max(0, System.Math.Min(width - 1, xhot));
+            int yhotClamp = System.Math.Max(0, System.Math.Min(height - 1, yhot));
+            IntPtr cursor = SDL_CreateColorCursor(cursorSurface, xhotClamp, yhotClamp);
             if (cursor == IntPtr.Zero)
             {
                 throw new InvalidOperationException(SDL_GetError());
@@ -70,7 +75,22 @@ namespace Epsitec.Common.Widgets.Platform
 
         public static MouseCursor FromImage(Drawing.Image cursorImage)
         {
-            return MouseCursor.FromImage(cursorImage, 0, 0);
+            int x = 0;
+            int y = 0;
+            if (cursorImage is Drawing.Canvas)
+            {
+                var canvas = (Drawing.Canvas)cursorImage;
+                x = (int)System.Math.Round(canvas.Origin.X);
+                y = (int)System.Math.Round(canvas.Height - canvas.Origin.Y);
+            }
+            else if (cursorImage is Drawing.DynamicImage)
+            {
+                var dynImage = (Drawing.DynamicImage)cursorImage;
+                x = (int)System.Math.Round(dynImage.Origin.X);
+                y = (int)System.Math.Round(dynImage.Height - dynImage.Origin.Y);
+            }
+
+            return MouseCursor.FromImage(cursorImage, x, y);
         }
 
         public static void Hide()
