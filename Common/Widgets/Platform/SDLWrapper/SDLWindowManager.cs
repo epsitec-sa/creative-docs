@@ -55,7 +55,11 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         private static void ProcessEvents()
         {
-            while (SDL_PollEvent(out SDL_Event e) == 1)
+            // wait for first event
+            SDL_WaitEvent(out SDL_Event e);
+            SDLWindowManager.HandleEvent(e);
+            // handle other events, if any
+            while (SDL_PollEvent(out e) == 1)
             {
                 SDLWindowManager.HandleEvent(e);
             }
