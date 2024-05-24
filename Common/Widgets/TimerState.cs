@@ -8,15 +8,15 @@ namespace Epsitec.Common.Widgets
     /// </summary>
     public enum TimerState
     {
-        /// <summary>
-        /// The timer is in an invalid state.
-        /// </summary>
-        Invalid,
+        ///// <summary>
+        ///// The timer is in an invalid state.
+        ///// </summary>
+        //Invalid,
 
-        /// <summary>
-        /// The timer has been disposed.
-        /// </summary>
-        Disposed,
+        ///// <summary>
+        ///// The timer has been disposed.
+        ///// </summary>
+        //Disposed,
 
         /// <summary>
         /// The timer does not run. Calling <see cref="Timer.Start"/> will start
@@ -35,10 +35,10 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         Suspended,
 
-        /// <summary>
-        /// The timer does not run. The delay has elapsed. Calling
-        /// <see cref="Timer.Start"/> will start a new delay.
-        /// </summary>
-        Elapsed
+        ///// <summary>
+        ///// The timer does not run. The delay has elapsed. Calling
+        ///// <see cref="Timer.Start"/> will start a new delay.
+        ///// </summary>
+        //Elapsed
     }
 }

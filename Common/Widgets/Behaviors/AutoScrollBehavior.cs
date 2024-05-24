@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
         public void Dispose()
         {
-            if (this.autoScrollTimer.State != TimerState.Disposed)
+            if (!this.autoScrollTimer.IsDisposed)
             {
                 this.autoScrollTimer.TimeElapsed -= this.HandleAutoScrollTimeElapsed;
                 this.autoScrollTimer.Dispose();

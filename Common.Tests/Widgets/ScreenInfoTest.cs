@@ -267,6 +267,7 @@ namespace Epsitec.Common.Tests.Widgets
                 Rectangle clip_rect
             )
             {
+                /*
                 if (this.timer == null)
                 {
                     this.timer = new Timer();
@@ -371,6 +372,8 @@ namespace Epsitec.Common.Tests.Widgets
                 buffer.AppendFormat("{0:X2}", (int)(this.HotColor.B * 255.5));
 
                 this.PaintText(graphics, buffer.ToString());
+                */
+                throw new System.NotImplementedException();
             }
 
             protected virtual void PaintText(Graphics graphics, string text)
