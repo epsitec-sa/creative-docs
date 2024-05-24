@@ -114,26 +114,12 @@ namespace Epsitec.Common.Widgets.Collections
                 );
             }
 
-            z = System.Math.Max(0, z);
-            z = System.Math.Min(z, this.Count - 1);
+            z = System.Math.Max(0, System.Math.Min(this.Count - 1, z));
 
             int newIndex = this.Count - z - 1;
             int oldIndex = this.IndexOf(visual);
 
-            if (oldIndex < newIndex)
-            {
-                this.visuals.RemoveAt(oldIndex);
-                this.visuals.Insert(newIndex, visual);
-
-                Visual parent = this.host;
-
-                if (parent != null)
-                {
-                    Layouts.LayoutContext.AddToMeasureQueue(parent);
-                    Layouts.LayoutContext.AddToArrangeQueue(parent);
-                }
-            }
-            else if (oldIndex > newIndex)
+            if (oldIndex != newIndex)
             {
                 this.visuals.RemoveAt(oldIndex);
                 this.visuals.Insert(newIndex, visual);
@@ -238,13 +224,13 @@ namespace Epsitec.Common.Widgets.Collections
 
             if (parent == null)
             {
+                this.UpdateLayoutStatistics(visual, 1);
+
                 //	Le visual n'a pas de parent, ce qui simplifie la gestion. Il
                 //	suffit de lui en attribuer un :
 
                 visual.SetParentVisual(this.host);
                 visual.InheritedPropertyCache.InheritValuesFromParent(visual, this.host);
-
-                this.UpdateLayoutStatistics(visual, 1);
             }
             else if (this.host == parent)
             {
@@ -253,6 +239,8 @@ namespace Epsitec.Common.Widgets.Collections
             }
             else
             {
+                this.UpdateLayoutStatistics(visual, 1);
+
                 //	Le visual est encore attaché à un parent. Il faut commencer par
                 //	le détacher de son ancien parent, puis notifier l'ancien parent
                 //	du changement :
@@ -266,12 +254,12 @@ namespace Epsitec.Common.Widgets.Collections
 
                 visual.SetParentVisual(this.host);
                 visual.InheritedPropertyCache.InheritValuesFromParent(visual, this.host);
-                this.UpdateLayoutStatistics(visual, 1);
             }
 
             System.Diagnostics.Debug.Assert(visual.Parent == this.host);
 
             this.NotifyChanged();
+            this.VerifyLayoutStatistics();
         }
 
         private void DetachVisual(Visual visual)
@@ -290,6 +278,7 @@ namespace Epsitec.Common.Widgets.Collections
             System.Diagnostics.Debug.Assert(visual.Parent == null);
 
             this.NotifyChanged();
+            this.VerifyLayoutStatistics();
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
