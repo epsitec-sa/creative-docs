@@ -1,6 +1,7 @@
 //	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System;
 using System.Collections.Generic;
 using System.IO.Enumeration;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace Epsitec.Common.Drawing.Platform
         internal NativeBitmap(byte[] buffer)
         {
             this.magicImage = new ImageMagick.MagickImage(buffer);
+        }
+
+        ~NativeBitmap()
+        {
+            this.Dispose();
         }
 
         public override int Stride
@@ -220,6 +226,8 @@ namespace Epsitec.Common.Drawing.Platform
             }
             this.magicImage.Dispose();
             this.magicImage = null;
+            this.pixelBuffer = null;
+            GC.SuppressFinalize(this);
         }
 
         #endregion

@@ -35,6 +35,11 @@ namespace Epsitec.Common.Drawing
             this.isCacheEnabled = enableCache;
         }
 
+        ~DynamicImage()
+        {
+            this.Dispose();
+        }
+
         public bool IsCacheEnabled
         {
             get
@@ -371,6 +376,7 @@ namespace Epsitec.Common.Drawing
             {
                 this.InvalidateCache();
             }
+            System.GC.SuppressFinalize(this);
         }
 
         private DynamicImage GetImageForKey(Key key)

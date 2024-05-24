@@ -68,6 +68,11 @@ namespace Epsitec.Common.Drawing
             this.origin = original.origin;
         }
 
+        ~Canvas()
+        {
+            this.Dispose();
+        }
+
         public static Canvas FromData(byte[] buffer)
         {
             return new Canvas(buffer);
@@ -84,7 +89,7 @@ namespace Epsitec.Common.Drawing
             if (this.zoom != zoom)
             {
                 this.zoom = zoom;
-                this.InvalidateCache();
+                this.DestroyCache();
             }
         }
 
@@ -93,7 +98,7 @@ namespace Epsitec.Common.Drawing
             if (this.color != color)
             {
                 this.color = color;
-                this.InvalidateCache();
+                this.DestroyCache();
             }
         }
 
@@ -102,7 +107,7 @@ namespace Epsitec.Common.Drawing
             if (this.adorner != adorner)
             {
                 this.adorner = adorner;
-                this.InvalidateCache();
+                this.DestroyCache();
             }
         }
 
@@ -380,7 +385,7 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        protected void InvalidateCache()
+        protected void DestroyCache()
         {
             if (this.cache != null)
             {
@@ -398,7 +403,8 @@ namespace Epsitec.Common.Drawing
             this.isDisposed = true;
 
             Canvas.globalIconCache.Remove(this);
-            this.InvalidateCache();
+            this.DestroyCache();
+            GC.SuppressFinalize(this);
         }
 
         public void RemoveFromCache()

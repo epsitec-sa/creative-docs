@@ -18,32 +18,58 @@ namespace Epsitec.Common.Drawing
             this.buffer = new AntigrainSharp.GraphicBuffer(width, height, stride, Font.FontManager);
         }
 
+        ~DrawingBitmap()
+        {
+            this.Dispose();
+        }
+
         public AntigrainSharp.GraphicContext GraphicContext
         {
-            get { return this.buffer.GraphicContext; }
+            get
+            {
+                this.RequireNotDisposed();
+                return this.buffer.GraphicContext;
+            }
         }
 
         public override Size Size
         {
-            get { return new Size(this.buffer.Height, this.buffer.Width); }
+            get
+            {
+                this.RequireNotDisposed();
+                return new Size(this.buffer.Height, this.buffer.Width);
+            }
         }
 
         public override int Stride
         {
-            get { return (int)this.buffer.Stride; }
+            get
+            {
+                this.RequireNotDisposed();
+                return (int)this.buffer.Stride;
+            }
         }
 
         public override int PixelWidth
         {
-            get { return (int)this.buffer.Width; }
+            get
+            {
+                this.RequireNotDisposed();
+                return (int)this.buffer.Width;
+            }
         }
         public override int PixelHeight
         {
-            get { return (int)this.buffer.Height; }
+            get
+            {
+                this.RequireNotDisposed();
+                return (int)this.buffer.Height;
+            }
         }
 
         public override byte[] GetPixelBuffer()
         {
+            this.RequireNotDisposed();
             return this.buffer.GetBufferData();
         }
 
@@ -367,24 +393,21 @@ namespace Epsitec.Common.Drawing
         #region IDisposable Members
         public override void Dispose()
         {
-            this.buffer.Dispose();
+            if (this.buffer != null)
+            {
+                this.buffer.Dispose();
+                this.buffer = null;
+            }
+            System.GC.SuppressFinalize(this);
         }
         #endregion
 
-        protected virtual void Dispose(bool disposing)
+        private void RequireNotDisposed()
         {
-            /*
-            if (disposing)
+            if (this.buffer == null)
             {
-                //	Nothing 'managed' to dispose here
+                throw new System.ObjectDisposedException(this.GetType().FullName);
             }
-
-            if (this.aggBuffer != System.IntPtr.Zero)
-            {
-                AntigrainCPP.Buffer.Delete(this.aggBuffer);
-                this.aggBuffer = System.IntPtr.Zero;
-            }
-            */
         }
 
         #region RawData Class
