@@ -201,7 +201,13 @@ namespace Epsitec.Common.Drawing.Platform
         {
             // In the antigrain backend, we use the BGRA format for pixels, so we use the same format here
             // See the definition in AggUI/aggcpp/pixelfmt.h
-            return this.magicImage.GetPixels().ToByteArray(ImageMagick.PixelMapping.BGRA);
+            if (this.pixelBuffer == null)
+            {
+                this.pixelBuffer = this
+                    .magicImage.GetPixels()
+                    .ToByteArray(ImageMagick.PixelMapping.BGRA);
+            }
+            return this.pixelBuffer;
         }
 
         #region IDisposable Members
@@ -893,5 +899,6 @@ namespace Epsitec.Common.Drawing.Platform
         }
 
         private ImageMagick.MagickImage magicImage;
+        private byte[] pixelBuffer;
     }
 }
