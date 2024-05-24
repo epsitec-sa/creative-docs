@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {

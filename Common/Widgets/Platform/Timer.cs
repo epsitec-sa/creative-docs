@@ -1,9 +1,13 @@
 //	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Widgets.Platform
 {
     /// <summary>
     /// La classe Timer implémente les services nécessaires à la réalisation
@@ -296,7 +300,7 @@ namespace Epsitec.Common.Widgets
 
                     int delta = (int)wait.TotalMilliseconds;
 
-                    if ((this.higherAccuracy == false) && (delta <= 0))
+                    if (this.higherAccuracy == false && delta <= 0)
                     {
                         //	Si l'exactitude temporelle des événements n'importe pas trop, il
                         //	vaut mieux tricher ici et prendre un peu de retard, mais au moins
@@ -338,7 +342,7 @@ namespace Epsitec.Common.Widgets
                 this.TimeElapsed(this);
             }
 
-            if ((this.delaySecondsAutoRepeat > 0) && (this.state == TimerState.Elapsed))
+            if (this.delaySecondsAutoRepeat > 0 && this.state == TimerState.Elapsed)
             {
                 //this.ExpirationDate = this.ExpirationDate.AddSeconds(
                 //    this.delaySecondsAutoRepeat
@@ -351,12 +355,12 @@ namespace Epsitec.Common.Widgets
         {
             if (this.state == TimerState.Disposed)
             {
-                throw new System.ObjectDisposedException(this.GetType().FullName);
+                throw new System.ObjectDisposedException(GetType().FullName);
             }
         }
         #endregion
 
-        public event Support.EventHandler TimeElapsed;
+        public event EventHandler TimeElapsed;
 
         private readonly System.Timers.Timer timer;
 

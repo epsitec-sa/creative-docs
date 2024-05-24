@@ -1,6 +1,7 @@
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
