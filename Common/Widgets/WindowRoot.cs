@@ -358,18 +358,19 @@ namespace Epsitec.Common.Widgets
 
             if (this.BackColor.IsValid)
             {
-                if (this.BackColor.A != 1.0)
-                {
-                    //graphics.DrawingBitmap.Erase(
-                    //    new System.Drawing.Rectangle(
-                    //        (int)x1,
-                    //        (int)y1,
-                    //        (int)x2 - (int)x1,
-                    //        (int)y2 - (int)y1
-                    //    )
-                    //);
-                    throw new System.NotImplementedException();
-                }
+                // bl-net8-cross maybedelete
+                //if (this.BackColor.A != 1.0)
+                //{
+                //    graphics.DrawingBitmap.Erase(
+                //        new System.Drawing.Rectangle(
+                //            (int)x1,
+                //            (int)y1,
+                //            (int)x2 - (int)x1,
+                //            (int)y2 - (int)y1
+                //        )
+                //    );
+                //    throw new System.NotImplementedException();
+                //}
                 if (this.BackColor.A > 0.0)
                 {
                     graphics.SolidRenderer.Color = this.BackColor;
