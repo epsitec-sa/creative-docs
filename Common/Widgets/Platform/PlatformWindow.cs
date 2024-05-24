@@ -128,6 +128,20 @@ namespace Epsitec.Common.Widgets.Platform
             this.DispatchMessage(msg);
         }
 
+        public override void OnMouseWheel(int wheelX, int wheelY)
+        {
+            this.DispatchMessage(
+                Message.FromMouseEvent(
+                    MessageType.MouseWheel,
+                    this,
+                    MouseButtons.None,
+                    0,
+                    0,
+                    wheelY
+                )
+            );
+        }
+
         protected override void OnResize(int sx, int sy)
         {
             this.widgetWindow.OnResize(sx, sy);

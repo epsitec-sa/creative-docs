@@ -540,16 +540,25 @@ namespace Epsitec.Common.Widgets
             message.filterOnlyFocused = false;
             message.filterOnlyOnHit = true;
 
-            message.cursor = new Drawing.Point(x, y);
-            message.button = button;
-            message.wheel = wheelDist;
+            if (type == MessageType.MouseWheel)
+            {
+                message.cursor = Message.state.windowCursor;
+                message.button = MouseButtons.None;
+                message.wheel = wheelDist;
+            }
+            else
+            {
+                message.cursor = new Drawing.Point(x, y);
+                message.button = button;
+                message.wheel = wheelDist;
 
-            Message.state.window = window.HostingWidgetWindow;
-            Message.state.windowCursor = message.cursor;
-            Message.state.screenCursor =
-                Message.CurrentState.window == null
-                    ? Drawing.Point.Zero
-                    : Message.CurrentState.window.WindowPointToScreenPoint(message.cursor);
+                Message.state.window = window.HostingWidgetWindow;
+                Message.state.windowCursor = message.cursor;
+                Message.state.screenCursor =
+                    Message.CurrentState.window == null
+                        ? Drawing.Point.Zero
+                        : Message.CurrentState.window.WindowPointToScreenPoint(message.cursor);
+            }
 
             //	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.
 

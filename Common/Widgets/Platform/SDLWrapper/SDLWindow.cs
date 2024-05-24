@@ -214,7 +214,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         public virtual void OnMouseMove(int x, int y) { }
 
-        public virtual void OnMouseWheel(int x, int y) { }
+        public virtual void OnMouseWheel(int wheelX, int wheelY) { }
 
         protected virtual void OnFocusGained() { }
 
