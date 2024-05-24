@@ -16,24 +16,6 @@ namespace Epsitec.Common.Drawing.Renderers
             this.Dispose();
         }
 
-        //public DrawingBitmap DrawingBitmap
-        //{
-        //    set
-        //    {
-        //        if (this.pixmap != value)
-        //        {
-        //            if (value == null)
-        //            {
-        //                this.Detach();
-        //            }
-        //            else
-        //            {
-        //                this.Attach(value);
-        //            }
-        //        }
-        //    }
-        //}
-
         public Color Color
         {
             get { return this.color; }
@@ -78,8 +60,7 @@ namespace Epsitec.Common.Drawing.Renderers
             Color c4
         )
         {
-            /*
-            AntigrainSharp.Renderer.Special.Fill4Colors(
+            this.solidRenderer.Fill4Colors(
                 x,
                 y,
                 dx,
@@ -97,8 +78,6 @@ namespace Epsitec.Common.Drawing.Renderers
                 c4.G,
                 c4.B
             );
-            */
-            throw new System.NotImplementedException();
         }
 
         public void SetColor(Color color)
@@ -151,22 +130,6 @@ namespace Epsitec.Common.Drawing.Renderers
             System.GC.SuppressFinalize(this);
         }
         #endregion
-
-        //private void Attach(DrawingBitmap pixmap)
-        //{
-        //    this.Detach();
-
-        //    this.pixmap = pixmap;
-        //    this.color = new Color();
-        //}
-
-        //private void Detach()
-        //{
-        //    if (this.pixmap != null)
-        //    {
-        //        this.pixmap = null;
-        //    }
-        //}
 
         private Color color;
         internal readonly AntigrainSharp.Renderer.Solid solidRenderer;
