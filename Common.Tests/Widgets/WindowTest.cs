@@ -210,8 +210,8 @@ namespace Epsitec.Common.Tests.Widgets
             Window window = new Window(WindowFlags.Resizable);
             Timer timer = new Timer();
 
-            timer.AutoRepeat = 1.0;
-            timer.Delay = 1.0;
+            timer.AutoRepeat = true;
+            timer.Period = 1.0;
             timer.TimeElapsed += (s) =>
                 System.Diagnostics.Debug.WriteLine(window.WindowPlacement.ToString());
             timer.Start();

@@ -497,7 +497,7 @@ namespace Epsitec.Common.Widgets
         private void RestartTimer(double delay)
         {
             this.timer.Suspend();
-            this.timer.Delay = delay;
+            this.timer.Period = delay;
             this.timer.Start();
         }
 

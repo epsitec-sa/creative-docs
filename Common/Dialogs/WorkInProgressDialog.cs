@@ -261,8 +261,8 @@ namespace Epsitec.Common.Dialogs
                 }
             };
 
-            this.timer.AutoRepeat = 0.050;
-            this.timer.Delay = 0.050;
+            this.timer.AutoRepeat = true;
+            this.timer.Period = 0.050;
 
             return dialogWindow;
         }

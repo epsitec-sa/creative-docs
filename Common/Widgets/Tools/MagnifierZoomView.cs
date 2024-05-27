@@ -337,8 +337,8 @@ namespace Epsitec.Common.Widgets.Tools
             if (this.timer == null)
             {
                 this.timer = new Timer();
-                this.timer.AutoRepeat = 0.1;
-                this.timer.Delay = 0.1;
+                this.timer.AutoRepeat = true;
+                this.timer.Period = 0.1;
                 this.timer.TimeElapsed += HandleTimerTimeElapsed;
                 this.timer.Start();
             }

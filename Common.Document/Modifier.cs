@@ -7370,8 +7370,8 @@ namespace Epsitec.Common.Document
         public void MiniaturesTimerStart(bool quick)
         {
             //	Démarre le timer des miniatures.
-            this.miniaturesTimer.Delay = quick ? 0.05 : 0.10;
-            //?this.miniaturesTimer.Delay = quick ? 0.50 : 1.00;
+            this.miniaturesTimer.Period = quick ? 0.05 : 0.10;
+            //?this.miniaturesTimer.Period = quick ? 0.50 : 1.00;
             this.miniaturesTimer.Start();
         }
 

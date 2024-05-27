@@ -104,11 +104,13 @@ namespace Epsitec.Common.Widgets.Behaviors
             switch (phase)
             {
                 case Phase.InitialDelay:
-                    this.autoScrollTimer.AutoRepeat = this.InitialDelay;
+                    this.autoScrollTimer.Period = this.InitialDelay;
+                    this.autoScrollTimer.AutoRepeat = true;
                     break;
 
                 case Phase.RepeatPeriod:
-                    this.autoScrollTimer.AutoRepeat = this.RepeatPeriod;
+                    this.autoScrollTimer.Period = this.RepeatPeriod;
+                    this.autoScrollTimer.AutoRepeat = true;
                     break;
             }
 

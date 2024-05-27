@@ -903,8 +903,8 @@ namespace Epsitec.Common.Widgets
             if (this.IsFocused && TextField.flashTimer != null)
             {
                 double delay = SystemInformation.CursorBlinkDelay;
-                TextField.flashTimer.Delay = delay;
-                TextField.flashTimer.AutoRepeat = delay;
+                TextField.flashTimer.Period = delay;
+                TextField.flashTimer.AutoRepeat = true;
                 TextField.flashTimer.Start(); // restart du timer
                 TextField.showCursor = true; // avec le curseur visible
             }

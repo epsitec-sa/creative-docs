@@ -1,7 +1,7 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Widgets.Platform
 {
     /// <summary>
     /// The <c>TimerState</c> enumeration lists all possible timer states.

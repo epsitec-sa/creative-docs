@@ -272,7 +272,7 @@ namespace Epsitec.Common.Tests.Widgets
                 {
                     this.timer = new Timer();
                     this.timer.AutoRepeat = 0.1;
-                    this.timer.Delay = 0.1;
+                    this.timer.Period = 0.1;
                     this.timer.TimeElapsed += HandleTimerTimeElapsed;
                     this.timer.Start();
                 }

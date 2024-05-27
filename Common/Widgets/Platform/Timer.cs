@@ -22,6 +22,10 @@ namespace Epsitec.Common.Widgets.Platform
 
         public Timer(System.TimeSpan period)
         {
+            if (period == System.TimeSpan.Zero)
+            {
+                throw new System.ArgumentException("Timer period should not be zero.");
+            }
             this.timer = new PeriodicTimer(period);
             this.period = period;
             this.remainingTime = System.TimeSpan.Zero;
@@ -34,109 +38,52 @@ namespace Epsitec.Common.Widgets.Platform
 
         #region public thread-safe api
 
-        //public bool HigherAccuracy
-        //{
-        //    get
-        //    {
-        //        lock (this)
-        //        {
-        //            RequireNotDisposed();
-        //            return higherAccuracy;
-        //        }
-        //    }
-        //    set
-        //    {
-        //        lock (this)
-        //        {
-        //            RequireNotDisposed();
-        //            higherAccuracy = value;
-        //        }
-        //    }
-        //}
-
-        public double Delay
+        public double Period
         {
             get
             {
-                lock (this)
-                {
-                    RequireNotDisposed();
-                    //return period;
-                    return 0;
-                }
+                RequireNotDisposed();
+                return this.period.TotalSeconds;
             }
             set
             {
-                lock (this)
+                RequireNotDisposed();
+                if (value <= 0)
                 {
-                    RequireNotDisposed();
-                    //	Change le délai. Le temps de référence est soit le moment où le
-                    //	timer est démarré pour la première fois, soit maintenant si le
-                    //	timer est déjà démarré.
-
-                    //SetDelay(value);
+                    throw new System.ArgumentException(
+                        "Timer Period should be a strictly positive number."
+                    );
                 }
+                if (state != TimerState.Stopped)
+                {
+                    throw new System.InvalidOperationException(
+                        "The timer should be stopped to set the delay"
+                    );
+                }
+                this.period = System.TimeSpan.FromSeconds(value);
             }
         }
-
-        //public System.DateTime ExpirationDate
-        //{
-        //    get
-        //    {
-        //        lock (this)
-        //        {
-        //            RequireNotDisposed();
-        //            return expirationDate;
-        //        }
-        //    }
-        //    set
-        //    {
-        //        lock (this)
-        //        {
-        //            RequireNotDisposed();
-        //            if (expirationDate != value)
-        //            {
-        //                expirationDate = value;
-        //                period = 0;
-        //                UpdateTimerSettings();
-        //            }
-        //        }
-        //    }
-        //}
 
         public TimerState State
         {
             get
             {
-                lock (this)
-                {
-                    RequireNotDisposed();
-                    return state;
-                }
+                RequireNotDisposed();
+                return state;
             }
         }
 
-        public double AutoRepeat
+        public bool AutoRepeat
         {
             get
             {
-                lock (this)
-                {
-                    RequireNotDisposed();
-                    return delaySecondsAutoRepeat;
-                }
+                RequireNotDisposed();
+                return this.autoRepeat;
             }
             set
             {
-                lock (this)
-                {
-                    RequireNotDisposed();
-                    if (delaySecondsAutoRepeat != value)
-                    {
-                        delaySecondsAutoRepeat = value;
-                        //SetDelay(value);
-                    }
-                }
+                RequireNotDisposed();
+                this.autoRepeat = value;
             }
         }
 
@@ -179,7 +126,6 @@ namespace Epsitec.Common.Widgets.Platform
                     this.timerTask = this.StartAsyncTimer();
                     break;
             }
-            this.state = TimerState.Running;
         }
 
         public void Suspend()
@@ -228,188 +174,51 @@ namespace Epsitec.Common.Widgets.Platform
             this.state = TimerState.Stopped;
         }
 
-        //public void Restart()
-        //{
-        //    UnsafeStop();
-        //    UnsafeStart();
-        //}
         #endregion
 
         #region private unsafe implementation
 
         private async Task StartAsyncTimer()
         {
-            System.Console.WriteLine("start async timer");
+            //System.Console.WriteLine("start async timer");
             this.cancelTokenSource = new CancellationTokenSource();
+            this.state = TimerState.Running;
             try
             {
                 if (this.remainingTime != System.TimeSpan.Zero)
                 {
                     this.timer.Period = this.remainingTime;
                     this.expirationDate = System.DateTime.Now.Add(this.remainingTime);
-                    System.Console.WriteLine($"wait for remaining time {this.remainingTime}");
+
+                    //System.Console.WriteLine($"wait for remaining time {this.remainingTime}");
                     await this.timer.WaitForNextTickAsync(this.cancelTokenSource.Token);
                     this.TimeElapsed.Raise(this);
+
                     this.remainingTime = System.TimeSpan.Zero;
+                    if (!this.autoRepeat)
+                    {
+                        this.state = TimerState.Stopped;
+                        return;
+                    }
                 }
                 this.timer.Period = this.period;
-                while (true)
+                do
                 {
                     this.expirationDate = System.DateTime.Now.Add(this.period);
-                    System.Console.WriteLine($"wait for next tick");
+                    //System.Console.WriteLine($"wait for next tick");
                     await this.timer.WaitForNextTickAsync(this.cancelTokenSource.Token);
                     this.TimeElapsed.Raise(this);
-                }
+                } while (this.autoRepeat);
             }
             catch (System.OperationCanceledException)
             {
-                System.Console.WriteLine("timer canceled");
+                //System.Console.WriteLine("timer canceled");
                 // ignore when canceled
+                return;
             }
-            System.Console.WriteLine("done");
+            this.state = TimerState.Stopped;
+            //System.Console.WriteLine("done");
         }
-
-        //private void UnsafeStart()
-        //{
-        //    //	Démarre le timer s'il était arrêté. Un timer suspendu reprend là où
-        //    //	il en était.
-
-        //    switch (state)
-        //    {
-        //        case TimerState.Invalid:
-        //        case TimerState.Elapsed:
-
-        //            //	Le timer n'a jamais servi, ou alors, le timer a déjà atteint la
-        //            //	fin de la période de comptage.
-
-        //            state = TimerState.Stopped;
-        //            break;
-
-        //        case TimerState.Stopped:
-        //            break;
-
-        //        case TimerState.Running:
-
-        //            //	Le timer tourne, on n'a pas besoin de faire quoi que ce soit.
-
-        //            return;
-
-        //        case TimerState.Suspended:
-
-        //            //	Le timer est actuellement arrêté. Il suffit de mettre à jour la
-        //            //	date de fin et de le relancer.
-
-        //            expirationDate = System.DateTime.Now.Add(remainingTime);
-        //            break;
-        //    }
-
-        //    if (state == TimerState.Stopped)
-        //    {
-        //        //	Si le délai en secondes est spécifé, alors on l'utilise pour réinitialiser
-        //        //	la date d'expiration. Utile si on a utilisé la propriété Delay pour définir
-        //        //	le délai, puis fait un Start plus tard.
-
-        //        if (period > 0)
-        //        {
-        //            expirationDate = System.DateTime.Now.AddSeconds(period);
-        //        }
-        //    }
-
-        //    state = TimerState.Running;
-
-        //    UpdateTimerSettings();
-        //}
-
-        //private void UnsafeStop()
-        //{
-        //    state = TimerState.Stopped;
-        //}
-
-        //private void UnsafeSuspend()
-        //{
-        //    //	Suspend le timer (le temps restant est conservé jusqu'au prochain démarrage
-        //    //	du timer).
-
-        //    if (state == TimerState.Running)
-        //    {
-        //        timer.Stop();
-        //        remainingTime = expirationDate.Subtract(System.DateTime.Now);
-        //        state = TimerState.Suspended;
-        //    }
-        //}
-
-        //private void SetDelay(double delay)
-        //{
-        //    period = delay;
-        //    expirationDate = System.DateTime.Now.AddSeconds(delay);
-        //    remainingTime = expirationDate.Subtract(System.DateTime.Now);
-
-        //    UpdateTimerSettings();
-        //}
-
-        //private void UpdateTimerSettings()
-        //{
-        //    switch (state)
-        //    {
-        //        case TimerState.Running:
-        //        case TimerState.Suspended:
-        //            timer.Stop();
-
-        //            System.DateTime now = System.DateTime.Now;
-        //            System.TimeSpan wait = expirationDate.Subtract(now);
-
-        //            int delta = (int)wait.TotalMilliseconds;
-
-        //            if (higherAccuracy == false && delta <= 0)
-        //            {
-        //                //	Si l'exactitude temporelle des événements n'importe pas trop, il
-        //                //	vaut mieux tricher ici et prendre un peu de retard, mais au moins
-        //                //	passer par la boucle des événements...
-
-        //                delta = 1;
-        //                expirationDate = now.AddMilliseconds(delta);
-        //            }
-
-        //            if (delta > 0)
-        //            {
-        //                timer.Interval = delta;
-        //                timer.Start();
-        //            }
-        //            else
-        //            {
-        //                //	On arrive trop tard (on a manqué le moment où le timer expirait) et
-        //                //	on génère donc manuellement l'événement.
-
-        //                OnTimeElapsed();
-        //            }
-        //            break;
-        //    }
-        //}
-
-        //private void OnTimeElapsed()
-        //{
-        //    // the system timer could fire while we are changing our timer state
-        //    // if that happens, we simply ignore the event here
-        //    if (state != TimerState.Running)
-        //    {
-        //        return;
-        //    }
-
-        //    state = TimerState.Elapsed;
-
-        //    if (TimeElapsed != null)
-        //    {
-        //        TimeElapsed(this);
-        //    }
-
-        //    if (delaySecondsAutoRepeat > 0 && state == TimerState.Elapsed)
-        //    {
-        //        //this.ExpirationDate = this.ExpirationDate.AddSeconds(
-        //        //    this.delaySecondsAutoRepeat
-        //        //);
-        //        UnsafeStart();
-        //    }
-        //}
 
         private void RequireNotDisposed()
         {
@@ -430,7 +239,6 @@ namespace Epsitec.Common.Widgets.Platform
         private System.DateTime expirationDate;
         private System.TimeSpan remainingTime;
         private System.TimeSpan period;
-        private double delaySecondsAutoRepeat;
-        private bool higherAccuracy;
+        private bool autoRepeat;
     }
 }

@@ -620,7 +620,7 @@ namespace Epsitec.Common.Widgets.Behaviors
                 MenuBehavior.timerKeepMenu = null;
                 MenuBehavior.timerBehaviour = null;
 
-                MenuBehavior.timer.Delay = SystemInformation.MenuShowDelay;
+                MenuBehavior.timer.Period = SystemInformation.MenuShowDelay;
                 MenuBehavior.timer.Start();
 
                 this.UpdateItems();
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Widgets.Behaviors
                 MenuBehavior.timerKeepMenu = MenuItem.GetMenuWindow(item) as MenuWindow;
                 MenuBehavior.timerBehaviour = this;
 
-                MenuBehavior.timer.Delay = SystemInformation.MenuShowDelay;
+                MenuBehavior.timer.Period = SystemInformation.MenuShowDelay;
                 MenuBehavior.timer.Start();
             }
 

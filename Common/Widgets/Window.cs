@@ -49,7 +49,8 @@ namespace Epsitec.Common.Widgets
             this.root.Name = "Root";
 
             this.timer.TimeElapsed += this.HandleTimeElapsed;
-            this.timer.AutoRepeat = 0.050;
+            this.timer.Period = 0.050;
+            this.timer.AutoRepeat = true;
 
             Window.windows.Add(this);
         }
@@ -452,7 +453,8 @@ namespace Epsitec.Common.Widgets
                         if (newEngage.AutoRepeat)
                         {
                             this.timer.Stop();
-                            this.timer.AutoRepeat = newEngage.AutoEngageDelay;
+                            this.timer.Period = newEngage.AutoEngageDelay;
+                            this.timer.AutoRepeat = true;
                             this.timer.Start();
                         }
                     }
@@ -2004,7 +2006,7 @@ namespace Epsitec.Common.Widgets
 
         public void SetEngageTimerDelay(double delay)
         {
-            this.timer.Delay = delay;
+            this.timer.Period = delay;
         }
 
         internal void PostProcessMessage(Message message)
@@ -2272,7 +2274,8 @@ namespace Epsitec.Common.Widgets
         {
             if (this.engagedWidget != null)
             {
-                this.timer.AutoRepeat = this.engagedWidget.AutoEngageRepeatPeriod;
+                this.timer.Period = this.engagedWidget.AutoEngageRepeatPeriod;
+                this.timer.AutoRepeat = true;
 
                 if (this.engagedWidget.IsEngaged)
                 {

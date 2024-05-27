@@ -75,7 +75,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
                 this.splashTimer = new Timer();
                 this.splashTimer.TimeElapsed += this.HandleSplashTimerTimeElapsed;
-                this.splashTimer.Delay = 10.0;
+                this.splashTimer.Period = 10.0;
 
                 this.window.MakeLayeredWindow();
                 PlatformWindow.PumpEvents();

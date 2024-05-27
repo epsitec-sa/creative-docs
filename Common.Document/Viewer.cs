@@ -81,7 +81,8 @@ namespace Epsitec.Common.Document
             this.hotSpotHandle.Type = Objects.HandleType.Center;
 
             this.autoScrollTimer = new Timer();
-            this.autoScrollTimer.AutoRepeat = 0.1;
+            this.autoScrollTimer.Period = 0.1;
+            this.autoScrollTimer.AutoRepeat = true;
             this.autoScrollTimer.TimeElapsed += this.HandleAutoScrollTimeElapsed;
 
             this.miniBarTimer = new Timer();
@@ -3039,13 +3040,13 @@ namespace Epsitec.Common.Document
             switch (delayed)
             {
                 case MiniBarDelayed.Delayed:
-                    this.miniBarTimer.Delay = 0.2;
+                    this.miniBarTimer.Period = 0.2;
                     break;
                 case MiniBarDelayed.DoubleClick:
-                    this.miniBarTimer.Delay = SystemInformation.DoubleClickDelay;
+                    this.miniBarTimer.Period = SystemInformation.DoubleClickDelay;
                     break;
                 default:
-                    this.miniBarTimer.Delay = 0.01;
+                    this.miniBarTimer.Period = 0.01;
                     break;
             }
             this.miniBarTimer.Start();
@@ -3056,7 +3057,7 @@ namespace Epsitec.Common.Document
             if (this.miniBarCmds != null)
             {
                 this.miniBarTimer.Stop();
-                this.miniBarTimer.Delay = SystemInformation.DoubleClickDelay;
+                this.miniBarTimer.Period = SystemInformation.DoubleClickDelay;
                 this.miniBarTimer.Start();
             }
         }

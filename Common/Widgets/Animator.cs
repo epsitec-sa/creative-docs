@@ -72,8 +72,8 @@ namespace Epsitec.Common.Widgets
             if (this.timer == null)
             {
                 this.timer = new Timer();
-                this.timer.Delay = 0.010;
-                this.timer.AutoRepeat = 0.010;
+                this.timer.Period = 0.010;
+                this.timer.AutoRepeat = true;
 
                 this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
 
