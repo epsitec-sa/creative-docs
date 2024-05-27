@@ -8,7 +8,7 @@ namespace Epsitec.Common.Tests.Widgets.Platform
     public class TimerTest
     {
         [Test]
-        public void TestTimerFiresOnceInTime()
+        public async Task TestTimerFiresOnceInTime()
         {
             int eventCount = 0;
             var timer = new Timer(new System.TimeSpan(0, 0, 1));
@@ -19,13 +19,13 @@ namespace Epsitec.Common.Tests.Widgets.Platform
             Assert.AreEqual(TimerState.Stopped, timer.State);
             timer.Start();
             Assert.AreEqual(TimerState.Running, timer.State);
-            Task.Delay(1500).Wait();
+            await WaitForTimerEvents(1500);
             Assert.AreEqual(TimerState.Stopped, timer.State);
             Assert.AreEqual(1, eventCount);
         }
 
         [Test]
-        public void TestTimerGetAndSetPeriod()
+        public async Task TestTimerGetAndSetPeriod()
         {
             int eventCount = 0;
             var timer = new Timer(new System.TimeSpan(0, 0, 1));
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Tests.Widgets.Platform
             timer.Start();
             Assert.AreEqual(TimerState.Running, timer.State);
             Assert.AreEqual(1.0, timer.Period);
-            Task.Delay(1500).Wait();
+            await WaitForTimerEvents(1500);
             Assert.AreEqual(TimerState.Stopped, timer.State);
             Assert.AreEqual(1, eventCount);
             timer.Stop();
@@ -45,13 +45,13 @@ namespace Epsitec.Common.Tests.Widgets.Platform
             Assert.AreEqual(0.2, timer.Period);
             timer.Start();
             Assert.AreEqual(TimerState.Running, timer.State);
-            Task.Delay(250).Wait();
+            await WaitForTimerEvents(250);
             Assert.AreEqual(TimerState.Stopped, timer.State);
             Assert.AreEqual(2, eventCount);
         }
 
         [Test]
-        public void TestTimerFiresManyTimesInTime()
+        public async Task TestTimerFiresManyTimesInTime()
         {
             int eventCount = 0;
             var timer = new Timer(new System.TimeSpan(0, 0, 0, 0, 50));
@@ -61,12 +61,12 @@ namespace Epsitec.Common.Tests.Widgets.Platform
             };
             timer.AutoRepeat = true;
             timer.Start();
-            Task.Delay(520).Wait();
+            await WaitForTimerEvents(520);
             Assert.AreEqual(10, eventCount);
         }
 
         [Test]
-        public void TestTimerDoesNotFireWhenStopped()
+        public async Task TestTimerDoesNotFireWhenStopped()
         {
             int eventCount = 0;
             var timer = new Timer(new System.TimeSpan(0, 0, 0, 0, 100));
@@ -76,20 +76,22 @@ namespace Epsitec.Common.Tests.Widgets.Platform
             };
             timer.AutoRepeat = true;
             Assert.AreEqual(TimerState.Stopped, timer.State);
+            System.Console.WriteLine("test - call timer start");
             timer.Start();
             Assert.AreEqual(TimerState.Running, timer.State);
-            Task.Delay(150).Wait();
+            await WaitForTimerEvents(150);
             Assert.AreEqual(TimerState.Running, timer.State);
+            System.Console.WriteLine("test - call timer stop");
             timer.Stop();
             Assert.AreEqual(TimerState.Stopped, timer.State);
             Assert.AreEqual(1, eventCount);
-            Task.Delay(350).Wait();
+            await WaitForTimerEvents(350);
             Assert.AreEqual(TimerState.Stopped, timer.State);
             Assert.AreEqual(1, eventCount);
         }
 
         [Test]
-        public void TestTimerCanRestart()
+        public async Task TestTimerCanRestart()
         {
             int eventCount = 0;
             var timer = new Timer(new System.TimeSpan(0, 0, 0, 0, 200));
@@ -99,18 +101,33 @@ namespace Epsitec.Common.Tests.Widgets.Platform
             };
             Assert.AreEqual(TimerState.Stopped, timer.State);
             timer.Start();
-            Task.Delay(100).Wait();
+            await WaitForTimerEvents(100);
             Assert.AreEqual(TimerState.Running, timer.State);
             timer.Suspend();
             Assert.AreEqual(TimerState.Suspended, timer.State);
-            Task.Delay(1000).Wait();
+            await WaitForTimerEvents(1000);
             Assert.AreEqual(0, eventCount);
             Assert.AreEqual(TimerState.Suspended, timer.State);
             timer.Start();
             Assert.AreEqual(TimerState.Running, timer.State);
-            Task.Delay(110).Wait();
+            await WaitForTimerEvents(150);
             Assert.AreEqual(1, eventCount);
             Assert.AreEqual(TimerState.Stopped, timer.State);
+        }
+
+        public async Task WaitForTimerEvents(int durationMS)
+        {
+            var startTime = System.DateTime.Now;
+            while (true)
+            {
+                double elapsedTimeMS = System.DateTime.Now.Subtract(startTime).TotalMilliseconds;
+                if (elapsedTimeMS >= durationMS)
+                {
+                    return;
+                }
+                Timer.FirePendingEvents();
+                await Task.Delay(0); // this is to allow other tasks to run
+            }
         }
     }
 }
