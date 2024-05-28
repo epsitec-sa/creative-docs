@@ -115,6 +115,32 @@ namespace Epsitec.Common.Tests.Widgets.Platform
             Assert.AreEqual(TimerState.Stopped, timer.State);
         }
 
+        [Test]
+        public async Task TestMultipleTimers()
+        {
+            int slowCount = 0;
+            int fastCount = 0;
+            var timerSlow = new Timer(new System.TimeSpan(0, 0, 0, 0, 200));
+            var timerFast = new Timer(new System.TimeSpan(0, 0, 0, 0, 20));
+            timerSlow.TimeElapsed += _ =>
+            {
+                slowCount++;
+            };
+            timerFast.TimeElapsed += _ =>
+            {
+                fastCount++;
+            };
+            timerSlow.AutoRepeat = true;
+            timerFast.AutoRepeat = true;
+            timerSlow.Start();
+            timerFast.Start();
+            await WaitForTimerEvents(2010);
+            timerFast.Suspend();
+            timerSlow.Suspend();
+            Assert.AreEqual(10, slowCount);
+            Assert.AreEqual(100, fastCount);
+        }
+
         public async Task WaitForTimerEvents(int durationMS)
         {
             var startTime = System.DateTime.Now;

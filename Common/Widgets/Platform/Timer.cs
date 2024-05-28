@@ -27,11 +27,10 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 throw new System.ArgumentException("Timer period should not be zero.");
             }
-            this.timer = new PeriodicTimer(period);
             this.period = period;
             this.autoRepeat = false;
             this.remainingTime = System.TimeSpan.Zero;
-            this.state = TimerState.Stopped;
+            this.SetState(TimerState.Stopped);
         }
 
         ~Timer()
@@ -94,7 +93,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         public bool IsDisposed
         {
-            get { return this.timer == null; }
+            get { return this.isDisposed; }
         }
 
         #endregion
@@ -103,11 +102,17 @@ namespace Epsitec.Common.Widgets.Platform
 
         public void Dispose()
         {
-            this.cancelTokenSource.Cancel();
-            if (this.timer != null)
+            this.TerminateTimerTask();
+            this.isDisposed = true;
+            if (this.cancelTokenSource != null)
             {
-                this.timer.Dispose();
-                this.timer = null;
+                this.cancelTokenSource.Dispose();
+                this.cancelTokenSource = null;
+            }
+            if (this.timerTask != null)
+            {
+                this.timerTask.Dispose();
+                this.timerTask = null;
             }
             System.GC.SuppressFinalize(this);
         }
@@ -124,7 +129,7 @@ namespace Epsitec.Common.Widgets.Platform
                     return;
                 case TimerState.Suspended:
                 case TimerState.Stopped:
-                    this.state = TimerState.Running;
+                    this.SetState(TimerState.Running);
                     this.timerTask = this.StartAsyncTimer();
                     break;
             }
@@ -141,9 +146,6 @@ namespace Epsitec.Common.Widgets.Platform
                 case TimerState.Running:
                     this.remainingTime = this.expirationDate.Subtract(System.DateTime.Now);
                     this.TerminateTimerTask();
-                    System.Console.WriteLine(
-                        $"remaining milliseconds {this.remainingTime.TotalMilliseconds}"
-                    );
                     if (this.remainingTime.TotalMilliseconds < 1.0)
                     {
                         // the timer has a resolution of 1 ms
@@ -155,7 +157,7 @@ namespace Epsitec.Common.Widgets.Platform
                 case TimerState.Stopped:
                     throw new System.InvalidOperationException("Cannot suspend a stopped timer");
             }
-            this.state = TimerState.Suspended;
+            this.SetState(TimerState.Suspended);
         }
 
         public void Stop()
@@ -173,7 +175,7 @@ namespace Epsitec.Common.Widgets.Platform
                     this.remainingTime = System.TimeSpan.Zero;
                     break;
             }
-            this.state = TimerState.Stopped;
+            this.SetState(TimerState.Stopped);
         }
 
         public static void FirePendingEvents()
@@ -187,48 +189,59 @@ namespace Epsitec.Common.Widgets.Platform
 
         #region private unsafe implementation
 
+        private void SetState(TimerState newState)
+        {
+            //System.Console.WriteLine($"new timer state: {newState}");
+            this.state = newState;
+        }
+
         private async Task StartAsyncTimer()
         {
-            System.Console.WriteLine("start async timer");
+            //System.Console.WriteLine("start async timer");
             this.cancelTokenSource = new CancellationTokenSource();
             try
             {
                 if (this.remainingTime != System.TimeSpan.Zero)
                 {
-                    this.timer.Period = this.remainingTime;
+                    //System.Console.WriteLine(
+                    //    $"wait for remaining time {this.remainingTime.TotalMilliseconds}ms"
+                    //);
                     this.expirationDate = System.DateTime.Now.Add(this.remainingTime);
-
-                    System.Console.WriteLine($"wait for remaining time {this.remainingTime}");
-                    await this.timer.WaitForNextTickAsync(this.cancelTokenSource.Token);
-                    System.Console.WriteLine($"fire event");
-                    Timer.AddToPendingQueue(this);
+                    await this.QueueEventAfterDelay(this.cancelTokenSource.Token);
 
                     this.remainingTime = System.TimeSpan.Zero;
                     if (!this.autoRepeat)
                     {
-                        System.Console.WriteLine($"no autorepeat -> done");
-                        this.state = TimerState.Stopped;
+                        //System.Console.WriteLine($"no autorepeat -> done");
+                        this.SetState(TimerState.Stopped);
                         return;
                     }
                 }
-                this.timer.Period = this.period;
+                this.expirationDate = System.DateTime.Now;
                 do
                 {
-                    this.expirationDate = System.DateTime.Now.Add(this.period);
-                    System.Console.WriteLine($"wait for next tick");
-                    await this.timer.WaitForNextTickAsync(this.cancelTokenSource.Token);
-                    System.Console.WriteLine($"fire event");
-                    Timer.AddToPendingQueue(this);
+                    //System.Console.WriteLine($"wait for next tick");
+                    this.expirationDate = this.expirationDate.Add(this.period);
+                    await this.QueueEventAfterDelay(this.cancelTokenSource.Token);
                 } while (this.autoRepeat);
             }
             catch (System.OperationCanceledException)
             {
-                System.Console.WriteLine("timer canceled");
+                //System.Console.WriteLine("timer canceled");
                 // ignore when canceled
                 return;
             }
-            this.state = TimerState.Stopped;
-            System.Console.WriteLine("timer done");
+            this.SetState(TimerState.Stopped);
+            //System.Console.WriteLine("timer done");
+        }
+
+        private async Task QueueEventAfterDelay(CancellationToken cancelToken)
+        {
+            cancelToken.ThrowIfCancellationRequested();
+            System.TimeSpan duration = this.expirationDate.Subtract(System.DateTime.Now);
+            await Task.Delay((int)duration.TotalMilliseconds, cancelToken);
+            cancelToken.ThrowIfCancellationRequested();
+            Timer.AddToPendingQueue(this);
         }
 
         private void TerminateTimerTask()
@@ -244,7 +257,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         private void RequireNotDisposed()
         {
-            if (this.timer == null)
+            if (this.isDisposed)
             {
                 throw new System.ObjectDisposedException(GetType().FullName);
             }
@@ -260,7 +273,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         public event EventHandler TimeElapsed;
 
-        private PeriodicTimer timer;
         private CancellationTokenSource cancelTokenSource;
         private Task timerTask;
 
@@ -269,5 +281,7 @@ namespace Epsitec.Common.Widgets.Platform
         private System.TimeSpan remainingTime;
         private System.TimeSpan period;
         private bool autoRepeat;
+
+        private bool isDisposed;
     }
 }
