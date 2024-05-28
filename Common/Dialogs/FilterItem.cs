@@ -1,8 +1,8 @@
 //	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.Extensions;
 using System.Linq;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Dialogs
 
             this.name = name;
             this.caption = caption;
-            this.filter = string.Join(";", items);
+            this.filter = string.Join(",", items);
         }
 
         public string Name
@@ -45,15 +45,7 @@ namespace Epsitec.Common.Dialogs
 
         public string GetFileDialogFilter()
         {
-            var buffer = new System.Text.StringBuilder();
-
-            buffer.Append(this.caption);
-            buffer.Append(" (");
-            buffer.Append(this.filter);
-            buffer.Append(")|");
-            buffer.Append(this.filter);
-
-            return buffer.ToString();
+            return this.filter;
         }
 
         /// <summary>
@@ -64,17 +56,17 @@ namespace Epsitec.Common.Dialogs
         /// <returns>The sanitized filter item.</returns>
         private static string SanitizeFilterItem(string item)
         {
-            if (item.StartsWith("*"))
+            if (item.StartsWith("*."))
             {
-                return item;
+                return item.Substring(2);
             }
             else if (item.StartsWith("."))
             {
-                return "*" + item;
+                return item.Substring(1);
             }
             else
             {
-                return "*." + item;
+                return item;
             }
         }
 

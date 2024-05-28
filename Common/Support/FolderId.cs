@@ -7,6 +7,8 @@ namespace Epsitec.Common.Support
     /// The <c>FolderId</c> enumeration lists all special folders which might
     /// be defined by the Operating System (currently only Microsoft Windows).
     /// </summary>
+
+    // bl-net8-cross maybedelete
     public enum FolderId { }
 #if false
         CommonAdminTools,

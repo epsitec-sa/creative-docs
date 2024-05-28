@@ -40,7 +40,7 @@ namespace Epsitec.Common.Dialogs.Helpers
                 {
                     if (i > 0)
                     {
-                        buffer.Append("|");
+                        buffer.Append(";");
                     }
 
                     buffer.Append(this[i].GetFileDialogFilter());
