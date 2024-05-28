@@ -1,10 +1,10 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs.Controllers
 {
@@ -74,11 +74,11 @@ namespace Epsitec.Common.Dialogs.Controllers
             //	Add all desktop and computer nodes
 
             FolderItem desktop = FileManager.GetFolderItem(
-                FolderId.VirtualDesktop,
+                System.Environment.SpecialFolder.Desktop,
                 FolderQueryMode.SmallIcons
             );
             FolderItem computer = FileManager.GetFolderItem(
-                FolderId.VirtualMyComputer,
+                System.Environment.SpecialFolder.MyDocuments,
                 FolderQueryMode.SmallIcons
             );
 

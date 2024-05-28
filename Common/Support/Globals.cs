@@ -261,29 +261,7 @@ namespace Epsitec.Common.Support
 
             public static string ExecutableRoot
             {
-                get
-                {
-                    string path = Directories.Executable;
-
-                    string debugSuffix = @"\bin\Debug";
-                    string releaseSuffix = @"\bin\Release";
-                    string nunitSuffix = @"\nunit";
-
-                    if (path.EndsWith(debugSuffix))
-                    {
-                        path = path.Substring(0, path.Length - debugSuffix.Length);
-                    }
-                    else if (path.EndsWith(releaseSuffix))
-                    {
-                        path = path.Substring(0, path.Length - releaseSuffix.Length);
-                    }
-                    else if (path.Contains(nunitSuffix))
-                    {
-                        path = path.Substring(0, path.IndexOf(nunitSuffix));
-                    }
-
-                    return path;
-                }
+                get { return IO.PathTools.RemoveUntilDir("bin", Directories.Executable); }
             }
 
             public static string InitialDirectory

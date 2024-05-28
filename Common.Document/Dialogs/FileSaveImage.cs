@@ -31,10 +31,5 @@ namespace Epsitec.Common.Document.Dialogs
         {
             get { return Res.Strings.Dialog.SaveImage.ActionButtonName; }
         }
-
-        protected override void FavoritesAddApplicationFolders()
-        {
-            this.AddFavorite(FolderId.MyPictures);
-        }
     }
 }

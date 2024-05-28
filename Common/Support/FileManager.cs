@@ -169,12 +169,15 @@ namespace Epsitec.Common.Support
         /// Gets the folder item for a special folder (such as the desktop,
         /// for instance).
         /// </summary>
-        /// <param name="file">The special folder identifier.</param>
+        /// <param name="folder">The special folder identifier.</param>
         /// <param name="mode">The details retrieval mode.</param>
         /// <returns>A valid folder item or <c>FolderItem.Empty</c>.</returns>
-        public static FolderItem GetFolderItem(FolderId file, FolderQueryMode mode)
+        public static FolderItem GetFolderItem(
+            System.Environment.SpecialFolder folder,
+            FolderQueryMode mode
+        )
         {
-            return Platform.FileInfo.CreateFolderItem(file, mode);
+            return FileManager.GetFolderItem(System.Environment.GetFolderPath(folder), mode);
         }
 
         /// <summary>
@@ -185,7 +188,8 @@ namespace Epsitec.Common.Support
         /// <returns>The icon for the folder item or <c>null</c>.</returns>
         public static FolderItemIcon GetFolderItemIcon(FolderItem item, FolderQueryMode mode)
         {
-            return Platform.FileInfo.CreateFolderItem(item.Handle, mode).Icon;
+            //return Platform.FileInfo.CreateFolderItem(item.Handle, mode).Icon;
+            return item.Icon;
         }
 
         /// <summary>
@@ -196,7 +200,7 @@ namespace Epsitec.Common.Support
         /// <returns>A valid folder item or <c>FolderItem.Empty</c>.</returns>
         public static FolderItem GetFolderItem(string path, FolderQueryMode mode)
         {
-            return Platform.FileInfo.CreateFolderItem(path, mode);
+            return new FolderItem(path, mode);
         }
 
         /// <summary>

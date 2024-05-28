@@ -1673,9 +1673,8 @@ namespace Epsitec.Common.Document
             //	Retourne le nom du dossier contenant les exemples originaux.
             get
             {
-                return string.Concat(
-                    Common.Support.Globals.Directories.Executable,
-                    "\\",
+                return System.IO.Path.Join(
+                    System.IO.Path.GetDirectoryName(Globals.Directories.ExecutableRoot),
                     Document.OriginalSamplesDisplayName
                 );
             }
@@ -1699,7 +1698,7 @@ namespace Epsitec.Common.Document
 				return string.Concat(path, "\\", Document.DisplayMySamples);
 #else
                 FolderItem item = FileManager.GetFolderItem(
-                    FolderId.VirtualMyDocuments,
+                    System.Environment.SpecialFolder.MyDocuments,
                     FolderQueryMode.NoIcons
                 );
                 string path = item.FullPath;

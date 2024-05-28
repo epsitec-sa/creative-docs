@@ -11,5 +11,8 @@
     <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0" />
+  </ItemGroup>
 
 </Project>

@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Epsitec.Common.Support
 {
@@ -11,75 +13,81 @@ namespace Epsitec.Common.Support
     /// </summary>
     public struct FolderItem : System.IEquatable<FolderItem>
     {
-        internal FolderItem(
-            Common.Drawing.Image icon,
-            FolderQueryMode queryMode,
-            string displayName,
-            string typeName,
-            string fullPath,
-            Platform.FolderItemHandle handle,
-            Platform.FolderItemAttributes attributes
-        )
+        public FolderItem(string path, FolderQueryMode mode)
         {
-            this.icon = icon == null ? null : new FolderItemIcon(icon);
-            this.queryMode = queryMode;
-            this.displayName = displayName;
-            this.typeName = typeName;
-            this.fullPath = fullPath;
-            this.handle = handle;
-            this.attributes = attributes;
-
-            if (
-                (this.IsFolder)
-                && (this.IsHidden == false)
-                && (string.IsNullOrEmpty(this.fullPath) == false)
-            )
-            {
-                //	For some yet unknown reasons, the attributes provided by the enumeration
-                //	functions don't provide the correct 'Hidden' attribute in some cases; for
-                //	instance, a .svn folder in a document library won't be marked as hidden.
-
-                //	Make sure what the visibility of the directory really is:
-
-                this.attributes = FolderItem.FixDirectoryHiddenAttribute(
-                    this.attributes,
-                    this.fullPath
-                );
-            }
+            this.fullPath = path;
+            this.queryMode = mode;
         }
 
-        private static Platform.FolderItemAttributes FixDirectoryHiddenAttribute(
-            Platform.FolderItemAttributes attributes,
-            string fullPath
-        )
-        {
-            try
-            {
-                if (System.IO.Directory.Exists(fullPath))
-                {
-                    var folderAttrib = new System.IO.DirectoryInfo(fullPath).Attributes;
+        //internal FolderItem(
+        //    Common.Drawing.Image icon,
+        //    FolderQueryMode queryMode,
+        //    string displayName,
+        //    string typeName,
+        //    string fullPath,
+        //    Platform.FolderItemHandle handle,
+        //    Platform.FolderItemAttributes attributes
+        //)
+        //{
+        //    this.icon = icon == null ? null : new FolderItemIcon(icon);
+        //    this.queryMode = queryMode;
+        //    this.displayName = displayName;
+        //    this.typeName = typeName;
+        //    this.fullPath = fullPath;
+        //    this.handle = handle;
+        //    this.attributes = attributes;
 
-                    if ((folderAttrib & System.IO.FileAttributes.Hidden) != 0)
-                    {
-                        attributes |= Platform.FolderItemAttributes.Hidden;
-                    }
-                }
-            }
-            catch { }
+        //    if (
+        //        (this.IsFolder)
+        //        && (this.IsHidden == false)
+        //        && (string.IsNullOrEmpty(this.fullPath) == false)
+        //    )
+        //    {
+        //        //	For some yet unknown reasons, the attributes provided by the enumeration
+        //        //	functions don't provide the correct 'Hidden' attribute in some cases; for
+        //        //	instance, a .svn folder in a document library won't be marked as hidden.
 
-            return attributes;
-        }
+        //        //	Make sure what the visibility of the directory really is:
 
-        internal FolderItem(Platform.FolderItemHandle handle)
-        {
-            this.icon = null;
-            this.queryMode = new FolderQueryMode();
-            this.displayName = null;
-            this.typeName = null;
-            this.fullPath = null;
-            this.handle = handle;
-            this.attributes = Platform.FolderItemAttributes.None;
-        }
+        //        this.attributes = FolderItem.FixDirectoryHiddenAttribute(
+        //            this.attributes,
+        //            this.fullPath
+        //        );
+        //    }
+        //}
+
+        //private static Platform.FolderItemAttributes FixDirectoryHiddenAttribute(
+        //    Platform.FolderItemAttributes attributes,
+        //    string fullPath
+        //)
+        //{
+        //    try
+        //    {
+        //        if (System.IO.Directory.Exists(fullPath))
+        //        {
+        //            var folderAttrib = new System.IO.DirectoryInfo(fullPath).Attributes;
+
+        //            if ((folderAttrib & System.IO.FileAttributes.Hidden) != 0)
+        //            {
+        //                attributes |= Platform.FolderItemAttributes.Hidden;
+        //            }
+        //        }
+        //    }
+        //    catch { }
+
+        //    return attributes;
+        //}
+
+        //internal FolderItem(Platform.FolderItemHandle handle)
+        //{
+        //    this.icon = null;
+        //    this.queryMode = new FolderQueryMode();
+        //    this.displayName = null;
+        //    this.typeName = null;
+        //    this.fullPath = null;
+        //    this.handle = handle;
+        //    this.attributes = Platform.FolderItemAttributes.None;
+        //}
 
         /// <summary>
         /// Gets the icon for this item.
@@ -87,7 +95,12 @@ namespace Epsitec.Common.Support
         /// <value>The icon or <c>null</c>.</value>
         public FolderItemIcon Icon
         {
-            get { return this.icon; }
+            get
+            {
+                /*return this.icon;
+                 * */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -96,7 +109,13 @@ namespace Epsitec.Common.Support
         /// <value>The display name.</value>
         public string DisplayName
         {
-            get { return this.displayName; }
+            get
+            {
+                /*
+                return this.displayName;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -105,7 +124,13 @@ namespace Epsitec.Common.Support
         /// <value>The type name.</value>
         public string TypeName
         {
-            get { return this.typeName; }
+            get
+            {
+                /*
+                return this.typeName;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -127,7 +152,13 @@ namespace Epsitec.Common.Support
         /// </value>
         public bool IsVirtual
         {
-            get { return string.IsNullOrEmpty(this.fullPath); }
+            get
+            {
+                /*
+                return string.IsNullOrEmpty(this.fullPath);
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -136,7 +167,18 @@ namespace Epsitec.Common.Support
         /// <value><c>true</c> if this item is empty; otherwise, <c>false</c>.</value>
         public bool IsEmpty
         {
-            get { return this.displayName == null; }
+            get
+            {
+                if (this.fullPath == null)
+                {
+                    return true;
+                }
+                if (!this.IsFolder)
+                {
+                    return false;
+                }
+                return !Directory.EnumerateFileSystemEntries(this.fullPath).Any();
+            }
         }
 
         /// <summary>
@@ -145,7 +187,13 @@ namespace Epsitec.Common.Support
         /// <value><c>true</c> if this item is valid; otherwise, <c>false</c>.</value>
         public bool IsValid
         {
-            get { return this.displayName != null; }
+            get
+            {
+                /*
+                return this.displayName != null;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -157,7 +205,13 @@ namespace Epsitec.Common.Support
         /// </value>
         public bool IsBrowsable
         {
-            get { return (this.attributes & Platform.FolderItemAttributes.Browsable) != 0; }
+            get
+            {
+                /*
+                return (this.attributes & Platform.FolderItemAttributes.Browsable) != 0;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -166,7 +220,11 @@ namespace Epsitec.Common.Support
         /// <value><c>true</c> if this item is a folder; otherwise, <c>false</c>.</value>
         public bool IsFolder
         {
-            get { return (this.attributes & Platform.FolderItemAttributes.Folder) != 0; }
+            get
+            {
+                FileAttributes attributes = File.GetAttributes(this.fullPath);
+                return attributes.HasFlag(FileAttributes.Directory);
+            }
         }
 
         /// <summary>
@@ -177,7 +235,13 @@ namespace Epsitec.Common.Support
         /// </value>
         public bool IsCompressed
         {
-            get { return (this.attributes & Platform.FolderItemAttributes.Compressed) != 0; }
+            get
+            {
+                /*
+                return (this.attributes & Platform.FolderItemAttributes.Compressed) != 0;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -188,7 +252,13 @@ namespace Epsitec.Common.Support
         /// </value>
         public bool IsEncrypted
         {
-            get { return (this.attributes & Platform.FolderItemAttributes.Encrypted) != 0; }
+            get
+            {
+                /*
+                return (this.attributes & Platform.FolderItemAttributes.Encrypted) != 0;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -199,6 +269,7 @@ namespace Epsitec.Common.Support
         {
             get
             {
+                /*
                 if ((this.attributes & Platform.FolderItemAttributes.Hidden) != 0)
                 {
                     return true;
@@ -207,6 +278,8 @@ namespace Epsitec.Common.Support
                 {
                     return false;
                 }
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -218,7 +291,13 @@ namespace Epsitec.Common.Support
         /// </value>
         public bool IsShortcut
         {
-            get { return (this.attributes & Platform.FolderItemAttributes.Shortcut) != 0; }
+            get
+            {
+                /*
+                return (this.attributes & Platform.FolderItemAttributes.Shortcut) != 0;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -227,10 +306,10 @@ namespace Epsitec.Common.Support
         /// <value>
         /// 	<c>true</c> if this item is a web link; otherwise, <c>false</c>.
         /// </value>
-        public bool IsWebLink
-        {
-            get { return (this.attributes & Platform.FolderItemAttributes.WebLink) != 0; }
-        }
+        //public bool IsWebLink
+        //{
+        //    get { return (this.attributes & Platform.FolderItemAttributes.WebLink) != 0; }
+        //}
 
         /// <summary>
         /// Gets a value indicating whether this item is read only.
@@ -240,7 +319,13 @@ namespace Epsitec.Common.Support
         /// </value>
         public bool IsReadOnly
         {
-            get { return (this.attributes & Platform.FolderItemAttributes.ReadOnly) != 0; }
+            get
+            {
+                /*
+                return (this.attributes & Platform.FolderItemAttributes.ReadOnly) != 0;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -251,6 +336,7 @@ namespace Epsitec.Common.Support
         {
             get
             {
+                /*
                 //	WIN32 specific code :
 
                 if (
@@ -265,6 +351,8 @@ namespace Epsitec.Common.Support
                 {
                     return false;
                 }
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -277,7 +365,13 @@ namespace Epsitec.Common.Support
         /// </value>
         public bool IsFileSystemNode
         {
-            get { return (this.attributes & Platform.FolderItemAttributes.FileSystemNode) != 0; }
+            get
+            {
+                /*
+                return (this.attributes & Platform.FolderItemAttributes.FileSystemNode) != 0;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -288,6 +382,7 @@ namespace Epsitec.Common.Support
         {
             get
             {
+                /*
                 if (this.IsDrive)
                 {
                     return new System.IO.DriveInfo(this.fullPath);
@@ -296,6 +391,8 @@ namespace Epsitec.Common.Support
                 {
                     return null;
                 }
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -305,7 +402,13 @@ namespace Epsitec.Common.Support
         /// <value>The query mode.</value>
         public FolderQueryMode QueryMode
         {
-            get { return this.queryMode; }
+            get
+            {
+                /*
+                return this.queryMode;
+                */
+                throw new System.NotImplementedException();
+            }
         }
 
         public static readonly FolderItem Empty = new FolderItem();
@@ -318,6 +421,7 @@ namespace Epsitec.Common.Support
         {
             get
             {
+                /*
                 int ticks = System.Environment.TickCount;
                 int delta = System.Math.Abs(FolderItem.showHiddenFilesCacheTicks - ticks);
 
@@ -339,6 +443,8 @@ namespace Epsitec.Common.Support
                 }
 
                 return FolderItem.showHiddenFilesCacheValue;
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -350,6 +456,7 @@ namespace Epsitec.Common.Support
         {
             get
             {
+                /*
                 int ticks = System.Environment.TickCount;
                 int delta = System.Math.Abs(FolderItem.hideFileExtensionsCacheTicks - ticks);
 
@@ -367,6 +474,8 @@ namespace Epsitec.Common.Support
                 }
 
                 return FolderItem.hideFileExtensionsCacheValue;
+                */
+                throw new System.NotImplementedException();
             }
         }
 
@@ -378,6 +487,7 @@ namespace Epsitec.Common.Support
         /// <returns>The short name of the file.</returns>
         public static string GetShortFileName(string path)
         {
+            /*
             if (FolderItem.HideFileExtensions)
             {
                 return System.IO.Path.GetFileNameWithoutExtension(path);
@@ -386,6 +496,8 @@ namespace Epsitec.Common.Support
             {
                 return System.IO.Path.GetFileName(path);
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -397,6 +509,7 @@ namespace Epsitec.Common.Support
         /// </returns>
         public static bool IsNetworkPath(string path)
         {
+            /*
             if (string.IsNullOrEmpty(path))
             {
                 return false;
@@ -410,12 +523,15 @@ namespace Epsitec.Common.Support
             {
                 return false;
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         #region IEquatable<FolderItem> Members
 
         public bool Equals(FolderItem other)
         {
+            /*
             if (System.Object.ReferenceEquals(other, null))
             {
                 return false;
@@ -427,6 +543,8 @@ namespace Epsitec.Common.Support
             }
 
             return this.handle.Equals(other.handle);
+            */
+            throw new System.NotImplementedException();
         }
 
         #endregion
@@ -460,6 +578,7 @@ namespace Epsitec.Common.Support
 
         public override string ToString()
         {
+            /*
             System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
             buffer.Append(this.DisplayName);
@@ -475,13 +594,15 @@ namespace Epsitec.Common.Support
             buffer.Append(this.IsFileSystemNode ? "N" : "n");
 
             return buffer.ToString();
+            */
+            throw new System.NotImplementedException();
         }
 
-        internal Platform.FolderItemHandle Handle
-        {
-            get { return this.handle; }
-            set { this.handle = value; }
-        }
+        //internal Platform.FolderItemHandle Handle
+        //{
+        //    get { return this.handle; }
+        //    set { this.handle = value; }
+        //}
 
         private readonly FolderItemIcon icon;
         private readonly string displayName;

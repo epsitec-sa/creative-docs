@@ -18,21 +18,17 @@ namespace Epsitec.Common.Support.Platform
 
         public static FolderItem CreateFolderItem(string path, FolderQueryMode mode)
         {
-            /*
-            return Win32.FileInfo.CreateFolderItem(path, mode);
-            */
-            throw new System.NotImplementedException();
-            return FolderItem.Empty;
+            return new FolderItem(path, mode);
         }
 
-        internal static FolderItem CreateFolderItem(FolderItemHandle handle, FolderQueryMode mode)
-        {
-            /*
-            return Win32.FileInfo.CreateFolderItem(handle, mode);
-            */
-            throw new System.NotImplementedException();
-            return FolderItem.Empty;
-        }
+        //internal static FolderItem CreateFolderItem(FolderItemHandle handle, FolderQueryMode mode)
+        //{
+        //    /*
+        //    return Win32.FileInfo.CreateFolderItem(handle, mode);
+        //    */
+        //    throw new System.NotImplementedException();
+        //    return FolderItem.Empty;
+        //}
 
         /// <summary>
         /// Returns a collection of folders within another folder defined by its path

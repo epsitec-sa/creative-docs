@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Dialogs.Helpers;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
@@ -54,7 +55,7 @@ namespace Epsitec.Common.Dialogs
                 if (value == "") // poste de travail ?
                 {
                     folder = FileManager.GetFolderItem(
-                        FolderId.VirtualMyComputer,
+                        System.Environment.SpecialFolder.MyDocuments,
                         FolderQueryMode.NoIcons
                     );
                 }
@@ -73,7 +74,7 @@ namespace Epsitec.Common.Dialogs
                     if (folder.IsEmpty)
                     {
                         folder = FileManager.GetFolderItem(
-                            FolderId.VirtualMyComputer,
+                            System.Environment.SpecialFolder.MyDocuments,
                             FolderQueryMode.NoIcons
                         );
                     }
@@ -115,53 +116,83 @@ namespace Epsitec.Common.Dialogs
 
         public DialogResult ShowDialog()
         {
-            /*
-            System.Windows.Forms.FileDialog dialog;
-
+            // bl-net8-cross cleanup
+            //System.Windows.Forms.FileDialog dialog;
+            NativeFileDialogSharp.DialogResult result;
             switch (this.fileDialogType)
             {
                 case FileDialogType.Save:
-                    dialog = new System.Windows.Forms.SaveFileDialog()
-                    {
-                        CheckFileExists = false,
-                        CheckPathExists = false,
-                    };
+                    //dialog = new System.Windows.Forms.SaveFileDialog()
+                    //{
+                    //    CheckFileExists = false,
+                    //    CheckPathExists = false,
+                    //};
+                    result = NativeFileDialogSharp.Dialog.FileSave(
+                        this.filters.FileDialogFilter,
+                        this.InitialDirectory
+                    );
                     break;
 
                 default:
-                    dialog = new System.Windows.Forms.OpenFileDialog()
+                    if (this.enableMultipleSelection)
                     {
-                        CheckFileExists = true,
-                        CheckPathExists = true,
-                        Multiselect = this.enableMultipleSelection,
-                    };
+                        result = NativeFileDialogSharp.Dialog.FileOpenMultiple(
+                            this.filters.FileDialogFilter,
+                            this.InitialDirectory
+                        );
+                    }
+                    else
+                    {
+                        result = NativeFileDialogSharp.Dialog.FileOpen(
+                            this.filters.FileDialogFilter,
+                            this.InitialDirectory
+                        );
+                    }
+                    //dialog = new System.Windows.Forms.OpenFileDialog()
+                    //{
+                    //    CheckFileExists = true,
+                    //    CheckPathExists = true,
+                    //    Multiselect = this.enableMultipleSelection,
+                    //};
                     break;
             }
+            // SETUP SOME OPTIONS
 
-            dialog.AutoUpgradeEnabled = true;
-            dialog.DereferenceLinks = true;
-            dialog.AddExtension = true;
-            dialog.RestoreDirectory = false;
-            dialog.ShowHelp = false;
-            dialog.ValidateNames = true;
-            dialog.Title = this.title;
-            dialog.InitialDirectory = this.InitialDirectory;
-            dialog.FileName = System.IO.Path.GetFileName(this.FileName);
-            dialog.Filter = this.filters.FileDialogFilter;
+            //dialog.AutoUpgradeEnabled = true;
+            //dialog.DereferenceLinks = true;
+            //dialog.AddExtension = true;
+            //dialog.RestoreDirectory = false;
+            //dialog.ShowHelp = false;
+            //dialog.ValidateNames = true;
+            //dialog.Title = this.title;
+            //dialog.InitialDirectory = this.InitialDirectory;
+            //dialog.FileName = System.IO.Path.GetFileName(this.FileName);
+            //dialog.Filter = this.filters.FileDialogFilter;
 
-            foreach (var favorite in this.favorites)
+            //foreach (var favorite in this.favorites)
+            //{
+            //    var place = new System.Windows.Forms.FileDialogCustomPlace(favorite);
+            //    dialog.CustomPlaces.Add(place);
+            //}
+
+            // SHOW THE DIALOG
+            //var windowsResult = dialog.ShowDialog();
+
+            // GET THE RESULT
+            //this.result = AbstractFileDialog.ConvertWindowsResult(windowsResult);
+            if (result.IsOk)
             {
-                var place = new System.Windows.Forms.FileDialogCustomPlace(favorite);
-                dialog.CustomPlaces.Add(place);
+                this.result = DialogResult.Accept;
+            }
+            if (result.IsCancelled)
+            {
+                this.result = DialogResult.Cancel;
             }
 
-            var windowsResult = dialog.ShowDialog();
-            this.result = AbstractFileDialog.ConvertWindowsResult(windowsResult);
-
-            if (this.result == DialogResult.Accept)
+            if (result.IsOk)
             {
-                this.filename = dialog.FileName;
-                this.filenames = dialog.FileNames;
+                this.filename = result.Path;
+                this.filenames = result.Paths?.ToArray();
 
                 this.InitialDirectory = System.IO.Path.GetDirectoryName(this.filename);
             }
@@ -179,9 +210,6 @@ namespace Epsitec.Common.Dialogs
             {
                 return this.result;
             }
-            */
-            throw new System.NotImplementedException();
-            return DialogResult.None;
         }
 
         protected virtual string RedirectPath(string path)
@@ -212,9 +240,6 @@ namespace Epsitec.Common.Dialogs
         protected abstract Rectangle GetOwnerBounds();
 
         protected abstract void FavoritesAddApplicationFolders();
-
-        protected void AddFavorite(FolderId id) { }
-
         protected void AddFavorite(string text, string icon, string path)
         {
             this.favorites.Add(path);
