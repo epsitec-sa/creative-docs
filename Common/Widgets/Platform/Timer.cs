@@ -56,12 +56,6 @@ namespace Epsitec.Common.Widgets.Platform
                         "Timer Period should be a strictly positive number."
                     );
                 }
-                if (state != TimerState.Stopped)
-                {
-                    throw new System.InvalidOperationException(
-                        "The timer should be stopped to set the delay"
-                    );
-                }
                 this.period = System.TimeSpan.FromSeconds(value);
             }
         }
@@ -104,16 +98,6 @@ namespace Epsitec.Common.Widgets.Platform
         {
             this.TerminateTimerTask();
             this.isDisposed = true;
-            if (this.cancelTokenSource != null)
-            {
-                this.cancelTokenSource.Dispose();
-                this.cancelTokenSource = null;
-            }
-            if (this.timerTask != null)
-            {
-                this.timerTask.Dispose();
-                this.timerTask = null;
-            }
             System.GC.SuppressFinalize(this);
         }
 
@@ -247,8 +231,18 @@ namespace Epsitec.Common.Widgets.Platform
 
         private void TerminateTimerTask()
         {
-            this.cancelTokenSource.Cancel();
-            this.timerTask.Wait();
+            if (this.cancelTokenSource != null)
+            {
+                this.cancelTokenSource.Cancel();
+                this.cancelTokenSource.Dispose();
+                this.cancelTokenSource = null;
+            }
+            if (this.timerTask != null)
+            {
+                this.timerTask.Wait();
+                this.timerTask.Dispose();
+                this.timerTask = null;
+            }
         }
 
         private void FireTimerEvent()
