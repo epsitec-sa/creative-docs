@@ -45,7 +45,7 @@ namespace Epsitec.Common.DocumentEditor
                     break;
             }
 
-            Application.application.Window.Run();
+            Window.RunEventLoop();
             Application.application.Dispose();
         }
 

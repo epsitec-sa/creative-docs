@@ -65,9 +65,9 @@ namespace Epsitec.Common.Widgets
             this.root.NotifyWindowSizeChanged(width, height);
         }
 
-        public void Run()
+        public static void RunEventLoop()
         {
-            SDLWindowManager.RunApplicationEventLoop();
+            PlatformWindow.RunEventLoop();
         }
 
         public static void Quit()
@@ -803,7 +803,7 @@ namespace Epsitec.Common.Widgets
 
             //	Il est conseillé de rajouter un test nommé AutomatedTestEnvironment qui
             //	met la propriété RunningInAutomatedTestEnvironment à true; ainsi, si on
-            //	exécute un test global (Run sans avoir sélectionné de test spécifique),
+            //	exécute un test global (RunEventLoop sans avoir sélectionné de test spécifique),
             //	RunInTestEnvironment ne bloquera pas.
 
             if (PlatformWindow.RunningInAutomatedTestEnvironment)
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Widgets
             }
             else
             {
-                System.Windows.Forms.Application.Run(platformWindow.PlatformWindow);
+                System.Windows.Forms.Application.RunEventLoop(platformWindow.PlatformWindow);
             }
             */
         }
@@ -826,7 +826,7 @@ namespace Epsitec.Common.Widgets
                     }
                     else
                     {
-                        System.Windows.Forms.Application.Run(form);
+                        System.Windows.Forms.Application.RunEventLoop(form);
                     }
         
                 }

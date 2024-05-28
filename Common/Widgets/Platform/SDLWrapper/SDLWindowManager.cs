@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         }
 
         /// <summary>
-        /// Run the application event loop.
+        /// RunEventLoop the application event loop.
         /// This function is blocking until all windows are closed.
         /// </summary>
         public static void RunApplicationEventLoop()
@@ -63,14 +63,14 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             }
         }
 
-        public static void PushUserEvent(SDLWindow window, int eventCode)
+        public static void PushUserEvent(int eventCode, SDLWindow? window)
         {
             SDL_Event ev = new SDL_Event();
             ev.type = (SDL_EventType)SDLWindowManager.USER_EVENT;
             SDL_UserEvent userEvent = new SDL_UserEvent();
             userEvent.type = SDLWindowManager.USER_EVENT;
             userEvent.timestamp = SDL_GetTicks();
-            userEvent.windowID = window.windowID;
+            userEvent.windowID = window == null ? 0 : window.windowID;
             userEvent.code = eventCode;
             ev.user = userEvent;
             SDL_PushEvent(ref ev);
@@ -121,7 +121,9 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 default:
                     if (e.type == (SDL_EventType)SDLWindowManager.USER_EVENT)
                     {
-                        window = SDLWindowManager.GetWindowFromId(e.user.windowID);
+                        window =
+                            SDLWindowManager.GetWindowFromId(e.user.windowID)
+                            ?? SDLWindowManager.GetAnyWindow();
                         window?.OnUserEvent(e.user.code);
                         return;
                     }
@@ -133,6 +135,15 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         private static SDLWindow GetWindowFromId(uint winId)
         {
             return openWindows.GetValueOrDefault(winId, null);
+        }
+
+        private static SDLWindow GetAnyWindow()
+        {
+            foreach (var (_, window) in SDLWindowManager.openWindows.ToArray())
+            {
+                return window;
+            }
+            return null;
         }
 
         static void QuitSDL()

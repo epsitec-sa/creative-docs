@@ -147,6 +147,13 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.OnResize(sx, sy);
         }
 
+        public override void OnUserEvent(int eventCode)
+        {
+            // for now, we have only one user event type to fire the timers
+            // if we need to add more of them later, we can distinguish them with the eventCode
+            Timer.FirePendingEvents();
+        }
+
         //public override void OnKey(int x, int y, uint key, AntigrainSharp.InputFlags flags)
         //{
         //    KeyCode keyCode = (KeyCode)key;
@@ -513,7 +520,7 @@ namespace Epsitec.Common.Widgets.Platform
                     );
                 }
                 Console.WriteLine($"Set opacity {value}");
-                //this.SetWindowOpacity((float)value);
+                this.SetWindowOpacity((float)value);
                 this.alpha = value;
             }
         }
@@ -836,6 +843,15 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 this.widgetWindow.DispatchValidation();
             }
+        }
+
+        public static void RunEventLoop()
+        {
+            Timer.PendingTimers += (_) =>
+            {
+                SDLWrapper.SDLWindowManager.PushUserEvent(0, null);
+            };
+            SDLWrapper.SDLWindowManager.RunApplicationEventLoop();
         }
         #endregion
 

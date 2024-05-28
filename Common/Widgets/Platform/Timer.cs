@@ -155,7 +155,8 @@ namespace Epsitec.Common.Widgets.Platform
                     }
                     break;
                 case TimerState.Stopped:
-                    throw new System.InvalidOperationException("Cannot suspend a stopped timer");
+                    // suspending when the timer is stopped does nothing
+                    return;
             }
             this.SetState(TimerState.Suspended);
         }
@@ -266,8 +267,11 @@ namespace Epsitec.Common.Widgets.Platform
         private static void AddToPendingQueue(Timer timer)
         {
             Timer.pendingTimersQueue.Enqueue(timer);
+            Timer.PendingTimers(null);
         }
         #endregion
+
+        public static event EventHandler PendingTimers;
 
         private static ConcurrentQueue<Timer> pendingTimersQueue = new ConcurrentQueue<Timer>();
 

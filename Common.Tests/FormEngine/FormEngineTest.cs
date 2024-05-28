@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.FormEngine;
 using Epsitec.Common.Support;
@@ -5,7 +6,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Adorners;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.FormEngine
 {
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Tests.FormEngine
         public void AutomatedTestEnvironment()
         {
             //	Si ce test est exécuté avant les autres tests, ceux-ci ne bloquent pas
-            //	dans l'interaction des diverses fenêtres. Utile si on fait un [Run] de
+            //	dans l'interaction des diverses fenêtres. Utile si on fait un [RunEventLoop] de
             //	tous les tests d'un coup.
 
             Window.RunningInAutomatedTestEnvironment = true;

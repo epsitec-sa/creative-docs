@@ -949,7 +949,7 @@ namespace Epsitec.Common.Tests.Widgets
             //			text.Dock   = DockStyle.Fill;
             //			window.WindowSize = new Drawing.Size (200, 80);
             //			window.Show ();
-            //			window.Run ();
+            //			window.RunEventLoop ();
             //		}
 
             System.Diagnostics.Debug.WriteLine("Button clicked.");
