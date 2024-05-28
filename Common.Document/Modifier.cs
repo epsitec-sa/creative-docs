@@ -2142,6 +2142,7 @@ namespace Epsitec.Common.Document
             return true;
         }
 
+        // bl-net8-cross maybedelete
         /*        protected System.Drawing.Bitmap GetPastedBitmap()
                 {
                     //	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
@@ -7371,7 +7372,6 @@ namespace Epsitec.Common.Document
         {
             //	Démarre le timer des miniatures.
             this.miniaturesTimer.Period = quick ? 0.05 : 0.10;
-            //?this.miniaturesTimer.Period = quick ? 0.50 : 1.00;
             this.miniaturesTimer.Start();
         }
 
