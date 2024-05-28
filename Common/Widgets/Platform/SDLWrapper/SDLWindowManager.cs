@@ -7,12 +7,20 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 {
     internal class SDLWindowManager
     {
+        private static uint USER_EVENT;
+        private static bool initDone = false;
+
         static void Init()
         {
+            if (SDLWindowManager.initDone)
+            {
+                return;
+            }
             if (SDL_Init(SDL_INIT_VIDEO) < 0)
             {
                 throw new SDLException(SDL_GetError());
             }
+            SDLWindowManager.USER_EVENT = SDL_RegisterEvents(1);
         }
 
         public static void AddWindow(SDLWindow window)
@@ -31,6 +39,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         /// </summary>
         public static void RunApplicationEventLoop()
         {
+            SDLWindowManager.Init();
             Console.WriteLine("SDLWindowManager run");
             while (true)
             {
@@ -43,6 +52,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 }
             }
             Console.WriteLine("SDLWindowManager run end");
+            SDLWindowManager.QuitSDL();
         }
 
         public static void UpdateDrawings()
@@ -51,6 +61,19 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             {
                 window.UpdateDrawing();
             }
+        }
+
+        public static void PushUserEvent(SDLWindow window, int eventCode)
+        {
+            SDL_Event ev = new SDL_Event();
+            ev.type = (SDL_EventType)SDLWindowManager.USER_EVENT;
+            SDL_UserEvent userEvent = new SDL_UserEvent();
+            userEvent.type = SDLWindowManager.USER_EVENT;
+            userEvent.timestamp = SDL_GetTicks();
+            userEvent.windowID = window.windowID;
+            userEvent.code = eventCode;
+            ev.user = userEvent;
+            SDL_PushEvent(ref ev);
         }
 
         private static void ProcessEvents()
@@ -96,6 +119,12 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                     window?.OnMouseWheel(e.wheel.x, e.wheel.y);
                     break;
                 default:
+                    if (e.type == (SDL_EventType)SDLWindowManager.USER_EVENT)
+                    {
+                        window = SDLWindowManager.GetWindowFromId(e.user.windowID);
+                        window?.OnUserEvent(e.user.code);
+                        return;
+                    }
                     Console.WriteLine($"SDLWindow handle event {e.type}");
                     break;
             }

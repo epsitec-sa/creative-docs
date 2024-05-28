@@ -216,6 +216,8 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         public virtual void OnMouseWheel(int wheelX, int wheelY) { }
 
+        public virtual void OnUserEvent(int eventCode) { }
+
         protected virtual void OnFocusGained() { }
 
         protected virtual void OnFocusLost() { }
@@ -223,6 +225,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         protected virtual void OnWindowShown() { }
 
         protected virtual void OnWindowHidden() { }
+
         #endregion
 
         #region Public methods
