@@ -237,6 +237,19 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.isVisible = true;
         }
 
+        public void ShowWithoutFocus()
+        {
+            this.RequireNotDisposed();
+            // Hack: SDL2 does not support window that can't be focused (which we need for the tooltip)
+            // we get the currently focused window, show the new window and set the focus back on the other window
+            // When SDL3 will be released, we might replace this hack by using SDL_SetWindowFocusable()
+            // to disable input focus on tooltips
+            IntPtr focusedWindow = SDL_GetMouseFocus();
+            SDL_ShowWindow(this.window);
+            SDL_RaiseWindow(focusedWindow);
+            this.isVisible = true;
+        }
+
         public void Hide()
         {
             this.RequireNotDisposed();

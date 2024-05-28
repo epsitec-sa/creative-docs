@@ -213,6 +213,25 @@ namespace Epsitec.Common.Widgets
             this.PlatformWindow.Show();
         }
 
+        public virtual void ShowWithoutFocus()
+        {
+            this.AsyncValidation();
+
+            if (this.showCount == 0)
+            {
+                this.showCount++;
+                //				this.root.InternalUpdateGeometry ();
+                this.root.Invalidate();
+            }
+
+            if (this.IsVisible == false)
+            {
+                this.OnAboutToShowWindow();
+            }
+
+            this.PlatformWindow.ShowWithoutFocus();
+        }
+
         public virtual void ShowDialog()
         {
             this.AsyncValidation();

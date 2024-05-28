@@ -20,7 +20,9 @@ namespace Epsitec.Common.Widgets
             this.hash = new Dictionary<long, object>();
             this.behaviour = ToolTipBehaviour.Normal;
 
-            this.window = new Window(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar);
+            this.window = new Window(
+                WindowFlags.NoBorder | WindowFlags.HideFromTaskbar | WindowFlags.AlwaysOnTop
+            );
             this.window.Name = "$ToolTip";
             this.window.DisableMouseActivation();
             this.window.WindowBounds = new Drawing.Rectangle(0, 0, 8, 8);
@@ -704,7 +706,7 @@ namespace Epsitec.Common.Widgets
 
             if (this.IsDisplayed == false)
             {
-                this.window.Show();
+                this.window.ShowWithoutFocus();
             }
 
             this.lastChangeTime = System.DateTime.Now;
