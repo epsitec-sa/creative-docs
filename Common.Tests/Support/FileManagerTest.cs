@@ -1,6 +1,6 @@
+using System.IO;
 using Epsitec.Common.Support;
 using NUnit.Framework;
-using System.IO;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Tests.Support
             System.IO.File.Delete(movedFile1);
             System.IO.File.Delete(movedFile2);
         }
-        
+
         [Test]
         public void CheckRename()
         {
@@ -116,11 +116,7 @@ namespace Epsitec.Common.Tests.Support
 
             string newFolder = GetRandomTempPath();
             string newFilePath = Path.Join(newFolder, Path.GetFileName(testFile));
-            FileManager.CopyFilesToFolder(
-                mode,
-                new string[] { testFile },
-                newFolder
-            );
+            FileManager.CopyFilesToFolder(mode, new string[] { testFile }, newFolder);
 
             Assert.IsTrue(System.IO.File.Exists(testFile));
             Assert.IsTrue(System.IO.File.Exists(newFilePath));
@@ -129,6 +125,7 @@ namespace Epsitec.Common.Tests.Support
 
             FileManager.DeleteFiles(mode, newFolder);
         }
+
         [Test]
         [Ignore("Broken behavior. Seems unused.")]
         public void CheckMoveToFolderDeleteFolder()
@@ -143,11 +140,7 @@ namespace Epsitec.Common.Tests.Support
 
             string newFolder = GetRandomTempPath();
             string newFilePath = Path.Join(newFolder, Path.GetFileName(testFile));
-            FileManager.MoveFilesToFolder(
-                mode,
-                new string[] { testFile },
-                newFolder
-            );
+            FileManager.MoveFilesToFolder(mode, new string[] { testFile }, newFolder);
 
             Assert.IsFalse(System.IO.File.Exists(testFile));
             Assert.IsTrue(System.IO.File.Exists(newFilePath));
@@ -162,7 +155,7 @@ namespace Epsitec.Common.Tests.Support
         {
             string sourceFolder = GetRandomTempPath();
             System.IO.Directory.CreateDirectory(sourceFolder);
-            
+
             string testFile1 = Path.Join(sourceFolder, Path.GetRandomFileName());
             string testFile2 = Path.Join(sourceFolder, Path.GetRandomFileName());
             System.IO.File.WriteAllText(testFile1, "Fichier 1\r\n");
@@ -175,11 +168,7 @@ namespace Epsitec.Common.Tests.Support
             string newFilePath2 = Path.Join(newFolder, Path.GetFileName(testFile2));
 
             string wildcardPattern = Path.Join(sourceFolder, "*.*");
-            FileManager.MoveFilesToFolder(
-                mode,
-                new string[] { wildcardPattern },
-                newFolder
-            );
+            FileManager.MoveFilesToFolder(mode, new string[] { wildcardPattern }, newFolder);
 
             Assert.IsFalse(System.IO.File.Exists(testFile1));
             Assert.IsFalse(System.IO.File.Exists(testFile2));
@@ -196,7 +185,7 @@ namespace Epsitec.Common.Tests.Support
         {
             string sourceFolder = GetRandomTempPath();
             System.IO.Directory.CreateDirectory(sourceFolder);
-            
+
             string testFile1 = Path.Join(sourceFolder, Path.GetRandomFileName());
             string testFile2 = Path.Join(sourceFolder, Path.GetRandomFileName());
             System.IO.File.WriteAllText(testFile1, "Fichier 1\r\n");
@@ -209,11 +198,7 @@ namespace Epsitec.Common.Tests.Support
             string newFilePath2 = Path.Join(newFolder, Path.GetFileName(testFile2));
 
             string wildcardPattern = Path.Join(sourceFolder, "*.*");
-            FileManager.CopyFilesToFolder(
-                mode,
-                new string[] { wildcardPattern },
-                newFolder
-            );
+            FileManager.CopyFilesToFolder(mode, new string[] { wildcardPattern }, newFolder);
 
             Assert.IsTrue(System.IO.File.Exists(testFile1));
             Assert.IsTrue(System.IO.File.Exists(testFile2));
@@ -237,7 +222,7 @@ namespace Epsitec.Common.Tests.Support
             bool ok = false;
 
             FolderItem folderItem = FileManager.GetFolderItem(
-                FolderId.Recent,
+                System.Environment.SpecialFolder.Recent,
                 FolderQueryMode.NoIcons
             );
 
@@ -245,7 +230,6 @@ namespace Epsitec.Common.Tests.Support
                 FolderItem item in FileManager.GetFolderItems(folderItem, FolderQueryMode.NoIcons)
             )
             {
-
                 if (item.IsShortcut)
                 {
                     string resolvesTo = FileManager
