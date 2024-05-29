@@ -155,18 +155,10 @@ namespace Epsitec.Common.Widgets.Layouts
         {
             Visual visual = o as Visual;
 
-            if (visual != null)
+            if (visual != null && visual.Parent != null)
             {
-                if (visual.HasChildren)
-                {
-                    visual.Children.RefreshLayoutStatistics();
-                }
-
-                if (visual.Parent != null)
-                {
-                    LayoutContext.AddToMeasureQueue(visual);
-                    LayoutContext.AddToArrangeQueue(visual);
-                }
+                LayoutContext.AddToMeasureQueue(visual);
+                LayoutContext.AddToArrangeQueue(visual);
             }
         }
 

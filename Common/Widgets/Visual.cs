@@ -1711,38 +1711,6 @@ namespace Epsitec.Common.Widgets
             that.InvalidateDisplayCaption();
         }
 
-        private static void NotifyAnchorChanged(
-            DependencyObject o,
-            object oldValue,
-            object newValue
-        )
-        {
-            Visual that = o as Visual;
-
-            if (that.parent != null)
-            {
-                DockStyle dock = that.Dock;
-                AnchorStyles anchorOld = (AnchorStyles)oldValue;
-                AnchorStyles anchorNew = (AnchorStyles)newValue;
-
-                that.parent.children.UpdateLayoutStatistics(that, dock, dock, anchorOld, anchorNew);
-            }
-        }
-
-        private static void NotifyDockChanged(DependencyObject o, object oldValue, object newValue)
-        {
-            Visual that = o as Visual;
-
-            if (that.parent != null)
-            {
-                AnchorStyles anchor = that.Anchor;
-                DockStyle dockOld = (DockStyle)oldValue;
-                DockStyle dockNew = (DockStyle)newValue;
-
-                that.parent.children.UpdateLayoutStatistics(that, dockOld, dockNew, anchor, anchor);
-            }
-        }
-
         private static void NotifyActiveStateChanged(
             DependencyObject o,
             object oldValue,
@@ -1909,7 +1877,6 @@ namespace Epsitec.Common.Widgets
             typeof(Visual),
             new VisualPropertyMetadata(
                 AnchorStyles.None,
-                Visual.NotifyAnchorChanged,
                 VisualPropertyMetadataOptions.AffectsArrange
             )
         );
@@ -1917,11 +1884,7 @@ namespace Epsitec.Common.Widgets
             "Dock",
             typeof(DockStyle),
             typeof(Visual),
-            new VisualPropertyMetadata(
-                DockStyle.None,
-                Visual.NotifyDockChanged,
-                VisualPropertyMetadataOptions.AffectsArrange
-            )
+            new VisualPropertyMetadata(DockStyle.None, VisualPropertyMetadataOptions.AffectsArrange)
         );
         public static readonly DependencyProperty MarginsProperty = DependencyProperty.Register(
             "Margins",
