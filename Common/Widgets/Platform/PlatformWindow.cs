@@ -209,6 +209,7 @@ namespace Epsitec.Common.Widgets.Platform
 
         protected override void OnWindowClosed()
         {
+            // bl-net8-cross cleanup
             //if (this.Focused)
             //{
             //    //	Si la fenêtre avait le focus et qu'on la ferme, on aimerait bien que

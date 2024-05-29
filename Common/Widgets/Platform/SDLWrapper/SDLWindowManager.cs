@@ -50,7 +50,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 {
                     break;
                 }
-                Console.WriteLine($"still {SDLWindowManager.openWindows.Count} windows open");
             }
             Console.WriteLine("SDLWindowManager run end");
             SDLWindowManager.QuitSDL();
