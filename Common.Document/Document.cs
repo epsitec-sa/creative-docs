@@ -176,7 +176,7 @@ namespace Epsitec.Common.Document
                 this.notifier = new Notifier(this);
                 this.dialogs = new DocumentDialogs(this);
                 this.settings = new Settings.Settings(this);
-                //this.printer = new Printer(this);
+                this.printer = new Printer(this);
                 this.exportPdf = new PDF.Export(this);
             }
 
