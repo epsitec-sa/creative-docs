@@ -850,6 +850,7 @@ namespace Epsitec.Common.Types
                 {
                     if (this.binding.IsAsync)
                     {
+                        /*
                         //	If the binding requires an asynchronous access to the source
                         //	value, we delegate the work to the BindingAsyncOperation class.
 
@@ -868,6 +869,8 @@ namespace Epsitec.Common.Types
                         //	to be successfully set and return immediately.
 
                         this.asyncOperation.QuerySourceValueAndUpdateTarget();
+                        */
+                        throw new System.NotImplementedException();
                     }
                     else
                     {
@@ -1232,6 +1235,6 @@ namespace Epsitec.Common.Types
         private bool isDataContextBound;
         private int sourceUpdateCounter;
         private int targetUpdateCounter;
-        private BindingAsyncOperation asyncOperation;
+        //private BindingAsyncOperation asyncOperation;
     }
 }

@@ -589,6 +589,7 @@ namespace Epsitec.Common.Types
         {
             if (this.IsAsync)
             {
+                /*
                 //	The binding is defined to be asynchronous : start a separate
                 //	operation, running concurrently, which will walk the source
                 //	tree and update the targets :
@@ -598,6 +599,8 @@ namespace Epsitec.Common.Types
                 BindingAsyncOperation asyncOperation = new BindingAsyncOperation(this, expressions);
 
                 asyncOperation.AttachToSourceAndUpdateTargets();
+                */
+                throw new System.NotImplementedException();
             }
             else
             {
