@@ -52,6 +52,7 @@ namespace Epsitec.Common.DocumentEditor
         public Application(DocumentType type)
         {
             Window window = new Window(WindowFlags.Resizable);
+            window.WindowClosed += this.HandleMainWindowClosed;
 
             this.editor = new DocumentEditor(
                 type,
@@ -121,6 +122,11 @@ namespace Epsitec.Common.DocumentEditor
             window.MakeActive();
 
             this.editor.MakeReadyToRun();
+        }
+
+        public void HandleMainWindowClosed(object sender)
+        {
+            ToolTip.Default.CloseToolTip();
         }
 
         private void HandleWindowAsyncNotification(object sender)

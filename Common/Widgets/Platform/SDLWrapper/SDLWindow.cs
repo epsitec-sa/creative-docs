@@ -107,13 +107,33 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             get { return this.isVisible; }
         }
 
-        public bool Focused
+        public bool IsFocused
         {
             get
             {
                 this.RequireNotDisposed();
                 SDL_WindowFlags flags = (SDL_WindowFlags)SDL_GetWindowFlags(this.window);
                 return flags.HasFlag(SDL_WindowFlags.SDL_WINDOW_INPUT_FOCUS);
+            }
+        }
+
+        public bool IsMinimized
+        {
+            get
+            {
+                this.RequireNotDisposed();
+                SDL_WindowFlags flags = (SDL_WindowFlags)SDL_GetWindowFlags(this.window);
+                return flags.HasFlag(SDL_WindowFlags.SDL_WINDOW_MINIMIZED);
+            }
+        }
+
+        public bool IsMaximized
+        {
+            get
+            {
+                this.RequireNotDisposed();
+                SDL_WindowFlags flags = (SDL_WindowFlags)SDL_GetWindowFlags(this.window);
+                return flags.HasFlag(SDL_WindowFlags.SDL_WINDOW_MAXIMIZED);
             }
         }
 
@@ -226,6 +246,8 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         protected virtual void OnWindowHidden() { }
 
+        protected virtual void OnWindowClosed() { }
+
         #endregion
 
         #region Public methods
@@ -261,6 +283,24 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         {
             this.RequireNotDisposed();
             SDL_RaiseWindow(this.window);
+        }
+
+        public void Maximize()
+        {
+            this.RequireNotDisposed();
+            SDL_MaximizeWindow(this.window);
+        }
+
+        public void Minimize()
+        {
+            this.RequireNotDisposed();
+            SDL_MinimizeWindow(this.window);
+        }
+
+        public void Restore()
+        {
+            this.RequireNotDisposed();
+            SDL_RestoreWindow(this.window);
         }
 
         public void Flash()
@@ -316,6 +356,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                     this.OnWindowHidden();
                     break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
+                    this.OnWindowClosed();
                     this.Dispose();
                     return;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_MOVED:

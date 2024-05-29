@@ -70,6 +70,11 @@ namespace Epsitec.Common.Widgets
             }
         }
 
+        public void CloseToolTip()
+        {
+            this.window?.Dispose();
+        }
+
         public void HideToolTip()
         {
             lock (this)

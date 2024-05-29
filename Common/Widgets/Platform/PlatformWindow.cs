@@ -207,6 +207,28 @@ namespace Epsitec.Common.Widgets.Platform
             this.widgetWindow.NotifyWindowDefocused();
         }
 
+        protected override void OnWindowClosed()
+        {
+            //if (this.Focused)
+            //{
+            //    //	Si la fenêtre avait le focus et qu'on la ferme, on aimerait bien que
+            //    //	si elle avait une fenêtre "parent", alors ce soit le parent qui reçoive
+            //    //	le focus à son tour. Ca paraît logique.
+
+            //    System.Windows.Forms.Form form = this.Owner;
+
+            //    if (form != null)
+            //    {
+            //        form.Activate();
+            //    }
+            //}
+
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.OnWindowClosed();
+            }
+        }
+
         #endregion
 
         #region SDL <-> Creativedocs conversions
@@ -722,7 +744,7 @@ namespace Epsitec.Common.Widgets.Platform
                 case Animation.RollRight:
                 case Animation.RollLeft:
                     this.isFrozen = true;
-                    this.isAnimatingActiveWindow = this.Focused;
+                    this.isAnimatingActiveWindow = this.IsFocused;
                     this.WindowBounds = b1;
 
                     animator = new Animator(SystemInformation.MenuAnimationRollTime);
@@ -1415,87 +1437,6 @@ namespace Epsitec.Common.Widgets.Platform
         #endregion NotImplemented
 
         #region NotImplemented event handlers
-        protected void OnClosed(System.EventArgs e)
-        //protected override void OnClosed(System.EventArgs e)
-        {
-            /*
-            if (this.Focused)
-            {
-                //	Si la fenêtre avait le focus et qu'on la ferme, on aimerait bien que
-                //	si elle avait une fenêtre "parent", alors ce soit le parent qui reçoive
-                //	le focus à son tour. Ca paraît logique.
-
-                System.Windows.Forms.Form form = this.Owner;
-
-                if (form != null)
-                {
-                    form.Activate();
-                }
-            }
-
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.OnWindowClosed();
-            }
-
-            base.OnClosed(e);
-            */
-            throw new NotImplementedException();
-        }
-
-        protected void OnClosing(System.ComponentModel.CancelEventArgs e)
-        //protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            /*
-            base.OnClosing(e);
-
-            if (this.forcedClose)
-            {
-                return;
-            }
-
-            if (this.widgetWindow == null)
-            {
-                return;
-            }
-
-            this.widgetWindow.OnWindowCloseClicked();
-
-            if (this.preventClose)
-            {
-                e.Cancel = true;
-
-                if (this.preventQuit)
-                {
-                    return;
-                }
-
-                CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher(this.widgetWindow);
-
-                //	Don't generate an Alt-F4 event if there is no dispatcher attached with this
-                //	window, as it would probably bubble up to the owner window and cause the
-                //	application to quit...
-
-                if (dispatcher == null)
-                {
-                    return;
-                }
-
-                //	Empêche la fermeture de la fenêtre lorsque l'utilisateur clique sur le bouton de
-                //	fermeture, et synthétise un événement clavier ALT + F4 à la place...
-
-                System.Windows.Forms.Keys altF4 =
-                    System.Windows.Forms.Keys.F4 | System.Windows.Forms.Keys.Alt;
-                System.Windows.Forms.KeyEventArgs fakeEvent = new System.Windows.Forms.KeyEventArgs(
-                    altF4
-                );
-                Message message = Message.FromKeyEvent(MessageType.KeyDown, fakeEvent);
-                message.MarkAsDummyMessage();
-                this.DispatchMessage(message);
-            }
-            */
-            throw new NotImplementedException();
-        }
 
         protected void OnMouseEnter(System.EventArgs e)
         //protected override void OnMouseEnter(System.EventArgs e)

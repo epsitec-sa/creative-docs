@@ -581,27 +581,21 @@ namespace Epsitec.Common.Widgets
 
         public bool IsMinimized
         {
-            /*            get
-                        {
-                            return (this.latformWindow != null)
-                                && (this.platformWindow.WindowState == System.Windows.Forms.FormWindowState.Minimized);
-                        }
-            */
             get
             {
-                throw new System.NotImplementedException();
-                return true;
+
+                return this.PlatformWindow.IsMinimized;
             }
             set
             {
-                /*                if (this.platformWindow != null)
-                                {
-                                    this.platformWindow.WindowState = value
-                                        ? System.Windows.Forms.FormWindowState.Minimized
-                                        : System.Windows.Forms.FormWindowState.Normal;
-                                }
-                */
-                throw new System.NotImplementedException();
+                if (value)
+                {
+                    this.PlatformWindow.Minimize();
+                }
+                else
+                {
+                    this.PlatformWindow.Restore();
+                }
             }
         }
 
@@ -1202,7 +1196,7 @@ namespace Epsitec.Common.Widgets
 
                 this.OnWindowDefocused();
 
-                if ((this.owner != null) && (this.owner.platformWindow.Focused == false))
+                if ((this.owner != null) && (this.owner.platformWindow.IsFocused == false))
                 {
                     this.owner.NotifyWindowDefocused();
                 }
