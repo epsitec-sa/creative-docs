@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Platform;
 
@@ -752,7 +753,8 @@ namespace Epsitec.Common.Document
                     this.document.Modifier.ObjectMemoryTool
                 );
 
-                this.document.Modifier.OpletQueueEnable = false;
+                System.Diagnostics.Debug.Assert(this.modOpletQueue == null);
+                this.modOpletQueue = this.document.Modifier.DisableOpletQueue();
                 Objects.Abstract layer = this.drawingContext.RootObject();
                 this.CreateRank = layer.Objects.Add(obj); // ajoute à la fin de la liste
             }
@@ -808,7 +810,8 @@ namespace Epsitec.Common.Document
                 {
                     layer.Objects.RemoveAt(this.createRank);
 
-                    this.document.Modifier.OpletQueueEnable = true;
+                    this.modOpletQueue.RestorePreviousState();
+                    this.modOpletQueue = null;
                     this.CreateRank = layer.Objects.Add(obj); // ajoute à la fin de la liste
                     this.document.Modifier.GroupUpdateParents();
                     this.document.Modifier.OpletQueueValidateAction();
@@ -874,7 +877,8 @@ namespace Epsitec.Common.Document
             {
                 layer.Objects.RemoveAt(this.createRank);
 
-                this.document.Modifier.OpletQueueEnable = true;
+                this.modOpletQueue.RestorePreviousState();
+                this.modOpletQueue = null;
                 this.CreateRank = layer.Objects.Add(obj); // ajoute à la fin de la liste
                 this.document.Modifier.GroupUpdateParents();
                 this.document.Modifier.OpletQueueValidateAction();
@@ -2026,7 +2030,8 @@ namespace Epsitec.Common.Document
         #region ZoomMouse
         protected void ZoomMouseDown(Point mouse, bool isRight)
         {
-            this.document.Modifier.OpletQueueEnable = false;
+            System.Diagnostics.Debug.Assert(this.modOpletQueue == null);
+            this.modOpletQueue = this.document.Modifier.DisableOpletQueue();
             this.moveStart = mouse;
 
             if (this.drawingContext.IsShift)
@@ -2114,8 +2119,8 @@ namespace Epsitec.Common.Document
                     }
                 }
             }
-
-            this.document.Modifier.OpletQueueEnable = true;
+            this.modOpletQueue.RestorePreviousState();
+            this.modOpletQueue = null;
         }
         #endregion
 
@@ -5763,5 +5768,7 @@ namespace Epsitec.Common.Document
         protected Image mouseCursorTextFlowAdd;
         protected Image mouseCursorTextFlowRemove;
         protected Image mouseCursorFine;
+
+        private IStateContext modOpletQueue;
     }
 }

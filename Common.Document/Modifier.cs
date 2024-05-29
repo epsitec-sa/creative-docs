@@ -6505,31 +6505,28 @@ namespace Epsitec.Common.Document
         protected Properties.Aggregate AggregateCreate(string name, bool three)
         {
             //	Crée un nouvel agrégat avec seulement 3 propriétés, pas encore référencé.
-            this.OpletQueueEnable = false;
-
-            Properties.Aggregate agg = new Properties.Aggregate(this.document);
-
-            if (name == "")
+            Properties.Aggregate agg;
+            using (this.document.Modifier.DisableOpletQueue())
             {
-                name = this.GetNextTextStyleName(StyleCategory.Graphic); // nom unique
+                agg = new Properties.Aggregate(this.document);
+                if (name == "")
+                {
+                    name = this.GetNextTextStyleName(StyleCategory.Graphic); // nom unique
+                }
+                agg.AggregateName = name;
+                Objects.Abstract model = this.ObjectMemoryTool;
+                if (this.TotalSelected > 0)
+                {
+                    model = this.RetFirstSelectedObject();
+                }
+                if (three)
+                {
+                    this.AggregateCreateProperty(agg, model, Properties.Type.LineMode);
+                    this.AggregateCreateProperty(agg, model, Properties.Type.LineColor);
+                    this.AggregateCreateProperty(agg, model, Properties.Type.FillGradient);
+                }
+                agg.Styles.Selected = -1;
             }
-            agg.AggregateName = name;
-
-            Objects.Abstract model = this.ObjectMemoryTool;
-            if (this.TotalSelected > 0)
-            {
-                model = this.RetFirstSelectedObject();
-            }
-
-            if (three)
-            {
-                this.AggregateCreateProperty(agg, model, Properties.Type.LineMode);
-                this.AggregateCreateProperty(agg, model, Properties.Type.LineColor);
-                this.AggregateCreateProperty(agg, model, Properties.Type.FillGradient);
-            }
-            agg.Styles.Selected = -1;
-
-            this.OpletQueueEnable = true;
             return agg;
         }
 
@@ -6537,29 +6534,29 @@ namespace Epsitec.Common.Document
         {
             //	Crée un nouvel agrégat avec toutes les propriétés d'un objet modèle,
             //	pas encore référencé.
-            this.OpletQueueEnable = false;
-
-            Properties.Aggregate agg = new Properties.Aggregate(this.document);
-
-            if (name == "")
+            Properties.Aggregate agg;
+            using (this.document.Modifier.DisableOpletQueue())
             {
-                name = this.GetNextTextStyleName(StyleCategory.Graphic); // nom unique
+                agg = new Properties.Aggregate(this.document);
+
+                if (name == "")
+                {
+                    name = this.GetNextTextStyleName(StyleCategory.Graphic); // nom unique
+                }
+                agg.AggregateName = name;
+
+                for (int i = 0; i < 100; i++)
+                {
+                    Properties.Type type = Properties.Abstract.SortOrder(i);
+                    if (!Properties.Abstract.StyleAbility(type))
+                        continue;
+                    if (model.Property(type) == null)
+                        continue;
+
+                    this.AggregateCreateProperty(agg, model, type);
+                }
+                agg.Styles.Selected = -1;
             }
-            agg.AggregateName = name;
-
-            for (int i = 0; i < 100; i++)
-            {
-                Properties.Type type = Properties.Abstract.SortOrder(i);
-                if (!Properties.Abstract.StyleAbility(type))
-                    continue;
-                if (model.Property(type) == null)
-                    continue;
-
-                this.AggregateCreateProperty(agg, model, type);
-            }
-            agg.Styles.Selected = -1;
-
-            this.OpletQueueEnable = true;
             return agg;
         }
 
@@ -7213,16 +7210,7 @@ namespace Epsitec.Common.Document
         {
             //	Détermine si les actions seront annulables ou non.
             get { return this.opletQueue.IsEnabled && !this.opletSkip; }
-            set
-            {
-                if (value != this.opletQueue.IsEnabled)
-                {
-                    if (value)
-                        this.opletQueue.Enable();
-                    else
-                        this.opletQueue.Disable();
-                }
-            }
+            set { throw new System.NotImplementedException(); }
         }
 
         public IStateContext DisableOpletQueue()
