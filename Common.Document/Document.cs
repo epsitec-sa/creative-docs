@@ -1009,9 +1009,10 @@ namespace Epsitec.Common.Document
             //	de connaître le pointeur au document.
             Document.ReadDocument = this;
 
+            IStateContext modQueueCtx = null;
             if (this.Modifier != null)
             {
-                this.Modifier.OpletQueueEnable = false;
+                modQueueCtx = this.Modifier.DisableOpletQueue();
             }
 
             Document doc = null;
@@ -1054,7 +1055,7 @@ namespace Epsitec.Common.Document
                 {
                     if (this.Modifier != null)
                     {
-                        this.Modifier.OpletQueueEnable = true;
+                        modQueueCtx.RestorePreviousState();
                     }
                     return e.Message;
                 }
@@ -1072,7 +1073,7 @@ namespace Epsitec.Common.Document
                 {
                     if (this.Modifier != null)
                     {
-                        this.Modifier.OpletQueueEnable = true;
+                        modQueueCtx.RestorePreviousState();
                     }
                     return e.Message;
                 }
@@ -1080,7 +1081,7 @@ namespace Epsitec.Common.Document
 
             if (this.Modifier != null)
             {
-                this.Modifier.OpletQueueEnable = true;
+                modQueueCtx.RestorePreviousState();
             }
 
             if (doc.textContext != null)
@@ -1189,9 +1190,10 @@ namespace Epsitec.Common.Document
         private void ReadFinalize()
         {
             //	Adapte tous les objets après une désérialisation.
+            IStateContext modQueueCtx = null;
             if (this.Modifier != null)
             {
-                this.Modifier.OpletQueueEnable = false;
+                modQueueCtx = this.Modifier.DisableOpletQueue();
             }
 
             if (!this.IsRevisionGreaterOrEqual(1, 0, 24))
@@ -1309,7 +1311,7 @@ namespace Epsitec.Common.Document
             {
                 this.Modifier.UpdatePageAfterChanging();
                 this.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
-                this.Modifier.OpletQueueEnable = true;
+                modQueueCtx.RestorePreviousState();
                 this.Modifier.OpletQueuePurge();
             }
         }

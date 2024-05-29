@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -2571,13 +2571,13 @@ namespace Epsitec.Common.Document
         public void InternalPageLayer(int page, int layer)
         {
             //	Spécifie une page et un calque.
-            bool ie = this.document.Modifier.OpletQueueEnable;
-            this.document.Modifier.OpletQueueEnable = false;
-            this.RootStackClear();
-            this.RootStackPush(page);
-            this.RootStackPush(layer);
-            this.UpdateAfterPageChanged();
-            this.document.Modifier.OpletQueueEnable = ie;
+            using (this.document.Modifier.DisableOpletQueue())
+            {
+                this.RootStackClear();
+                this.RootStackPush(page);
+                this.RootStackPush(layer);
+                this.UpdateAfterPageChanged();
+            }
         }
 
         public int TotalPages()

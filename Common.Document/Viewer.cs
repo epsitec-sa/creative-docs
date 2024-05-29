@@ -830,12 +830,11 @@ namespace Epsitec.Common.Document
                 {
                     this.document.Notifier.NotifyArea(obj.BoundingBox);
                     layer.Objects.RemoveAt(this.createRank);
-
-                    this.document.Modifier.OpletQueueEnable = true;
-                    obj.Dispose();
-                    this.document.Modifier.OpletQueueCancelAction(); // annule les propriétés
-
-                    this.document.Modifier.IsObjectJustCreated = false;
+                    using (this.document.Modifier.EnableOpletQueue())
+                    {
+                        obj.Dispose();
+                        this.document.Modifier.OpletQueueCancelAction(); // annule les propriétés
+                    }
                 }
 
                 this.CreateRank = -1;
@@ -884,11 +883,11 @@ namespace Epsitec.Common.Document
             {
                 layer.Objects.RemoveAt(this.createRank);
 
-                this.document.Modifier.OpletQueueEnable = true;
-                obj.Dispose();
-                this.document.Modifier.OpletQueueCancelAction(); // annule les propriétés
-
-                this.document.Modifier.IsObjectJustCreated = false;
+                using (this.document.Modifier.EnableOpletQueue())
+                {
+                    obj.Dispose();
+                    this.document.Modifier.OpletQueueCancelAction(); // annule les propriétés
+                }
                 obj = null;
             }
 

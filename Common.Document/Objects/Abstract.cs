@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -1794,21 +1794,19 @@ namespace Epsitec.Common.Document.Objects
         {
             //	Transfert toutes les propriétés d'un ObjectMemory source qui n'existent
             //	pas dans l'objet courant.
-            bool ie = this.document.Modifier.OpletQueueEnable;
-            this.document.Modifier.OpletQueueEnable = false;
-
-            for (int i = 0; i < src.properties.Count; i++)
+            using (this.document.Modifier.DisableOpletQueue())
             {
-                Properties.Abstract property = src.properties[i] as Properties.Abstract;
-                if (this.ExistProperty(property.Type))
-                    continue;
+                for (int i = 0; i < src.properties.Count; i++)
+                {
+                    Properties.Abstract property = src.properties[i] as Properties.Abstract;
+                    if (this.ExistProperty(property.Type))
+                        continue;
 
-                property.Owners.Clear();
-                property.Owners.Add(this); // l'objet est un propriétaire de cette propriété
-                this.properties.Add(property); // ajoute dans la liste de l'objet
+                    property.Owners.Clear();
+                    property.Owners.Add(this); // l'objet est un propriétaire de cette propriété
+                    this.properties.Add(property); // ajoute dans la liste de l'objet
+                }
             }
-
-            this.document.Modifier.OpletQueueEnable = ie;
         }
 
         public int PropertyIndex(Properties.Type type)
@@ -2241,28 +2239,24 @@ namespace Epsitec.Common.Document.Objects
 
                 if (existing.BoolValue == close)
                 {
-                    oqe = this.document.Modifier.OpletQueueEnable;
-                    this.document.Modifier.OpletQueueEnable = true;
-
-                    this.MergeProperty(existing, pb);
-
-                    this.document.Modifier.OpletQueueEnable = oqe;
+                    using (this.document.Modifier.EnableOpletQueue())
+                    {
+                        this.MergeProperty(existing, pb);
+                    }
                     return;
                 }
             }
 
-            oqe = this.document.Modifier.OpletQueueEnable;
-            this.document.Modifier.OpletQueueEnable = true;
+            using (this.document.Modifier.EnableOpletQueue())
+            {
+                Properties.Abstract dst = Properties.Abstract.NewProperty(this.document, pb.Type);
+                pb.CopyTo(dst);
+                Properties.Bool npb = dst as Properties.Bool;
+                npb.BoolValue = close;
+                this.document.Modifier.PropertyAdd(dst);
 
-            Properties.Abstract dst = Properties.Abstract.NewProperty(this.document, pb.Type);
-            pb.CopyTo(dst);
-            Properties.Bool npb = dst as Properties.Bool;
-            npb.BoolValue = close;
-            this.document.Modifier.PropertyAdd(dst);
-
-            this.MergeProperty(npb, pb);
-
-            this.document.Modifier.OpletQueueEnable = oqe;
+                this.MergeProperty(npb, pb);
+            }
         }
 
         public void UseProperty(Properties.Abstract style)

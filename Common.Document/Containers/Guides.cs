@@ -177,9 +177,10 @@ namespace Epsitec.Common.Document.Containers
             if (sel >= this.document.Settings.GuidesCount)
             {
                 sel = this.document.Settings.GuidesCount - 1;
-                this.document.Modifier.OpletQueueEnable = false;
-                this.document.Settings.GuidesSelected = sel;
-                this.document.Modifier.OpletQueueEnable = true;
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    this.document.Settings.GuidesSelected = sel;
+                }
             }
 
             this.UpdateTable();

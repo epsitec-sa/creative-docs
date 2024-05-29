@@ -1466,9 +1466,10 @@ namespace Epsitec.Common.Document.Containers
 
             if (this.document.Aggregates.Selected != this.graphicList.SelectedRow)
             {
-                this.document.Modifier.OpletQueueEnable = false;
-                this.document.Aggregates.Selected = this.graphicList.SelectedRow;
-                this.document.Modifier.OpletQueueEnable = true;
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    this.document.Aggregates.Selected = this.graphicList.SelectedRow;
+                }
             }
 
             Properties.Aggregate agg = this.GetAggregate();
@@ -1476,9 +1477,10 @@ namespace Epsitec.Common.Document.Containers
             {
                 Properties.Type type = Properties.Abstract.TypeName(this.SelectorName);
                 Properties.Abstract property = agg.Property(type);
-                this.document.Modifier.OpletQueueEnable = false;
-                agg.Styles.Selected = agg.Styles.IndexOf(property);
-                this.document.Modifier.OpletQueueEnable = true;
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    agg.Styles.Selected = agg.Styles.IndexOf(property);
+                }
             }
 
             this.UpdateToolBar();

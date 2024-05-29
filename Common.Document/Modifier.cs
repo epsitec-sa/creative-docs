@@ -798,40 +798,39 @@ namespace Epsitec.Common.Document
         {
             //	Vide le document de tous ses objets.
             this.ActiveViewer.CreateEnding(false, false);
-            this.OpletQueueEnable = false;
-
-            this.TotalSelected = 0;
-            this.totalHide = 0;
-            this.totalPageHide = 0;
-            this.document.DocumentObjects.Clear();
-
-            this.document.PropertiesAuto.Clear();
-            this.document.PropertiesSel.Clear();
-            this.CreateObjectMemory();
-
-            Objects.Page page = new Objects.Page(this.document, null); // crée la page initiale
-            this.document.DocumentObjects.Add(page);
-
-            Objects.Layer layer = new Objects.Layer(this.document, null); // crée le calque initial
-            page.Objects.Add(layer);
-
-            foreach (Viewer viewer in this.viewers)
+            using (this.document.Modifier.DisableOpletQueue())
             {
-                DrawingContext context = viewer.DrawingContext;
-                context.InternalPageLayer(0, 0);
-                //?context.ZoomPageAndCenter();
+                this.TotalSelected = 0;
+                this.totalHide = 0;
+                this.totalPageHide = 0;
+                this.document.DocumentObjects.Clear();
+
+                this.document.PropertiesAuto.Clear();
+                this.document.PropertiesSel.Clear();
+                this.CreateObjectMemory();
+
+                Objects.Page page = new Objects.Page(this.document, null); // crée la page initiale
+                this.document.DocumentObjects.Add(page);
+
+                Objects.Layer layer = new Objects.Layer(this.document, null); // crée le calque initial
+                page.Objects.Add(layer);
+
+                foreach (Viewer viewer in this.viewers)
+                {
+                    DrawingContext context = viewer.DrawingContext;
+                    context.InternalPageLayer(0, 0);
+                    //?context.ZoomPageAndCenter();
+                }
+
+                this.UpdatePageAfterChanging();
+                this.document.Settings.Reset();
+                this.zoomHistory.Clear();
+                this.document.HotSpot = new Point(0, 0);
+                this.document.Filename = "";
+                this.document.ClearDirtySerialize();
+                this.ActiveViewer.SelectorType = SelectorType.Auto;
+                this.IsObjectJustCreated = false;
             }
-
-            this.UpdatePageAfterChanging();
-            this.document.Settings.Reset();
-            this.zoomHistory.Clear();
-            this.document.HotSpot = new Point(0, 0);
-            this.document.Filename = "";
-            this.document.ClearDirtySerialize();
-            this.ActiveViewer.SelectorType = SelectorType.Auto;
-            this.IsObjectJustCreated = false;
-
-            this.OpletQueueEnable = true;
             this.OpletQueuePurge();
 
             this.document.Notifier.NotifyArea();
@@ -5993,50 +5992,51 @@ namespace Epsitec.Common.Document
         {
             //	Ajoute toutes les propriétés des objets sélectionnés dans une liste.
             //	Tient compte du mode propertiesDetail.
-            this.OpletQueueEnable = false;
-            list.Clear();
+            using (this.document.Modifier.DisableOpletQueue())
+            {
+                list.Clear();
 
-            if (this.tool == "ToolPicker" && this.TotalSelected == 0) // pipette ?
-            {
-                this.ObjectMemoryTool.PropertiesList(list, null);
-            }
-            else if (this.IsTool) // outil select, edit, loupe, etc. ?
-            {
-                DrawingContext context = this.ActiveViewer.DrawingContext;
-                Objects.Abstract layer = context.RootObject();
-                foreach (Objects.Abstract obj in this.document.Flat(layer, true))
+                if (this.tool == "ToolPicker" && this.TotalSelected == 0) // pipette ?
                 {
-                    obj.PropertiesList(list, this.propertiesDetail);
+                    this.ObjectMemoryTool.PropertiesList(list, null);
                 }
-            }
-            else // choix d'un objet à créer ?
-            {
-                //	Crée un objet factice (document = null), c'est-à-dire sans
-                //	propriétés, qui servira juste de filtre pour objectMemory.
-                Objects.Abstract dummy = Objects.Abstract.CreateObject(null, this.tool, null);
-                this.ObjectMemoryTool.PropertiesList(list, dummy);
-                dummy.Dispose();
-            }
+                else if (this.IsTool) // outil select, edit, loupe, etc. ?
+                {
+                    DrawingContext context = this.ActiveViewer.DrawingContext;
+                    Objects.Abstract layer = context.RootObject();
+                    foreach (Objects.Abstract obj in this.document.Flat(layer, true))
+                    {
+                        obj.PropertiesList(list, this.propertiesDetail);
+                    }
+                }
+                else // choix d'un objet à créer ?
+                {
+                    //	Crée un objet factice (document = null), c'est-à-dire sans
+                    //	propriétés, qui servira juste de filtre pour objectMemory.
+                    Objects.Abstract dummy = Objects.Abstract.CreateObject(null, this.tool, null);
+                    this.ObjectMemoryTool.PropertiesList(list, dummy);
+                    dummy.Dispose();
+                }
 
-            list.Sort();
-            this.OpletQueueEnable = true;
+                list.Sort();
+            }
         }
 
         protected void PropertiesListDeep(System.Collections.ArrayList list)
         {
             //	Ajoute le détail de toutes les propriétés des objets sélectionnés
             //	dans une liste, en vue d'une modifications des couleurs.
-            this.OpletQueueEnable = false;
-            list.Clear();
-
-            DrawingContext context = this.ActiveViewer.DrawingContext;
-            Objects.Abstract layer = context.RootObject();
-            foreach (Objects.Abstract obj in this.document.Deep(layer, true))
+            using (this.document.Modifier.DisableOpletQueue())
             {
-                obj.PropertiesList(list, true);
-            }
+                list.Clear();
 
-            this.OpletQueueEnable = true;
+                DrawingContext context = this.ActiveViewer.DrawingContext;
+                Objects.Abstract layer = context.RootObject();
+                foreach (Objects.Abstract obj in this.document.Deep(layer, true))
+                {
+                    obj.PropertiesList(list, true);
+                }
+            }
         }
         #endregion
 
@@ -6462,13 +6462,14 @@ namespace Epsitec.Common.Document
             }
             else // objectMemory ?
             {
-                this.OpletQueueEnable = false;
-                model = Objects.Abstract.CreateObject(
-                    this.document,
-                    this.tool,
-                    this.ObjectMemoryTool
-                );
-                this.OpletQueueEnable = true;
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    model = Objects.Abstract.CreateObject(
+                        this.document,
+                        this.tool,
+                        this.ObjectMemoryTool
+                    );
+                }
             }
             if (model == null)
                 return;
@@ -6492,9 +6493,10 @@ namespace Epsitec.Common.Document
 
             if (!this.IsTool) // objectMemory ?
             {
-                this.OpletQueueEnable = false;
-                model.Dispose();
-                this.OpletQueueEnable = true;
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    model.Dispose();
+                }
             }
 
             this.AggregateUse(agg);
@@ -6640,13 +6642,13 @@ namespace Epsitec.Common.Document
             }
             else // objectMemory ?
             {
-                this.OpletQueueEnable = false;
-                this.ObjectMemoryTool.AggregateFree();
-                this.ObjectMemoryTool.Aggregates.Clear();
-                this.ObjectMemoryTool.Aggregates.Add(agg);
-                this.ObjectMemoryTool.AggregateUse();
-                this.OpletQueueEnable = true;
-
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    this.ObjectMemoryTool.AggregateFree();
+                    this.ObjectMemoryTool.Aggregates.Clear();
+                    this.ObjectMemoryTool.Aggregates.Add(agg);
+                    this.ObjectMemoryTool.AggregateUse();
+                }
                 this.document.Notifier.NotifySelectionChanged();
             }
 
@@ -6701,11 +6703,11 @@ namespace Epsitec.Common.Document
             }
             else // objectMemory ?
             {
-                this.OpletQueueEnable = false;
-                this.ObjectMemoryTool.AggregateFree();
-                this.ObjectMemoryTool.Aggregates.Clear();
-                this.OpletQueueEnable = true;
-
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    this.ObjectMemoryTool.AggregateFree();
+                    this.ObjectMemoryTool.Aggregates.Clear();
+                }
                 this.document.Notifier.NotifyStyleChanged();
                 this.document.Notifier.NotifySelectionChanged();
             }
@@ -6849,11 +6851,12 @@ namespace Epsitec.Common.Document
                 if (this.ObjectMemoryTool.Aggregates.Count == 0)
                     return;
 
-                this.OpletQueueEnable = false;
-                Properties.Aggregate agg =
-                    this.ObjectMemoryTool.Aggregates[0] as Properties.Aggregate;
-                agg.AggregateName = name;
-                this.OpletQueueEnable = true;
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    Properties.Aggregate agg =
+                        this.ObjectMemoryTool.Aggregates[0] as Properties.Aggregate;
+                    agg.AggregateName = name;
+                }
             }
         }
 
@@ -7003,11 +7006,11 @@ namespace Epsitec.Common.Document
             //	Reprend les propriétés d'un objet modèle.
             if (this.TotalSelected == 0)
             {
-                this.OpletQueueEnable = false;
-                this.ObjectMemory.PickerProperties(model);
-                this.ObjectMemoryText.PickerProperties(model);
-                this.OpletQueueEnable = true;
-
+                using (this.document.Modifier.DisableOpletQueue())
+                {
+                    this.ObjectMemory.PickerProperties(model);
+                    this.ObjectMemoryText.PickerProperties(model);
+                }
                 this.document.Notifier.NotifyStyleChanged();
                 this.document.Notifier.NotifySelectionChanged();
             }
@@ -7220,6 +7223,16 @@ namespace Epsitec.Common.Document
                         this.opletQueue.Disable();
                 }
             }
+        }
+
+        public IStateContext DisableOpletQueue()
+        {
+            return this.opletQueue.Disable();
+        }
+
+        public IStateContext EnableOpletQueue()
+        {
+            return this.opletQueue.Enable();
         }
 
         public System.IDisposable OpletQueueBeginAction(string name)

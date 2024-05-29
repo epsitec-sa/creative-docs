@@ -1,6 +1,8 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System;
+
 namespace Epsitec.Common.Support
 {
     /// <summary>
@@ -13,6 +15,7 @@ namespace Epsitec.Common.Support
         {
             this.queue = new System.Collections.ArrayList();
             this.tempQueue = new System.Collections.ArrayList();
+            this.isEnabled = true;
         }
 
         public bool CanUndo
@@ -326,12 +329,12 @@ namespace Epsitec.Common.Support
 
         public bool IsDisabled
         {
-            get { return (this.disableCount > 0); }
+            get { return !this.IsEnabled; }
         }
 
         public bool IsEnabled
         {
-            get { return (this.disableCount == 0); }
+            get { return this.isEnabled; }
         }
 
         public bool IsUndoRedoInProgress
@@ -486,49 +489,47 @@ namespace Epsitec.Common.Support
 
             this.action.Release();
 
-            if (this.fenceId == 0)
+            if (this.fenceId != 0)
             {
-                //	Toutes les actions "ouvertes" ont été validées. On peut donc copier les oplets
-                //	(avec leurs frontières) dans la liste officielle.
+                return;
+            }
+            //	Toutes les actions "ouvertes" ont été validées. On peut donc copier les oplets
+            //	(avec leurs frontières) dans la liste officielle.
 
-                System.Diagnostics.Debug.Assert(this.action == null);
+            System.Diagnostics.Debug.Assert(this.action == null);
 
-                this.PurgeRedo();
+            this.PurgeRedo();
 
-                if (this.tempQueue.Count > 0)
+            if (this.tempQueue.Count > 0)
+            {
+                //	N'insère un élément dans la liste que si des oplets seront effectivement
+                //	ajoutés; une insertion vide ne va pas apparaître dans la queue !
+
+                if (this.disableMerge && this.liveIndex > 0)
                 {
-                    //	N'insère un élément dans la liste que si des oplets seront effectivement
-                    //	ajoutés; une insertion vide ne va pas apparaître dans la queue !
+                    //	Empêche la fusion de cette série d'oplets avec la série précédente;
+                    //	il faut donc marquer la séquence précédente :
 
-                    if (this.disableMerge)
+                    Fence fence = this.queue[this.liveIndex - 1] as Fence;
+
+                    if (fence != null)
                     {
-                        if (this.liveIndex > 0)
-                        {
-                            //	Empêche la fusion de cette série d'oplets avec la série précédente;
-                            //	il faut donc marquer la séquence précédente :
-
-                            Fence fence = this.queue[this.liveIndex - 1] as Fence;
-
-                            if (fence != null)
-                            {
-                                fence.MergeMode = MergeMode.Disabled;
-                            }
-                        }
+                        fence.MergeMode = MergeMode.Disabled;
                     }
-
-                    this.queue.AddRange(this.tempQueue);
-                    this.queue.Add(new Fence(this.tempName, mode));
-                    this.tempQueue.Clear();
-
-                    this.fenceCount++;
-
-                    this.liveFence = this.fenceCount;
-                    this.liveIndex = this.queue.Count;
                 }
 
-                this.OnActionValidated();
-                this.disableMerge = false;
+                this.queue.AddRange(this.tempQueue);
+                this.queue.Add(new Fence(this.tempName, mode));
+                this.tempQueue.Clear();
+
+                this.fenceCount++;
+
+                this.liveFence = this.fenceCount;
+                this.liveIndex = this.queue.Count;
             }
+
+            this.OnActionValidated();
+            this.disableMerge = false;
         }
 
         public void CancelAction()
@@ -870,27 +871,91 @@ namespace Epsitec.Common.Support
             System.Diagnostics.Debug.Assert(this.liveIndex == this.queue.Count);
         }
 
-        public void Disable()
+        public IStateContext Disable()
         {
             lock (this)
             {
-                this.disableCount++;
+                this.openedStateContextCount++;
+                var ctx = new OpletQueueStateContext(
+                    this,
+                    this.isEnabled,
+                    this.openedStateContextCount
+                );
+                this.isEnabled = false;
+                return ctx;
             }
         }
 
-        public void Enable()
+        public IStateContext Enable()
         {
             lock (this)
             {
-                if (this.disableCount == 0)
+                this.openedStateContextCount++;
+                var ctx = new OpletQueueStateContext(
+                    this,
+                    this.isEnabled,
+                    this.openedStateContextCount
+                );
+                this.isEnabled = true;
+                return ctx;
+            }
+        }
+
+        private void RestoreState(bool state, int token)
+        {
+            lock (this)
+            {
+                if (this.openedStateContextCount != token)
                 {
                     throw new System.InvalidOperationException(
-                        "Enable not possible, queue is not disabled."
+                        $"Invalid restore with token {token} for queue with count {this.openedStateContextCount}"
                     );
                 }
-
-                this.disableCount--;
+                this.openedStateContextCount--;
+                this.isEnabled = state;
             }
+        }
+
+        /// <summary>
+        /// Restores the state of the OpletQueue after an Enable or Disable request
+        /// </summary>
+        private class OpletQueueStateContext : IStateContext
+        {
+            public OpletQueueStateContext(OpletQueue queue, bool previousState, int token)
+            {
+                this.queue = queue;
+                this.previousState = previousState;
+                this.token = token;
+            }
+
+            ~OpletQueueStateContext()
+            {
+                this.Dispose();
+            }
+
+            public void Dispose()
+            {
+                if (this.queue != null)
+                {
+                    this.RestorePreviousState();
+                }
+                GC.SuppressFinalize(this);
+            }
+
+            public void RestorePreviousState()
+            {
+                if (this.queue == null)
+                {
+                    return;
+                }
+                this.queue.RestoreState(this.previousState, this.token);
+                this.queue = null;
+                this.Dispose();
+            }
+
+            private OpletQueue queue;
+            private bool previousState;
+            private int token;
         }
 
         protected class AutoActionCleanup : System.IDisposable
@@ -1080,6 +1145,7 @@ namespace Epsitec.Common.Support
         protected bool isUndoRedoInProgress;
         protected bool disableMerge;
 
-        private int disableCount;
+        private int openedStateContextCount;
+        private bool isEnabled;
     }
 }
