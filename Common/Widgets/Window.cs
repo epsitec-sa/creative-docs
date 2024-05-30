@@ -621,11 +621,7 @@ namespace Epsitec.Common.Widgets
         public Drawing.Rectangle WindowBounds
         {
             get { return this.PlatformWindow.WindowBounds; }
-            set
-            {
-                this.windowLocationSet = true;
-                this.PlatformWindow.WindowBounds = value;
-            }
+            set { this.PlatformWindow.WindowBounds = value; }
         }
 
         public Drawing.Image Icon
@@ -692,40 +688,13 @@ namespace Epsitec.Common.Widgets
         public Drawing.Point WindowLocation
         {
             get { return this.PlatformWindow.WindowLocation; }
-            set
-            {
-                this.windowLocationSet = true;
-                this.PlatformWindow.WindowLocation = value;
-            }
+            set { this.PlatformWindow.WindowLocation = value; }
         }
 
         public Drawing.Size WindowSize
         {
             get { return this.PlatformWindow.WindowSize; }
-            set
-            {
-                if (this.windowLocationSet)
-                {
-                    this.PlatformWindow.WindowSize = value;
-                }
-                else
-                {
-                    //	L'utilisateur n'a jamais positionné sa fenêtre et le système
-                    //	dans son immense bonté nous a proposé une origine. Si nous
-                    //	changeons sa taille avec notre système de coordonnées, le
-                    //	sommet ne sera plus là où l'OS aurait voulu qu'il soit. Il
-                    //	faut donc repositionner en même temps que l'on redimensionne
-                    //	la fenêtre :
-
-                    Drawing.Rectangle bounds = this.WindowBounds;
-
-                    bounds.Bottom = bounds.Top - value.Height;
-                    bounds.Width = value.Width;
-
-                    this.WindowBounds = bounds;
-                    this.windowLocationSet = false;
-                }
-            }
+            set { this.PlatformWindow.WindowSize = value; }
         }
 
         public Drawing.Rectangle WindowPlacementBounds
@@ -2512,7 +2481,6 @@ namespace Epsitec.Common.Widgets
         private HashSet<Window> ownedWindows;
         private WindowRoot root;
         private bool windowIsFocused;
-        private bool windowLocationSet;
 
         private int showCount;
         private int recursiveLayoutCount;
