@@ -1244,11 +1244,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         internal void MarkForRepaint(Drawing.Rectangle rect)
         {
-            // TODO bl-net8-cross
-            // since the drawing works differently with AntigrainSharp than with winforms,
-            // those Invalidate calls will probably not be needed anymore
-            // If that turn out to be the case, we could delete them
-
             rect.RoundInflate();
 
             this.dirtyRectangle.MergeWith(rect);
@@ -1257,52 +1252,18 @@ namespace Epsitec.Common.Widgets.Platform
             int top = (int)(rect.Top);
             int bottom = (int)(rect.Bottom);
 
-            int width = (int)(rect.Width);
-            int height = top - bottom + 1;
-            int x = (int)(rect.Left);
-            int y = this.Height - top;
-
             if (this.isLayered)
             {
                 this.isLayeredDirty = true;
             }
-            //this.Invalidate(new Rectangle(x, y, width, height));
         }
 
         internal void SynchronousRepaint()
         {
-            // TODO bl-net8-cross
-            // since the drawing works differently with AntigrainSharp than with winforms,
-            // those Invalidate calls will probably not be needed anymore
-            // If that turn out to be the case, we could delete them
-            /*
-            if (this.isLayoutInProgress)
+            if (this.widgetWindow != null)
             {
-                return;
+                this.widgetWindow.ForceLayout();
             }
-
-            this.isLayoutInProgress = true;
-
-            try
-            {
-                if (this.widgetWindow != null)
-                {
-                    this.widgetWindow.ForceLayout();
-                }
-            }
-            finally
-            {
-                this.isLayoutInProgress = false;
-            }
-
-            if (this.dirtyRectangle.IsValid)
-            {
-                using (this.isSyncUpdating.Enter())
-                {
-                    //this.Update(); // winforms: redraw the invalidated areas
-                }
-            }
-            */
         }
 
         internal static void SendSynchronizeCommandCache()
