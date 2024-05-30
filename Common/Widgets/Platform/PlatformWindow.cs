@@ -20,6 +20,7 @@ namespace Epsitec.Common.Widgets.Platform
             : base("Creativedocs", 100, 100, PlatformWindow.MapToSDLWindowFlags(windowFlags))
         {
             this.widgetWindow = window;
+            this.minimumSize = Size.MaxValue;
 
             /* //REMOVED (bl-net8-cross)
             base.MinimumSize = new System.Drawing.Size(1, 1);
@@ -476,8 +477,20 @@ namespace Epsitec.Common.Widgets.Platform
             // bl-net8-cross
             // old thing from winforms, see if still usefull
             get { return this.minimumSize; }
-            set { this.minimumSize = value; }
+            set
+            {
+                this.minimumSize = value;
+                Size targetSize = new Size(
+                    System.Math.Max(this.Width, value.Width),
+                    System.Math.Max(this.Height, value.Height)
+                );
+                if (targetSize != this.WindowSize)
+                {
+                    this.WindowSize = targetSize;
+                }
+            }
         }
+
         private WindowPlacement CurrentWindowPlacement
         {
             set

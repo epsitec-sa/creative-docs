@@ -268,8 +268,11 @@ namespace Epsitec.Common.Widgets
             {
                 this.OnAboutToHideWindow();
             }
-            this.PlatformWindow.Close();
-            this.platformWindow = null;
+            if (this.platformWindow != null)
+            {
+                this.platformWindow.Close();
+                this.platformWindow = null;
+            }
         }
 
         public void AdjustWindowSize()
