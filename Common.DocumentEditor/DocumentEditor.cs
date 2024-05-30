@@ -6325,7 +6325,6 @@ namespace Epsitec.Common.DocumentEditor
 
             while (!this.checker.IsReady && attempts-- > 0)
             {
-                Epsitec.Common.Widgets.Window.PumpEvents();
                 System.Threading.Thread.Sleep(100); // attend 0.1s
             }
 

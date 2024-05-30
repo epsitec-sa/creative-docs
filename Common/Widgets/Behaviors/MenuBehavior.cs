@@ -456,7 +456,7 @@ namespace Epsitec.Common.Widgets.Behaviors
             //	Si une fenêtre possède le focus, il faut avant de la cacher activer
             //	la fenêtre parent, pour éviter des clignotements de fenêtres :
 
-            if ((window.IsFocused) && (Window.IsApplicationActive))
+            if (window.IsFocused)
             {
                 Window owner = window.Owner;
 

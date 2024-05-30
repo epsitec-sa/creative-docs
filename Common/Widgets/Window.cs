@@ -153,13 +153,6 @@ namespace Epsitec.Common.Widgets
             );
         }
 
-        public static void PumpEvents()
-        {
-            /*
-            System.Windows.Forms.Application.DoEvents();
-            */
-        }
-
         public void MakeLayeredWindow()
         {
             this.PlatformWindow.IsLayered = true;
@@ -672,12 +665,6 @@ namespace Epsitec.Common.Widgets
             set { this.PlatformWindow.AllowDrop = value; }
         }
 
-        public static bool IsApplicationActive
-        {
-            //get { return Platform.PlatformWindow.IsApplicationActive; }
-            get { return true; }
-        }
-
         public static int DebugAliveWindowsCount
         {
             get { return Window.windows.Count; }
@@ -802,20 +789,6 @@ namespace Epsitec.Common.Widgets
             */
         }
 
-        /*        public static void RunInTestEnvironment(System.Windows.Forms.Form form)
-                {
-        
-                    if (PlatformWindow.RunningInAutomatedTestEnvironment)
-                    {
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-                    else
-                    {
-                        System.Windows.Forms.Application.RunEventLoop(form);
-                    }
-        
-                }
-        */
         public System.IDisposable PushPaintFilter(IPaintFilter filter)
         {
             return new PushPaintFilterHelper(this, filter);
@@ -961,52 +934,6 @@ namespace Epsitec.Common.Widgets
                 );
                 Widget.UpdateEntered(this, child, message);
             }
-        }
-
-        public void ToggleMaximize()
-        {
-            /*
-            if (this.platformWindow.WindowState == System.Windows.Forms.FormWindowState.Maximized)
-            {
-                this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Normal;
-            }
-            else
-            {
-                this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            }
-
-            //			var placement = this.WindowPlacement;
-            //			placement = new WindowPlacement (placement.Bounds, !placement.IsFullScreen, placement.IsMinimized, placement.IsHidden);
-            //			this.WindowPlacement = placement;
-            */
-            throw new System.NotImplementedException();
-        }
-
-        public void ToggleMinimize()
-        {
-            /*
-            var placement = this.WindowPlacement;
-
-            if (this.platformWindow.WindowState == System.Windows.Forms.FormWindowState.Minimized)
-            {
-                if (placement.IsFullScreen)
-                {
-                    this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-                }
-                else
-                {
-                    this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Normal;
-                }
-            }
-            else
-            {
-                this.platformWindow.WindowState = System.Windows.Forms.FormWindowState.Minimized;
-            }
-
-            //			placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, !placement.IsMinimized, placement.IsHidden);
-            //			this.WindowPlacement = placement;
-            */
-            throw new System.NotImplementedException();
         }
 
         protected void OnAsyncNotification()

@@ -175,13 +175,6 @@ namespace Epsitec.Common.Tests.Widgets
         }
 
         [Test]
-        public void CheckAppActivation()
-        {
-            Window.ApplicationActivated += Window_ApplicationActivated;
-            Window.ApplicationDeactivated += Window_ApplicationDeactivated;
-        }
-
-        [Test]
         public void CheckWindowList()
         {
             Window[] windows = Epsitec.Common.Widgets.Platform.WindowList.GetVisibleWindows();
@@ -864,7 +857,6 @@ namespace Epsitec.Common.Tests.Widgets
             window.WindowLocation = new Point(3840 + 20, 1000);
 
             window.Show();
-            Window.PumpEvents();
 
             text.SetParent(window.Root);
             text.Dock = DockStyle.Top;
@@ -924,18 +916,6 @@ namespace Epsitec.Common.Tests.Widgets
                     button.ActualHeight
                 )
             );
-        }
-
-        private void Window_ApplicationActivated(object sender)
-        {
-            System.Diagnostics.Debug.Assert(Window.IsApplicationActive == true);
-            System.Diagnostics.Debug.WriteLine("Application activated");
-        }
-
-        private void Window_ApplicationDeactivated(object sender)
-        {
-            System.Diagnostics.Debug.Assert(Window.IsApplicationActive == false);
-            System.Diagnostics.Debug.WriteLine("Application deactivated");
         }
 
         private void AlphaTestButtonClicked(object sender, MessageEventArgs e)

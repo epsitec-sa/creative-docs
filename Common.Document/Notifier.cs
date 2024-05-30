@@ -487,200 +487,205 @@ namespace Epsitec.Common.Document
             //	des NotifyXYZ fait précédemment.
             if (this.documentChanged)
             {
-                this.OnDocumentChanged();
                 this.documentChanged = false;
+                this.OnDocumentChanged();
             }
 
             if (this.mouseChanged)
             {
-                this.OnMouseChanged();
                 this.mouseChanged = false;
+                this.OnMouseChanged();
             }
 
             if (this.modifChanged)
             {
-                this.OnModifChanged();
                 this.modifChanged = false;
+                this.OnModifChanged();
             }
 
             if (this.originChanged)
             {
-                this.OnOriginChanged();
                 this.originChanged = false;
+                this.OnOriginChanged();
             }
 
             if (this.zoomChanged)
             {
-                this.OnZoomChanged();
                 this.zoomChanged = false;
+                this.OnZoomChanged();
             }
 
             if (this.toolChanged)
             {
-                this.OnToolChanged();
                 this.toolChanged = false;
+                this.OnToolChanged();
             }
 
             if (this.saveChanged)
             {
-                this.OnSaveChanged();
                 this.saveChanged = false;
+                this.OnSaveChanged();
             }
 
             if (this.selectionChanged)
             {
-                this.OnSelectionChanged();
                 this.selectionChanged = false;
+                this.OnSelectionChanged();
             }
 
             if (this.geometryChanged)
             {
-                this.OnGeometryChanged();
                 this.geometryChanged = false;
+                this.OnGeometryChanged();
             }
 
             if (this.shaperChanged)
             {
-                this.OnShaperChanged();
                 this.shaperChanged = false;
+                this.OnShaperChanged();
             }
 
             if (this.textChanged)
             {
-                this.OnTextChanged();
                 this.textChanged = false;
+                this.OnTextChanged();
             }
 
             if (this.textCursorChanged)
             {
-                this.OnTextCursorChanged();
                 this.textCursorChanged = false;
+                this.OnTextCursorChanged();
             }
 
             if (this.styleChanged)
             {
-                this.OnStyleChanged();
                 this.styleChanged = false;
+                this.OnStyleChanged();
             }
 
             if (this.pagesChanged)
             {
-                this.OnPagesChanged();
                 this.pagesChanged = false;
+                this.OnPagesChanged();
             }
 
             if (this.layersChanged)
             {
-                this.OnLayersChanged();
                 this.layersChanged = false;
+                this.OnLayersChanged();
             }
 
             if (this.pageObject != null)
             {
-                this.OnPageChanged(this.pageObject);
+                var page = this.pageObject;
                 this.pageObject = null;
+                this.OnPageChanged(page);
             }
 
             if (this.layerObject != null)
             {
-                this.OnLayerChanged(this.layerObject);
+                var layer = this.layerObject;
                 this.layerObject = null;
+                this.OnLayerChanged(layer);
             }
 
             if (this.undoRedoChanged)
             {
-                this.OnUndoRedoChanged();
                 this.undoRedoChanged = false;
+                this.OnUndoRedoChanged();
             }
 
             if (this.gridChanged)
             {
-                this.OnGridChanged();
                 this.gridChanged = false;
+                this.OnGridChanged();
             }
 
             if (this.labelPropertiesChanged)
             {
-                this.OnLabelPropertiesChanged();
                 this.labelPropertiesChanged = false;
+                this.OnLabelPropertiesChanged();
             }
 
             if (this.constrainChanged)
             {
-                this.OnConstrainChanged();
                 this.constrainChanged = false;
+                this.OnConstrainChanged();
             }
 
             if (this.magnetChanged)
             {
-                this.OnMagnetChanged();
                 this.magnetChanged = false;
+                this.OnMagnetChanged();
             }
 
             if (this.previewChanged)
             {
-                this.OnPreviewChanged();
                 this.previewChanged = false;
+                this.OnPreviewChanged();
             }
 
             if (this.settingsChanged)
             {
-                this.OnSettingsChanged();
                 this.settingsChanged = false;
+                this.OnSettingsChanged();
             }
 
             if (this.fontsSettingsChanged)
             {
-                this.OnFontsSettingsChanged();
                 this.fontsSettingsChanged = false;
+                this.OnFontsSettingsChanged();
             }
 
             if (this.guidesChanged)
             {
-                this.OnGuidesChanged();
                 this.guidesChanged = false;
+                this.OnGuidesChanged();
             }
 
             if (this.hideHalfChanged)
             {
-                this.OnHideHalfChanged();
                 this.hideHalfChanged = false;
+                this.OnHideHalfChanged();
             }
 
             if (this.debugChanged)
             {
-                this.OnDebugChanged();
                 this.debugChanged = false;
+                this.OnDebugChanged();
             }
 
             if (this.propertyList.Count > 0)
             {
-                this.OnPropertyChanged(this.propertyList);
+                var propertyList = this.propertyList;
                 this.propertyList.Clear();
+                this.OnPropertyChanged(propertyList);
             }
 
             if (this.aggregateList.Count > 0)
             {
-                this.OnAggregateChanged(this.aggregateList);
+                var aggregateList = this.aggregateList;
                 this.aggregateList.Clear();
+                this.OnAggregateChanged(aggregateList);
             }
 
             if (this.textStyleList.Count > 0)
             {
-                this.OnTextStyleChanged(this.textStyleList);
+                var textStyleList = this.textStyleList;
                 this.textStyleList.Clear();
+                this.OnTextStyleChanged(textStyleList);
             }
 
             if (this.textStyleListChanged)
             {
-                this.OnTextStyleListChanged();
                 this.textStyleListChanged = false;
+                this.OnTextStyleListChanged();
             }
 
             if (this.selNamesChanged)
             {
-                this.OnSelNamesChanged();
                 this.selNamesChanged = false;
+                this.OnSelNamesChanged();
             }
 
             foreach (Viewer viewer in this.document.Modifier.Viewers)
