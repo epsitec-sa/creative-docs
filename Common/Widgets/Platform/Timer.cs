@@ -224,8 +224,12 @@ namespace Epsitec.Common.Widgets.Platform
         {
             cancelToken.ThrowIfCancellationRequested();
             System.TimeSpan duration = this.expirationDate.Subtract(System.DateTime.Now);
-            await Task.Delay((int)duration.TotalMilliseconds, cancelToken);
-            cancelToken.ThrowIfCancellationRequested();
+            int durationMS = (int)duration.TotalMilliseconds;
+            if (durationMS > 0)
+            {
+                await Task.Delay(durationMS, cancelToken);
+                cancelToken.ThrowIfCancellationRequested();
+            }
             Timer.AddToPendingQueue(this);
         }
 
