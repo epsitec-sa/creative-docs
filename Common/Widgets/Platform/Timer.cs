@@ -184,38 +184,47 @@ namespace Epsitec.Common.Widgets.Platform
         {
             //System.Console.WriteLine("start async timer");
             this.cancelTokenSource = new CancellationTokenSource();
-            try
+            if (this.remainingTime != System.TimeSpan.Zero)
             {
-                if (this.remainingTime != System.TimeSpan.Zero)
+                //System.Console.WriteLine(
+                //    $"wait for remaining time {this.remainingTime.TotalMilliseconds}ms"
+                //);
+                this.expirationDate = System.DateTime.Now.Add(this.remainingTime);
+                try
                 {
-                    //System.Console.WriteLine(
-                    //    $"wait for remaining time {this.remainingTime.TotalMilliseconds}ms"
-                    //);
-                    this.expirationDate = System.DateTime.Now.Add(this.remainingTime);
                     await this.QueueEventAfterDelay(this.cancelTokenSource.Token);
-
-                    this.remainingTime = System.TimeSpan.Zero;
-                    if (!this.autoRepeat)
-                    {
-                        //System.Console.WriteLine($"no autorepeat -> done");
-                        this.SetState(TimerState.Stopped);
-                        return;
-                    }
                 }
-                this.expirationDate = System.DateTime.Now;
-                do
+                catch (System.OperationCanceledException)
                 {
-                    //System.Console.WriteLine($"wait for next tick");
-                    this.expirationDate = this.expirationDate.Add(this.period);
-                    await this.QueueEventAfterDelay(this.cancelTokenSource.Token);
-                } while (this.autoRepeat);
+                    //System.Console.WriteLine("timer canceled");
+                    // ignore when canceled
+                    return;
+                }
+
+                this.remainingTime = System.TimeSpan.Zero;
+                if (!this.autoRepeat)
+                {
+                    //System.Console.WriteLine($"no autorepeat -> done");
+                    this.SetState(TimerState.Stopped);
+                    return;
+                }
             }
-            catch (System.OperationCanceledException)
+            this.expirationDate = System.DateTime.Now;
+            do
             {
-                //System.Console.WriteLine("timer canceled");
-                // ignore when canceled
-                return;
-            }
+                //System.Console.WriteLine($"wait for next tick");
+                this.expirationDate = this.expirationDate.Add(this.period);
+                try
+                {
+                    await this.QueueEventAfterDelay(this.cancelTokenSource.Token);
+                }
+                catch (System.OperationCanceledException)
+                {
+                    //System.Console.WriteLine("timer canceled");
+                    // ignore when canceled
+                    return;
+                }
+            } while (this.autoRepeat);
             this.SetState(TimerState.Stopped);
             //System.Console.WriteLine("timer done");
         }
@@ -238,14 +247,17 @@ namespace Epsitec.Common.Widgets.Platform
             if (this.cancelTokenSource != null)
             {
                 this.cancelTokenSource.Cancel();
-                this.cancelTokenSource.Dispose();
-                this.cancelTokenSource = null;
             }
             if (this.timerTask != null)
             {
                 this.timerTask.Wait();
                 this.timerTask.Dispose();
                 this.timerTask = null;
+            }
+            if (this.cancelTokenSource != null)
+            {
+                this.cancelTokenSource.Dispose();
+                this.cancelTokenSource = null;
             }
         }
 
