@@ -382,11 +382,19 @@ namespace Epsitec.Common.Widgets
 
         private void RegisterOwnedWindow(Window child)
         {
+            if (this.isDisposed)
+            {
+                return;
+            }
             this.ownedWindows.Add(child);
         }
 
         private void RemoveOwnedWindow(Window child)
         {
+            if (this.isDisposed)
+            {
+                return;
+            }
             this.ownedWindows.Remove(child);
         }
         #endregion
