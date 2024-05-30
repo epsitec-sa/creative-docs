@@ -2,17 +2,15 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUDinternal void MakeTitlelessResizableWindow()
 
 using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Widgets
 {
-    using System.Linq;
-    using Epsitec.Common.Types.Collections;
-    using Epsitec.Common.Widgets.Platform;
-    using Epsitec.Common.Widgets.Platform.SDLWrapper;
-
     /// <summary>
     /// La classe Window représente une fenêtre du système d'exploitation. Ce
     /// n'est pas un widget en tant que tel: Window.Root définit le widget à la
@@ -24,10 +22,6 @@ namespace Epsitec.Common.Widgets
             System.IDisposable,
             IIsDisposed
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // implement Window (stub)
-        // ******************************************************************
         public Window()
             : this(null, WindowFlags.None) { }
 
@@ -75,6 +69,7 @@ namespace Epsitec.Common.Widgets
             /*
             System.Windows.Forms.Application.Exit();
             */
+            throw new System.NotImplementedException();
         }
 
         public static void InvalidateAll(Window.InvalidateReason reason)
@@ -1404,7 +1399,7 @@ namespace Epsitec.Common.Widgets
 
         public void AsyncDispose()
         {
-            // bl-net8-cross
+            // bl-net8-cross cleanup
             /*
             Platform.PlatformWindow.ProcessCrossThreadOperation(() => this.platformWindow.Owner = null);
 
@@ -1418,6 +1413,7 @@ namespace Epsitec.Common.Widgets
                 this.Dispose();
             }
             */
+            this.Dispose();
         }
 
         public void AsyncNotify()
@@ -1820,13 +1816,6 @@ namespace Epsitec.Common.Widgets
             }
 
             this.PostProcessMessage(message);
-#if false
-			if ((this.window != null) &&
-				(Platform.Window.IsInAnyWndProc == false))
-			{
-				Application.ExecuteAsyncCallbacks ();
-			}
-#endif
         }
 
         public static void SetCaptureAndRetireMessage(Widget widget, Message message)

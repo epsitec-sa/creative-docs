@@ -12,48 +12,12 @@ namespace Epsitec.Common.Widgets.Platform
     /// </summary>
     internal class PlatformWindow : SDLWrapper.SDLWindow
     {
-        // ******************************************************************
-        // TODO bl-net8-cross
-        // implement PlatformWindow (stub)
-        // ******************************************************************
         internal PlatformWindow(Window window, WindowFlags windowFlags)
             : base("Creativedocs", 100, 100, PlatformWindow.MapToSDLWindowFlags(windowFlags))
         {
             this.widgetWindow = window;
-            this.minimumSize = Size.MaxValue;
-
-            /* //REMOVED (bl-net8-cross)
-            base.MinimumSize = new System.Drawing.Size(1, 1);
-
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-
-            this.SetStyle(System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(System.Windows.Forms.ControlStyles.Opaque, true);
-            this.SetStyle(System.Windows.Forms.ControlStyles.ResizeRedraw, true);
-            this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint, true);
-            */
-
+            this.minimumSize = new Size(1, 1);
             this.WindowType = WindowType.Document;
-
-            //this.graphics.AllocatePixmap();
-
-            //PlatformWindow.DummyHandleEater(this.Handle);
-
-            /*
-            //	Fait en sorte que les changements de dimensions en [x] et en [y] provoquent un
-            //	redessin complet de la fenêtre, sinon Windows tente de recopier l'ancien contenu
-            //	en le décalant, ce qui donne des effets bizarres :
-
-            int classWindowStyle = Win32Api.GetClassLong(this.Handle, Win32Const.GCL_STYLE);
-
-            classWindowStyle |= Win32Const.CS_HREDRAW;
-            classWindowStyle |= Win32Const.CS_VREDRAW;
-
-            Win32Api.SetClassLong(this.Handle, Win32Const.GCL_STYLE, classWindowStyle);
-            */
-
-            //this.ReallocatePixmap();
-
             WindowList.Insert(this);
         }
 
@@ -601,6 +565,7 @@ namespace Epsitec.Common.Widgets.Platform
             this.isAnimatingActiveWindow = true;
             this.WindowBounds = bounds;
             this.MarkForRepaint();
+            // bl-net8-cross
             //this.RefreshGraphics();
 
             Animator animator;
@@ -771,7 +736,7 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
-        protected bool RefreshGraphics(Drawing.Graphics graphics)
+        protected bool RefreshGraphics(Graphics graphics)
         {
             if (this.widgetWindow != null)
             {

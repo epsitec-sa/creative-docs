@@ -753,7 +753,10 @@ namespace Epsitec.Common.Document
                     this.document.Modifier.ObjectMemoryTool
                 );
 
-                this.modOpletQueue.Dispose();
+                if (this.modOpletQueue != null)
+                {
+                    this.modOpletQueue.Dispose();
+                }
                 this.modOpletQueue = this.document.Modifier.DisableOpletQueue();
                 Objects.Abstract layer = this.drawingContext.RootObject();
                 this.CreateRank = layer.Objects.Add(obj); // ajoute à la fin de la liste
@@ -2030,7 +2033,10 @@ namespace Epsitec.Common.Document
         #region ZoomMouse
         protected void ZoomMouseDown(Point mouse, bool isRight)
         {
-            this.modOpletQueue.Dispose();
+            if (this.modOpletQueue != null)
+            {
+                this.modOpletQueue.Dispose();
+            }
             this.modOpletQueue = this.document.Modifier.DisableOpletQueue();
             this.moveStart = mouse;
 
