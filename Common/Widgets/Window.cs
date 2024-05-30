@@ -1168,7 +1168,11 @@ namespace Epsitec.Common.Widgets
 
                 this.OnWindowDefocused();
 
-                if ((this.owner != null) && (this.owner.platformWindow.IsFocused == false))
+                if (
+                    this.owner != null
+                    && this.owner.platformWindow != null
+                    && !this.owner.platformWindow.IsFocused
+                )
                 {
                     this.owner.NotifyWindowDefocused();
                 }
@@ -1849,8 +1853,7 @@ namespace Epsitec.Common.Widgets
                     //	Le message n'a pas été consommé. Regarde si nous avons à faire
                     //	à une fenêtre chaînée avec un parent.
 
-                    // bl-net8-cross I don't see why we would need to get anything in screen coordinates
-                    //pos = Helpers.VisualTree.MapParentToScreen(root, pos);
+                    pos = Helpers.VisualTree.MapParentToScreen(root, pos);
                     root = MenuWindow.GetParentWidget(window);
 
                     if ((root == null) || (root.IsVisible == false))
@@ -1858,7 +1861,7 @@ namespace Epsitec.Common.Widgets
                         break;
                     }
 
-                    //pos = Helpers.VisualTree.MapScreenToParent(root, pos);
+                    pos = Helpers.VisualTree.MapScreenToParent(root, pos);
                     window = root.Window;
 
                     root.MessageHandler(message, pos);

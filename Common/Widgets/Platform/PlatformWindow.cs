@@ -474,8 +474,6 @@ namespace Epsitec.Common.Widgets.Platform
 
         public Drawing.Size MinimumSize
         {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
             get { return this.minimumSize; }
             set
             {
