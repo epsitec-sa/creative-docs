@@ -2135,45 +2135,46 @@ namespace Epsitec.Common.Document
             h *= 1.0 / scale;
 
             Document document = this.document.DocumentForSamples;
-            document.Modifier.OpletQueueEnable = false;
-
-            if (textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph)
+            using (document.Modifier.DisableOpletQueue())
             {
-                Objects.TextBox2 obj = this.document.ObjectForSamplesParagraph;
-                obj.RectangleToSample(rect);
-                obj.SampleDefineStyle(textStyle);
+                if (textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph)
+                {
+                    Objects.TextBox2 obj = this.document.ObjectForSamplesParagraph;
+                    obj.RectangleToSample(rect);
+                    obj.SampleDefineStyle(textStyle);
 
-                Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+                    Shape[] shapes = obj.ShapesBuild(graphics, null, false);
 
-                Drawer drawer = new Drawer(document);
-                drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.OnlyText, shapes);
+                    Drawer drawer = new Drawer(document);
+                    drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.OnlyText, shapes);
+                }
+
+                if (textStyle.TextStyleClass == Common.Text.TextStyleClass.Text)
+                {
+                    Point p1 = rect.TopLeft;
+                    Point p2 = rect.TopRight;
+                    p1.Y -= h * 0.7;
+                    p2.Y -= h * 0.7;
+
+                    double r = 12 * Modifier.FontSizeScale;
+                    graphics.LineWidth = 1.0;
+                    graphics.AddLine(p1.X - 10, p1.Y, p2.X + 10, p2.Y);
+                    graphics.AddLine(p1.X - 10, p1.Y + r, p2.X + 10, p2.Y + r);
+                    graphics.RenderSolid(Color.FromRgb(1, 0, 0)); // rouge
+
+                    Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
+                    obj.RectangleToSample(p1, p2);
+                    obj.SampleDefineStyle(textStyle);
+
+                    Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+                    Drawer drawer = new Drawer(document);
+                    drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+                }
+
+                graphics.Transform = initial;
+                graphics.RestoreClippingRectangle(iClip);
             }
-
-            if (textStyle.TextStyleClass == Common.Text.TextStyleClass.Text)
-            {
-                Point p1 = rect.TopLeft;
-                Point p2 = rect.TopRight;
-                p1.Y -= h * 0.7;
-                p2.Y -= h * 0.7;
-
-                double r = 12 * Modifier.FontSizeScale;
-                graphics.LineWidth = 1.0;
-                graphics.AddLine(p1.X - 10, p1.Y, p2.X + 10, p2.Y);
-                graphics.AddLine(p1.X - 10, p1.Y + r, p2.X + 10, p2.Y + r);
-                graphics.RenderSolid(Color.FromRgb(1, 0, 0)); // rouge
-
-                Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
-                obj.RectangleToSample(p1, p2);
-                obj.SampleDefineStyle(textStyle);
-
-                Shape[] shapes = obj.ShapesBuild(graphics, null, false);
-
-                Drawer drawer = new Drawer(document);
-                drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
-            }
-
-            graphics.Transform = initial;
-            graphics.RestoreClippingRectangle(iClip);
         }
 
         protected void DrawDynamicText(

@@ -1881,13 +1881,15 @@ namespace Epsitec.Common.Document
                 DrawingContext context = this.ActiveViewer.DrawingContext;
                 Objects.Abstract layer = context.RootObject();
                 this.document.Clipboard.Modifier.New();
-                this.document.Clipboard.Modifier.OpletQueueEnable = false;
-                this.Duplicate(this.document, this.document.Clipboard, new Point(0, 0), true);
-                this.document.Clipboard.Modifier.AggregateFreeAll();
-                this.DeleteSelection();
-                this.document.Notifier.NotifySelectionChanged();
+                using (this.document.Clipboard.Modifier.DisableOpletQueue())
+                {
+                    this.Duplicate(this.document, this.document.Clipboard, new Point(0, 0), true);
+                    this.document.Clipboard.Modifier.AggregateFreeAll();
+                    this.DeleteSelection();
+                    this.document.Notifier.NotifySelectionChanged();
 
-                this.OpletQueueValidateAction();
+                    this.OpletQueueValidateAction();
+                }
             }
 
             this.CopyFoo();
@@ -1911,12 +1913,14 @@ namespace Epsitec.Common.Document
                 DrawingContext context = this.ActiveViewer.DrawingContext;
                 Objects.Abstract layer = context.RootObject();
                 this.document.Clipboard.Modifier.New();
-                this.document.Clipboard.Modifier.OpletQueueEnable = false;
-                this.Duplicate(this.document, this.document.Clipboard, new Point(0, 0), true);
-                this.document.Clipboard.Modifier.AggregateFreeAll();
-                this.document.Notifier.NotifySelectionChanged();
+                using (this.document.Clipboard.Modifier.DisableOpletQueue())
+                {
+                    this.Duplicate(this.document, this.document.Clipboard, new Point(0, 0), true);
+                    this.document.Clipboard.Modifier.AggregateFreeAll();
+                    this.document.Notifier.NotifySelectionChanged();
 
-                this.OpletQueueValidateAction();
+                    this.OpletQueueValidateAction();
+                }
             }
 
             this.CopyFoo();
@@ -1971,14 +1975,16 @@ namespace Epsitec.Common.Document
                 DrawingContext context = this.ActiveViewer.DrawingContext;
                 Objects.Abstract layer = context.RootObject();
                 this.DeselectAll();
-                this.document.Clipboard.Modifier.OpletQueueEnable = false;
-                this.Duplicate(this.document.Clipboard, this.document, new Point(0, 0), true);
-                this.ActiveViewer.UpdateSelector();
-                this.ShowSelection();
-                this.document.Notifier.NotifySelectionChanged();
-                this.document.SetDirtySerialize(CacheBitmapChanging.Local);
+                using (this.document.Clipboard.Modifier.DisableOpletQueue())
+                {
+                    this.Duplicate(this.document.Clipboard, this.document, new Point(0, 0), true);
+                    this.ActiveViewer.UpdateSelector();
+                    this.ShowSelection();
+                    this.document.Notifier.NotifySelectionChanged();
+                    this.document.SetDirtySerialize(CacheBitmapChanging.Local);
 
-                this.OpletQueueValidateAction();
+                    this.OpletQueueValidateAction();
+                }
             }
         }
 
@@ -7210,7 +7216,6 @@ namespace Epsitec.Common.Document
         {
             //	Détermine si les actions seront annulables ou non.
             get { return this.opletQueue.IsEnabled && !this.opletSkip; }
-            set { throw new System.NotImplementedException(); }
         }
 
         public IStateContext DisableOpletQueue()
