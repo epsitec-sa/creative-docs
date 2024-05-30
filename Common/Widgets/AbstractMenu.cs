@@ -100,50 +100,12 @@ namespace Epsitec.Common.Widgets
 
         public void ShowAsContextMenu(Window owner, Drawing.Point pos)
         {
-            this.AdjustSize();
-
-            Window.ResetMouseCursor();
-
-            MenuWindow window = MenuItem.GetMenuWindow(this) as MenuWindow;
-
-            Layouts.LayoutContext.SyncArrange(this);
-
-            pos.Y -= this.ActualHeight;
-            pos.X -= this.shadow.Left;
-            pos.Y += this.shadow.Top;
-
-            window.Owner = owner;
-            window.WindowLocation = pos;
-
-            this.ConnectEventHandlers();
-            this.Behavior.OpenPopup(window, Behaviors.MenuBehavior.Animate.Yes);
-
-            this.Focus();
+            this.ShowMenu(pos, owner: owner);
         }
 
         public void ShowAsContextMenu(Widget parent, Drawing.Point pos)
         {
-            this.AdjustSize();
-
-            Window.ResetMouseCursor();
-
-            MenuWindow window = MenuItem.GetMenuWindow(this) as MenuWindow;
-            Window owner = parent.Window;
-
-            Layouts.LayoutContext.SyncArrange(this);
-
-            pos.Y -= this.ActualHeight;
-            pos.X -= this.shadow.Left;
-            pos.Y += this.shadow.Top;
-
-            window.Owner = owner;
-            window.WindowLocation = pos;
-            window.ParentWidget = parent;
-
-            this.ConnectEventHandlers();
-            this.Behavior.OpenPopup(window, Behaviors.MenuBehavior.Animate.Yes);
-
-            this.Focus();
+            this.ShowMenu(pos, parent: parent);
         }
 
         public void ShowAsComboList(
@@ -153,22 +115,40 @@ namespace Epsitec.Common.Widgets
             Behaviors.MenuBehavior.Animate animate = Behaviors.MenuBehavior.Animate.Yes
         )
         {
+            this.ShowMenu(
+                pos,
+                parent: parent,
+                button: button,
+                animate: animate,
+                comboListMode: true
+            );
+            this.Window.MakeFocused();
+        }
+
+        private void ShowMenu(
+            Drawing.Point pos,
+            Window owner = null,
+            Widget parent = null,
+            Widget button = null,
+            Behaviors.MenuBehavior.Animate animate = Behaviors.MenuBehavior.Animate.Yes,
+            bool comboListMode = false
+        )
+        {
             this.AdjustSize();
 
             Window.ResetMouseCursor();
 
             MenuWindow window = MenuItem.GetMenuWindow(this) as MenuWindow;
-            Window owner = parent.Window;
+            owner ??= parent.Window;
 
             Layouts.LayoutContext.SyncArrange(this);
 
-            pos.Y -= this.ActualHeight;
-            pos.X -= this.shadow.Left;
-            pos.Y += this.shadow.Top;
-
             window.Owner = owner;
             window.WindowLocation = pos;
-            window.ParentWidget = parent;
+            if (parent != null)
+            {
+                window.ParentWidget = parent;
+            }
 
             if (button != null)
             {
@@ -176,12 +156,17 @@ namespace Epsitec.Common.Widgets
                 this.openButton.SetEngaged(true);
                 this.openButton.SetFrozen(true);
             }
-
             this.ConnectEventHandlers();
-            this.Behavior.OpenCombo(window, animate);
+            if (comboListMode)
+            {
+                this.Behavior.OpenCombo(window, animate);
+            }
+            else
+            {
+                this.Behavior.OpenPopup(window, animate);
+            }
 
             this.Focus();
-            this.Window.MakeFocused();
         }
 
         public override Drawing.Size GetBestFitSize()
