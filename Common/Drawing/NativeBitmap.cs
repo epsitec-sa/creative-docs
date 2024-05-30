@@ -34,7 +34,7 @@ namespace Epsitec.Common.Drawing.Platform
             get
             {
                 // divide by 8 to get the stride in byte
-                return this.magicImage.Width * this.BitsPerPixel / 8;
+                return -this.magicImage.Width * this.BitsPerPixel / 8;
             }
         }
 
