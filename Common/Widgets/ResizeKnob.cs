@@ -53,6 +53,7 @@ namespace Epsitec.Common.Widgets
 
         protected override void ProcessMessage(Message message, Drawing.Point pos)
         {
+            // bl-net8-cross maybedelete
             /*
             if (!this.IsEnabled)
                 return;
@@ -105,7 +106,6 @@ namespace Epsitec.Common.Widgets
                     break;
             }
             */
-            throw new System.NotImplementedException();
         }
 
         protected override void PaintBackgroundImplementation(
