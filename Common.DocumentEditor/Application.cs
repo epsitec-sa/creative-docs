@@ -126,7 +126,10 @@ namespace Epsitec.Common.DocumentEditor
 
         public void HandleMainWindowClosed(object sender)
         {
-            ToolTip.Default.CloseToolTip();
+            foreach (Window window in Window.GetAllLiveWindows())
+            {
+                window.Close();
+            }
         }
 
         private void HandleWindowAsyncNotification(object sender)
