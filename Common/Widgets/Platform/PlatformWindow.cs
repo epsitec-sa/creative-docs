@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System;
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using SDL2;
 
@@ -16,6 +17,8 @@ namespace Epsitec.Common.Widgets.Platform
             : base("Creativedocs", 100, 100, PlatformWindow.MapToSDLWindowFlags(windowFlags))
         {
             this.widgetWindow = window;
+            this.dirtyRectangle = Drawing.Rectangle.Empty;
+            this.dirtyRegion = new Drawing.DirtyRegion();
             this.minimumSize = new Size(1, 1);
             this.WindowType = WindowType.Document;
             WindowList.Insert(this);
@@ -753,11 +756,23 @@ namespace Epsitec.Common.Widgets.Platform
 
         private bool RefreshGraphicsLowLevel(Graphics graphics)
         {
-            if (this.widgetWindow != null)
+            if (this.dirtyRectangle.IsValid)
             {
-                this.widgetWindow.RefreshGraphics(graphics, Rectangle.MaxValue, []);
+                Drawing.Rectangle repaint = this.dirtyRectangle;
+                Drawing.Rectangle[] strips = this.dirtyRegion.GenerateStrips();
+
+                this.dirtyRectangle = Drawing.Rectangle.Empty;
+                this.dirtyRegion = new Drawing.DirtyRegion();
+
+                if (this.widgetWindow != null)
+                {
+                    this.widgetWindow.RefreshGraphics(graphics, repaint, strips);
+                }
+
+                return true;
             }
-            return true;
+
+            return false;
         }
 
         internal void DispatchMessage(Message message)
@@ -1234,7 +1249,6 @@ namespace Epsitec.Common.Widgets.Platform
             // those Invalidate calls will probably not be needed anymore
             // If that turn out to be the case, we could delete them
 
-            /*
             rect.RoundInflate();
 
             this.dirtyRectangle.MergeWith(rect);
@@ -1246,15 +1260,13 @@ namespace Epsitec.Common.Widgets.Platform
             int width = (int)(rect.Width);
             int height = top - bottom + 1;
             int x = (int)(rect.Left);
-            int y = this.ClientSize.Height - top;
+            int y = this.Height - top;
 
             if (this.isLayered)
             {
                 this.isLayeredDirty = true;
             }
-
-            this.Invalidate(new System.Drawing.Rectangle(x, y, width, height));
-            */
+            //this.Invalidate(new Rectangle(x, y, width, height));
         }
 
         internal void SynchronousRepaint()
@@ -1597,14 +1609,16 @@ namespace Epsitec.Common.Widgets.Platform
         #endregion
 
         private Window widgetWindow;
+        private Size minimumSize;
+        private Image icon;
 
         private AntigrainSharp.AbstractGraphicBuffer renderingBuffer;
-        private Size minimumSize;
-
-        private Image icon;
+        private Rectangle dirtyRectangle;
+        private DirtyRegion dirtyRegion;
 
         private bool isFullscreen;
         private bool isLayered;
+        private bool isLayeredDirty;
         private bool isFrozen;
         private bool isAnimatingActiveWindow;
         private bool isNoActivate;
