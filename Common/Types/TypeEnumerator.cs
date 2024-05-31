@@ -1,11 +1,10 @@
 //	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.Types
 {
@@ -18,8 +17,6 @@ namespace Epsitec.Common.Types
     {
         private TypeEnumerator()
         {
-            this.exclusion = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-
             this.types = new List<System.Type>();
             this.classTypes = new List<System.Type>();
             this.assemblies = new List<Assembly>();
@@ -55,24 +52,15 @@ namespace Epsitec.Common.Types
         /// <returns>The collection of types, which will be empty if none was found.</returns>
         public IEnumerable<System.Type> GetTypesFromName(string typeName)
         {
-            try
+            List<System.Type> list;
+
+            if (this.typeMap.TryGetValue(typeName, out list))
             {
-                this.exclusion.EnterReadLock();
-
-                List<System.Type> list;
-
-                if (this.typeMap.TryGetValue(typeName, out list))
-                {
-                    return list.ToArray();
-                }
-                else
-                {
-                    return Enumerable.Empty<System.Type>();
-                }
+                return list.ToArray();
             }
-            finally
+            else
             {
-                this.exclusion.ExitReadLock();
+                return Enumerable.Empty<System.Type>();
             }
         }
 
@@ -111,16 +99,7 @@ namespace Epsitec.Common.Types
         /// <returns>The collection of loaded assemblies.</returns>
         public IEnumerable<Assembly> GetLoadedAssemblies()
         {
-            try
-            {
-                this.exclusion.EnterReadLock();
-
-                return this.assemblies.ToArray();
-            }
-            finally
-            {
-                this.exclusion.ExitReadLock();
-            }
+            return this.assemblies.ToArray();
         }
 
         /// <summary>
@@ -149,25 +128,16 @@ namespace Epsitec.Common.Types
         public IEnumerable<TAttribute> GetAllAssemblyLevelAttributes<TAttribute>()
             where TAttribute : System.Attribute
         {
-            try
+            var result = new List<TAttribute>();
+
+            List<System.Attribute> list;
+
+            if (this.attributes.TryGetValue(typeof(TAttribute), out list))
             {
-                this.exclusion.EnterReadLock();
-
-                var result = new List<TAttribute>();
-
-                List<System.Attribute> list;
-
-                if (this.attributes.TryGetValue(typeof(TAttribute), out list))
-                {
-                    result.AddRange(list.Cast<TAttribute>());
-                }
-
-                return result;
+                result.AddRange(list.Cast<TAttribute>());
             }
-            finally
-            {
-                this.exclusion.ExitReadLock();
-            }
+
+            return result;
         }
 
         /// <summary>
@@ -181,31 +151,22 @@ namespace Epsitec.Common.Types
             int length = 0;
             string shortName = "";
 
-            try
+            foreach (var item in this.namespaceShortcutsFullToShort)
             {
-                this.exclusion.EnterReadLock();
+                var key = item.Key;
+                var value = item.Value;
 
-                foreach (var item in this.namespaceShortcutsFullToShort)
+                if (name.StartsWith(key))
                 {
-                    var key = item.Key;
-                    var value = item.Value;
-
-                    if (name.StartsWith(key))
+                    if (
+                        (key.Length > length)
+                        && (name.Length == key.Length || name[key.Length] == '.')
+                    )
                     {
-                        if (
-                            (key.Length > length)
-                            && (name.Length == key.Length || name[key.Length] == '.')
-                        )
-                        {
-                            length = key.Length;
-                            shortName = value;
-                        }
+                        length = key.Length;
+                        shortName = value;
                     }
                 }
-            }
-            finally
-            {
-                this.exclusion.ExitReadLock();
             }
 
             if (name.Length == length)
@@ -251,16 +212,7 @@ namespace Epsitec.Common.Types
 
             string fullName;
 
-            try
-            {
-                this.exclusion.EnterReadLock();
-
-                fullName = this.namespaceShortcutsShortToFull[shortName];
-            }
-            finally
-            {
-                this.exclusion.ExitReadLock();
-            }
+            fullName = this.namespaceShortcutsShortToFull[shortName];
 
             return fullName + otherName;
         }
@@ -285,26 +237,17 @@ namespace Epsitec.Common.Types
             {
                 System.Type[] array;
 
-                this.exclusion.EnterReadLock();
+                int length = collection.Count - index;
 
-                try
+                if (length < 1)
                 {
-                    int length = collection.Count - index;
-
-                    if (length < 1)
-                    {
-                        yield break;
-                    }
-
-                    array = new System.Type[length];
-                    collection.CopyTo(index, array, 0, length);
-
-                    index += length;
+                    yield break;
                 }
-                finally
-                {
-                    this.exclusion.ExitReadLock();
-                }
+
+                array = new System.Type[length];
+                collection.CopyTo(index, array, 0, length);
+
+                index += length;
 
                 foreach (var type in array)
                 {
@@ -340,31 +283,20 @@ namespace Epsitec.Common.Types
                 return;
             }
 
-            //  ===>
-            this.exclusion.EnterWriteLock();
-            try
+            if (this.assemblyNames.Add(assembly.FullName))
             {
-                if (this.assemblyNames.Add(assembly.FullName))
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        string.Format("TypeEnumerator: analyzing assembly {0}", assembly.FullName)
-                    );
-                    this.assemblies.Add(assembly);
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        string.Format("TypeEnumerator: skipping assembly {0}", assembly.FullName)
-                    );
-                    return;
-                }
+                System.Diagnostics.Debug.WriteLine(
+                    string.Format("TypeEnumerator: analyzing assembly {0}", assembly.FullName)
+                );
+                this.assemblies.Add(assembly);
             }
-            finally
+            else
             {
-                this.exclusion.ExitWriteLock();
+                System.Diagnostics.Debug.WriteLine(
+                    string.Format("TypeEnumerator: skipping assembly {0}", assembly.FullName)
+                );
+                return;
             }
-            //  <===
-
 
             //  Execute this method outside of the exclusion, because it can trigger
             //  new assembly loads which might execute on other treads and which are
@@ -372,97 +304,81 @@ namespace Epsitec.Common.Types
 
             var types = assembly.GetTypes();
 
-            //  ===>
-            this.exclusion.EnterWriteLock();
-            try
+            foreach (var type in types)
             {
-                foreach (var type in types)
+                var name = type.FullName;
+
+                if (this.typeNames.Add(type.AssemblyQualifiedName))
                 {
-                    var name = type.FullName;
+                    this.types.Add(type);
 
-                    if (this.typeNames.Add(type.AssemblyQualifiedName))
+                    if (type.IsClass)
                     {
-                        this.types.Add(type);
-
-                        if (type.IsClass)
-                        {
-                            this.classTypes.Add(type);
-                        }
-
-                        List<System.Type> list;
-
-                        if (this.typeMap.TryGetValue(name, out list)) { }
-                        else
-                        {
-                            list = new List<System.Type>();
-                            this.typeMap[name] = list;
-                        }
-
-                        list.Add(type);
+                        this.classTypes.Add(type);
                     }
+
+                    List<System.Type> list;
+
+                    if (this.typeMap.TryGetValue(name, out list)) { }
                     else
                     {
-                        System.Diagnostics.Debug.Fail(
-                            string.Format("TypeEnumerator: found duplicate type '{0}'", name)
-                        );
+                        list = new List<System.Type>();
+                        this.typeMap[name] = list;
                     }
+
+                    list.Add(type);
                 }
-
-                var shortcuts = assembly.GetCustomAttributes<NamespaceShortcutAttribute>();
-
-                foreach (var shortcut in shortcuts)
+                else
                 {
-                    string shortName;
-                    string fullName;
-
-                    if (
-                        this.namespaceShortcutsFullToShort.TryGetValue(
-                            shortcut.FullName,
-                            out shortName
-                        )
-                    )
-                    {
-                        System.Diagnostics.Debug.Assert(shortName == shortcut.ShortName);
-                    }
-                    if (
-                        this.namespaceShortcutsShortToFull.TryGetValue(
-                            shortcut.ShortName,
-                            out fullName
-                        )
-                    )
-                    {
-                        System.Diagnostics.Debug.Assert(fullName == shortcut.FullName);
-                    }
-
-                    this.namespaceShortcutsShortToFull[shortcut.ShortName] = shortcut.FullName;
-                    this.namespaceShortcutsFullToShort[shortcut.FullName] = shortcut.ShortName;
-                }
-
-                var attributes = assembly.GetCustomAttributes(false);
-
-                foreach (System.Attribute attribute in attributes)
-                {
-                    var attributeType = attribute.GetType();
-                    List<System.Attribute> attributeList;
-
-                    if (this.attributes.TryGetValue(attributeType, out attributeList))
-                    {
-                        //	List already exists.
-                    }
-                    else
-                    {
-                        attributeList = new List<System.Attribute>();
-                        this.attributes[attributeType] = attributeList;
-                    }
-
-                    attributeList.Add(attribute);
+                    System.Diagnostics.Debug.Fail(
+                        string.Format("TypeEnumerator: found duplicate type '{0}'", name)
+                    );
                 }
             }
-            finally
+
+            var shortcuts = assembly.GetCustomAttributes<NamespaceShortcutAttribute>();
+
+            foreach (var shortcut in shortcuts)
             {
-                this.exclusion.ExitWriteLock();
+                string shortName;
+                string fullName;
+
+                if (
+                    this.namespaceShortcutsFullToShort.TryGetValue(shortcut.FullName, out shortName)
+                )
+                {
+                    System.Diagnostics.Debug.Assert(shortName == shortcut.ShortName);
+                }
+                if (
+                    this.namespaceShortcutsShortToFull.TryGetValue(shortcut.ShortName, out fullName)
+                )
+                {
+                    System.Diagnostics.Debug.Assert(fullName == shortcut.FullName);
+                }
+
+                this.namespaceShortcutsShortToFull[shortcut.ShortName] = shortcut.FullName;
+                this.namespaceShortcutsFullToShort[shortcut.FullName] = shortcut.ShortName;
             }
-            //  <===
+
+            var attributes = assembly.GetCustomAttributes(false);
+
+            foreach (System.Attribute attribute in attributes)
+            {
+                var attributeType = attribute.GetType();
+                List<System.Attribute> attributeList;
+
+                if (this.attributes.TryGetValue(attributeType, out attributeList))
+                {
+                    //	List already exists.
+                }
+                else
+                {
+                    attributeList = new List<System.Attribute>();
+                    this.attributes[attributeType] = attributeList;
+                }
+
+                attributeList.Add(attribute);
+            }
         }
 
         private static bool IsForeignAssembly(Assembly assembly)
@@ -514,6 +430,5 @@ namespace Epsitec.Common.Types
         private readonly Dictionary<string, List<System.Type>> typeMap;
         private readonly Dictionary<string, string> namespaceShortcutsShortToFull;
         private readonly Dictionary<string, string> namespaceShortcutsFullToShort;
-        private readonly ReaderWriterLockSlim exclusion;
     }
 }
