@@ -13,10 +13,6 @@ namespace Epsitec.Common.Drawing
             {
                 ImageManager.runningEngines.Add(this);
 
-                if (ImageManager.callbackQueue == null)
-                {
-                    ImageManager.callbackQueue = new CallbackQueue();
-                }
                 if (ImageManager.imageStore == null)
                 {
                     ImageManager.imageStore = new ImageStore();
@@ -328,7 +324,6 @@ namespace Epsitec.Common.Drawing
 
         public void Dispose()
         {
-            CallbackQueue callbackQueue = null;
             ImageStore imageStore = null;
 
             lock (ImageManager.globalExclusion)
@@ -337,18 +332,11 @@ namespace Epsitec.Common.Drawing
 
                 if (ImageManager.runningEngines.Count == 0)
                 {
-                    callbackQueue = ImageManager.callbackQueue;
                     imageStore = ImageManager.imageStore;
-
-                    ImageManager.callbackQueue = null;
                     ImageManager.imageStore = null;
                 }
             }
 
-            if (callbackQueue != null)
-            {
-                callbackQueue.Dispose();
-            }
             if (imageStore != null)
             {
                 imageStore.Dispose();
@@ -731,7 +719,6 @@ namespace Epsitec.Common.Drawing
         private static ImageManager instance;
         private static object globalExclusion = new object();
         private static List<ImageManager> runningEngines = new List<ImageManager>();
-        private static CallbackQueue callbackQueue;
         private static ImageStore imageStore;
 
         private object localExclusion = new object();
