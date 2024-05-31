@@ -1,12 +1,12 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 [assembly: DependencyClass(typeof(Command), Converter = typeof(Command.SerializationConverter))]
 
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Widgets
             if (this.uniqueId == 0)
             {
                 this.commandId = commandId;
-                this.uniqueId = System.Threading.Interlocked.Increment(ref Command.nextUniqueId);
+                this.uniqueId = Command.nextUniqueId++;
 
                 CommandPool.RegisterCommand(commandId, this);
             }

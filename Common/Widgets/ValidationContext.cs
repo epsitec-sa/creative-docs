@@ -1,8 +1,8 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -18,9 +18,7 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public ValidationContext()
         {
-            this.uniqueId = System.Threading.Interlocked.Increment(
-                ref ValidationContext.nextUniqueId
-            );
+            this.uniqueId = ValidationContext.nextUniqueId++;
             this.records = new List<Record>();
             this.groupDisables = new Dictionary<string, int>();
         }

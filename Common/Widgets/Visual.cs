@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
     {
         public Visual()
         {
-            this.visualSerialId = System.Threading.Interlocked.Increment(ref Visual.nextSerialId);
+            this.visualSerialId = Visual.nextSerialId++;
 
             //	Since IsFocused would be automatically inherited, we have to define
             //	it locally. Setting InheritsParentFocus will clear the definition.

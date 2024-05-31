@@ -13,7 +13,6 @@ namespace Epsitec.Common.Widgets
         public Message()
         {
             this.tickCount = System.Environment.TickCount;
-            this.messageId = System.Threading.Interlocked.Increment(ref Message.nextMessageId);
             this.userMessageId = Message.currentUserMessageId;
 
             /*            Message.state.buttons = (MouseButtons)(int)System.Windows.Forms.Control.MouseButtons;
@@ -917,11 +916,9 @@ namespace Epsitec.Common.Widgets
         private static KeyCode lastCode;
         private static Message lastMessage;
         private static Message.State state;
-        private static long nextMessageId = 1;
         private static long currentUserMessageId;
 
         private readonly MessageType messageType;
-        private readonly long messageId;
         private readonly long userMessageId;
         private readonly int tickCount;
 

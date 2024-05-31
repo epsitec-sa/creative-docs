@@ -1,9 +1,9 @@
 //	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Widgets
             this.name = name;
             this.level = level;
             this.options = options;
-            this.id = System.Threading.Interlocked.Increment(ref CommandDispatcher.nextId);
+            this.id = CommandDispatcher.nextId++;
 
             switch (this.level)
             {
