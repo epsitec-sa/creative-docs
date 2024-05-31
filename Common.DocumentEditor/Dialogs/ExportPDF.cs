@@ -1,3 +1,6 @@
+using System.Threading;
+using System.Threading.Tasks;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
@@ -132,14 +135,22 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             );
             string err = "";
 
-            Common.Dialogs.WorkInProgressDialog.ExecuteCancellable(
+            WorkInProgressDialog.WIPTaskDelegate printJobDelegate = async Task (
+                IWorkInProgressReport report,
+                CancellationToken ct
+            ) =>
+            {
+                // make the printing task asynchronous
+                /*
+                report.DefineOperation(Res.Strings.Export.PDF.Progress.Operation);
+                err = this.editor.CurrentDocument.ExportPdf(filename, report);
+                */
+                throw new System.NotImplementedException();
+            };
+            WorkInProgressDialog.ExecuteCancellable(
                 Res.Strings.Export.PDF.Progress.Title,
                 ProgressIndicatorStyle.UnknownDuration,
-                delegate(Common.Dialogs.IWorkInProgressReport report)
-                {
-                    report.DefineOperation(Res.Strings.Export.PDF.Progress.Operation);
-                    err = this.editor.CurrentDocument.ExportPdf(filename, report);
-                },
+                printJobDelegate,
                 this.editor.Window
             );
 
