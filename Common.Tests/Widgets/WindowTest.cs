@@ -141,12 +141,7 @@ namespace Epsitec.Common.Tests.Widgets
             window.Root.BackColor = Color.Transparent;
             window.MakeLayeredWindow();
             window.Alpha = 0.5;
-            window.WindowBounds = new Rectangle(
-                ScreenInfo.GlobalArea.Left + 50,
-                200,
-                100 * zoom,
-                200 * zoom
-            );
+            window.WindowSize = new Size(100 * zoom, 200 * zoom);
 
             Widget back = new Widget();
             back.Dock = DockStyle.Fill;
@@ -837,7 +832,7 @@ namespace Epsitec.Common.Tests.Widgets
             window.Root.BackColor = Color.Transparent;
             window.MakeLayeredWindow();
             window.Alpha = 0.75;
-            window.WindowBounds = new Rectangle(ScreenInfo.GlobalArea.Left + 50, 200, 200, 200);
+            window.WindowSize = new Size(200, 200);
 
             button.SetParent(window.Root);
             button.SetManualBounds(new Rectangle(10, 10, 80, 24));
