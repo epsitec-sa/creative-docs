@@ -426,6 +426,11 @@ namespace Epsitec.Common.Widgets
             set { this.SetValue(Visual.ActiveStateProperty, value); }
         }
 
+        /// <summary>
+        /// Whether the Visual wants to be visible.
+        /// This is different from <c>IsVisible</c>, the widget could have
+        /// <c>Visibility</c> set but still be hidden if it's parent is hidden
+        /// </summary>
         public bool Visibility
         {
             get { return (bool)this.GetValue(Visual.VisibilityProperty); }
@@ -433,15 +438,21 @@ namespace Epsitec.Common.Widgets
             {
                 if (this.Visibility != value)
                 {
-                    // bl-net8-cross double_visibility_property
-                    if (this.IsVisible)
-                    {
-                        this.Invalidate();
-                    }
-
-                    // This is not beautiful
                     this.SetValueBase(Visual.VisibilityProperty, value);
-                    this.SetValueBase(Visual.IsVisibleProperty, value);
+
+                    if (value)
+                    {
+                        this.ClearValue(Visual.IsVisibleProperty);
+                    }
+                    else
+                    {
+                        if (this.IsVisible)
+                        {
+                            this.Invalidate();
+                        }
+
+                        this.SetValueBase(Visual.IsVisibleProperty, false);
+                    }
                 }
             }
         }
@@ -467,10 +478,14 @@ namespace Epsitec.Common.Widgets
             }
         }
 
+        /// <summary>
+        /// Whether this Visual is actually visible.
+        /// This is different from <c>Visibility</c>, the widget could have
+        /// <c>Visibility</c> set but still be hidden if it's parent is hidden
+        /// </summary>
         public bool IsVisible
         {
-            // bl-net8-cross double_visibility_property
-            get { return (bool)this.GetValue(Visual.VisibilityProperty); }
+            get { return (bool)this.GetValue(Visual.IsVisibleProperty); }
         }
 
         public bool IsEnabled
@@ -1775,7 +1790,6 @@ namespace Epsitec.Common.Widgets
             remove { this.RemoveUserEventHandler("ChildrenChanged", value); }
         }
 
-        // bl-net8-cross double_visibility_property
         public event PropertyChangedEventHandler IsVisibleChanged
         {
             add { this.AddEventHandler(Visual.IsVisibleProperty, value); }
@@ -2028,7 +2042,7 @@ namespace Epsitec.Common.Widgets
             typeof(bool),
             typeof(Visual),
             new VisualPropertyMetadata(
-                true, // bl-net8-cross double_visibility_property
+                true,
                 new SetValueOverrideCallback(Visual.SetVisibilityValue),
                 VisualPropertyMetadataOptions.None
             )
@@ -2137,12 +2151,7 @@ namespace Epsitec.Common.Widgets
                 typeof(bool),
                 typeof(Visual),
                 new VisualPropertyMetadata(
-                    true, /* 
-                    bl-net8-cross double_visibility_property
-                    HACK: default to true to match VisibilityProperty
-                    TODO: we should probably have only one property
-                    They do differ in their metadata, though…
-                    */
+                    false,
                     VisualPropertyMetadataOptions.InheritsValue
                         | VisualPropertyMetadataOptions.AffectsArrange
                         | VisualPropertyMetadataOptions.AffectsDisplay
