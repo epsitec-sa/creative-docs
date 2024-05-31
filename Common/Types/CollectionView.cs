@@ -1191,7 +1191,7 @@ namespace Epsitec.Common.Types
         /// </summary>
         protected void BeginDeferredRefresh()
         {
-            System.Threading.Interlocked.Increment(ref this.deferCounter);
+            this.deferCounter++;
         }
 
         /// <summary>
@@ -1200,7 +1200,8 @@ namespace Epsitec.Common.Types
         /// </summary>
         protected void EndDeferredRefresh()
         {
-            if (System.Threading.Interlocked.Decrement(ref this.deferCounter) == 0)
+            this.deferCounter--;
+            if (this.deferCounter == 0)
             {
                 this.RefreshContents();
             }
@@ -1216,10 +1217,7 @@ namespace Epsitec.Common.Types
             if (this.IsRefreshDeferred)
             {
                 throw new System.InvalidOperationException(
-                    string.Format(
-                        "Invalid operation while refresh is deferred; thread name='{0}'",
-                        System.Threading.Thread.CurrentThread.Name ?? "<null>"
-                    )
+                    "Invalid operation while refresh is deferred"
                 );
             }
         }
