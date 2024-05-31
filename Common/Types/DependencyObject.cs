@@ -1,8 +1,8 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using System.Collections.Generic;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Types
 {
@@ -1406,9 +1406,7 @@ namespace Epsitec.Common.Types
 
                 type.Register(property);
 
-                System.Threading.Interlocked.Increment(
-                    ref DependencyObject.registeredPropertyCount
-                );
+                DependencyObject.registeredPropertyCount++;
             }
         }
 

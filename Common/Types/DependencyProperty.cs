@@ -40,9 +40,7 @@ namespace Epsitec.Common.Types
             this.propertyType = propertyType;
             this.ownerType = ownerType;
             this.defaultMetadata = metadata;
-            this.globalIndex = System.Threading.Interlocked.Increment(
-                ref DependencyProperty.globalPropertyCount
-            );
+            this.globalIndex = DependencyProperty.globalPropertyCount++;
             this.isPropertyDerivedFromDependencyObject = typeof(DependencyObject).IsAssignableFrom(
                 this.propertyType
             );
