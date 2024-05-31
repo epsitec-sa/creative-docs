@@ -504,7 +504,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
         private void GenerateNewPassId()
         {
-            this.passId = System.Threading.Interlocked.Increment(ref LayoutContext.nextPassId);
+            this.passId = LayoutContext.nextPassId++;
         }
 
         private LayoutMeasure GetCachedWidthMeasure(Visual visual)
