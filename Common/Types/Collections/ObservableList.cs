@@ -1,9 +1,9 @@
 //	Copyright © 2006-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Types.Collections
 {
@@ -675,14 +675,14 @@ namespace Epsitec.Common.Types.Collections
             public ReEnabler(ObservableList<T> list)
             {
                 this.list = list;
-                System.Threading.Interlocked.Increment(ref this.list.silent);
+                this.list.silent++;
             }
 
             #region IDisposable Members
 
             public void Dispose()
             {
-                System.Threading.Interlocked.Decrement(ref this.list.silent);
+                this.list.silent--;
             }
 
             #endregion
