@@ -354,15 +354,11 @@ namespace Epsitec.Common.Widgets
             get { return this.owner; }
             set
             {
-                if (value == null)
-                {
-                    throw new System.ArgumentException("Window owner cannot be set to null");
-                }
                 this.owner?.RemoveOwnedWindow(this);
                 if (this.owner != value)
                 {
                     this.owner = value;
-                    this.owner.RegisterOwnedWindow(this);
+                    this.owner?.RegisterOwnedWindow(this);
                     Helpers.VisualTree.InvalidateCommandDispatcher(this);
                 }
             }
