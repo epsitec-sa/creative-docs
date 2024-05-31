@@ -108,13 +108,13 @@ namespace Epsitec.Common.Text.Styles
         public void IncrementUserCount()
         {
             Debug.Assert.IsInBounds(this.userCount + 1, 1, BaseSettings.MaxUserCount - 1);
-            System.Threading.Interlocked.Increment(ref this.userCount);
+            this.userCount++;
         }
 
         public void DecrementUserCount()
         {
             Debug.Assert.IsInBounds(this.userCount, 1, BaseSettings.MaxUserCount - 1);
-            System.Threading.Interlocked.Decrement(ref this.userCount);
+            this.userCount--;
         }
 
         internal void Initialize(System.Collections.ICollection properties)
