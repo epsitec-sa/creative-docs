@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
@@ -6,7 +7,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.AddressBook.Entities;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.Dialogs
 {
@@ -24,11 +24,6 @@ namespace Epsitec.Common.Tests.Dialogs
             Epsitec.Common.Document.Engine.Initialize();
             Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookRoyale");
             Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache();
-        }
-
-        [Test]
-        public void AutomatedTestEnvironment()
-        {
             Window.RunningInAutomatedTestEnvironment = true;
         }
 

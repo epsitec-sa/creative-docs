@@ -1,11 +1,11 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 [assembly: DependencyClass(typeof(Placeholder))]
 
@@ -19,7 +19,7 @@ namespace Epsitec.Common.UI
     {
         public Placeholder()
         {
-            Application.QueueAsyncCallback(this.CreateUserInterface);
+            this.CreateUserInterface();
         }
 
         public Placeholder(Widget embedder)
@@ -149,7 +149,6 @@ namespace Epsitec.Common.UI
             object savedValue = this.Value;
 
             this.SetParent(parent);
-            this.SyncQueuedCalls();
 
             if (
                 (this.Value != UndefinedValue.Value)
@@ -275,12 +274,12 @@ namespace Epsitec.Common.UI
                 {
                     if (this.controllerName != null)
                     {
-                        Application.QueueAsyncCallback(this.CreateUserInterface);
+                        this.CreateUserInterface();
                     }
                 }
                 else
                 {
-                    Application.QueueAsyncCallback(this.RecreateUserInterface);
+                    this.RecreateUserInterface();
                 }
             }
         }
@@ -315,7 +314,7 @@ namespace Epsitec.Common.UI
         {
             if (this.controller != null)
             {
-                Application.QueueAsyncCallback(this.RecreateUserInterface);
+                this.RecreateUserInterface();
             }
         }
 
@@ -323,7 +322,7 @@ namespace Epsitec.Common.UI
         {
             if (this.controller != null)
             {
-                Application.QueueAsyncCallback(this.RecreateUserInterface);
+                this.RecreateUserInterface();
             }
         }
 
@@ -379,7 +378,7 @@ namespace Epsitec.Common.UI
 
             if (this.controller != null)
             {
-                Application.QueueAsyncCallback(this.RecreateUserInterface);
+                this.RecreateUserInterface();
             }
         }
 
@@ -389,7 +388,7 @@ namespace Epsitec.Common.UI
 
             if (this.controller != null)
             {
-                Application.QueueAsyncCallback(this.RecreateUserInterface);
+                this.RecreateUserInterface();
             }
         }
 
@@ -397,26 +396,9 @@ namespace Epsitec.Common.UI
         {
             base.UpdateValue(oldValue, newValue);
 
-            this.SyncQueuedCalls();
-
             if (this.controller != null)
             {
                 this.controller.RefreshUserInterface(oldValue, newValue);
-            }
-        }
-
-        private void SyncQueuedCalls()
-        {
-            if (Application.HasQueuedAsyncCallback(this.CreateUserInterface))
-            {
-                Application.RemoveQueuedAsyncCallback(this.CreateUserInterface);
-                this.CreateUserInterface();
-            }
-
-            if (Application.HasQueuedAsyncCallback(this.RecreateUserInterface))
-            {
-                Application.RemoveQueuedAsyncCallback(this.RecreateUserInterface);
-                this.RecreateUserInterface();
             }
         }
 
