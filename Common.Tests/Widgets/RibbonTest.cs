@@ -1,5 +1,6 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform.SDLWrapper;
 using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Widgets
@@ -147,6 +148,8 @@ namespace Epsitec.Common.Tests.Widgets
             Assert.IsFalse(window.Root.IsVisible);
 
             window.Show();
+
+            SDLWindowManager.ProcessEvents();
 
             Assert.IsTrue(window.IsVisible);
             Assert.IsTrue(window.Root.IsVisible);
