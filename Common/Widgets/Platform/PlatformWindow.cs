@@ -542,6 +542,16 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get { return this.widgetWindow; }
         }
+        internal static bool UseWaitCursor
+        {
+            // bl-net8-cross
+            // old thing from winforms, see if still usefull
+
+            //get { return System.Windows.Forms.Application.UseWaitCursor; }
+            get { return true; }
+            //set { System.Windows.Forms.Application.UseWaitCursor = value; }
+            set { }
+        }
 
         internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
         {
@@ -789,55 +799,6 @@ namespace Epsitec.Common.Widgets.Platform
             ToolTip.Default.HideToolTip();
         }
 
-        internal bool StartWindowManagerOperation(WindowManagerOperation op)
-        {
-            /*
-            //	Documentation sur WM_NCHITTEST et les modes HT...
-            //	Cf http://blogs.msdn.com/jfoscoding/archive/2005/07/28/444647.aspx
-            //	Cf http://msdn.microsoft.com/netframework/default.aspx?pull=/libarary/en-us/dndotnet/html/automationmodel.asp
-
-            switch (op)
-            {
-                case Platform.WindowManagerOperation.ResizeLeft:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_LEFT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeRight:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_RIGHT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeBottom:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOM);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeBottomRight:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMRIGHT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeBottomLeft:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMLEFT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeTop:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOP);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeTopRight:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPRIGHT);
-                    return true;
-                case Platform.WindowManagerOperation.ResizeTopLeft:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPLEFT);
-                    return true;
-                case Platform.WindowManagerOperation.MoveWindow:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_CAPTION);
-                    return true;
-                case Platform.WindowManagerOperation.PressMinimizeButton:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MINBUTTON);
-                    return true;
-                case Platform.WindowManagerOperation.PressMaximizeButton:
-                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MAXBUTTON);
-                    return true;
-            }
-
-            return false;
-            */
-            throw new System.NotImplementedException();
-        }
-
         internal void SetFrozen(bool frozen)
         {
             this.isFrozen = frozen;
@@ -867,19 +828,65 @@ namespace Epsitec.Common.Widgets.Platform
             };
             SDLWrapper.SDLWindowManager.RunApplicationEventLoop();
         }
+
+        protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
+        {
+            if (this.IsDisposed)
+            {
+                return;
+            }
+
+            this.WindowBounds = bounds;
+            this.paintOffset = offset;
+        }
+
+        protected void AnimateAlpha(double alpha)
+        {
+            this.Alpha = alpha;
+        }
+
+        protected void AnimateCleanup(Animator animator)
+        {
+            animator.Dispose();
+
+            this.isFrozen = false;
+            this.isAnimatingActiveWindow = false;
+
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.OnWindowAnimationEnded();
+            }
+        }
+
+        internal void MarkForRepaint()
+        {
+            // repaint all
+            this.MarkForRepaint(new Drawing.Rectangle(0, 0, this.Width, this.Height));
+        }
+
+        internal void MarkForRepaint(Drawing.Rectangle rect)
+        {
+            rect.RoundInflate();
+
+            this.dirtyRectangle.MergeWith(rect);
+            this.dirtyRegion.Add(rect);
+        }
+
+        internal void SynchronousRepaint()
+        {
+            if (this.widgetWindow != null)
+            {
+                this.widgetWindow.ForceLayout();
+            }
+        }
+
+        internal void Close()
+        {
+            this.Dispose();
+        }
         #endregion
 
         #region NotImplemented
-        internal static bool UseWaitCursor
-        {
-            // bl-net8-cross
-            // old thing from winforms, see if still usefull
-
-            //get { return System.Windows.Forms.Application.UseWaitCursor; }
-            get { return true; }
-            //set { System.Windows.Forms.Application.UseWaitCursor = value; }
-            set { }
-        }
 
         internal Drawing.Rectangle WindowPlacementNormalBounds
         {
@@ -991,6 +998,55 @@ namespace Epsitec.Common.Widgets.Platform
                 */
                 throw new NotImplementedException();
             }
+        }
+
+        internal bool StartWindowManagerOperation(WindowManagerOperation op)
+        {
+            /*
+            //	Documentation sur WM_NCHITTEST et les modes HT...
+            //	Cf http://blogs.msdn.com/jfoscoding/archive/2005/07/28/444647.aspx
+            //	Cf http://msdn.microsoft.com/netframework/default.aspx?pull=/libarary/en-us/dndotnet/html/automationmodel.asp
+
+            switch (op)
+            {
+                case Platform.WindowManagerOperation.ResizeLeft:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_LEFT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeRight:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_RIGHT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeBottom:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOM);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeBottomRight:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMRIGHT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeBottomLeft:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_BOTTOMLEFT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeTop:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOP);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeTopRight:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPRIGHT);
+                    return true;
+                case Platform.WindowManagerOperation.ResizeTopLeft:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_TOPLEFT);
+                    return true;
+                case Platform.WindowManagerOperation.MoveWindow:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_CAPTION);
+                    return true;
+                case Platform.WindowManagerOperation.PressMinimizeButton:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MINBUTTON);
+                    return true;
+                case Platform.WindowManagerOperation.PressMaximizeButton:
+                    this.ReleaseCaptureAndSendMessage(Win32Const.HT_MAXBUTTON);
+                    return true;
+            }
+
+            return false;
+            */
+            throw new System.NotImplementedException();
         }
 
         internal static void ProcessException(System.Exception ex, string tag)
@@ -1236,36 +1292,6 @@ namespace Epsitec.Common.Widgets.Platform
             throw new System.NotImplementedException();
         }
 
-        internal void MarkForRepaint()
-        {
-            // repaint all
-            this.MarkForRepaint(new Drawing.Rectangle(0, 0, this.Width, this.Height));
-        }
-
-        internal void MarkForRepaint(Drawing.Rectangle rect)
-        {
-            rect.RoundInflate();
-
-            this.dirtyRectangle.MergeWith(rect);
-            this.dirtyRegion.Add(rect);
-
-            int top = (int)(rect.Top);
-            int bottom = (int)(rect.Bottom);
-
-            if (this.isLayered)
-            {
-                this.isLayeredDirty = true;
-            }
-        }
-
-        internal void SynchronousRepaint()
-        {
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.ForceLayout();
-            }
-        }
-
         internal static void SendSynchronizeCommandCache()
         {
             // bl-net8-cross
@@ -1343,45 +1369,6 @@ namespace Epsitec.Common.Widgets.Platform
             */
             throw new System.NotImplementedException();
             return null;
-        }
-
-        protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
-        {
-            /*
-            if (this.IsDisposed)
-            {
-                return;
-            }
-
-            this.WindowBounds = bounds;
-            this.paintOffset = offset;
-            this.Invalidate();
-            this.Update();
-            */
-            throw new NotImplementedException();
-        }
-
-        protected void AnimateAlpha(double alpha)
-        {
-            this.Alpha = alpha;
-        }
-
-        protected void AnimateCleanup(Animator animator)
-        {
-            animator.Dispose();
-
-            this.isFrozen = false;
-            this.isAnimatingActiveWindow = false;
-
-            if (this.widgetWindow != null)
-            {
-                this.widgetWindow.OnWindowAnimationEnded();
-            }
-        }
-
-        internal void Close()
-        {
-            this.Dispose();
         }
 
         #endregion NotImplemented
@@ -1567,6 +1554,11 @@ namespace Epsitec.Common.Widgets.Platform
             // We do not call Dispose on our widgetWindow since it could still live without us.
             this.widgetWindow = null;
         }
+
+        private bool IsDisposed
+        {
+            get { return this.renderingBuffer == null; }
+        }
         #endregion
 
         private Window widgetWindow;
@@ -1576,10 +1568,10 @@ namespace Epsitec.Common.Widgets.Platform
         private AntigrainSharp.AbstractGraphicBuffer renderingBuffer;
         private Rectangle dirtyRectangle;
         private DirtyRegion dirtyRegion;
+        private Point paintOffset;
 
         private bool isFullscreen;
         private bool isLayered;
-        private bool isLayeredDirty;
         private bool isFrozen;
         private bool isAnimatingActiveWindow;
         private bool isNoActivate;
