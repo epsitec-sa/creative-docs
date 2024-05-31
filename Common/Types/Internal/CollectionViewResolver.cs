@@ -52,7 +52,8 @@ namespace Epsitec.Common.Types.Internal
                 Context context = this.GetContext(binding);
                 ViewDef viewDef = context.GetViewDef(collection, autoCreate);
 
-                if ((System.Threading.Interlocked.Increment(ref this.counter) % 1000) == 999)
+                this.counter++;
+                if (this.counter % 1000 == 999)
                 {
                     this.FreeDeadContexts();
                 }
@@ -72,25 +73,22 @@ namespace Epsitec.Common.Types.Internal
         {
             //	TODO: make sure that this gets invoked when a binding object attached to a context dies...
 
-            System.Threading.Interlocked.Exchange(ref this.counter, 0);
+            this.counter = 0;
 
-            lock (this.exclusion)
-            {
-                this.contexts.RemoveAll(
-                    delegate(Context item)
+            this.contexts.RemoveAll(
+                delegate(Context item)
+                {
+                    if (item.Binding == null)
                     {
-                        if (item.Binding == null)
-                        {
-                            item.Dispose();
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        item.Dispose();
+                        return true;
                     }
-                );
-            }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            );
         }
 
         /// <summary>
@@ -124,37 +122,34 @@ namespace Epsitec.Common.Types.Internal
 
         private Context GetContext(Binding binding)
         {
-            lock (this.exclusion)
-            {
-                Context context = null;
-                int index = this.contexts.FindIndex(
-                    delegate(Context item)
+            Context context = null;
+            int index = this.contexts.FindIndex(
+                delegate(Context item)
+                {
+                    if (item.Binding == binding)
                     {
-                        if (item.Binding == binding)
-                        {
-                            context = item;
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        context = item;
+                        return true;
                     }
-                );
-
-                if (index < 0)
-                {
-                    context = new Context(binding);
-                    this.contexts.Insert(0, context);
+                    else
+                    {
+                        return false;
+                    }
                 }
-                else if (index > 0)
-                {
-                    this.contexts.RemoveAt(index);
-                    this.contexts.Insert(0, context);
-                }
+            );
 
-                return context;
+            if (index < 0)
+            {
+                context = new Context(binding);
+                this.contexts.Insert(0, context);
             }
+            else if (index > 0)
+            {
+                this.contexts.RemoveAt(index);
+                this.contexts.Insert(0, context);
+            }
+
+            return context;
         }
 
         #region Private Context Class
@@ -286,7 +281,6 @@ namespace Epsitec.Common.Types.Internal
 
         public static readonly CollectionViewResolver Default = new CollectionViewResolver();
 
-        private object exclusion = new object();
         private List<Context> contexts = new List<Context>();
         private int counter;
     }
