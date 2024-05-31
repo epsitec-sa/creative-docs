@@ -1,9 +1,9 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
-using System.Collections.Generic;
 
 [assembly: DependencyClass(typeof(ItemPanel))]
 
@@ -1259,12 +1259,9 @@ namespace Epsitec.Common.UI
 
         internal void ClearUserInterface()
         {
-            using (new LockManager(this))
+            foreach (ItemView view in this.views)
             {
-                foreach (ItemView view in this.views)
-                {
-                    view.ClearUserInterface();
-                }
+                view.ClearUserInterface();
             }
         }
 
@@ -1319,18 +1316,12 @@ namespace Epsitec.Common.UI
 
         internal void AddPanelGroup(ItemPanelGroup group)
         {
-            using (new LockManager(this))
-            {
-                this.groups.Add(group);
-            }
+            this.groups.Add(group);
         }
 
         internal void RemovePanelGroup(ItemPanelGroup group)
         {
-            using (new LockManager(this))
-            {
-                this.groups.Remove(group);
-            }
+            this.groups.Remove(group);
         }
 
         internal void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
@@ -1581,10 +1572,7 @@ namespace Epsitec.Common.UI
 
             ItemPanelGroup[] groups;
 
-            using (new LockManager(this))
-            {
-                groups = this.groups.ToArray();
-            }
+            groups = this.groups.ToArray();
 
             for (int i = 0; i < groups.Length; i++)
             {
@@ -2908,10 +2896,7 @@ namespace Epsitec.Common.UI
 
         private IList<ItemView> SafeGetViews()
         {
-            using (new LockManager(this))
-            {
-                return this.views;
-            }
+            return this.views;
         }
 
         private void InternalSelectItemView(ItemView view)
@@ -3123,12 +3108,9 @@ namespace Epsitec.Common.UI
 
             Dictionary<object, ItemView> currentViews = new Dictionary<object, ItemView>();
 
-            using (new LockManager(this))
+            foreach (ItemView view in this.views)
             {
-                foreach (ItemView view in this.views)
-                {
-                    currentViews.Add(view.Item, view);
-                }
+                currentViews.Add(view.Item, view);
             }
 
             List<ItemView> views = new List<ItemView>();
@@ -3178,22 +3160,19 @@ namespace Epsitec.Common.UI
 
             List<ItemView> dispose = new List<ItemView>();
 
-            using (new LockManager(this))
+            foreach (ItemView view in this.views)
             {
-                foreach (ItemView view in this.views)
+                if (view.Widget != null)
                 {
-                    if (view.Widget != null)
+                    if (!views.Contains(view))
                     {
-                        if (!views.Contains(view))
-                        {
-                            dispose.Add(view);
-                        }
+                        dispose.Add(view);
                     }
                 }
-
-                this.views = views;
-                this.hotItemViewIndex = -1;
             }
+
+            this.views = views;
+            this.hotItemViewIndex = -1;
 
             dispose.ForEach(
                 delegate(ItemView view)
@@ -3530,48 +3509,6 @@ namespace Epsitec.Common.UI
             }
         }
 
-        private void AssertLockOwned()
-        {
-            System.Diagnostics.Debug.Assert(this.lockAcquired > 0);
-            System.Diagnostics.Debug.Assert(
-                this.lockOwnerPid == System.Threading.Thread.CurrentThread.ManagedThreadId
-            );
-        }
-
-        #region LockManager Class
-
-        private class LockManager : System.IDisposable
-        {
-            public LockManager(ItemPanel panel)
-            {
-                this.panel = panel;
-                System.Threading.Monitor.Enter(this.panel.exclusion);
-                this.panel.lockAcquired++;
-                this.panel.lockOwnerPid = System.Threading.Thread.CurrentThread.ManagedThreadId;
-            }
-
-            ~LockManager()
-            {
-                throw new System.InvalidOperationException("Lock not properly released");
-            }
-
-            #region IDisposable Members
-
-            public void Dispose()
-            {
-                this.panel.lockAcquired--;
-                System.Threading.Monitor.Exit(this.panel.exclusion);
-                this.panel = null;
-                System.GC.SuppressFinalize(this);
-            }
-
-            #endregion
-
-            ItemPanel panel;
-        }
-
-        #endregion
-
         #region RefreshState Class
 
         class RefreshState
@@ -3819,22 +3756,12 @@ namespace Epsitec.Common.UI
 
         List<ItemView> views
         {
-            get
-            {
-                this.AssertLockOwned();
-                return this.lockedViews;
-            }
-            set
-            {
-                this.AssertLockOwned();
-                this.lockedViews = value;
-            }
+            get { return this.lockedViews; }
+            set { this.lockedViews = value; }
         }
 
         List<ItemView> lockedViews = new List<ItemView>();
         object exclusion = new object();
-        int lockAcquired;
-        int lockOwnerPid;
         int hotItemViewIndex = -1;
         double apertureX,
             apertureY,
