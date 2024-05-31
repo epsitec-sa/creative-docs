@@ -65,12 +65,13 @@ namespace Epsitec.Common.Types
 
         private void BeginDefer()
         {
-            System.Threading.Interlocked.Increment(ref this.deferCounter);
+            this.deferCounter++;
         }
 
         private void EndDefer()
         {
-            if (System.Threading.Interlocked.Decrement(ref this.deferCounter) == 0)
+            this.deferCounter--;
+            if (this.deferCounter == 0)
             {
                 this.AttachAfterChanges();
             }
