@@ -1,8 +1,8 @@
 //	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
+using Epsitec.Common.Support.Extensions;
 
 [assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Types.Caption))]
 
@@ -607,12 +607,13 @@ namespace Epsitec.Common.Types
 
         private void SuspendChanged()
         {
-            System.Threading.Interlocked.Increment(ref this.suspendCounter);
+            this.suspendCounter++;
         }
 
         private void ResumeChanged()
         {
-            if (System.Threading.Interlocked.Decrement(ref this.suspendCounter) == 0)
+            this.suspendCounter--;
+            if (this.suspendCounter == 0)
             {
                 if (this.hasChanged)
                 {
@@ -632,8 +633,7 @@ namespace Epsitec.Common.Types
             {
                 this.hasChanged = true;
             }
-
-            if (System.Threading.Thread.VolatileRead(ref this.suspendCounter) == 0)
+            if (this.suspendCounter == 0)
             {
                 this.hasChanged = false;
 
