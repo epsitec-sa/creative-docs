@@ -228,7 +228,6 @@ namespace Epsitec.Common.Dialogs
             if (this.operation != null)
             {
                 this.timer.Start();
-                Window.SuspendAsyncNotify();
                 Application.SetWaitCursor();
 
                 this.DialogWindow.MouseCursor = MouseCursor.AsWait;
@@ -244,7 +243,6 @@ namespace Epsitec.Common.Dialogs
             if (this.timer.State == TimerState.Running)
             {
                 this.timer.Stop();
-                Window.ResumeAsyncNotify();
                 Application.ClearWaitCursor();
             }
         }

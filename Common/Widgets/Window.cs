@@ -30,8 +30,7 @@ namespace Epsitec.Common.Widgets
 
         internal Window(WindowRoot root, WindowFlags windowFlags)
         {
-            this.id = System.Threading.Interlocked.Increment(ref Window.nextWindowId);
-            this.thread = System.Threading.Thread.CurrentThread;
+            this.id = Window.nextWindowId++;
 
             this.components = new Support.Data.ComponentCollection(this);
             this.ownedWindows = new HashSet<Window>();
@@ -103,10 +102,7 @@ namespace Epsitec.Common.Widgets
 
         public static IEnumerable<Window> GetAllLiveWindows()
         {
-            var currentThread = System.Threading.Thread.CurrentThread;
-            return Window.windows.FindAll(window =>
-                !window.IsDisposed && window.Thread == currentThread
-            );
+            return Window.windows.FindAll(window => !window.IsDisposed);
         }
 
         public static void GrabScreen(Drawing.Image bitmap, int x, int y)
@@ -540,11 +536,6 @@ namespace Epsitec.Common.Widgets
                     this.platformWindow.SetFrozen(value);
                 }
             }
-        }
-
-        public System.Threading.Thread Thread
-        {
-            get { return this.thread; }
         }
 
         #region IIsDisposed Members
@@ -1407,20 +1398,6 @@ namespace Epsitec.Common.Widgets
 
         public void AsyncDispose()
         {
-            // bl-net8-cross cleanup
-            /*
-            Platform.PlatformWindow.ProcessCrossThreadOperation(() => this.platformWindow.Owner = null);
-
-            if (Application.MainUIThread == System.Threading.Thread.CurrentThread)
-            {
-                this.isDisposeQueued = true;
-                this.SendQueueCommand();
-            }
-            else
-            {
-                this.Dispose();
-            }
-            */
             this.Dispose();
         }
 
@@ -1463,49 +1440,9 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        public static void SuspendAsyncNotify()
-        {
-            System.Threading.Interlocked.Increment(ref Window.asyncSuspendCount);
-        }
-
-        public static void ResumeAsyncNotify()
-        {
-            if (System.Threading.Interlocked.Decrement(ref Window.asyncSuspendCount) == 0)
-            {
-                Window[] windows = new Window[0];
-
-                lock (Window.pendingAsyncWindows)
-                {
-                    windows = Window.pendingAsyncWindows.ToArray();
-                    Window.pendingAsyncWindows.Clear();
-                }
-
-                foreach (Window window in windows)
-                {
-                    if (window.platformWindow != null)
-                    {
-                        window.platformWindow.SendQueueCommand();
-                    }
-                }
-            }
-        }
-
         private void SendQueueCommand()
         {
-            if (Window.asyncSuspendCount == 0)
-            {
-                this.PlatformWindow.SendQueueCommand();
-            }
-            else
-            {
-                lock (Window.pendingAsyncWindows)
-                {
-                    if (!Window.pendingAsyncWindows.Contains(this))
-                    {
-                        Window.pendingAsyncWindows.Add(this);
-                    }
-                }
-            }
+            this.PlatformWindow.SendQueueCommand();
         }
 
         public void ForceLayout()
@@ -2404,7 +2341,6 @@ namespace Epsitec.Common.Widgets
         private static Window focusedWindow;
 
         private readonly long id;
-        private readonly System.Threading.Thread thread;
 
         private PlatformWindow platformWindow;
         private Window owner;
@@ -2431,8 +2367,6 @@ namespace Epsitec.Common.Widgets
         private bool isAsyncNotificationQueued;
         private bool isAsyncLayoutQueued;
         private bool isDisposed;
-        private static int asyncSuspendCount;
-        private static List<Window> pendingAsyncWindows = new List<Window>();
 
         private bool pendingValidation;
         private List<Widget> asyncValidationList = new List<Widget>();

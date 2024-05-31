@@ -1416,7 +1416,6 @@ namespace Epsitec.Common.Widgets
 
         private static void ProcessEntered(System.Action<Widget> action)
         {
-            var currentThread = System.Threading.Thread.CurrentThread;
             bool again = true;
 
             while (again)
@@ -1427,11 +1426,7 @@ namespace Epsitec.Common.Widgets
 
                 lock (Widget.enteredWidgets)
                 {
-                    widgets = Widget
-                        .enteredWidgets.Where(x =>
-                            x.Window != null && x.Window.Thread == currentThread
-                        )
-                        .ToArray();
+                    widgets = Widget.enteredWidgets.Where(x => x.Window != null).ToArray();
                 }
 
                 foreach (var widget in widgets)
