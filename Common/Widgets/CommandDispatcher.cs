@@ -350,7 +350,7 @@ namespace Epsitec.Common.Widgets
                 CommandDispatcherLevel.Root
             );
 
-            System.Diagnostics.Debug.Assert(CommandDispatcher.defaultDispatcher.id == 1);
+            System.Diagnostics.Debug.Assert(CommandDispatcher.defaultDispatcher.id == 0);
         }
 
         private static object ResolveWeakController(object controller)

@@ -1073,7 +1073,7 @@ namespace Epsitec.Common.Widgets.Platform
             buffer.Append(System.Diagnostics.Process.GetCurrentProcess().MainWindowTitle);
             buffer.Append("\r\n");
             buffer.Append("Thread: ");
-            buffer.Append(System.Threading.Thread.CurrentThread.Name);
+            buffer.Append(System. Threading.Thread.CurrentThread.Name);
             buffer.Append("\r\n");
             buffer.Append("\r\n");
 

@@ -80,6 +80,7 @@ namespace Epsitec.Common.Drawing
 
         private void AddThread()
         {
+            /*
             System.Threading.Thread thread = null;
 
             lock (this.exclusion)
@@ -99,6 +100,8 @@ namespace Epsitec.Common.Drawing
             {
                 thread.Start();
             }
+            */
+            throw new System.NotImplementedException();
         }
 
         private void ProcessingLoop()

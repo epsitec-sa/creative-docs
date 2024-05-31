@@ -1,9 +1,9 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.IO;
 using Epsitec.Common.Types.Collections;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -101,6 +101,7 @@ namespace Epsitec.Common.Support
         /// <param name="path">The path to the file.</param>
         public void Open(string path)
         {
+            /*
             this.sourcePath = path;
             this.sourceStream = new System.IO.FileStream(
                 path,
@@ -118,6 +119,8 @@ namespace Epsitec.Common.Support
             );
             this.copyThread = new System.Threading.Thread(this.CopyThread);
             this.copyThread.Start();
+            */
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
