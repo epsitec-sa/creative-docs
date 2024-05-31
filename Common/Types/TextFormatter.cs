@@ -1,16 +1,16 @@
 //	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Linq.Expressions;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Text;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Formatters;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Common.Types
 {
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Types
             {
                 return TextFormatter.cultureOverride
                     ?? TextFormatter.activeCulture
-                    ?? System.Threading.Thread.CurrentThread.CurrentCulture;
+                    ?? CultureInfo.CurrentCulture;
             }
         }
 
@@ -63,9 +63,7 @@ namespace Epsitec.Common.Types
 
         public static void DefineActiveCulture(string twoLetterISOLanguageName)
         {
-            var fullName =
-                twoLetterISOLanguageName
-                + System.Threading.Thread.CurrentThread.CurrentCulture.Name.Substring(2);
+            var fullName = twoLetterISOLanguageName + CultureInfo.CurrentCulture.Name.Substring(2);
             TextFormatter.DefineActiveCulture(CultureInfo.GetCultureInfo(fullName));
         }
 
