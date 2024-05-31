@@ -309,6 +309,19 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_FlashWindow(this.window, SDL_FlashOperation.SDL_FLASH_UNTIL_FOCUSED);
         }
 
+        public void GenerateWindowCloseEvent()
+        {
+            SDL_Event ev = new SDL_Event();
+            SDL_WindowEvent windowEvent = new SDL_WindowEvent();
+            windowEvent.type = SDL_EventType.SDL_WINDOWEVENT;
+            windowEvent.windowEvent = SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE;
+            windowEvent.windowID = this.windowID;
+            windowEvent.timestamp = SDL_GetTicks();
+            ev.type = SDL_EventType.SDL_WINDOWEVENT;
+            ev.window = windowEvent;
+            SDL_PushEvent(ref ev);
+        }
+
         #endregion
 
         #region Private methods
@@ -472,6 +485,11 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_DestroyWindow(this.window);
             this.window = IntPtr.Zero;
             GC.SuppressFinalize(this);
+        }
+
+        public bool IsDisposed
+        {
+            get { return this.window == IntPtr.Zero; }
         }
         #endregion
 

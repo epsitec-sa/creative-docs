@@ -277,7 +277,10 @@ namespace Epsitec.Common.Widgets.Platform
         private static void AddToPendingQueue(Timer timer)
         {
             Timer.pendingTimersQueue.Enqueue(timer);
-            Timer.PendingTimers(null);
+            if (Timer.PendingTimers != null)
+            {
+                Timer.PendingTimers(null);
+            }
         }
         #endregion
 

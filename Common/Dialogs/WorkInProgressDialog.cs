@@ -1,6 +1,9 @@
 //	Copyright © 2007-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Platform;
@@ -14,15 +17,18 @@ namespace Epsitec.Common.Dialogs
     /// </summary>
     public class WorkInProgressDialog : AbstractMessageDialog, IWorkInProgressReport
     {
+        public delegate Task WIPTaskDelegate(IWorkInProgressReport report, CancellationToken ct);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkInProgressDialog"/> class.
         /// </summary>
         /// <param name="title">The title displayed in the dialog.</param>
         /// <param name="cancellable">if set to <c>true</c> the action is cancellable.</param>
-        public WorkInProgressDialog(string title, bool cancellable)
+        public WorkInProgressDialog(string title, bool cancellable, WIPTaskDelegate operation)
         {
             this.dialogTitle = title;
             this.cancellable = cancellable;
+            this.operation = operation;
 
             this.privateDispatcher = new CommandDispatcher(
                 "Dialog",
@@ -31,17 +37,6 @@ namespace Epsitec.Common.Dialogs
             this.privateContext = new CommandContext();
 
             this.privateDispatcher.RegisterController(this);
-        }
-
-        /// <summary>
-        /// Gets or sets the action which will be executed when the dialog
-        /// is shown.
-        /// </summary>
-        /// <value>The action.</value>
-        public System.Action<IWorkInProgressReport> Operation
-        {
-            get { return this.operation; }
-            set { this.operation = value; }
         }
 
         /// <summary>
@@ -66,15 +61,6 @@ namespace Epsitec.Common.Dialogs
         }
 
         /// <summary>
-        /// Gets a value indicating whether the operation was canceled.
-        /// </summary>
-        /// <value><c>true</c> if the operation was canceled; otherwise, <c>false</c>.</value>
-        public bool Canceled
-        {
-            get { return this.canceled; }
-        }
-
-        /// <summary>
         /// Gets the operation result.
         /// </summary>
         /// <value>The operation result.</value>
@@ -88,7 +74,7 @@ namespace Epsitec.Common.Dialogs
         /// is set to <code>OperationResult.Error</code>.
         /// </summary>
         /// <value>The operation exception.</value>
-        public System.Exception OperationException
+        public Exception OperationException
         {
             get { return this.operationException; }
         }
@@ -96,7 +82,7 @@ namespace Epsitec.Common.Dialogs
         public static OperationResult Execute(
             string title,
             ProgressIndicatorStyle style,
-            System.Action<IWorkInProgressReport> action
+            WIPTaskDelegate action
         )
         {
             return WorkInProgressDialog.Execute(title, style, action, null);
@@ -105,7 +91,7 @@ namespace Epsitec.Common.Dialogs
         public static OperationResult Execute(
             string title,
             ProgressIndicatorStyle style,
-            System.Action<IWorkInProgressReport> action,
+            WIPTaskDelegate action,
             Window owner
         )
         {
@@ -115,7 +101,7 @@ namespace Epsitec.Common.Dialogs
         public static OperationResult ExecuteCancellable(
             string title,
             ProgressIndicatorStyle style,
-            System.Action<IWorkInProgressReport> action
+            WIPTaskDelegate action
         )
         {
             return WorkInProgressDialog.ExecuteCancellable(title, style, action, null);
@@ -124,7 +110,7 @@ namespace Epsitec.Common.Dialogs
         public static OperationResult ExecuteCancellable(
             string title,
             ProgressIndicatorStyle style,
-            System.Action<IWorkInProgressReport> action,
+            WIPTaskDelegate action,
             Window owner
         )
         {
@@ -134,13 +120,12 @@ namespace Epsitec.Common.Dialogs
         private static OperationResult Execute(
             string title,
             ProgressIndicatorStyle style,
-            System.Action<IWorkInProgressReport> action,
+            WIPTaskDelegate action,
             Window owner,
             bool cancellable
         )
         {
-            WorkInProgressDialog dialog = new WorkInProgressDialog(title, cancellable);
-            dialog.Operation = action;
+            WorkInProgressDialog dialog = new WorkInProgressDialog(title, cancellable, action);
             dialog.OwnerWindow = owner;
             dialog.ProgressIndicatorStyle = style;
             dialog.OpenDialog();
@@ -151,30 +136,18 @@ namespace Epsitec.Common.Dialogs
 
         void IWorkInProgressReport.DefineOperation(string formattedText)
         {
-            lock (this.exclusion)
-            {
-                this.operationMessage = formattedText;
-            }
+            this.operationMessage = formattedText;
         }
 
         void IWorkInProgressReport.DefineProgress(double value, string formattedText)
         {
-            lock (this.exclusion)
-            {
-                this.progressValue = value;
-                this.progressMessage = formattedText;
-            }
+            this.progressValue = value;
+            this.progressMessage = formattedText;
         }
 
         bool IWorkInProgressReport.Canceled
         {
-            get
-            {
-                lock (this.exclusion)
-                {
-                    return this.canceled;
-                }
-            }
+            get { return this.operationResult == OperationResult.Canceled; }
         }
 
         #endregion
@@ -196,63 +169,44 @@ namespace Epsitec.Common.Dialogs
             frame.Dock = DockStyle.Fill;
             frame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
-#if false
-			StaticText textTitle = new StaticText (frame);
-			textTitle.Dock = DockStyle.Stacked;
-			textTitle.PreferredHeight = 32;
-			textTitle.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleCenter;
-			textTitle.Text = string.Concat (@"<font size=""120%"">", this.dialogTitle, @"</font>");
-#endif
-
             this.operationMessageWidget = new StaticText(frame);
             this.operationMessageWidget.PreferredHeight = 30;
             this.operationMessageWidget.Dock = DockStyle.Stacked;
-            this.operationMessageWidget.Margins = new Epsitec.Common.Drawing.Margins(10, 10, 15, 0);
+            this.operationMessageWidget.Margins = new Drawing.Margins(10, 10, 15, 0);
 
             this.progressMessageWidget = new StaticText(frame);
             this.progressMessageWidget.Dock = DockStyle.Stacked;
-            this.progressMessageWidget.Margins = new Epsitec.Common.Drawing.Margins(10, 10, 0, 0);
+            this.progressMessageWidget.Margins = new Drawing.Margins(10, 10, 0, 0);
 
             this.progressIndicator = new ProgressIndicator(frame);
             this.progressIndicator.ProgressStyle = this.progressIndicatorStyle;
             this.progressIndicator.Dock = DockStyle.Stacked;
-            this.progressIndicator.Margins = new Epsitec.Common.Drawing.Margins(10, 10, 15, 0);
+            this.progressIndicator.Margins = new Drawing.Margins(10, 10, 15, 0);
 
             if (this.cancellable)
             {
                 this.cancelButton = new Button(frame);
                 this.cancelButton.Dock = DockStyle.StackEnd;
                 this.cancelButton.HorizontalAlignment = HorizontalAlignment.Center;
-                this.cancelButton.Margins = new Epsitec.Common.Drawing.Margins(0, 0, 16, 8);
+                this.cancelButton.Margins = new Drawing.Margins(0, 0, 16, 8);
                 this.cancelButton.Clicked += this.HandleCancelButtonClicked;
                 this.cancelButton.Text = Res.Strings.Dialog.Generic.Button.Cancel.ToString();
             }
 
-            this.timer = new Timer();
+            this.timer = new Widgets.Platform.Timer();
             this.timer.TimeElapsed += delegate(object sender)
             {
-                string operationMessage;
-                string progressMessage;
-                double progressValue;
-
-                lock (this.exclusion)
-                {
-                    operationMessage = this.operationMessage;
-                    progressMessage = this.progressMessage;
-                    progressValue = this.progressValue;
-                }
-
                 this.operationMessageWidget.Text = string.Concat(
                     @"<font size=""150%"">",
-                    operationMessage,
+                    this.operationMessage,
                     "</font>"
                 );
-                this.progressMessageWidget.Text = progressMessage;
+                this.progressMessageWidget.Text = this.progressMessage;
 
                 switch (this.progressIndicatorStyle)
                 {
                     case ProgressIndicatorStyle.Default:
-                        this.progressIndicator.ProgressValue = progressValue;
+                        this.progressIndicator.ProgressValue = this.progressValue;
                         break;
 
                     case ProgressIndicatorStyle.UnknownDuration:
@@ -277,16 +231,9 @@ namespace Epsitec.Common.Dialogs
                 Window.SuspendAsyncNotify();
                 Application.SetWaitCursor();
 
-                this.DialogWindow.MouseCursor = Widgets.Platform.MouseCursor.AsWait;
+                this.DialogWindow.MouseCursor = MouseCursor.AsWait;
 
-                System.Threading.Thread thread = new System.Threading.Thread(this.ProcessAction);
-
-                thread.Name = "Process Action";
-                thread.Start();
-            }
-            else
-            {
-                this.CloseDialog();
+                this.ProcessAction();
             }
         }
 
@@ -304,7 +251,7 @@ namespace Epsitec.Common.Dialogs
 
         protected void CancelOperation()
         {
-            this.canceled = true;
+            this.cancelTokenSource?.Cancel();
 
             if (this.cancelButton != null)
             {
@@ -320,36 +267,43 @@ namespace Epsitec.Common.Dialogs
         private void ProcessAction()
         {
             this.operationResult = OperationResult.Pending;
+            this.cancelTokenSource = new CancellationTokenSource();
+            this.operation(this, this.cancelTokenSource.Token).ContinueWith(this.OnOperationDone);
+        }
 
-            try
+        private void OnOperationDone(Task operationTask)
+        {
+            // inspired from https://stackoverflow.com/questions/21520869/proper-way-of-handling-exception-in-task-continuewith
+            if (operationTask.IsFaulted)
             {
-                this.operation(this);
-                this.operationResult = this.canceled
-                    ? OperationResult.Canceled
-                    : OperationResult.Done;
-            }
-            catch (System.Exception ex)
-            {
+                Exception ex = operationTask.Exception;
+                while (ex is AggregateException && ex.InnerException != null)
+                {
+                    ex = ex.InnerException;
+                }
                 this.operationException = ex;
                 this.operationResult = OperationResult.Error;
             }
-
-            SimpleCallback callback = this.CloseDialog;
-
-            callback.DynamicInvoke();
+            else if (operationTask.IsCanceled)
+            {
+                this.operationResult = OperationResult.Canceled;
+                this.Result = DialogResult.Cancel;
+            }
+            else
+            {
+                this.operationResult = OperationResult.Done;
+            }
+            this.DialogWindow.GenerateCloseEvent();
         }
 
         [Command(Res.CommandIds.Dialog.Generic.Cancel)]
         protected void CommandQuitDialog()
         {
-            this.Result = DialogResult.Cancel;
-
-            this.CloseDialog();
+            this.CancelOperation();
         }
 
-        private readonly object exclusion = new object();
-
-        private System.Action<IWorkInProgressReport> operation;
+        private WIPTaskDelegate operation;
+        private CancellationTokenSource cancelTokenSource;
         private string dialogTitle;
 
         private CommandDispatcher privateDispatcher;
@@ -359,16 +313,15 @@ namespace Epsitec.Common.Dialogs
         private ProgressIndicator progressIndicator;
         private StaticText progressMessageWidget;
         private Button cancelButton;
-        private Timer timer;
+        private Widgets.Platform.Timer timer;
 
         private string operationMessage;
         private string progressMessage;
         private double progressValue;
-        private bool canceled;
         private bool cancellable;
         private ProgressIndicatorStyle progressIndicatorStyle;
         private OperationResult operationResult;
 
-        private System.Exception operationException;
+        private Exception operationException;
     }
 }

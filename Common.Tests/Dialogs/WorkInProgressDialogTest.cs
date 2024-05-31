@@ -1,6 +1,8 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Threading;
+using System.Threading.Tasks;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Widgets;
 using NUnit.Framework;
@@ -28,31 +30,38 @@ namespace Epsitec.Common.Tests.Dialogs
             );
             Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
             Epsitec.Common.Document.Engine.Initialize();
+            Common.Widgets.Platform.Timer.PendingTimers += (_) =>
+            {
+                Common.Widgets.Platform.SDLWrapper.SDLWindowManager.PushUserEvent(0, null);
+            };
         }
 
         [Test]
         public void CheckProgress()
         {
             bool executed = false;
+            WorkInProgressDialog.WIPTaskDelegate waitForProgress = async Task (
+                IWorkInProgressReport report,
+                CancellationToken ct
+            ) =>
+            {
+                report.DefineOperation("Waiting");
+
+                for (int i = 5; i >= 0; i--)
+                {
+                    report.DefineProgress((5 - i) / 5.0, string.Format("{0} seconds remaining", i));
+                    await Task.Delay(1000, ct);
+
+                    ct.ThrowIfCancellationRequested();
+                }
+                report.DefineProgress(1.0, "done");
+                executed = true;
+            };
 
             WorkInProgressDialog.Execute(
                 "CheckProgress",
                 ProgressIndicatorStyle.Default,
-                delegate(IWorkInProgressReport report)
-                {
-                    report.DefineOperation("Waiting");
-
-                    for (int i = 5; i >= 0; i--)
-                    {
-                        report.DefineProgress(
-                            (5 - i) / 5.0,
-                            string.Format("{0} seconds remaining", i)
-                        );
-                        System.Threading.Thread.Sleep(1 * 1000);
-                    }
-                    report.DefineProgress(1.0, "done");
-                    executed = true;
-                }
+                waitForProgress
             );
 
             Assert.IsTrue(executed);
@@ -62,30 +71,28 @@ namespace Epsitec.Common.Tests.Dialogs
         public void CheckCancellableProgress()
         {
             bool executed = false;
+            WorkInProgressDialog.WIPTaskDelegate waitForProgress = async Task (
+                IWorkInProgressReport report,
+                CancellationToken ct
+            ) =>
+            {
+                report.DefineOperation("Waiting");
+
+                for (int i = 5; i >= 0; i--)
+                {
+                    report.DefineProgress((5 - i) / 5.0, string.Format("{0} seconds remaining", i));
+                    await Task.Delay(1000, ct);
+
+                    ct.ThrowIfCancellationRequested();
+                }
+                report.DefineProgress(1.0, "done");
+                executed = true;
+            };
 
             WorkInProgressDialog.ExecuteCancellable(
                 "CheckCancellableProgress",
                 ProgressIndicatorStyle.Default,
-                delegate(IWorkInProgressReport report)
-                {
-                    report.DefineOperation("Waiting");
-
-                    for (int i = 5; i >= 0; i--)
-                    {
-                        report.DefineProgress(
-                            (5 - i) / 5.0,
-                            string.Format("{0} seconds remaining", i)
-                        );
-                        System.Threading.Thread.Sleep(1 * 1000);
-
-                        if (report.Canceled)
-                        {
-                            return;
-                        }
-                    }
-                    report.DefineProgress(1.0, "done");
-                    executed = true;
-                }
+                waitForProgress
             );
 
             Assert.IsTrue(executed);
@@ -95,25 +102,28 @@ namespace Epsitec.Common.Tests.Dialogs
         public void CheckCancellableProgressUnknownDuration()
         {
             bool executed = false;
+            WorkInProgressDialog.WIPTaskDelegate waitForProgress = async Task (
+                IWorkInProgressReport report,
+                CancellationToken ct
+            ) =>
+            {
+                report.DefineOperation("Waiting");
+
+                for (int i = 5; i >= 0; i--)
+                {
+                    report.DefineProgress((5 - i) / 5.0, string.Format("{0} seconds remaining", i));
+                    await Task.Delay(1000, ct);
+
+                    ct.ThrowIfCancellationRequested();
+                }
+                report.DefineProgress(1.0, "done");
+                executed = true;
+            };
 
             WorkInProgressDialog.ExecuteCancellable(
                 "CheckCancellableProgressUnknownDuration",
                 ProgressIndicatorStyle.UnknownDuration,
-                delegate(IWorkInProgressReport report)
-                {
-                    report.DefineOperation("Waiting");
-
-                    for (int i = 0; i < 100; i++)
-                    {
-                        System.Threading.Thread.Sleep(100);
-
-                        if (report.Canceled)
-                        {
-                            return;
-                        }
-                    }
-                    executed = true;
-                }
+                waitForProgress
             );
 
             Assert.IsTrue(executed);

@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 
         public static void RunEventLoop()
         {
-            PlatformWindow.RunEventLoop();
+            PlatformWindow.RunMainEventLoop();
         }
 
         public static void Quit()
@@ -238,6 +238,7 @@ namespace Epsitec.Common.Widgets
             }
 
             this.PlatformWindow.ShowDialogWindow();
+            this.PlatformWindow.RunUntilClosed();
             this.DispatchQueuedCommands();
         }
 
@@ -261,6 +262,11 @@ namespace Epsitec.Common.Widgets
                 this.platformWindow.Close();
                 this.platformWindow = null;
             }
+        }
+
+        public void GenerateCloseEvent()
+        {
+            this.platformWindow?.GenerateWindowCloseEvent();
         }
 
         public void AdjustWindowSize()
@@ -756,11 +762,9 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                if (this.platformWindow == null)
+                if (this.platformWindow != null && this.platformWindow.IsDisposed)
                 {
-                    throw new System.InvalidOperationException(
-                        $"No PlatformWindow associated with window {this.id}"
-                    );
+                    this.platformWindow = null;
                 }
                 return this.platformWindow;
             }
@@ -2198,7 +2202,7 @@ namespace Epsitec.Common.Widgets
 
         private void SyncMinSizeWithWindowRoot()
         {
-            if ((this.platformWindow != null))
+            if (this.PlatformWindow != null)
             {
                 int width = (int)(this.root.RealMinSize.Width + 0.5);
                 int height = (int)(this.root.RealMinSize.Height + 0.5);

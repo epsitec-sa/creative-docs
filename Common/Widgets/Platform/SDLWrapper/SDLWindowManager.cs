@@ -34,18 +34,16 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         }
 
         /// <summary>
-        /// RunEventLoop the application event loop.
+        /// Run the main application event loop.
         /// This function is blocking until all windows are closed.
         /// </summary>
-        public static void RunApplicationEventLoop()
+        public static void RunMainApplicationEventLoop()
         {
             SDLWindowManager.Init();
             Console.WriteLine("SDLWindowManager run");
             while (true)
             {
-                SDLWindowManager.ProcessEvents();
-
-                SDLWindowManager.UpdateDrawings();
+                SDLWindowManager.DoUpdateStep();
                 if (SDLWindowManager.openWindows.Count == 0)
                 {
                     break;
@@ -53,6 +51,19 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             }
             Console.WriteLine("SDLWindowManager run end");
             SDLWindowManager.QuitSDL();
+        }
+
+        /// <summary>
+        /// Run the event loop until <paramref name="modalWindow"/> is closed.
+        /// This function is blocking.
+        /// </summary>
+        /// <param name="modalWindow"></param>
+        public static void RunModalWindowEventLoop(SDLWindow modalWindow)
+        {
+            while (SDLWindowManager.openWindows.ContainsKey(modalWindow.windowID))
+            {
+                SDLWindowManager.DoUpdateStep();
+            }
         }
 
         public static void UpdateDrawings()
@@ -86,6 +97,12 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             {
                 SDLWindowManager.HandleEvent(e);
             }
+        }
+
+        private static void DoUpdateStep()
+        {
+            SDLWindowManager.ProcessEvents();
+            SDLWindowManager.UpdateDrawings();
         }
 
         /// <summary>

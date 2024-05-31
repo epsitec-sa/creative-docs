@@ -45,6 +45,10 @@ namespace Epsitec.Common.Widgets.Platform
 
         protected override void OnDraw()
         {
+            if (this.renderingBuffer == null)
+            {
+                return;
+            }
             var graphics = new Graphics(this.renderingBuffer.GraphicContext);
             this.RefreshGraphics(graphics);
         }
@@ -818,13 +822,18 @@ namespace Epsitec.Common.Widgets.Platform
             }
         }
 
-        public static void RunEventLoop()
+        public static void RunMainEventLoop()
         {
             Timer.PendingTimers += (_) =>
             {
                 SDLWrapper.SDLWindowManager.PushUserEvent(0, null);
             };
-            SDLWrapper.SDLWindowManager.RunApplicationEventLoop();
+            SDLWrapper.SDLWindowManager.RunMainApplicationEventLoop();
+        }
+
+        public void RunUntilClosed()
+        {
+            SDLWrapper.SDLWindowManager.RunModalWindowEventLoop(this);
         }
 
         protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
