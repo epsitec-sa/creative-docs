@@ -748,56 +748,53 @@ namespace Epsitec.Common.Types
 
         private void InternalUpdateSource(object value)
         {
-            if (this.targetUpdateCounter == 0)
+            if (this.targetUpdateCounter != 0)
             {
-                System.Threading.Interlocked.Increment(ref this.sourceUpdateCounter);
+                return;
+            }
+            this.sourceUpdateCounter++;
 
-                try
+            try
+            {
+                DependencyObject doSource;
+                DependencyProperty property;
+                IStructuredData sdSource;
+                string name;
+
+                switch (this.sourceType)
                 {
-                    DependencyObject doSource;
-                    DependencyProperty property;
-                    IStructuredData sdSource;
-                    string name;
+                    case DataSourceType.PropertyObject:
+                        doSource = (DependencyObject)this.sourceObject;
+                        property = (DependencyProperty)this.sourceProperty;
 
-                    switch (this.sourceType)
-                    {
-                        case DataSourceType.PropertyObject:
-                            doSource = (DependencyObject)this.sourceObject;
-                            property = (DependencyProperty)this.sourceProperty;
+                        BindingExpression.SetValue(
+                            doSource,
+                            property,
+                            this.ConvertBackValue(value)
+                        );
+                        break;
 
-                            BindingExpression.SetValue(
-                                doSource,
-                                property,
-                                this.ConvertBackValue(value)
-                            );
-                            break;
+                    case DataSourceType.StructuredData:
+                        sdSource = this.sourceObject as IStructuredData;
+                        name = (string)this.sourceProperty;
 
-                        case DataSourceType.StructuredData:
-                            sdSource = this.sourceObject as IStructuredData;
-                            name = (string)this.sourceProperty;
+                        BindingExpression.SetValue(sdSource, name, this.ConvertBackValue(value));
+                        break;
 
-                            BindingExpression.SetValue(
-                                sdSource,
-                                name,
-                                this.ConvertBackValue(value)
-                            );
-                            break;
+                    case DataSourceType.SourceItself:
+                        throw new System.InvalidOperationException(
+                            "Cannot update source: DataSourceType set to SourceItself"
+                        );
 
-                        case DataSourceType.SourceItself:
-                            throw new System.InvalidOperationException(
-                                "Cannot update source: DataSourceType set to SourceItself"
-                            );
-
-                        case DataSourceType.Resource:
-                            throw new System.InvalidOperationException(
-                                "Cannot update source: DataSourceType set to Resource"
-                            );
-                    }
+                    case DataSourceType.Resource:
+                        throw new System.InvalidOperationException(
+                            "Cannot update source: DataSourceType set to Resource"
+                        );
                 }
-                finally
-                {
-                    System.Threading.Interlocked.Decrement(ref this.sourceUpdateCounter);
-                }
+            }
+            finally
+            {
+                this.sourceUpdateCounter--;
             }
         }
 
@@ -846,36 +843,37 @@ namespace Epsitec.Common.Types
         {
             if (this.sourceType != DataSourceType.None)
             {
-                if (this.binding.IsAttached)
+                if (!this.binding.IsAttached)
                 {
-                    if (this.binding.IsAsync)
+                    return;
+                }
+                if (this.binding.IsAsync)
+                {
+                    /*
+                    //	If the binding requires an asynchronous access to the source
+                    //	value, we delegate the work to the BindingAsyncOperation class.
+
+                    if (this.asyncOperation == null)
                     {
-                        /*
-                        //	If the binding requires an asynchronous access to the source
-                        //	value, we delegate the work to the BindingAsyncOperation class.
-
-                        if (this.asyncOperation == null)
-                        {
-                            this.asyncOperation = new BindingAsyncOperation(this);
-                        }
-
-                        //	First, tell the target that the data is still pending. This is
-                        //	immediate :
-
-                        this.InternalUpdateTarget(PendingValue.Value);
-
-                        //	Now, queue up an asynchronous call to GetSourceValue followed
-                        //	by a call to InternalUpdateTarget, but don't wait for the value
-                        //	to be successfully set and return immediately.
-
-                        this.asyncOperation.QuerySourceValueAndUpdateTarget();
-                        */
-                        throw new System.NotImplementedException();
+                        this.asyncOperation = new BindingAsyncOperation(this);
                     }
-                    else
-                    {
-                        this.InternalUpdateTarget(this.GetSourceValue());
-                    }
+
+                    //	First, tell the target that the data is still pending. This is
+                    //	immediate :
+
+                    this.InternalUpdateTarget(PendingValue.Value);
+
+                    //	Now, queue up an asynchronous call to GetSourceValue followed
+                    //	by a call to InternalUpdateTarget, but don't wait for the value
+                    //	to be successfully set and return immediately.
+
+                    this.asyncOperation.QuerySourceValueAndUpdateTarget();
+                    */
+                    throw new System.NotImplementedException();
+                }
+                else
+                {
+                    this.InternalUpdateTarget(this.GetSourceValue());
                 }
             }
             else
@@ -886,39 +884,41 @@ namespace Epsitec.Common.Types
 
         internal void InternalUpdateTarget(object value)
         {
-            if ((this.sourceUpdateCounter == 0) && (Binding.IsRealValue(value)))
+            if (this.sourceUpdateCounter != 0 || !Binding.IsRealValue(value))
             {
-                System.Threading.Interlocked.Increment(ref this.targetUpdateCounter);
+                return;
+            }
+            this.targetUpdateCounter++;
 
-                try
-                {
-                    BindingExpression.SetValue(
-                        this.targetObject,
-                        this.TargetProperty,
-                        this.ConvertValue(value)
-                    );
-                }
-                finally
-                {
-                    System.Threading.Interlocked.Decrement(ref this.targetUpdateCounter);
-                }
+            try
+            {
+                BindingExpression.SetValue(
+                    this.targetObject,
+                    this.TargetProperty,
+                    this.ConvertValue(value)
+                );
+            }
+            finally
+            {
+                this.targetUpdateCounter--;
             }
         }
 
         internal void InternalResetTarget()
         {
-            if (this.sourceUpdateCounter == 0)
+            if (this.sourceUpdateCounter != 0)
             {
-                System.Threading.Interlocked.Increment(ref this.targetUpdateCounter);
+                return;
+            }
+            this.targetUpdateCounter++;
 
-                try
-                {
-                    BindingExpression.ClearValue(this.targetObject, this.TargetProperty);
-                }
-                finally
-                {
-                    System.Threading.Interlocked.Decrement(ref this.targetUpdateCounter);
-                }
+            try
+            {
+                BindingExpression.ClearValue(this.targetObject, this.TargetProperty);
+            }
+            finally
+            {
+                this.targetUpdateCounter--;
             }
         }
 
