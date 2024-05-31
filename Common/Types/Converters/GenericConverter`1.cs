@@ -53,7 +53,7 @@ namespace Epsitec.Common.Types.Converters
 
         protected System.Globalization.CultureInfo GetCurrentCulture()
         {
-            return this.culture ?? System.Threading.Thread.CurrentThread.CurrentCulture;
+            return this.culture ?? System.Globalization.CultureInfo.CurrentCulture;
         }
 
         static GenericConverter()
