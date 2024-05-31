@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System;
-using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using SDL2;
 
@@ -21,7 +20,6 @@ namespace Epsitec.Common.Widgets.Platform
             this.dirtyRegion = new Drawing.DirtyRegion();
             this.minimumSize = new Size(1, 1);
             this.WindowType = WindowType.Document;
-            WindowList.Insert(this);
         }
 
         #region SDLWindow overrides
@@ -1535,20 +1533,16 @@ namespace Epsitec.Common.Widgets.Platform
             {
                 return;
             }
-            WindowList.Remove(this);
-
             if (this.renderingBuffer != null)
             {
                 this.renderingBuffer.Dispose();
+                this.renderingBuffer = null;
             }
-            this.renderingBuffer = null;
-
             if (this.icon != null)
             {
                 this.icon.Dispose();
+                this.icon = null;
             }
-            this.icon = null;
-
             base.Dispose();
 
             // We do not call Dispose on our widgetWindow since it could still live without us.

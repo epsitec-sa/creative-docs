@@ -175,16 +175,6 @@ namespace Epsitec.Common.Tests.Widgets
         }
 
         [Test]
-        public void CheckWindowList()
-        {
-            Window[] windows = Epsitec.Common.Widgets.Platform.WindowList.GetVisibleWindows();
-            for (int i = 0; i < windows.Length; i++)
-            {
-                System.Console.Out.WriteLine("{0}: {1}", i, windows[i].Text);
-            }
-        }
-
-        [Test]
         public void CheckMouseCursor()
         {
             Image image = Common.Drawing.Platform.NativeBitmap.FromFile(@"Images\cursor.png");

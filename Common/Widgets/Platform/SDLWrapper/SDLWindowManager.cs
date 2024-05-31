@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         public static void UpdateDrawings()
         {
-            foreach (var (_, window) in SDLWindowManager.openWindows.ToArray())
+            foreach (var window in SDLWindowManager.openWindows.Values.ToArray())
             {
                 window.UpdateDrawing();
             }
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         private static SDLWindow GetAnyWindow()
         {
-            foreach (var (_, window) in SDLWindowManager.openWindows.ToArray())
+            foreach (var window in SDLWindowManager.openWindows.Values.ToArray())
             {
                 return window;
             }
