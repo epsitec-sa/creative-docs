@@ -46,7 +46,6 @@ namespace Epsitec.Common.Widgets.Collections
         {
             get
             {
-                this.DebugShow($"Get DockLayoutCount (stored: {this.dockLayoutCount}");
                 this.RefreshLayoutStatistics();
                 return this.dockLayoutCount;
             }
@@ -116,8 +115,6 @@ namespace Epsitec.Common.Widgets.Collections
                     "Cannot change Z order of visual; it does not belong to this children collection"
                 );
             }
-            this.DebugShow($"ChangeZOrder");
-
             z = System.Math.Max(0, System.Math.Min(this.Count - 1, z));
 
             int newIndex = this.Count - z - 1;
@@ -140,7 +137,6 @@ namespace Epsitec.Common.Widgets.Collections
 
         public void AddRange(IEnumerable<Visual> collection)
         {
-            this.DebugShow($"AddRange");
             if (collection != null)
             {
                 Snapshot snapshot = Snapshot.RecordTree(collection);
@@ -163,7 +159,6 @@ namespace Epsitec.Common.Widgets.Collections
 
         public void Change(System.Func<IEnumerable<Visual>, IEnumerable<Visual>> changeFunction)
         {
-            this.DebugShow($"Change");
             var oldItems = this.Visuals.ToArray();
             var newItems = changeFunction(this.Visuals).ToArray();
 
@@ -302,8 +297,6 @@ namespace Epsitec.Common.Widgets.Collections
                         FlatChildrenCollection.NullVisualMessage
                     );
                 }
-                this.DebugShow($"set visual[{index}] {value}");
-
                 Visual oldValue = this.Visuals[index];
                 Visual newValue = value;
 
@@ -335,7 +328,6 @@ namespace Epsitec.Common.Widgets.Collections
 
         public void Insert(int index, Visual item)
         {
-            this.DebugShow($"Insert visual {item}");
             if (item == null)
             {
                 throw new System.ArgumentNullException(FlatChildrenCollection.NullVisualMessage);
@@ -391,20 +383,16 @@ namespace Epsitec.Common.Widgets.Collections
 
                 return;
             }
-            this.DebugShow($"Add visual {item}");
-
             Snapshot snapshot = Snapshot.RecordTree(item);
 
             this.Visuals.Add(item);
             this.AttachVisual(item);
 
             this.NotifyChanges(snapshot);
-            this.DebugShow($"Add visual done");
         }
 
         public bool Remove(Visual item)
         {
-            this.DebugShow($"Remove visual {item}");
             if (item == null)
             {
                 throw new System.ArgumentNullException(FlatChildrenCollection.NullVisualMessage);
@@ -429,7 +417,6 @@ namespace Epsitec.Common.Widgets.Collections
 
         public void Clear()
         {
-            this.DebugShow("Clear");
             if (this.Visuals.Count > 0)
             {
                 Visual[] copy = this.Visuals.ToArray();
@@ -612,21 +599,6 @@ namespace Epsitec.Common.Widgets.Collections
                 //this.DebugShow();
                 return this.visuals;
             }
-        }
-
-        public void DebugShow(string title)
-        {
-            if (this.id != 132)
-            {
-                return;
-            }
-            System.Console.WriteLine(title);
-            var visualsStr = new StringBuilder($"{System.DateTime.Now} FCC_{this.id} | ");
-            foreach (Visual item in this.visuals)
-            {
-                visualsStr.Append($"{item.Dock} | ");
-            }
-            System.Console.WriteLine(visualsStr);
         }
 
         private const string NullVisualMessage = "Visual children may not be null";
