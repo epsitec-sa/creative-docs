@@ -266,21 +266,12 @@ namespace Epsitec.Common.UI
 
         public void DefineDefaultColumns(IStructuredType sourceType, double width)
         {
-            System.Threading.Interlocked.Increment(ref this.suspendColumnUpdates);
+            this.SourceType = sourceType;
+            this.Columns.Clear();
 
-            try
+            foreach (string fieldId in sourceType.GetFieldIds())
             {
-                this.SourceType = sourceType;
-                this.Columns.Clear();
-
-                foreach (string fieldId in sourceType.GetFieldIds())
-                {
-                    this.Columns.Add(new ItemTableColumn(fieldId, width));
-                }
-            }
-            finally
-            {
-                System.Threading.Interlocked.Decrement(ref this.suspendColumnUpdates);
+                this.Columns.Add(new ItemTableColumn(fieldId, width));
             }
 
             this.UpdateColumnHeader();
@@ -449,23 +440,6 @@ namespace Epsitec.Common.UI
         public Margins GetPanelPadding()
         {
             return this.surface.Margins;
-        }
-
-        private void UpdateApertureProtected()
-        {
-            if (this.suspendScroll == 0)
-            {
-                System.Threading.Interlocked.Increment(ref this.suspendScroll);
-
-                try
-                {
-                    this.UpdateAperture();
-                }
-                finally
-                {
-                    System.Threading.Interlocked.Decrement(ref this.suspendScroll);
-                }
-            }
         }
 
         private void UpdateAperture()
@@ -697,12 +671,7 @@ namespace Epsitec.Common.UI
 
         private void UpdateColumnHeader()
         {
-            if (
-                (this.suspendColumnUpdates == 0)
-                && (this.columns != null)
-                && (this.columns.Count > 0)
-                && (this.sourceType != null)
-            )
+            if ((this.columns != null) && (this.columns.Count > 0) && (this.sourceType != null))
             {
                 Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager(
                     this
@@ -834,18 +803,18 @@ namespace Epsitec.Common.UI
 
         private void HandleSurfaceSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            this.UpdateApertureProtected();
+            this.UpdateAperture();
         }
 
         private void HandleScrollerValueChanged(object sender)
         {
-            this.UpdateApertureProtected();
+            this.UpdateAperture();
             this.Invalidate();
         }
 
         private void HandleContentsSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            this.UpdateApertureProtected();
+            this.UpdateAperture();
         }
 
         private void HandleItemPanelApertureChanged(
@@ -874,45 +843,33 @@ namespace Epsitec.Common.UI
 
         private void SynchronizeScrollers(Rectangle value)
         {
-            if (this.suspendScroll == 0)
+            Size scrollSize = this.GetScrollSize(
+                this.apertureSize - this.itemPanel.AperturePadding.Size
+            );
+
+            double sx = scrollSize.Width;
+            double sy = scrollSize.Height;
+            double ox = value.Left;
+            double oy = value.Top;
+
+            if (sx > 0)
             {
-                Size scrollSize = this.GetScrollSize(
-                    this.apertureSize - this.itemPanel.AperturePadding.Size
-                );
-
-                double sx = scrollSize.Width;
-                double sy = scrollSize.Height;
-                double ox = value.Left;
-                double oy = value.Top;
-
-                System.Threading.Interlocked.Increment(ref this.suspendScroll);
-
-                try
+                //this.hScroller.Value = (decimal) (ox / sx);
+            }
+            if (sy > 0)
+            {
+                switch (this.GetVerticalScrollMode())
                 {
-                    if (sx > 0)
-                    {
-                        //this.hScroller.Value = (decimal) (ox / sx);
-                    }
-                    if (sy > 0)
-                    {
-                        switch (this.GetVerticalScrollMode())
-                        {
-                            case ItemTableScrollMode.Linear:
-                                this.SetVerticalScrollValueLinear(value.Bottom);
-                                break;
-                            case ItemTableScrollMode.ItemBased:
-                                this.SetVerticalScrollValueItemBased(value.Bottom);
-                                break;
-                        }
-                    }
-
-                    this.UpdateAperture();
-                }
-                finally
-                {
-                    System.Threading.Interlocked.Decrement(ref this.suspendScroll);
+                    case ItemTableScrollMode.Linear:
+                        this.SetVerticalScrollValueLinear(value.Bottom);
+                        break;
+                    case ItemTableScrollMode.ItemBased:
+                        this.SetVerticalScrollValueItemBased(value.Bottom);
+                        break;
                 }
             }
+
+            this.UpdateAperture();
         }
 
         private void OnFrameVisibilityChanged(DependencyPropertyChangedEventArgs e)
@@ -1054,10 +1011,8 @@ namespace Epsitec.Common.UI
         private Widget headerStripe;
         private ItemPanel itemPanel;
         private IStructuredType sourceType;
-        private int suspendColumnUpdates;
         private Size defaultItemSize;
         private Size apertureSize;
-        private int suspendScroll;
         private double horizontalOffset;
         private bool separatorVisibility = true;
     }

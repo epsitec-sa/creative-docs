@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -17,7 +16,6 @@ namespace Epsitec.Common.Widgets
     {
         protected Application()
         {
-            this.applicationThread = System.Threading.Thread.CurrentThread;
             this.applicationStartStatus = Platform.AppSupport.CreateSemaphore(
                 this.ApplicationIdentifier
             );
@@ -84,15 +82,6 @@ namespace Epsitec.Common.Widgets
             get { return this.resourceManagerPool; }
         }
 
-        /// <summary>
-        /// Gets the synchronization context used for the application UI.
-        /// </summary>
-        /// <value>The synchronization context.</value>
-        public static SynchronizationContext SynchronizationContext
-        {
-            get { return Application.synchronizationContext; }
-        }
-
         public static bool DisableAsyncCallbackExecution
         {
             get { return Application.disableAsyncCallbackExecution; }
@@ -120,18 +109,12 @@ namespace Epsitec.Common.Widgets
 
         public static void SetWaitCursor()
         {
-            System.Threading.Interlocked.Increment(ref Application.waitCursorCount);
             Platform.PlatformWindow.UseWaitCursor = true;
         }
 
         public static void ClearWaitCursor()
         {
-            if (System.Threading.Interlocked.Decrement(ref Application.waitCursorCount) < 0)
-            {
-                throw new System.InvalidOperationException("WaitCursor count < 0");
-            }
-
-            Platform.PlatformWindow.UseWaitCursor = (Application.waitCursorCount > 0);
+            Platform.PlatformWindow.UseWaitCursor = false;
         }
 
         public void SetEnable(Command command, bool enable)
@@ -298,12 +281,6 @@ namespace Epsitec.Common.Widgets
                 return;
             }
 
-            /*System.Diagnostics.Debug.Assert(
-                Application.mainApplicationThread == System.Threading.Thread.CurrentThread
-            );
-            System.Diagnostics.Debug.Assert(Application.runningCallbacks.Count == 0);
-            */
-
             if (Application.pendingCallbacks.Count > 0)
             {
                 try
@@ -382,7 +359,6 @@ namespace Epsitec.Common.Widgets
                 typeof(Application)
             );
 
-        private static readonly SynchronizationContext synchronizationContext;
         private static readonly object queueExclusion = new object();
         private static Queue<Support.SimpleCallback> pendingCallbacks =
             new Queue<Support.SimpleCallback>();
@@ -390,9 +366,7 @@ namespace Epsitec.Common.Widgets
             new Queue<Support.SimpleCallback>();
         private static bool executingAsyncCallbacks;
         private static bool disableAsyncCallbackExecution;
-        private static int waitCursorCount;
 
-        private readonly System.Threading.Thread applicationThread;
         private readonly CommandDispatcher commandDispatcher;
         private readonly CommandContext commandContext;
         private readonly Support.ResourceManager resourceManager;
