@@ -3,6 +3,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Adorners;
 using Epsitec.Common.Widgets.Helpers;
+using Epsitec.Common.Widgets.Platform.SDLWrapper;
 using Epsitec.Common.Widgets.Validators;
 using NUnit.Framework;
 
@@ -25,6 +26,8 @@ namespace Epsitec.Common.Tests.Widgets
             image.IsCacheEnabled = false;
 
             Epsitec.Common.Support.ImageProvider.Instance.AddDynamicImage("Xyz", image);
+
+            Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
         }
 
         private bool DynamicImageXyz(
@@ -73,12 +76,6 @@ namespace Epsitec.Common.Tests.Widgets
             }
 
             return true;
-        }
-
-        [Test]
-        public void AutomatedTestEnvironment()
-        {
-            Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
         }
 
         [Test]
@@ -1004,6 +1001,10 @@ namespace Epsitec.Common.Tests.Widgets
             Assert.IsFalse(a.IsVisible);
 
             window.Show();
+
+            // this will update the visibility properties
+            // once the window shown event is processed
+            SDLWindowManager.ProcessEvents();
 
             Assert.IsTrue(window.IsVisible);
             Assert.IsTrue(window.Root.IsVisible);

@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_PushEvent(ref ev);
         }
 
-        private static void ProcessEvents()
+        public static void ProcessEvents()
         {
             // wait for first event
             SDL_WaitEvent(out SDL_Event e);
