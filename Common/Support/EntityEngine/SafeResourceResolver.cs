@@ -1,7 +1,6 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using System.Collections.Generic;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
@@ -11,10 +10,7 @@ namespace Epsitec.Common.Support.EntityEngine
     /// The <c>SafeResourceResolver</c> class provides a thread-safe access to captions and
     /// structured types
     /// </summary>
-    public sealed class SafeResourceResolver
-        : IStructuredTypeResolver,
-            ICaptionResolver,
-            System.IDisposable
+    public sealed class SafeResourceResolver : IStructuredTypeResolver, ICaptionResolver
     {
         public SafeResourceResolver(
             IStructuredTypeResolver structuredTypeResolver,
@@ -72,18 +68,6 @@ namespace Epsitec.Common.Support.EntityEngine
         }
 
         #endregion
-
-        #region IDisposable Members
-
-
-        public void Dispose()
-        {
-            this.captions.Dispose();
-            this.structuredTypes.Dispose();
-        }
-
-        #endregion
-
 
         private Caption ComputeCaption(ICaptionResolver resolver, Druid captionId)
         {
