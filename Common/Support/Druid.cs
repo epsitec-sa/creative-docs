@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Support
         /// <returns>A temporary DRUID.</returns>
         public static Druid CreateTemporaryDruid()
         {
-            long value = System.Threading.Interlocked.Increment(ref Druid.uniqueId);
+            long value = Druid.uniqueId++;
 
             int module = 0xfffff;
             int local = (int)((value >> 0) & 0xfffff);
