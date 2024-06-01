@@ -1,13 +1,13 @@
 //	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 [assembly: DependencyClass(typeof(ResourceManager))]
 
@@ -72,9 +72,7 @@ namespace Epsitec.Common.Support
             this.captionCache = new ConcurrentDictionary<string, Weak<Caption>>();
             this.defaultModulePath = modulePath;
 
-            this.serialId = System.Threading.Interlocked.Increment(
-                ref ResourceManager.nextSerialId
-            );
+            this.serialId = ResourceManager.nextSerialId++;
             this.providers = new ConcurrentDictionary<string, ProviderRecord>();
             this.culture = CultureInfo.CurrentUICulture;
 
