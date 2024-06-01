@@ -41,14 +41,10 @@
     <Compile Remove="Dialogs\DialogTest.cs" />
     <None   Include="Dialogs\DialogTest.cs" />
     -->
-    <Compile Remove="Dialogs\FileDialogTest.cs" />
-    <None   Include="Dialogs\FileDialogTest.cs" />
     <Compile Remove="Dialogs\MessageTest.cs" />
     <None   Include="Dialogs\MessageTest.cs" />
     <Compile Remove="Dialogs\PrintDialogTest.cs" />
     <None   Include="Dialogs\PrintDialogTest.cs" />
-    <Compile Remove="Dialogs\Tool.cs" />
-    <None   Include="Dialogs\Tool.cs" />
     <!--
     <Compile Remove="Dialogs\WorkInProgressDialogTest.cs" />
     <None   Include="Dialogs\WorkInProgressDialogTest.cs" />
