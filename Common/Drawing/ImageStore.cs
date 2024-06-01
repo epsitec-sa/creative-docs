@@ -1,8 +1,8 @@
 //	Copyright © 2007-2008, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing.Platform;
 using System.Collections.Generic;
+using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Drawing
 {
@@ -18,7 +18,6 @@ namespace Epsitec.Common.Drawing
         /// </summary>
         public ImageStore()
         {
-            this.mutex = new System.Threading.Mutex(false, ImageStore.GetMutexName());
             this.records = new List<ImageRecord>();
             this.cacheDir = System.IO.Path.Combine(
                 System.Environment.GetFolderPath(
@@ -124,18 +123,7 @@ namespace Epsitec.Common.Drawing
                             this.cacheDir,
                             record.CacheFileName
                         );
-
-                        this.mutex.WaitOne();
-
-                        try
-                        {
-                            System.IO.File.WriteAllBytes(cacheFilePath, data);
-                        }
-                        finally
-                        {
-                            this.mutex.ReleaseMutex();
-                        }
-
+                        System.IO.File.WriteAllBytes(cacheFilePath, data);
                         return;
                     }
                 }
@@ -326,14 +314,6 @@ namespace Epsitec.Common.Drawing
             }
         }
 
-        private static string GetMutexName()
-        {
-            return string.Concat(
-                @"Global\OPaC.ImageManager.CacheLock.",
-                System.Environment.UserName
-            );
-        }
-
         private static string GetPathHash(string path)
         {
             System.Text.StringBuilder output = new System.Text.StringBuilder();
@@ -371,19 +351,7 @@ namespace Epsitec.Common.Drawing
             {
                 if (System.IO.File.Exists(this.GetCacheJournalPath()))
                 {
-                    this.mutex.WaitOne();
-
-                    string[] source;
-
-                    try
-                    {
-                        source = System.IO.File.ReadAllLines(this.GetCacheJournalPath());
-                    }
-                    finally
-                    {
-                        this.mutex.ReleaseMutex();
-                    }
-
+                    string[] source = System.IO.File.ReadAllLines(this.GetCacheJournalPath());
                     this.FillRecords(source);
                 }
             }
@@ -410,33 +378,24 @@ namespace Epsitec.Common.Drawing
 
         private void UpdateRecords(ActionCallback callback)
         {
-            this.mutex.WaitOne();
-
-            try
+            if (System.IO.File.Exists(this.GetCacheJournalPath()))
             {
-                if (System.IO.File.Exists(this.GetCacheJournalPath()))
-                {
-                    this.FillRecords(System.IO.File.ReadAllLines(this.GetCacheJournalPath()));
-                }
-
-                if (callback())
-                {
-                    List<string> source = new List<string>();
-
-                    foreach (ImageRecord record in this.records)
-                    {
-                        if ((record.SourceHeight > 8) && (record.SourceWidth > 8))
-                        {
-                            source.Add(record.ToString());
-                        }
-                    }
-
-                    System.IO.File.WriteAllLines(this.GetCacheJournalPath(), source.ToArray());
-                }
+                this.FillRecords(System.IO.File.ReadAllLines(this.GetCacheJournalPath()));
             }
-            finally
+
+            if (callback())
             {
-                this.mutex.ReleaseMutex();
+                List<string> source = new List<string>();
+
+                foreach (ImageRecord record in this.records)
+                {
+                    if ((record.SourceHeight > 8) && (record.SourceWidth > 8))
+                    {
+                        source.Add(record.ToString());
+                    }
+                }
+
+                System.IO.File.WriteAllLines(this.GetCacheJournalPath(), source.ToArray());
             }
         }
 
@@ -708,7 +667,6 @@ namespace Epsitec.Common.Drawing
         private const long maximumDiskCacheSize = 50 * 1024 * 1024L;
 
         private string cacheDir;
-        private System.Threading.Mutex mutex;
         private List<ImageRecord> records;
         private long totalCacheLength;
     }
