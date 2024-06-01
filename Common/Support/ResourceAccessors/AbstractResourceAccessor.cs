@@ -1,8 +1,8 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
@@ -681,14 +681,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
             public Suspender(AbstractResourceAccessor host)
             {
                 this.host = host;
-                System.Threading.Interlocked.Increment(ref this.host.suspendNotifications);
+                this.host.suspendNotifications++;
             }
 
             #region IDisposable Members
 
             public void Dispose()
             {
-                System.Threading.Interlocked.Decrement(ref this.host.suspendNotifications);
+                this.host.suspendNotifications--;
             }
 
             #endregion
