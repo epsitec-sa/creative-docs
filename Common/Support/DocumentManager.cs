@@ -110,15 +110,7 @@ namespace Epsitec.Common.Support
         /// </summary>
         public void Close()
         {
-            if (this.copyThread != null)
-            {
-                this.copyThreadAbortRequest = true;
-                this.copyThread.Join();
-                this.copyThread = null;
-            }
-
             this.DeleteLocalCopy();
-
             this.sourcePath = null;
         }
 
@@ -325,7 +317,7 @@ namespace Epsitec.Common.Support
             {
                 int count = this.sourceStream.Read(buffer, 0, buffer.Length);
 
-                if ((count == 0) || (this.copyThreadAbortRequest))
+                if (count == 0)
                 {
                     break;
                 }
@@ -333,7 +325,7 @@ namespace Epsitec.Common.Support
                 this.localCopyStream.Write(buffer, 0, count);
                 this.localCopyStream.Flush();
 
-                System.Threading.Interlocked.Add(ref this.localCopyWritten, count);
+                this.localCopyWritten += count;
 
                 this.localCopyWait.Signal();
             }
@@ -419,8 +411,6 @@ namespace Epsitec.Common.Support
         private readonly object exclusion = new object();
         private string sourcePath;
         private string localCopyPath;
-        private System.Threading.Thread copyThread;
-        private bool copyThreadAbortRequest;
         private System.IO.FileStream sourceStream;
         private System.IO.FileStream localCopyStream;
         private long sourceLength;
