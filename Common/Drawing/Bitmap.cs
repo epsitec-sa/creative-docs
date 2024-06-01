@@ -180,101 +180,6 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public bool LockBits()
-        {
-            /*            lock (this)
-                        {
-                            if (this.bitmapData == null)
-                            {
-                                System.Drawing.Imaging.ImageLockMode mode = System
-                                    .Drawing
-                                    .Imaging
-                                    .ImageLockMode
-                                    .ReadOnly;
-                                System.Drawing.Imaging.PixelFormat format = System
-                                    .Drawing
-                                    .Imaging
-                                    .PixelFormat
-                                    .Format32bppArgb;
-            
-                                int width = this.bitmapDx;
-                                int height = this.bitmapDy;
-            
-                                lock (lockedBitmapDataCache)
-                                {
-                                    System.Diagnostics.Debug.Assert(
-                                        !Bitmap.lockedBitmapDataCache.ContainsKey(this.bitmap)
-                                    );
-                                }
-            
-                                lock (Bitmap.lockedBitmapDataCache)
-                                {
-                                    int attempt = 0;
-                                    bool success = false;
-            
-                                    while ((success == false) && (attempt++ < 10))
-                                    {
-                                        try
-                                        {
-                                            this.bitmapData = this.bitmap.LockBits(
-                                                new System.Drawing.Rectangle(0, 0, width, height),
-                                                mode,
-                                                format
-                                            );
-                                            success = true;
-                                        }
-                                        catch (System.Exception)
-                                        {
-                                            System.Diagnostics.Debug.WriteLine(
-                                                "Attempted to lock bitmap and failed: " + attempt
-                                            );
-                                            System.Threading.Thread.Sleep(1);
-                                        }
-                                    }
-            
-                                    Bitmap.lockedBitmapDataCache[this.bitmap] = this.bitmapData;
-                                }
-                            }
-            
-                            if (this.bitmapData != null)
-                            {
-                                this.bitmapLockCount++;
-                                return true;
-                            }
-                        }
-            
-            */
-            //return false;
-            throw new System.NotImplementedException();
-        }
-
-        public void UnlockBits()
-        {
-            /*            lock (this)
-                        {
-                            if (this.bitmapLockCount > 0)
-                            {
-                                this.bitmapLockCount--;
-            
-                                if (this.bitmapLockCount == 0)
-                                {
-                                    System.Diagnostics.Debug.Assert(this.bitmap != null);
-                                    System.Diagnostics.Debug.Assert(this.bitmapData != null);
-            
-                                    this.bitmap.UnlockBits(this.bitmapData);
-                                    this.bitmapData = null;
-            
-                                    lock (Bitmap.lockedBitmapDataCache)
-                                    {
-                                        Bitmap.lockedBitmapDataCache.Remove(this.bitmap);
-                                    }
-                                }
-                            }
-                        }
-            */
-            throw new System.NotImplementedException();
-        }
-
         public void FlipY()
         {
             /*            try
@@ -606,16 +511,6 @@ namespace Epsitec.Common.Drawing
                         }
             */
             //return null;
-            throw new System.NotImplementedException();
-        }
-
-        private static void NotifyMemoryExhauted()
-        {
-            /*
-            Bitmap.OnOutOfMemoryEncountered();
-            System.GC.Collect();
-            System.Threading.Thread.Sleep(1);
-            */
             throw new System.NotImplementedException();
         }
 
