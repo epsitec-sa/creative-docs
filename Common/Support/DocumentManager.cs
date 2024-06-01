@@ -101,25 +101,6 @@ namespace Epsitec.Common.Support
         /// <param name="path">The path to the file.</param>
         public void Open(string path)
         {
-            /*
-            this.sourcePath = path;
-            this.sourceStream = new System.IO.FileStream(
-                path,
-                System.IO.FileMode.Open,
-                System.IO.FileAccess.Read,
-                System.IO.FileShare.Read
-            );
-            this.sourceLength = this.sourceStream.Length;
-            this.localCopyPath = System.IO.Path.GetTempFileName();
-            this.localCopyStream = new System.IO.FileStream(
-                this.localCopyPath,
-                System.IO.FileMode.Create,
-                System.IO.FileAccess.ReadWrite,
-                System.IO.FileShare.Read
-            );
-            this.copyThread = new System.Threading.Thread(this.CopyThread);
-            this.copyThread.Start();
-            */
             throw new System.NotImplementedException();
         }
 
