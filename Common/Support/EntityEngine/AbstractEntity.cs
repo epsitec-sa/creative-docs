@@ -1,11 +1,10 @@
 //	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -118,7 +117,7 @@ namespace Epsitec.Common.Support.EntityEngine
         /// </remarks>
         protected AbstractEntity()
         {
-            this.entitySerialId = Interlocked.Increment(ref AbstractEntity.nextSerialId);
+            this.entitySerialId = AbstractEntity.nextSerialId++;
 
             this.context = AbstractEntity.defaultContext;
 
