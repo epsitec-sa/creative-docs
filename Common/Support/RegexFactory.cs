@@ -86,9 +86,8 @@ namespace Epsitec.Common.Support
             char decimalSeparator;
 
             decimalSeparator = System
-                .Threading
-                .Thread
-                .CurrentThread
+                .Globalization
+                .CultureInfo
                 .CurrentCulture
                 .NumberFormat
                 .NumberDecimalSeparator[0];
