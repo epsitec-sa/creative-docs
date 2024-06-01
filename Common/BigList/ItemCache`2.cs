@@ -16,7 +16,6 @@ namespace Epsitec.Common.BigList
         public ItemCache(int capacity, ItemListFeatures features)
             : base(capacity, features)
         {
-            this.exclusion = new ReadWriteLock();
             this.extraStates = new IndexedStore<TState>(ItemCache.DefaultExtraCapacity);
             this.data = new IndexedStore<ItemData<TData>>(ItemCache.DefaultDataCapacity);
         }
@@ -40,14 +39,10 @@ namespace Epsitec.Common.BigList
             int count = this.DataProvider.Count;
             var array = new ushort[count];
 
-            this.exclusion.EnterWriteLock();
-
             this.states.Clear();
             this.extraStates.Clear();
             this.data.Clear();
             this.states.AddRange(array);
-
-            this.exclusion.ExitWriteLock();
 
             this.OnResetFired();
         }
@@ -83,9 +78,7 @@ namespace Epsitec.Common.BigList
 
         public ItemData<TData> GetItemDataExact(int index)
         {
-            this.exclusion.EnterReadLock();
             var data = this.GetItemDataLocked(index);
-            this.exclusion.ExitReadLock();
 
             if (data == null)
             {
@@ -93,9 +86,7 @@ namespace Epsitec.Common.BigList
 
                 if (data != null)
                 {
-                    this.exclusion.EnterWriteLock();
                     this.data[index] = data;
-                    this.exclusion.ExitWriteLock();
                 }
             }
 
@@ -115,9 +106,7 @@ namespace Epsitec.Common.BigList
                 return ItemState.Empty;
             }
 
-            this.exclusion.EnterReadLock();
             var state = this.GetItemStateLocked(index, details);
-            this.exclusion.ExitReadLock();
 
             if (state == null)
             {
@@ -161,9 +150,7 @@ namespace Epsitec.Common.BigList
                 );
             }
 
-            this.exclusion.EnterWriteLock();
             this.SetItemStateLocked(index, state as TState, details);
-            this.exclusion.ExitWriteLock();
         }
 
         private ItemHeight GetItemHeightWithoutMargins(int index)
@@ -295,7 +282,6 @@ namespace Epsitec.Common.BigList
         }
 
         private readonly IndexedStore<TState> extraStates;
-        private readonly ReadWriteLock exclusion;
         private readonly IndexedStore<ItemData<TData>> data;
     }
 }
