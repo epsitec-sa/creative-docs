@@ -35,26 +35,16 @@ namespace Epsitec.Common.Support
             get { return this.value; }
         }
 
-        public int Increment()
-        {
-            return System.Threading.Interlocked.Increment(ref this.value);
-        }
-
-        public int Decrement()
-        {
-            return System.Threading.Interlocked.Decrement(ref this.value);
-        }
-
         public DisposableWrapper<int> Enter()
         {
-            var value = this.Increment();
+            this.value++;
 
-            return DisposableWrapper.CreateDisposable(this.Release, value);
+            return DisposableWrapper.CreateDisposable(this.Release, this.value);
         }
 
         private void Release()
         {
-            this.Decrement();
+            this.value--;
         }
 
         /// <summary>
