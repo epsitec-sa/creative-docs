@@ -203,7 +203,7 @@ namespace Epsitec.Common.Support.EntityEngine
         /// </summary>
         public void NewDataGeneration()
         {
-            System.Threading.Interlocked.Increment(ref this.dataGeneration);
+            this.dataGeneration++;
         }
 
         public System.IDisposable SuspendConstraintChecking()
