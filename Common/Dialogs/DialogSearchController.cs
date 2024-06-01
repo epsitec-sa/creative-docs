@@ -1,12 +1,12 @@
 //	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -1052,14 +1052,14 @@ namespace Epsitec.Common.Dialogs
             public SuspendSearchHandlerHelper(DialogSearchController host)
             {
                 this.host = host;
-                System.Threading.Interlocked.Increment(ref this.host.suspendSearchHandler);
+                this.host.suspendSearchHandler++;
             }
 
             #region IDisposable Members
 
             public void Dispose()
             {
-                System.Threading.Interlocked.Decrement(ref this.host.suspendSearchHandler);
+                this.host.suspendSearchHandler--;
                 System.GC.SuppressFinalize(this);
             }
 
