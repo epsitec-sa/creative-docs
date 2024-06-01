@@ -653,14 +653,15 @@ namespace Epsitec.Common.Drawing
 
             if (change > 0)
             {
-                if (System.Threading.Interlocked.Increment(ref this.pendingCounter) > 1)
+                this.pendingCounter++;
+                if (this.pendingCounter > 1)
                 {
                     System.Diagnostics.Debug.WriteLine("Should not happen: counter > 1");
                 }
             }
             else if (change < 0)
             {
-                System.Threading.Interlocked.Decrement(ref this.pendingCounter);
+                this.pendingCounter--;
             }
 
             QueueStatus newStatus = this.QueueStatus;
@@ -677,14 +678,15 @@ namespace Epsitec.Common.Drawing
 
             if (change > 0)
             {
-                if (System.Threading.Interlocked.Increment(ref this.workingCounter) > 1)
+                this.workingCounter++;
+                if (this.workingCounter > 1)
                 {
                     System.Diagnostics.Debug.WriteLine("Should not happen: counter > 1");
                 }
             }
             else if (change < 0)
             {
-                System.Threading.Interlocked.Decrement(ref this.workingCounter);
+                this.workingCounter--;
             }
 
             QueueStatus newStatus = this.QueueStatus;
