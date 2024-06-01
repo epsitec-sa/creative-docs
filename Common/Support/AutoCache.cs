@@ -1,8 +1,8 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Common.Support
 {
@@ -15,15 +15,10 @@ namespace Epsitec.Common.Support
     /// - A function must be stable, that is, it must have the same result if called several times
     ///   with the same argument.
     /// - It might only have a single input argument and a single result.
-    ///
-    /// This class is thread safe. By saying that, I mean that this class by itself will not cause
-    /// any deadlock and that calls to the computer function, their results and to the clear function
-    /// will always be consistent. However, this class cannot make any guarantees about the thread
-    /// safety of the computer function.
     /// </remarks>
     /// <typeparam name="TKey">The type of the function argument.</typeparam>
     /// <typeparam name="TValue">The type of the function result.</typeparam>
-    public sealed class AutoCache<TKey, TValue> : System.IDisposable
+    public sealed class AutoCache<TKey, TValue>
     {
         /*
          * As the Dictionary<TKey,TValue> class cannot contain a value for the null key, we have to
@@ -42,8 +37,6 @@ namespace Epsitec.Common.Support
         public AutoCache(System.Func<TKey, TValue> computer)
         {
             computer.ThrowIfNull("computer");
-
-            this.rwLock = new ReaderWriterLockWrapper();
 
             this.resultOfCallWithNull = default(TValue);
             this.resultOfCallWithNullComputed = false;
@@ -78,87 +71,37 @@ namespace Epsitec.Common.Support
         /// </summary>
         public void Clear()
         {
-            using (this.rwLock.LockWrite())
-            {
-                this.cache.Clear();
+            this.cache.Clear();
 
-                this.resultOfCallWithNull = default(TValue);
-                this.resultOfCallWithNullComputed = false;
-            }
+            this.resultOfCallWithNull = default(TValue);
+            this.resultOfCallWithNullComputed = false;
         }
-
-        #region IDisposable Members
-
-
-        public void Dispose()
-        {
-            this.rwLock.Dispose();
-        }
-
-        #endregion
-
 
         private TValue GetResultForNullArgument(TKey key)
         {
-            TValue result = default(TValue);
-            bool done = false;
-
-            using (this.rwLock.LockRead())
+            if (!this.resultOfCallWithNullComputed)
             {
-                done = this.resultOfCallWithNullComputed;
-
-                if (done)
-                {
-                    result = this.resultOfCallWithNull;
-                }
+                this.resultOfCallWithNull = this.computer(key);
+                this.resultOfCallWithNullComputed = true;
             }
-
-            if (!done)
-            {
-                using (this.rwLock.LockWrite())
-                {
-                    if (!this.resultOfCallWithNullComputed)
-                    {
-                        this.resultOfCallWithNull = this.computer(key);
-                        this.resultOfCallWithNullComputed = true;
-                    }
-
-                    result = this.resultOfCallWithNull;
-                }
-            }
-
-            return result;
+            return this.resultOfCallWithNull;
         }
 
         private TValue GetResultForRegularArgument(TKey key)
         {
             TValue result = default(TValue);
-            bool done = false;
-
-            using (this.rwLock.LockRead())
-            {
-                done = this.cache.TryGetValue(key, out result);
-            }
+            bool done = this.cache.TryGetValue(key, out result);
 
             if (!done)
             {
-                using (this.rwLock.LockWrite())
-                {
-                    done = this.cache.TryGetValue(key, out result);
+                result = this.computer(key);
 
-                    if (!done)
-                    {
-                        result = this.computer(key);
-
-                        this.cache[key] = result;
-                    }
-                }
+                this.cache[key] = result;
             }
 
             return result;
         }
 
-        private readonly ReaderWriterLockWrapper rwLock;
         private readonly System.Func<TKey, TValue> computer;
         private readonly IDictionary<TKey, TValue> cache;
 
