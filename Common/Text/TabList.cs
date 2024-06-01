@@ -962,17 +962,13 @@ namespace Epsitec.Common.Text
             public void IncrementUserCount(int n)
             {
                 Debug.Assert.IsInBounds(this.userCount + n, 1, TabRecord.MaxUserCount);
-
-                for (int i = 0; i < n; i++)
-                {
-                    System.Threading.Interlocked.Increment(ref this.userCount);
-                }
+                this.userCount += n;
             }
 
             public void DecrementUserCount()
             {
                 Debug.Assert.IsInBounds(this.userCount, 1, TabRecord.MaxUserCount);
-                System.Threading.Interlocked.Decrement(ref this.userCount);
+                this.userCount--;
             }
 
             public void Initialize(
