@@ -81,7 +81,6 @@ namespace Epsitec.Common.Drawing
                 value = System.Math.Max(value, 10 * 1024 * 1024L);
 
                 this.memoryPressureThreshold = (int)value;
-                this.threadPool.DefineMemoryLimit(value * 2);
             }
         }
 
@@ -310,7 +309,7 @@ namespace Epsitec.Common.Drawing
 
                 if (addWorkerThread)
                 {
-                    this.threadPool.QueueWorkItem(this.ProcessWorkQueueItem);
+                    this.ProcessWorkQueueItem();
                 }
             }
         }
@@ -340,12 +339,6 @@ namespace Epsitec.Common.Drawing
             if (imageStore != null)
             {
                 imageStore.Dispose();
-            }
-
-            if (this.threadPool != null)
-            {
-                this.threadPool.Dispose();
-                this.threadPool = null;
             }
         }
 
@@ -601,7 +594,7 @@ namespace Epsitec.Common.Drawing
                     queueable.ChangePendingCounter(1);
                 }
 
-                this.threadPool.QueueWorkItem(this.ProcessWorkQueueItem);
+                this.ProcessWorkQueueItem();
             }
         }
 
@@ -733,7 +726,6 @@ namespace Epsitec.Common.Drawing
 
         private bool isCacheTrimmingRequested;
 
-        private CustomThreadPool threadPool = new CustomThreadPool();
         private LinkedList<Callback> processingWorkQueue = new LinkedList<Callback>();
         private LinkedList<Callback> pendingWorkQueue = new LinkedList<Callback>();
         private Dictionary<string, ImageData> images = new Dictionary<string, ImageData>();
