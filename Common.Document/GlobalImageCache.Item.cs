@@ -389,31 +389,7 @@ namespace Epsitec.Common.Document
 
             protected void TryReadImageData(bool read)
             {
-                int attemptCount = 0;
-
-                while (attemptCount < 5)
-                {
-                    try
-                    {
-                        this.ReadImageData(read);
-                        return;
-                    }
-                    catch (System.OutOfMemoryException ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(
-                            "TryReadOriginalImage failed: " + ex.Message
-                        );
-
-                        this.data = null;
-                        this.date = System.DateTime.MinValue;
-
-                        GlobalImageCache.FreeEverything();
-                        System.GC.Collect();
-                        System.Threading.Thread.Sleep(10);
-
-                        attemptCount++;
-                    }
-                }
+                this.ReadImageData(read);
             }
 
             protected void ReadImageData(bool read)
