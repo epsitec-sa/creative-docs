@@ -27,7 +27,7 @@ namespace Epsitec.Common.Text
             //	Il faut appeler cette méthode chaque fois qu'un style est
             //	modifié.
 
-            long value = System.Threading.Interlocked.Increment(ref this.current);
+            long value = this.current++;
             this.time = System.DateTime.Now;
             return value;
         }
