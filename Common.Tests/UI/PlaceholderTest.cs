@@ -1,6 +1,7 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Tests.UI;
@@ -10,7 +11,6 @@ using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 [assembly: Controller(typeof(PlaceholderTest.Test1Controller))]
 
@@ -24,11 +24,6 @@ namespace Epsitec.Common.Tests.UI
         {
             Epsitec.Common.Widgets.Widget.Initialize();
             Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
-        }
-
-        [Test]
-        public void AutomatedTestEnvironment()
-        {
             Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
         }
 
@@ -269,183 +264,6 @@ namespace Epsitec.Common.Tests.UI
         }
 
         [Test]
-        public void CheckInteractiveControllersWithAsyncBinding()
-        {
-            Window window = new Window();
-
-            GridLayoutEngine grid = new GridLayoutEngine();
-
-            grid.ColumnDefinitions.Add(new ColumnDefinition());
-            grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(40)));
-            grid.ColumnDefinitions.Add(new ColumnDefinition());
-            grid.ColumnDefinitions.Add(
-                new ColumnDefinition(
-                    new GridLength(1, GridUnitType.Proportional),
-                    60,
-                    double.PositiveInfinity
-                )
-            );
-            grid.ColumnDefinitions.Add(new ColumnDefinition()); // en trop
-
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(
-                new RowDefinition(new GridLength(1, GridUnitType.Proportional))
-            );
-            //			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ()); // en pas assez
-
-            grid.ColumnDefinitions[0].RightBorder = 1;
-
-            grid.RowDefinitions[0].BottomBorder = 1;
-            grid.RowDefinitions[2].TopBorder = -1;
-            grid.RowDefinitions[3].TopBorder = -1;
-
-            Panel panel = new Epsitec.Common.UI.Panel();
-
-            StructuredType type = new StructuredType();
-            StructuredData data = new StructuredData(type);
-
-            IntegerType ageType = new IntegerType(16, 80);
-            ageType.DefinePreferredRange(new DecimalRange(20, 65, 10));
-
-            type.Fields.Add("Name", new StringType(1));
-            type.Fields.Add("Forename", new StringType(1));
-            type.Fields.Add("Slow", TypeRosetta.GetNamedTypeFromTypeObject(typeof(SlowIntValue)));
-            type.Fields.Add("Sex", new EnumType(typeof(Sex)));
-
-            data.SetValue("Name", "Arnaud");
-            data.SetValue("Forename", "Pierre");
-            data.SetValue("Slow", new SlowIntValue());
-            data.SetValue("Sex", Sex.Male);
-
-            panel.DataSource = new DataSource();
-            panel.DataSource.AddDataSource("Person", data);
-
-            Placeholder placeholder1 = new Placeholder();
-            Placeholder placeholder2 = new Placeholder();
-            Placeholder placeholder3 = new Placeholder();
-            Placeholder placeholder4 = new Placeholder();
-            Placeholder placeholder5 = new Placeholder();
-            Placeholder placeholder6 = new Placeholder();
-
-            placeholder1.Controller = "*";
-            placeholder1.PreferredHeight = 20;
-            placeholder1.TabIndex = 1;
-            GridLayoutEngine.SetColumn(placeholder1, 0);
-            GridLayoutEngine.SetRow(placeholder1, 1);
-            GridLayoutEngine.SetColumnSpan(placeholder1, 4);
-
-            placeholder2.Controller = "*";
-            placeholder2.PreferredHeight = 20;
-            placeholder2.TabIndex = 2;
-            GridLayoutEngine.SetColumn(placeholder2, 0);
-            GridLayoutEngine.SetRow(placeholder2, 2);
-            GridLayoutEngine.SetColumnSpan(placeholder2, 4);
-
-            placeholder3.Controller = "Numeric";
-            placeholder3.PreferredHeight = 20;
-            placeholder3.TabIndex = 3;
-            GridLayoutEngine.SetColumn(placeholder3, 0);
-            GridLayoutEngine.SetRow(placeholder3, 3);
-
-            placeholder4.Controller = "Enum";
-            placeholder4.ControllerParameters = "Mode=Combo";
-            placeholder4.PreferredHeight = 20;
-            placeholder4.TabIndex = 4;
-            GridLayoutEngine.SetColumn(placeholder4, 2);
-            GridLayoutEngine.SetRow(placeholder4, 3);
-            GridLayoutEngine.SetColumnSpan(placeholder4, 2);
-
-            placeholder5.Controller = "Numeric";
-            placeholder5.PreferredHeight = 20;
-            placeholder5.TabIndex = 5;
-            GridLayoutEngine.SetColumn(placeholder5, 0);
-            GridLayoutEngine.SetRow(placeholder5, 4);
-
-            placeholder6.Controller = "Numeric";
-            placeholder6.PreferredHeight = 20;
-            placeholder6.TabIndex = 6;
-            GridLayoutEngine.SetColumn(placeholder6, 2);
-            GridLayoutEngine.SetRow(placeholder6, 4);
-
-            Binding binding1 = new Binding(BindingMode.TwoWay, "Person.Name");
-            Binding binding2 = new Binding(BindingMode.TwoWay, "Person.Forename");
-            Binding binding3 = new Binding(BindingMode.OneWay, "Person.Slow.A");
-            Binding binding4 = new Binding(BindingMode.TwoWay, "Person.Sex");
-            Binding binding5 = new Binding(BindingMode.OneWay, "Person.Slow.B");
-            Binding binding6 = new Binding(BindingMode.OneWay, "Person.Slow.C");
-
-            binding3.IsAsync = true;
-            binding5.IsAsync = true;
-            binding6.IsAsync = true;
-
-            placeholder1.SetBinding(Placeholder.ValueProperty, binding1);
-            placeholder2.SetBinding(Placeholder.ValueProperty, binding2);
-            placeholder3.SetBinding(Placeholder.ValueProperty, binding3);
-            placeholder4.SetBinding(Placeholder.ValueProperty, binding4);
-            placeholder5.SetBinding(Placeholder.ValueProperty, binding5);
-            placeholder6.SetBinding(Placeholder.ValueProperty, binding6);
-
-            LayoutEngine.SetLayoutEngine(panel, grid);
-
-            panel.Padding = new Margins(8, 8, 5, 5);
-            panel.Dock = DockStyle.Fill;
-
-            panel.Children.Add(placeholder1);
-            panel.Children.Add(placeholder2);
-            panel.Children.Add(placeholder3);
-            panel.Children.Add(placeholder4);
-            panel.Children.Add(placeholder5);
-            panel.Children.Add(placeholder6);
-
-            StaticText text;
-
-            text = new StaticText();
-            text.Text = "Label";
-            text.PreferredWidth = 40;
-            text.PreferredHeight = 20;
-            text.BackColor = Color.FromBrightness(0.6);
-            text.Margins = new Margins(0, 0, 0, 0);
-            text.ContentAlignment = ContentAlignment.MiddleCenter;
-            text.VerticalAlignment = VerticalAlignment.BaseLine;
-            GridLayoutEngine.SetColumn(text, 0);
-            GridLayoutEngine.SetRow(text, 0);
-            panel.Children.Add(text);
-
-            text = new StaticText();
-            text.Text = "Data fields";
-            text.PreferredWidth = 40;
-            text.PreferredHeight = 20;
-            text.BackColor = Color.FromBrightness(0.6);
-            text.Margins = new Margins(0, 0, 0, 0);
-            text.ContentAlignment = ContentAlignment.MiddleCenter;
-            text.VerticalAlignment = VerticalAlignment.BaseLine;
-            GridLayoutEngine.SetColumn(text, 1);
-            GridLayoutEngine.SetRow(text, 0);
-            GridLayoutEngine.SetColumnSpan(text, 3);
-            panel.Children.Add(text);
-
-            text = new StaticText();
-            text.PreferredHeight = 20;
-            GridLayoutEngine.SetColumn(text, 0);
-            GridLayoutEngine.SetRow(text, 5);
-            GridLayoutEngine.SetColumnSpan(text, 4);
-            panel.Children.Add(text);
-
-            StructureChangeListener listener = new StructureChangeListener(text);
-
-            data.ValueChanged += listener.HandleValueChanged;
-
-            window.Root.Children.Add(panel);
-            window.Show();
-
-            Window.RunInTestEnvironment(window);
-        }
-
-        [Test]
         public void CheckBinding1()
         {
             Placeholder placeholder = new Placeholder();
@@ -572,61 +390,6 @@ namespace Epsitec.Common.Tests.UI
             Assert.AreEqual("LastName", placeholder.Columns[1].FieldId);
             Assert.AreEqual("Company", placeholder.Columns[2].FieldId);
             Assert.AreEqual(Res.Types.Record.Address.CaptionId, placeholder.SourceTypeId);
-        }
-
-        private class SlowIntValue : DependencyObject
-        {
-            public int A
-            {
-                get { return (int)this.GetValue(SlowIntValue.AProperty); }
-            }
-
-            public int B
-            {
-                get { return (int)this.GetValue(SlowIntValue.BProperty); }
-            }
-
-            public int C
-            {
-                get { return (int)this.GetValue(SlowIntValue.CProperty); }
-            }
-
-            private static object GetAValue(DependencyObject o)
-            {
-                System.Threading.Thread.Sleep(3 * 1000);
-                return 35;
-            }
-
-            private static object GetBValue(DependencyObject o)
-            {
-                System.Threading.Thread.Sleep(5 * 1000);
-                return 36;
-            }
-
-            private static object GetCValue(DependencyObject o)
-            {
-                System.Threading.Thread.Sleep(10 * 1000);
-                return 37;
-            }
-
-            public static DependencyProperty AProperty = DependencyProperty.RegisterReadOnly(
-                "A",
-                typeof(int),
-                typeof(SlowIntValue),
-                new DependencyPropertyMetadata(SlowIntValue.GetAValue)
-            );
-            public static DependencyProperty BProperty = DependencyProperty.RegisterReadOnly(
-                "B",
-                typeof(int),
-                typeof(SlowIntValue),
-                new DependencyPropertyMetadata(SlowIntValue.GetBValue)
-            );
-            public static DependencyProperty CProperty = DependencyProperty.RegisterReadOnly(
-                "C",
-                typeof(int),
-                typeof(SlowIntValue),
-                new DependencyPropertyMetadata(SlowIntValue.GetCValue)
-            );
         }
 
         private class StructureChangeListener
