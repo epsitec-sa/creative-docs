@@ -213,9 +213,6 @@
     <None   Include="Debug\Expect.cs" />
     <Compile Remove="Debug\FailureException.cs" />
     <None   Include="Debug\FailureException.cs" />
-    -->
-    <Compile Remove="Debug\GeneralExceptionCatcher.cs" />
-    <!--
     <Compile Remove="Debug\Profiler.cs" />
     <None   Include="Debug\Profiler.cs" />
     <Compile Remove="Debug\Sos.cs" />
@@ -2877,8 +2874,6 @@
     <Compile Remove="Widgets\WindowType.cs" />
     <None   Include="Widgets\WindowType.cs" />
     -->
-    <Compile Remove="WinFormsUtils.cs" />
-    <None Include="WinFormsUtils.cs" />
   </ItemGroup>
 
 
