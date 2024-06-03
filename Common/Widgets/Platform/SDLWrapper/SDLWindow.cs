@@ -326,6 +326,20 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         #region Private methods
 
+        internal int DisplayIndex
+        {
+            get
+            {
+                this.RequireNotDisposed();
+                int index = SDL_GetWindowDisplayIndex(this.window);
+                if (index < 0)
+                {
+                    throw new InvalidOperationException(SDL_GetError());
+                }
+                return index;
+            }
+        }
+
         internal void UpdateWindowPosition()
         {
             SDL_GetWindowPosition(this.window, out this.x, out this.y);

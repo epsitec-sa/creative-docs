@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets.Platform
     /// </summary>
     public class ScreenInfo
     {
-        private ScreenInfo(int displayIndex)
+        public ScreenInfo(int displayIndex)
         {
             this.displayIndex = displayIndex;
         }
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Widgets.Platform
             return rect;
         }
 
-        private static readonly ScreenInfo MainScreen = new ScreenInfo(0); // the main display is always at index 0
+        public static readonly ScreenInfo MainScreen = new ScreenInfo(0); // the main display is always at index 0
 
         private int displayIndex;
     }

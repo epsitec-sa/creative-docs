@@ -12,8 +12,14 @@ namespace Epsitec.Common.Widgets.Platform
     /// </summary>
     internal class PlatformWindow : SDLWrapper.SDLWindow
     {
-        internal PlatformWindow(Window window, WindowFlags windowFlags)
-            : base("Creativedocs", 100, 100, PlatformWindow.MapToSDLWindowFlags(windowFlags))
+        internal PlatformWindow(
+            Window window,
+            WindowFlags windowFlags,
+            string windowTitle,
+            int width,
+            int height
+        )
+            : base(windowTitle, width, height, PlatformWindow.MapToSDLWindowFlags(windowFlags))
         {
             this.widgetWindow = window;
             this.dirtyRectangle = Drawing.Rectangle.Empty;
@@ -544,6 +550,7 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get { return this.widgetWindow; }
         }
+
         internal static bool UseWaitCursor
         {
             // bl-net8-cross

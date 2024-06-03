@@ -3,6 +3,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.DocumentEditor
 {
@@ -51,7 +52,27 @@ namespace Epsitec.Common.DocumentEditor
 
         public Application(DocumentType type)
         {
-            Window window = new Window(WindowFlags.Resizable);
+            string windowTitle;
+            switch (type)
+            {
+                case DocumentType.Graphic:
+                    windowTitle = Res.Strings.Application.TitleDoc;
+                    break;
+
+                case DocumentType.Pictogram:
+                    windowTitle = Res.Strings.Application.TitlePic;
+                    break;
+
+                case DocumentType.Text:
+                    windowTitle = Res.Strings.Application.TitleTxt;
+                    break;
+
+                default:
+                    windowTitle = Res.Strings.Application.TitleDoc;
+                    break;
+            }
+
+            Window window = new Window(WindowFlags.Resizable, windowTitle: windowTitle);
             window.WindowClosed += this.HandleMainWindowClosed;
 
             this.editor = new DocumentEditor(
@@ -88,31 +109,17 @@ namespace Epsitec.Common.DocumentEditor
                 // if the location is not set in GlobalSettings, we only set the size
                 // the location will default to the screen center
                 window.WindowSize = windowBounds.Size;
+                Rectangle bounds = window.ScreenInfo.Bounds;
+                window.WindowLocation = new Point(
+                    bounds.X + (bounds.Width - windowBounds.Width) / 2,
+                    bounds.Y + (bounds.Height - windowBounds.Height) / 2
+                );
             }
             else
             {
                 window.WindowBounds = windowBounds;
             }
             window.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
-
-            switch (type)
-            {
-                case DocumentType.Graphic:
-                    window.Text = Res.Strings.Application.TitleDoc;
-                    break;
-
-                case DocumentType.Pictogram:
-                    window.Text = Res.Strings.Application.TitlePic;
-                    break;
-
-                case DocumentType.Text:
-                    window.Text = Res.Strings.Application.TitleTxt;
-                    break;
-
-                default:
-                    window.Text = Res.Strings.Application.TitleDoc;
-                    break;
-            }
 
             this.editor.PreferredSize = window.ClientSize;
             this.editor.Dock = DockStyle.Fill;

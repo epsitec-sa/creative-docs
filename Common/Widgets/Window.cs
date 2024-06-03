@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -22,13 +23,18 @@ namespace Epsitec.Common.Widgets
             System.IDisposable,
             IIsDisposed
     {
-        public Window()
-            : this(null, WindowFlags.None) { }
+        public Window(string windowTitle = null, Size? windowSize = null)
+            : this(null, WindowFlags.None, windowTitle, windowSize) { }
 
-        public Window(WindowFlags windowFlags)
-            : this(null, windowFlags) { }
+        public Window(WindowFlags windowFlags, string windowTitle = null, Size? windowSize = null)
+            : this(null, windowFlags, windowTitle, windowSize) { }
 
-        internal Window(WindowRoot root, WindowFlags windowFlags)
+        internal Window(
+            WindowRoot root,
+            WindowFlags windowFlags,
+            string windowTitle = null,
+            Size? windowSize = null
+        )
         {
             this.id = Window.nextWindowId++;
 
@@ -36,7 +42,14 @@ namespace Epsitec.Common.Widgets
             this.ownedWindows = new HashSet<Window>();
 
             this.root = root ?? new WindowRoot(this);
-            this.platformWindow = new PlatformWindow(this, windowFlags);
+            int width = 100;
+            int height = 100;
+            if (windowSize != null)
+            {
+                width = System.Math.Max((int)windowSize.Value.Width, 100);
+                height = System.Math.Max((int)windowSize.Value.Height, 100);
+            }
+            this.platformWindow = new PlatformWindow(this, windowFlags, windowTitle, width, height);
             this.timer = new Timer();
 
             this.root.Name = "Root";
@@ -747,6 +760,11 @@ namespace Epsitec.Common.Widgets
                     Window.isRunningInAutomatedTestEnvironment = value;
                 }
             }
+        }
+
+        public ScreenInfo ScreenInfo
+        {
+            get { return new ScreenInfo(this.PlatformWindow.DisplayIndex); }
         }
 
         private PlatformWindow PlatformWindow
