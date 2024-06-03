@@ -1433,28 +1433,6 @@ namespace Epsitec.Common.DocumentEditor
             return dialog.Result;
         }
 
-        protected static string AdjustFilename(string filename)
-        {
-            //	Si on a tapé "toto", mais qu'il existe le fichier "Toto",
-            //	met le "vrai" nom dans filename.
-            string path = System.IO.Path.GetDirectoryName(filename);
-            string name = System.IO.Path.GetFileName(filename);
-            string[] s;
-            try
-            {
-                s = System.IO.Directory.GetFiles(path, name);
-            }
-            catch
-            {
-                return filename;
-            }
-            if (s.Length == 1)
-            {
-                filename = s[0];
-            }
-            return filename;
-        }
-
         protected bool Open()
         {
             //	Demande un nom de fichier puis ouvre le fichier.
@@ -1551,8 +1529,6 @@ namespace Epsitec.Common.DocumentEditor
                     }
                 }
 
-                filename = DocumentEditor.AdjustFilename(filename);
-
                 if (!this.IsRecyclableDocument())
                 {
                     this.CreateDocument(this.Window);
@@ -1622,7 +1598,6 @@ namespace Epsitec.Common.DocumentEditor
                 }
 
                 filename = this.dlgFileSave.FileName;
-                filename = DocumentEditor.AdjustFilename(filename);
             }
 
             if (Document.RedirectPath(ref filename))
@@ -1667,7 +1642,6 @@ namespace Epsitec.Common.DocumentEditor
             }
 
             filename = this.dlgFileSaveModel.FileName;
-            filename = DocumentEditor.AdjustFilename(filename);
 
             if (Document.RedirectPath(ref filename))
             {
