@@ -169,7 +169,7 @@ namespace Epsitec.Common.Support
         {
             get
             {
-                if (this.fullPath == null)
+                if (!Path.Exists(this.fullPath))
                 {
                     return true;
                 }
