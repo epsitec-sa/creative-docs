@@ -93,7 +93,6 @@ namespace Epsitec.Common.Tests.Widgets
         }
 
         [Test]
-        [Ignore("Infinite loop")]
         public void CheckAdornerBigText()
         {
             Window.RunInTestEnvironment(this.CreateBigText());
@@ -1210,6 +1209,8 @@ namespace Epsitec.Common.Tests.Widgets
             Assert.IsFalse(multi.IsVisible);
 
             window.Show();
+
+            SDLWindowManager.ProcessEvents();
 
             Assert.IsTrue(window.IsVisible);
             Assert.IsTrue(window.Root.IsVisible);

@@ -5075,6 +5075,8 @@ namespace Epsitec.Common.Widgets
                 int end = System.Math.Min(run.Start + run.Length, lineStart + line.Text.Length);
                 if (end <= start)
                 {
+                    brutIndex += next - start;
+                    beginOfLine = false;
                     continue;
                 }
 
@@ -5222,7 +5224,6 @@ namespace Epsitec.Common.Widgets
 
         private void GenerateBlocks()
         {
-            // TODO please refactor me, I'm hideously long
             //	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
             this.blocks.Clear();
 

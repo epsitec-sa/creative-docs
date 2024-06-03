@@ -165,7 +165,6 @@ namespace Epsitec.Common.Tests.Widgets
         }
 
         [Test]
-        [Ignore("Infinite loop")]
         public void CheckBasicLayout()
         {
             TextLayout layout = this.NewTextLayout();
@@ -415,7 +414,6 @@ namespace Epsitec.Common.Tests.Widgets
         }
 
         [Test]
-        [Ignore("Infinite loop")]
         public void CheckTextWithParamElements()
         {
             Window window = new Window();

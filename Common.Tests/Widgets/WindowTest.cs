@@ -128,8 +128,6 @@ namespace Epsitec.Common.Tests.Widgets
             w3.WindowSize = new Size(400, 150);
             w3.WindowLocation = new Point(200, 500);
             w3.Show();
-
-            Window.MessageFilter += new MessageHandler(Window_MessageFilter);
         }
 
         [Test]
