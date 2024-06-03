@@ -246,20 +246,7 @@ namespace Epsitec.Common.Dialogs
 
             if (this.AutoCenterDialog)
             {
-                Drawing.Rectangle dialogBounds = window.WindowBounds;
-
-                double ox = System.Math.Floor(
-                    ownerBounds.Left + (ownerBounds.Width - dialogBounds.Width) / 2
-                );
-                double oy = System.Math.Floor(
-                    ownerBounds.Top
-                        - (ownerBounds.Height - dialogBounds.Height) / 3
-                        - dialogBounds.Height
-                );
-
-                dialogBounds.Location = new Drawing.Point(ox, oy);
-
-                window.WindowBounds = dialogBounds;
+                window.CenterOnScreen();
             }
 
             this.OnDialogOpening();
