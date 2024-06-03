@@ -274,8 +274,27 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             // When SDL3 will be released, we might replace this hack by using SDL_SetWindowFocusable()
             // to disable input focus on tooltips
             IntPtr focusedWindow = SDL_GetMouseFocus();
+            uint focusedWindowID = SDL_GetWindowID(focusedWindow);
             SDL_ShowWindow(this.window);
             SDL_RaiseWindow(focusedWindow);
+            // With our hack, we generate a unfocused/focused event sequence on the focusedWindow
+            // we filter these events to avoid unexpected things later on
+            SDL_FilterEvents(
+                (IntPtr _, IntPtr evPtr) =>
+                {
+                    SDL_Event ev = Marshal.PtrToStructure<SDL_Event>(evPtr);
+                    if (
+                        ev.type == SDL_EventType.SDL_WINDOWEVENT
+                        && ev.window.windowID == focusedWindowID
+                    )
+                    {
+                        // ignore event
+                        return 0;
+                    }
+                    return 1;
+                },
+                IntPtr.Zero
+            );
             this.isVisible = true;
         }
 
