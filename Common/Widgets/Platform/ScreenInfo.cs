@@ -2,20 +2,18 @@
 //	Responsable: Pierre ARNAUD
 
 using System;
-using System.ComponentModel.Design;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
+using static SDL2.SDL;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Widgets.Platform
 {
     /// <summary>
     /// La classe ScreenInfo fournit les informations au sujet d'un écran.
     /// </summary>
     public class ScreenInfo
     {
-        public static double PrimaryHeight
+        private ScreenInfo(int displayIndex)
         {
-            get { return ScreenInfo.MainScreen.Bounds.Height; }
+            this.displayIndex = displayIndex;
         }
 
         /// <summary>
@@ -26,13 +24,9 @@ namespace Epsitec.Common.Widgets
         {
             get
             {
-                SystemTools.ScreenInfo.Rect screen = SystemTools.ScreenInfo.GetResolution();
-                int ox = 0;
-                int oy = 0;
-                int dx = screen.Width;
-                int dy = screen.Height;
-
-                return new Drawing.Rectangle(ox, oy, dx, dy);
+                SDL_Rect bounds;
+                SDL_GetDisplayBounds(this.displayIndex, out bounds);
+                return new Drawing.Rectangle(bounds.x, bounds.y, bounds.w, bounds.h);
             }
         }
 
@@ -43,17 +37,12 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public Drawing.Rectangle WorkingArea
         {
-            get { return this.Bounds; }
-            /*            get
-                        {
-                            int ox = this.screen.WorkingArea.Left;
-                            int oy = (int)ScreenInfo.PrimaryHeight - this.screen.WorkingArea.Bottom;
-                            int dx = this.screen.WorkingArea.Width;
-                            int dy = this.screen.WorkingArea.Height;
-            
-                            return new Drawing.Rectangle(ox, oy, dx, dy);
-                        }
-            */
+            get
+            {
+                SDL_Rect bounds;
+                SDL_GetDisplayUsableBounds(this.displayIndex, out bounds);
+                return new Drawing.Rectangle(bounds.x, bounds.y, bounds.w, bounds.h);
+            }
         }
 
         /// <summary>
@@ -62,26 +51,12 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public bool IsPrimary
         {
-            // get { return this.screen.Primary; }
-            get { throw new System.NotImplementedException(); }
+            get { return this.displayIndex == 0; }
         }
 
         public string DeviceName
         {
-            get { throw new System.NotImplementedException(); }
-            /*            get
-                        {
-                            string name = this.screen.DeviceName;
-                            int pos = name.IndexOf('\0');
-            
-                            if (pos >= 0)
-                            {
-                                name = name.Substring(0, pos);
-                            }
-            
-                            return name;
-                        }
-            */
+            get { return SDL_GetDisplayName(this.displayIndex); }
         }
 
         /// <summary>
@@ -90,7 +65,7 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public static Drawing.Rectangle GlobalArea
         {
-            get { throw new System.NotImplementedException(); }
+            get { throw new NotImplementedException(); }
             /*            get
                         {
                             int ox = System.Windows.Forms.SystemInformation.VirtualScreen.Left;
@@ -110,23 +85,22 @@ namespace Epsitec.Common.Widgets
         /// </summary>
         public static ScreenInfo[] AllScreens
         {
-            get { throw new System.NotImplementedException(); }
-            /*            get
-                        {
-                            System.Windows.Forms.Screen[] screens = System.Windows.Forms.Screen.AllScreens;
-            
-                            int n = screens.Length;
-            
-                            ScreenInfo[] infos = new ScreenInfo[n];
-            
-                            for (int i = 0; i < n; i++)
-                            {
-                                infos[i] = new ScreenInfo(screens[i]);
-                            }
-            
-                            return infos;
-                        }
-            */
+            get
+            {
+                int numDisplay = SDL_GetNumVideoDisplays();
+                if (numDisplay < 1)
+                {
+                    throw new InvalidOperationException(SDL_GetError());
+                }
+                ScreenInfo[] infos = new ScreenInfo[numDisplay];
+
+                for (int i = 0; i < numDisplay; i++)
+                {
+                    infos[i] = new ScreenInfo(i);
+                }
+
+                return infos;
+            }
         }
 
         /// <summary>
@@ -136,15 +110,8 @@ namespace Epsitec.Common.Widgets
         /// <returns>écran trouvé</returns>
         public static ScreenInfo Find(Drawing.Point point)
         {
-            return ScreenInfo.MainScreen;
-            /*            int ox = (int)(point.X + 0.5);
-                        int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(point.Y + 0.5);
-        
-                        System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint(
-                            new System.Drawing.Point(ox, oy)
-                        );
-                        return screen == null ? null : new ScreenInfo(screen);
-            */
+            // use SDL_GetPointDisplayIndex when the sdl library is updated to >= 2.24.0
+            return MainScreen;
         }
 
         /// <summary>
@@ -154,17 +121,8 @@ namespace Epsitec.Common.Widgets
         /// <returns>écran trouvé</returns>
         public static ScreenInfo Find(Drawing.Rectangle rect)
         {
-            return ScreenInfo.MainScreen;
-            /*            int ox = (int)(rect.Left + 0.5);
-                        int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(rect.Top + 0.5);
-                        int dx = (int)(rect.Width + 0.5);
-                        int dy = (int)(rect.Height + 0.5);
-            
-                        System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromRectangle(
-                            new System.Drawing.Rectangle(ox, oy, dx, dy)
-                        );
-                        return screen == null ? null : new ScreenInfo(screen);
-            */
+            // use SDL_GetRectDisplayIndex when the sdl library is updated to >= 2.24.0
+            return MainScreen;
         }
 
         /// <summary>
@@ -175,7 +133,7 @@ namespace Epsitec.Common.Widgets
         /// <returns>The adjusted rectangle.</returns>
         public static Drawing.Rectangle FitIntoWorkingArea(Drawing.Rectangle rect)
         {
-            ScreenInfo si = ScreenInfo.Find(rect.Center);
+            ScreenInfo si = Find(rect.Center);
             Drawing.Rectangle area = si.WorkingArea;
 
             rect.Width = System.Math.Min(rect.Width, area.Width);
@@ -204,6 +162,8 @@ namespace Epsitec.Common.Widgets
             return rect;
         }
 
-        private static readonly ScreenInfo MainScreen = new ScreenInfo();
+        private static readonly ScreenInfo MainScreen = new ScreenInfo(0); // the main display is always at index 0
+
+        private int displayIndex;
     }
 }

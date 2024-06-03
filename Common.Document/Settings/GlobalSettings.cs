@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Document.Settings
 {

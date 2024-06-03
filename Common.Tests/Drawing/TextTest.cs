@@ -4,6 +4,7 @@ using Epsitec.Common.Text.Cursors;
 using Epsitec.Common.Text.Layout;
 using Epsitec.Common.Text.Properties;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Platform;
 using NUnit.Framework;
 
 namespace Epsitec.Common.Tests.Drawing
