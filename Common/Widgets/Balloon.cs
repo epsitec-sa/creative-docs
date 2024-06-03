@@ -34,12 +34,14 @@ namespace Epsitec.Common.Widgets
 
         public void Attach()
         {
-            Window.MessageFilter += new MessageHandler(this.MessageFilter);
+            //Window.MessageFilter += new MessageHandler(this.MessageFilter);
+            throw new System.NotImplementedException();
         }
 
         public void Detach()
         {
-            Window.MessageFilter -= new MessageHandler(this.MessageFilter);
+            //Window.MessageFilter -= new MessageHandler(this.MessageFilter);
+            throw new System.NotImplementedException();
         }
 
         public double Distance

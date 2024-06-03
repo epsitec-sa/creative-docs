@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Behaviors;
 
 namespace Epsitec.Common.Widgets
 {
@@ -78,6 +79,15 @@ namespace Epsitec.Common.Widgets
 
             base.Hide();
             base.Close();
+        }
+
+        protected override void HandleMessage(Message message, Widget root)
+        {
+            this.behavior.HandleMessage(this, message, root);
+            if (!message.Handled)
+            {
+                base.HandleMessage(message, root);
+            }
         }
 
         protected override void OnWindowDisposing()

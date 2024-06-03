@@ -501,16 +501,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 
             if (this.localMenuCount == 1)
             {
-                lock (MenuBehavior.syncObject)
-                {
-                    MenuBehavior.menuCount++;
-
-                    if (MenuBehavior.menuCount == 1)
-                    {
-                        MenuBehavior.RegisterFilter();
-                    }
-                }
-
                 MenuBehavior.Push(this);
             }
         }
@@ -522,17 +512,6 @@ namespace Epsitec.Common.Widgets.Behaviors
             if (this.localMenuCount == 0)
             {
                 MenuBehavior.Pop(this);
-
-                lock (MenuBehavior.syncObject)
-                {
-                    MenuBehavior.menuCount--;
-
-                    if (MenuBehavior.menuCount == 0)
-                    {
-                        MenuBehavior.UnregisterFilter();
-                        MenuBehavior.GenerateDummyMouseMoveEvents();
-                    }
-                }
             }
         }
 
@@ -1249,31 +1228,6 @@ namespace Epsitec.Common.Widgets.Behaviors
             this.updateRequested = 0;
         }
 
-        private static void RegisterFilter()
-        {
-            Window.ApplicationDeactivated += MenuBehavior.HandleApplicationDeactivated;
-            Window.MessageFilter += MenuBehavior.MessageFilter;
-        }
-
-        private static void UnregisterFilter()
-        {
-            Window.ApplicationDeactivated -= MenuBehavior.HandleApplicationDeactivated;
-            Window.MessageFilter -= MenuBehavior.MessageFilter;
-        }
-
-        private static void GenerateDummyMouseMoveEvents()
-        {
-            Drawing.Point pos = Message.CurrentState.LastScreenPosition;
-            Window[] windows = Window.FindFromPosition(pos);
-
-            foreach (Window window in windows)
-            {
-                window.DispatchMessage(
-                    Message.CreateDummyMouseMoveEvent(window.ScreenPointToWindowPoint(pos))
-                );
-            }
-        }
-
         private static MenuBehavior[] GetActiveMenuBehaviors()
         {
             lock (MenuBehavior.syncObject)
@@ -1395,24 +1349,8 @@ namespace Epsitec.Common.Widgets.Behaviors
             }
         }
 
-        private static void MessageFilter(object sender, Message message)
+        public void HandleMessage(MenuWindow window, Message message, Widget root)
         {
-            if ((MenuBehavior.menuList.Count == 0) && (MenuBehavior.menuRootList.Count == 0))
-            {
-                //	Rien à filtrer si aucun menu n'est actuellement visible. Il
-                //	est primordial de faire le test immédiatement, pour éviter
-                //	de griller inutilement des cycles CPU.
-
-                return;
-            }
-
-            Window window = sender as Window;
-
-            if ((window == null) || (window.IsDisposed))
-            {
-                return;
-            }
-
             if (message.IsMouseType)
             {
                 if ((MenuBehavior.menuList.Count > 0) && (window.CapturingWidget != null))
@@ -1447,7 +1385,7 @@ namespace Epsitec.Common.Widgets.Behaviors
                     }
                 }
 
-                MenuBehavior.ProcessMouseEvent(window, message);
+                this.ProcessMouseEvent(window, message, root);
             }
             else if (message.IsKeyType)
             {
@@ -1456,9 +1394,7 @@ namespace Epsitec.Common.Widgets.Behaviors
                     return;
                 }
 
-                MenuWindow menuWindow = window as MenuWindow;
-
-                if ((menuWindow != null) && (menuWindow.MenuType == MenuType.ComboList))
+                if ((window != null) && (window.MenuType == MenuType.ComboList))
                 {
                     return;
                 }
@@ -1467,7 +1403,7 @@ namespace Epsitec.Common.Widgets.Behaviors
             }
         }
 
-        private static void ProcessMouseEvent(Window window, Message message)
+        private void ProcessMouseEvent(MenuWindow window, Message message, Widget rootWidget)
         {
             Drawing.Point mouse = window.WindowPointToScreenPoint(message.Cursor);
 
@@ -1904,7 +1840,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 
         static readonly object syncObject = new object();
         static long nextId = 1;
-        static int menuCount;
         static List<MenuBehavior> menuList;
         static List<MenuBehavior> menuRootList;
         static MenuItem menuLastItem;
@@ -1922,7 +1857,6 @@ namespace Epsitec.Common.Widgets.Behaviors
         static bool keyboardNavigationActive;
         static Drawing.Point keyboardNavigationMousePos;
 
-        private long id = MenuBehavior.GetNextId();
         private System.Collections.ArrayList liveMenuWindows = new System.Collections.ArrayList();
         private Window rootWindow;
         private Widget rootMenu;

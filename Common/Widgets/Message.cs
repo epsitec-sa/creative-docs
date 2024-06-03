@@ -597,13 +597,6 @@ namespace Epsitec.Common.Widgets
 
             if (type == MessageType.MouseUp)
             {
-                if (Message.state.window != Message.state.windowMouseDown)
-                {
-                    //	The button was pressed in another window and we are getting a parasitic
-                    //	mouse up event here...
-
-                    return null;
-                }
                 if (Message.state.buttonDownCount == 0)
                 {
                     //	The button was pressed in a window not controlled by this framework

@@ -1180,41 +1180,6 @@ namespace Epsitec.Common.Widgets
             this.WindowPlacementChanged.Raise(this);
         }
 
-        internal bool FilterMessage(Message message)
-        {
-            if (Window.MessageFilter != null)
-            {
-                Window.MessageFilter(this, message);
-
-                //	Si le message a été "absorbé" par le filtre, il ne faut en aucun
-                //	cas le transmettre plus loin.
-
-                if (message.Handled)
-                {
-                    if (message.Swallowed && !this.IsFrozen)
-                    {
-                        //	Le message a été mangé. Il faut donc aussi manger le message
-                        //	correspondant si les messages viennent par paire.
-
-                        switch (message.MessageType)
-                        {
-                            case MessageType.MouseDown:
-                                this.PlatformWindow.FilterMouseMessages = true;
-                                break;
-
-                            case MessageType.KeyDown:
-                                this.PlatformWindow.FilterKeyMessages = true;
-                                break;
-                        }
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         protected virtual void OnFocusedWidgetChanged(DependencyPropertyChangedEventArgs e)
         {
             this.root.ClearFocusChain();
@@ -1675,7 +1640,7 @@ namespace Epsitec.Common.Widgets
             this.DispatchMessage(message, this.modalWidget);
         }
 
-        internal void DispatchMessage(Message message, Widget root)
+        protected virtual void HandleMessage(Message message, Widget root)
         {
             this.ForceLayout();
 
@@ -1784,6 +1749,11 @@ namespace Epsitec.Common.Widgets
             }
 
             this.PostProcessMessage(message);
+        }
+
+        internal void DispatchMessage(Message message, Widget root)
+        {
+            this.HandleMessage(message, root);
         }
 
         public static void SetCaptureAndRetireMessage(Widget widget, Message message)
@@ -2343,7 +2313,6 @@ namespace Epsitec.Common.Widgets
         public event EventHandler WindowDragExited;
         public event EventHandler<WindowDragEventArgs> WindowDragDropped;
 
-        public static event MessageHandler MessageFilter;
         public static event EventHandler ApplicationActivated;
         public static event EventHandler ApplicationDeactivated;
         public static event EventHandler<DependencyPropertyChangedEventArgs> GlobalFocusedWidgetChanged;
