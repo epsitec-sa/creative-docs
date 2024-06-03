@@ -101,6 +101,7 @@ namespace Epsitec.Common.Support
         /// <param name="path">The path to the file.</param>
         public void Open(string path)
         {
+            // bl-net8-cross important
             throw new System.NotImplementedException();
         }
 

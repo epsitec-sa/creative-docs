@@ -321,7 +321,9 @@ namespace Epsitec.Common.Document.Settings
             }
             this.lastFilename.Insert(0, filename);
 
-            FileManager.AddToRecentDocuments(filename);
+            // bl-net8-cross
+            // Add filename to the "Recent" files
+            // FileManager.AddToRecentDocuments(filename);
         }
 
         protected int LastFilenameSearch(string filename)
