@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 
 namespace Epsitec.Common.OpenType
 {
@@ -15,7 +15,6 @@ namespace Epsitec.Common.OpenType
         internal Font(FontIdentity identity)
         {
             this.identity = identity;
-            // TODO bl-net8-cross free the underlying freetype handle when done
             this.fontHandle = AntigrainSharp.Font.LoadFromFile(identity.FilePath);
         }
 
@@ -156,6 +155,11 @@ namespace Epsitec.Common.OpenType
         //{
         //    get { return this.fontType; }
         //}
+
+        public byte[] GetFontRawData()
+        {
+            return File.ReadAllBytes(this.FontIdentity.FilePath);
+        }
 
         /// <summary>
         /// Compares the typography of two fonts and return true if both have the

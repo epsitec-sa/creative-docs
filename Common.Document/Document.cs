@@ -1463,6 +1463,7 @@ namespace Epsitec.Common.Document
 
         public string Write(string filename)
         {
+            filename = this.AddFileExtension(filename);
             //	Enregistre le document sur disque.
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
@@ -1578,6 +1579,31 @@ namespace Epsitec.Common.Document
             }
             DocumentCache.Remove(filename);
             return "";
+        }
+
+        private string AddFileExtension(string filename)
+        {
+            string extension;
+            switch (this.type)
+            {
+                case DocumentType.Graphic:
+                    extension = ".crdoc";
+                    break;
+                case DocumentType.Pictogram:
+                    extension = ".crdoc";
+                    break;
+                case DocumentType.Text:
+                    extension = ".txt";
+                    break;
+                default:
+                    extension = "";
+                    break;
+            }
+            if (!filename.EndsWith(extension))
+            {
+                return $"{filename}{extension}";
+            }
+            return filename;
         }
 
         private string PictogramCheckBeforeWrite()
@@ -2169,7 +2195,6 @@ namespace Epsitec.Common.Document
 
         protected void FontWriteAll(ZipFile zip)
         {
-            /*
             //	Ecrit sur disque tous les fichiers des polices utilisées dans le document.
             if (this.fontList == null || this.fontIncludeMode == FontIncludeMode.None)
             {
@@ -2190,10 +2215,8 @@ namespace Epsitec.Common.Document
 
                 string name = Document.GetFontFilename(fontName, i);
 
-                zip.AddEntry(name, font.FontData.Data.Array, true);
+                zip.AddEntry(name, font.GetFontRawData(), true);
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         protected void FontReadAll(ZipFile zip)
