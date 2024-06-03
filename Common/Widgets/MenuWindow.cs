@@ -101,6 +101,12 @@ namespace Epsitec.Common.Widgets
             this.Root.Children.Clear();
         }
 
+        protected override void OnWindowDefocused()
+        {
+            this.behavior.Reject();
+            base.OnWindowDefocused();
+        }
+
         protected override void OnAboutToShowWindow()
         {
             System.Diagnostics.Debug.Assert(this.behavior != null);
