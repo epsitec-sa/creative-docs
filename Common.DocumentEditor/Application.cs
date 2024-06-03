@@ -109,11 +109,7 @@ namespace Epsitec.Common.DocumentEditor
                 // if the location is not set in GlobalSettings, we only set the size
                 // the location will default to the screen center
                 window.WindowSize = windowBounds.Size;
-                Rectangle bounds = window.ScreenInfo.Bounds;
-                window.WindowLocation = new Point(
-                    bounds.X + (bounds.Width - windowBounds.Width) / 2,
-                    bounds.Y + (bounds.Height - windowBounds.Height) / 2
-                );
+                window.CenterOnScreen();
             }
             else
             {

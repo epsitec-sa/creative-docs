@@ -767,6 +767,11 @@ namespace Epsitec.Common.Widgets
             get { return new ScreenInfo(this.PlatformWindow.DisplayIndex); }
         }
 
+        public void CenterOnScreen()
+        {
+            this.PlatformWindow.CenterOnScreen();
+        }
+
         private PlatformWindow PlatformWindow
         {
             get

@@ -144,6 +144,13 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.UpdateWindowPosition();
         }
 
+        public void CenterOnScreen()
+        {
+            this.RequireNotDisposed();
+            SDL_SetWindowPosition(this.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+            this.UpdateWindowPosition();
+        }
+
         public void SetSize(int width, int height)
         {
             this.RequireNotDisposed();
