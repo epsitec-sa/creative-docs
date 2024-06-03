@@ -573,7 +573,7 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
-            // TODO bl-net8-cross
+            // TODO bl-net8-cross important
             // handle transform and scale parameters properly
             Font.FontManager.SetFont(this.openTypeFontIdentity.FilePath);
             gctx.SetColor(color.R, color.G, color.B, color.A);
