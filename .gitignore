@@ -10,6 +10,9 @@
 *.user
 *.sln.docstates
 
+# Vim
+*.swp
+
 # Build results
 
 x64/
