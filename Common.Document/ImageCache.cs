@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document
         {
             //	Supprime toutes les images du cache.
             DocumentManager manager = this.Document == null ? null : this.Document.DocumentManager;
-            string zipFilePath = manager == null ? null : manager.GetLocalFilePath();
+            string zipFilePath = manager == null ? null : manager.GetSourceFilePath();
 
             if (!string.IsNullOrEmpty(zipFilePath))
             {
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Document
             }
             else
             {
-                return this.document.DocumentManager.GetLocalFilePath();
+                return this.document.DocumentManager.GetSourceFilePath();
             }
         }
 

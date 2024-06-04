@@ -95,7 +95,7 @@ namespace Epsitec.Common.Document
                 DocumentManager manager = GlobalImageCache.FindDocumentManager(zipFileName);
 
                 using (
-                    System.IO.Stream stream = manager.GetLocalFileStream(System.IO.FileAccess.Read)
+                    System.IO.Stream stream = manager.GetSourceFileStream(System.IO.FileAccess.Read)
                 )
                 {
                     if (stream != null)
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document
 
                 if (manager != null)
                 {
-                    string path = manager.GetLocalFilePath().ToLowerInvariant();
+                    string path = manager.GetSourceFilePath().ToLowerInvariant();
 
                     if (path == zipPath)
                     {

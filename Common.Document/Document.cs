@@ -862,11 +862,11 @@ namespace Epsitec.Common.Document
                 this.ioDocumentManager = new DocumentManager();
                 this.ioDocumentManager.Open(filename);
 
-                Stream sourceStream = this.ioDocumentManager.GetLocalFileStream(FileAccess.Read);
+                Stream sourceStream = this.ioDocumentManager.GetSourceFileStream(FileAccess.Read);
 
                 string err = "";
                 ZipFile zip = new ZipFile();
-                zip.LoadFileName = this.ioDocumentManager.GetLocalFilePath();
+                zip.LoadFileName = this.ioDocumentManager.GetSourceFilePath();
                 DocumentFileExtension ext = Document.GetDocumentFileExtension(filename);
                 bool isCrDoc = (ext == DocumentFileExtension.CrDoc);
                 bool isCrMod = (ext == DocumentFileExtension.CrMod);

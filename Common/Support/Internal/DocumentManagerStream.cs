@@ -38,7 +38,7 @@ namespace Epsitec.Common.Support.Internal
 
         public override long Length
         {
-            get { return this.manager.SourceLength; }
+            get { return this.stream.Length; }
         }
 
         public override long Position
@@ -77,8 +77,6 @@ namespace Epsitec.Common.Support.Internal
                     throw new System.InvalidOperationException();
             }
 
-            this.manager.WaitForLocalCopyLength((int)pos, -1);
-
             return this.stream.Seek(pos, System.IO.SeekOrigin.Begin);
         }
 
@@ -89,8 +87,6 @@ namespace Epsitec.Common.Support.Internal
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            this.manager.WaitForLocalCopyLength(this.Position + count, -1);
-
             return this.stream.Read(buffer, offset, count);
         }
 
