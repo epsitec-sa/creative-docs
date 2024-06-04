@@ -1730,11 +1730,9 @@ namespace Epsitec.Common.Document
                     FolderQueryMode.NoIcons
                 );
                 string path = item.FullPath;
-                return string.Concat(
+                return System.IO.Path.Join(
                     path,
-                    "\\",
                     Res.Strings.Directory.MyDocumentsRoot,
-                    "\\",
                     Document.MySamplesDisplayName
                 );
 #endif
