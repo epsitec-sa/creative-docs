@@ -558,9 +558,8 @@ namespace Epsitec.Common.Drawing
             Color color
         )
         {
-            Font.FontManager.SetFont(this.openTypeFontIdentity.FilePath);
+            Font.FontManager.SetFont(this.openTypeFontIdentity.FilePath, size);
             gctx.SetColor(color.R, color.G, color.B, color.A);
-            Font.FontManager.SetFontSize(size);
             return gctx.DrawText(text, ox, oy);
         }
 

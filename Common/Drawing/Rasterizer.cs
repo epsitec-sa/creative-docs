@@ -261,7 +261,6 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
-            /*
             if ((glyphs == null) || (glyphs.Length == 0))
             {
                 return;
@@ -278,7 +277,11 @@ namespace Epsitec.Common.Drawing
                 transform.TX,
                 transform.TY
             );
-            this.rasterizer.AddGlyphs(font.Handle, 1.0, glyphs, x, null, null);
+            Font.FontManager.SetFont(font.OpenTypeFontIdentity.FilePath);
+            for (int i = 0; i < glyphs.Length; i++)
+            {
+                this.rasterizer.AddGlyph(glyphs[i], x[i], 0, 1.0, Font.FontManager);
+            }
             this.rasterizer.SetTransform(
                 this.transform.XX,
                 this.transform.XY,
@@ -287,8 +290,6 @@ namespace Epsitec.Common.Drawing
                 this.transform.TX,
                 this.transform.TY
             );
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -309,10 +310,11 @@ namespace Epsitec.Common.Drawing
             double[] sx
         )
         {
-            /*
-            this.rasterizer.AddGlyphs(font.Handle, scale, glyphs, x, y, sx);
-            */
-            throw new System.NotImplementedException();
+            Font.FontManager.SetFont(font.OpenTypeFontIdentity.FilePath);
+            for (int i = 0; i < glyphs.Length; i++)
+            {
+                this.rasterizer.AddGlyph(glyphs[i], x[i], y[i], sx[i], Font.FontManager);
+            }
         }
 
         protected override void SyncFillMode()

@@ -917,7 +917,7 @@ namespace Epsitec.Common.Drawing
 
         public double AddText(double x, double y, string text, Font font, double size)
         {
-            return font.PaintText(this.context, text, size, x, y, this.Color);
+            return this.rasterizer.AddText(font, text, x, y, size);
         }
 
         public void AddFilledRectangle(double x, double y, double width, double height)
