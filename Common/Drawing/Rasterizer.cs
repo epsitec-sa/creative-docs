@@ -107,8 +107,7 @@ namespace Epsitec.Common.Drawing
         /// <param name="scale">The font scale (or font point size).</param>
         public override void AddGlyph(Font font, int glyph, double x, double y, double scale)
         {
-            /*
-
+            Font.FontManager.SetFont(font.OpenTypeFontIdentity.FilePath);
             if (font.IsSynthetic)
             {
                 Transform ft = font.SyntheticTransform;
@@ -119,15 +118,8 @@ namespace Epsitec.Common.Drawing
                 {
                     case SyntheticFontMode.Oblique:
                         ft = ft.MultiplyBy(this.transform);
-                        this.rasterizer.SetTransform(
-                            ft.XX,
-                            ft.XY,
-                            ft.YX,
-                            ft.YY,
-                            ft.TX,
-                            ft.TY
-                        );
-                        this.rasterizer.AddGlyph(font.Handle, glyph, 0, 0, scale);
+                        this.rasterizer.SetTransform(ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
+                        this.rasterizer.AddGlyph(glyph, 0, 0, scale, Font.FontManager);
                         this.rasterizer.SetTransform(
                             this.transform.XX,
                             this.transform.XY,
@@ -142,10 +134,7 @@ namespace Epsitec.Common.Drawing
                         break;
                 }
             }
-
-            this.rasterizer.AddGlyph(font.Handle, glyph, x, y, scale);
-            */
-            throw new System.NotImplementedException();
+            this.rasterizer.AddGlyph(glyph, x, y, scale, Font.FontManager);
         }
 
         /// <summary>
@@ -169,7 +158,6 @@ namespace Epsitec.Common.Drawing
             double sy
         )
         {
-            /*
             if ((sx == 1.0) && (sy == 1.0))
             {
                 this.AddGlyph(font, glyph, x, y, scale);
@@ -183,15 +171,9 @@ namespace Epsitec.Common.Drawing
                 ft = ft.MultiplyBy(this.transform);
                 ft = ft.MultiplyByPostfix(Transform.CreateScaleTransform(sx, sy));
 
-                this.rasterizer.SetTransform(
-                    ft.XX,
-                    ft.XY,
-                    ft.YX,
-                    ft.YY,
-                    ft.TX,
-                    ft.TY
-                );
-                this.rasterizer.AddGlyph(font.Handle, glyph, 0, 0, scale);
+                this.rasterizer.SetTransform(ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
+                Font.FontManager.SetFont(font.OpenTypeFontIdentity.FilePath);
+                rasterizer.AddGlyph(glyph, 0, 0, scale, Font.FontManager);
                 this.rasterizer.SetTransform(
                     this.transform.XX,
                     this.transform.XY,
@@ -201,8 +183,6 @@ namespace Epsitec.Common.Drawing
                     this.transform.TY
                 );
             }
-            */
-            throw new System.NotImplementedException();
         }
 
         /// <summary>

@@ -195,6 +195,11 @@ namespace Epsitec.Common.Drawing
             }
         }
 
+        public OpenType.FontIdentity OpenTypeFontIdentity
+        {
+            get { return this.openTypeFontIdentity; }
+        }
+
         public OpenType.Font OpenTypeFont
         {
             get
@@ -791,7 +796,7 @@ namespace Epsitec.Common.Drawing
         readonly string syntheticStyle;
         readonly SyntheticFontMode syntheticMode;
         readonly OpenType.FontIdentity openTypeFontIdentity;
-        OpenType.Font openTypeFont;
+        private OpenType.Font openTypeFont;
 
         static OpenType.FontCollection fontCollection;
         static List<Font> fontArray;
