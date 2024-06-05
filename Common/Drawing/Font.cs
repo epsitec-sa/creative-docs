@@ -568,9 +568,9 @@ namespace Epsitec.Common.Drawing
             GraphicContext gctx,
             double scale,
             ushort[] glyphs,
-            double[] x,
-            double[] y,
-            double[] sx,
+            double[] xa,
+            double[] ya,
+            double[] sxa,
             Color color,
             double xx,
             double yy,
@@ -578,20 +578,23 @@ namespace Epsitec.Common.Drawing
             double ty
         )
         {
-            // TODO bl-net8-cross important
-            // handle transform and scale parameters properly
-            Font.FontManager.SetFont(this.openTypeFontIdentity.FilePath);
-            gctx.SetColor(color.R, color.G, color.B, color.A);
+            var rast = new AntigrainSharp.Rasterizer();
+            rast.SetTransform(xx, 0, 0, yy, tx, ty);
+            gctx.RendererSolid.Color(color.R, color.G, color.B, color.A);
+
+            double sy = scale * yy;
+
             for (int i = 0; i < glyphs.Length; i++)
             {
                 ushort glyph = glyphs[i];
-                double px = x[i];
-                double py = y[i];
-                double size = sx[i];
-                Font.FontManager.SetFontSize(size);
+                double x = xa[i] * xx + tx;
+                double y = ya[i] * yy + ty;
+                double sx = sxa[i] * scale * xx;
 
-                gctx.DrawGlyph(glyph, px, py);
+                rast.SetTransform(sx, 0, 0, sy, 0, 0);
+                rast.AddGlyph(glyph, x, y, 1.0, Font.FontManager);
             }
+            rast.RenderSolid(gctx.RendererSolid);
         }
 
         public static void RegisterResourceFont(
