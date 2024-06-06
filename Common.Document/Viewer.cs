@@ -2898,7 +2898,7 @@ namespace Epsitec.Common.Document
             this.ClosePopupInterface(obj);
 
             this.popupInterfaceWindow = new Window(
-                WindowFlags.NoBorder | WindowFlags.HideFromTaskbar
+                WindowFlags.NoBorder | WindowFlags.HideFromTaskbar | WindowFlags.AlwaysOnTop
             );
             this.popupInterfaceWindow.DisableMouseActivation();
             this.popupInterfaceWindow.MakeLayeredWindow(true);

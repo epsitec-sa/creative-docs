@@ -45,7 +45,9 @@ namespace Epsitec.Common.Dialogs
 
             dx = System.Math.Max(dx, 2 * 75 + 3 * 8);
 
-            Window dialogWindow = new Window(WindowFlags.HideFromTaskbar | WindowFlags.NoBorder);
+            Window dialogWindow = new Window(
+                WindowFlags.HideFromTaskbar | WindowFlags.NoBorder | WindowFlags.AlwaysOnTop
+            );
 
             dialogWindow.Text = this.dialogTitle;
             dialogWindow.Name = "Dialog";

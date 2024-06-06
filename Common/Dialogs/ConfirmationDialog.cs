@@ -218,7 +218,7 @@ namespace Epsitec.Common.Dialogs
             var flags = WindowFlags.HideFromTaskbar;
             if (!this.hasCancel)
             {
-                flags |= WindowFlags.NoBorder;
+                flags |= WindowFlags.NoBorder | WindowFlags.AlwaysOnTop;
             }
             Window dialogWindow = new Window(flags);
             if (this.hasCancel)
