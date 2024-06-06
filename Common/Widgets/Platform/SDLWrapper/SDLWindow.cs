@@ -8,9 +8,6 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
     {
         internal SDLWindow(string windowTitle, int width, int height, SDL_WindowFlags flags)
         {
-            this.width = width;
-            this.height = height;
-
             var window = SDL_CreateWindow(
                 windowTitle,
                 SDL_WINDOWPOS_CENTERED,
@@ -28,6 +25,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             this.windowID = SDL_GetWindowID(window);
             SDLWindowManager.AddWindow(this);
             this.UpdateWindowPosition();
+            this.UpdateWindowSize();
 
             var renderer = SDL_CreateRenderer(
                 window,
@@ -43,7 +41,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 );
             }
             this.renderer = renderer;
-            this.RecreateDrawingArea(width, height);
+            this.RecreateDrawingArea();
         }
 
         ~SDLWindow()
@@ -155,6 +153,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
         {
             this.RequireNotDisposed();
             SDL_SetWindowSize(this.window, width, height);
+            this.UpdateWindowSize();
         }
 
         public void SetBorder(bool border)
@@ -371,6 +370,11 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             SDL_GetWindowPosition(this.window, out this.x, out this.y);
         }
 
+        internal void UpdateWindowSize()
+        {
+            SDL_GetWindowSize(this.window, out this.width, out this.height);
+        }
+
         internal void UpdateDrawing()
         {
             this.OnDraw();
@@ -420,7 +424,9 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                 // see how we could have a dynamic resize
                 case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
                 case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
-                    this.RecreateDrawingArea(we.data1, we.data2);
+                    this.width = we.data1;
+                    this.height = we.data2;
+                    this.RecreateDrawingArea();
                     this.OnResize(we.data1, we.data2);
                     break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED:
@@ -438,30 +444,34 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             }
         }
 
-        private void RecreateDrawingArea(int width, int height)
+        private void RecreateDrawingArea()
         {
             this.DestroyDrawingArea();
-            this.width = width;
-            this.height = height;
 
             // bl-net8-cross
             // hardcoded pixelformat and stride value
             var pixelformat = SDL_PIXELFORMAT_ARGB8888;
-            int stride = width * 4;
+            int stride = this.width * 4;
 
-            this.surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, pixelformat);
+            this.surface = SDL_CreateRGBSurfaceWithFormat(
+                0,
+                this.width,
+                this.height,
+                32,
+                pixelformat
+            );
             if (this.surface == 0)
             {
                 throw new InvalidOperationException(SDL_GetError());
             }
             var surfaceObj = (SDL_Surface)Marshal.PtrToStructure(this.surface, typeof(SDL_Surface));
-            this.RecreateGraphicBuffer(surfaceObj.pixels, width, height, stride);
+            this.RecreateGraphicBuffer(surfaceObj.pixels, this.width, this.height, stride);
             this.texture = SDL_CreateTexture(
                 this.renderer,
                 pixelformat,
                 (int)SDL_TextureAccess.SDL_TEXTUREACCESS_STREAMING,
-                width,
-                height
+                this.width,
+                this.height
             );
             if (this.texture == 0)
             {
