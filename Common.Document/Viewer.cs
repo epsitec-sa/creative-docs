@@ -3269,6 +3269,10 @@ namespace Epsitec.Common.Document
             // Upon recreating the menu, inside MenuAddItem, we have `cs.Enable == false`
             // nothing is added to the context menu, hence it shows up empty
             // Now, why is the CommandState disabled ???
+            //
+            // It seems that their is an issue with the current object selection
+            // Eventhough the object looks selected (and we can interact through some tools with it),
+            // some tools do not work (the ones from the top tool bar and context menus)
 
 
 
