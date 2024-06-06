@@ -3259,7 +3259,7 @@ namespace Epsitec.Common.Document
         #region ContextMenu
         protected void ContextMenu(Point mouse, bool globalMenu)
         {
-            // bl-net8-cross bug
+            // bl-net8-cross important
             // Steps to reproduce:
             // - open a context
             // - draw a rectangle
