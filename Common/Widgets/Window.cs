@@ -42,12 +42,14 @@ namespace Epsitec.Common.Widgets
             this.ownedWindows = new HashSet<Window>();
 
             this.root = root ?? new WindowRoot(this);
-            int width = 100;
-            int height = 100;
+            int defaultWidth = 2;
+            int defaultHeight = 2;
+            int width = defaultWidth;
+            int height = defaultHeight;
             if (windowSize != null)
             {
-                width = System.Math.Max((int)windowSize.Value.Width, 100);
-                height = System.Math.Max((int)windowSize.Value.Height, 100);
+                width = System.Math.Max((int)windowSize.Value.Width, defaultWidth);
+                height = System.Math.Max((int)windowSize.Value.Height, defaultHeight);
             }
             this.platformWindow = new PlatformWindow(this, windowFlags, windowTitle, width, height);
             this.timer = new Timer();
@@ -684,7 +686,7 @@ namespace Epsitec.Common.Widgets
             get { return Window.windows.ToArray(); }
         }
 
-        public Drawing.Point WindowLocation
+        public virtual Drawing.Point WindowLocation
         {
             get { return this.PlatformWindow.WindowLocation; }
             set { this.PlatformWindow.WindowLocation = value; }
