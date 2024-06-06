@@ -619,19 +619,25 @@ namespace Epsitec.Common.Widgets
 
             Window window = widget.Window;
 
-            if (window == null)
+            if (window == null || window.IsClosed)
             {
                 MenuWindow menu = new MenuWindow(
                     MenuItem.GetMenuBehavior(widget),
                     MenuItem.GetParentMenuItem(widget)
                 );
 
-                Drawing.Size size = widget.GetBestFitSize();
+                //Drawing.Size size = widget.GetBestFitSize();
 
                 widget.Dock = DockStyle.Fill;
 
-                menu.Root.SetManualBounds(new Drawing.Rectangle(Drawing.Point.Zero, size));
+                //menu.Root.SetManualBounds(new Drawing.Rectangle(Drawing.Point.Zero, size));
                 menu.Root.Children.Add(widget);
+                menu.ForceLayout();
+                if (widget.GetBestFitSize().Width < 5)
+                {
+                    System.Console.WriteLine("");
+                    widget.GetBestFitSize();
+                }
                 menu.MenuType =
                     MenuItem.GetParentMenuItem(widget) == null
                         ? MenuType.Undefined

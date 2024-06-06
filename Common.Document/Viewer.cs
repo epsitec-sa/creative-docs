@@ -3259,6 +3259,19 @@ namespace Epsitec.Common.Document
         #region ContextMenu
         protected void ContextMenu(Point mouse, bool globalMenu)
         {
+            // bl-net8-cross bug
+            // Steps to reproduce:
+            // - open a context
+            // - draw a rectangle
+            // - open a context menu on the rectangle
+            // -> the menu does not appear
+            // Investigation:
+            // Upon recreating the menu, inside MenuAddItem, we have `cs.Enable == false`
+            // nothing is added to the context menu, hence it shows up empty
+            // Now, why is the CommandState disabled ???
+
+
+
             //	Construit le menu contextuel.
             this.ClearHilite();
 
