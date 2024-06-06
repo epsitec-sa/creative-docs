@@ -3001,23 +3001,7 @@ namespace Epsitec.Common.Document
             ScreenInfo si = ScreenInfo.Find(this.MapClientToScreen(mouse));
             Drawing.Rectangle wa = si.WorkingArea;
 
-            this.miniBarLines = 1;
-            double maxWidth = 0;
-            double width = 0;
-            foreach (string cmd in cmds)
-            {
-                if (cmd == "#") // fin de ligne ?
-                {
-                    maxWidth = System.Math.Max(maxWidth, width);
-                    width = 0;
-                    this.miniBarLines++;
-                }
-                else // commande ou séparateur ?
-                {
-                    width += this.MiniBarCommandWidth(cmd);
-                }
-            }
-            maxWidth = System.Math.Max(maxWidth, width);
+            (this.miniBarLines, double maxWidth) = this.miniBar.ComputeLinesAndMaxWidth(cmds);
 
             double mx = maxWidth + frame.Margin * 2 + 1;
             double my =
@@ -3096,175 +3080,30 @@ namespace Epsitec.Common.Document
                 return;
             }
 
-            this.miniBar = new Window(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar);
-            this.miniBar.DisableMouseActivation();
-            this.miniBar.MakeLayeredWindow(true);
-            this.miniBar.Root.SyncPaint = true;
-            this.miniBar.WindowSize = this.miniBarRect.Size;
+            this.miniBar = new MiniBarWindow(
+                size: this.miniBarRect.Size,
+                this.miniBarHot,
+                this.miniBarDistance,
+                this.CloseMiniBar
+            );
             this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
-            this.miniBar.Root.BackColor = Color.FromAlphaRgb(0, 1, 1, 1);
             this.miniBar.Owner = this.Window;
-
-            this.miniBarBalloon = new Balloon();
-            this.miniBarBalloon.Hot = this.miniBarHot;
-            this.miniBarBalloon.Distance = this.miniBarDistance;
-            this.miniBarBalloon.SetParent(this.miniBar.Root);
-            this.miniBarBalloon.Anchor = AnchorStyles.All;
-            this.miniBarBalloon.CloseNeeded += this.HandleMiniBarCloseNeeded;
-            this.miniBarBalloon.Attach();
 
             this.miniBar.Show(); // nécessaire pour que IsAway fonctionne !
 
             mouse = this.InternalToScreen(mouse);
             mouse = this.MapClientToScreen(mouse);
-            if (this.miniBarBalloon.IsAway(mouse)) // souris déjà trop loin ?
+            if (this.miniBar.IsAway(mouse)) // souris déjà trop loin ?
             {
                 this.CloseMiniBar(false);
                 this.miniBarCmds = null;
                 return;
             }
 
-            CommandDispatcher cd = this.GetCommandDispatcher();
-
-            bool beginOfLine = true;
-            Widget line = null;
-            foreach (string cmd in this.miniBarCmds)
-            {
-                if (beginOfLine)
-                {
-                    double m = (line == null) ? 0 : this.miniBarBalloon.Margin;
-                    IconButton button = new IconButton();
-                    line = new Widget(this.miniBarBalloon);
-                    line.PreferredHeight = button.PreferredHeight;
-                    line.Dock = DockStyle.Top;
-                    line.Margins = new Margins(0, 0, m, 0);
-                    beginOfLine = false;
-                }
-
-                if (cmd == "") // séparateur ?
-                {
-                    IconSeparator sep = new IconSeparator();
-                    sep.PreferredWidth = this.MiniBarCommandWidth(cmd);
-                    sep.Dock = DockStyle.Left;
-                    sep.SetParent(line);
-                }
-                else if (cmd == "#") // fin de ligne ?
-                {
-                    beginOfLine = true;
-                }
-                else
-                {
-                    Command c = Common.Widgets.Command.Find(cmd);
-
-                    IconButton button = new IconButton(c.CommandId, c.Icon, c.CommandId);
-
-                    if (c.Statefull)
-                    {
-                        button.ButtonStyle = ButtonStyle.ActivableIcon;
-                    }
-
-                    button.PreferredWidth = this.MiniBarCommandWidth(cmd);
-                    button.Dock = DockStyle.Left;
-                    button.SetParent(line);
-                    button.Clicked += this.HandleMiniBarButtonClicked;
-
-                    ToolTip.Default.SetToolTip(button, c.GetDescriptionWithShortcut());
-                }
-            }
+            this.miniBar.ProcessMiniBarCommands(this.miniBarCmds);
             this.miniBarCmds = null;
 
             this.miniBar.Show();
-        }
-
-        private void HandleMiniBarCloseNeeded(object sender)
-        {
-            //	Appelé lorsque la souris s'est éloignée est que la fermeture est nécessaire.
-            this.CloseMiniBar(true);
-        }
-
-        private void HandleMiniBarButtonClicked(object sender, MessageEventArgs e)
-        {
-            Widget button = sender as Widget;
-            if (button != null)
-            {
-                if (
-                    button.Name == "OrderUpAll"
-                    || button.Name == "OrderUpOne"
-                    || button.Name == "OrderDownOne"
-                    || button.Name == "OrderDownAll"
-                    || button.Name == Res.Commands.FontBold.CommandId
-                    || button.Name == Res.Commands.FontItalic.CommandId
-                    || button.Name == Res.Commands.FontUnderline.CommandId
-                    || button.Name == Commands.FontOverline
-                    || button.Name == Commands.FontStrikeout
-                    || button.Name == Commands.FontSubscript
-                    || button.Name == Commands.FontSuperscript
-                    || button.Name == Commands.FontSizePlus
-                    || button.Name == Commands.FontSizeMinus
-                    || button.Name == Commands.FontClear
-                    || button.Name == "ParagraphLeading08"
-                    || button.Name == "ParagraphLeading10"
-                    || button.Name == "ParagraphLeading15"
-                    || button.Name == "ParagraphLeading20"
-                    || button.Name == "ParagraphLeading30"
-                    || button.Name == "ParagraphLeadingPlus"
-                    || button.Name == "ParagraphLeadingMinus"
-                    || button.Name == "ParagraphIndentPlus"
-                    || button.Name == "ParagraphIndentMinus"
-                    || button.Name == "ParagraphClear"
-                    || button.Name == "JustifHLeft"
-                    || button.Name == "JustifHCenter"
-                    || button.Name == "JustifHRight"
-                    || button.Name == "JustifHJustif"
-                    || button.Name == "JustifHAll"
-                )
-                    return;
-            }
-
-            this.CloseMiniBar(false);
-        }
-
-        public bool CloseMiniBar()
-        {
-            //	Ferme la mini-palette si nécessaire. Retourne true si elle a été fermée.
-            if (this.miniBar == null)
-                return false;
-            this.CloseMiniBar(false);
-            return true;
-        }
-
-        public void CloseMiniBar(bool fadeout)
-        {
-            //	Ferme la mini-palette.
-            this.miniBarTimer.Suspend();
-
-            if (this.miniBar != null)
-            {
-                if (fadeout)
-                {
-                    this.miniBar.WindowAnimationEnded += this.HandleMiniBarWindowAnimationEnded;
-                    this.miniBar.AnimateShow(Animation.FadeOut);
-                }
-                else
-                {
-                    this.miniBar.Close();
-                    this.miniBar.AsyncDispose();
-                }
-
-                this.miniBarBalloon.CloseNeeded -= this.HandleMiniBarCloseNeeded;
-                this.miniBarBalloon.Detach();
-
-                this.miniBarBalloon = null;
-                this.miniBar = null;
-            }
-        }
-
-        private void HandleMiniBarWindowAnimationEnded(object sender)
-        {
-            //	Quand l'animation de fermeture de la mini-palette est terminée, il faut
-            //	encore supprimer la fenêtre, pour éviter qu'elle ne traîne ad eternum.
-            Window miniBar = sender as Window;
-            miniBar.AsyncDispose();
         }
 
         protected virtual List<string> MiniBarCommands(bool noSelected)
@@ -3324,30 +3163,6 @@ namespace Epsitec.Common.Document
                     this.MiniBarAdd(list, "");
                     this.MiniBarAdd(list, "ToTextBox2");
                     this.MiniBarAdd(list, "");
-#if false
-					this.MiniBarAdd(list, "Rotate90");
-					this.MiniBarAdd(list, "Rotate180");
-					this.MiniBarAdd(list, "Rotate270");
-					this.MiniBarAdd(list, "");
-					this.MiniBarAdd(list, "MirrorH");
-					this.MiniBarAdd(list, "MirrorV");
-					this.MiniBarAdd(list, "");
-					this.MiniBarAdd(list, "ScaleDiv2");
-					this.MiniBarAdd(list, "ScaleMul2");
-					this.MiniBarAdd(list, "");
-					this.MiniBarAdd(list, "Combine");
-					this.MiniBarAdd(list, "Uncombine");
-					this.MiniBarAdd(list, "ToBezier");
-					this.MiniBarAdd(list, "ToPoly");
-					this.MiniBarAdd(list, "Fragment");
-					this.MiniBarAdd(list, "");
-					this.MiniBarAdd(list, "BooleanOr");
-					this.MiniBarAdd(list, "BooleanAnd");
-					this.MiniBarAdd(list, "BooleanXor");
-					this.MiniBarAdd(list, "BooleanFrontMinus");
-					this.MiniBarAdd(list, "BooleanBackMinus");
-					this.MiniBarAdd(list, "");
-#endif
                 }
 
                 Objects.Abstract layer = this.drawingContext.RootObject();
@@ -3366,131 +3181,9 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            //	Essaie différentes largeurs de justifications, pour retenir la meilleure,
-            //	c'est-à-dire celle qui a le moins de déchets (place perdue sur la dernière ligne).
-            double bestScraps = 10000;
-            double bestHope = 8 * 22;
-            int linesRequired = this.MiniBarCount(list) / 8 + 1;
-            for (double hope = 2 * 22; hope <= 16 * 22; hope += 22)
-            {
-                if (this.MiniBarJustifDo(list, hope) == linesRequired)
-                {
-                    double scraps = this.MiniBarJustifScraps(list);
-                    if (bestScraps > scraps)
-                    {
-                        bestScraps = scraps;
-                        bestHope = hope;
-                    }
-                }
-
-                this.MiniBarJustifClear(list);
-            }
-            this.MiniBarJustifDo(list, bestHope);
+            this.miniBar.ComputeBestJustification(list);
 
             return list;
-        }
-
-        protected int MiniBarCount(IEnumerable<string> list)
-        {
-            //	Compte le nombre de commandes dans une liste.
-            int count = 0;
-            foreach (string cmd in list)
-            {
-                if (cmd != "")
-                    count++;
-            }
-            return count;
-        }
-
-        protected int MiniBarJustifDo(List<string> list, double widthHope)
-        {
-            //	Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
-            //	de fin de ligne ("#").
-            //	Retourne le nombre de lignes nécessaires.
-            double width = 0;
-            int lines = 1;
-            for (int i = 0; i < list.Count; i++)
-            {
-                string cmd = list[i] as string;
-
-                if (cmd == "") // séparateur ?
-                {
-                    if (width >= widthHope)
-                    {
-                        list.RemoveAt(i); // supprime le séparateur...
-                        list.Insert(i, "#"); // ...et remplace-le par une marque de fin de ligne
-                        width = 0;
-                        lines++;
-                    }
-                    else
-                    {
-                        width += this.MiniBarCommandWidth(cmd);
-                    }
-                }
-                else // commande ?
-                {
-                    width += this.MiniBarCommandWidth(cmd);
-                }
-            }
-            return lines;
-        }
-
-        protected void MiniBarJustifClear(List<string> list)
-        {
-            //	Supprime la justification de la mini-palette.
-            for (int i = 0; i < list.Count; i++)
-            {
-                string cmd = list[i] as string;
-
-                if (cmd == "#") // fin de ligne d'un essai précédent ?
-                {
-                    list.RemoveAt(i); // supprime la marque de fin de ligne...
-                    list.Insert(i, ""); // ...et remplace-la par un séparateur
-                }
-            }
-        }
-
-        protected double MiniBarJustifScraps(List<string> list)
-        {
-            //	Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
-            //	perdue à la fin de la dernière ligne.
-            double shortestLine = 10000;
-            double longestLine = 0;
-            double width = 0;
-            foreach (string cmd in list)
-            {
-                if (cmd == "#") // fin de ligne ?
-                {
-                    shortestLine = System.Math.Min(shortestLine, width);
-                    longestLine = System.Math.Max(longestLine, width);
-                    width = 0;
-                }
-                else // commande ou séparateur ?
-                {
-                    width += this.MiniBarCommandWidth(cmd);
-                }
-            }
-            shortestLine = System.Math.Min(shortestLine, width);
-            longestLine = System.Math.Max(longestLine, width);
-
-            return longestLine - shortestLine;
-        }
-
-        protected double MiniBarCommandWidth(string cmd)
-        {
-            //	Retourne la largeur du widget d'une commande.
-            if (cmd == "") // séparateur ?
-            {
-                return 12;
-            }
-            else if (cmd == "#") // fin de ligne ?
-            {
-                return 0;
-            }
-            else // commande ?
-            {
-                return 22;
-            }
         }
 
         public void MiniBarAdd(List<string> list, string cmd)
@@ -3522,6 +3215,46 @@ namespace Epsitec.Common.Document
 
             list.Add(cmd);
         }
+
+        public bool CloseMiniBar()
+        {
+            //	Ferme la mini-palette si nécessaire. Retourne true si elle a été fermée.
+            if (this.miniBar == null)
+                return false;
+            this.CloseMiniBar(false);
+            return true;
+        }
+
+        public void CloseMiniBar(bool fadeout)
+        {
+            //	Ferme la mini-palette.
+            this.miniBarTimer.Suspend();
+
+            if (this.miniBar != null)
+            {
+                if (fadeout)
+                {
+                    this.miniBar.WindowAnimationEnded += this.HandleMiniBarWindowAnimationEnded;
+                    this.miniBar.AnimateShow(Animation.FadeOut);
+                }
+                else
+                {
+                    this.miniBar.Close();
+                    this.miniBar.AsyncDispose();
+                }
+
+                this.miniBar = null;
+            }
+        }
+
+        private void HandleMiniBarWindowAnimationEnded(object sender)
+        {
+            //	Quand l'animation de fermeture de la mini-palette est terminée, il faut
+            //	encore supprimer la fenêtre, pour éviter qu'elle ne traîne ad eternum.
+            Window miniBar = sender as Window;
+            miniBar.AsyncDispose();
+        }
+
         #endregion
 
 
@@ -5729,8 +5462,7 @@ namespace Epsitec.Common.Document
         protected Drawing.Rectangle miniBarRect;
         protected double miniBarHot;
         protected double miniBarDistance;
-        protected Window miniBar;
-        protected Balloon miniBarBalloon;
+        protected MiniBarWindow miniBar;
         protected VMenu contextMenu;
         protected VMenu contextMenuOrder;
         protected VMenu contextMenuOper;

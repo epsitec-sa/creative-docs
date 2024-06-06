@@ -32,18 +32,6 @@ namespace Epsitec.Common.Widgets
             this.SetEmbedder(embedder);
         }
 
-        public void Attach()
-        {
-            //Window.MessageFilter += new MessageHandler(this.MessageFilter);
-            throw new System.NotImplementedException();
-        }
-
-        public void Detach()
-        {
-            //Window.MessageFilter -= new MessageHandler(this.MessageFilter);
-            throw new System.NotImplementedException();
-        }
-
         public double Distance
         {
             //	Hauteur de la queue.
@@ -148,37 +136,6 @@ namespace Epsitec.Common.Widgets
             {
                 return (dy - rect.Height / 2 > this.awayMargin);
             }
-        }
-
-        private void MessageFilter(object sender, Message message)
-        {
-            //	Appelé même lorsque la souris n'est plus sur le widget.
-            if (message.MessageType == MessageType.MouseMove)
-            {
-                Window window = sender as Window;
-
-                Point mouse = window.WindowPointToScreenPoint(message.Cursor);
-                if (this.IsAway(mouse))
-                {
-                    this.OnCloseNeeded();
-                }
-            }
-        }
-
-        protected virtual void OnCloseNeeded()
-        {
-            //	Génère un événement pour dire que la fermeture est nécessaire.
-            var handler = this.GetUserEventHandler("CloseNeeded");
-            if (handler != null)
-            {
-                handler(this);
-            }
-        }
-
-        public event EventHandler CloseNeeded
-        {
-            add { this.AddUserEventHandler("CloseNeeded", value); }
-            remove { this.RemoveUserEventHandler("CloseNeeded", value); }
         }
 
         protected double distance;
