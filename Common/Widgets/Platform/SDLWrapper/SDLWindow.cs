@@ -382,7 +382,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
             var surfaceObj = (SDL_Surface)Marshal.PtrToStructure(this.surface, typeof(SDL_Surface));
             SDL_UpdateTexture(this.texture, IntPtr.Zero, surfaceObj.pixels, surfaceObj.pitch);
 
-            if (SDL_SetRenderDrawColor(this.renderer, 0, 0, 0, 255) < 0)
+            if (SDL_SetRenderDrawColor(this.renderer, 0, 0, 0, 0) < 0)
             {
                 throw new InvalidOperationException(SDL_GetError());
             }

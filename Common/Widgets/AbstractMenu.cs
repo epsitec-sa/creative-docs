@@ -217,7 +217,7 @@ namespace Epsitec.Common.Widgets
             {
                 Window window = this.Window;
 
-                if ((window != null) && (window.IsSyncPaintDisabled == false))
+                if (window != null)
                 {
                     window.SynchronousRepaint();
 

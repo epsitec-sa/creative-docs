@@ -171,12 +171,20 @@ namespace Epsitec.Common.Widgets
 
         public void MakeActive()
         {
-            this.PlatformWindow.Flash();
+            if (this.platformWindow == null)
+            {
+                return;
+            }
+            this.platformWindow.Flash();
         }
 
         public void MakeFocused()
         {
-            this.PlatformWindow.Focus();
+            if (this.platformWindow == null)
+            {
+                return;
+            }
+            this.platformWindow.Focus();
         }
 
         public void DisableMouseActivation()
@@ -523,9 +531,9 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        public bool IsSyncPaintDisabled
+        public bool IsClosed
         {
-            get { return (this.platformWindow == null); }
+            get { return this.platformWindow == null; }
         }
 
         public bool IsVisible

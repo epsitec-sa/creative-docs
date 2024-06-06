@@ -1518,23 +1518,16 @@ namespace Epsitec.Common.Widgets
 
                     if (window != null)
                     {
-                        if (window.IsSyncPaintDisabled)
-                        {
-                            this.Parent.Invalidate(this.MapClientToParent(rect));
-                        }
-                        else
-                        {
-                            window.SynchronousRepaint();
+                        window.SynchronousRepaint();
 
-                            using (
-                                window.PushPaintFilter(
-                                    new WidgetSyncPaintFilter(this, window.PaintFilter)
-                                )
+                        using (
+                            window.PushPaintFilter(
+                                new WidgetSyncPaintFilter(this, window.PaintFilter)
                             )
-                            {
-                                window.MarkForRepaint(this.MapClientToRoot(rect));
-                                window.SynchronousRepaint();
-                            }
+                        )
+                        {
+                            window.MarkForRepaint(this.MapClientToRoot(rect));
+                            window.SynchronousRepaint();
                         }
                     }
                 }

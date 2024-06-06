@@ -6,11 +6,7 @@ namespace Epsitec.Common.Document
 {
     public class MiniBarWindow : Window
     {
-        public MiniBarWindow(
-            double hot,
-            double distance,
-            System.Action<bool> closeMiniBarCallback,
-        )
+        public MiniBarWindow(double hot, double distance, System.Action<bool> closeMiniBarCallback)
             : base(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar)
         {
             this.DisableMouseActivation();
