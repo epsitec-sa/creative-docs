@@ -10,12 +10,8 @@ namespace Epsitec.Common.Document
             double hot,
             double distance,
             System.Action<bool> closeMiniBarCallback,
-            Size? size = null
         )
-            : base(
-                WindowFlags.NoBorder | WindowFlags.HideFromTaskbar | WindowFlags.AlwaysOnTop,
-                windowSize: size
-            )
+            : base(WindowFlags.NoBorder | WindowFlags.HideFromTaskbar)
         {
             this.DisableMouseActivation();
             this.MakeLayeredWindow(true);

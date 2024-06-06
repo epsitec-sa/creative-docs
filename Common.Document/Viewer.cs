@@ -3239,7 +3239,6 @@ namespace Epsitec.Common.Document
                 else
                 {
                     this.miniBar.Close();
-                    this.miniBar.AsyncDispose();
                 }
 
                 this.miniBar = null;
