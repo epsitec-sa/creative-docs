@@ -281,7 +281,6 @@ namespace Epsitec.Common.Document
         }
         #endregion
 
-
         protected override void ProcessMessage(Message message, Point pos)
         {
             //	Gestion d'un événement.
@@ -304,6 +303,17 @@ namespace Epsitec.Common.Document
                 //?System.Diagnostics.Debug.WriteLine("ProcessMessage: MouseMove après MouseUp poubellisé !");
                 return;
             }
+
+            if (this.miniBar != null && message.MessageType == MessageType.MouseMove)
+            {
+                Point mouse = this.miniBar.WindowPointToScreenPoint(message.Cursor);
+                if (this.miniBar.IsAway(mouse))
+                {
+                    this.CloseMiniBar(true);
+                    return;
+                }
+            }
+
             this.lastMessageType = message.MessageType;
 
             this.mousePosWidget = pos;
@@ -3001,7 +3011,7 @@ namespace Epsitec.Common.Document
             ScreenInfo si = ScreenInfo.Find(this.MapClientToScreen(mouse));
             Drawing.Rectangle wa = si.WorkingArea;
 
-            (this.miniBarLines, double maxWidth) = this.miniBar.ComputeLinesAndMaxWidth(cmds);
+            (this.miniBarLines, double maxWidth) = MiniBarWindow.ComputeLinesAndMaxWidth(cmds);
 
             double mx = maxWidth + frame.Margin * 2 + 1;
             double my =
@@ -3011,21 +3021,18 @@ namespace Epsitec.Common.Document
                 + this.miniBarDistance;
             Size size = new Size(mx, my);
             mouse.X -= size.Width / 2;
-            this.miniBarRect = new Drawing.Rectangle(mouse, size);
             this.miniBarHot = hot ? size.Width / 2 : double.NaN;
 
-            Drawing.Rectangle rect = this.MapClientToScreen(this.miniBarRect);
+            Rectangle rect = this.MapClientToScreen(new Rectangle(mouse, size));
             if (rect.Left < wa.Left) // dépasse à gauche ?
             {
                 double dx = wa.Left - rect.Left;
-                this.miniBarRect.Offset(dx, 0);
                 this.miniBarHot -= dx;
             }
 
             if (rect.Right > wa.Right) // dépasse à droite ?
             {
                 double dx = rect.Right - wa.Right;
-                this.miniBarRect.Offset(-dx, 0);
                 this.miniBarHot += dx;
             }
 
@@ -3081,27 +3088,19 @@ namespace Epsitec.Common.Document
             }
 
             this.miniBar = new MiniBarWindow(
-                size: this.miniBarRect.Size,
                 this.miniBarHot,
                 this.miniBarDistance,
                 this.CloseMiniBar
             );
-            this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
             this.miniBar.Owner = this.Window;
-
-            this.miniBar.Show(); // nécessaire pour que IsAway fonctionne !
-
-            mouse = this.InternalToScreen(mouse);
-            mouse = this.MapClientToScreen(mouse);
-            if (this.miniBar.IsAway(mouse)) // souris déjà trop loin ?
-            {
-                this.CloseMiniBar(false);
-                this.miniBarCmds = null;
-                return;
-            }
 
             this.miniBar.ProcessMiniBarCommands(this.miniBarCmds);
             this.miniBarCmds = null;
+
+            this.miniBar.ForceLayout(); // necessary to have the window size recomputed
+            this.miniBar.WindowLocation = this.MapClientToScreen(
+                this.InternalToClient(this.miniBarClickPos)
+            );
 
             this.miniBar.Show();
         }
@@ -3181,7 +3180,7 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            this.miniBar.ComputeBestJustification(list);
+            MiniBarWindow.ComputeBestJustification(list);
 
             return list;
         }
@@ -5459,7 +5458,6 @@ namespace Epsitec.Common.Document
         protected Timer miniBarTimer;
         protected List<string> miniBarCmds;
         protected int miniBarLines;
-        protected Drawing.Rectangle miniBarRect;
         protected double miniBarHot;
         protected double miniBarDistance;
         protected MiniBarWindow miniBar;

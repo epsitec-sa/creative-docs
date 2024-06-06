@@ -1,5 +1,4 @@
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -83,8 +82,7 @@ namespace Epsitec.Common.Widgets
         protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
         {
             //	Dessine la "bulle" de style bd.
-            IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-            Drawing.Rectangle rect = this.Client.Bounds;
+            Rectangle rect = this.Client.Bounds;
             rect.Deflate(0.5);
 
             Path path;

@@ -7,10 +7,10 @@ namespace Epsitec.Common.Document
     public class MiniBarWindow : Window
     {
         public MiniBarWindow(
-            Size size,
             double hot,
             double distance,
-            System.Action<bool> closeMiniBarCallback
+            System.Action<bool> closeMiniBarCallback,
+            Size? size = null
         )
             : base(
                 WindowFlags.NoBorder | WindowFlags.HideFromTaskbar | WindowFlags.AlwaysOnTop,
@@ -28,6 +28,18 @@ namespace Epsitec.Common.Document
             this.balloon.SetParent(this.Root);
             this.balloon.Anchor = AnchorStyles.All;
             this.closeMiniBarCallback = closeMiniBarCallback;
+        }
+
+        public override Point WindowLocation
+        {
+            // this is set to have the MiniBarWindow origin at the center of the bottom side
+            get { return base.WindowLocation - this.WindowLocationOffset; }
+            set { base.WindowLocation = value + this.WindowLocationOffset; }
+        }
+
+        private Point WindowLocationOffset
+        {
+            get { return new Point(-this.WindowSize.Width / 2, -this.WindowSize.Height); }
         }
 
         public bool IsAway(Point mouse)
@@ -55,7 +67,7 @@ namespace Epsitec.Common.Document
                 if (cmd == "") // séparateur ?
                 {
                     IconSeparator sep = new IconSeparator();
-                    sep.PreferredWidth = this.CommandWidth(cmd);
+                    sep.PreferredWidth = MiniBarWindow.CommandWidth(cmd);
                     sep.Dock = DockStyle.Left;
                     sep.SetParent(line);
                 }
@@ -74,7 +86,7 @@ namespace Epsitec.Common.Document
                         button.ButtonStyle = ButtonStyle.ActivableIcon;
                     }
 
-                    button.PreferredWidth = this.CommandWidth(cmd);
+                    button.PreferredWidth = MiniBarWindow.CommandWidth(cmd);
                     button.Dock = DockStyle.Left;
                     button.SetParent(line);
                     button.Clicked += this.HandleMiniBarButtonClicked;
@@ -82,28 +94,6 @@ namespace Epsitec.Common.Document
                     ToolTip.Default.SetToolTip(button, c.GetDescriptionWithShortcut());
                 }
             }
-        }
-
-        public (int lines, double maxWidth) ComputeLinesAndMaxWidth(List<string> cmds)
-        {
-            int lines = 1;
-            double maxWidth = 0;
-            double width = 0;
-            foreach (string cmd in cmds)
-            {
-                if (cmd == "#") // fin de ligne ?
-                {
-                    maxWidth = System.Math.Max(maxWidth, width);
-                    width = 0;
-                    lines++;
-                }
-                else // commande ou séparateur ?
-                {
-                    width += this.CommandWidth(cmd);
-                }
-            }
-            maxWidth = System.Math.Max(maxWidth, width);
-            return (lines, maxWidth);
         }
 
         private void HandleMiniBarButtonClicked(object sender, MessageEventArgs e)
@@ -148,7 +138,29 @@ namespace Epsitec.Common.Document
             this.closeMiniBarCallback(false);
         }
 
-        protected double CommandWidth(string cmd)
+        public static (int lines, double maxWidth) ComputeLinesAndMaxWidth(List<string> cmds)
+        {
+            int lines = 1;
+            double maxWidth = 0;
+            double width = 0;
+            foreach (string cmd in cmds)
+            {
+                if (cmd == "#") // fin de ligne ?
+                {
+                    maxWidth = System.Math.Max(maxWidth, width);
+                    width = 0;
+                    lines++;
+                }
+                else // commande ou séparateur ?
+                {
+                    width += MiniBarWindow.CommandWidth(cmd);
+                }
+            }
+            maxWidth = System.Math.Max(maxWidth, width);
+            return (lines, maxWidth);
+        }
+
+        protected static double CommandWidth(string cmd)
         {
             //	Retourne la largeur du widget d'une commande.
             if (cmd == "") // séparateur ?
@@ -165,31 +177,18 @@ namespace Epsitec.Common.Document
             }
         }
 
-        protected override void HandleMessage(Message message, Widget root)
-        {
-            //	Appelé même lorsque la souris n'est plus sur le widget.
-            if (message.MessageType == MessageType.MouseMove)
-            {
-                Point mouse = this.WindowPointToScreenPoint(message.Cursor);
-                if (this.IsAway(mouse))
-                {
-                    this.closeMiniBarCallback(true);
-                }
-            }
-        }
-
-        public void ComputeBestJustification(List<string> list)
+        public static void ComputeBestJustification(List<string> list)
         {
             //	Essaie différentes largeurs de justifications, pour retenir la meilleure,
             //	c'est-à-dire celle qui a le moins de déchets (place perdue sur la dernière ligne).
             double bestScraps = 10000;
             double bestHope = 8 * 22;
-            int linesRequired = this.Count(list) / 8 + 1;
+            int linesRequired = MiniBarWindow.Count(list) / 8 + 1;
             for (double hope = 2 * 22; hope <= 16 * 22; hope += 22)
             {
-                if (this.JustifDo(list, hope) == linesRequired)
+                if (MiniBarWindow.JustifDo(list, hope) == linesRequired)
                 {
-                    double scraps = this.JustifScraps(list);
+                    double scraps = MiniBarWindow.JustifScraps(list);
                     if (bestScraps > scraps)
                     {
                         bestScraps = scraps;
@@ -197,12 +196,12 @@ namespace Epsitec.Common.Document
                     }
                 }
 
-                this.JustifClear(list);
+                MiniBarWindow.JustifClear(list);
             }
-            this.JustifDo(list, bestHope);
+            MiniBarWindow.JustifDo(list, bestHope);
         }
 
-        protected int Count(IEnumerable<string> list)
+        protected static int Count(IEnumerable<string> list)
         {
             //	Compte le nombre de commandes dans une liste.
             int count = 0;
@@ -214,7 +213,7 @@ namespace Epsitec.Common.Document
             return count;
         }
 
-        protected int JustifDo(List<string> list, double widthHope)
+        protected static int JustifDo(List<string> list, double widthHope)
         {
             //	Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
             //	de fin de ligne ("#").
@@ -236,18 +235,18 @@ namespace Epsitec.Common.Document
                     }
                     else
                     {
-                        width += this.CommandWidth(cmd);
+                        width += MiniBarWindow.CommandWidth(cmd);
                     }
                 }
                 else // commande ?
                 {
-                    width += this.CommandWidth(cmd);
+                    width += MiniBarWindow.CommandWidth(cmd);
                 }
             }
             return lines;
         }
 
-        protected void JustifClear(List<string> list)
+        protected static void JustifClear(List<string> list)
         {
             //	Supprime la justification de la mini-palette.
             for (int i = 0; i < list.Count; i++)
@@ -262,7 +261,7 @@ namespace Epsitec.Common.Document
             }
         }
 
-        protected double JustifScraps(List<string> list)
+        protected static double JustifScraps(List<string> list)
         {
             //	Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
             //	perdue à la fin de la dernière ligne.
@@ -279,7 +278,7 @@ namespace Epsitec.Common.Document
                 }
                 else // commande ou séparateur ?
                 {
-                    width += this.CommandWidth(cmd);
+                    width += MiniBarWindow.CommandWidth(cmd);
                 }
             }
             shortestLine = System.Math.Min(shortestLine, width);
