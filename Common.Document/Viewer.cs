@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document
             get
             {
                 Rectangle rect = this.Client.Bounds;
-                return this.ScreenToInternal(rect);
+                return this.ClientToInternal(rect);
             }
         }
 
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Document
             move.Y /= this.drawingContext.ScaleY;
             this.AutoScroll(move);
 
-            mouse = this.ScreenToInternal(mouse); // position en coordonnées internes
+            mouse = this.ClientToInternal(mouse); // position en coordonnées internes
             this.DispatchDummyMouseMoveEvent();
         }
 
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Document
             {
                 Rectangle rect = this.Client.Bounds;
                 rect.Deflate(5); // ch'tite marge
-                return this.ScreenToInternal(rect);
+                return this.ClientToInternal(rect);
             }
         }
 
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Document
             this.lastMessageType = message.MessageType;
 
             this.mousePosWidget = pos;
-            pos = this.ScreenToInternal(pos); // position en coordonnées internes
+            pos = this.ClientToInternal(pos); // position en coordonnées internes
 
             if (pos.X != this.mousePos.X || pos.Y != this.mousePos.Y)
             {
@@ -2995,7 +2995,7 @@ namespace Epsitec.Common.Document
             }
 
             this.miniBarClickPos = mouse;
-            mouse = this.InternalToScreen(mouse);
+            mouse = this.InternalToClient(mouse);
             mouse.Y++; // pour ne pas être sur le pixel visé par la souris
 
             ScreenInfo si = ScreenInfo.Find(this.MapClientToScreen(mouse));
@@ -3744,7 +3744,7 @@ namespace Epsitec.Common.Document
             this.contextMenu.Host = this;
             Menus.ContextMenuItem.MenuCreate(this.contextMenu, list);
             this.contextMenu.AdjustSize();
-            mouse = this.InternalToScreen(mouse);
+            mouse = this.InternalToClient(mouse);
             mouse = this.MapClientToScreen(mouse);
 
             ScreenInfo si = ScreenInfo.Find(mouse);
@@ -4391,7 +4391,7 @@ namespace Epsitec.Common.Document
             double iy = 0.5 / this.drawingContext.ScaleY;
 
             clipRect.Inflate(1);
-            clipRect = this.ScreenToInternal(clipRect);
+            clipRect = this.ClientToInternal(clipRect);
             clipRect = Rectangle.Intersection(clipRect, this.document.Modifier.RectangleArea);
 
             if (this.IsActiveViewer)
@@ -5308,39 +5308,39 @@ namespace Epsitec.Common.Document
 
 
         #region Convert
-        public Rectangle ScreenToInternal(Rectangle rect)
+        public Rectangle ClientToInternal(Rectangle rect)
         {
-            //	Conversion d'un rectangle écran -> rectangle interne.
+            //	Conversion d'un rectangle client -> rectangle interne.
             if (!rect.IsInfinite)
             {
-                rect.BottomLeft = this.ScreenToInternal(rect.BottomLeft);
-                rect.TopRight = this.ScreenToInternal(rect.TopRight);
+                rect.BottomLeft = this.ClientToInternal(rect.BottomLeft);
+                rect.TopRight = this.ClientToInternal(rect.TopRight);
             }
             return rect;
         }
 
-        public Point ScreenToInternal(Point pos)
+        public Point ClientToInternal(Point pos)
         {
-            //	Conversion d'une coordonnée écran -> coordonnée interne.
+            //	Conversion d'une coordonnée client -> coordonnée interne.
             pos.X = pos.X / this.drawingContext.ScaleX - this.drawingContext.OriginX;
             pos.Y = pos.Y / this.drawingContext.ScaleY - this.drawingContext.OriginY;
             return pos;
         }
 
-        public Rectangle InternalToScreen(Rectangle rect)
+        public Rectangle InternalToClient(Rectangle rect)
         {
-            //	Conversion d'un rectangle interne -> rectangle écran.
+            //	Conversion d'un rectangle interne -> rectangle client.
             if (!rect.IsInfinite)
             {
-                rect.BottomLeft = this.InternalToScreen(rect.BottomLeft);
-                rect.TopRight = this.InternalToScreen(rect.TopRight);
+                rect.BottomLeft = this.InternalToClient(rect.BottomLeft);
+                rect.TopRight = this.InternalToClient(rect.TopRight);
             }
             return rect;
         }
 
-        public Point InternalToScreen(Point pos)
+        public Point InternalToClient(Point pos)
         {
-            //	Conversion d'une coordonnée interne -> coordonnée écran.
+            //	Conversion d'une coordonnée interne -> coordonnée client.
             pos.X = (pos.X + this.drawingContext.OriginX) * this.drawingContext.ScaleX;
             pos.Y = (pos.Y + this.drawingContext.OriginY) * this.drawingContext.ScaleY;
             return pos;

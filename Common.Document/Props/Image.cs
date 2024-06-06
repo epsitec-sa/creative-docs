@@ -1,7 +1,7 @@
+using System.Runtime.Serialization;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Widgets;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Document.Properties
 
         private Point GetPopupInterfacePosition(Viewer viewer, Objects.Abstract obj)
         {
-            var pos = viewer.InternalToScreen(obj.BoundingBoxThin.BottomLeft);
+            var pos = viewer.InternalToClient(obj.BoundingBoxThin.BottomLeft);
             return new Point(pos.X - 4, pos.Y - 5);
         }
 

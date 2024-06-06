@@ -2412,7 +2412,7 @@ namespace Epsitec.Common.Document
 
             if (!clipRect.IsInfinite)
             {
-                clipRect = drawingContext.Viewer.ScreenToInternal(clipRect);
+                clipRect = drawingContext.Viewer.ClientToInternal(clipRect);
             }
 
             Objects.Abstract page = drawingContext.RootObject(1);
@@ -2455,7 +2455,7 @@ namespace Epsitec.Common.Document
                 {
                     initialClip = graphics.SaveClippingRectangle();
                     clipRect = Rectangle.Intersection(clipRect, this.Modifier.PageArea);
-                    Rectangle clip = drawingContext.Viewer.InternalToScreen(clipRect);
+                    Rectangle clip = drawingContext.Viewer.InternalToClient(clipRect);
                     clip = drawingContext.Viewer.MapClientToRoot(clip);
                     graphics.SetClippingRectangle(clip);
                 }

@@ -372,7 +372,7 @@ namespace Epsitec.Common.Document
         {
             //	Avec le mode motionless = true, on cherche à conserver la position visée dans l'écran.
             //	Avec le mode motionless = false, on cherche à centrer la position visée.
-            Point iPos = this.viewer.InternalToScreen(new Point(centerX, centerY));
+            Point iPos = this.viewer.InternalToClient(new Point(centerX, centerY));
 
             bool changed = false;
             if (this.zoom != zoom)
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Document
 
             if (motionless)
             {
-                Point iOffset = this.viewer.InternalToScreen(new Point(centerX, centerY)) - iPos;
+                Point iOffset = this.viewer.InternalToClient(new Point(centerX, centerY)) - iPos;
                 iOffset.X /= this.ScaleX;
                 iOffset.Y /= this.ScaleY;
 

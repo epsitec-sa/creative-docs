@@ -683,7 +683,7 @@ namespace Epsitec.Common.Document.Widgets
             this.draggingFirstMove = false;
 
             pos.X = this.GetHandleHorizontalPos(handle);
-            pos = this.document.Modifier.ActiveViewer.ScreenToInternal(pos);
+            pos = this.document.Modifier.ActiveViewer.ClientToInternal(pos);
             this.document.Modifier.ActiveViewer.MarkerVertical =
                 (this.draggingTabToDelete == null) ? pos.X : double.NaN;
         }

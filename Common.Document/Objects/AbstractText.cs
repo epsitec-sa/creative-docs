@@ -241,9 +241,9 @@ namespace Epsitec.Common.Document.Objects
                     Drawing.Rectangle selbox = this.EditSelectBox;
                     if (!selbox.IsEmpty)
                     {
-                        selbox = viewer.InternalToScreen(selbox);
+                        selbox = viewer.InternalToClient(selbox);
                         double top = System.Math.Min(selbox.Top, viewer.ActualHeight - 2);
-                        Point mouse = viewer.InternalToScreen(pos);
+                        Point mouse = viewer.InternalToClient(pos);
                         distance = System.Math.Max(top - mouse.Y, 0);
                     }
                     Viewer.MiniBarDelayed delayed =

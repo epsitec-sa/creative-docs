@@ -5540,7 +5540,7 @@ namespace Epsitec.Common.DocumentEditor
                 box.Inflate(viewer.DrawingContext.HandleRedrawSize / 2);
             }
 
-            box = viewer.InternalToScreen(box);
+            box = viewer.InternalToClient(box);
             this.InvalidateDraw(viewer, box);
         }
 
