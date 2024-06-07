@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
         {
             if (this.IsVisible == false)
             {
-                this.AnimateShow(Animation.FadeIn);
+                this.AnimateShow(Animation.None);
             }
 
             this.FocusWidget(this.Root);

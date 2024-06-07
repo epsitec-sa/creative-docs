@@ -548,7 +548,10 @@ namespace Epsitec.Common.Widgets.Platform
                     );
                 }
                 Console.WriteLine($"Set opacity {value}");
-                this.SetWindowOpacity((float)value);
+                if (value != 1.0)
+                {
+                    this.SetWindowOpacity((float)value);
+                }
                 this.alpha = value;
             }
         }

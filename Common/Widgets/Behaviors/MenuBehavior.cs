@@ -354,7 +354,7 @@ namespace Epsitec.Common.Widgets.Behaviors
             }
 
             Drawing.Point location = window.WindowLocation;
-            Animation animation = Animation.FadeIn;
+            Animation animation = Animation.None;
 
             if (host != null)
             {
