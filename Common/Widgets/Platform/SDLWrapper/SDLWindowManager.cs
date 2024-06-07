@@ -135,6 +135,14 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                     window = SDLWindowManager.GetWindowFromId(e.wheel.windowID);
                     window?.OnMouseWheel(e.wheel.x, e.wheel.y);
                     break;
+                case SDL_EventType.SDL_KEYDOWN:
+                    window = SDLWindowManager.GetWindowFromId(e.key.windowID);
+                    window?.OnKeyDown(e.key.keysym);
+                    break;
+                case SDL_EventType.SDL_KEYUP:
+                    window = SDLWindowManager.GetWindowFromId(e.key.windowID);
+                    window?.OnKeyUp(e.key.keysym);
+                    break;
                 default:
                     if (e.type == (SDL_EventType)SDLWindowManager.USER_EVENT)
                     {
@@ -144,7 +152,7 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
                         window?.OnUserEvent(e.user.code);
                         return;
                     }
-                    Console.WriteLine($"SDLWindow handle event {e.type}");
+                    Console.WriteLine($"SDLWindowManager handle event {e.type}");
                     break;
             }
         }

@@ -238,6 +238,10 @@ namespace Epsitec.Common.Widgets.Platform.SDLWrapper
 
         public virtual void OnMouseButtonUp(int x, int y, int button) { }
 
+        public virtual void OnKeyDown(SDL_Keysym keysym) { }
+
+        public virtual void OnKeyUp(SDL_Keysym keysym) { }
+
         public virtual void OnMouseMove(int x, int y) { }
 
         public virtual void OnMouseWheel(int wheelX, int wheelY) { }

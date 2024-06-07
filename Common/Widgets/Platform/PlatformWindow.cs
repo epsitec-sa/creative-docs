@@ -4,6 +4,7 @@
 using System;
 using Epsitec.Common.Drawing;
 using SDL2;
+using static SDL2.SDL;
 
 namespace Epsitec.Common.Widgets.Platform
 {
@@ -116,6 +117,25 @@ namespace Epsitec.Common.Widgets.Platform
                     wheelY
                 )
             );
+        }
+
+        public override void OnKeyUp(SDL.SDL_Keysym keysym)
+        {
+            KeyCode keycode = KeyboardConverter.ConvertKeycodeFromSDL(keysym.sym);
+            ModifierKeys modifiers = KeyboardConverter.ConvertModifiersFromSDL(keysym.mod);
+            Message msg = Message.FromKeyEvent(MessageType.KeyUp, keycode, modifiers);
+            this.DispatchMessage(msg);
+        }
+
+        public override void OnKeyDown(SDL.SDL_Keysym keysym)
+        {
+            KeyCode keycode = KeyboardConverter.ConvertKeycodeFromSDL(keysym.sym);
+            ModifierKeys modifiers = KeyboardConverter.ConvertModifiersFromSDL(keysym.mod);
+            Message msg = Message.FromKeyEvent(MessageType.KeyDown, keycode, modifiers);
+            this.DispatchMessage(msg);
+            // For some reason, there are two types of key press events
+            msg = Message.FromKeyEvent(MessageType.KeyPress, keycode, modifiers);
+            this.DispatchMessage(msg);
         }
 
         protected override void OnResize(int sx, int sy)
