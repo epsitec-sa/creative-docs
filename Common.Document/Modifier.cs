@@ -932,20 +932,7 @@ namespace Epsitec.Common.Document
 
                 return this.totalSelected;
             }
-            set
-            {
-                int oldValue = this.TotalSelected;
-                int newValue = value;
-
-                if (oldValue != newValue)
-                {
-                    this.totalSelected = newValue;
-
-                    this.OnTotalSelectedChanged(
-                        new DependencyPropertyChangedEventArgs("TotalSelected", oldValue, newValue)
-                    );
-                }
-            }
+            private set { this.totalSelected = value; }
         }
 
         public int TotalHide
@@ -991,16 +978,6 @@ namespace Epsitec.Common.Document
                 }
             }
         }
-
-        protected virtual void OnTotalSelectedChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (this.TotalSelectedChanged != null)
-            {
-                this.TotalSelectedChanged(this, e);
-            }
-        }
-
-        public event EventHandler<DependencyPropertyChangedEventArgs> TotalSelectedChanged;
 
         #endregion
 
@@ -1456,6 +1433,33 @@ namespace Epsitec.Common.Document
                 return;
 
             this.DeselectAll();
+        }
+
+        public void SelectObject(Objects.Abstract obj, bool edit = false)
+        {
+            if (!obj.IsSelected)
+            {
+                this.TotalSelected++;
+                obj.Select(true, edit);
+            }
+        }
+
+        public void SelectObjectRect(Objects.Abstract obj, Rectangle rect)
+        {
+            if (!obj.IsSelected)
+            {
+                this.TotalSelected++;
+            }
+            obj.Select(rect);
+        }
+
+        public void DeselectObject(Objects.Abstract obj)
+        {
+            if (obj.IsSelected)
+            {
+                this.TotalSelected--;
+                obj.Deselect();
+            }
         }
 
         public void DeselectAll()

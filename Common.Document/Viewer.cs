@@ -1052,8 +1052,7 @@ namespace Epsitec.Common.Document
                             if (this.drawingContext.IsShift)
                             {
                                 this.document.Modifier.UpdateCounters();
-                                obj.Deselect();
-                                this.document.Modifier.TotalSelected--;
+                                this.document.Modifier.DeselectObject(obj);
                                 this.document.Modifier.FlushMoveAfterDuplicate();
                             }
                             else
@@ -1180,8 +1179,7 @@ namespace Epsitec.Common.Document
                                 else
                                 {
                                     this.document.Modifier.UpdateCounters();
-                                    this.moveObject.Deselect();
-                                    this.document.Modifier.TotalSelected--;
+                                    this.document.Modifier.DeselectObject(this.moveObject);
 
                                     this.selector.FixStarting(this.moveStart);
                                 }
@@ -2666,8 +2664,7 @@ namespace Epsitec.Common.Document
                         {
                             if (obj.IsSelected)
                             {
-                                obj.Deselect();
-                                this.document.Modifier.TotalSelected--;
+                                this.document.Modifier.DeselectObject(obj);
                             }
                         }
                     }
@@ -2680,8 +2677,7 @@ namespace Epsitec.Common.Document
                     {
                         if (!obj.IsSelected || obj.IsEdited != edit)
                         {
-                            obj.Select(true, edit);
-                            this.document.Modifier.TotalSelected++;
+                            this.document.Modifier.SelectObject(obj, edit: edit);
                         }
                     }
                 }
@@ -2694,8 +2690,7 @@ namespace Epsitec.Common.Document
                     {
                         if (!obj.IsSelected || obj.IsEdited != edit)
                         {
-                            obj.Select(true, edit);
-                            this.document.Modifier.TotalSelected++;
+                            this.document.Modifier.SelectObject(obj, edit: edit);
                         }
                     }
                     else
@@ -2704,8 +2699,7 @@ namespace Epsitec.Common.Document
                         {
                             if (obj.IsSelected)
                             {
-                                obj.Deselect();
-                                this.document.Modifier.TotalSelected--;
+                                this.document.Modifier.DeselectObject(obj);
                             }
                         }
                     }
@@ -2726,9 +2720,8 @@ namespace Epsitec.Common.Document
                 {
                     if (!obj.IsSelected)
                     {
-                        this.document.Modifier.TotalSelected++;
+                        this.document.Modifier.SelectObjectRect(obj, rect);
                     }
-                    obj.Select(rect);
                 }
                 else
                 {
@@ -2736,8 +2729,7 @@ namespace Epsitec.Common.Document
                     {
                         if (obj.IsSelected)
                         {
-                            obj.Deselect();
-                            this.document.Modifier.TotalSelected--;
+                            this.document.Modifier.DeselectObject(obj);
                         }
                     }
                 }
@@ -3259,23 +3251,6 @@ namespace Epsitec.Common.Document
         #region ContextMenu
         protected void ContextMenu(Point mouse, bool globalMenu)
         {
-            // bl-net8-cross important
-            // Steps to reproduce:
-            // - open a context
-            // - draw a rectangle
-            // - open a context menu on the rectangle
-            // -> the menu does not appear
-            // Investigation:
-            // Upon recreating the menu, inside MenuAddItem, we have `cs.Enable == false`
-            // nothing is added to the context menu, hence it shows up empty
-            // Now, why is the CommandState disabled ???
-            //
-            // It seems that their is an issue with the current object selection
-            // Eventhough the object looks selected (and we can interact through some tools with it),
-            // some tools do not work (the ones from the top tool bar and context menus)
-
-
-
             //	Construit le menu contextuel.
             this.ClearHilite();
 

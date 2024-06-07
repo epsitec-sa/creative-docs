@@ -1,5 +1,5 @@
-using Epsitec.Common.Support;
 using System.Runtime.Serialization;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Document
 {
@@ -331,11 +331,16 @@ namespace Epsitec.Common.Document
                 else
                 {
                     Objects.Abstract obj = operation.Object as Objects.Abstract;
-                    if (obj.IsSelected)
+                    if (obj.IsSelected && !document.Modifier.IsDirtyCounters)
                     {
-                        if (!document.Modifier.IsDirtyCounters)
+                        switch (incSelect)
                         {
-                            document.Modifier.TotalSelected += incSelect;
+                            case 1:
+                                document.Modifier.SelectObject(obj);
+                                break;
+                            case -1:
+                                document.Modifier.DeselectObject(obj);
+                                break;
                         }
                     }
                     document.Notifier.NotifyArea(obj.BoundingBox);
