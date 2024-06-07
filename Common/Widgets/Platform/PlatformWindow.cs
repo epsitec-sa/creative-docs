@@ -295,19 +295,14 @@ namespace Epsitec.Common.Widgets.Platform
             return new Point(x, this.Height - y);
         }
 
-        public Point ScreenPointToWindowPoint(Point screenPoint)
-        {
-            // See comment in WindowPointToScreenPoint about the coordinate system used
-            return new Point(
-                screenPoint.X - this.WindowX,
-                this.WindowY + this.Height - screenPoint.Y
-            );
+        public Point ToSDLScreenPoint(Point windowPoint) {
+            return new Point(windowPoint.X, this.ScreenInfo windowPoint.Y);
         }
 
-        public Point WindowPointToScreenPoint(Point windowPoint)
+        public Point FromSDLScreenPoint(Point windowPoint)
         {
             /*
-            The coordinate system for the screen is the same as the one used by SDL:
+            The coordinate system for the screen flipped on the y-axis compared to SDL:
 
                ───────────────────────────►x
               ┌────────────────────────────┐
@@ -319,23 +314,18 @@ namespace Epsitec.Common.Widgets.Platform
             ▼ │                            │
             y └────────────────────────────┘
 
-            The coordinate system used by Creativedocs has the y-axis flipped:
-
             y ┌────────────────────────────┐
             ▲ │                            │
             │ │                            │
-            │ │       Creativedocs         │
+            │ │    Screen (Creativedocs)   │
             │ │                            │
             │ │                            │
             │ │                            │
               └────────────────────────────┘
                ───────────────────────────►x
             */
-            return new Point(
-                this.WindowX + windowPoint.X,
-                this.WindowY + this.Height - windowPoint.Y
-            );
         }
+
         #endregion
 
         #region old WinForms compatibility
@@ -379,6 +369,12 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
         }
+
+        public ScreenInfo ScreenInfo
+        {
+            get { return new ScreenInfo(this.DisplayIndex); }
+        }
+
 
         internal bool PreventAutoClose
         {
@@ -623,7 +619,8 @@ namespace Epsitec.Common.Widgets.Platform
                     return;
 
                 case Animation.RollDown:
-                    b1 = new Drawing.Rectangle(bounds.Left, bounds.Top - 1, bounds.Width, 1);
+                    //b1 = new Drawing.Rectangle(bounds.Left, bounds.Top - 1, bounds.Width, 1);
+                    b1 = new Drawing.Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 1);
                     b2 = bounds;
                     o1 = new Drawing.Point(0, 1 - bounds.Height);
                     o2 = new Drawing.Point(0, 0);

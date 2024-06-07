@@ -772,11 +772,6 @@ namespace Epsitec.Common.Widgets
             }
         }
 
-        public ScreenInfo ScreenInfo
-        {
-            get { return new ScreenInfo(this.PlatformWindow.DisplayIndex); }
-        }
-
         public void CenterOnScreen()
         {
             this.PlatformWindow.CenterOnScreen();
@@ -2114,12 +2109,12 @@ namespace Epsitec.Common.Widgets
 
         public Drawing.Point WindowPointToScreenPoint(Drawing.Point point)
         {
-            return this.PlatformWindow.WindowPointToScreenPoint(point);
+            return point + this.PlatformWindow.WindowLocation;
         }
 
         public Drawing.Point ScreenPointToWindowPoint(Drawing.Point point)
         {
-            return this.PlatformWindow.ScreenPointToWindowPoint(point);
+            return point - this.PlatformWindow.WindowLocation;
         }
 
         protected void HandleTimeElapsed(object sender)
