@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
@@ -82,12 +80,6 @@ namespace Epsitec.Common.Widgets
             get { return this.resourceManagerPool; }
         }
 
-        public static bool DisableAsyncCallbackExecution
-        {
-            get { return Application.disableAsyncCallbackExecution; }
-            set { Application.disableAsyncCallbackExecution = value; }
-        }
-
         public abstract string ShortWindowTitle { get; }
 
         public abstract string ApplicationIdentifier { get; }
@@ -95,16 +87,6 @@ namespace Epsitec.Common.Widgets
         public ApplicationStartStatus ApplicationStartStatus
         {
             get { return this.applicationStartStatus; }
-        }
-
-        public static bool IsExecutingAsyncCallbacks
-        {
-            get { return Application.executingAsyncCallbacks; }
-        }
-
-        public static bool HasPendingAsyncCallbacks
-        {
-            get { return Application.pendingCallbacks.Count > 0; }
         }
 
         public static void SetWaitCursor()
@@ -179,164 +161,6 @@ namespace Epsitec.Common.Widgets
             window.PreventAutoQuit = false;
         }
 
-        public static void QueueTasklets(string name, params TaskletJob[] jobs)
-        {
-            var tasklet = Tasklet.QueueBatch(name, jobs);
-
-            if (tasklet.ContainsPendingJobs)
-            {
-                Application.QueueAsyncCallback(tasklet.ExecuteAllJobs);
-            }
-        }
-
-        public static bool HasQueuedAsyncCallback(Support.SimpleCallback callback)
-        {
-            lock (Application.queueExclusion)
-            {
-                if (
-                    (Application.pendingCallbacks.Contains(callback))
-                    || (Application.runningCallbacks.Contains(callback))
-                )
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public static void RemoveQueuedAsyncCallback(Support.SimpleCallback callback)
-        {
-            lock (Application.queueExclusion)
-            {
-                if (Application.pendingCallbacks.Contains(callback))
-                {
-                    int n = Application.pendingCallbacks.Count;
-
-                    for (int i = 0; i < n; i++)
-                    {
-                        Support.SimpleCallback item = Application.pendingCallbacks.Dequeue();
-
-                        if (item != callback)
-                        {
-                            Application.pendingCallbacks.Enqueue(item);
-                        }
-                    }
-                }
-                if (Application.runningCallbacks.Contains(callback))
-                {
-                    int n = Application.runningCallbacks.Count;
-
-                    for (int i = 0; i < n; i++)
-                    {
-                        Support.SimpleCallback item = Application.runningCallbacks.Dequeue();
-
-                        if (item != callback)
-                        {
-                            Application.runningCallbacks.Enqueue(item);
-                        }
-                    }
-                }
-            }
-        }
-
-        public static void QueueAsyncCallback(Support.SimpleCallback callback)
-        {
-            lock (Application.queueExclusion)
-            {
-                //	Reorder the queue if the callback is already in the queue; otherwise
-                //	add it to the pending queue and make sure the main thread executes it
-                //	soon.
-
-                if (Application.pendingCallbacks.Count > 50)
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "Probable performance issue: more than 50 pending callbacks queued !"
-                    );
-                }
-
-                if (Application.pendingCallbacks.Contains(callback))
-                {
-                    Application.pendingCallbacks.Requeue(callback);
-                }
-                else if (Application.runningCallbacks.Contains(callback))
-                {
-                    Application.runningCallbacks.Requeue(callback);
-                }
-                else
-                {
-                    Application.pendingCallbacks.Enqueue(callback);
-
-                    Platform.PlatformWindow.SendAwakeEvent();
-                }
-            }
-        }
-
-        public static void ExecuteAsyncCallbacks()
-        {
-            if (
-                (Application.executingAsyncCallbacks) || (Application.disableAsyncCallbackExecution)
-            )
-            {
-                return;
-            }
-
-            if (Application.pendingCallbacks.Count > 0)
-            {
-                try
-                {
-                    Application.executingAsyncCallbacks = true;
-
-                    lock (Application.queueExclusion)
-                    {
-                        Application.runningCallbacks = Application.pendingCallbacks;
-                        Application.pendingCallbacks = new Queue<Support.SimpleCallback>();
-                    }
-
-                    //-					System.Diagnostics.Trace.WriteLine ("Executing async callbacks, started.");
-
-                    while (Application.runningCallbacks.Count > 0)
-                    {
-                        Support.SimpleCallback callback = Application.runningCallbacks.Dequeue();
-                        callback();
-                    }
-
-                    //-					System.Diagnostics.Trace.WriteLine ("Executing async callbacks, done.");
-                }
-                finally
-                {
-                    if (Application.runningCallbacks.Count > 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine(
-                            "Running callbacks not executed: " + Application.runningCallbacks.Count,
-                            "ExecuteAsyncCallbacks"
-                        );
-
-                        lock (Application.queueExclusion)
-                        {
-                            Queue<Support.SimpleCallback> queue =
-                                new Queue<Support.SimpleCallback>();
-
-                            while (Application.runningCallbacks.Count > 0)
-                            {
-                                queue.Enqueue(Application.runningCallbacks.Dequeue());
-                            }
-                            while (Application.pendingCallbacks.Count > 0)
-                            {
-                                queue.Enqueue(Application.pendingCallbacks.Dequeue());
-                            }
-
-                            Application.pendingCallbacks = queue;
-                        }
-                    }
-
-                    System.Diagnostics.Debug.Assert(Application.runningCallbacks.Count == 0);
-
-                    Application.executingAsyncCallbacks = false;
-                }
-            }
-        }
-
         public static void Invoke(Support.SimpleCallback callback)
         {
             callback.DynamicInvoke();
@@ -358,14 +182,6 @@ namespace Epsitec.Common.Widgets
                 typeof(Application),
                 typeof(Application)
             );
-
-        private static readonly object queueExclusion = new object();
-        private static Queue<Support.SimpleCallback> pendingCallbacks =
-            new Queue<Support.SimpleCallback>();
-        private static Queue<Support.SimpleCallback> runningCallbacks =
-            new Queue<Support.SimpleCallback>();
-        private static bool executingAsyncCallbacks;
-        private static bool disableAsyncCallbackExecution;
 
         private readonly CommandDispatcher commandDispatcher;
         private readonly CommandContext commandContext;

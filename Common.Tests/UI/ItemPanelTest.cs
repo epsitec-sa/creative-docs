@@ -1,6 +1,7 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -8,7 +9,6 @@ using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.UI
 {
@@ -55,8 +55,6 @@ namespace Epsitec.Common.Tests.UI
 
             Assert.AreEqual(new Size(100 - 17 - 2 * 1, 80 - 26 - 17 - 2 * 1), panel.Aperture.Size);
 
-            Application.ExecuteAsyncCallbacks();
-
             Assert.AreEqual(2, panel.GetItemViewCount());
             Assert.AreEqual(new Size(200, 20 * 2), panel.GetContentsSize());
             Assert.IsNotNull(panel.GetItemView(0).Widget);
@@ -75,7 +73,6 @@ namespace Epsitec.Common.Tests.UI
             Assert.AreEqual(3, (panel.GetItemView(0).Group).ChildPanel.GetItemViewCount());
 
             Assert.AreEqual(new Size(200, 20 * 2), panel.GetContentsSize());
-            Application.ExecuteAsyncCallbacks();
             Assert.AreEqual(new Size(200, 20 + 20 * 3 + 20), panel.GetContentsSize());
             Assert.AreEqual(new Rectangle(0, 20, 200, 20 + 20 * 3), panel.GetItemView(0).Bounds);
             Assert.AreEqual(new Rectangle(0, 0, 200, 20), panel.GetItemView(1).Bounds);
@@ -115,7 +112,6 @@ namespace Epsitec.Common.Tests.UI
             Assert.AreEqual(3, (panel.GetItemView(0).Group.ChildPanel.GetItemViewCount()));
 
             Assert.AreEqual(new Size(200, 20 + 20 * 3 + 20), panel.GetContentsSize());
-            Application.ExecuteAsyncCallbacks();
             Assert.AreEqual(new Size(200, 20 * 2), panel.GetContentsSize());
 
             //	Expanded subpanel
@@ -129,7 +125,6 @@ namespace Epsitec.Common.Tests.UI
             Assert.AreEqual(new Size(200, 20 + 80), panel.GetContentsSize());
 
             panel.ExpandItemView(panel.GetItemView(1), true);
-            Application.ExecuteAsyncCallbacks();
 
             Assert.AreEqual(new Rectangle(0, 0, 200, 20 + 20 * 3), panel.GetItemView(1).Bounds);
             Assert.AreEqual(
@@ -180,8 +175,6 @@ namespace Epsitec.Common.Tests.UI
 
             Assert.AreEqual(new Size(99 - 17 - 2 * 1, 105 - 26 - 17 - 2 * 1), panel.Aperture.Size);
 
-            Application.ExecuteAsyncCallbacks();
-
             Assert.AreEqual(2, panel.GetItemViewCount());
             Assert.AreEqual(new Size(300, 20 * 2), panel.GetContentsSize());
             Assert.IsNotNull(panel.GetItemView(0).Widget);
@@ -192,7 +185,6 @@ namespace Epsitec.Common.Tests.UI
             Assert.AreEqual(3, (panel.GetItemView(1).Item as CollectionViewGroup).ItemCount);
 
             panel.ExpandItemView(panel.GetItemView(0), true);
-            Application.ExecuteAsyncCallbacks();
             panel.Show(panel.GetItemView(0));
 
             ItemPanelGroup group = panel.GetItemView(0).Group;
@@ -547,8 +539,6 @@ namespace Epsitec.Common.Tests.UI
             panel.Layout = ItemPanelLayout.VerticalList;
             panel.ItemSelectionMode = ItemPanelSelectionMode.None;
 
-            Application.ExecuteAsyncCallbacks();
-
             panel.SelectItemView(panel.GetItemView(0));
             Assert.AreEqual(0, panel.GetSelectedItemViews().Count);
             Assert.IsFalse(panel.GetItemView(0).IsSelected);
@@ -619,8 +609,6 @@ namespace Epsitec.Common.Tests.UI
             panel.Items = ItemPanelTest.GetStringItems();
             panel.Layout = ItemPanelLayout.VerticalList;
 
-            Application.ExecuteAsyncCallbacks();
-
             Assert.AreEqual(7, panel.GetItemViewCount());
             Assert.AreEqual("Monday", panel.GetItemView(0).Item);
             Assert.AreEqual("Sunday", panel.GetItemView(6).Item);
@@ -667,7 +655,6 @@ namespace Epsitec.Common.Tests.UI
             items.Add("--any--");
 
             panel.Items.Refresh();
-            Application.ExecuteAsyncCallbacks();
 
             Assert.AreEqual(8, panel.GetItemViewCount());
             Assert.AreEqual(new Size(80, 20 * 8), panel.GetContentsSize());

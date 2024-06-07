@@ -1153,7 +1153,7 @@ namespace Epsitec.Common.UI
             {
                 if (root.manualTrackingCounter == 0)
                 {
-                    Widgets.Application.QueueAsyncCallback(root.ExecuteAsyncRefreshOperations);
+                    root.ExecuteAsyncRefreshOperations();
                 }
                 else
                 {

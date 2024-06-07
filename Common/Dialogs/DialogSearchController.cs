@@ -220,8 +220,6 @@ namespace Epsitec.Common.Dialogs
             //	Make sure that the placeholders had the opportunity to create their
             //	user interface, or else we won't set the focus on the proper widget :
 
-            Application.ExecuteAsyncCallbacks();
-
             if ((path == null) || (path.IsEmpty))
             {
                 this.dialogPanel.SetFocusOnTabWidget();
@@ -555,7 +553,7 @@ namespace Epsitec.Common.Dialogs
 
             if (this.activeSearchContext != null)
             {
-                Widgets.Application.QueueAsyncCallback(this.AsyncResolveSearch);
+                this.AsyncResolveSearch();
             }
         }
 

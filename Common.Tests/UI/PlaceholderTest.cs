@@ -277,8 +277,6 @@ namespace Epsitec.Common.Tests.UI
 
             placeholder.SetBinding(AbstractPlaceholder.ValueProperty, binding);
 
-            Application.ExecuteAsyncCallbacks();
-
             Assert.AreEqual("Pierre", placeholder.Value);
             Assert.AreEqual(2, placeholder.Children.Count);
             Assert.AreEqual("Prénom", ((Widget)placeholder.Children[0]).Text);
@@ -327,8 +325,6 @@ namespace Epsitec.Common.Tests.UI
             binding = new Binding(BindingMode.TwoWay, "Boss.FirstName");
             placeholder.SetBinding(AbstractPlaceholder.ValueProperty, binding);
 
-            Application.ExecuteAsyncCallbacks();
-
             Assert.AreEqual("Cathi", placeholder.Value);
             Assert.AreEqual(2, placeholder.Children.Count);
             Assert.AreEqual("Prénom", ((Widget)placeholder.Children[0]).Text);
@@ -339,8 +335,6 @@ namespace Epsitec.Common.Tests.UI
 
             binding = new Binding(BindingMode.TwoWay, "Employees.LastName");
             placeholder.SetBinding(AbstractPlaceholder.ValueProperty, binding);
-
-            Application.ExecuteAsyncCallbacks();
 
             Assert.AreEqual("Nicoud", placeholder.Value);
             Assert.AreEqual(2, placeholder.Children.Count);

@@ -323,7 +323,7 @@ namespace Epsitec.Common.Widgets
         {
             if (this.autoDisposeOnCleanup)
             {
-                Application.QueueAsyncCallback(this.Dispose);
+                this.Dispose();
             }
             else
             {
