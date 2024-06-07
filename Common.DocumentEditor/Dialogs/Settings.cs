@@ -420,6 +420,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             }
 
             this.window.Show();
+            this.window.MakeActive();
         }
 
         public override void Save()

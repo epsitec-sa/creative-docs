@@ -4,7 +4,6 @@
 using System;
 using Epsitec.Common.Drawing;
 using SDL2;
-using static SDL2.SDL;
 
 namespace Epsitec.Common.Widgets.Platform
 {

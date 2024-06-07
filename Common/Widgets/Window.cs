@@ -263,10 +263,10 @@ namespace Epsitec.Common.Widgets
 
         public virtual void Hide()
         {
-            if (this.IsVisible)
+            if (this.IsVisible && !this.IsClosed)
             {
                 this.OnAboutToHideWindow();
-                this.PlatformWindow.Hide();
+                this.platformWindow.Hide();
             }
         }
 
