@@ -41,6 +41,10 @@ namespace Epsitec.Common.Document
 
         public void ProcessMiniBarCommands(List<string> commands)
         {
+            if (commands == null)
+            {
+                return;
+            }
             bool beginOfLine = true;
             Widget line = null;
             foreach (string cmd in commands)
