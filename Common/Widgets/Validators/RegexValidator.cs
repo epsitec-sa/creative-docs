@@ -75,8 +75,8 @@ namespace Epsitec.Common.Widgets.Validators
         protected override void ValidateText(string text)
         {
             if (
-                ((this.acceptEmpty) && (text.Length == 0))
-                || ((text.Length > 0)) && (this.regex.IsMatch(text))
+                (this.acceptEmpty && text.Length == 0)
+                || (text.Length > 0 && this.regex != null && this.regex.IsMatch(text))
             )
             {
                 this.SetState(ValidationState.Ok);
