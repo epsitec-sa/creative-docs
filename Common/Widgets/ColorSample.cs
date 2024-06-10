@@ -286,10 +286,15 @@ namespace Epsitec.Common.Widgets
                         break;
                 }
 
-                if (
-                    this.DragSourceEnable == false
-                    || !this.dragBehavior.ProcessMessage(message, pos)
-                )
+                if (this.DragSourceEnable)
+                {
+                    // bl-net8-cross maybedelete
+                    // Drag and drop behavior to drag a color from one sample to the other
+                    // This feature does not work currently and is not critical to have
+
+                    // this.dragBehavior.ProcessMessage(message, pos);
+                }
+                if (!message.Handled)
                 {
                     base.ProcessMessage(message, pos);
                 }
