@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document
 
         private Point WindowLocationOffset
         {
-            get { return new Point(-this.WindowSize.Width / 2, -this.WindowSize.Height); }
+            get { return new Point(-this.WindowSize.Width / 2, 0); }
         }
 
         public bool IsAway(Point mouse)

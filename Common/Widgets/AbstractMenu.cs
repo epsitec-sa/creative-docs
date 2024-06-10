@@ -432,7 +432,6 @@ namespace Epsitec.Common.Widgets
                         );
 
                         location.X -= this.menu.shadow.Left;
-                        location.Y -= size.Height - this.menu.shadow.Top - 1;
                     }
                     else
                     {
@@ -446,8 +445,8 @@ namespace Epsitec.Common.Widgets
                         );
 
                         location.X -= size.Width + this.menu.shadow.Left;
-                        location.Y -= size.Height - this.menu.shadow.Top - 1;
                     }
+                    location.Y -= size.Height - this.menu.shadow.Top - 1;
                 }
 
                 //	Détermine s'il faut décaler verticalement le menu pour qu'il tienne

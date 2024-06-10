@@ -295,11 +295,12 @@ namespace Epsitec.Common.Widgets.Platform
             return new Point(x, this.Height - y);
         }
 
-        public Point ToSDLScreenPoint(Point windowPoint) {
-            return new Point(windowPoint.X, this.ScreenInfo windowPoint.Y);
+        public Point ToSDLScreenPoint(Point point)
+        {
+            return new Point(point.X, this.ScreenInfo.WorkingArea.Height - point.Y);
         }
 
-        public Point FromSDLScreenPoint(Point windowPoint)
+        public Point FromSDLScreenPoint(Point point)
         {
             /*
             The coordinate system for the screen flipped on the y-axis compared to SDL:
@@ -324,6 +325,7 @@ namespace Epsitec.Common.Widgets.Platform
               └────────────────────────────┘
                ───────────────────────────►x
             */
+            return new Point(point.X, this.ScreenInfo.WorkingArea.Height - point.Y);
         }
 
         #endregion
@@ -374,7 +376,6 @@ namespace Epsitec.Common.Widgets.Platform
         {
             get { return new ScreenInfo(this.DisplayIndex); }
         }
-
 
         internal bool PreventAutoClose
         {
@@ -494,10 +495,18 @@ namespace Epsitec.Common.Widgets.Platform
                 }
             }
         }
+
         internal Drawing.Point WindowLocation
         {
-            get { return new Point(this.WindowX, this.WindowY); }
-            set { this.SetPosition((int)value.X, (int)value.Y); }
+            get
+            {
+                return this.FromSDLScreenPoint(new Point(this.WindowX, this.WindowY + this.Height));
+            }
+            set
+            {
+                Point location = this.ToSDLScreenPoint(value + new Point(0, this.Height));
+                this.SetPosition((int)location.X, (int)location.Y);
+            }
         }
 
         internal Drawing.Size WindowSize

@@ -3734,17 +3734,18 @@ namespace Epsitec.Common.Document
             this.contextMenu.Host = this;
             Menus.ContextMenuItem.MenuCreate(this.contextMenu, list);
             this.contextMenu.AdjustSize();
-            mouse = this.InternalToClient(mouse);
-            mouse = this.MapClientToScreen(mouse);
+            Point menuPosition =
+                this.MapClientToScreen(this.InternalToClient(mouse))
+                - new Point(0, this.contextMenu.PreferredHeight);
 
-            ScreenInfo si = ScreenInfo.Find(mouse);
-            Drawing.Rectangle wa = si.WorkingArea;
-            if (mouse.Y - this.contextMenu.ActualHeight < wa.Bottom)
+            ScreenInfo si = ScreenInfo.Find(menuPosition);
+            Rectangle wa = si.WorkingArea;
+            if (menuPosition.Y < wa.Bottom)
             {
-                mouse.Y = wa.Bottom + this.contextMenu.ActualHeight;
+                menuPosition.Y = wa.Bottom + this.contextMenu.PreferredHeight;
             }
 
-            this.contextMenu.ShowAsContextMenu(this.Window, mouse);
+            this.contextMenu.ShowAsContextMenu(this.Window, menuPosition);
         }
 
         public void ExecuteObjectCommand(string cmd)
