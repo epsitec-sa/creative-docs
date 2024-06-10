@@ -28,7 +28,6 @@ namespace Epsitec.Common.Widgets
             this.window.WindowBounds = new Drawing.Rectangle(0, 0, 8, 8);
             this.window.Root.SyncPaint = true;
 
-            // /!\ DATA RACE Timer.TimeElapsed can be called anytime, we need to make sure it doesn't corrupt our state
             this.timer = new Timer();
             this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
         }
@@ -36,38 +35,14 @@ namespace Epsitec.Common.Widgets
         #region public safe API
         public ToolTipBehaviour Behaviour
         {
-            get
-            {
-                lock (this)
-                {
-                    return this.behaviour;
-                }
-            }
-            set
-            {
-                lock (this)
-                {
-                    this.behaviour = value;
-                }
-            }
+            get { return this.behaviour; }
+            set { this.behaviour = value; }
         }
 
         public Drawing.Point InitialLocation
         {
-            get
-            {
-                lock (this)
-                {
-                    return this.initialPos;
-                }
-            }
-            set
-            {
-                lock (this)
-                {
-                    this.initialPos = value;
-                }
-            }
+            get { return this.initialPos; }
+            set { this.initialPos = value; }
         }
 
         public void CloseToolTip()
@@ -77,303 +52,166 @@ namespace Epsitec.Common.Widgets
 
         public void HideToolTip()
         {
-            lock (this)
+            this.timer.Stop();
+
+            if (this.IsDisplayed)
             {
-                this.UnsafeHideToolTip();
+                this.window.Hide();
+                this.lastChangeTime = System.DateTime.Now;
             }
         }
 
         public void SetToolTip(Widget widget, string caption)
         {
-            lock (this)
-            {
-                this.SetToolTipText(widget, caption);
-                this.DefineToolTip(widget, caption);
-            }
+            this.SetToolTipText(widget, caption);
+            this.DefineToolTip(widget, caption);
         }
 
         public void SetToolTip(Widget widget, FormattedText caption)
         {
-            lock (this)
-            {
-                this.SetToolTipText(widget, caption.ToString());
-                this.DefineToolTip(widget, caption);
-            }
+            this.SetToolTipText(widget, caption.ToString());
+            this.DefineToolTip(widget, caption);
         }
 
         public void SetToolTip(Widget widget, Widget caption)
         {
-            lock (this)
-            {
-                this.SetToolTipWidget(widget, caption);
-                this.DefineToolTip(widget, caption);
-            }
+            this.SetToolTipWidget(widget, caption);
+            this.DefineToolTip(widget, caption);
         }
 
         public void SetToolTip(Widget widget, Caption caption)
         {
-            lock (this)
-            {
-                this.SetToolTipCaption(widget, caption);
-                this.DefineToolTip(widget, caption);
-            }
+            this.SetToolTipCaption(widget, caption);
+            this.DefineToolTip(widget, caption);
         }
 
         public void ClearToolTip(Widget widget)
         {
-            lock (this)
-            {
-                this.SetToolTipText(widget, null);
-                this.UnregisterWidget(widget);
-            }
+            this.SetToolTipText(widget, null);
+            this.UnregisterWidget(widget);
         }
 
         public void SetToolTipColor(DependencyObject obj, Color value)
         {
-            lock (this)
-            {
-                obj.SetValue(ToolTip.ToolTipColorProperty, value);
-            }
+            obj.SetValue(ToolTip.ToolTipColorProperty, value);
         }
 
         public void ClearToolTipColor(DependencyObject obj)
         {
-            lock (this)
-            {
-                obj.ClearValue(ToolTip.ToolTipColorProperty);
-            }
+            obj.ClearValue(ToolTip.ToolTipColorProperty);
         }
 
-        /*
-        public static bool HasToolTipText(DependencyObject obj)
-        {
-            return obj.ContainsValue(ToolTip.ToolTipTextProperty);
-        }
-
-        public static Widget GetToolTipWidget(DependencyObject obj)
-        {
-            return obj.GetValue(ToolTip.ToolTipWidgetProperty) as Widget;
-        }
-
-        public static bool HasToolTipWidget(DependencyObject obj)
-        {
-            return obj.ContainsValue(ToolTip.ToolTipWidgetProperty);
-        }
-
-        public static Caption GetToolTipCaption(DependencyObject obj)
-        {
-            return obj.GetValue(ToolTip.ToolTipCaptionProperty) as Caption;
-        }
-
-        public static bool HasToolTipCaption(DependencyObject obj)
-        {
-            return obj.ContainsValue(ToolTip.ToolTipCaptionProperty);
-        }
-
-        public void ShowToolTipForWidget(Widget widget)
-        {
-            if (ToolTip.HasToolTip(widget))
-            {
-                this.HideToolTip();
-                this.AttachToWidget(widget);
-                this.ShowToolTip();
-            }
-        }
-
-        public void HideToolTipForWidget(Widget widget)
-        {
-            if ((this.widget == widget) && (widget != null))
-            {
-                this.HideToolTip();
-            }
-        }
-
-        public void RegisterDynamicToolTipHost(Widget widget)
-        {
-            Helpers.IToolTipHost host = widget as Helpers.IToolTipHost;
-
-            if (host == null)
-            {
-                throw new System.ArgumentException("Widget does not implement IToolTipHost");
-            }
-
-            this.RegisterWidget(widget);
-        }
-
-        public void UnregisterDynamicToolTipHost(Widget widget)
-        {
-            Helpers.IToolTipHost host = widget as Helpers.IToolTipHost;
-
-            if (host == null)
-            {
-                throw new System.ArgumentException("Widget does not implement IToolTipHost");
-            }
-
-            this.UnregisterWidget(widget);
-        }
-
-        public void UpdateManualToolTip(Drawing.Point mouse, string caption, Color color)
-        {
-            if (this.behaviour == ToolTipBehaviour.Manual)
-            {
-                this.ShowToolTip(mouse, caption, color);
-            }
-        }
-
-        public void UpdateManualToolTip(Drawing.Point mouse, Widget caption)
-        {
-            if (this.behaviour == ToolTipBehaviour.Manual)
-            {
-                this.ShowToolTip(mouse, caption, Color.Empty);
-            }
-        }
-
-        public void RefreshToolTip(Widget widget, Drawing.Point mouse)
-        {
-            if (this.widget == widget)
-            {
-                this.ProcessToolTipHost(this.widget as Helpers.IToolTipHost, mouse);
-
-                if ((!this.IsDisplayed) && (this.hostProvidedCaption != this.refreshedCaption))
-                {
-                    this.refreshedCaption = this.hostProvidedCaption;
-                    this.ShowToolTip();
-                    this.RestartTimer(ToolTip.GetTooltipAutoCloseDelay(widget));
-                }
-            }
-        }
-        */
         #endregion
 
-        #region safe event handlers
+        #region event handlers
         private void HandleTimerTimeElapsed(object sender)
         {
-            lock (this)
+            if (this.IsDisplayed)
             {
-                if (this.IsDisplayed)
+                this.HideToolTip();
+                System.Diagnostics.Debug.Assert(this.IsDisplayed == false);
+            }
+            else
+            {
+                this.ShowToolTip();
+                if (this.widget != null)
                 {
-                    this.UnsafeHideToolTip();
-                    System.Diagnostics.Debug.Assert(this.IsDisplayed == false);
-                }
-                else
-                {
-                    this.ShowToolTip();
-                    if (this.widget != null)
-                    {
-                        this.RestartTimer(this.GetTooltipAutoCloseDelay(this.widget));
-                    }
+                    this.RestartTimer(this.GetTooltipAutoCloseDelay(this.widget));
                 }
             }
         }
 
         private void HandleWidgetEntered(object sender, MessageEventArgs e)
         {
-            lock (this)
+            Widget widget = sender as Widget;
+
+            this.AttachToWidget(widget);
+
+            System.Diagnostics.Debug.Assert(this.widget != null);
+
+            Drawing.Point mouse = this.widget.MapRootToClient(Message.CurrentState.LastPosition);
+
+            if (this.ProcessToolTipHost(this.widget as Helpers.IToolTipHost, mouse))
             {
-                Widget widget = sender as Widget;
+                return;
+            }
 
-                //-			System.Diagnostics.Debug.WriteLine ("HandleWidgetEntered: " + widget.ToString ());
-
-                this.AttachToWidget(widget);
-
-                System.Diagnostics.Debug.Assert(this.widget != null);
-
-                Drawing.Point mouse = this.widget.MapRootToClient(
-                    Message.CurrentState.LastPosition
-                );
-
-                if (this.ProcessToolTipHost(this.widget as Helpers.IToolTipHost, mouse))
-                {
-                    return;
-                }
-
-                if (this.behaviour != ToolTipBehaviour.Manual)
-                {
-                    this.DelayShow();
-                }
+            if (this.behaviour != ToolTipBehaviour.Manual)
+            {
+                this.DelayShow();
             }
         }
 
         private void HandleWidgetExited(object sender, MessageEventArgs e)
         {
-            lock (this)
-            {
-                Widget widget = sender as Widget;
+            Widget widget = sender as Widget;
 
-                if (this.behaviour != ToolTipBehaviour.Manual)
+            if (this.behaviour != ToolTipBehaviour.Manual)
+            {
+                if (this.widget == widget)
                 {
-                    //-				System.Diagnostics.Debug.WriteLine ("HandleWidgetExited: " + widget.ToString ());
-                    if (this.widget == widget)
-                    {
-                        this.UnsafeHideToolTip();
-                        this.DetachFromWidget(widget);
-                    }
+                    this.HideToolTip();
+                    this.DetachFromWidget(widget);
                 }
             }
         }
 
         private void HandleWidgetPreProcessing(object sender, MessageEventArgs e)
         {
-            lock (this)
+            if (e.Message.MessageType != MessageType.MouseMove)
             {
-                if (
-                    (e.Message.MessageType == MessageType.MouseMove)
-                    && (this.ProcessToolTipHost(this.widget as Helpers.IToolTipHost, e.Point))
-                )
-                {
-                    return;
-                }
+                return;
+            }
+            bool done = this.ProcessToolTipHost(this.widget as Helpers.IToolTipHost, e.Point);
+            if (done)
+            {
+                return;
+            }
+            if (!this.IsDisplayed)
+            {
+                return;
+            }
 
-                if ((this.IsDisplayed) && (e.Message.MessageType == MessageType.MouseMove))
-                {
-                    Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen(
-                        this.widget,
-                        e.Point
-                    );
+            Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen(this.widget, e.Point);
 
-                    switch (this.behaviour)
+            switch (this.behaviour)
+            {
+                case ToolTipBehaviour.Normal:
+                    if (Point.Distance(mouse, this.birthPos) > ToolTip.hideDistance)
                     {
-                        case ToolTipBehaviour.Normal:
-                            if (Drawing.Point.Distance(mouse, this.birthPos) > ToolTip.hideDistance)
-                            {
-                                this.UnsafeHideToolTip();
-                                this.RestartTimer(SystemInformation.ToolTipShowDelay);
-                            }
-                            break;
-
-                        case ToolTipBehaviour.FollowMouse:
-                            mouse += ToolTip.offset;
-                            mouse.Y -= this.window.Root.ActualHeight;
-                            this.window.WindowLocation = mouse;
-                            break;
-
-                        case ToolTipBehaviour.Manual:
-                            break;
+                        this.HideToolTip();
+                        this.RestartTimer(SystemInformation.ToolTipShowDelay);
                     }
-                }
+                    break;
+
+                case ToolTipBehaviour.FollowMouse:
+                    mouse += ToolTip.offset;
+                    mouse.Y -= this.window.Root.ActualHeight;
+                    this.window.WindowLocation = mouse;
+                    break;
+
+                case ToolTipBehaviour.Manual:
+                    break;
             }
         }
 
         private void HandleWidgetDisposed(object sender)
         {
-            lock (this)
+            Widget widget = sender as Widget;
+
+            if (this.widget == widget)
             {
-                Widget widget = sender as Widget;
-
-                if (this.widget == widget)
-                {
-                    this.DetachFromWidget(widget);
-                }
-
-                System.Diagnostics.Debug.Assert(this.widget != widget);
-                //-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget.GetVisualSerialId ()));
-
-                if (this.HasToolTip(widget))
-                {
-                    this.SetToolTipText(widget, null);
-                }
-                this.DefineToolTip(widget, null);
+                this.DetachFromWidget(widget);
             }
+
+            System.Diagnostics.Debug.Assert(this.widget != widget);
+            //-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget.GetVisualSerialId ()));
+
+            if (this.HasToolTip(widget))
+            {
+                this.SetToolTipText(widget, null);
+            }
+            this.DefineToolTip(widget, null);
         }
         #endregion
 
@@ -387,17 +225,6 @@ namespace Epsitec.Common.Widgets
                     return false;
                 }
                 return this.window.IsVisible;
-            }
-        }
-
-        private void UnsafeHideToolTip()
-        {
-            this.timer.Stop();
-
-            if (this.IsDisplayed)
-            {
-                this.window.Hide();
-                this.lastChangeTime = System.DateTime.Now;
             }
         }
 
@@ -545,7 +372,7 @@ namespace Epsitec.Common.Widgets
                 }
                 else if (caption == null)
                 {
-                    this.UnsafeHideToolTip();
+                    this.HideToolTip();
                 }
 
                 this.hostProvidedCaption = caption;
@@ -589,9 +416,7 @@ namespace Epsitec.Common.Widgets
                     this.birthPos =
                         (this.behaviour == ToolTipBehaviour.Manual)
                             /**/? this.initialPos
-                            /**/: Message.CurrentState.LastWindow.WindowPointToScreenPoint(
-                                Message.CurrentState.LastPosition
-                            );
+                            : Message.CurrentState.LastScreenPosition;
                 }
                 catch (System.ObjectDisposedException)
                 {
@@ -688,7 +513,7 @@ namespace Epsitec.Common.Widgets
 
             //	Modifie la position du tool-tip pour qu'il ne dépasse pas de l'écran.
 
-            Drawing.Rectangle wa = ScreenInfo.Find(mouse).WorkingArea;
+            Rectangle wa = ScreenInfo.Find(mouse).WorkingArea;
 
             if (mouse.Y < wa.Bottom)
             {
@@ -699,7 +524,7 @@ namespace Epsitec.Common.Widgets
                 mouse.X = wa.Right - tip.PreferredWidth;
             }
 
-            this.window.WindowBounds = new Drawing.Rectangle(mouse, tip.PreferredSize);
+            this.window.WindowBounds = new Rectangle(mouse, tip.PreferredSize);
             this.window.Owner = this.widget.Window;
 
             if (tip.Parent != this.window.Root)
