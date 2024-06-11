@@ -13,10 +13,10 @@ namespace Epsitec.Common.Drawing
             {
                 ImageManager.runningEngines.Add(this);
 
-                if (ImageManager.callbackQueue == null)
-                {
-                    ImageManager.callbackQueue = new CallbackQueue();
-                }
+                //if (ImageManager.callbackQueue == null)
+                //{
+                //    ImageManager.callbackQueue = new CallbackQueue();
+                //}
                 if (ImageManager.imageStore == null)
                 {
                     ImageManager.imageStore = new ImageStore();
