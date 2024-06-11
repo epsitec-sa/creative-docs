@@ -1776,10 +1776,8 @@ namespace Epsitec.Common.Document
                 "uniqueCharacterStyleId"
             );
 
-            //byte[] toto = new byte[0];
             if (this.type == DocumentType.Pictogram)
             {
-                //System.Console.WriteLine(toto[1]);
                 Assert(this.size == other.size, "size");
                 Assert(this.hotSpot == other.hotSpot, "hotSpot");
             }
@@ -1794,11 +1792,11 @@ namespace Epsitec.Common.Document
                 root.Add(new XElement("Name", this.name));
             }
 
-            //if (this.type == DocumentType.Pictogram)
-            //{
-            //    info.AddValue("Size", this.size);
-            //    info.AddValue("HotSpot", this.hotSpot);
-            //}
+            if (this.type == DocumentType.Pictogram)
+            {
+                root.Add(new XElement("Size", this.size.ToXML()));
+                root.Add(new XElement("HotSpot", this.hotSpot.ToXML()));
+            }
             //else
             //{
             //    info.AddValue("Settings", this.settings);
@@ -1838,6 +1836,15 @@ namespace Epsitec.Common.Document
             XElement root = xmlDocument.Root;
             DocumentType.TryParse(root.Element("Type").Value, out this.type);
             this.name = root.Element("Name")?.Value;
+
+            if (this.type == DocumentType.Pictogram)
+            {
+                this.size = new Size(root.Element("Size"));
+                this.hotSpot = new Point(root.Element("HotSpot"));
+
+                this.textContext = null;
+                this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+            }
 
             this.uniqueObjectId = int.Parse(root.Element("UniqueObjectId").Value);
             this.uniqueAggregateId = int.Parse(root.Element("UniqueAggregateId").Value);
