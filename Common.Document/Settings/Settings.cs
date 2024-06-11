@@ -12,6 +12,8 @@ namespace Epsitec.Common.Document.Settings
         {
             this.document = document;
 
+            // bl-net8-cross refactor
+            // Use a hashtable instead of a list for the settings
             this.settings = new System.Collections.ArrayList();
             this.CreateDefault();
 
@@ -21,6 +23,7 @@ namespace Epsitec.Common.Document.Settings
             this.quickFonts = new System.Collections.ArrayList();
             Settings.DefaultQuickFonts(this.quickFonts);
 
+            this.drawingSettings = new DrawingSettings(document);
             this.printInfo = new PrintInfo(document);
             this.exportPDFInfo = new ExportPDFInfo(document);
             this.exportICOInfo = new ExportICOInfo(document);
@@ -214,6 +217,11 @@ namespace Epsitec.Common.Document.Settings
             if (dialog == null)
                 return "";
             return dialog;
+        }
+
+        public DrawingSettings DrawingSettings
+        {
+            get { return this.drawingSettings; }
         }
 
         public PrintInfo PrintInfo
@@ -491,6 +499,7 @@ namespace Epsitec.Common.Document.Settings
         protected bool globalGuides;
         protected UndoableList guides;
         protected System.Collections.ArrayList quickFonts;
+        protected DrawingSettings drawingSettings;
         protected PrintInfo printInfo;
         protected ExportPDFInfo exportPDFInfo;
         protected ExportICOInfo exportICOInfo;

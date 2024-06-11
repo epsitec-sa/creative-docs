@@ -619,7 +619,7 @@ namespace Epsitec.Common.Document
                         this.modifier.InsertOpletSize();
                         this.size = value;
                         this.SetDirtySerialize(CacheBitmapChanging.All);
-                        this.modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
+                        this.modifier.ActiveViewer?.DrawingContext.ZoomPageAndCenter();
                         this.notifier.NotifyAllChanged();
                         this.modifier.OpletQueueValidateAction();
 
@@ -909,12 +909,12 @@ namespace Epsitec.Common.Document
                     if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
                     {
                         this.Filename = filename;
-                        this.globalSettings.LastFilenameAdd(filename);
+                        this.globalSettings?.LastFilenameAdd(filename);
                         this.ClearDirtySerialize();
                     }
                     if (ext == DocumentFileExtension.CrMod || ext == DocumentFileExtension.IconMod)
                     {
-                        this.globalSettings.LastModelAdd(filename);
+                        this.globalSettings?.LastModelAdd(filename);
                     }
                 }
                 else
@@ -1158,7 +1158,7 @@ namespace Epsitec.Common.Document
                 if (this.Modifier != null && doc.readRootStack != null)
                 {
                     int pageNumber = this.Modifier.PrintablePageRank(0); // numéro de la première page non modèle du document
-                    this.Modifier.ActiveViewer.DrawingContext.InternalPageLayer(pageNumber, 0);
+                    this.Modifier.ActiveViewer?.DrawingContext.InternalPageLayer(pageNumber, 0);
                 }
             }
 
@@ -1305,7 +1305,7 @@ namespace Epsitec.Common.Document
             if (this.Modifier != null)
             {
                 this.Modifier.UpdatePageAfterChanging();
-                this.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+                this.Modifier.ActiveViewer?.DrawingContext.UpdateAfterPageChanged();
                 this.Modifier.OpletQueueEnable = true;
                 this.Modifier.OpletQueuePurge();
             }
@@ -1757,7 +1757,7 @@ namespace Epsitec.Common.Document
         #region Serialization
         public XDocument ToXML()
         {
-            return new XDocument();
+            return new XDocument(new XElement("test"));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -23,5 +23,8 @@ Document doc = new Document(
     null,
     null
 );
+Console.WriteLine($"Read old format file {inputFilePath}");
 doc.Read(inputFilePath);
+Console.WriteLine($"Write new format file {outputFilePath}");
 doc.Write(outputFilePath);
+Console.WriteLine($"Done.");

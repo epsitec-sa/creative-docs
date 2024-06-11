@@ -157,47 +157,43 @@ namespace Epsitec.Common.Document.Settings
                 switch (this.name)
                 {
                     case "GridActive":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridActive;
+                        return this.document.Settings.DrawingSettings.GridActive;
 
                     case "GridShow":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridShow;
+                        return this.document.Settings.DrawingSettings.GridShow;
 
                     case "TextGridShow":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextGridShow;
+                        return this.document.Settings.DrawingSettings.TextGridShow;
 
                     case Commands.TextShowControlCharacters:
-                        return this.document
-                            .Modifier
-                            .ActiveViewer
-                            .DrawingContext
-                            .TextShowControlCharacters;
+                        return this.document.Settings.DrawingSettings.TextShowControlCharacters;
 
                     case "TextFontFilter":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+                        return this.document.Settings.DrawingSettings.TextFontFilter;
 
                     case "TextFontSampleAbc":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc;
+                        return this.document.Settings.DrawingSettings.TextFontSampleAbc;
 
                     case "GuidesActive":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GuidesActive;
+                        return this.document.Settings.DrawingSettings.GuidesActive;
 
                     case "GuidesShow":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GuidesShow;
+                        return this.document.Settings.DrawingSettings.GuidesShow;
 
                     case "GuidesMouse":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GuidesMouse;
+                        return this.document.Settings.DrawingSettings.GuidesMouse;
 
                     case "PreviewActive":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.PreviewActive;
+                        return this.document.Settings.DrawingSettings.PreviewActive;
 
                     case "RulersShow":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.RulersShow;
+                        return this.document.Settings.DrawingSettings.RulersShow;
 
                     case "LabelsShow":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow;
+                        return this.document.Settings.DrawingSettings.LabelsShow;
 
                     case "MagnetActive":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.MagnetActive;
+                        return this.document.Settings.DrawingSettings.MagnetActive;
 
                     case "PrintCollate":
                         return this.document.Settings.PrintInfo.Collate;
@@ -259,60 +255,55 @@ namespace Epsitec.Common.Document.Settings
                 switch (this.name)
                 {
                     case "GridActive":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridActive = value;
+                        this.document.Settings.DrawingSettings.GridActive = value;
                         break;
 
                     case "GridShow":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridShow = value;
+                        this.document.Settings.DrawingSettings.GridShow = value;
                         break;
 
                     case "TextGridShow":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextGridShow = value;
+                        this.document.Settings.DrawingSettings.TextGridShow = value;
                         break;
 
                     case Commands.TextShowControlCharacters:
-                        this.document
-                            .Modifier
-                            .ActiveViewer
-                            .DrawingContext
-                            .TextShowControlCharacters = value;
+                        this.document.Settings.DrawingSettings.TextShowControlCharacters = value;
                         break;
 
                     case "TextFontFilter":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter = value;
+                        this.document.Settings.DrawingSettings.TextFontFilter = value;
                         break;
 
                     case "TextFontSampleAbc":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc =
-                            value;
+                        this.document.Settings.DrawingSettings.TextFontSampleAbc = value;
                         break;
 
                     case "GuidesActive":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GuidesActive = value;
+                        this.document.Settings.DrawingSettings.GuidesActive = value;
                         break;
 
                     case "GuidesShow":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GuidesShow = value;
+                        this.document.Settings.DrawingSettings.GuidesShow = value;
                         break;
 
                     case "GuidesMouse":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GuidesMouse = value;
+                        this.document.Settings.DrawingSettings.GuidesMouse = value;
                         break;
 
                     case "PreviewActive":
-                        this.document.Modifier.ActiveViewer.DrawingContext.PreviewActive = value;
+                        this.document.Settings.DrawingSettings.PreviewActive = value;
                         break;
 
                     case "RulersShow":
-                        this.document.Modifier.ActiveViewer.DrawingContext.RulersShow = value;
+                        this.document.Settings.DrawingSettings.RulersShow = value;
                         break;
 
                     case "LabelsShow":
-                        this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow = value;
+                        this.document.Settings.DrawingSettings.LabelsShow = value;
                         break;
 
                     case "MagnetActive":
-                        this.document.Modifier.ActiveViewer.DrawingContext.MagnetActive = value;
+                        this.document.Settings.DrawingSettings.MagnetActive = value;
                         break;
 
                     case "PrintCollate":

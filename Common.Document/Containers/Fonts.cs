@@ -83,17 +83,12 @@ namespace Epsitec.Common.Document.Containers
             this.ignoreChange = true;
             this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
             this.fontSelector.SampleHeight = this.document
-                .Modifier
-                .ActiveViewer
-                .DrawingContext
+                .Settings
+                .DrawingSettings
                 .TextFontSampleHeight;
-            this.fontSelector.SampleAbc = this.document
-                .Modifier
-                .ActiveViewer
-                .DrawingContext
-                .TextFontSampleAbc;
+            this.fontSelector.SampleAbc = this.document.Settings.DrawingSettings.TextFontSampleAbc;
             this.slider.Value = (decimal)
-                this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
+                this.document.Settings.DrawingSettings.TextFontSampleHeight;
             this.ignoreChange = false;
         }
 
@@ -147,8 +142,7 @@ namespace Epsitec.Common.Document.Containers
             HSlider slider = sender as HSlider;
             if (slider == null)
                 return;
-            this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight = (double)
-                slider.Value;
+            this.document.Settings.DrawingSettings.TextFontSampleHeight = (double)slider.Value;
             this.UpdateList();
         }
 

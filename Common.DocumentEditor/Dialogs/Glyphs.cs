@@ -792,25 +792,10 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             bool abc = false;
             if (this.editor.HasCurrentDocument)
             {
-                quickOnly = this.editor
-                    .CurrentDocument
-                    .Modifier
-                    .ActiveViewer
-                    .DrawingContext
-                    .TextFontFilter;
+                quickOnly = this.editor.CurrentDocument.Settings.DrawingSettings.TextFontFilter;
                 quickFonts = this.editor.CurrentDocument.Settings.QuickFonts;
-                height = this.editor
-                    .CurrentDocument
-                    .Modifier
-                    .ActiveViewer
-                    .DrawingContext
-                    .TextFontSampleHeight;
-                abc = this.editor
-                    .CurrentDocument
-                    .Modifier
-                    .ActiveViewer
-                    .DrawingContext
-                    .TextFontSampleAbc;
+                height = this.editor.CurrentDocument.Settings.DrawingSettings.TextFontSampleHeight;
+                abc = this.editor.CurrentDocument.Settings.DrawingSettings.TextFontSampleAbc;
             }
             int quickCount;
             System.Collections.ArrayList fontList = Misc.MergeFontList(

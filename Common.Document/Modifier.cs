@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -796,7 +796,7 @@ namespace Epsitec.Common.Document
         public void New()
         {
             //	Vide le document de tous ses objets.
-            this.ActiveViewer.CreateEnding(false, false);
+            this.ActiveViewer?.CreateEnding(false, false);
             this.OpletQueueEnable = false;
 
             this.TotalSelected = 0;
@@ -827,7 +827,10 @@ namespace Epsitec.Common.Document
             this.document.HotSpot = new Point(0, 0);
             this.document.Filename = "";
             this.document.ClearDirtySerialize();
-            this.ActiveViewer.SelectorType = SelectorType.Auto;
+            if (this.ActiveViewer != null)
+            {
+                this.ActiveViewer.SelectorType = SelectorType.Auto;
+            }
             this.IsObjectJustCreated = false;
 
             this.OpletQueueEnable = true;

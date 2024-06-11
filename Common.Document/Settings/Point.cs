@@ -1,5 +1,5 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -156,13 +156,13 @@ namespace Epsitec.Common.Document.Settings
                         );
 
                     case "GridStep":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridStep;
+                        return this.document.Settings.DrawingSettings.GridStep;
 
                     case "GridSubdiv":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridSubdiv;
+                        return this.document.Settings.DrawingSettings.GridSubdiv;
 
                     case "GridOffset":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridOffset;
+                        return this.document.Settings.DrawingSettings.GridOffset;
 
                     case "DuplicateMove":
                         return this.document.Modifier.DuplicateMove;
@@ -182,15 +182,15 @@ namespace Epsitec.Common.Document.Settings
                         break;
 
                     case "GridStep":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridStep = value;
+                        this.document.Settings.DrawingSettings.GridStep = value;
                         break;
 
                     case "GridSubdiv":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridSubdiv = value;
+                        this.document.Settings.DrawingSettings.GridSubdiv = value;
                         break;
 
                     case "GridOffset":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridOffset = value;
+                        this.document.Settings.DrawingSettings.GridOffset = value;
                         break;
 
                     case "DuplicateMove":

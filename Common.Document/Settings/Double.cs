@@ -1,5 +1,5 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -359,20 +359,16 @@ namespace Epsitec.Common.Document.Settings
                         return this.document.Modifier.DimensionDecimal;
 
                     case "TextGridStep":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+                        return this.document.Settings.DrawingSettings.TextGridStep;
 
                     case "TextGridSubdiv":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextGridSubdiv;
+                        return this.document.Settings.DrawingSettings.TextGridSubdiv;
 
                     case "TextGridOffset":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
+                        return this.document.Settings.DrawingSettings.TextGridOffset;
 
                     case "TextFontSampleHeight":
-                        return this.document
-                            .Modifier
-                            .ActiveViewer
-                            .DrawingContext
-                            .TextFontSampleHeight;
+                        return this.document.Settings.DrawingSettings.TextFontSampleHeight;
                 }
 
                 return 0.0;
@@ -523,20 +519,19 @@ namespace Epsitec.Common.Document.Settings
                         break;
 
                     case "TextGridStep":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep = value;
+                        this.document.Settings.DrawingSettings.TextGridStep = value;
                         break;
 
                     case "TextGridSubdiv":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextGridSubdiv = value;
+                        this.document.Settings.DrawingSettings.TextGridSubdiv = value;
                         break;
 
                     case "TextGridOffset":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset = value;
+                        this.document.Settings.DrawingSettings.TextGridOffset = value;
                         break;
 
                     case "TextFontSampleHeight":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight =
-                            value;
+                        this.document.Settings.DrawingSettings.TextFontSampleHeight = value;
                         break;
                 }
             }

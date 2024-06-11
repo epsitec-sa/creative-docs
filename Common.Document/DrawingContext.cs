@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -31,42 +31,41 @@ namespace Epsitec.Common.Document
             this.viewer = viewer;
             this.drawer = new Drawer(this.document);
             this.rootStack = new List<int>();
-            this.constrainAngle = ConstrainAngle.None;
             this.constrainList = new List<MagnetLine>();
             this.masterPageList = new List<Objects.Page>();
             this.magnetLayerList = new List<Objects.Layer>();
 
             if (this.document.Type == DocumentType.Pictogram)
             {
-                this.gridStep = new Point(1.0, 1.0);
-                this.gridSubdiv = new Point(1.0, 1.0);
-                this.gridOffset = new Point(0.0, 0.0);
+                this.GridStep = new Point(1.0, 1.0);
+                this.GridSubdiv = new Point(1.0, 1.0);
+                this.GridOffset = new Point(0.0, 0.0);
 
-                this.textGridStep = 1.0;
-                this.textGridSubdiv = 1.0;
-                this.textGridOffset = 0.0;
+                this.TextGridStep = 1.0;
+                this.TextGridSubdiv = 1.0;
+                this.TextGridOffset = 0.0;
             }
             else
             {
                 if (System.Globalization.RegionInfo.CurrentRegion.IsMetric)
                 {
-                    this.gridStep = new Point(50.0, 50.0); // 5mm
-                    this.gridSubdiv = new Point(5.0, 5.0);
-                    this.gridOffset = new Point(0.0, 0.0);
+                    this.GridStep = new Point(50.0, 50.0); // 5mm
+                    this.GridSubdiv = new Point(5.0, 5.0);
+                    this.GridOffset = new Point(0.0, 0.0);
 
-                    this.textGridStep = 100.0; // 10mm
-                    this.textGridSubdiv = 1.0;
-                    this.textGridOffset = 0.0;
+                    this.TextGridStep = 100.0; // 10mm
+                    this.TextGridSubdiv = 1.0;
+                    this.TextGridOffset = 0.0;
                 }
                 else
                 {
-                    this.gridStep = new Point(50.8, 50.8); // 0.2in
-                    this.gridSubdiv = new Point(5.0, 5.0);
-                    this.gridOffset = new Point(0.0, 0.0);
+                    this.GridStep = new Point(50.8, 50.8); // 0.2in
+                    this.GridSubdiv = new Point(5.0, 5.0);
+                    this.GridOffset = new Point(0.0, 0.0);
 
-                    this.textGridStep = 127.0; // 0.5in
-                    this.textGridSubdiv = 1.0;
-                    this.textGridOffset = 0.0;
+                    this.TextGridStep = 127.0; // 0.5in
+                    this.TextGridSubdiv = 1.0;
+                    this.TextGridOffset = 0.0;
                 }
             }
 
@@ -558,20 +557,8 @@ namespace Epsitec.Common.Document
         public bool PreviewActive
         {
             //	Mode "comme imprimé".
-            get { return this.previewActive; }
-            set
-            {
-                if (this.previewActive != value)
-                {
-                    this.previewActive = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyPreviewChanged();
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.PreviewActive; }
+            set { this.document.Settings.DrawingSettings.PreviewActive = value; }
         }
 
         public System.Predicate<DrawImageFilterInfo> DrawImageFilter { get; set; }
@@ -620,125 +607,36 @@ namespace Epsitec.Common.Document
         public bool GridActive
         {
             //	Action de la grille magnétique.
-            get { return this.gridActive; }
-            set
-            {
-                if (this.gridActive != value)
-                {
-                    this.gridActive = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.GridActive; }
+            set { this.document.Settings.DrawingSettings.GridActive = value; }
         }
 
         public bool GridShow
         {
             //	Affichage de la grille magnétique.
-            get { return this.gridShow; }
-            set
-            {
-                if (this.gridShow != value)
-                {
-                    this.gridShow = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.GridShow; }
+            set { this.document.Settings.DrawingSettings.GridShow = value; }
         }
 
         public Point GridStep
         {
             //	Pas de la grille magnétique.
-            get { return this.gridStep; }
-            set
-            {
-                if (this.gridStep != value)
-                {
-                    this.gridStep = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.GridStep; }
+            set { this.document.Settings.DrawingSettings.GridStep = value; }
         }
 
         public Point GridSubdiv
         {
             //	Subdivisions de la grille magnétique.
-            get { return this.gridSubdiv; }
-            set
-            {
-                if (this.gridSubdiv != value)
-                {
-                    this.gridSubdiv = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.GridSubdiv; }
+            set { this.document.Settings.DrawingSettings.GridSubdiv = value; }
         }
 
         public Point GridOffset
         {
             //	Décalage de la grille magnétique.
-            get { return this.gridOffset; }
-            set
-            {
-                if (this.gridOffset != value)
-                {
-                    this.gridOffset = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.GridOffset; }
+            set { this.document.Settings.DrawingSettings.GridOffset = value; }
         }
 
         public void SnapGridVectorLength(ref Point vector)
@@ -775,7 +673,7 @@ namespace Epsitec.Common.Document
             bool snapX,
                 snapY;
 
-            if (!this.gridActive ^ this.isAlt)
+            if (!this.GridActive ^ this.isAlt)
             {
                 this.SnapGuides(ref pos, box, out snapX, out snapY);
                 return;
@@ -794,13 +692,13 @@ namespace Epsitec.Common.Document
         public void SnapGridForce(ref Point pos)
         {
             //	Force un point sur la grille magnétique, toujours.
-            pos = Point.GridAlign(pos, this.SnapGridOffset, this.gridStep);
+            pos = Point.GridAlign(pos, this.SnapGridOffset, this.GridStep);
         }
 
         public void SnapGridForce(ref Point pos, Point offset)
         {
             //	Force un point sur la grille magnétique, toujours.
-            pos = Point.GridAlign(pos, offset, this.gridStep);
+            pos = Point.GridAlign(pos, offset, this.GridStep);
         }
 
         protected Point SnapGridOffset
@@ -811,9 +709,9 @@ namespace Epsitec.Common.Document
                 Point offset = new Point(0.0, 0.0);
                 if (this.document.Type == DocumentType.Pictogram)
                 {
-                    offset = new Point(this.gridStep.X / 2, this.gridStep.Y / 2);
+                    offset = new Point(this.GridStep.X / 2, this.GridStep.Y / 2);
                 }
-                return offset - this.gridOffset;
+                return offset - this.GridOffset;
             }
         }
         #endregion
@@ -823,213 +721,38 @@ namespace Epsitec.Common.Document
         public bool TextGridShow
         {
             //	Affichage de la grille magnétique pour le texte.
-            get { return this.textGridShow; }
-            set
-            {
-                if (this.textGridShow != value)
-                {
-                    this.textGridShow = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.TextGridShow; }
+            set { this.document.Settings.DrawingSettings.TextGridShow = value; }
         }
 
         public double TextGridStep
         {
             //	Pas de la grille magnétique pour le texte.
-            get { return this.textGridStep; }
-            set
-            {
-                if (this.textGridStep != value)
-                {
-                    this.textGridStep = value;
-                    this.UpdateAllTextForTextGrid();
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea();
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.TextGridStep; }
+            set { this.document.Settings.DrawingSettings.TextGridStep = value; }
         }
 
         public double TextGridSubdiv
         {
             //	Subdivisions de la grille magnétique pour le texte.
-            get { return this.textGridSubdiv; }
-            set
-            {
-                if (this.textGridSubdiv != value)
-                {
-                    this.textGridSubdiv = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.TextGridSubdiv; }
+            set { this.document.Settings.DrawingSettings.TextGridSubdiv = value; }
         }
 
         public double TextGridOffset
         {
             //	Décalage de la grille magnétique pour le texte.
-            get { return this.textGridOffset; }
-            set
-            {
-                if (this.textGridOffset != value)
-                {
-                    this.textGridOffset = value;
-                    this.UpdateAllTextForTextGrid();
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea();
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
-        }
-
-        protected void UpdateAllTextForTextGrid()
-        {
-            //	Met à jour tous les pavés du document lorsque les lignes magnétiques ont changé.
-            foreach (TextFlow flow in this.document.TextFlows)
-            {
-                foreach (Objects.AbstractText obj in flow.Chain)
-                {
-                    Text.ITextFrame frame = obj.TextFrame as Text.ITextFrame;
-                    if (frame != null)
-                    {
-                        obj.UpdateTextGrid(true);
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.TextGridOffset; }
+            set { this.document.Settings.DrawingSettings.TextGridOffset = value; }
         }
 
         public bool TextShowControlCharacters
         {
             //	Affichage des caractères de contrôle pour le texte.
-            get { return this.textShowControlCharacters; }
-            set
-            {
-                if (this.textShowControlCharacters != value)
-                {
-                    this.textShowControlCharacters = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea();
-                        this.document.Notifier.NotifyGridChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.TextShowControlCharacters; }
+            set { this.document.Settings.DrawingSettings.TextShowControlCharacters = value; }
         }
 
-        public bool TextFontFilter
-        {
-            //	Affichage réduit des caractères (seulement les caractères rapides).
-            get { return this.textFontFilter; }
-            set
-            {
-                if (this.textFontFilter != value)
-                {
-                    this.textFontFilter = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyFontsSettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
-        }
-
-        public bool TextFontSampleAbc
-        {
-            //	Echantillons "Abc" à la place de "AaBbYyZz".
-            get { return this.textFontSampleAbc; }
-            set
-            {
-                if (this.textFontSampleAbc != value)
-                {
-                    this.textFontSampleAbc = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyFontsSettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
-        }
-
-        public double TextFontSampleHeight
-        {
-            //	Taille des échantillons de caractères pour FontSelector.
-            get { return this.textFontSampleHeight; }
-            set
-            {
-                if (this.textFontSampleHeight != value)
-                {
-                    this.textFontSampleHeight = value;
-
-                    if (
-                        this.document.Notifier != null
-                        && this.viewer != null
-                        && !this.viewer.IsMiniature
-                    )
-                    {
-                        this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                    }
-                }
-            }
-        }
         #endregion
 
 
@@ -1037,25 +760,8 @@ namespace Epsitec.Common.Document
         public bool RulersShow
         {
             //	Affichage des règles graduées.
-            get { return this.rulersShow; }
-            set
-            {
-                if (this.rulersShow != value)
-                {
-                    this.rulersShow = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.RulersShow; }
+            set { this.document.Settings.DrawingSettings.RulersShow = value; }
         }
         #endregion
 
@@ -1064,25 +770,8 @@ namespace Epsitec.Common.Document
         public bool LabelsShow
         {
             //	Affichage des noms de objets.
-            get { return this.labelsShow; }
-            set
-            {
-                if (this.labelsShow != value)
-                {
-                    this.labelsShow = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.LabelsShow; }
+            set { this.document.Settings.DrawingSettings.LabelsShow = value; }
         }
         #endregion
 
@@ -1091,97 +780,19 @@ namespace Epsitec.Common.Document
         public bool AggregatesShow
         {
             //	Affichage des noms de styles.
-            get { return this.aggregatesShow; }
-            set
-            {
-                if (this.aggregatesShow != value)
-                {
-                    this.aggregatesShow = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifyGridChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.AggregatesShow; }
+            set { this.document.Settings.DrawingSettings.AggregatesShow = value; }
         }
         #endregion
 
 
         #region Guides
-        public bool GuidesActive
-        {
-            //	Action des repères magnétiques.
-            get { return this.guidesActive; }
-            set
-            {
-                if (this.guidesActive != value)
-                {
-                    this.guidesActive = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
-        }
 
         public bool GuidesShow
         {
             //	Affichage des repères magnétiques.
-            get { return this.guidesShow; }
-            set
-            {
-                if (this.guidesShow != value)
-                {
-                    this.guidesShow = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyArea(this.viewer);
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
-        }
-
-        public bool GuidesMouse
-        {
-            //	Déplacement avec la souris des repères magnétiques.
-            get { return this.guidesMouse; }
-            set
-            {
-                if (this.guidesMouse != value)
-                {
-                    this.guidesMouse = value;
-
-                    if (
-                        this.document.Notifier != null
-                        && this.viewer != null
-                        && !this.viewer.IsMiniature
-                    )
-                    {
-                        this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.GuidesShow; }
+            set { this.document.Settings.DrawingSettings.GuidesShow = value; }
         }
 
         protected void SnapGuides(ref Point pos, Rectangle box, out bool snapX, out bool snapY)
@@ -1189,7 +800,7 @@ namespace Epsitec.Common.Document
             //	Force un point sur un repère magnétique.
             snapX = false;
             snapY = false;
-            if (!this.guidesActive ^ this.isAlt)
+            if (!this.document.Settings.DrawingSettings.GuidesActive ^ this.isAlt)
                 return;
 
             Objects.Page page = this.document.DocumentObjects[this.CurrentPage] as Objects.Page;
@@ -1501,7 +1112,7 @@ namespace Epsitec.Common.Document
             {
                 IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
                 Color color = Color.FromColor(adorner.ColorCaption, 0.8);
-                if (this.previewActive)
+                if (this.PreviewActive)
                 {
                     color = Color.FromBrightness(color.GetBrightness());
                     color = Color.FromAlphaColor(color.A * 0.5, color);
@@ -1517,7 +1128,7 @@ namespace Epsitec.Common.Document
             {
                 IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
                 Color color = Color.FromColor(adorner.ColorCaption, 0.4);
-                if (this.previewActive)
+                if (this.PreviewActive)
                 {
                     color = Color.FromBrightness(color.GetBrightness());
                     color = Color.FromAlphaColor(color.A * 0.5, color);
@@ -1554,31 +1165,14 @@ namespace Epsitec.Common.Document
         public bool MagnetActive
         {
             //	Action des lignes magnétiques.
-            get { return this.magnetActive; }
-            set
-            {
-                if (this.magnetActive != value)
-                {
-                    this.magnetActive = value;
-
-                    if (this.document.Notifier != null)
-                    {
-                        this.document.Notifier.NotifyMagnetChanged();
-                        this.document.Notifier.NotifySettingsChanged();
-
-                        if (this.viewer != null && !this.viewer.IsMiniature)
-                        {
-                            this.document.SetDirtySerialize(CacheBitmapChanging.None);
-                        }
-                    }
-                }
-            }
+            get { return this.document.Settings.DrawingSettings.MagnetActive; }
+            set { this.document.Settings.DrawingSettings.MagnetActive = value; }
         }
 
         public bool MagnetActiveAndExist
         {
             //	Indique s'il existe des lignes magnétiques activées.
-            get { return (this.magnetActive && this.magnetLayerList.Count > 0); }
+            get { return (this.MagnetActive && this.magnetLayerList.Count > 0); }
         }
 
         public void MagnetClearStarting()
@@ -1597,7 +1191,7 @@ namespace Epsitec.Common.Document
         public bool MagnetSnapPos(ref Point pos)
         {
             //	Retourne une position éventuellement contrainte.
-            if (!this.magnetActive)
+            if (!this.MagnetActive)
                 return false;
 
             if (this.isCtrl)
@@ -1862,7 +1456,7 @@ namespace Epsitec.Common.Document
         public void DrawMagnet(Graphics graphics, Size size)
         {
             //	Dessine les lignes magnétiques.
-            if (!this.magnetActive)
+            if (!this.MagnetActive)
                 return;
             if (this.isCtrl)
                 return;
@@ -1883,17 +1477,16 @@ namespace Epsitec.Common.Document
         public bool ConstrainActive
         {
             //	Action des lignes contraintes.
-            get { return this.constrainActive; }
+            get { return this.document.Settings.DrawingSettings.MagnetActive; }
             set
             {
-                if (this.constrainActive != value)
+                if (this.ConstrainActive != value)
                 {
-                    this.constrainActive = value;
+                    this.document.Settings.DrawingSettings.MagnetActive = value;
 
                     if (this.document.Notifier != null)
                     {
                         this.document.Notifier.NotifyConstrainChanged();
-                        this.document.Notifier.NotifySettingsChanged();
 
                         if (this.viewer != null && !this.viewer.IsMiniature)
                         {
@@ -1904,11 +1497,10 @@ namespace Epsitec.Common.Document
             }
         }
 
-        public ConstrainAngle ConstrainAngle
+        private ConstrainAngle ConstrainAngle
         {
             //	Angles supplémentaires pour les contraintes.
-            get { return this.constrainAngle; }
-            set { this.constrainAngle = value; }
+            get { return this.document.Settings.DrawingSettings.ConstrainAngle; }
         }
 
         public void ConstrainClear()
@@ -1953,7 +1545,7 @@ namespace Epsitec.Common.Document
             this.ConstrainAddHorizontal(pos.Y, isVisible, handleRank);
             this.ConstrainAddVertical(pos.X, isVisible, handleRank);
 
-            if (this.constrainAngle == ConstrainAngle.Quarter)
+            if (this.ConstrainAngle == ConstrainAngle.Quarter)
             {
                 Point r = new Point(pos.X + 1.0, pos.Y);
                 this.ConstrainAddLine(
@@ -1970,7 +1562,7 @@ namespace Epsitec.Common.Document
                 );
             }
 
-            if (this.constrainAngle == ConstrainAngle.Sixth)
+            if (this.ConstrainAngle == ConstrainAngle.Sixth)
             {
                 Point r = new Point(pos.X + 1.0, pos.Y);
                 this.ConstrainAddLine(
@@ -1999,7 +1591,7 @@ namespace Epsitec.Common.Document
                 );
             }
 
-            if (this.constrainAngle == ConstrainAngle.Eight)
+            if (this.ConstrainAngle == ConstrainAngle.Eight)
             {
                 Point r = new Point(pos.X + 1.0, pos.Y);
                 this.ConstrainAddLine(
@@ -2068,7 +1660,7 @@ namespace Epsitec.Common.Document
                     return;
             }
 
-            line.IsVisible = this.constrainActive | isVisible;
+            line.IsVisible = this.ConstrainActive | isVisible;
             this.constrainList.Add(line);
         }
 
@@ -2081,7 +1673,7 @@ namespace Epsitec.Common.Document
             MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
             line.Initialize(center, ext, true, isVisible, handleRank);
 
-            line.IsVisible = this.constrainActive;
+            line.IsVisible = this.ConstrainActive;
             this.constrainList.Add(line);
         }
 
@@ -2805,28 +2397,9 @@ namespace Epsitec.Common.Document
         protected double originX;
         protected double originY;
         protected LayerDrawingMode layerDrawingMode = LayerDrawingMode.DimmedInactive;
-        protected bool previewActive;
+
         protected bool fillEmptyPlaceholders;
-        protected bool gridActive;
-        protected bool gridShow;
-        protected Point gridStep = new Point(1, 1);
-        protected Point gridSubdiv = new Point(1, 1);
-        protected Point gridOffset;
-        protected bool textGridShow;
-        protected bool textShowControlCharacters = true;
-        protected bool textFontFilter = true;
-        protected bool textFontSampleAbc;
-        protected double textFontSampleHeight = 30;
-        protected double textGridStep;
-        protected double textGridSubdiv;
-        protected double textGridOffset;
-        protected bool guidesActive = true;
-        protected bool guidesShow = true;
-        protected bool guidesMouse = true;
-        protected bool magnetActive = true;
-        protected bool rulersShow = true;
-        protected bool labelsShow;
-        protected bool aggregatesShow;
+
         protected bool hideHalfActive = true;
         protected bool visibleHandles = true;
         protected bool isDimmed;
@@ -2844,8 +2417,7 @@ namespace Epsitec.Common.Document
         protected bool isShift;
         protected bool isCtrl;
         protected bool isAlt;
-        protected bool constrainActive;
-        protected ConstrainAngle constrainAngle;
+
         protected List<MagnetLine> constrainList;
         protected bool isMagnetStarting;
         protected Point magnetStarting;
