@@ -1755,6 +1755,36 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
+        public static Document LoadFromXMLFile(string filename)
+        {
+            return new Document(XDocument.Load(filename));
+        }
+
+        public void AssertIsEquivalent(Document other)
+        {
+            Assert(this.Type == other.Type, "Type");
+            Assert(this.Name == other.Name, "Name");
+
+            Assert(this.uniqueObjectId == other.uniqueObjectId, "uniqueObjectId");
+            Assert(this.uniqueAggregateId == other.uniqueAggregateId, "uniqueAggregateId");
+            Assert(
+                this.uniqueParagraphStyleId == other.uniqueParagraphStyleId,
+                "uniqueParagraphStyleId"
+            );
+            Assert(
+                this.uniqueCharacterStyleId == other.uniqueCharacterStyleId,
+                "uniqueCharacterStyleId"
+            );
+
+            //byte[] toto = new byte[0];
+            if (this.type == DocumentType.Pictogram)
+            {
+                //System.Console.WriteLine(toto[1]);
+                Assert(this.size == other.size, "size");
+                Assert(this.hotSpot == other.hotSpot, "hotSpot");
+            }
+        }
+
         public XDocument ToXML()
         {
             XElement root = new XElement("Document");
@@ -1803,11 +1833,6 @@ namespace Epsitec.Common.Document
             return new XDocument(root);
         }
 
-        public static Document LoadFromXMLFile(string filename)
-        {
-            return new Document(XDocument.Load(filename));
-        }
-
         private Document(XDocument xmlDocument)
         {
             XElement root = xmlDocument.Root;
@@ -1818,21 +1843,6 @@ namespace Epsitec.Common.Document
             this.uniqueAggregateId = int.Parse(root.Element("UniqueAggregateId").Value);
             this.uniqueParagraphStyleId = int.Parse(root.Element("UniqueParagraphStyleId").Value);
             this.uniqueCharacterStyleId = int.Parse(root.Element("UniqueCharacterStyleId").Value);
-        }
-
-        public void AssertIsEquivalent(Document other)
-        {
-            System.Diagnostics.Debug.Assert(this.Type == other.Type);
-            System.Diagnostics.Debug.Assert(this.Name == other.Name);
-
-            System.Diagnostics.Debug.Assert(this.uniqueObjectId == other.uniqueObjectId);
-            System.Diagnostics.Debug.Assert(this.uniqueAggregateId == other.uniqueAggregateId);
-            System.Diagnostics.Debug.Assert(
-                this.uniqueParagraphStyleId == other.uniqueParagraphStyleId
-            );
-            System.Diagnostics.Debug.Assert(
-                this.uniqueCharacterStyleId == other.uniqueCharacterStyleId
-            );
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -2004,6 +2014,14 @@ namespace Epsitec.Common.Document
             {
                 this.uniqueParagraphStyleId = 0;
                 this.uniqueCharacterStyleId = 0;
+            }
+        }
+
+        private void Assert(bool condition, string message)
+        {
+            if (!condition)
+            {
+                throw new System.InvalidOperationException(message);
             }
         }
 

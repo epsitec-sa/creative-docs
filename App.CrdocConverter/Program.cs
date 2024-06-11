@@ -7,11 +7,19 @@ string root =
 string outputDir =
     "C:\\devel\\cresus-core-dev-converter\\cresus-core\\App.CrdocConverter\\output_files";
 
+bool verbose = false;
+int failed = 0;
+
+string WithColor(string message, int color)
+{
+    return $"\x1b[{color}m{message}\x1b[0m";
+}
+
 Document LoadOriginalDocument(string inputFile)
 {
     Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache();
     Document document = new Document(
-        DocumentType.Graphic,
+        Path.GetExtension(inputFile) == ".icon" ? DocumentType.Pictogram : DocumentType.Graphic,
         DocumentMode.Modify,
         InstallType.Full,
         DebugMode.Release,
@@ -20,22 +28,39 @@ Document LoadOriginalDocument(string inputFile)
         null,
         null
     );
-    Console.WriteLine("    - read old");
+    if (verbose)
+    {
+        Console.WriteLine("    - read old");
+    }
     document.Read(inputFile);
     return document;
 }
 
 void ExportToNewFormat(Document original, string filepath)
 {
-    Console.WriteLine("    - write xml");
+    if (verbose)
+    {
+        Console.WriteLine("    - write xml");
+    }
     original.Write(filepath);
 }
 
 void CheckReadBackDocument(Document original, string filepath)
 {
-    Console.WriteLine("    - check reading back from xml");
+    if (verbose)
+    {
+        Console.WriteLine("    - check reading back from xml");
+    }
     Document newDocument = Document.LoadFromXMLFile(filepath);
-    newDocument.AssertIsEquivalent(original);
+    try
+    {
+        newDocument.AssertIsEquivalent(original);
+    }
+    catch (InvalidOperationException ex)
+    {
+        Console.WriteLine(WithColor($"    Error: {ex.Message}", 31));
+        failed++;
+    }
 }
 
 void TestConvert(string oldFile)
@@ -53,4 +78,11 @@ foreach (string file in Directory.GetFiles(root))
 {
     TestConvert(file);
 }
-Console.WriteLine($"Done.");
+if (failed == 0)
+{
+    Console.WriteLine(WithColor($"All conversions succeeded !", 32));
+}
+else
+{
+    Console.WriteLine(WithColor($"{failed} conversions failed !", 31));
+}
