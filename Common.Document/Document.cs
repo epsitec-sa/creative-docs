@@ -1757,11 +1757,49 @@ namespace Epsitec.Common.Document
         #region Serialization
         public XDocument ToXML()
         {
-            XElement root = new XElement("Document", new XElement("Type", this.type));
+            XElement root = new XElement("Document");
+            root.Add(new XElement("Type", this.type));
             if (this.name != null)
             {
                 root.Add(new XElement("Name", this.name));
             }
+
+            //if (this.type == DocumentType.Pictogram)
+            //{
+            //    info.AddValue("Size", this.size);
+            //    info.AddValue("HotSpot", this.hotSpot);
+            //}
+            //else
+            //{
+            //    info.AddValue("Settings", this.settings);
+            //    info.AddValue("ExportFilename", this.exportFilename);
+            //    info.AddValue("ExportFilter", this.exportFilter);
+
+            //    info.AddValue("ObjectMemory", this.modifier.ObjectMemory);
+            //    info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
+
+            //    info.AddValue(
+            //        "RootStack",
+            //        this.modifier.ActiveViewer.DrawingContext.GetRootStack()
+            //    );
+
+            //    byte[] textContextData =
+            //        this.textContext == null ? null : this.textContext.Serialize();
+            //    info.AddValue("TextContextData", textContextData);
+
+            //    info.AddValue("TextFlows", this.textFlows);
+            //    info.AddValue("FontList", this.fontList);
+            //    info.AddValue("FontIncludeMode", this.fontIncludeMode);
+            //    info.AddValue("ImageIncludeMode", this.imageIncludeMode);
+            //}
+
+            root.Add(new XElement("UniqueObjectId", this.uniqueObjectId));
+            root.Add(new XElement("UniqueAggregateId", this.uniqueAggregateId));
+            root.Add(new XElement("UniqueParagraphStyleId", this.uniqueParagraphStyleId));
+            root.Add(new XElement("UniqueCharacterStyleId", this.uniqueCharacterStyleId));
+            //info.AddValue("Objects", this.objects);
+            //info.AddValue("Properties", this.propertiesAuto);
+            //info.AddValue("Aggregates", this.aggregates);
             return new XDocument(root);
         }
 
@@ -1775,6 +1813,26 @@ namespace Epsitec.Common.Document
             XElement root = xmlDocument.Root;
             DocumentType.TryParse(root.Element("Type").Value, out this.type);
             this.name = root.Element("Name")?.Value;
+
+            this.uniqueObjectId = int.Parse(root.Element("UniqueObjectId").Value);
+            this.uniqueAggregateId = int.Parse(root.Element("UniqueAggregateId").Value);
+            this.uniqueParagraphStyleId = int.Parse(root.Element("UniqueParagraphStyleId").Value);
+            this.uniqueCharacterStyleId = int.Parse(root.Element("UniqueCharacterStyleId").Value);
+        }
+
+        public void AssertIsEquivalent(Document other)
+        {
+            System.Diagnostics.Debug.Assert(this.Type == other.Type);
+            System.Diagnostics.Debug.Assert(this.Name == other.Name);
+
+            System.Diagnostics.Debug.Assert(this.uniqueObjectId == other.uniqueObjectId);
+            System.Diagnostics.Debug.Assert(this.uniqueAggregateId == other.uniqueAggregateId);
+            System.Diagnostics.Debug.Assert(
+                this.uniqueParagraphStyleId == other.uniqueParagraphStyleId
+            );
+            System.Diagnostics.Debug.Assert(
+                this.uniqueCharacterStyleId == other.uniqueCharacterStyleId
+            );
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

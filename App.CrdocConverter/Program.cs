@@ -35,9 +35,7 @@ void CheckReadBackDocument(Document original, string filepath)
 {
     Console.WriteLine("    - check reading back from xml");
     Document newDocument = Document.LoadFromXMLFile(filepath);
-
-    System.Diagnostics.Debug.Assert(newDocument.Type == original.Type);
-    System.Diagnostics.Debug.Assert(newDocument.Name == original.Name);
+    newDocument.AssertIsEquivalent(original);
 }
 
 void TestConvert(string oldFile)
