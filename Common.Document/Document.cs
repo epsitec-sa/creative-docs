@@ -1757,7 +1757,24 @@ namespace Epsitec.Common.Document
         #region Serialization
         public XDocument ToXML()
         {
-            return new XDocument(new XElement("test"));
+            XElement root = new XElement("Document", new XElement("Type", this.type));
+            if (this.name != null)
+            {
+                root.Add(new XElement("Name", this.name));
+            }
+            return new XDocument(root);
+        }
+
+        public static Document LoadFromXMLFile(string filename)
+        {
+            return new Document(XDocument.Load(filename));
+        }
+
+        private Document(XDocument xmlDocument)
+        {
+            XElement root = xmlDocument.Root;
+            DocumentType.TryParse(root.Element("Type").Value, out this.type);
+            this.name = root.Element("Name")?.Value;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
