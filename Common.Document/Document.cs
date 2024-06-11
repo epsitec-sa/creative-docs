@@ -1,13 +1,14 @@
-using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
-using Epsitec.Common.Support;
-using Epsitec.Common.Text;
-using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.IO;
+using Epsitec.Common.Support;
+using Epsitec.Common.Text;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document
 {
@@ -1463,113 +1464,115 @@ namespace Epsitec.Common.Document
             int undoCount = this.modifier.OpletQueue.UndoActionCount;
             DocumentFileExtension ext = Document.GetDocumentFileExtension(filename);
 
-            try
-            {
-                this.Modifier.DeselectAll();
+            XDocument xmlDocument = this.ToXML();
+            xmlDocument.Save(filename);
+            //try
+            //{
+            //    this.Modifier.DeselectAll();
 
-                this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
+            //    this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
 
-                if (this.ioDocumentManager == null)
-                {
-                    this.ioDocumentManager = new DocumentManager();
-                }
+            //    if (this.ioDocumentManager == null)
+            //    {
+            //        this.ioDocumentManager = new DocumentManager();
+            //    }
 
-                if (this.type == DocumentType.Pictogram)
-                {
-                    string err = this.PictogramCheckBeforeWrite();
-                    if (err != "")
-                    {
-                        return err;
-                    }
+            //    if (this.type == DocumentType.Pictogram)
+            //    {
+            //        string err = this.PictogramCheckBeforeWrite();
+            //        if (err != "")
+            //        {
+            //            return err;
+            //        }
 
-                    this.ioDocumentManager.Save(
-                        filename,
-                        delegate(System.IO.Stream stream)
-                        {
-                            Document.WriteIdentifier(stream, this.ioType);
+            //        this.ioDocumentManager.Save(
+            //            filename,
+            //            delegate(System.IO.Stream stream)
+            //            {
+            //                Document.WriteIdentifier(stream, this.ioType);
 
-                            if (this.ioType == IOType.BinaryCompress)
-                            {
-                                //?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
-                                Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
-                                BinaryFormatter formatter = new BinaryFormatter();
-                                formatter.Serialize(compressor, this);
-                                compressor.Close();
-                                return true;
-                            }
-                            else if (this.ioType == IOType.SoapUncompress)
-                            {
-                                SoapFormatter formatter = new SoapFormatter();
-                                formatter.Serialize(stream, this);
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                    );
-                }
-                else
-                {
-                    this.FontUpdate();
-                    this.ImageFlushUnused();
-                    if (this.imageCache != null)
-                    {
-                        this.imageCache.GenerateShortNames();
-                    }
-                    this.ImageUpdate();
+            //                if (this.ioType == IOType.BinaryCompress)
+            //                {
+            //                    //?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
+            //                    Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
+            //                    BinaryFormatter formatter = new BinaryFormatter();
+            //                    formatter.Serialize(compressor, this);
+            //                    compressor.Close();
+            //                    return true;
+            //                }
+            //                else if (this.ioType == IOType.SoapUncompress)
+            //                {
+            //                    SoapFormatter formatter = new SoapFormatter();
+            //                    formatter.Serialize(stream, this);
+            //                    return true;
+            //                }
+            //                else
+            //                {
+            //                    return false;
+            //                }
+            //            }
+            //        );
+            //    }
+            //    else
+            //    {
+            //        this.FontUpdate();
+            //        this.ImageFlushUnused();
+            //        if (this.imageCache != null)
+            //        {
+            //            this.imageCache.GenerateShortNames();
+            //        }
+            //        this.ImageUpdate();
 
-                    byte[] data;
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        Document.WriteIdentifier(stream, this.ioType);
+            //        byte[] data;
+            //        using (MemoryStream stream = new MemoryStream())
+            //        {
+            //            Document.WriteIdentifier(stream, this.ioType);
 
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        formatter.Serialize(stream, this);
-                        data = stream.ToArray();
-                    }
+            //            BinaryFormatter formatter = new BinaryFormatter();
+            //            formatter.Serialize(stream, this);
+            //            data = stream.ToArray();
+            //        }
 
-                    ZipFile zip = new ZipFile();
-                    zip.AddEntry("document.data", data, 0);
-                    this.WriteMiniature(zip, 1, ext == DocumentFileExtension.CrMod);
-                    this.WriteStatistics(zip, 2);
-                    if (this.imageCache != null)
-                    {
-                        this.imageCache.WriteData(zip, this.imageIncludeMode);
-                    }
-                    this.FontWriteAll(zip);
-                    zip.CompressionLevel = 6;
+            //        ZipFile zip = new ZipFile();
+            //        zip.AddEntry("document.data", data, 0);
+            //        this.WriteMiniature(zip, 1, ext == DocumentFileExtension.CrMod);
+            //        this.WriteStatistics(zip, 2);
+            //        if (this.imageCache != null)
+            //        {
+            //            this.imageCache.WriteData(zip, this.imageIncludeMode);
+            //        }
+            //        this.FontWriteAll(zip);
+            //        zip.CompressionLevel = 6;
 
-                    this.ioDocumentManager.Save(
-                        filename,
-                        delegate(System.IO.Stream stream)
-                        {
-                            zip.SaveFile(stream);
-                            return true;
-                        }
-                    );
-                }
-            }
-            catch (System.Exception e)
-            {
-                return e.Message;
-            }
-            finally
-            {
-                while (undoCount < this.modifier.OpletQueue.UndoActionCount)
-                {
-                    this.modifier.OpletQueue.UndoAction();
-                }
+            //        this.ioDocumentManager.Save(
+            //            filename,
+            //            delegate(System.IO.Stream stream)
+            //            {
+            //                zip.SaveFile(stream);
+            //                return true;
+            //            }
+            //        );
+            //    }
+            //}
+            //catch (System.Exception e)
+            //{
+            //    return e.Message;
+            //}
+            //finally
+            //{
+            //    while (undoCount < this.modifier.OpletQueue.UndoActionCount)
+            //    {
+            //        this.modifier.OpletQueue.UndoAction();
+            //    }
 
-                this.modifier.OpletQueue.PurgeRedo();
-            }
+            //    this.modifier.OpletQueue.PurgeRedo();
+            //}
 
-            if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
-            {
-                this.Filename = filename;
-                this.ClearDirtySerialize();
-            }
+            //if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
+            //{
+            //    this.Filename = filename;
+            //    this.ClearDirtySerialize();
+            //}
             DocumentCache.Remove(filename);
             return "";
         }
@@ -1752,6 +1755,11 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
+        public XDocument ToXML()
+        {
+            return new XDocument();
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le document.
