@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Drawing;
@@ -3982,14 +3983,13 @@ namespace Epsitec.Common.Document.Objects
 
             yield return new XElement("Properties", this.properties.ToXML());
 
-            // bl-convert serialize handles
-
             //	Ne sérialise que les poignées des objets, sans celles des propriétés.
-            List<IXMLWritable> objHandles = new();
+            var handles = new XElement("Handles");
             for (int i = 0; i < this.TotalMainHandle; i++)
             {
-                objHandles.Add(this.handles[i]);
+                handles.Add(this.handles[i].ToXML());
             }
+            yield return handles;
             yield return new XElement("Objects", this.objects.ToXML());
             yield return new XElement("Direction", this.direction);
             yield return new XElement("Aggregates", this.aggregates.ToXML());
@@ -4002,7 +4002,10 @@ namespace Epsitec.Common.Document.Objects
 
             this.properties = SerializableUndoableList.FromXML(xml.Element("Properties"));
 
-            // bl-convert deserialize handles
+            this.handles = xml.Element("Handles")
+                .Elements()
+                .Select(Common.Document.Objects.Handle.FromXML)
+                .ToList();
 
             this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
             this.direction = double.Parse(xml.Attribute("direction").Value);
