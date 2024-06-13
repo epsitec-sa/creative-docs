@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Drawing
 {
@@ -543,6 +544,18 @@ namespace Epsitec.Common.Drawing
             i.Y = a.Y + (x - a.X) * ((b.Y - a.Y) / (b.X - a.X));
 
             return true;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement("Point", new XAttribute("x", this.X), new XAttribute("y", this.Y));
+        }
+
+        public Point(XElement xml)
+        {
+            XElement root = xml.Element("Point");
+            this.x = double.Parse(root.Attribute("x").Value);
+            this.y = double.Parse(root.Attribute("y").Value);
         }
 
         #region Converter Class

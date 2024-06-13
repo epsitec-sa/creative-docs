@@ -1,6 +1,8 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Drawing
 {
     using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
@@ -206,6 +208,22 @@ namespace Epsitec.Common.Drawing
                 System.Math.Max(0, a.Width - b.Width),
                 System.Math.Max(0, a.Height - b.Height)
             );
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Size",
+                new XAttribute("width", this.Width),
+                new XAttribute("height", this.Height)
+            );
+        }
+
+        public Size(XElement xml)
+        {
+            XElement root = xml.Element("Size");
+            this.width = double.Parse(root.Attribute("width").Value);
+            this.height = double.Parse(root.Attribute("height").Value);
         }
 
         #region Converter Class
