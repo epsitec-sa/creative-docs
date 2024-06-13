@@ -957,11 +957,22 @@ namespace Epsitec.Common.Document.Properties
         public XElement ToXML()
         {
             var root = new XElement(
-                "Abstract",
+                "AbstractProperty",
                 new XAttribute("Type", this.type),
                 new XAttribute("IsStyle", this.isStyle)
             );
             return root;
+        }
+
+        protected Abstract(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            Type.TryParse(xml.Attribute("Type").Value, out this.type);
+            this.isStyle = bool.Parse(xml.Attribute("IsStyle").Value);
+            this.owners = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideProperty
+            );
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
