@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document
 {
@@ -10,7 +11,7 @@ namespace Epsitec.Common.Document
     /// Flux de texte.
     /// </summary>
     [System.Serializable()]
-    public class TextFlow : ISerializable
+    public class TextFlow : ISerializable, IXMLSerializable<TextFlow>
     {
         private TextFlow()
         {
@@ -28,7 +29,10 @@ namespace Epsitec.Common.Document
             this.InitializeNavigator();
             this.InitializeEmptyTextStory();
 
-            this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
+            this.objectsChain = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsChain
+            );
         }
 
         protected void InitializeNavigator()
@@ -260,7 +264,7 @@ namespace Epsitec.Common.Document
             return this.objectsChain.IndexOf(obj);
         }
 
-        public UndoableList Chain
+        public SerializableUndoableList Chain
         {
             //	Donne la chaîne des pavés de texte.
             get { return this.objectsChain; }
@@ -336,7 +340,7 @@ namespace Epsitec.Common.Document
         public void NotifyAreaFlow()
         {
             //	Notifie "à repeindre" toute la chaîne des pavés.
-            UndoableList chain = this.Chain;
+            SerializableUndoableList chain = this.Chain;
 
             foreach (Viewer viewer in this.document.Modifier.Viewers)
             {
@@ -470,7 +474,7 @@ namespace Epsitec.Common.Document
 
         public static void StatisticFonts(
             List<OpenType.FontName> list,
-            UndoableList textFlows,
+            SerializableUndoableList textFlows,
             TextStats.FontNaming fontNaming
         )
         {
@@ -492,7 +496,7 @@ namespace Epsitec.Common.Document
         }
 
         public static void ReadCheckWarnings(
-            UndoableList textFlows,
+            SerializableUndoableList textFlows,
             System.Collections.ArrayList warnings
         )
         {
@@ -634,6 +638,26 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
+        public XElement ToXML()
+        {
+            // bl-converter serialize textStory
+            return new XElement(
+                "TextFlow",
+                new XElement("ObjectsChain", this.objectsChain.ToXML())
+            );
+        }
+
+        public static TextFlow FromXML(XElement xml)
+        {
+            return new TextFlow(xml);
+        }
+
+        private TextFlow(XElement xml)
+        {
+            var root = xml.Element("TextFlow");
+            this.objectsChain = SerializableUndoableList.FromXML(root.Element("ObjectsChain"));
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.
@@ -649,7 +673,8 @@ namespace Epsitec.Common.Document
             //	Constructeur qui désérialise l'objet.
             this.document = Document.ReadDocument;
 
-            this.objectsChain = (UndoableList)info.GetValue("ObjectsChain", typeof(UndoableList));
+            this.objectsChain = (SerializableUndoableList)
+                info.GetValue("ObjectsChain", typeof(SerializableUndoableList));
             this.textStoryData = (byte[])info.GetValue("TextStoryData", typeof(byte[]));
         }
 
@@ -703,6 +728,6 @@ namespace Epsitec.Common.Document
         protected Text.TextNavigator textNavigator;
         protected TextNavigator2 metaNavigator;
         protected Objects.AbstractText activeTextBox;
-        protected UndoableList objectsChain;
+        protected SerializableUndoableList objectsChain;
     }
 }

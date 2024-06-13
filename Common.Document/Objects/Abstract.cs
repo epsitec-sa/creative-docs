@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Objects.Abstract est la classe de base des objets graphiques.
     /// </summary>
     [System.Serializable()]
-    public abstract class Abstract : ISerializable
+    public abstract class Abstract : ISerializable, IXMLWritable
     {
         public Abstract(Document document, Objects.Abstract model)
         {
@@ -33,11 +34,11 @@ namespace Epsitec.Common.Document.Objects
                 this.uniqueId = this.document.GetNextUniqueObjectId();
             }
 
-            this.properties = new UndoableList(
+            this.properties = new SerializableUndoableList(
                 this.document,
                 UndoableListType.PropertiesInsideObject
             );
-            this.aggregates = new UndoableList(
+            this.aggregates = new SerializableUndoableList(
                 this.document,
                 UndoableListType.AggregatesInsideObject
             );
@@ -168,7 +169,7 @@ namespace Epsitec.Common.Document.Objects
             set { this.handles = value; }
         }
 
-        public UndoableList Objects
+        public SerializableUndoableList Objects
         {
             get { return this.objects; }
             set { this.objects = value; }
@@ -2230,7 +2231,7 @@ namespace Epsitec.Common.Document.Objects
                 return; // on ne veut rien changer
 
             bool oqe;
-            UndoableList properties = this.document.PropertiesAuto;
+            SerializableUndoableList properties = this.document.PropertiesAuto;
             foreach (Properties.Abstract property in properties)
             {
                 Properties.Bool existing = property as Properties.Bool;
@@ -2373,7 +2374,7 @@ namespace Epsitec.Common.Document.Objects
         protected Properties.Abstract SearchProperty(Properties.Abstract item, bool selected)
         {
             //	Cherche une propriété identique dans une collection du document.
-            UndoableList properties = this.document.Modifier.PropertyList(selected);
+            SerializableUndoableList properties = this.document.Modifier.PropertyList(selected);
 
             foreach (Properties.Abstract property in properties)
             {
@@ -2388,7 +2389,7 @@ namespace Epsitec.Common.Document.Objects
             return null;
         }
 
-        public UndoableList Aggregates
+        public SerializableUndoableList Aggregates
         {
             //	Liste des agrégats utilisés par l'objet.
             get { return this.aggregates; }
@@ -3971,6 +3972,26 @@ namespace Epsitec.Common.Document.Objects
 
 
         #region Serialization
+
+        public abstract XElement ToXML();
+
+        public IEnumerable<XObject> IterXMLParts()
+        {
+            yield return new XAttribute("UniqueId", this.uniqueId);
+            yield return new XAttribute("Name", this.name);
+            yield return new XElement("Properties", this.properties.ToXML());
+
+            //	Ne sérialise que les poignées des objets, sans celles des propriétés.
+            //List<IXMLWritable> objHandles = new();
+            //for (int i = 0; i < this.TotalMainHandle; i++)
+            //{
+            //    objHandles.Add(this.handles[i]);
+            //}
+            yield return new XElement("Objects", this.objects.ToXML());
+            yield return new XElement("Direction", this.direction);
+            yield return new XElement("Aggregates", this.aggregates.ToXML());
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.
@@ -3997,14 +4018,16 @@ namespace Epsitec.Common.Document.Objects
             this.document = Document.ReadDocument;
             this.uniqueId = info.GetInt32("UniqueId");
             this.name = info.GetString("Name");
-            this.properties = (UndoableList)info.GetValue("Properties", typeof(UndoableList));
+            this.properties = (SerializableUndoableList)
+                info.GetValue("Properties", typeof(SerializableUndoableList));
             this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
             this.handles = (System.Collections.ArrayList)
                 info.GetValue("Handles", typeof(System.Collections.ArrayList));
             this.HandlePropertiesCreate(); // crée les poignées des propriétés
 
-            this.objects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
+            this.objects = (SerializableUndoableList)
+                info.GetValue("Objects", typeof(SerializableUndoableList));
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 17))
             {
@@ -4017,11 +4040,12 @@ namespace Epsitec.Common.Document.Objects
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 26))
             {
-                this.aggregates = (UndoableList)info.GetValue("Aggregates", typeof(UndoableList));
+                this.aggregates = (SerializableUndoableList)
+                    info.GetValue("Aggregates", typeof(SerializableUndoableList));
             }
             else if (this.document.IsRevisionGreaterOrEqual(1, 0, 24))
             {
-                this.aggregates = new UndoableList(
+                this.aggregates = new SerializableUndoableList(
                     this.document,
                     UndoableListType.AggregatesInsideObject
                 );
@@ -4034,7 +4058,7 @@ namespace Epsitec.Common.Document.Objects
             }
             else
             {
-                this.aggregates = new UndoableList(
+                this.aggregates = new SerializableUndoableList(
                     this.document,
                     UndoableListType.AggregatesInsideObject
                 );
@@ -4143,16 +4167,16 @@ namespace Epsitec.Common.Document.Objects
         protected Point moveHandlePos;
 
         protected string name = "";
-        protected UndoableList properties;
+        protected SerializableUndoableList properties;
         protected List<Properties.Abstract> additionnalProperties;
         protected System.Collections.ArrayList handles = new System.Collections.ArrayList();
         protected UndoableList selectedSegments = null;
-        protected UndoableList objects = null;
+        protected SerializableUndoableList objects = null;
         protected int totalPropertyHandle;
         protected double direction = 0.0;
         protected double initialDirection = 0.0;
         protected SurfaceAnchor surfaceAnchor;
-        protected UndoableList aggregates = null;
+        protected SerializableUndoableList aggregates = null;
 
         protected bool isDirtyPageAndLayerNumbers = true;
         protected int pageNumber = -1;

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Drawing
 
     [System.Serializable]
     [System.ComponentModel.TypeConverter(typeof(Size.Converter))]
-    public struct Size
+    public struct Size : Support.IXMLSerializable<Size>
     {
         public Size(double width, double height)
         {
@@ -219,7 +219,12 @@ namespace Epsitec.Common.Drawing
             );
         }
 
-        public Size(XElement xml)
+        public static Size FromXML(XElement xml)
+        {
+            return new Size(xml);
+        }
+
+        private Size(XElement xml)
         {
             XElement root = xml.Element("Size");
             this.width = double.Parse(root.Attribute("width").Value);

@@ -11,7 +11,7 @@ namespace Epsitec.Common.Drawing
 
     [System.Serializable]
     [System.ComponentModel.TypeConverter(typeof(Point.Converter))]
-    public struct Point
+    public struct Point : Support.IXMLSerializable<Point>
     {
         public Point(double x, double y)
         {
@@ -551,7 +551,12 @@ namespace Epsitec.Common.Drawing
             return new XElement("Point", new XAttribute("x", this.X), new XAttribute("y", this.Y));
         }
 
-        public Point(XElement xml)
+        public static Point FromXML(XElement xml)
+        {
+            return new Point(xml);
+        }
+
+        private Point(XElement xml)
         {
             XElement root = xml.Element("Point");
             this.x = double.Parse(root.Attribute("x").Value);

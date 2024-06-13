@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.Settings
             this.CreateDefault();
 
             this.globalGuides = true;
-            this.guides = new UndoableList(this.document, UndoableListType.Guides);
+            this.guides = new SerializableUndoableList(this.document, UndoableListType.Guides);
 
             this.quickFonts = new System.Collections.ArrayList();
             Settings.DefaultQuickFonts(this.quickFonts);
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Document.Settings
             this.document.SetDirtySerialize(CacheBitmapChanging.None);
         }
 
-        protected UndoableList GuidesList
+        protected SerializableUndoableList GuidesList
         {
             //	Retourne la liste des repères.
             get
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
-        protected UndoableList GuidesListOther
+        protected SerializableUndoableList GuidesListOther
         {
             //	Retourne l'autre (global/local) liste des repères.
             get
@@ -393,7 +393,7 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
-        public UndoableList GuidesListGlobal
+        public SerializableUndoableList GuidesListGlobal
         {
             //	Retourne la liste des repères globaux.
             get { return this.guides; }
@@ -441,7 +441,8 @@ namespace Epsitec.Common.Document.Settings
             this.document = Document.ReadDocument;
             this.settings = (System.Collections.ArrayList)
                 info.GetValue("Settings", typeof(System.Collections.ArrayList));
-            this.guides = (UndoableList)info.GetValue("GuidesList", typeof(UndoableList));
+            this.guides = (SerializableUndoableList)
+                info.GetValue("GuidesList", typeof(SerializableUndoableList));
             this.printInfo = (PrintInfo)info.GetValue("PrintInfo", typeof(PrintInfo));
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 10))
@@ -497,7 +498,7 @@ namespace Epsitec.Common.Document.Settings
         protected System.Collections.ArrayList settings;
         protected System.Collections.Hashtable owners;
         protected bool globalGuides;
-        protected UndoableList guides;
+        protected SerializableUndoableList guides;
         protected System.Collections.ArrayList quickFonts;
         protected DrawingSettings drawingSettings;
         protected PrintInfo printInfo;

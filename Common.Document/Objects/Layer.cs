@@ -1,7 +1,8 @@
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -37,7 +38,10 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new UndoableList(this.document, UndoableListType.ObjectsInsideDocument);
+            this.objects = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideDocument
+            );
         }
 
         protected override bool ExistingProperty(Properties.Type type)
@@ -141,7 +145,7 @@ namespace Epsitec.Common.Document.Objects
 
         #region Menu
         public static VMenu CreateMenu(
-            UndoableList layers,
+            SerializableUndoableList layers,
             int currentLayer,
             string cmd,
             Support.EventHandler<MessageEventArgs> message
@@ -278,6 +282,11 @@ namespace Epsitec.Common.Document.Objects
 
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Layer", this.IterXMLParts());
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

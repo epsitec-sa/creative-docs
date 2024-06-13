@@ -105,7 +105,7 @@ namespace Epsitec.Common.Document.Widgets
                     total++;
 
                 System.Collections.ArrayList texts = new System.Collections.ArrayList();
-                UndoableList styles = this.aggregate.Styles;
+                SerializableUndoableList styles = this.aggregate.Styles;
                 foreach (Properties.Abstract property in styles)
                 {
                     string text = property.SampleText;

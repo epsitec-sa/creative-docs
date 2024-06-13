@@ -1,6 +1,7 @@
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -48,13 +49,16 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Property représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public abstract class Abstract : System.IComparable, ISerializable
+    public abstract class Abstract : System.IComparable, ISerializable, IXMLWritable
     {
         public Abstract(Document document, Type type)
         {
             this.document = document;
             this.type = type;
-            this.owners = new UndoableList(this.document, UndoableListType.ObjectsInsideProperty);
+            this.owners = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideProperty
+            );
             this.Initialize();
         }
 
@@ -258,7 +262,7 @@ namespace Epsitec.Common.Document.Properties
             return Type.None;
         }
 
-        public UndoableList Owners
+        public SerializableUndoableList Owners
         {
             //	Liste des propriétaires. Normalement, un propriétaire est un Objects.Abstract.
             //	Mais une propriété "isMulti" contient une liste de propriétaires de type
@@ -950,6 +954,16 @@ namespace Epsitec.Common.Document.Properties
 
 
         #region Serialization
+        public XElement ToXML()
+        {
+            var root = new XElement(
+                "Abstract",
+                new XAttribute("Type", this.type),
+                new XAttribute("IsStyle", this.isStyle)
+            );
+            return root;
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.
@@ -968,14 +982,17 @@ namespace Epsitec.Common.Document.Properties
             {
                 this.oldStyleName = info.GetString("StyleName");
             }
-            this.owners = new UndoableList(this.document, UndoableListType.ObjectsInsideProperty);
+            this.owners = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideProperty
+            );
         }
         #endregion
 
 
         protected Document document;
         protected Type type = Type.None;
-        protected UndoableList owners;
+        protected SerializableUndoableList owners;
         protected string oldStyleName = "";
         protected bool isOnlyForCreation = false;
         protected bool isStyle = false;

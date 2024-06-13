@@ -1,6 +1,7 @@
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Text;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -1604,6 +1605,11 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("TextBox2", this.IterXMLParts());
+        }
+
         protected TextBox2(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

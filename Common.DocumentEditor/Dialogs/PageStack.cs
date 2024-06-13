@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
@@ -318,7 +318,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
         public VMenu CreatePagesMenu()
         {
             //	Construit le menu pour choisir une page.
-            UndoableList pages = this.editor.CurrentDocument.DocumentObjects; // liste des pages
+            SerializableUndoableList pages = this.editor.CurrentDocument.DocumentObjects; // liste des pages
             return Objects.Page.CreateMenu(pages, this.showedPage, null, this.HandleMenuPressed);
         }
 
