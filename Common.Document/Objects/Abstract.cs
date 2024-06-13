@@ -163,11 +163,11 @@ namespace Epsitec.Common.Document.Objects
             set { this.popupInterfaceFrame = value; }
         }
 
-        public System.Collections.ArrayList Handles
-        {
-            get { return this.handles; }
-            set { this.handles = value; }
-        }
+        //public System.Collections.ArrayList Handles
+        //{
+        //    get { return this.handles; }
+        //    set { this.handles = value; }
+        //}
 
         public SerializableUndoableList Objects
         {
@@ -3779,7 +3779,7 @@ namespace Epsitec.Common.Document.Objects
                 this.globalSelected = host.globalSelected;
                 this.allSelected = host.allSelected;
 
-                this.list = new System.Collections.ArrayList();
+                this.list = new();
                 foreach (Handle hObj in this.host.handles)
                 {
                     Handle hCopy = new Handle(host.document);
@@ -3821,7 +3821,7 @@ namespace Epsitec.Common.Document.Objects
                 }
                 else
                 {
-                    System.Collections.ArrayList temp = this.host.handles;
+                    List<Handle> temp = this.host.handles;
                     this.host.handles = this.list;
                     this.list = temp;
                 }
@@ -3849,7 +3849,7 @@ namespace Epsitec.Common.Document.Objects
             protected bool edited;
             protected bool globalSelected;
             protected bool allSelected;
-            protected System.Collections.ArrayList list;
+            protected List<Handle> list;
         }
         #endregion
 
@@ -3871,7 +3871,7 @@ namespace Epsitec.Common.Document.Objects
             public OpletGeometry(Objects.Abstract host)
             {
                 this.host = host;
-                this.list = new System.Collections.ArrayList();
+                this.list = new List<Handle>();
                 this.direction = host.direction;
 
                 foreach (Handle handle in this.host.handles)
@@ -3886,7 +3886,7 @@ namespace Epsitec.Common.Document.Objects
             {
                 this.host.document.Notifier.NotifyArea(this.host.BoundingBox);
 
-                System.Collections.ArrayList temp = this.host.handles;
+                List<Handle> temp = this.host.handles;
                 this.host.handles = this.list;
                 this.list = temp;
 
@@ -3915,7 +3915,7 @@ namespace Epsitec.Common.Document.Objects
             }
 
             protected Objects.Abstract host;
-            protected System.Collections.ArrayList list;
+            protected List<Handle> list;
             protected double direction;
         }
         #endregion
@@ -3985,11 +3985,11 @@ namespace Epsitec.Common.Document.Objects
             // bl-convert serialize handles
 
             //	Ne sérialise que les poignées des objets, sans celles des propriétés.
-            //List<IXMLWritable> objHandles = new();
-            //for (int i = 0; i < this.TotalMainHandle; i++)
-            //{
-            //    objHandles.Add(this.handles[i]);
-            //}
+            List<IXMLWritable> objHandles = new();
+            for (int i = 0; i < this.TotalMainHandle; i++)
+            {
+                objHandles.Add(this.handles[i]);
+            }
             yield return new XElement("Objects", this.objects.ToXML());
             yield return new XElement("Direction", this.direction);
             yield return new XElement("Aggregates", this.aggregates.ToXML());
@@ -4039,8 +4039,7 @@ namespace Epsitec.Common.Document.Objects
                 info.GetValue("Properties", typeof(SerializableUndoableList));
             this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
-            this.handles = (System.Collections.ArrayList)
-                info.GetValue("Handles", typeof(System.Collections.ArrayList));
+            this.handles = (List<Handle>)info.GetValue("Handles", typeof(List<Handle>));
             this.HandlePropertiesCreate(); // crée les poignées des propriétés
 
             this.objects = (SerializableUndoableList)
@@ -4186,7 +4185,7 @@ namespace Epsitec.Common.Document.Objects
         protected string name = "";
         protected SerializableUndoableList properties;
         protected List<Properties.Abstract> additionnalProperties;
-        protected System.Collections.ArrayList handles = new System.Collections.ArrayList();
+        protected List<Handle> handles = new();
         protected UndoableList selectedSegments = null;
         protected SerializableUndoableList objects = null;
         protected int totalPropertyHandle;
