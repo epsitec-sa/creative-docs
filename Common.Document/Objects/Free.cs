@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Free est la classe de l'objet graphique "trait à main levée".
     /// </summary>
     [System.Serializable()]
-    public class Free : Objects.Abstract
+    public class Free : Objects.Abstract, Support.IXMLSerializable<Free>
     {
         public Free(Document document, Objects.Abstract model)
             : this(document, model, false) { }
@@ -1119,6 +1119,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Free", this.IterXMLParts());
         }
+
+        public static Free FromXML(XElement xml)
+        {
+            return new Free(xml);
+        }
+
+        private Free(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

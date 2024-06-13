@@ -487,16 +487,62 @@ namespace Epsitec.Common.Document
             var root = xml.Element("UndoableList");
             UndoableListType.TryParse(root.Attribute("Type").Value, out this.type);
             this.selected = int.Parse(root.Attribute("Selected").Value);
-            //this.objectList = root.Elements().Select(el => )
+            this.objectList = root.Element("List")
+                .Elements()
+                .Select(el => this.LoadObjectFromXML(el))
+                .ToList();
         }
 
-        //private System.Type GetClass(string className)
-        //{
-        //    switch (className)
-        //    {
-        //        case "Abstract"
-        //    }
-        //}
+        private IXMLWritable LoadObjectFromXML(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                case "Bezier":
+                    return Objects.Bezier.FromXML(xml);
+                case "Circle":
+                    return Objects.Circle.FromXML(xml);
+                case "Dimension":
+                    return Objects.Dimension.FromXML(xml);
+                case "Ellipse":
+                    return Objects.Ellipse.FromXML(xml);
+                case "Free":
+                    return Objects.Free.FromXML(xml);
+                case "Group":
+                    return Objects.Group.FromXML(xml);
+                case "Image":
+                    return Objects.Image.FromXML(xml);
+                case "Layer":
+                    return Objects.Layer.FromXML(xml);
+                case "Line":
+                    return Objects.Line.FromXML(xml);
+                case "Memory":
+                    return Objects.Memory.FromXML(xml);
+                case "Page":
+                    return Objects.Page.FromXML(xml);
+                case "Poly":
+                    return Objects.Poly.FromXML(xml);
+                case "Rectangle":
+                    return Objects.Rectangle.FromXML(xml);
+                case "Regular":
+                    return Objects.Regular.FromXML(xml);
+                case "Surface":
+                    return Objects.Surface.FromXML(xml);
+                case "TextBox":
+                    return Objects.TextBox.FromXML(xml);
+                case "TextBox2":
+                    return Objects.TextBox2.FromXML(xml);
+                case "TextLine":
+                    return Objects.TextLine.FromXML(xml);
+                case "TextLine2":
+                    return Objects.TextLine2.FromXML(xml);
+                case "Volume":
+                    return Objects.Volume.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Object type '{xml.Name.LocalName}'"
+                    );
+            }
+        }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {

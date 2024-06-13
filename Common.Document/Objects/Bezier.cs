@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Bezier est la classe de l'objet graphique "courbes de Bézier".
     /// </summary>
     [System.Serializable()]
-    public class Bezier : Objects.Abstract
+    public class Bezier : Objects.Abstract, Support.IXMLSerializable<Bezier>
     {
         public Bezier(Document document, Objects.Abstract model)
             : base(document, model)
@@ -2058,6 +2058,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Bezier", this.IterXMLParts());
         }
+
+        public static Bezier FromXML(XElement xml)
+        {
+            return new Bezier(xml);
+        }
+
+        private Bezier(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

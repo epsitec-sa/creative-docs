@@ -9,7 +9,10 @@ namespace Epsitec.Common.Document.Objects
     /// La classe TextLine2 est la classe de l'objet graphique "texte simple".
     /// </summary>
     [System.Serializable()]
-    public class TextLine2 : Objects.AbstractText, Text.ITextRenderer
+    public class TextLine2
+        : Objects.AbstractText,
+            Text.ITextRenderer,
+            Support.IXMLSerializable<TextLine2>
     {
         public TextLine2(Document document, Objects.Abstract model)
             : base(document, model) { }
@@ -3193,6 +3196,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("TextLine2", this.IterXMLParts());
         }
+
+        public static TextLine2 FromXML(XElement xml)
+        {
+            return new TextLine2(xml);
+        }
+
+        private TextLine2(XElement xml)
+            : base(xml) { }
 
         protected TextLine2(SerializationInfo info, StreamingContext context)
             : base(info, context)

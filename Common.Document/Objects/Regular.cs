@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Regular est la classe de l'objet graphique "polygone régulier".
     /// </summary>
     [System.Serializable()]
-    public class Regular : Objects.Abstract
+    public class Regular : Objects.Abstract, Support.IXMLSerializable<Regular>
     {
         public Regular(Document document, Objects.Abstract model)
             : base(document, model)
@@ -652,6 +652,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Regular", this.IterXMLParts());
         }
+
+        public static Regular FromXML(XElement xml)
+        {
+            return new Regular(xml);
+        }
+
+        private Regular(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

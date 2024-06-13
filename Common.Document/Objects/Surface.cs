@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Surface est la classe de l'objet graphique surface 2d.
     /// </summary>
     [System.Serializable()]
-    public class Surface : Objects.Abstract
+    public class Surface : Objects.Abstract, Support.IXMLSerializable<Surface>
     {
         public Surface(Document document, Objects.Abstract model)
             : base(document, model)
@@ -829,6 +829,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Surface", this.IterXMLParts());
         }
+
+        public static Surface FromXML(XElement xml)
+        {
+            return new Surface(xml);
+        }
+
+        private Surface(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

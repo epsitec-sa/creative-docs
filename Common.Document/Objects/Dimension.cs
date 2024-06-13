@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Dimension est la classe de l'objet graphique "cotation".
     /// </summary>
     [System.Serializable()]
-    public class Dimension : Objects.Abstract
+    public class Dimension : Objects.Abstract, Support.IXMLSerializable<Dimension>
     {
         public Dimension(Document document, Objects.Abstract model)
             : this(document, model, false) { }
@@ -1313,6 +1313,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Dimension", this.IterXMLParts());
         }
+
+        public static Dimension FromXML(XElement xml)
+        {
+            return new Dimension(xml);
+        }
+
+        private Dimension(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

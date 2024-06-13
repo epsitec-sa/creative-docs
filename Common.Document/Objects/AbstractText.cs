@@ -1,11 +1,12 @@
 #define SIMPLECOPYPASTE		// copier/coller tout simple
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -1625,6 +1626,21 @@ namespace Epsitec.Common.Document.Objects
 
 
         #region Serialization
+        public new IEnumerable<XObject> IterXMLParts()
+        {
+            foreach (XObject item in base.IterXMLParts())
+            {
+                yield return item;
+            }
+            yield return new XElement("TextFlow", this.textFlow.ToXML());
+        }
+
+        protected AbstractText(XElement xml)
+            : base(xml)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

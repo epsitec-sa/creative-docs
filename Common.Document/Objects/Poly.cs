@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Poly est la classe de l'objet graphique "polygone".
     /// </summary>
     [System.Serializable()]
-    public class Poly : Objects.Abstract
+    public class Poly : Objects.Abstract, Support.IXMLSerializable<Poly>
     {
         public Poly(Document document, Objects.Abstract model)
             : base(document, model)
@@ -1313,6 +1313,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Poly", this.IterXMLParts());
         }
+
+        public static Poly FromXML(XElement xml)
+        {
+            return new Poly(xml);
+        }
+
+        private Poly(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

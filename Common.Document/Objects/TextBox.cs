@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe TextBox est la classe de l'objet graphique "pavé de texte".
     /// </summary>
     [System.Serializable()]
-    public class TextBox : Objects.Abstract
+    public class TextBox : Objects.Abstract, Support.IXMLSerializable<TextBox>
     {
         public TextBox(Document document, Objects.Abstract model)
             : base(document, model)
@@ -647,6 +647,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("TextBox", this.IterXMLParts());
         }
+
+        public static TextBox FromXML(XElement xml)
+        {
+            return new TextBox(xml);
+        }
+
+        private TextBox(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

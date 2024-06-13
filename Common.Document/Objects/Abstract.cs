@@ -3979,7 +3979,10 @@ namespace Epsitec.Common.Document.Objects
         {
             yield return new XAttribute("UniqueId", this.uniqueId);
             yield return new XAttribute("Name", this.name);
+
             yield return new XElement("Properties", this.properties.ToXML());
+
+            // bl-convert serialize handles
 
             //	Ne sérialise que les poignées des objets, sans celles des propriétés.
             //List<IXMLWritable> objHandles = new();
@@ -3990,6 +3993,20 @@ namespace Epsitec.Common.Document.Objects
             yield return new XElement("Objects", this.objects.ToXML());
             yield return new XElement("Direction", this.direction);
             yield return new XElement("Aggregates", this.aggregates.ToXML());
+        }
+
+        protected Abstract(XElement xml)
+        {
+            this.uniqueId = int.Parse(xml.Attribute("UniqueId").Value);
+            this.name = xml.Attribute("Name").Value;
+
+            this.properties = SerializableUndoableList.FromXML(xml.Element("Properties"));
+
+            // bl-convert deserialize handles
+
+            this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
+            this.direction = double.Parse(xml.Attribute("direction").Value);
+            this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

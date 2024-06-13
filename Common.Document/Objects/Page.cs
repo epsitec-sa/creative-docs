@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Page est la classe de l'objet graphique "page".
     /// </summary>
     [System.Serializable()]
-    public class Page : Objects.Abstract
+    public class Page : Objects.Abstract, Support.IXMLSerializable<Page>
     {
         public Page(Document document, Objects.Abstract model)
             : base(document, model)
@@ -660,6 +660,14 @@ namespace Epsitec.Common.Document.Objects
             // bl-convert add missing attributes
             return new XElement("Page", this.IterXMLParts());
         }
+
+        public static Page FromXML(XElement xml)
+        {
+            return new Page(xml);
+        }
+
+        private Page(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

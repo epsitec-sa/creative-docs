@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Circle est la classe de l'objet graphique "cercle".
     /// </summary>
     [System.Serializable()]
-    public class Circle : Objects.Abstract
+    public class Circle : Objects.Abstract, Support.IXMLSerializable<Circle>
     {
         public Circle(Document document, Objects.Abstract model)
             : base(document, model)
@@ -325,6 +325,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Circle", this.IterXMLParts());
         }
+
+        public static Circle FromXML(XElement xml)
+        {
+            return new Circle(xml);
+        }
+
+        private Circle(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

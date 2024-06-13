@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Layer est la classe de l'objet graphique "calque".
     /// </summary>
     [System.Serializable()]
-    public class Layer : Objects.Abstract
+    public class Layer : Objects.Abstract, Support.IXMLSerializable<Layer>
     {
         public Layer(Document document, Objects.Abstract model)
             : base(document, model)
@@ -284,8 +284,17 @@ namespace Epsitec.Common.Document.Objects
         #region Serialization
         public override XElement ToXML()
         {
+            // bl-convert add missing data
             return new XElement("Layer", this.IterXMLParts());
         }
+
+        public static Layer FromXML(XElement xml)
+        {
+            return new Layer(xml);
+        }
+
+        private Layer(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

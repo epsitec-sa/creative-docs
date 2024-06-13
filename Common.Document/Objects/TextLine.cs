@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe TextLine est la classe de l'objet graphique "texte simple".
     /// </summary>
     [System.Serializable()]
-    public class TextLine : Objects.Abstract
+    public class TextLine : Objects.Abstract, Support.IXMLSerializable<TextLine>
     {
         public TextLine(Document document, Objects.Abstract model)
             : base(document, model)
@@ -2190,6 +2190,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("TextLine", this.IterXMLParts());
         }
+
+        public static TextLine FromXML(XElement xml)
+        {
+            return new TextLine(xml);
+        }
+
+        private TextLine(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

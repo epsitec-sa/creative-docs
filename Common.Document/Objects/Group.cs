@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Group est la classe de l'objet graphique "groupe".
     /// </summary>
     [System.Serializable()]
-    public class Group : Objects.Abstract
+    public class Group : Objects.Abstract, Support.IXMLSerializable<Group>
     {
         public Group(Document document, Objects.Abstract model)
             : base(document, model)
@@ -312,6 +312,14 @@ namespace Epsitec.Common.Document.Objects
         {
             return new XElement("Group", this.IterXMLParts());
         }
+
+        public static Group FromXML(XElement xml)
+        {
+            return new Group(xml);
+        }
+
+        private Group(XElement xml)
+            : base(xml) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
