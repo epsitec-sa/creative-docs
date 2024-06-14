@@ -1,5 +1,7 @@
-using Epsitec.Common.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -19,7 +21,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Line représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Line : Abstract
+    public class Line : Abstract, Support.IXMLSerializable<Line>
     {
         public Line(Document document, Type type)
             : base(document, type) { }
@@ -793,6 +795,79 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Line otherLine = (Line)other;
+            if (
+                this.dash
+                && !(this.dashPen == otherLine.dashPen && this.dashGap == otherLine.dashGap)
+            )
+            {
+                return false;
+            }
+            return base.HasEquivalentData(other)
+                && this.width == otherLine.width
+                && this.cap == otherLine.cap
+                && this.join == otherLine.join
+                && this.limit == otherLine.limit
+                && this.dash == otherLine.dash;
+        }
+
+        public override XElement ToXML()
+        {
+            var root = new XElement(
+                "Line",
+                base.IterXMLParts(),
+                new XAttribute("Width", this.width),
+                new XAttribute("Cap", this.cap),
+                new XAttribute("Join", this.join),
+                new XAttribute("Limit", this.limit),
+                new XAttribute("Dash", this.dash)
+            );
+            if (this.dash)
+            {
+                root.Add(
+                    new XAttribute(
+                        "DashPen",
+                        string.Join(" ", this.dashPen.Select(f => f.ToString()))
+                    )
+                );
+                root.Add(
+                    new XAttribute(
+                        "DashGap",
+                        string.Join(" ", this.dashGap.Select(f => f.ToString()))
+                    )
+                );
+            }
+            return root;
+        }
+
+        public static Line FromXML(XElement xml)
+        {
+            return new Line(xml);
+        }
+
+        private Line(XElement xml)
+            : base(xml)
+        {
+            this.width = double.Parse(xml.Attribute("Width").Value);
+            CapStyle.TryParse(xml.Attribute("Cap").Value, out this.cap);
+            JoinStyle.TryParse(xml.Attribute("Join").Value, out this.join);
+            this.limit = double.Parse(xml.Attribute("Limit").Value);
+            this.dash = bool.Parse(xml.Attribute("Dash").Value);
+            if (this.dash)
+            {
+                this.dashPen = xml.Attribute("DashPen")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+                this.dashGap = xml.Attribute("DashGap")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+            }
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

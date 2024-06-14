@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Color représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Color : Abstract
+    public class Color : Abstract, Support.IXMLSerializable<Color>
     {
         public Color(Document document, Type type)
             : base(document, type) { }
@@ -93,6 +94,32 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Color otherColor = (Color)other;
+            return base.HasEquivalentData(other) && this.color == otherColor.color;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Color",
+                base.IterXMLParts(),
+                new XElement("Color", this.color.ToXML())
+            );
+        }
+
+        public static Color FromXML(XElement xml)
+        {
+            return new Color(xml);
+        }
+
+        private Color(XElement xml)
+            : base(xml)
+        {
+            this.color = RichColor.FromXML(xml.Element("Color"));
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

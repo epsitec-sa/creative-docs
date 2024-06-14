@@ -638,6 +638,13 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
+
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            TextFlow otherTextFlow = (TextFlow)other;
+            return otherTextFlow.objectsChain.HasEquivalentData(this.objectsChain);
+        }
+
         public XElement ToXML()
         {
             // bl-converter serialize textStory

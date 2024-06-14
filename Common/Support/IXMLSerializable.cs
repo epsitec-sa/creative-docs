@@ -5,6 +5,8 @@ namespace Epsitec.Common.Support
     public interface IXMLWritable
     {
         public XElement ToXML();
+
+        public bool HasEquivalentData(IXMLWritable other);
     }
 
     public interface IXMLSerializable<T> : IXMLWritable

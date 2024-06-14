@@ -284,8 +284,19 @@ namespace Epsitec.Common.Document.Objects
         #region Serialization
         public override XElement ToXML()
         {
-            // bl-convert add missing data
-            return new XElement("Layer", this.IterXMLParts());
+            var root = new XElement(
+                "Layer",
+                this.IterXMLParts(),
+                new XAttribute("LayerType", this.layerType)
+            );
+            if (this.document.Type != DocumentType.Pictogram)
+            {
+                root.Add(
+                    new XAttribute("LayerPrint", this.layerPrint),
+                    new XAttribute("Magnet", this.magnet)
+                );
+            }
+            return root;
         }
 
         public static Layer FromXML(XElement xml)
@@ -294,7 +305,15 @@ namespace Epsitec.Common.Document.Objects
         }
 
         private Layer(XElement xml)
-            : base(xml) { }
+            : base(xml)
+        {
+            LayerType.TryParse(xml.Attribute("LayerType").Value, out this.layerType);
+            if (this.document.Type != DocumentType.Pictogram)
+            {
+                LayerPrint.TryParse(xml.Attribute("LayerPrint").Value, out this.layerPrint);
+                this.magnet = bool.Parse(xml.Attribute("Magnet").Value);
+            }
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

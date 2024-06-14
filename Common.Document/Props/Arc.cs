@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -17,7 +18,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Arc représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Arc : Abstract
+    public class Arc : Abstract, Support.IXMLSerializable<Arc>
     {
         public Arc(Document document, Type type)
             : base(document, type) { }
@@ -370,6 +371,53 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Arc otherArc = (Arc)other;
+            return base.HasEquivalentData(other)
+                && this.arcType == otherArc.arcType
+                && (
+                    this.arcType == ArcType.Full
+                    || (
+                        this.startingAngle == otherArc.startingAngle
+                        && this.endingAngle == otherArc.endingAngle
+                    )
+                );
+        }
+
+        public override XElement ToXML()
+        {
+            var root = new XElement(
+                "Arc",
+                base.IterXMLParts(),
+                new XAttribute("ArcType", this.arcType)
+            );
+            if (this.arcType != ArcType.Full)
+            {
+                root.Add(
+                    new XAttribute("StartingAngle", this.startingAngle),
+                    new XAttribute("EndingAngle", this.endingAngle)
+                );
+            }
+            return root;
+        }
+
+        public static Arc FromXML(XElement xml)
+        {
+            return new Arc(xml);
+        }
+
+        private Arc(XElement xml)
+            : base(xml)
+        {
+            ArcType.TryParse(xml.Attribute("ArcType").Value, out this.arcType);
+            if (this.arcType != ArcType.Full)
+            {
+                this.startingAngle = double.Parse(xml.Attribute("StartingAngle").Value);
+                this.endingAngle = double.Parse(xml.Attribute("EndingAngle").Value);
+            }
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

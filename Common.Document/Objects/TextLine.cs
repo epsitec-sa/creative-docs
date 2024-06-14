@@ -2186,6 +2186,13 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            TextLine otherTextLine = (TextLine)other;
+            return base.HasEquivalentData(other)
+                && this.textLayout.Text == otherTextLine.textLayout.Text;
+        }
+
         public override XElement ToXML()
         {
             return new XElement("TextLine", this.IterXMLParts());

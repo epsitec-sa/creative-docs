@@ -1,5 +1,7 @@
-using Epsitec.Common.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -24,7 +26,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Arrow représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Arrow : Abstract
+    public class Arrow : Abstract, Support.IXMLSerializable<Arrow>
     {
         public Arrow(Document document, Type type)
             : base(document, type) { }
@@ -923,6 +925,77 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Arrow otherArrow = (Arrow)other;
+            if (!(base.HasEquivalentData(other) && this.arrowType == otherArrow.arrowType))
+            {
+                return false;
+            }
+            if (this.arrowType[0] != ArrowType.Right || this.arrowType[1] != ArrowType.Right)
+            {
+                return this.length == otherArrow.length
+                    && this.effect1 == otherArrow.effect1
+                    && this.effect2 == otherArrow.effect2;
+            }
+            return true;
+        }
+
+        public override XElement ToXML()
+        {
+            var root = new XElement(
+                "Arrow",
+                base.IterXMLParts(),
+                new XAttribute("ArrowType_0", this.arrowType[0]),
+                new XAttribute("ArrowType_1", this.arrowType[1])
+            );
+            if (this.arrowType[0] != ArrowType.Right || this.arrowType[1] != ArrowType.Right)
+            {
+                root.Add(
+                    new XAttribute(
+                        "length",
+                        string.Join(" ", this.length.Select(f => f.ToString()))
+                    ),
+                    new XAttribute(
+                        "effect1",
+                        string.Join(" ", this.effect1.Select(f => f.ToString()))
+                    ),
+                    new XAttribute(
+                        "effect2",
+                        string.Join(" ", this.effect2.Select(f => f.ToString()))
+                    )
+                );
+            }
+            return root;
+        }
+
+        public static Arrow FromXML(XElement xml)
+        {
+            return new Arrow(xml);
+        }
+
+        private Arrow(XElement xml)
+            : base(xml)
+        {
+            ArrowType.TryParse(xml.Attribute("ArrowType_0").Value, out this.arrowType[0]);
+            ArrowType.TryParse(xml.Attribute("ArrowType_1").Value, out this.arrowType[1]);
+            if (this.arrowType[0] != ArrowType.Right || this.arrowType[1] != ArrowType.Right)
+            {
+                this.length = xml.Attribute("Length")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+                this.effect1 = xml.Attribute("Effect1")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+                this.effect2 = xml.Attribute("Effect2")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+            }
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

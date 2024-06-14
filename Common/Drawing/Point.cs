@@ -546,6 +546,11 @@ namespace Epsitec.Common.Drawing
             return true;
         }
 
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            return this == (Point)other;
+        }
+
         public XElement ToXML()
         {
             return new XElement("Point", new XAttribute("x", this.X), new XAttribute("y", this.Y));

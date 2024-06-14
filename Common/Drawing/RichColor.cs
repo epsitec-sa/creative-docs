@@ -1,6 +1,8 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Drawing
 {
     [System.Serializable]
@@ -9,7 +11,9 @@ namespace Epsitec.Common.Drawing
     /// The <c>RichColor</c> structure represents an RGB or CMYK color, or
     /// a grayscale value.
     /// </summary>
-    public struct RichColor : System.Runtime.Serialization.ISerializable
+    public struct RichColor
+        : System.Runtime.Serialization.ISerializable,
+            Support.IXMLSerializable<RichColor>
     {
         public RichColor(Color color)
         {
@@ -1457,7 +1461,44 @@ namespace Epsitec.Common.Drawing
         }
         #endregion
 
-        #region ISerializable Members
+        #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            return this == (RichColor)other;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "RichColor",
+                new XAttribute("Alpha", this.alpha),
+                new XAttribute("Value1", this.value1),
+                new XAttribute("Value2", this.value2),
+                new XAttribute("Value3", this.value3),
+                new XAttribute("Value4", this.value4),
+                new XAttribute("Name", this.name),
+                new XAttribute("ColorSpace", this.colorSpace),
+                new XAttribute("IsValid", this.isValid)
+            );
+        }
+
+        public static RichColor FromXML(XElement xml)
+        {
+            return new RichColor(xml);
+        }
+
+        private RichColor(XElement xml)
+        {
+            this.alpha = double.Parse(xml.Attribute("Alpha").Value);
+            this.value1 = double.Parse(xml.Attribute("Value1").Value);
+            this.value2 = double.Parse(xml.Attribute("Value2").Value);
+            this.value3 = double.Parse(xml.Attribute("Value3").Value);
+            this.value4 = double.Parse(xml.Attribute("Value4").Value);
+            this.name = xml.Attribute("Name").Value;
+            ColorSpace.TryParse(xml.Attribute("ColorSpace").Value, out this.colorSpace);
+            this.isValid = bool.Parse(xml.Attribute("IsValid").Value);
+        }
+
         public RichColor(
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context

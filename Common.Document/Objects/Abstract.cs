@@ -3972,6 +3972,19 @@ namespace Epsitec.Common.Document.Objects
         #endregion
 
 
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            Abstract otherAbstract = (Abstract)other;
+            return this.uniqueId == otherAbstract.uniqueId
+                && this.name == otherAbstract.name
+                && this.direction == otherAbstract.direction
+                && this.properties.HasEquivalentData(otherAbstract.properties)
+                && this.objects.HasEquivalentData(otherAbstract.objects)
+                && this.aggregates.HasEquivalentData(otherAbstract.aggregates)
+                && this.handles.Zip(otherAbstract.handles)
+                    .All(h => h.First.HasEquivalentData(h.Second));
+        }
+
         #region Serialization
 
         public abstract XElement ToXML();
@@ -3980,6 +3993,7 @@ namespace Epsitec.Common.Document.Objects
         {
             yield return new XAttribute("UniqueId", this.uniqueId);
             yield return new XAttribute("Name", this.name);
+            yield return new XAttribute("Direction", this.direction);
 
             yield return new XElement("Properties", this.properties.ToXML());
 
@@ -3991,25 +4005,28 @@ namespace Epsitec.Common.Document.Objects
             }
             yield return handles;
             yield return new XElement("Objects", this.objects.ToXML());
-            yield return new XElement("Direction", this.direction);
             yield return new XElement("Aggregates", this.aggregates.ToXML());
         }
 
         protected Abstract(XElement xml)
         {
+            this.document = Document.ReadDocument;
             this.uniqueId = int.Parse(xml.Attribute("UniqueId").Value);
             this.name = xml.Attribute("Name").Value;
+            this.direction = double.Parse(xml.Attribute("Direction").Value);
 
             this.properties = SerializableUndoableList.FromXML(xml.Element("Properties"));
+            this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
             this.handles = xml.Element("Handles")
                 .Elements()
                 .Select(Common.Document.Objects.Handle.FromXML)
                 .ToList();
+            this.HandlePropertiesCreate(); // crée les poignées des propriétés
 
             this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
-            this.direction = double.Parse(xml.Attribute("direction").Value);
             this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
+            this.CreateMissingProperties();
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

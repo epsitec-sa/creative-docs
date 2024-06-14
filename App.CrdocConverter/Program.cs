@@ -52,13 +52,9 @@ void CheckReadBackDocument(Document original, string filepath)
         Console.WriteLine("    - check reading back from xml");
     }
     Document newDocument = Document.LoadFromXMLFile(filepath);
-    try
+    if (!newDocument.HasEquivalentData(original))
     {
-        newDocument.AssertIsEquivalent(original);
-    }
-    catch (InvalidOperationException ex)
-    {
-        Console.WriteLine(WithColor($"    Error: {ex.Message}", 31));
+        Console.WriteLine(WithColor($"    Error: ", 31));
         failed++;
     }
 }

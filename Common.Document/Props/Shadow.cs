@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Shadow représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Shadow : Abstract
+    public class Shadow : Abstract, Support.IXMLSerializable<Shadow>
     {
         public Shadow(Document document, Type type)
             : base(document, type) { }
@@ -146,6 +147,42 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Shadow otherShadow = (Shadow)other;
+            return base.HasEquivalentData(other)
+                && this.radius == otherShadow.radius
+                && this.ox == otherShadow.ox
+                && this.oy == otherShadow.oy
+                && this.color == otherShadow.color;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Shadow",
+                base.IterXMLParts(),
+                new XAttribute("Radius", this.radius),
+                new XAttribute("Ox", this.ox),
+                new XAttribute("Oy", this.oy),
+                new XElement("Color", this.color)
+            );
+        }
+
+        public static Shadow FromXML(XElement xml)
+        {
+            return new Shadow(xml);
+        }
+
+        private Shadow(XElement xml)
+            : base(xml)
+        {
+            this.radius = double.Parse(xml.Attribute("Radius").Value);
+            this.ox = double.Parse(xml.Attribute("Ox").Value);
+            this.oy = double.Parse(xml.Attribute("Oy").Value);
+            this.color = RichColor.FromXML(xml.Element("Color"));
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.
@@ -178,7 +215,7 @@ namespace Epsitec.Common.Document.Properties
         #endregion
 
 
-        protected Drawing.RichColor color;
+        protected RichColor color;
         protected double radius;
         protected double ox;
         protected double oy;

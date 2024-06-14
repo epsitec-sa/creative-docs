@@ -1626,6 +1626,12 @@ namespace Epsitec.Common.Document.Objects
 
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            AbstractText otherAbstractText = (AbstractText)other;
+            return base.HasEquivalentData(other) && this.textFlow == otherAbstractText.textFlow;
+        }
+
         public new IEnumerable<XObject> IterXMLParts()
         {
             foreach (XObject item in base.IterXMLParts())

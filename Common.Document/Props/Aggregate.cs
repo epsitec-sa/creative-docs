@@ -248,6 +248,14 @@ namespace Epsitec.Common.Document.Properties
 
 
         #region Serialization
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            Aggregate otherAggregate = (Aggregate)other;
+            return otherAggregate.aggregateName == this.aggregateName
+                && otherAggregate.styles.HasEquivalentData(this.styles)
+                && otherAggregate.children.HasEquivalentData(this.children);
+        }
+
         public XElement ToXML()
         {
             var root = new XElement("Aggregate", new XAttribute("Name", this.aggregateName));

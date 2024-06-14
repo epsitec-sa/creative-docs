@@ -581,6 +581,13 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Handle otherHandle = (Handle)other;
+            return this.type == otherHandle.type
+                && this.constrainType == otherHandle.constrainType
+                && this.position == otherHandle.position;
+        }
 
         public XElement ToXML()
         {

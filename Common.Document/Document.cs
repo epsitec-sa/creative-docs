@@ -1778,6 +1778,35 @@ namespace Epsitec.Common.Document
             return new Document(root);
         }
 
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            var otherDoc = (Document)other;
+            if (
+                !(
+                    this.Type == otherDoc.Type
+                    && this.Name == otherDoc.Name
+                    && this.uniqueObjectId == otherDoc.uniqueObjectId
+                    && this.uniqueAggregateId == otherDoc.uniqueAggregateId
+                    && this.uniqueParagraphStyleId == otherDoc.uniqueParagraphStyleId
+                    && this.uniqueCharacterStyleId == otherDoc.uniqueCharacterStyleId
+                )
+            )
+            {
+                return false;
+            }
+
+            if (
+                this.type == DocumentType.Pictogram
+                && (this.size != otherDoc.size || this.hotSpot != otherDoc.hotSpot)
+            )
+            {
+                return false;
+            }
+            return this.objects.HasEquivalentData(otherDoc.objects)
+                && this.propertiesAuto.HasEquivalentData(otherDoc.propertiesAuto)
+                && this.aggregates.HasEquivalentData(otherDoc.aggregates);
+        }
+
         public void AssertIsEquivalent(Document other)
         {
             Assert(this.Type == other.Type, "Type");
@@ -1799,9 +1828,9 @@ namespace Epsitec.Common.Document
                 Assert(this.size == other.size, "size");
                 Assert(this.hotSpot == other.hotSpot, "hotSpot");
             }
-            Assert(this.objects == other.objects, "objects");
-            Assert(this.propertiesAuto == other.propertiesAuto, "propertiesAuto");
-            Assert(this.aggregates == other.aggregates, "aggregates");
+            Assert(this.objects.HasEquivalentData(other.objects), "objects");
+            Assert(this.propertiesAuto.HasEquivalentData(other.propertiesAuto), "propertiesAuto");
+            Assert(this.aggregates.HasEquivalentData(other.aggregates), "aggregates");
         }
 
         public XElement ToXML()
@@ -1854,6 +1883,7 @@ namespace Epsitec.Common.Document
 
         private Document(XElement root)
         {
+            Document.ReadDocument = this; // bl-converter ugly, refactor
             DocumentType.TryParse(root.Element("Type").Value, out this.type);
             this.name = root.Element("Name")?.Value;
 

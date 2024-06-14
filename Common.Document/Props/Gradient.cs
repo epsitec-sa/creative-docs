@@ -1,5 +1,7 @@
-using Epsitec.Common.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -21,7 +23,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Gradient représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Gradient : Abstract
+    public class Gradient : Abstract, Support.IXMLSerializable<Gradient>
     {
         public Gradient(Document document, Type type)
             : base(document, type) { }
@@ -1178,6 +1180,144 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Gradient otherGradient = (Gradient)other;
+            if (
+                !(
+                    base.HasEquivalentData(other)
+                    && this.fillType == otherGradient.fillType
+                    && this.color1 == otherGradient.color1
+                    && this.smooth == otherGradient.smooth
+                )
+            )
+            {
+                return false;
+            }
+            if (
+                this.fillType != GradientFillType.None
+                && !(
+                    this.color2 == otherGradient.color2
+                    && this.angle == otherGradient.angle
+                    && this.cx == otherGradient.cx
+                    && this.cy == otherGradient.cy
+                    && this.sx == otherGradient.sx
+                    && this.sy == otherGradient.sy
+                    && this.repeat == otherGradient.repeat
+                    && this.middle == otherGradient.middle
+                )
+            )
+            {
+                return false;
+            }
+            if (
+                (
+                    this.fillType == GradientFillType.Hatch
+                    || this.fillType == GradientFillType.Dots
+                    || this.fillType == GradientFillType.Squares
+                )
+                && !(
+                    this.hatchAngle == otherGradient.hatchAngle
+                    && this.hatchWidth == otherGradient.hatchWidth
+                    && this.hatchDistance == otherGradient.hatchDistance
+                )
+            )
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override XElement ToXML()
+        {
+            var root = new XElement(
+                "Gradient",
+                base.IterXMLParts(),
+                new XAttribute("FillType", this.fillType),
+                new XElement("Color1", this.color1.ToXML()),
+                new XAttribute("Smooth", this.smooth)
+            );
+            if (this.fillType != GradientFillType.None)
+            {
+                root.Add(
+                    new XElement("Color2", this.color2.ToXML()),
+                    new XAttribute("Angle", this.angle),
+                    new XAttribute("Cx", this.cx),
+                    new XAttribute("Cy", this.cy),
+                    new XAttribute("Sx", this.sx),
+                    new XAttribute("Sy", this.sy),
+                    new XAttribute("Repeat", this.repeat),
+                    new XAttribute("Middle", this.middle)
+                );
+            }
+            if (
+                this.fillType == GradientFillType.Hatch
+                || this.fillType == GradientFillType.Dots
+                || this.fillType == GradientFillType.Squares
+            )
+            {
+                root.Add(
+                    new XAttribute(
+                        "HatchAngle",
+                        string.Join(" ", this.hatchAngle.Select(f => f.ToString()))
+                    ),
+                    new XAttribute(
+                        "HatchWidth",
+                        string.Join(" ", this.hatchWidth.Select(f => f.ToString()))
+                    ),
+                    new XAttribute(
+                        "HatchDistance",
+                        string.Join(" ", this.hatchDistance.Select(f => f.ToString()))
+                    )
+                );
+            }
+            return root;
+        }
+
+        public static Gradient FromXML(XElement xml)
+        {
+            return new Gradient(xml);
+        }
+
+        private Gradient(XElement xml)
+            : base(xml)
+        {
+            GradientFillType.TryParse(xml.Attribute("FillType").Value, out this.fillType);
+            this.color1 = RichColor.FromXML(xml.Element("Color1"));
+            this.smooth = double.Parse(xml.Attribute("Smooth").Value);
+
+            if (this.fillType != GradientFillType.None)
+            {
+                this.color2 = RichColor.FromXML(xml.Element("Color2"));
+                this.angle = double.Parse(xml.Attribute("Angle").Value);
+                this.cx = double.Parse(xml.Attribute("Cx").Value);
+                this.cy = double.Parse(xml.Attribute("Cy").Value);
+                this.sx = double.Parse(xml.Attribute("Sx").Value);
+                this.sy = double.Parse(xml.Attribute("Sy").Value);
+                this.repeat = int.Parse(xml.Attribute("Repeat").Value);
+                this.middle = double.Parse(xml.Attribute("Middle").Value);
+            }
+            if (
+                this.fillType == GradientFillType.Hatch
+                || this.fillType == GradientFillType.Dots
+                || this.fillType == GradientFillType.Squares
+            )
+            {
+                this.hatchAngle = xml.Attribute("HatchAngle")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+                this.hatchWidth = xml.Attribute("HatchWidth")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+                this.hatchDistance = xml.Attribute("HatchDistance")
+                    .Value.Split(" ")
+                    .Select(double.Parse)
+                    .ToArray();
+            }
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

@@ -1,9 +1,11 @@
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Document
 {
     using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 
     [System.Serializable]
-    public struct Polar
+    public struct Polar : Support.IXMLSerializable<Polar>
     {
         public Polar(double r, double a)
         {
@@ -77,6 +79,28 @@ namespace Epsitec.Common.Document
         public static bool operator !=(Polar a, Polar b)
         {
             return (a.r != b.r) || (a.a != b.a);
+        }
+
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Polar otherPolar = (Polar)other;
+            return otherPolar == this;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement("Polar", new XAttribute("r", this.r), new XAttribute("a", this.a));
+        }
+
+        public static Polar FromXML(XElement xml)
+        {
+            return new Polar(xml);
+        }
+
+        private Polar(XElement xml)
+        {
+            this.r = double.Parse(xml.Attribute("R").Value);
+            this.a = double.Parse(xml.Attribute("A").Value);
         }
 
         private double r;

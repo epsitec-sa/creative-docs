@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Drawing;
@@ -953,15 +954,23 @@ namespace Epsitec.Common.Document.Properties
         #endregion
 
 
-        #region Serialization
-        public XElement ToXML()
+        public bool HasEquivalentData(IXMLWritable other)
         {
-            var root = new XElement(
-                "AbstractProperty",
-                new XAttribute("Type", this.type),
-                new XAttribute("IsStyle", this.isStyle)
-            );
-            return root;
+            Abstract otherAbstract = (Abstract)other;
+            if (this.type == otherAbstract.type && this.isStyle == otherAbstract.isStyle)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        #region Serialization
+        public abstract XElement ToXML();
+
+        public IEnumerable<XObject> IterXMLParts()
+        {
+            yield return new XAttribute("Type", this.type);
+            yield return new XAttribute("IsStyle", this.isStyle);
         }
 
         protected Abstract(XElement xml)

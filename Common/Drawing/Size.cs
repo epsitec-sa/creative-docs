@@ -210,6 +210,11 @@ namespace Epsitec.Common.Drawing
             );
         }
 
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            return this == (Size)other;
+        }
+
         public XElement ToXML()
         {
             return new XElement(

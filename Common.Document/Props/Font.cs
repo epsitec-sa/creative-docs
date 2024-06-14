@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Font représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Font : Abstract
+    public class Font : Abstract, Support.IXMLSerializable<Font>
     {
         public Font(Document document, Type type)
             : base(document, type) { }
@@ -207,6 +208,39 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Font otherFont = (Font)other;
+            return base.HasEquivalentData(other)
+                && this.fontName == otherFont.fontName
+                && this.fontSize == otherFont.fontSize
+                && this.fontColor == otherFont.fontColor;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Font",
+                base.IterXMLParts(),
+                new XAttribute("FontName", this.fontName),
+                new XAttribute("FontSize", this.fontSize),
+                new XElement("FontColor", this.fontColor.ToXML())
+            );
+        }
+
+        public static Font FromXML(XElement xml)
+        {
+            return new Font(xml);
+        }
+
+        private Font(XElement xml)
+            : base(xml)
+        {
+            this.fontName = xml.Attribute("FontName").Value;
+            this.fontSize = double.Parse(xml.Attribute("FontSize").Value);
+            this.fontColor = RichColor.FromXML(xml.Element("FontColor"));
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

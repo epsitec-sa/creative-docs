@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Volume représente une propriété d'un objet volume 3d.
     /// </summary>
     [System.Serializable()]
-    public class Volume : Abstract
+    public class Volume : Abstract, Support.IXMLSerializable<Volume>
     {
         public Volume(Document document, Type type)
             : base(document, type) { }
@@ -415,6 +416,42 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Volume otherVolume = (Volume)other;
+            return base.HasEquivalentData(other)
+                && this.volumeType == otherVolume.volumeType
+                && this.rapport == otherVolume.rapport
+                && this.angleLeft == otherVolume.angleLeft
+                && this.angleRight == otherVolume.angleRight;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Volume",
+                base.IterXMLParts(),
+                new XAttribute("VolumeType", this.volumeType),
+                new XAttribute("Rapport", this.rapport),
+                new XAttribute("AngleLeft", this.angleLeft),
+                new XAttribute("AngleRight", this.angleRight)
+            );
+        }
+
+        public static Volume FromXML(XElement xml)
+        {
+            return new Volume(xml);
+        }
+
+        private Volume(XElement xml)
+            : base(xml)
+        {
+            VolumeType.TryParse(xml.Attribute("VolumeType").Value, out this.volumeType);
+            this.rapport = double.Parse(xml.Attribute("Rapport").Value);
+            this.angleLeft = double.Parse(xml.Attribute("AngleLeft").Value);
+            this.angleRight = double.Parse(xml.Attribute("AngleRight").Value);
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

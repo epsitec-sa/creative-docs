@@ -643,6 +643,14 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            TextBox otherTextBox = (TextBox)other;
+            return base.HasEquivalentData(other)
+                && this.textLayout.Text == otherTextBox.textLayout.Text
+                && this.textLayout.Style.GetTabs() == otherTextBox.textLayout.Style.GetTabs();
+        }
+
         public override XElement ToXML()
         {
             return new XElement("TextBox", this.IterXMLParts());

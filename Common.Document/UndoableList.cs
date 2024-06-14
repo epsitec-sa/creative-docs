@@ -466,6 +466,27 @@ namespace Epsitec.Common.Document
         public SerializableUndoableList(Document document, UndoableListType type)
             : base(document, type) { }
 
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            SerializableUndoableList otherList = (SerializableUndoableList)other;
+            if (this.type != otherList.type || this.selected != otherList.selected)
+            {
+                return false;
+            }
+            if (this.objectList.Count != otherList.objectList.Count)
+            {
+                return false;
+            }
+            foreach (var (our, theirs) in this.objectList.Zip(otherList.objectList))
+            {
+                if (!our.HasEquivalentData(theirs))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         #region Serialization
         public XElement ToXML()
         {
@@ -486,14 +507,34 @@ namespace Epsitec.Common.Document
         {
             var root = xml.Element("UndoableList");
             UndoableListType.TryParse(root.Attribute("Type").Value, out this.type);
+            var itemLoader = GetListItemLoader(this.type);
             this.selected = int.Parse(root.Attribute("Selected").Value);
-            this.objectList = root.Element("List")
-                .Elements()
-                .Select(el => this.LoadObjectFromXML(el))
-                .ToList();
+            this.objectList = root.Element("List").Elements().Select(itemLoader).ToList();
         }
 
-        private IXMLWritable LoadObjectFromXML(XElement xml)
+        private static System.Func<XElement, IXMLWritable> GetListItemLoader(
+            UndoableListType listType
+        )
+        {
+            switch (listType)
+            {
+                case UndoableListType.ObjectsInsideProperty:
+                case UndoableListType.ObjectsInsideDocument:
+                    return LoadObjectFromXML;
+                case UndoableListType.PropertiesInsideObject:
+                case UndoableListType.PropertiesInsideDocument:
+                    return LoadPropertyFromXML;
+                case UndoableListType.AggregatesInsideDocument:
+                case UndoableListType.AggregatesInsideObject:
+                    return Properties.Aggregate.FromXML;
+                default:
+                    throw new System.ArgumentException(
+                        $"No item loader for list type '{listType}'"
+                    );
+            }
+        }
+
+        private static IXMLWritable LoadObjectFromXML(XElement xml)
         {
             switch (xml.Name.LocalName)
             {
@@ -540,6 +581,57 @@ namespace Epsitec.Common.Document
                 default:
                     throw new System.ArgumentException(
                         $"Unknown Object type '{xml.Name.LocalName}'"
+                    );
+            }
+        }
+
+        private static IXMLWritable LoadPropertyFromXML(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                case "Arc":
+                    return Properties.Arc.FromXML(xml);
+                case "Arrow":
+                    return Properties.Arrow.FromXML(xml);
+                case "Bool":
+                    return Properties.Bool.FromXML(xml);
+                case "Color":
+                    return Properties.Color.FromXML(xml);
+                case "Corner":
+                    return Properties.Corner.FromXML(xml);
+                case "Dimension":
+                    return Properties.Dimension.FromXML(xml);
+                case "Font":
+                    return Properties.Font.FromXML(xml);
+                case "Frame":
+                    return Properties.Frame.FromXML(xml);
+                case "Gradient":
+                    return Properties.Gradient.FromXML(xml);
+                case "Image":
+                    return Properties.Image.FromXML(xml);
+                case "Justif":
+                    return Properties.Justif.FromXML(xml);
+                case "Line":
+                    return Properties.Line.FromXML(xml);
+                case "ModColor":
+                    return Properties.ModColor.FromXML(xml);
+                case "Name":
+                    return Properties.Name.FromXML(xml);
+                case "Regular":
+                    return Properties.Regular.FromXML(xml);
+                case "Shadow":
+                    return Properties.Shadow.FromXML(xml);
+                case "Surface":
+                    return Properties.Surface.FromXML(xml);
+                case "Tension":
+                    return Properties.Tension.FromXML(xml);
+                case "TextLine":
+                    return Properties.TextLine.FromXML(xml);
+                case "Volume":
+                    return Properties.Volume.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Property type '{xml.Name.LocalName}'"
                     );
             }
         }

@@ -1,7 +1,8 @@
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Widgets;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -9,7 +10,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Image représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Image : Abstract
+    public class Image : Abstract, Support.IXMLSerializable<Image>
     {
         //	Rotation CCW de l'image.
         public enum Rotation
@@ -835,6 +836,96 @@ namespace Epsitec.Common.Document.Properties
 
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Image otherImage = (Image)other;
+            return base.HasEquivalentData(other)
+                && this.filename == otherImage.filename
+                && this.shortName == otherImage.shortName
+                && this.date == otherImage.date
+                && this.insideDoc == otherImage.insideDoc
+                && this.fromClipboard == otherImage.fromClipboard
+                && this.rotation == otherImage.rotation
+                && this.mirrorH == otherImage.mirrorH
+                && this.mirrorV == otherImage.mirrorV
+                && this.homo == otherImage.homo
+                && this.filterCategory == otherImage.filterCategory
+                && this.cropMargins.Left == otherImage.cropMargins.Left
+                && this.cropMargins.Right == otherImage.cropMargins.Right
+                && this.cropMargins.Bottom == otherImage.cropMargins.Bottom
+                && this.cropMargins.Top == otherImage.cropMargins.Top;
+        }
+
+        public override XElement ToXML()
+        {
+            //	Si le dossier d'accès à l'image est le même que le dossier dans
+            //	lequel est sérialisé le fichier, sérialise juste le nom (relatif).
+            string filename = this.filename;
+            if (
+                filename != ""
+                && this.document.IoDirectory != ""
+                && this.document.IoDirectory == System.IO.Path.GetDirectoryName(filename)
+            )
+            {
+                filename = System.IO.Path.GetFileName(filename);
+            }
+
+            return new XElement(
+                "Image",
+                base.IterXMLParts(),
+                new XAttribute("Filename", filename),
+                new XAttribute("ShortName", this.shortName),
+                new XAttribute("Date", this.date),
+                new XAttribute("InsideDoc", this.insideDoc),
+                new XAttribute("FromClipboard", this.fromClipboard),
+                new XAttribute("Rotation", this.rotation),
+                new XAttribute("MirrorH", this.mirrorH),
+                new XAttribute("MirrorV", this.mirrorV),
+                new XAttribute("Homo", this.homo),
+                new XAttribute("FilterCategory", this.filterCategory),
+                new XAttribute("CropLeft", this.cropMargins.Left),
+                new XAttribute("CropRight", this.cropMargins.Right),
+                new XAttribute("CropBottom", this.cropMargins.Bottom),
+                new XAttribute("CropTop", this.cropMargins.Top)
+            );
+        }
+
+        public static Image FromXML(XElement xml)
+        {
+            return new Image(xml);
+        }
+
+        private Image(XElement xml)
+            : base(xml)
+        {
+            this.filename = xml.Attribute("Filename").Value;
+            //	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
+            //	ajoute le nom du dossier dans lequel est désérialisé le fichier
+            //	(pour le rendre absolu).
+            if (
+                this.filename != ""
+                && this.document.IoDirectory != ""
+                && System.IO.Path.GetDirectoryName(this.filename) == ""
+            )
+            {
+                this.filename = string.Concat(this.document.IoDirectory, "\\", this.filename);
+            }
+
+            this.shortName = xml.Attribute("ShortName").Value;
+            this.date = (System.DateTime)xml.Attribute("Date");
+            this.insideDoc = bool.Parse(xml.Attribute("InsideDoc").Value);
+            this.fromClipboard = bool.Parse(xml.Attribute("FromClipboard").Value);
+            Rotation.TryParse(xml.Attribute("Rotation").Value, out this.rotation);
+            this.mirrorH = bool.Parse(xml.Attribute("MirrorH").Value);
+            this.mirrorV = bool.Parse(xml.Attribute("MirrorV").Value);
+            this.homo = bool.Parse(xml.Attribute("Homo").Value);
+            this.filterCategory = int.Parse(xml.Attribute("FilterCategory").Value);
+            this.cropMargins.Left = double.Parse(xml.Attribute("CropLeft").Value);
+            this.cropMargins.Right = double.Parse(xml.Attribute("CropRight").Value);
+            this.cropMargins.Bottom = double.Parse(xml.Attribute("CropBottom").Value);
+            this.cropMargins.Top = double.Parse(xml.Attribute("CropTop").Value);
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

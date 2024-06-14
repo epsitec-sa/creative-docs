@@ -230,6 +230,13 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region Serialization
+
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            Guide otherGuide = (Guide)other;
+            return otherGuide.type == this.type && otherGuide.position == this.position;
+        }
+
         public XElement ToXML()
         {
             return new XElement(

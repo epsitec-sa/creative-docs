@@ -1,6 +1,7 @@
-using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Frame représente une propriété d'un cadre.
     /// </summary>
     [System.Serializable()]
-    public class Frame : Abstract
+    public class Frame : Abstract, Support.IXMLSerializable<Frame>
     {
         public Frame(Document document, Type type)
             : base(document, type) { }
@@ -763,6 +764,60 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Frame otherFrame = (Frame)other;
+            return base.HasEquivalentData(other)
+                && otherFrame.frameType == this.frameType
+                && otherFrame.frameWidth == this.frameWidth
+                && otherFrame.marginWidth == this.marginWidth
+                && otherFrame.marginConvexity == this.marginConvexity
+                && otherFrame.shadowInflate == this.shadowInflate
+                && otherFrame.shadowOffsetX == this.shadowOffsetX
+                && otherFrame.shadowOffsetY == this.shadowOffsetY
+                && otherFrame.frameColor == this.frameColor
+                && otherFrame.backgroundColor == this.backgroundColor
+                && otherFrame.shadowColor == this.shadowColor;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Frame",
+                base.IterXMLParts(),
+                new XAttribute("FrameType", this.frameType),
+                new XAttribute("FrameWidth", this.frameWidth),
+                new XAttribute("MarginWidth", this.marginWidth),
+                new XAttribute("MarginConvexity", this.marginConvexity),
+                new XAttribute("ShadowInflate", this.shadowInflate),
+                new XAttribute("ShadowOffsetX", this.shadowOffsetX),
+                new XAttribute("ShadowOffsetY", this.shadowOffsetY),
+                new XElement("FrameColor", this.frameColor.ToXML()),
+                new XElement("BackgroundColor", this.backgroundColor.ToXML()),
+                new XElement("ShadowColor", this.shadowColor.ToXML())
+            );
+        }
+
+        public static Frame FromXML(XElement xml)
+        {
+            return new Frame(xml);
+        }
+
+        private Frame(XElement xml)
+            : base(xml)
+        {
+            FrameType.TryParse(xml.Attribute("FrameType").Value, out this.frameType);
+            this.frameWidth = double.Parse(xml.Attribute("FrameWidth").Value);
+            this.marginWidth = double.Parse(xml.Attribute("MarginWidth").Value);
+            this.marginConvexity = double.Parse(xml.Attribute("MarginConvexity").Value);
+            this.shadowInflate = double.Parse(xml.Attribute("ShadowInflate").Value);
+            this.shadowOffsetX = double.Parse(xml.Attribute("ShadowOffsetX").Value);
+            this.shadowOffsetY = double.Parse(xml.Attribute("ShadowOffsetY").Value);
+            this.frameColor = RichColor.FromXML(xml.Element("FrameColor"));
+            this.shadowColor = RichColor.FromXML(xml.Element("ShadowColor"));
+            this.backgroundColor = RichColor.FromXML(xml.Element("BackgroundColor"));
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.
