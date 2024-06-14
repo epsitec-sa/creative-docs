@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Bool contient un réglage numérique.
     /// </summary>
     [System.Serializable()]
-    public class Bool : Abstract
+    public class Bool : Abstract, Support.IXMLSerializable<Bool>
     {
         public Bool(Document document, string name)
             : base(document, name)
@@ -399,6 +400,29 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Bool otherBool = (Bool)other;
+            return base.HasEquivalentData(other) && this.Value == otherBool.Value;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("Bool", base.IterXMLParts(), new XAttribute("Value", this.Value));
+        }
+
+        public static Bool FromXML(XElement xml)
+        {
+            return new Bool(xml);
+        }
+
+        private Bool(XElement xml)
+            : base(xml)
+        {
+            this.Value = bool.Parse(xml.Attribute("Value").Value);
+            this.Initialize();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

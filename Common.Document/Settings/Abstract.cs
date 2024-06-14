@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -6,7 +8,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Abstract représente un réglage.
     /// </summary>
     [System.Serializable()]
-    public abstract class Abstract : ISerializable
+    public abstract class Abstract : ISerializable, Support.IXMLWritable
     {
         public Abstract(Document document, string name)
         {
@@ -41,6 +43,25 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Abstract otherAbstract = (Abstract)other;
+            return this.name == otherAbstract.name;
+        }
+
+        public abstract XElement ToXML();
+
+        public IEnumerable<XObject> IterXMLParts()
+        {
+            yield return new XAttribute("Name", this.name);
+        }
+
+        protected Abstract(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            this.name = xml.Attribute("Name").Value;
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

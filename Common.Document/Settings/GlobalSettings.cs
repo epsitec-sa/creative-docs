@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -26,7 +27,10 @@ namespace Epsitec.Common.Document.Settings
     /// La classe GlobalSettings mémorise les paramètres de l'application.
     /// </summary>
     [System.Serializable()]
-    public class GlobalSettings : ISerializable, Epsitec.Common.Dialogs.IFavoritesSettings
+    public class GlobalSettings
+        : ISerializable,
+            Epsitec.Common.Dialogs.IFavoritesSettings,
+            Support.IXMLSerializable<GlobalSettings>
     {
         public GlobalSettings()
         {
@@ -796,6 +800,111 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region Serialization
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            GlobalSettings otherGlobalSettings = (GlobalSettings)other;
+            return this.windowLocation == otherGlobalSettings.windowLocation
+                && this.windowSize == otherGlobalSettings.windowSize
+                && this.isFullScreen == otherGlobalSettings.isFullScreen
+                && this.windowBounds == otherGlobalSettings.windowBounds
+                && this.screenDpi == otherGlobalSettings.screenDpi
+                && this.adorner == otherGlobalSettings.adorner
+                && this.defaultZoom == otherGlobalSettings.defaultZoom
+                && this.mouseWheelAction == otherGlobalSettings.mouseWheelAction
+                && this.fineCursor == otherGlobalSettings.fineCursor
+                && this.splashScreen == otherGlobalSettings.splashScreen
+                && this.firstAction == otherGlobalSettings.firstAction
+                && this.newDocument == otherGlobalSettings.newDocument
+                && this.lastModel == otherGlobalSettings.lastModel
+                && this.lastFilename == otherGlobalSettings.lastFilename
+                && this.initialDirectory == otherGlobalSettings.initialDirectory
+                && this.favoritesList == otherGlobalSettings.favoritesList
+                && this.favoritesBig == otherGlobalSettings.favoritesBig
+                && this.labelProperties == otherGlobalSettings.labelProperties
+                && this.colorCollection == otherGlobalSettings.colorCollection
+                && this.colorCollectionDirectory == otherGlobalSettings.colorCollectionDirectory
+                && this.colorCollectionFilename == otherGlobalSettings.colorCollectionFilename
+                && this.autoChecker == otherGlobalSettings.autoChecker
+                && this.dateChecker.Ticks == otherGlobalSettings.dateChecker.Ticks
+                && this.quickCommands == otherGlobalSettings.quickCommands
+                && this.quickExportFormat == otherGlobalSettings.quickExportFormat
+                && this.quickExportDpi == otherGlobalSettings.quickExportDpi;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "GlobalSettings",
+                new XElement("WindowLocation", this.windowLocation.ToXML()),
+                new XElement("WindowSize", this.windowSize.ToXML()),
+                new XAttribute("IsFullScreen", this.isFullScreen),
+                new XAttribute("WindowBounds", this.windowBounds), // TODO
+                new XAttribute("ScreenDpi", this.screenDpi),
+                new XAttribute("Adorner", this.adorner),
+                new XAttribute("DefaultZoom", this.defaultZoom),
+                new XAttribute("MouseWheelAction", this.mouseWheelAction),
+                new XAttribute("FineCursor", this.fineCursor),
+                new XAttribute("SplashScreen", this.splashScreen),
+                new XAttribute("FirstAction", this.firstAction),
+                new XAttribute("NewDocument", this.newDocument),
+                new XAttribute("LastModel", this.lastModel), // TODO
+                new XAttribute("LastFilename", this.lastFilename), // TODO
+                new XAttribute("InitialDirectory", this.initialDirectory),
+                new XAttribute("FavoritesList", this.favoritesList), // TODO
+                new XAttribute("FavoritesBig", this.favoritesBig),
+                new XAttribute("LabelProperties", this.labelProperties),
+                new XAttribute("ColorCollection", this.colorCollection), // TODO
+                new XAttribute("ColorCollectionDirectory", this.colorCollectionDirectory),
+                new XAttribute("ColorCollectionFilename", this.colorCollectionFilename),
+                new XAttribute("AutoChecker", this.autoChecker),
+                new XAttribute("DateChecker", this.dateChecker.Ticks),
+                new XAttribute("QuickCommands", this.quickCommands), // TODO
+                new XAttribute("QuickExportFormat", this.quickExportFormat),
+                new XAttribute("QuickExportDpi", this.quickExportDpi)
+            );
+        }
+
+        public static GlobalSettings FromXML(XElement xml)
+        {
+            return new GlobalSettings(xml);
+        }
+
+        private GlobalSettings(XElement xml)
+        {
+            this.windowLocation = Drawing.Point.FromXML(xml.Element("WindowLocation"));
+            this.windowSize = Drawing.Size.FromXML(xml.Element("WindowSize"));
+            this.isFullScreen = bool.Parse(xml.Attribute("IsFullScreen").Value);
+            this.windowBounds = null; // TOOD
+            this.screenDpi = double.Parse(xml.Attribute("ScreenDpi").Value);
+            this.adorner = xml.Attribute("Adorner").Value;
+            this.defaultZoom = double.Parse(xml.Attribute("DefaultZoom").Value);
+            MouseWheelAction.TryParse(
+                xml.Attribute("MouseWheelAction").Value,
+                out this.mouseWheelAction
+            );
+            this.fineCursor = bool.Parse(xml.Attribute("FineCursor").Value);
+            this.splashScreen = bool.Parse(xml.Attribute("SplashScreen").Value);
+            FirstAction.TryParse(xml.Attribute("FirstAction").Value, out this.firstAction);
+            this.newDocument = xml.Attribute("NewDocument").Value;
+            this.lastModel = null; // TODO
+            this.lastFilename = null; // TODO
+            this.initialDirectory = xml.Attribute("InitialDirectory").Value;
+            this.favoritesList = null; // TODO
+            this.favoritesBig = bool.Parse(xml.Attribute("FavoritesBig").Value);
+            this.labelProperties = bool.Parse(xml.Attribute("LabelProperties").Value);
+            this.colorCollection = null; // TODO
+            this.colorCollectionDirectory = xml.Attribute("ColorCollectionDirectory").Value;
+            this.colorCollectionFilename = xml.Attribute("ColorCollectionFilename").Value;
+            this.autoChecker = bool.Parse(xml.Attribute("AutoChecker").Value);
+            this.dateChecker = new Types.Date(long.Parse(xml.Attribute("DateChecker").Value));
+            this.quickCommands = null; // TODO
+            ImageFormat.TryParse(
+                xml.Attribute("QuickExportFormat").Value,
+                out this.quickExportFormat
+            );
+            this.quickExportDpi = double.Parse(xml.Attribute("QuickExportDpi").Value);
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise les réglages.

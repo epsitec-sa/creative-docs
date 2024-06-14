@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -13,7 +14,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe ExportICOInfo contient tous les réglages pour l'exportation d'une icône.
     /// </summary>
     [System.Serializable()]
-    public class ExportICOInfo : ISerializable
+    public class ExportICOInfo : ISerializable, Support.IXMLSerializable<ExportICOInfo>
     {
         public ExportICOInfo(Document document)
         {
@@ -33,6 +34,29 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            ExportICOInfo otherExportICOInfo = (ExportICOInfo)other;
+            return this.format == otherExportICOInfo.format;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement("ExportICOInfo", new XAttribute("ICOFormat", this.format));
+        }
+
+        public static ExportICOInfo FromXML(XElement xml)
+        {
+            return new ExportICOInfo(xml);
+        }
+
+        private ExportICOInfo(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            this.Initialize();
+            ICOFormat.TryParse(xml.Attribute("Format").Value, out this.format);
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise les réglages.

@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Double contient un réglage numérique.
     /// </summary>
     [System.Serializable()]
-    public class Double : Abstract
+    public class Double : Abstract, Support.IXMLSerializable<Double>
     {
         public Double(Document document, string name)
             : base(document, name)
@@ -662,6 +663,29 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Double otherDouble = (Double)other;
+            return base.HasEquivalentData(other) && this.Value == otherDouble.Value;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("Double", base.IterXMLParts(), new XAttribute("Value", this.Value));
+        }
+
+        public static Double FromXML(XElement xml)
+        {
+            return new Double(xml);
+        }
+
+        private Double(XElement xml)
+            : base(xml)
+        {
+            this.Value = double.Parse(xml.Attribute("Value").Value);
+            this.Initialize();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

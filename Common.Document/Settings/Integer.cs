@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Integer contient un réglage numérique.
     /// </summary>
     [System.Serializable()]
-    public class Integer : Abstract
+    public class Integer : Abstract, Support.IXMLSerializable<Integer>
     {
         public Integer(Document document, string name)
             : base(document, name)
@@ -640,6 +641,42 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Integer otherInteger = (Integer)other;
+            return base.HasEquivalentData(other) && this.Value == otherInteger.Value;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Integer",
+                base.IterXMLParts(),
+                new XAttribute("Value", this.Value)
+            );
+        }
+
+        public static Integer FromXML(XElement xml)
+        {
+            return new Integer(xml);
+        }
+
+        private Integer(XElement xml)
+            : base(xml)
+        {
+            int value = int.Parse(xml.Attribute("Value").Value);
+            if (this.name == "DefaultUnit")
+            {
+                RealUnitType unit = (RealUnitType)value;
+                this.document.Modifier.SetRealUnitDimension(unit, false);
+            }
+            else
+            {
+                this.Value = value;
+            }
+            this.Initialize();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

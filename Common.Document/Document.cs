@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
@@ -1795,42 +1796,38 @@ namespace Epsitec.Common.Document
                 return false;
             }
 
-            if (
-                this.type == DocumentType.Pictogram
-                && (this.size != otherDoc.size || this.hotSpot != otherDoc.hotSpot)
-            )
+            if (this.type == DocumentType.Pictogram)
             {
-                return false;
+                if (this.size != otherDoc.size || this.hotSpot != otherDoc.hotSpot)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (
+                    !(
+                        this.settings == otherDoc.settings
+                        && this.exportFilename == otherDoc.exportFilename
+                        && this.exportFilter == otherDoc.exportFilter
+                        && this.modifier.ObjectMemory == otherDoc.modifier.ObjectMemory
+                        && this.modifier.ObjectMemoryText == otherDoc.modifier.ObjectMemoryText
+                        && this.modifier.ActiveViewer.DrawingContext.GetRootStack()
+                            == otherDoc.modifier.ActiveViewer.DrawingContext.GetRootStack()
+                        && this.textContext == otherDoc.textContext
+                        && this.textFlows == otherDoc.textFlows
+                        && this.fontList == otherDoc.fontList
+                        && this.fontIncludeMode == otherDoc.fontIncludeMode
+                        && this.imageIncludeMode == otherDoc.imageIncludeMode
+                    )
+                )
+                {
+                    return false;
+                }
             }
             return this.objects.HasEquivalentData(otherDoc.objects)
                 && this.propertiesAuto.HasEquivalentData(otherDoc.propertiesAuto)
                 && this.aggregates.HasEquivalentData(otherDoc.aggregates);
-        }
-
-        public void AssertIsEquivalent(Document other)
-        {
-            Assert(this.Type == other.Type, "Type");
-            Assert(this.Name == other.Name, "Name");
-
-            Assert(this.uniqueObjectId == other.uniqueObjectId, "uniqueObjectId");
-            Assert(this.uniqueAggregateId == other.uniqueAggregateId, "uniqueAggregateId");
-            Assert(
-                this.uniqueParagraphStyleId == other.uniqueParagraphStyleId,
-                "uniqueParagraphStyleId"
-            );
-            Assert(
-                this.uniqueCharacterStyleId == other.uniqueCharacterStyleId,
-                "uniqueCharacterStyleId"
-            );
-
-            if (this.type == DocumentType.Pictogram)
-            {
-                Assert(this.size == other.size, "size");
-                Assert(this.hotSpot == other.hotSpot, "hotSpot");
-            }
-            Assert(this.objects.HasEquivalentData(other.objects), "objects");
-            Assert(this.propertiesAuto.HasEquivalentData(other.propertiesAuto), "propertiesAuto");
-            Assert(this.aggregates.HasEquivalentData(other.aggregates), "aggregates");
         }
 
         public XElement ToXML()
@@ -1847,29 +1844,33 @@ namespace Epsitec.Common.Document
                 root.Add(new XElement("Size", this.size.ToXML()));
                 root.Add(new XElement("HotSpot", this.hotSpot.ToXML()));
             }
-            //else
-            //{
-            //    info.AddValue("Settings", this.settings);
-            //    info.AddValue("ExportFilename", this.exportFilename);
-            //    info.AddValue("ExportFilter", this.exportFilter);
+            else
+            {
+                root.Add(new XElement("Settings", this.settings.ToXML()));
+                root.Add(new XElement("ExportFilename", this.exportFilename));
+                root.Add(new XElement("ExportFilter", this.exportFilter));
 
-            //    info.AddValue("ObjectMemory", this.modifier.ObjectMemory);
-            //    info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
+                root.Add(new XElement("ObjectMemory", this.modifier.ObjectMemory.ToXML()));
+                root.Add(new XElement("ObjectMemoryText", this.modifier.ObjectMemoryText.ToXML()));
 
-            //    info.AddValue(
-            //        "RootStack",
-            //        this.modifier.ActiveViewer.DrawingContext.GetRootStack()
-            //    );
+                //root.Add(
+                //    new XElement(
+                //        "RootStack",
+                //        this.modifier.ActiveViewer.DrawingContext.GetRootStack()
+                //    )
+                //);
 
-            //    byte[] textContextData =
-            //        this.textContext == null ? null : this.textContext.Serialize();
-            //    info.AddValue("TextContextData", textContextData);
+                //byte[] textContextData =
+                //    this.textContext == null ? null : this.textContext.Serialize();
+                //root.Add(new XElement("TextContextData", textContextData));
 
-            //    info.AddValue("TextFlows", this.textFlows);
-            //    info.AddValue("FontList", this.fontList);
-            //    info.AddValue("FontIncludeMode", this.fontIncludeMode);
-            //    info.AddValue("ImageIncludeMode", this.imageIncludeMode);
-            //}
+                root.Add(new XElement("TextFlows", this.textFlows.ToXML()));
+                root.Add(
+                    new XElement("FontList", this.fontList.Select(fontname => fontname.ToXML()))
+                );
+                root.Add(new XElement("FontIncludeMode", this.fontIncludeMode));
+                root.Add(new XElement("ImageIncludeMode", this.imageIncludeMode));
+            }
 
             root.Add(new XElement("UniqueObjectId", this.uniqueObjectId));
             root.Add(new XElement("UniqueAggregateId", this.uniqueAggregateId));
@@ -1881,28 +1882,54 @@ namespace Epsitec.Common.Document
             return root;
         }
 
-        private Document(XElement root)
+        private Document(XElement xml)
         {
             Document.ReadDocument = this; // bl-converter ugly, refactor
-            DocumentType.TryParse(root.Element("Type").Value, out this.type);
-            this.name = root.Element("Name")?.Value;
+            DocumentType.TryParse(xml.Element("Type").Value, out this.type);
+            this.name = xml.Element("Name")?.Value;
 
             if (this.type == DocumentType.Pictogram)
             {
-                this.size = Size.FromXML(root.Element("Size"));
-                this.hotSpot = Point.FromXML(root.Element("HotSpot"));
+                this.size = Size.FromXML(xml.Element("Size"));
+                this.hotSpot = Point.FromXML(xml.Element("HotSpot"));
 
                 this.textContext = null;
                 this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
             }
+            else
+            {
+                this.settings = Common.Document.Settings.Settings.FromXML(xml.Element("Settings"));
+                this.exportFilename = xml.Attribute("ExportFilename").Value;
+                this.exportFilter = int.Parse(xml.Attribute("ExportFilter").Value);
+                this.modifier.ObjectMemory = Objects.Memory.FromXML(xml.Element("ObjectMemory"));
+                this.modifier.ObjectMemoryText = Objects.Memory.FromXML(
+                    xml.Element("ObjectMemoryText")
+                );
+                // TODO
+                //RootStack;
+                //TextContextData;
+                this.textFlows = SerializableUndoableList.FromXML(xml.Element("TextFlows"));
+                this.fontList = xml.Element("FontList")
+                    .Elements()
+                    .Select(OpenType.FontName.FromXML)
+                    .ToList();
+                FontIncludeMode.TryParse(
+                    xml.Attribute("FontIncludeMode").Value,
+                    out this.fontIncludeMode
+                );
+                ImageIncludeMode.TryParse(
+                    xml.Attribute("ImageIncludeMode").Value,
+                    out this.imageIncludeMode
+                );
+            }
 
-            this.uniqueObjectId = int.Parse(root.Element("UniqueObjectId").Value);
-            this.uniqueAggregateId = int.Parse(root.Element("UniqueAggregateId").Value);
-            this.uniqueParagraphStyleId = int.Parse(root.Element("UniqueParagraphStyleId").Value);
-            this.uniqueCharacterStyleId = int.Parse(root.Element("UniqueCharacterStyleId").Value);
-            this.objects = SerializableUndoableList.FromXML(root.Element("Objects"));
-            this.propertiesAuto = SerializableUndoableList.FromXML(root.Element("Properties"));
-            this.aggregates = SerializableUndoableList.FromXML(root.Element("Aggregates"));
+            this.uniqueObjectId = int.Parse(xml.Element("UniqueObjectId").Value);
+            this.uniqueAggregateId = int.Parse(xml.Element("UniqueAggregateId").Value);
+            this.uniqueParagraphStyleId = int.Parse(xml.Element("UniqueParagraphStyleId").Value);
+            this.uniqueCharacterStyleId = int.Parse(xml.Element("UniqueCharacterStyleId").Value);
+            this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
+            this.propertiesAuto = SerializableUndoableList.FromXML(xml.Element("Properties"));
+            this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -2078,14 +2105,6 @@ namespace Epsitec.Common.Document
             {
                 this.uniqueParagraphStyleId = 0;
                 this.uniqueCharacterStyleId = 0;
-            }
-        }
-
-        private void Assert(bool condition, string message)
-        {
-            if (!condition)
-            {
-                throw new System.InvalidOperationException(message);
             }
         }
 

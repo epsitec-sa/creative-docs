@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Settings contient tous les réglages.
     /// </summary>
     [System.Serializable()]
-    public class Settings : ISerializable
+    public class Settings : ISerializable, Support.IXMLSerializable<Settings>
     {
         public Settings(Document document)
         {
@@ -423,6 +424,48 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Settings otherSettings = (Settings)other;
+            return otherSettings.settings == this.settings
+                && otherSettings.globalGuides == this.globalGuides
+                && otherSettings.guides == this.guides
+                && otherSettings.quickFonts == this.quickFonts
+                && otherSettings.printInfo == this.printInfo
+                && otherSettings.exportPDFInfo == this.exportPDFInfo
+                && otherSettings.exportICOInfo == this.exportICOInfo;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Settings",
+                new XAttribute("Settings", this.settings), // TODO
+                new XAttribute("GlobalGuides", this.globalGuides),
+                new XAttribute("QuickFonts", this.quickFonts), // TODO
+                new XElement("Guides", this.guides.ToXML()),
+                new XElement("PrintInfo", this.printInfo.ToXML()),
+                new XElement("ExportPDFInfo", this.exportPDFInfo.ToXML()),
+                new XElement("ExportICOInfo", this.exportICOInfo.ToXML())
+            );
+        }
+
+        public static Settings FromXML(XElement xml)
+        {
+            return new Settings(xml);
+        }
+
+        private Settings(XElement xml)
+        {
+            this.settings = null; // TODO
+            this.globalGuides = bool.Parse(xml.Attribute("GlobalGuides").Value);
+            this.guides = SerializableUndoableList.FromXML(xml.Element("Guides"));
+            this.quickFonts = null; // TODO
+            this.printInfo = PrintInfo.FromXML(xml.Element("PrintInfo"));
+            this.exportPDFInfo = ExportPDFInfo.FromXML(xml.Element("ExportPDFInfo"));
+            this.exportICOInfo = ExportICOInfo.FromXML(xml.Element("ExportICOInfo"));
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise les réglages.

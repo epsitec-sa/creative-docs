@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Range contient une plage "de à".
     /// </summary>
     [System.Serializable()]
-    public class Range : Abstract
+    public class Range : Abstract, Support.IXMLSerializable<Range>
     {
         public Range(Document document, string name)
             : base(document, name)
@@ -152,6 +153,41 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Range otherRange = (Range)other;
+            return base.HasEquivalentData(other)
+                && this.PrintRange == otherRange.PrintRange
+                && this.From == otherRange.From
+                && this.To == otherRange.To;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Range",
+                base.IterXMLParts(),
+                new XAttribute("PrintRange", this.PrintRange),
+                new XAttribute("From", this.From),
+                new XAttribute("To", this.To)
+            );
+        }
+
+        public static Range FromXML(XElement xml)
+        {
+            return new Range(xml);
+        }
+
+        private Range(XElement xml)
+            : base(xml)
+        {
+            PrintRange.TryParse(xml.Attribute("PrintRange").Value, out PrintRange printRange);
+            this.PrintRange = printRange;
+            this.From = int.Parse(xml.Attribute("From").Value);
+            this.To = int.Parse(xml.Attribute("To").Value);
+            this.Initialize();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

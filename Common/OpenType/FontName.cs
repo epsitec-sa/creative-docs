@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.OpenType
 {
@@ -11,7 +12,10 @@ namespace Epsitec.Common.OpenType
     /// single object.
     /// </summary>
     [System.Serializable]
-    public struct FontName : System.IComparable<FontName>, System.IEquatable<FontName>
+    public struct FontName
+        : System.IComparable<FontName>,
+            System.IEquatable<FontName>,
+            Common.Support.IXMLSerializable<FontName>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FontName"/> structure.
@@ -218,6 +222,32 @@ namespace Epsitec.Common.OpenType
         }
 
         #endregion
+
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            FontName otherFontName = (FontName)other;
+            return this.face == otherFontName.face && this.style == otherFontName.style;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "FontName",
+                new XAttribute("Face", this.face),
+                new XAttribute("Style", this.style)
+            );
+        }
+
+        public static FontName FromXML(XElement xml)
+        {
+            return new FontName(xml);
+        }
+
+        private FontName(XElement xml)
+        {
+            this.face = xml.Attribute("Face").Value;
+            this.style = xml.Attribute("Style").Value;
+        }
 
         private string face;
         private string style;

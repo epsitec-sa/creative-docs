@@ -1,5 +1,6 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Drawing
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Drawing
 
     [System.Serializable]
     [System.ComponentModel.TypeConverter(typeof(Margins.Converter))]
-    public struct Margins
+    public struct Margins : Support.IXMLSerializable<Margins>
     {
         public Margins(double left, double right, double top, double bottom)
         {
@@ -292,6 +293,39 @@ namespace Epsitec.Common.Drawing
             }
         }
         #endregion
+
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Margins otherMargins = (Margins)other;
+            return this.left == otherMargins.left
+                && this.right == otherMargins.right
+                && this.top == otherMargins.top
+                && this.bottom == otherMargins.bottom;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Margins",
+                new XAttribute("Left", this.left),
+                new XAttribute("Rigth", this.right),
+                new XAttribute("Top", this.top),
+                new XAttribute("Bottom", this.bottom)
+            );
+        }
+
+        public static Margins FromXML(XElement xml)
+        {
+            return new Margins(xml);
+        }
+
+        private Margins(XElement xml)
+        {
+            this.left = double.Parse(xml.Attribute("Left").Value);
+            this.right = double.Parse(xml.Attribute("Right").Value);
+            this.top = double.Parse(xml.Attribute("Top").Value);
+            this.bottom = double.Parse(xml.Attribute("Bottom").Value);
+        }
 
         private double left;
         private double right;

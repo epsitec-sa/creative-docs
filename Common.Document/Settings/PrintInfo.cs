@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -41,7 +43,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe PrintInfo contient tous les réglages secondaires pour l'impression.
     /// </summary>
     [System.Serializable()]
-    public class PrintInfo : ISerializable
+    public class PrintInfo : ISerializable, Support.IXMLSerializable<PrintInfo>
     {
         public PrintInfo(Document document)
         {
@@ -264,6 +266,103 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            PrintInfo otherPrintInfo = (PrintInfo)other;
+            return this.printName == otherPrintInfo.printName
+                && this.printRange == otherPrintInfo.printRange
+                && this.printArea == otherPrintInfo.printArea
+                && this.printFrom == otherPrintInfo.printFrom
+                && this.printTo == otherPrintInfo.printTo
+                && this.copies == otherPrintInfo.copies
+                && this.collate == otherPrintInfo.collate
+                && this.reverse == otherPrintInfo.reverse
+                && this.printToFile == otherPrintInfo.printToFile
+                && this.printFilename == otherPrintInfo.printFilename
+                && this.dpi == otherPrintInfo.dpi
+                && this.gamma == otherPrintInfo.gamma
+                && this.zoom == otherPrintInfo.zoom
+                && this.autoZoom == otherPrintInfo.autoZoom
+                && this.autoLandscape == otherPrintInfo.autoLandscape
+                && this.forceSimply == otherPrintInfo.forceSimply
+                && this.forceComplex == otherPrintInfo.forceComplex
+                && this.centring == otherPrintInfo.centring
+                && this.margins == otherPrintInfo.margins
+                && this.debord == otherPrintInfo.debord
+                && this.target == otherPrintInfo.target
+                && this.imageNameFilters == otherPrintInfo.imageNameFilters;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "PrintInfo",
+                new XAttribute("PrintName", this.printName),
+                new XAttribute("PrintRange", this.printRange),
+                new XAttribute("PrintArea", this.printArea),
+                new XAttribute("PrintFrom", this.printFrom),
+                new XAttribute("PrintTo", this.printTo),
+                new XAttribute("Copies", this.copies),
+                new XAttribute("Collate", this.collate),
+                new XAttribute("Reverse", this.reverse),
+                new XAttribute("PrintToFile", this.printToFile),
+                new XAttribute("PrintFilename", this.printFilename),
+                new XAttribute("Dpi", this.dpi),
+                new XAttribute("Gamma", this.gamma),
+                new XAttribute("Zoom", this.zoom),
+                new XAttribute("AutoZoom", this.autoZoom),
+                new XAttribute("AutoLandscape", this.autoLandscape),
+                new XAttribute("ForceSimply", this.forceSimply),
+                new XAttribute("ForceComplex", this.forceComplex),
+                new XAttribute("Centring", this.centring),
+                new XAttribute("Margins", this.margins),
+                new XAttribute("Debord", this.debord),
+                new XAttribute("Target", this.target),
+                new XElement(
+                    "ImageNameFilters",
+                    this.imageNameFilters.Select(filter => new XElement("Filter", filter))
+                )
+            );
+        }
+
+        public static PrintInfo FromXML(XElement xml)
+        {
+            return new PrintInfo(xml);
+        }
+
+        private PrintInfo(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            this.Initialize();
+
+            this.copies = 1;
+            this.printName = xml.Attribute("PrintName").Value;
+            PrintRange.TryParse(xml.Attribute("PrintRange").Value, out this.printRange);
+            PrintArea.TryParse(xml.Attribute("PrintArea").Value, out this.printArea);
+            this.printFrom = int.Parse(xml.Attribute("PrintFrom").Value);
+            this.printTo = int.Parse(xml.Attribute("PrintTo").Value);
+            this.copies = int.Parse(xml.Attribute("Copies").Value);
+            this.collate = bool.Parse(xml.Attribute("Collate").Value);
+            this.reverse = bool.Parse(xml.Attribute("Reverse").Value);
+            this.printToFile = bool.Parse(xml.Attribute("PrintToFile").Value);
+            this.printFilename = xml.Attribute("PrintFilename").Value;
+            this.dpi = double.Parse(xml.Attribute("Dpi").Value);
+            this.gamma = double.Parse(xml.Attribute("Gamma").Value);
+            this.zoom = double.Parse(xml.Attribute("Zoom").Value);
+            this.autoZoom = bool.Parse(xml.Attribute("AutoZoom").Value);
+            this.autoLandscape = bool.Parse(xml.Attribute("AutoLandscape").Value);
+            this.forceSimply = bool.Parse(xml.Attribute("ForceSimply").Value);
+            this.forceComplex = bool.Parse(xml.Attribute("ForceComplex").Value);
+            PrintCentring.TryParse(xml.Attribute("Centring").Value, out this.centring);
+            this.margins = double.Parse(xml.Attribute("Margins").Value);
+            this.debord = double.Parse(xml.Attribute("Debord").Value);
+            this.target = bool.Parse(xml.Attribute("Target").Value);
+            this.imageNameFilters = xml.Element("ImageNameFilters")
+                .Elements()
+                .Select(filter => filter.Value)
+                .ToArray();
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise les réglages.
