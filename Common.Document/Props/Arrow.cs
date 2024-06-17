@@ -953,16 +953,31 @@ namespace Epsitec.Common.Document.Properties
             {
                 root.Add(
                     new XAttribute(
-                        "length",
-                        string.Join(" ", this.length.Select(f => f.ToString()))
+                        "Length",
+                        string.Join(
+                            " ",
+                            this.length.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     ),
                     new XAttribute(
-                        "effect1",
-                        string.Join(" ", this.effect1.Select(f => f.ToString()))
+                        "Effect1",
+                        string.Join(
+                            " ",
+                            this.effect1.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     ),
                     new XAttribute(
-                        "effect2",
-                        string.Join(" ", this.effect2.Select(f => f.ToString()))
+                        "Effect2",
+                        string.Join(
+                            " ",
+                            this.effect2.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     )
                 );
             }
@@ -977,21 +992,22 @@ namespace Epsitec.Common.Document.Properties
         private Arrow(XElement xml)
             : base(xml)
         {
+            this.Initialize();
             ArrowType.TryParse(xml.Attribute("ArrowType_0").Value, out this.arrowType[0]);
             ArrowType.TryParse(xml.Attribute("ArrowType_1").Value, out this.arrowType[1]);
             if (this.arrowType[0] != ArrowType.Right || this.arrowType[1] != ArrowType.Right)
             {
                 this.length = xml.Attribute("Length")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
                 this.effect1 = xml.Attribute("Effect1")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
                 this.effect2 = xml.Attribute("Effect2")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
             }
         }

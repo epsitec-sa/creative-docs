@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Drawing;
@@ -37,7 +38,7 @@ namespace Epsitec.Common.Document.Settings
             this.windowLocation = new Drawing.Point(0, 0);
             this.windowSize = new Drawing.Size(830, 620);
             this.isFullScreen = false;
-            this.windowBounds = new System.Collections.Hashtable();
+            this.windowBounds = new();
 
             this.screenDpi = 96.0;
             this.adorner = "LookMetal";
@@ -46,9 +47,9 @@ namespace Epsitec.Common.Document.Settings
             this.fineCursor = false;
             this.splashScreen = true;
             this.firstAction = FirstAction.OpenNewDocument;
-            this.lastModel = new System.Collections.ArrayList();
+            this.lastModel = new();
             this.lastModelMax = 10;
-            this.lastFilename = new System.Collections.ArrayList();
+            this.lastFilename = new();
             this.lastFilenameMax = 10;
             this.favoritesList = new Epsitec.Common.Types.Collections.ObservableList<string>();
             this.favoritesBig = true;
@@ -156,7 +157,7 @@ namespace Epsitec.Common.Document.Settings
         public void SetWindowBounds(string name, Drawing.Point location, Drawing.Size size)
         {
             //	Ajoute une définition de fenêtre.
-            WindowBounds wb = this.windowBounds[name] as WindowBounds;
+            WindowBounds wb = this.windowBounds[name];
             if (wb == null)
             {
                 wb = new WindowBounds(location, size);
@@ -172,7 +173,7 @@ namespace Epsitec.Common.Document.Settings
         public bool GetWindowBounds(string name, out Drawing.Point location, out Drawing.Size size)
         {
             //	Cherche une définition de fenêtre.
-            WindowBounds wb = this.windowBounds[name] as WindowBounds;
+            WindowBounds wb = this.windowBounds[name];
             if (wb == null)
             {
                 location = Drawing.Point.Zero;
@@ -561,7 +562,7 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region QuickCommands
-        public System.Collections.ArrayList QuickCommands
+        public List<string> QuickCommands
         {
             //	Donne la liste des commandes rapides sous la forme "US:Name".
             //	U -> '1' si utilisé
@@ -571,10 +572,10 @@ namespace Epsitec.Common.Document.Settings
             set { this.quickCommands = value; }
         }
 
-        public static System.Collections.ArrayList DefaultQuickCommands()
+        public static List<string> DefaultQuickCommands()
         {
             //	Donne la liste des commandes rapides par défaut.
-            System.Collections.ArrayList list = new System.Collections.ArrayList();
+            List<string> list = new();
 
             list.Add("10:New");
             list.Add("10:Open");
@@ -710,7 +711,7 @@ namespace Epsitec.Common.Document.Settings
         {
             //	Met à jour la liste des commandes rapides en fonction d'éventuelles commandes qui n'y
             //	seraient pas encore.
-            System.Collections.ArrayList all = GlobalSettings.DefaultQuickCommands();
+            List<string> all = GlobalSettings.DefaultQuickCommands();
 
             for (int i = 0; i < all.Count; i++)
             {
@@ -722,7 +723,7 @@ namespace Epsitec.Common.Document.Settings
             }
 
             //	Supprime les commandes qui n'existent plus dans cette version du logiciel.
-            System.Collections.ArrayList purged = new System.Collections.ArrayList();
+            List<string> purged = new();
             foreach (string xcmd in this.quickCommands)
             {
                 string cmd = GlobalSettings.QuickCmd(xcmd as string);
@@ -734,7 +735,7 @@ namespace Epsitec.Common.Document.Settings
             this.quickCommands = purged;
         }
 
-        protected int IndexQuickExisting(System.Collections.ArrayList all, int i)
+        protected int IndexQuickExisting(List<string> all, int i)
         {
             while (true)
             {
@@ -759,7 +760,7 @@ namespace Epsitec.Common.Document.Settings
             return -1;
         }
 
-        protected int SearchQuickList(System.Collections.ArrayList all, string cmd)
+        protected int SearchQuickList(List<string> all, string cmd)
         {
             for (int i = 0; i < all.Count; i++)
             {
@@ -835,10 +836,7 @@ namespace Epsitec.Common.Document.Settings
         {
             return new XElement(
                 "GlobalSettings",
-                new XElement("WindowLocation", this.windowLocation.ToXML()),
-                new XElement("WindowSize", this.windowSize.ToXML()),
                 new XAttribute("IsFullScreen", this.isFullScreen),
-                new XAttribute("WindowBounds", this.windowBounds), // TODO
                 new XAttribute("ScreenDpi", this.screenDpi),
                 new XAttribute("Adorner", this.adorner),
                 new XAttribute("DefaultZoom", this.defaultZoom),
@@ -847,20 +845,54 @@ namespace Epsitec.Common.Document.Settings
                 new XAttribute("SplashScreen", this.splashScreen),
                 new XAttribute("FirstAction", this.firstAction),
                 new XAttribute("NewDocument", this.newDocument),
-                new XAttribute("LastModel", this.lastModel), // TODO
-                new XAttribute("LastFilename", this.lastFilename), // TODO
                 new XAttribute("InitialDirectory", this.initialDirectory),
-                new XAttribute("FavoritesList", this.favoritesList), // TODO
                 new XAttribute("FavoritesBig", this.favoritesBig),
                 new XAttribute("LabelProperties", this.labelProperties),
-                new XAttribute("ColorCollection", this.colorCollection), // TODO
                 new XAttribute("ColorCollectionDirectory", this.colorCollectionDirectory),
                 new XAttribute("ColorCollectionFilename", this.colorCollectionFilename),
                 new XAttribute("AutoChecker", this.autoChecker),
                 new XAttribute("DateChecker", this.dateChecker.Ticks),
-                new XAttribute("QuickCommands", this.quickCommands), // TODO
                 new XAttribute("QuickExportFormat", this.quickExportFormat),
-                new XAttribute("QuickExportDpi", this.quickExportDpi)
+                new XAttribute("QuickExportDpi", this.quickExportDpi),
+                new XElement("WindowLocation", this.windowLocation.ToXML()),
+                new XElement("WindowSize", this.windowSize.ToXML()),
+                new XElement(
+                    "WindowBounds",
+                    this.windowBounds.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Name", item.Key),
+                        item.Value.ToXML()
+                    ))
+                ),
+                new XElement(
+                    "LastModel",
+                    this.lastModel.Select(model => new XElement(
+                        "Model",
+                        new XAttribute("Name", model)
+                    ))
+                ),
+                new XElement(
+                    "LastFilename",
+                    this.lastFilename.Select(filename => new XElement(
+                        "Filename",
+                        new XAttribute("Name", filename)
+                    ))
+                ),
+                new XElement(
+                    "FavoritesList",
+                    new List<string>(this.favoritesList).Select(favorite => new XElement(
+                        "Favorite",
+                        new XAttribute("Name", favorite)
+                    ))
+                ),
+                this.colorCollection.ToXML(),
+                new XElement(
+                    "QuickCommands",
+                    this.quickCommands.Select(command => new XElement(
+                        "QuickCommand",
+                        new XAttribute("Name", command)
+                    ))
+                )
             );
         }
 
@@ -874,7 +906,15 @@ namespace Epsitec.Common.Document.Settings
             this.windowLocation = Drawing.Point.FromXML(xml.Element("WindowLocation"));
             this.windowSize = Drawing.Size.FromXML(xml.Element("WindowSize"));
             this.isFullScreen = bool.Parse(xml.Attribute("IsFullScreen").Value);
-            this.windowBounds = null; // TOOD
+            this.windowBounds = xml.Element("WindowBounds")
+                .Elements()
+                .Select(item =>
+                    (
+                        item.Attribute("Name").Value,
+                        WindowBounds.FromXML(item.Element("WindowBounds"))
+                    )
+                )
+                .ToDictionary();
             this.screenDpi = double.Parse(xml.Attribute("ScreenDpi").Value);
             this.adorner = xml.Attribute("Adorner").Value;
             this.defaultZoom = double.Parse(xml.Attribute("DefaultZoom").Value);
@@ -886,18 +926,31 @@ namespace Epsitec.Common.Document.Settings
             this.splashScreen = bool.Parse(xml.Attribute("SplashScreen").Value);
             FirstAction.TryParse(xml.Attribute("FirstAction").Value, out this.firstAction);
             this.newDocument = xml.Attribute("NewDocument").Value;
-            this.lastModel = null; // TODO
-            this.lastFilename = null; // TODO
+            this.lastModel = xml.Element("LastModel")
+                .Elements()
+                .Select(model => model.Attribute("Name").Value)
+                .ToList();
+            this.lastFilename = xml.Element("LastFilename")
+                .Elements()
+                .Select(model => model.Attribute("Filename").Value)
+                .ToList();
             this.initialDirectory = xml.Attribute("InitialDirectory").Value;
-            this.favoritesList = null; // TODO
+            List<string> favoritesList = xml.Element("FavoritesList")
+                .Elements()
+                .Select(favorite => favorite.Attribute("Name").Value)
+                .ToList();
+            this.favoritesList = [.. favoritesList];
             this.favoritesBig = bool.Parse(xml.Attribute("FavoritesBig").Value);
             this.labelProperties = bool.Parse(xml.Attribute("LabelProperties").Value);
-            this.colorCollection = null; // TODO
+            this.colorCollection = ColorCollection.FromXML(xml.Element("ColorCollection"));
             this.colorCollectionDirectory = xml.Attribute("ColorCollectionDirectory").Value;
             this.colorCollectionFilename = xml.Attribute("ColorCollectionFilename").Value;
             this.autoChecker = bool.Parse(xml.Attribute("AutoChecker").Value);
             this.dateChecker = new Types.Date(long.Parse(xml.Attribute("DateChecker").Value));
-            this.quickCommands = null; // TODO
+            this.quickCommands = xml.Element("QuickCommands")
+                .Elements()
+                .Select(model => model.Attribute("QuickCommand").Value)
+                .ToList();
             ImageFormat.TryParse(
                 xml.Attribute("QuickExportFormat").Value,
                 out this.quickExportFormat
@@ -956,8 +1009,9 @@ namespace Epsitec.Common.Document.Settings
                 info.GetValue("WindowLocation", typeof(Drawing.Point));
             this.windowSize = (Drawing.Size)info.GetValue("WindowSize", typeof(Drawing.Size));
             this.isFullScreen = info.GetBoolean("IsFullScreen");
-            this.windowBounds = (System.Collections.Hashtable)
-                info.GetValue("WindowBounds", typeof(System.Collections.Hashtable));
+            this.windowBounds =
+                (Dictionary<string, WindowBounds>)
+                    info.GetValue("WindowBounds", typeof(Dictionary<string, WindowBounds>));
 
             this.screenDpi = info.GetDouble("ScreenDpi");
             this.adorner = info.GetString("Adorner");
@@ -967,8 +1021,7 @@ namespace Epsitec.Common.Document.Settings
             this.fineCursor = info.GetBoolean("FineCursor");
             this.splashScreen = info.GetBoolean("SplashScreen");
             this.firstAction = (FirstAction)info.GetValue("FirstAction", typeof(FirstAction));
-            this.lastFilename = (System.Collections.ArrayList)
-                info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
+            this.lastFilename = (List<string>)info.GetValue("LastFilename", typeof(List<string>));
             this.initialDirectory = info.GetString("InitialDirectory");
 
             if (version >= 2)
@@ -989,8 +1042,8 @@ namespace Epsitec.Common.Document.Settings
 
             if (version >= 4)
             {
-                this.quickCommands = (System.Collections.ArrayList)
-                    info.GetValue("QuickCommands", typeof(System.Collections.ArrayList));
+                this.quickCommands =
+                    (List<string>)info.GetValue("QuickCommands", typeof(List<string>));
                 this.UpdateQuickCommands();
             }
             else
@@ -1009,12 +1062,11 @@ namespace Epsitec.Common.Document.Settings
 
             if (version >= 7)
             {
-                this.lastModel = (System.Collections.ArrayList)
-                    info.GetValue("LastModel", typeof(System.Collections.ArrayList));
+                this.lastModel = (List<string>)info.GetValue("LastModel", typeof(List<string>));
             }
             else
             {
-                this.lastModel = new System.Collections.ArrayList();
+                this.lastModel = new();
             }
 
             this.CleanUpLastFiles(this.lastFilename);
@@ -1053,7 +1105,7 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
-        private void CleanUpLastFiles(System.Collections.ArrayList paths)
+        private void CleanUpLastFiles(List<string> paths)
         {
             var alive = new List<string>();
 
@@ -1078,7 +1130,7 @@ namespace Epsitec.Common.Document.Settings
         protected Drawing.Point windowLocation;
         protected Drawing.Size windowSize;
         protected bool isFullScreen;
-        protected System.Collections.Hashtable windowBounds;
+        protected Dictionary<string, WindowBounds> windowBounds;
         protected double screenDpi;
         protected string adorner;
         protected double defaultZoom;
@@ -1087,9 +1139,9 @@ namespace Epsitec.Common.Document.Settings
         protected bool splashScreen;
         protected FirstAction firstAction;
         protected string newDocument;
-        protected System.Collections.ArrayList lastModel;
+        protected List<string> lastModel;
         protected int lastModelMax;
-        protected System.Collections.ArrayList lastFilename;
+        protected List<string> lastFilename;
         protected int lastFilenameMax;
         protected string initialDirectory;
         protected Epsitec.Common.Types.Collections.ObservableList<string> favoritesList;
@@ -1100,13 +1152,13 @@ namespace Epsitec.Common.Document.Settings
         protected string colorCollectionFilename;
         protected bool autoChecker;
         protected Common.Types.Date dateChecker;
-        protected System.Collections.ArrayList quickCommands;
+        protected List<string> quickCommands;
         protected ImageFormat quickExportFormat;
         protected double quickExportDpi;
 
         #region WindowBounds
         [System.Serializable()]
-        protected class WindowBounds : ISerializable
+        protected class WindowBounds : ISerializable, IXMLSerializable<WindowBounds>
         {
             public WindowBounds(Drawing.Point location, Drawing.Size size)
             {
@@ -1124,6 +1176,29 @@ namespace Epsitec.Common.Document.Settings
             {
                 get { return this.size; }
                 set { this.size = value; }
+            }
+
+            public bool HasEquivalentData(IXMLWritable other)
+            {
+                WindowBounds otherWindowBounds = (WindowBounds)other;
+                return this.location == otherWindowBounds.location
+                    && this.size == otherWindowBounds.size;
+            }
+
+            public XElement ToXML()
+            {
+                return new XElement("WindowBounds", this.location.ToXML(), this.size.ToXML());
+            }
+
+            public static WindowBounds FromXML(XElement xml)
+            {
+                return new WindowBounds(xml);
+            }
+
+            private WindowBounds(XElement xml)
+            {
+                this.location = Drawing.Point.FromXML(xml.Element("Location"));
+                this.size = Size.FromXML(xml.Element("Size"));
             }
 
             public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

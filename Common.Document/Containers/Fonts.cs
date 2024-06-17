@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
@@ -106,7 +107,7 @@ namespace Epsitec.Common.Document.Containers
             else
             {
                 clr = true;
-                System.Collections.ArrayList defList = new System.Collections.ArrayList();
+                List<string> defList = new();
                 Settings.Settings.DefaultQuickFonts(defList);
                 foreach (string font in this.fontSelector.SelectedList)
                 {

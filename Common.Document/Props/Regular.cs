@@ -571,15 +571,15 @@ namespace Epsitec.Common.Document.Properties
         private Regular(XElement xml)
             : base(xml)
         {
-            this.nbFaces = int.Parse(xml.Attribute("NbFaces").Value);
+            this.nbFaces = (int)xml.Attribute("NbFaces");
             RegularType.TryParse(xml.Attribute("RegularType").Value, out this.regularType);
             if (this.regularType != RegularType.Norm)
             {
-                this.deep = Polar.FromXML(xml.Element("Deep"));
-                this.e1 = Polar.FromXML(xml.Element("E1"));
-                this.e2 = Polar.FromXML(xml.Element("E2"));
-                this.i1 = Polar.FromXML(xml.Element("I1"));
-                this.i2 = Polar.FromXML(xml.Element("I2"));
+                this.deep = Polar.FromXML(xml.Element("Deep").Element("Polar"));
+                this.e1 = Polar.FromXML(xml.Element("E1").Element("Polar"));
+                this.e2 = Polar.FromXML(xml.Element("E2").Element("Polar"));
+                this.i1 = Polar.FromXML(xml.Element("I1").Element("Polar"));
+                this.i2 = Polar.FromXML(xml.Element("I2").Element("Polar"));
             }
         }
 

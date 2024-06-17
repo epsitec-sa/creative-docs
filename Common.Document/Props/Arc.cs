@@ -413,8 +413,8 @@ namespace Epsitec.Common.Document.Properties
             ArcType.TryParse(xml.Attribute("ArcType").Value, out this.arcType);
             if (this.arcType != ArcType.Full)
             {
-                this.startingAngle = double.Parse(xml.Attribute("StartingAngle").Value);
-                this.endingAngle = double.Parse(xml.Attribute("EndingAngle").Value);
+                this.startingAngle = (double)xml.Attribute("StartingAngle");
+                this.endingAngle = (double)xml.Attribute("EndingAngle");
             }
         }
 

@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Properties
         private Tension(XElement xml)
             : base(xml)
         {
-            this.tensionValue = double.Parse(xml.Attribute("TensionValue").Value);
+            this.tensionValue = (double)xml.Attribute("TensionValue");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

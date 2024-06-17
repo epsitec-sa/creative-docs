@@ -447,9 +447,9 @@ namespace Epsitec.Common.Document.Properties
             : base(xml)
         {
             VolumeType.TryParse(xml.Attribute("VolumeType").Value, out this.volumeType);
-            this.rapport = double.Parse(xml.Attribute("Rapport").Value);
-            this.angleLeft = double.Parse(xml.Attribute("AngleLeft").Value);
-            this.angleRight = double.Parse(xml.Attribute("AngleRight").Value);
+            this.rapport = (double)xml.Attribute("Rapport");
+            this.angleLeft = (double)xml.Attribute("AngleLeft");
+            this.angleRight = (double)xml.Attribute("AngleRight");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

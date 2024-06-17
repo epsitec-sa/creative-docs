@@ -237,8 +237,8 @@ namespace Epsitec.Common.Document.Properties
             : base(xml)
         {
             this.fontName = xml.Attribute("FontName").Value;
-            this.fontSize = double.Parse(xml.Attribute("FontSize").Value);
-            this.fontColor = RichColor.FromXML(xml.Element("FontColor"));
+            this.fontSize = (double)xml.Attribute("FontSize");
+            this.fontColor = RichColor.FromXML(xml.Element("FontColor").Element("RichColor"));
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

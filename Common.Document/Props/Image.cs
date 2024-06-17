@@ -913,17 +913,17 @@ namespace Epsitec.Common.Document.Properties
 
             this.shortName = xml.Attribute("ShortName").Value;
             this.date = (System.DateTime)xml.Attribute("Date");
-            this.insideDoc = bool.Parse(xml.Attribute("InsideDoc").Value);
-            this.fromClipboard = bool.Parse(xml.Attribute("FromClipboard").Value);
+            this.insideDoc = (bool)xml.Attribute("InsideDoc");
+            this.fromClipboard = (bool)xml.Attribute("FromClipboard");
             Rotation.TryParse(xml.Attribute("Rotation").Value, out this.rotation);
-            this.mirrorH = bool.Parse(xml.Attribute("MirrorH").Value);
-            this.mirrorV = bool.Parse(xml.Attribute("MirrorV").Value);
-            this.homo = bool.Parse(xml.Attribute("Homo").Value);
-            this.filterCategory = int.Parse(xml.Attribute("FilterCategory").Value);
-            this.cropMargins.Left = double.Parse(xml.Attribute("CropLeft").Value);
-            this.cropMargins.Right = double.Parse(xml.Attribute("CropRight").Value);
-            this.cropMargins.Bottom = double.Parse(xml.Attribute("CropBottom").Value);
-            this.cropMargins.Top = double.Parse(xml.Attribute("CropTop").Value);
+            this.mirrorH = (bool)xml.Attribute("MirrorH");
+            this.mirrorV = (bool)xml.Attribute("MirrorV");
+            this.homo = (bool)xml.Attribute("Homo");
+            this.filterCategory = (int)xml.Attribute("FilterCategory");
+            this.cropMargins.Left = (double)xml.Attribute("CropLeft");
+            this.cropMargins.Right = (double)xml.Attribute("CropRight");
+            this.cropMargins.Bottom = (double)xml.Attribute("CropBottom");
+            this.cropMargins.Top = (double)xml.Attribute("CropTop");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

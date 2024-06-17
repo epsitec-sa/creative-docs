@@ -849,9 +849,9 @@ namespace Epsitec.Common.Document.Properties
             CornerType.TryParse(xml.Attribute("CornerType").Value, out this.cornerType);
             if (this.cornerType != CornerType.Right)
             {
-                this.radius = double.Parse(xml.Attribute("Radius").Value);
-                this.effect1 = double.Parse(xml.Attribute("Effect1").Value);
-                this.effect2 = double.Parse(xml.Attribute("Effect2").Value);
+                this.radius = (double)xml.Attribute("Radius");
+                this.effect1 = (double)xml.Attribute("Effect1");
+                this.effect2 = (double)xml.Attribute("Effect2");
             }
         }
 

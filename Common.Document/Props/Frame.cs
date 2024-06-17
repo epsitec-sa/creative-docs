@@ -807,15 +807,17 @@ namespace Epsitec.Common.Document.Properties
             : base(xml)
         {
             FrameType.TryParse(xml.Attribute("FrameType").Value, out this.frameType);
-            this.frameWidth = double.Parse(xml.Attribute("FrameWidth").Value);
-            this.marginWidth = double.Parse(xml.Attribute("MarginWidth").Value);
-            this.marginConvexity = double.Parse(xml.Attribute("MarginConvexity").Value);
-            this.shadowInflate = double.Parse(xml.Attribute("ShadowInflate").Value);
-            this.shadowOffsetX = double.Parse(xml.Attribute("ShadowOffsetX").Value);
-            this.shadowOffsetY = double.Parse(xml.Attribute("ShadowOffsetY").Value);
-            this.frameColor = RichColor.FromXML(xml.Element("FrameColor"));
-            this.shadowColor = RichColor.FromXML(xml.Element("ShadowColor"));
-            this.backgroundColor = RichColor.FromXML(xml.Element("BackgroundColor"));
+            this.frameWidth = (double)xml.Attribute("FrameWidth");
+            this.marginWidth = (double)xml.Attribute("MarginWidth");
+            this.marginConvexity = (double)xml.Attribute("MarginConvexity");
+            this.shadowInflate = (double)xml.Attribute("ShadowInflate");
+            this.shadowOffsetX = (double)xml.Attribute("ShadowOffsetX");
+            this.shadowOffsetY = (double)xml.Attribute("ShadowOffsetY");
+            this.frameColor = RichColor.FromXML(xml.Element("FrameColor").Element("RichColor"));
+            this.shadowColor = RichColor.FromXML(xml.Element("ShadowColor").Element("RichColor"));
+            this.backgroundColor = RichColor.FromXML(
+                xml.Element("BackgroundColor").Element("RichColor")
+            );
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

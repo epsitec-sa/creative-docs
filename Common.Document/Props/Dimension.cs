@@ -342,11 +342,11 @@ namespace Epsitec.Common.Document.Properties
                 out this.dimensionJustif
             );
             DimensionForm.TryParse(xml.Attribute("DimensionForm").Value, out this.dimensionForm);
-            this.addLength = double.Parse(xml.Attribute("AddLength").Value);
-            this.outLength = double.Parse(xml.Attribute("OutLength").Value);
-            this.fontOffset = double.Parse(xml.Attribute("FontOffset").Value);
+            this.addLength = (double)xml.Attribute("AddLength");
+            this.outLength = (double)xml.Attribute("OutLength");
+            this.fontOffset = (double)xml.Attribute("FontOffset");
             this.dimensionText = xml.Attribute("DimensionText").Value;
-            this.rotateText = bool.Parse(xml.Attribute("RotateText").Value);
+            this.rotateText = (bool)xml.Attribute("RotateText");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -829,13 +829,23 @@ namespace Epsitec.Common.Document.Properties
                 root.Add(
                     new XAttribute(
                         "DashPen",
-                        string.Join(" ", this.dashPen.Select(f => f.ToString()))
+                        string.Join(
+                            " ",
+                            this.dashPen.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     )
                 );
                 root.Add(
                     new XAttribute(
                         "DashGap",
-                        string.Join(" ", this.dashGap.Select(f => f.ToString()))
+                        string.Join(
+                            " ",
+                            this.dashGap.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     )
                 );
             }
@@ -850,20 +860,20 @@ namespace Epsitec.Common.Document.Properties
         private Line(XElement xml)
             : base(xml)
         {
-            this.width = double.Parse(xml.Attribute("Width").Value);
+            this.width = (double)xml.Attribute("Width");
             CapStyle.TryParse(xml.Attribute("Cap").Value, out this.cap);
             JoinStyle.TryParse(xml.Attribute("Join").Value, out this.join);
-            this.limit = double.Parse(xml.Attribute("Limit").Value);
-            this.dash = bool.Parse(xml.Attribute("Dash").Value);
+            this.limit = (double)xml.Attribute("Limit");
+            this.dash = (bool)xml.Attribute("Dash");
             if (this.dash)
             {
                 this.dashPen = xml.Attribute("DashPen")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
                 this.dashGap = xml.Attribute("DashGap")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
             }
         }

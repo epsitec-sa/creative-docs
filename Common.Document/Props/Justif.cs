@@ -443,9 +443,9 @@ namespace Epsitec.Common.Document.Properties
             JustifHorizontal.TryParse(xml.Attribute("Horizontal").Value, out this.horizontal);
             JustifVertical.TryParse(xml.Attribute("Vertical").Value, out this.vertical);
             JustifOrientation.TryParse(xml.Attribute("Orientation").Value, out this.orientation);
-            this.marginH = double.Parse(xml.Attribute("MarginH").Value);
-            this.marginV = double.Parse(xml.Attribute("MarginV").Value);
-            this.offsetV = double.Parse(xml.Attribute("OffsetV").Value);
+            this.marginH = (double)xml.Attribute("MarginH");
+            this.marginV = (double)xml.Attribute("MarginV");
+            this.offsetV = (double)xml.Attribute("OffsetV");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

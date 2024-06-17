@@ -1469,17 +1469,21 @@ namespace Epsitec.Common.Drawing
 
         public XElement ToXML()
         {
-            return new XElement(
+            var root = new XElement(
                 "RichColor",
                 new XAttribute("Alpha", this.alpha),
                 new XAttribute("Value1", this.value1),
                 new XAttribute("Value2", this.value2),
                 new XAttribute("Value3", this.value3),
                 new XAttribute("Value4", this.value4),
-                new XAttribute("Name", this.name),
                 new XAttribute("ColorSpace", this.colorSpace),
                 new XAttribute("IsValid", this.isValid)
             );
+            if (this.name != null)
+            {
+                root.Add(new XAttribute("Name", this.name));
+            }
+            return root;
         }
 
         public static RichColor FromXML(XElement xml)
@@ -1489,14 +1493,14 @@ namespace Epsitec.Common.Drawing
 
         private RichColor(XElement xml)
         {
-            this.alpha = double.Parse(xml.Attribute("Alpha").Value);
-            this.value1 = double.Parse(xml.Attribute("Value1").Value);
-            this.value2 = double.Parse(xml.Attribute("Value2").Value);
-            this.value3 = double.Parse(xml.Attribute("Value3").Value);
-            this.value4 = double.Parse(xml.Attribute("Value4").Value);
-            this.name = xml.Attribute("Name").Value;
+            this.alpha = (double)xml.Attribute("Alpha");
+            this.value1 = (double)xml.Attribute("Value1");
+            this.value2 = (double)xml.Attribute("Value2");
+            this.value3 = (double)xml.Attribute("Value3");
+            this.value4 = (double)xml.Attribute("Value4");
+            this.name = xml.Attribute("Name")?.Value;
             ColorSpace.TryParse(xml.Attribute("ColorSpace").Value, out this.colorSpace);
-            this.isValid = bool.Parse(xml.Attribute("IsValid").Value);
+            this.isValid = (bool)xml.Attribute("IsValid");
         }
 
         public RichColor(

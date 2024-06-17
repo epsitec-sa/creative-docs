@@ -179,6 +179,14 @@ namespace Epsitec.Common.Document
 
             this.printDialog = new Common.Dialogs.PrinterDocumentPropertiesDialog();
 
+            this.InitInternalObjects();
+
+            this.ioType = IOType.BinaryCompress;
+            //this.ioType = IOType.SoapUncompress;
+        }
+
+        private void InitInternalObjects()
+        {
             if (this.mode == DocumentMode.Modify || this.mode == DocumentMode.Clipboard)
             {
                 this.modifier = new Modifier(this);
@@ -211,9 +219,6 @@ namespace Epsitec.Common.Document
                 this.Modifier.AttachViewer(clipboardViewer);
                 this.Modifier.New();
             }
-
-            this.ioType = IOType.BinaryCompress;
-            //this.ioType = IOType.SoapUncompress;
         }
 
         public void Dispose()
@@ -805,9 +810,12 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            foreach (TextFlow flow in this.textFlows)
+            if (this.textFlows != null)
             {
-                flow.NotifyAboutToExecuteCommand();
+                foreach (TextFlow flow in this.textFlows)
+                {
+                    flow.NotifyAboutToExecuteCommand();
+                }
             }
 
             this.SetDirtyCacheBitmap(changing);
@@ -1833,10 +1841,10 @@ namespace Epsitec.Common.Document
         public XElement ToXML()
         {
             XElement root = new XElement("Document");
-            root.Add(new XElement("Type", this.type));
+            root.Add(new XAttribute("Type", this.type));
             if (this.name != null)
             {
-                root.Add(new XElement("Name", this.name));
+                root.Add(new XAttribute("Name", this.name));
             }
 
             if (this.type == DocumentType.Pictogram)
@@ -1846,9 +1854,9 @@ namespace Epsitec.Common.Document
             }
             else
             {
-                root.Add(new XElement("Settings", this.settings.ToXML()));
-                root.Add(new XElement("ExportFilename", this.exportFilename));
-                root.Add(new XElement("ExportFilter", this.exportFilter));
+                root.Add(this.settings.ToXML());
+                root.Add(new XAttribute("ExportFilename", this.exportFilename));
+                root.Add(new XAttribute("ExportFilter", this.exportFilter));
 
                 root.Add(new XElement("ObjectMemory", this.modifier.ObjectMemory.ToXML()));
                 root.Add(new XElement("ObjectMemoryText", this.modifier.ObjectMemoryText.ToXML()));
@@ -1865,17 +1873,20 @@ namespace Epsitec.Common.Document
                 //root.Add(new XElement("TextContextData", textContextData));
 
                 root.Add(new XElement("TextFlows", this.textFlows.ToXML()));
-                root.Add(
-                    new XElement("FontList", this.fontList.Select(fontname => fontname.ToXML()))
-                );
-                root.Add(new XElement("FontIncludeMode", this.fontIncludeMode));
-                root.Add(new XElement("ImageIncludeMode", this.imageIncludeMode));
+                if (this.fontList != null)
+                {
+                    root.Add(
+                        new XElement("FontList", this.fontList.Select(fontname => fontname.ToXML()))
+                    );
+                }
+                root.Add(new XAttribute("FontIncludeMode", this.fontIncludeMode));
+                root.Add(new XAttribute("ImageIncludeMode", this.imageIncludeMode));
             }
 
-            root.Add(new XElement("UniqueObjectId", this.uniqueObjectId));
-            root.Add(new XElement("UniqueAggregateId", this.uniqueAggregateId));
-            root.Add(new XElement("UniqueParagraphStyleId", this.uniqueParagraphStyleId));
-            root.Add(new XElement("UniqueCharacterStyleId", this.uniqueCharacterStyleId));
+            root.Add(new XAttribute("UniqueObjectId", this.uniqueObjectId));
+            root.Add(new XAttribute("UniqueAggregateId", this.uniqueAggregateId));
+            root.Add(new XAttribute("UniqueParagraphStyleId", this.uniqueParagraphStyleId));
+            root.Add(new XAttribute("UniqueCharacterStyleId", this.uniqueCharacterStyleId));
             root.Add(new XElement("Objects", this.objects.ToXML()));
             root.Add(new XElement("Properties", this.propertiesAuto.ToXML()));
             root.Add(new XElement("Aggregates", this.aggregates.ToXML()));
@@ -1885,8 +1896,10 @@ namespace Epsitec.Common.Document
         private Document(XElement xml)
         {
             Document.ReadDocument = this; // bl-converter ugly, refactor
-            DocumentType.TryParse(xml.Element("Type").Value, out this.type);
-            this.name = xml.Element("Name")?.Value;
+            DocumentType.TryParse(xml.Attribute("Type").Value, out this.type);
+            this.name = xml.Attribute("Name")?.Value;
+
+            this.InitInternalObjects();
 
             if (this.type == DocumentType.Pictogram)
             {
@@ -1900,19 +1913,21 @@ namespace Epsitec.Common.Document
             {
                 this.settings = Common.Document.Settings.Settings.FromXML(xml.Element("Settings"));
                 this.exportFilename = xml.Attribute("ExportFilename").Value;
-                this.exportFilter = int.Parse(xml.Attribute("ExportFilter").Value);
-                this.modifier.ObjectMemory = Objects.Memory.FromXML(xml.Element("ObjectMemory"));
-                this.modifier.ObjectMemoryText = Objects.Memory.FromXML(
-                    xml.Element("ObjectMemoryText")
+                this.exportFilter = (int)xml.Attribute("ExportFilter");
+                this.readObjectMemory = Objects.Memory.FromXML(
+                    xml.Element("ObjectMemory").Element("Memory")
+                );
+                this.readObjectMemoryText = Objects.Memory.FromXML(
+                    xml.Element("ObjectMemoryText").Element("Memory")
                 );
                 // TODO
                 //RootStack;
                 //TextContextData;
                 this.textFlows = SerializableUndoableList.FromXML(xml.Element("TextFlows"));
                 this.fontList = xml.Element("FontList")
-                    .Elements()
-                    .Select(OpenType.FontName.FromXML)
-                    .ToList();
+                    ?.Elements()
+                    ?.Select(OpenType.FontName.FromXML)
+                    ?.ToList();
                 FontIncludeMode.TryParse(
                     xml.Attribute("FontIncludeMode").Value,
                     out this.fontIncludeMode
@@ -1923,10 +1938,10 @@ namespace Epsitec.Common.Document
                 );
             }
 
-            this.uniqueObjectId = int.Parse(xml.Element("UniqueObjectId").Value);
-            this.uniqueAggregateId = int.Parse(xml.Element("UniqueAggregateId").Value);
-            this.uniqueParagraphStyleId = int.Parse(xml.Element("UniqueParagraphStyleId").Value);
-            this.uniqueCharacterStyleId = int.Parse(xml.Element("UniqueCharacterStyleId").Value);
+            this.uniqueObjectId = (int)xml.Attribute("UniqueObjectId");
+            this.uniqueAggregateId = (int)xml.Attribute("UniqueAggregateId");
+            this.uniqueParagraphStyleId = (int)xml.Attribute("UniqueParagraphStyleId");
+            this.uniqueCharacterStyleId = (int)xml.Attribute("UniqueCharacterStyleId");
             this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
             this.propertiesAuto = SerializableUndoableList.FromXML(xml.Element("Properties"));
             this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));

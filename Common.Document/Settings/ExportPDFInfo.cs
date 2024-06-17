@@ -260,15 +260,19 @@ namespace Epsitec.Common.Document.Settings
                 xml.Attribute("ImageCompression").Value,
                 out this.imageCompression
             );
-            this.jpegQuality = double.Parse(xml.Attribute("JpegQuality").Value);
+            this.jpegQuality = (double)xml.Attribute("JpegQuality");
             this.imageMinDpi = double.Parse(xml.Attribute("ImageMinDpi").Value);
             this.imageMaxDpi = double.Parse(xml.Attribute("ImageMaxDpi").Value);
             this.imageNameFilters = xml.Element("ImageNameFilters")
                 .Elements()
                 .Select(filter => filter.Value)
                 .ToArray();
-            this.bleedEvenMargins = Margins.FromXML(xml.Element("BleedEvenMargins"));
-            this.bleedOddMargins = Margins.FromXML(xml.Element("BleedOddMargins "));
+            this.bleedEvenMargins = Margins.FromXML(
+                xml.Element("BleedEvenMargins").Element("Margins")
+            );
+            this.bleedOddMargins = Margins.FromXML(
+                xml.Element("BleedOddMargins").Element("Margins")
+            );
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

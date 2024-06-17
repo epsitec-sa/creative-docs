@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Properties
         private Color(XElement xml)
             : base(xml)
         {
-            this.color = RichColor.FromXML(xml.Element("Color"));
+            this.color = RichColor.FromXML(xml.Element("Color").Element("RichColor"));
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -783,7 +783,15 @@ namespace Epsitec.Common.Document.Properties
                 "Surface",
                 base.IterXMLParts(),
                 new XAttribute("SurfaceType", this.surfaceType),
-                new XAttribute("Factors", string.Join(" ", this.factors.Select(f => f.ToString()))),
+                new XAttribute(
+                    "Factors",
+                    string.Join(
+                        " ",
+                        this.factors.Select(f =>
+                            f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                        )
+                    )
+                ),
                 new XAttribute("Scalars", string.Join(" ", this.scalars.Select(f => f.ToString())))
             );
         }
@@ -797,7 +805,10 @@ namespace Epsitec.Common.Document.Properties
             : base(xml)
         {
             SurfaceType.TryParse(xml.Attribute("SurfaceType").Value, out this.surfaceType);
-            this.factors = xml.Attribute("Factors").Value.Split(" ").Select(double.Parse).ToArray();
+            this.factors = xml.Attribute("Factors")
+                .Value.Split(" ")
+                .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
+                .ToArray();
             this.scalars = xml.Attribute("Scalars").Value.Split(" ").Select(int.Parse).ToArray();
         }
 

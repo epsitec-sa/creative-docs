@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Text;
@@ -305,7 +306,7 @@ namespace Epsitec.Common.Document
 
         public static System.Collections.ArrayList MergeFontList(
             System.Collections.ArrayList inList,
-            System.Collections.ArrayList quickFaceNames,
+            List<string> quickFaceNames,
             bool quickOnly,
             string selectedFaceName,
             out int quickCount

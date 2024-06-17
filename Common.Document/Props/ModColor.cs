@@ -329,14 +329,14 @@ namespace Epsitec.Common.Document.Properties
         private ModColor(XElement xml)
             : base(xml)
         {
-            this.h = double.Parse(xml.Attribute("H").Value);
-            this.s = double.Parse(xml.Attribute("S").Value);
-            this.v = double.Parse(xml.Attribute("V").Value);
-            this.r = double.Parse(xml.Attribute("R").Value);
-            this.g = double.Parse(xml.Attribute("G").Value);
-            this.b = double.Parse(xml.Attribute("B").Value);
-            this.a = double.Parse(xml.Attribute("A").Value);
-            this.n = bool.Parse(xml.Attribute("N").Value);
+            this.h = (double)xml.Attribute("H");
+            this.s = (double)xml.Attribute("S");
+            this.v = (double)xml.Attribute("V");
+            this.r = (double)xml.Attribute("R");
+            this.g = (double)xml.Attribute("G");
+            this.b = (double)xml.Attribute("B");
+            this.a = (double)xml.Attribute("A");
+            this.n = (bool)xml.Attribute("N");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

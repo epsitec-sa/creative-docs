@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Properties
         private Bool(XElement xml)
             : base(xml)
         {
-            this.boolValue = bool.Parse(xml.Attribute("Value").Value);
+            this.boolValue = (bool)xml.Attribute("Value");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

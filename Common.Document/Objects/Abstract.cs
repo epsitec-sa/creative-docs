@@ -4004,7 +4004,11 @@ namespace Epsitec.Common.Document.Objects
                 handles.Add(this.handles[i].ToXML());
             }
             yield return handles;
-            yield return new XElement("Objects", this.objects.ToXML());
+            if (this.objects != null)
+            {
+                yield return new XElement("Objects", this.objects.ToXML());
+            }
+
             yield return new XElement("Aggregates", this.aggregates.ToXML());
         }
 
@@ -4024,7 +4028,11 @@ namespace Epsitec.Common.Document.Objects
                 .ToList();
             this.HandlePropertiesCreate(); // crée les poignées des propriétés
 
-            this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
+            var objectsXML = xml.Element("Objects");
+            if (objectsXML != null)
+            {
+                this.objects = SerializableUndoableList.FromXML(objectsXML);
+            }
             this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
             this.CreateMissingProperties();
         }

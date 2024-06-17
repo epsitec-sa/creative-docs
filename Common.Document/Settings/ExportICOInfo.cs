@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Settings
 
         public XElement ToXML()
         {
-            return new XElement("ExportICOInfo", new XAttribute("ICOFormat", this.format));
+            return new XElement("ExportICOInfo", new XAttribute("Format", this.format));
         }
 
         public static ExportICOInfo FromXML(XElement xml)

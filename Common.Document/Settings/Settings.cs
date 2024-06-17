@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 
@@ -15,13 +17,14 @@ namespace Epsitec.Common.Document.Settings
 
             // bl-net8-cross refactor
             // Use a hashtable instead of a list for the settings
-            this.settings = new System.Collections.ArrayList();
+            this.settings = new();
+            this.settings = new();
             this.CreateDefault();
 
             this.globalGuides = true;
             this.guides = new SerializableUndoableList(this.document, UndoableListType.Guides);
 
-            this.quickFonts = new System.Collections.ArrayList();
+            this.quickFonts = new();
             Settings.DefaultQuickFonts(this.quickFonts);
 
             this.drawingSettings = new DrawingSettings(document);
@@ -258,7 +261,7 @@ namespace Epsitec.Common.Document.Settings
         public Abstract Get(int index)
         {
             //	Donne un réglage d'après son index.
-            return this.settings[index] as Abstract;
+            return this.settings[index];
         }
 
         public Abstract Get(string name)
@@ -403,14 +406,14 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region QuickFonts
-        public System.Collections.ArrayList QuickFonts
+        public List<string> QuickFonts
         {
             //	Liste des polices rapides.
             get { return this.quickFonts; }
             set { this.quickFonts = value; }
         }
 
-        public static void DefaultQuickFonts(System.Collections.ArrayList list)
+        public static void DefaultQuickFonts(List<string> list)
         {
             //	Donne la liste des polices rapides par défaut.
             list.Clear();
@@ -440,13 +443,19 @@ namespace Epsitec.Common.Document.Settings
         {
             return new XElement(
                 "Settings",
-                new XAttribute("Settings", this.settings), // TODO
                 new XAttribute("GlobalGuides", this.globalGuides),
-                new XAttribute("QuickFonts", this.quickFonts), // TODO
+                new XElement("Settings", this.settings.Select(item => item.ToXML())),
+                new XElement(
+                    "QuickFonts",
+                    this.quickFonts.Select(fontname => new XElement(
+                        "Font",
+                        new XAttribute("Name", fontname)
+                    ))
+                ),
                 new XElement("Guides", this.guides.ToXML()),
-                new XElement("PrintInfo", this.printInfo.ToXML()),
-                new XElement("ExportPDFInfo", this.exportPDFInfo.ToXML()),
-                new XElement("ExportICOInfo", this.exportICOInfo.ToXML())
+                this.printInfo.ToXML(),
+                this.exportPDFInfo.ToXML(),
+                this.exportICOInfo.ToXML()
             );
         }
 
@@ -457,13 +466,42 @@ namespace Epsitec.Common.Document.Settings
 
         private Settings(XElement xml)
         {
-            this.settings = null; // TODO
+            this.settings = xml.Element("Settings")
+                .Elements()
+                .Select(Settings.LoadSettingFromXML)
+                .ToList();
             this.globalGuides = bool.Parse(xml.Attribute("GlobalGuides").Value);
             this.guides = SerializableUndoableList.FromXML(xml.Element("Guides"));
-            this.quickFonts = null; // TODO
+            this.quickFonts = xml.Element("QuickFonts")
+                .Elements()
+                .Select(item => item.Attribute("Name").Value)
+                .ToList();
             this.printInfo = PrintInfo.FromXML(xml.Element("PrintInfo"));
             this.exportPDFInfo = ExportPDFInfo.FromXML(xml.Element("ExportPDFInfo"));
             this.exportICOInfo = ExportICOInfo.FromXML(xml.Element("ExportICOInfo"));
+        }
+
+        private static Abstract LoadSettingFromXML(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                case "Bool":
+                    return Bool.FromXML(xml);
+                case "Double":
+                    return Double.FromXML(xml);
+                case "Integer":
+                    return Integer.FromXML(xml);
+                case "Point":
+                    return Point.FromXML(xml);
+                case "Range":
+                    return Range.FromXML(xml);
+                case "String":
+                    return String.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Setting type '{xml.Name.LocalName}'"
+                    );
+            }
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -482,8 +520,7 @@ namespace Epsitec.Common.Document.Settings
         {
             //	Constructeur qui désérialise les réglages.
             this.document = Document.ReadDocument;
-            this.settings = (System.Collections.ArrayList)
-                info.GetValue("Settings", typeof(System.Collections.ArrayList));
+            this.settings = (List<Abstract>)info.GetValue("Settings", typeof(List<Abstract>));
             this.guides = (SerializableUndoableList)
                 info.GetValue("GuidesList", typeof(SerializableUndoableList));
             this.printInfo = (PrintInfo)info.GetValue("PrintInfo", typeof(PrintInfo));
@@ -499,12 +536,11 @@ namespace Epsitec.Common.Document.Settings
 
             if (this.document.IsRevisionGreaterOrEqual(1, 2, 5))
             {
-                this.quickFonts = (System.Collections.ArrayList)
-                    info.GetValue("QuickFonts", typeof(System.Collections.ArrayList));
+                this.quickFonts = (List<string>)info.GetValue("QuickFonts", typeof(List<string>));
             }
             else
             {
-                this.quickFonts = new System.Collections.ArrayList();
+                this.quickFonts = new();
                 Settings.DefaultQuickFonts(this.quickFonts);
             }
 
@@ -538,11 +574,11 @@ namespace Epsitec.Common.Document.Settings
 
 
         protected Document document;
-        protected System.Collections.ArrayList settings;
+        protected List<Abstract> settings;
         protected System.Collections.Hashtable owners;
         protected bool globalGuides;
         protected SerializableUndoableList guides;
-        protected System.Collections.ArrayList quickFonts;
+        protected List<string> quickFonts;
         protected DrawingSettings drawingSettings;
         protected PrintInfo printInfo;
         protected ExportPDFInfo exportPDFInfo;

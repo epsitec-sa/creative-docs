@@ -1259,15 +1259,30 @@ namespace Epsitec.Common.Document.Properties
                 root.Add(
                     new XAttribute(
                         "HatchAngle",
-                        string.Join(" ", this.hatchAngle.Select(f => f.ToString()))
+                        string.Join(
+                            " ",
+                            this.hatchAngle.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     ),
                     new XAttribute(
                         "HatchWidth",
-                        string.Join(" ", this.hatchWidth.Select(f => f.ToString()))
+                        string.Join(
+                            " ",
+                            this.hatchWidth.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     ),
                     new XAttribute(
                         "HatchDistance",
-                        string.Join(" ", this.hatchDistance.Select(f => f.ToString()))
+                        string.Join(
+                            " ",
+                            this.hatchDistance.Select(f =>
+                                f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                            )
+                        )
                     )
                 );
             }
@@ -1283,12 +1298,12 @@ namespace Epsitec.Common.Document.Properties
             : base(xml)
         {
             GradientFillType.TryParse(xml.Attribute("FillType").Value, out this.fillType);
-            this.color1 = RichColor.FromXML(xml.Element("Color1"));
+            this.color1 = RichColor.FromXML(xml.Element("Color1").Element("RichColor"));
             this.smooth = double.Parse(xml.Attribute("Smooth").Value);
 
             if (this.fillType != GradientFillType.None)
             {
-                this.color2 = RichColor.FromXML(xml.Element("Color2"));
+                this.color2 = RichColor.FromXML(xml.Element("Color2").Element("RichColor"));
                 this.angle = double.Parse(xml.Attribute("Angle").Value);
                 this.cx = double.Parse(xml.Attribute("Cx").Value);
                 this.cy = double.Parse(xml.Attribute("Cy").Value);
@@ -1305,15 +1320,15 @@ namespace Epsitec.Common.Document.Properties
             {
                 this.hatchAngle = xml.Attribute("HatchAngle")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
                 this.hatchWidth = xml.Attribute("HatchWidth")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
                 this.hatchDistance = xml.Attribute("HatchDistance")
                     .Value.Split(" ")
-                    .Select(double.Parse)
+                    .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
                     .ToArray();
             }
         }

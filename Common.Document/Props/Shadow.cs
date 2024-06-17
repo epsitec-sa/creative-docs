@@ -177,10 +177,10 @@ namespace Epsitec.Common.Document.Properties
         private Shadow(XElement xml)
             : base(xml)
         {
-            this.radius = double.Parse(xml.Attribute("Radius").Value);
-            this.ox = double.Parse(xml.Attribute("Ox").Value);
-            this.oy = double.Parse(xml.Attribute("Oy").Value);
-            this.color = RichColor.FromXML(xml.Element("Color"));
+            this.radius = (double)xml.Attribute("Radius");
+            this.ox = (double)xml.Attribute("Ox");
+            this.oy = (double)xml.Attribute("Oy");
+            this.color = RichColor.FromXML(xml.Element("Color").Element("RichColor"));
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

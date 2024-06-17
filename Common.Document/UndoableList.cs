@@ -466,6 +466,7 @@ namespace Epsitec.Common.Document
         public SerializableUndoableList(Document document, UndoableListType type)
             : base(document, type) { }
 
+        #region Serialization
         public bool HasEquivalentData(IXMLWritable other)
         {
             SerializableUndoableList otherList = (SerializableUndoableList)other;
@@ -487,7 +488,6 @@ namespace Epsitec.Common.Document
             return true;
         }
 
-        #region Serialization
         public XElement ToXML()
         {
             return new XElement(
@@ -527,6 +527,10 @@ namespace Epsitec.Common.Document
                 case UndoableListType.AggregatesInsideDocument:
                 case UndoableListType.AggregatesInsideObject:
                     return Properties.Aggregate.FromXML;
+                case UndoableListType.Guides:
+                    return Settings.Guide.FromXML;
+                case UndoableListType.TextFlows:
+                    return TextFlow.FromXML;
                 default:
                     throw new System.ArgumentException(
                         $"No item loader for list type '{listType}'"

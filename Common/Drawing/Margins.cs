@@ -308,7 +308,7 @@ namespace Epsitec.Common.Drawing
             return new XElement(
                 "Margins",
                 new XAttribute("Left", this.left),
-                new XAttribute("Rigth", this.right),
+                new XAttribute("Right", this.right),
                 new XAttribute("Top", this.top),
                 new XAttribute("Bottom", this.bottom)
             );
@@ -321,10 +321,10 @@ namespace Epsitec.Common.Drawing
 
         private Margins(XElement xml)
         {
-            this.left = double.Parse(xml.Attribute("Left").Value);
-            this.right = double.Parse(xml.Attribute("Right").Value);
-            this.top = double.Parse(xml.Attribute("Top").Value);
-            this.bottom = double.Parse(xml.Attribute("Bottom").Value);
+            this.left = (double)xml.Attribute("Left");
+            this.right = (double)xml.Attribute("Right");
+            this.top = (double)xml.Attribute("Top");
+            this.bottom = (double)xml.Attribute("Bottom");
         }
 
         private double left;
