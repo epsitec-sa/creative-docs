@@ -773,8 +773,8 @@ namespace Epsitec.Common.Document.Properties
             Surface otherSurface = (Surface)other;
             return base.HasEquivalentData(other)
                 && this.surfaceType == otherSurface.surfaceType
-                && this.factors == otherSurface.factors
-                && this.scalars == otherSurface.scalars;
+                && this.factors.SequenceEqual(otherSurface.factors)
+                && this.scalars.SequenceEqual(otherSurface.scalars);
         }
 
         public override XElement ToXML()

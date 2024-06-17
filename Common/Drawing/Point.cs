@@ -564,8 +564,8 @@ namespace Epsitec.Common.Drawing
         private Point(XElement xml)
         {
             XElement root = xml.Element("Point");
-            this.x = double.Parse(root.Attribute("x").Value);
-            this.y = double.Parse(root.Attribute("y").Value);
+            this.x = (double)root.Attribute("x");
+            this.y = (double)root.Attribute("y");
         }
 
         #region Converter Class

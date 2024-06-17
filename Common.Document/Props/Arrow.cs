@@ -928,15 +928,20 @@ namespace Epsitec.Common.Document.Properties
         public new bool HasEquivalentData(Support.IXMLWritable other)
         {
             Arrow otherArrow = (Arrow)other;
-            if (!(base.HasEquivalentData(other) && this.arrowType == otherArrow.arrowType))
+            if (
+                !(
+                    base.HasEquivalentData(other)
+                    && this.arrowType.SequenceEqual(otherArrow.arrowType)
+                )
+            )
             {
                 return false;
             }
             if (this.arrowType[0] != ArrowType.Right || this.arrowType[1] != ArrowType.Right)
             {
-                return this.length == otherArrow.length
-                    && this.effect1 == otherArrow.effect1
-                    && this.effect2 == otherArrow.effect2;
+                return this.length.SequenceEqual(otherArrow.length)
+                    && this.effect1.SequenceEqual(otherArrow.effect1)
+                    && this.effect2.SequenceEqual(otherArrow.effect2);
             }
             return true;
         }

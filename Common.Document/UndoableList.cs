@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Document
 {
@@ -478,14 +479,7 @@ namespace Epsitec.Common.Document
             {
                 return false;
             }
-            foreach (var (our, theirs) in this.objectList.Zip(otherList.objectList))
-            {
-                if (!our.HasEquivalentData(theirs))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return this.objectList.HasEquivalentData(otherList.objectList);
         }
 
         public XElement ToXML()

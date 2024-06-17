@@ -232,8 +232,8 @@ namespace Epsitec.Common.Drawing
         private Size(XElement xml)
         {
             XElement root = xml.Element("Size");
-            this.width = double.Parse(root.Attribute("width").Value);
-            this.height = double.Parse(root.Attribute("height").Value);
+            this.width = (double)root.Attribute("width");
+            this.height = (double)root.Attribute("height");
         }
 
         #region Converter Class

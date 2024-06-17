@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Serialization;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Objects
@@ -33,6 +34,10 @@ namespace Epsitec.Common.Document.Objects
             if (this.document != null && this.document.Modifier != null)
             {
                 this.uniqueId = this.document.GetNextUniqueObjectId();
+            }
+            else
+            {
+                this.uniqueId = -111;
             }
 
             this.properties = new SerializableUndoableList(
@@ -3975,14 +3980,25 @@ namespace Epsitec.Common.Document.Objects
         public bool HasEquivalentData(IXMLWritable other)
         {
             Abstract otherAbstract = (Abstract)other;
-            return this.uniqueId == otherAbstract.uniqueId
-                && this.name == otherAbstract.name
-                && this.direction == otherAbstract.direction
-                && this.properties.HasEquivalentData(otherAbstract.properties)
-                && this.objects.HasEquivalentData(otherAbstract.objects)
-                && this.aggregates.HasEquivalentData(otherAbstract.aggregates)
-                && this.handles.Zip(otherAbstract.handles)
-                    .All(h => h.First.HasEquivalentData(h.Second));
+            List<bool> status =
+            [
+                this.uniqueId == otherAbstract.uniqueId,
+                this.name == otherAbstract.name,
+                this.direction == otherAbstract.direction,
+                this.properties.HasEquivalentData(otherAbstract.properties),
+                this.objects?.HasEquivalentData(otherAbstract.objects)
+                    ?? this.objects == otherAbstract.objects,
+                this.aggregates.HasEquivalentData(otherAbstract.aggregates),
+                this
+                    .handles.Slice(0, this.TotalMainHandle)
+                    .HasEquivalentData(otherAbstract.handles.Slice(0, this.TotalMainHandle))
+            ];
+            if (!status.All(x => x))
+            {
+                System.Console.WriteLine("Error in Objects.Abstract");
+                return false;
+            }
+            return true;
         }
 
         #region Serialization

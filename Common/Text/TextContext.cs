@@ -111,7 +111,7 @@ namespace Epsitec.Common.Text
             }
         }
 
-        public byte[] Serialize()
+        public string SerializeToString()
         {
             System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
@@ -145,14 +145,18 @@ namespace Epsitec.Common.Text
 
             buffer.Append("/");
             buffer.Append("~");
-
-            return System.Text.Encoding.UTF8.GetBytes(buffer.ToString());
+            return buffer.ToString();
         }
 
-        public void Deserialize(byte[] data)
+        public byte[] Serialize()
         {
-            string source = System.Text.Encoding.UTF8.GetString(data);
-            string[] args = source.Split('/');
+            // bl-convert ugly, use proper xml serialization
+            return System.Text.Encoding.UTF8.GetBytes(this.SerializeToString());
+        }
+
+        public void DeserializeFromString(string data)
+        {
+            string[] args = data.Split('/');
 
             int offset = 0;
 
@@ -201,6 +205,11 @@ namespace Epsitec.Common.Text
 
             System.Diagnostics.Debug.Assert(args[offset] == "~");
             System.Diagnostics.Debug.Assert(args.Length == offset + 1);
+        }
+
+        public void Deserialize(byte[] data)
+        {
+            this.DeserializeFromString(System.Text.Encoding.UTF8.GetString(data));
         }
 
         public bool GetGlyphAndFontForSpecialCode(

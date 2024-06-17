@@ -202,9 +202,9 @@ namespace Epsitec.Common.Document.Settings
                 && this.jpegQuality == otherExportPDFInfo.jpegQuality
                 && this.imageMinDpi == otherExportPDFInfo.imageMinDpi
                 && this.imageMaxDpi == otherExportPDFInfo.imageMaxDpi
-                && this.imageNameFilters == otherExportPDFInfo.imageNameFilters
-                && this.bleedEvenMargins == otherExportPDFInfo.bleedEvenMargins
-                && this.bleedOddMargins == otherExportPDFInfo.bleedOddMargins;
+                && this.imageNameFilters.SequenceEqual(otherExportPDFInfo.imageNameFilters)
+                && this.bleedEvenMargins.HasEquivalentData(otherExportPDFInfo.bleedEvenMargins)
+                && this.bleedOddMargins.HasEquivalentData(otherExportPDFInfo.bleedOddMargins);
         }
 
         public XElement ToXML()

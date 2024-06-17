@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -430,13 +431,21 @@ namespace Epsitec.Common.Document.Settings
         public bool HasEquivalentData(Support.IXMLWritable other)
         {
             Settings otherSettings = (Settings)other;
-            return otherSettings.settings == this.settings
-                && otherSettings.globalGuides == this.globalGuides
-                && otherSettings.guides == this.guides
-                && otherSettings.quickFonts == this.quickFonts
-                && otherSettings.printInfo == this.printInfo
-                && otherSettings.exportPDFInfo == this.exportPDFInfo
-                && otherSettings.exportICOInfo == this.exportICOInfo;
+            List<bool> checks =
+            [
+                otherSettings.settings.HasEquivalentData(this.settings),
+                otherSettings.globalGuides == this.globalGuides,
+                otherSettings.guides.HasEquivalentData(this.guides),
+                otherSettings.quickFonts.SequenceEqual(this.quickFonts),
+                otherSettings.printInfo.HasEquivalentData(this.printInfo),
+                otherSettings.exportPDFInfo.HasEquivalentData(this.exportPDFInfo),
+                otherSettings.exportICOInfo.HasEquivalentData(this.exportICOInfo)
+            ];
+            if (!checks.All(x => x))
+            {
+                return false;
+            }
+            return true;
         }
 
         public XElement ToXML()
@@ -466,6 +475,8 @@ namespace Epsitec.Common.Document.Settings
 
         private Settings(XElement xml)
         {
+            this.document = Document.ReadDocument;
+            this.drawingSettings = new DrawingSettings(this.document);
             this.settings = xml.Element("Settings")
                 .Elements()
                 .Select(Settings.LoadSettingFromXML)

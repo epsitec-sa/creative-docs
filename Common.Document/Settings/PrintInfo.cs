@@ -290,7 +290,7 @@ namespace Epsitec.Common.Document.Settings
                 && this.margins == otherPrintInfo.margins
                 && this.debord == otherPrintInfo.debord
                 && this.target == otherPrintInfo.target
-                && this.imageNameFilters == otherPrintInfo.imageNameFilters;
+                && this.imageNameFilters.SequenceEqual(otherPrintInfo.imageNameFilters);
         }
 
         public XElement ToXML()

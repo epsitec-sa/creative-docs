@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Serialization;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
 
@@ -179,14 +180,6 @@ namespace Epsitec.Common.Document
 
             this.printDialog = new Common.Dialogs.PrinterDocumentPropertiesDialog();
 
-            this.InitInternalObjects();
-
-            this.ioType = IOType.BinaryCompress;
-            //this.ioType = IOType.SoapUncompress;
-        }
-
-        private void InitInternalObjects()
-        {
             if (this.mode == DocumentMode.Modify || this.mode == DocumentMode.Clipboard)
             {
                 this.modifier = new Modifier(this);
@@ -219,6 +212,9 @@ namespace Epsitec.Common.Document
                 this.Modifier.AttachViewer(clipboardViewer);
                 this.Modifier.New();
             }
+
+            this.ioType = IOType.BinaryCompress;
+            //this.ioType = IOType.SoapUncompress;
         }
 
         public void Dispose()
@@ -1813,23 +1809,30 @@ namespace Epsitec.Common.Document
             }
             else
             {
-                if (
-                    !(
-                        this.settings == otherDoc.settings
-                        && this.exportFilename == otherDoc.exportFilename
-                        && this.exportFilter == otherDoc.exportFilter
-                        && this.modifier.ObjectMemory == otherDoc.modifier.ObjectMemory
-                        && this.modifier.ObjectMemoryText == otherDoc.modifier.ObjectMemoryText
-                        && this.modifier.ActiveViewer.DrawingContext.GetRootStack()
-                            == otherDoc.modifier.ActiveViewer.DrawingContext.GetRootStack()
-                        && this.textContext == otherDoc.textContext
-                        && this.textFlows == otherDoc.textFlows
-                        && this.fontList == otherDoc.fontList
-                        && this.fontIncludeMode == otherDoc.fontIncludeMode
-                        && this.imageIncludeMode == otherDoc.imageIncludeMode
-                    )
-                )
+                List<bool> checks =
+                [
+                    this.settings.HasEquivalentData(otherDoc.settings),
+                    this.exportFilename == otherDoc.exportFilename,
+                    this.exportFilter == otherDoc.exportFilter,
+                    this.modifier.ObjectMemory.HasEquivalentData(otherDoc.modifier.ObjectMemory),
+                    this.modifier.ObjectMemoryText.HasEquivalentData(
+                        otherDoc.modifier.ObjectMemoryText
+                    ),
+                    this.modifier?.ActiveViewer?.DrawingContext.GetRootStack()
+                        == otherDoc.modifier?.ActiveViewer?.DrawingContext.GetRootStack(),
+                    //this.textContext?.SerializeToString()
+                    //    == otherDoc.textContext?.SerializeToString() // bl-converter better serialization
+                    //,
+                    this.textFlows.HasEquivalentData(otherDoc.textFlows),
+                    this.fontList?.HasEquivalentData(otherDoc.fontList)
+                        ?? this.fontList == otherDoc.fontList,
+                    this.fontIncludeMode == otherDoc.fontIncludeMode,
+                    this.imageIncludeMode == otherDoc.imageIncludeMode
+                ];
+                if (!(checks.All(x => x)))
                 {
+                    var a = this.textContext?.SerializeToString();
+                    var b = otherDoc.textContext?.SerializeToString();
                     return false;
                 }
             }
@@ -1861,16 +1864,21 @@ namespace Epsitec.Common.Document
                 root.Add(new XElement("ObjectMemory", this.modifier.ObjectMemory.ToXML()));
                 root.Add(new XElement("ObjectMemoryText", this.modifier.ObjectMemoryText.ToXML()));
 
-                //root.Add(
-                //    new XElement(
-                //        "RootStack",
-                //        this.modifier.ActiveViewer.DrawingContext.GetRootStack()
-                //    )
-                //);
+                if (this.modifier.ActiveViewer != null)
+                {
+                    root.Add(
+                        new XElement(
+                            "RootStack",
+                            this.modifier.ActiveViewer.DrawingContext.GetRootStack()
+                                .Select(value => new XElement("Item", value))
+                        )
+                    );
+                }
 
-                //byte[] textContextData =
-                //    this.textContext == null ? null : this.textContext.Serialize();
-                //root.Add(new XElement("TextContextData", textContextData));
+                if (this.textContext != null)
+                {
+                    root.Add(new XElement("TextContextData", this.textContext.SerializeToString()));
+                }
 
                 root.Add(new XElement("TextFlows", this.textFlows.ToXML()));
                 if (this.fontList != null)
@@ -1894,12 +1902,19 @@ namespace Epsitec.Common.Document
         }
 
         private Document(XElement xml)
+            : this(
+                (DocumentType)DocumentType.Parse(typeof(DocumentType), xml.Attribute("Type").Value),
+                DocumentMode.Modify,
+                InstallType.Full,
+                DebugMode.Release,
+                null,
+                null,
+                null,
+                null
+            )
         {
             Document.ReadDocument = this; // bl-converter ugly, refactor
-            DocumentType.TryParse(xml.Attribute("Type").Value, out this.type);
             this.name = xml.Attribute("Name")?.Value;
-
-            this.InitInternalObjects();
 
             if (this.type == DocumentType.Pictogram)
             {
@@ -1914,15 +1929,21 @@ namespace Epsitec.Common.Document
                 this.settings = Common.Document.Settings.Settings.FromXML(xml.Element("Settings"));
                 this.exportFilename = xml.Attribute("ExportFilename").Value;
                 this.exportFilter = (int)xml.Attribute("ExportFilter");
-                this.readObjectMemory = Objects.Memory.FromXML(
+                this.modifier.ObjectMemory = Objects.Memory.FromXML(
                     xml.Element("ObjectMemory").Element("Memory")
                 );
-                this.readObjectMemoryText = Objects.Memory.FromXML(
+                this.modifier.ObjectMemoryText = Objects.Memory.FromXML(
                     xml.Element("ObjectMemoryText").Element("Memory")
                 );
-                // TODO
-                //RootStack;
-                //TextContextData;
+                this.readRootStack = xml.Element("RootStack")
+                    ?.Elements()
+                    ?.Select(item => int.Parse(item.Value))
+                    ?.ToList();
+                var textContextXML = xml.Element("TextContextData");
+                if (textContextXML != null)
+                {
+                    this.textContext.DeserializeFromString(textContextXML.Value);
+                }
                 this.textFlows = SerializableUndoableList.FromXML(xml.Element("TextFlows"));
                 this.fontList = xml.Element("FontList")
                     ?.Elements()
@@ -2038,8 +2059,7 @@ namespace Epsitec.Common.Document
 
                 if (this.IsRevisionGreaterOrEqual(1, 0, 8))
                 {
-                    this.readRootStack = (System.Collections.ArrayList)
-                        info.GetValue("RootStack", typeof(System.Collections.ArrayList));
+                    this.readRootStack = (List<int>)info.GetValue("RootStack", typeof(List<int>));
                 }
                 else
                 {
@@ -3802,7 +3822,7 @@ namespace Epsitec.Common.Document
         protected DocumentManager ioDocumentManager;
         protected Objects.Memory readObjectMemory;
         protected Objects.Memory readObjectMemoryText;
-        protected System.Collections.ArrayList readRootStack;
+        protected List<int> readRootStack;
         protected bool isSurfaceRotation;
         protected double surfaceRotationAngle;
         protected int uniqueObjectId;

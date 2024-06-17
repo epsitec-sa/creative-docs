@@ -2059,10 +2059,10 @@ namespace Epsitec.Common.Document
 
 
         #region RootStack
-        internal System.Collections.ArrayList GetRootStack()
+        internal List<int> GetRootStack()
         {
             //	Document doit pouvoir sérialiser la pile comme un ArrayList.
-            System.Collections.ArrayList list = new System.Collections.ArrayList();
+            List<int> list = new();
             foreach (int item in this.rootStack)
             {
                 list.Add(item);
