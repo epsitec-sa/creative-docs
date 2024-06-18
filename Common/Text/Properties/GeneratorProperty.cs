@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -9,7 +10,7 @@ namespace Epsitec.Common.Text.Properties
     /// Attention: cette propriété requiert un traitement spécial de la part
     /// de TextContext.GetPropertiesQuickAndDirty.
     /// </summary>
-    public class GeneratorProperty : Property
+    public class GeneratorProperty : Property, Common.Support.IXMLSerializable<GeneratorProperty>
     {
         public GeneratorProperty() { }
 
@@ -73,6 +74,36 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeInt(this.level),
                 /**/SerializerSupport.SerializeLong(this.uniqueId)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            GeneratorProperty other = (GeneratorProperty)otherWritable;
+            return this.generator == other.generator
+                && this.level == other.level
+                && this.uniqueId == other.uniqueId;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "GeneratorProperty",
+                new XAttribute("Generator", this.generator),
+                new XAttribute("Level", this.level),
+                new XAttribute("UniqueId", this.uniqueId)
+            );
+        }
+
+        public static GeneratorProperty FromXML(XElement xml)
+        {
+            return new GeneratorProperty(xml);
+        }
+
+        private GeneratorProperty(XElement xml)
+        {
+            this.generator = xml.Attribute("Generator").Value;
+            this.level = (int)xml.Attribute("Level");
+            this.uniqueId = (long)xml.Attribute("UniqueId");
         }
 
         public override void DeserializeFromText(

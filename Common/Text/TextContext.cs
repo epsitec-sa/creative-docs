@@ -2,6 +2,8 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text
 {
@@ -9,7 +11,7 @@ namespace Epsitec.Common.Text
     /// La classe TextContext décrit un contexte (pour la désérialisation) lié à
     /// un environnement 'texte'.
     /// </summary>
-    public class TextContext : ILanguageRecognizer
+    public class TextContext : ILanguageRecognizer, Common.Support.IXMLSerializable<TextContext>
     {
         public TextContext()
         {
@@ -19,7 +21,7 @@ namespace Epsitec.Common.Text
             this.generatorList = new GeneratorList(this);
             this.pManagerList = new ParagraphManagerList(this);
             this.charMarker = new Internal.CharMarker();
-            this.conditions = new System.Collections.Hashtable();
+            this.conditions = new();
             this.stories = new System.Collections.ArrayList();
 
             this.charMarker.Add(TextContext.DefaultMarkers.TagSelected);
@@ -154,6 +156,63 @@ namespace Epsitec.Common.Text
             return System.Text.Encoding.UTF8.GetBytes(this.SerializeToString());
         }
 
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            TextContext otherContext = (TextContext)other;
+            return this.uniqueId == otherContext.uniqueId
+                && this.styleList.HasEquivalentData(otherContext.styleList)
+                && this.defaultParaStyle.HasEquivalentData(otherContext.defaultParaStyle)
+                && this.defaultTextStyle.HasEquivalentData(otherContext.defaultTextStyle)
+                && this.tabList.HasEquivalentData(otherContext.tabList)
+                && this.generatorList.HasEquivalentData(otherContext.generatorList)
+                && this.conditions.SequenceEqual(otherContext.conditions);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "TextContext",
+                new XAttribute("UniqueId", this.uniqueId),
+                new XElement("StyleList", this.styleList.ToXML()),
+                new XElement("DefaultParaStyle", this.defaultParaStyle.ToXML()),
+                new XElement("DefaultTextStyle", this.defaultTextStyle.ToXML()),
+                new XElement("TabList", this.tabList.ToXML()),
+                new XElement("GeneratorList", this.generatorList.ToXML()),
+                new XAttribute(
+                    "Conditions",
+                    this.conditions.Select(name => new XElement(
+                        "Item",
+                        new XAttribute("Name", name)
+                    ))
+                )
+            );
+        }
+
+        public static TextContext FromXML(XElement xml)
+        {
+            return new TextContext(xml);
+        }
+
+        private TextContext(XElement xml)
+        {
+            this.uniqueId = (long)xml.Attribute("UniqueId");
+            this.styleList = Text.StyleList.FromXML(xml.Element("StyleList").Element("StyleList"));
+            this.defaultParaStyle = TextStyle.FromXML(
+                xml.Element("DefaultParaStyle").Element("DefaultParaStyle")
+            );
+            this.defaultTextStyle = TextStyle.FromXML(
+                xml.Element("DefaultTextStyle").Element("DefaultTextStyle")
+            );
+            this.tabList = Text.TabList.FromXML(xml.Element("TabList").Element("TabList"));
+            this.generatorList = Text.GeneratorList.FromXML(
+                xml.Element("GeneratorList").Element("GeneratorList")
+            );
+            this.conditions = xml.Element("Conditions")
+                .Elements()
+                .Select(item => item.Attribute("Name").Value)
+                .ToHashSet();
+        }
+
         public void DeserializeFromString(string data)
         {
             string[] args = data.Split('/');
@@ -280,7 +339,7 @@ namespace Epsitec.Common.Text
 
         public void SetCondition(string name)
         {
-            this.conditions[name] = this;
+            this.conditions.Add(name);
         }
 
         public bool TestCondition(string name)
@@ -1993,10 +2052,7 @@ namespace Epsitec.Common.Text
 
         private void SerializeConditions(System.Text.StringBuilder buffer)
         {
-            string[] conditions = new string[this.conditions.Count];
-            this.conditions.Keys.CopyTo(conditions, 0);
-
-            buffer.Append(SerializerSupport.SerializeStringArray(conditions));
+            throw new System.NotImplementedException();
         }
 
         private void DeserializeConditions(int version, string[] args, ref int offset)
@@ -2099,7 +2155,7 @@ namespace Epsitec.Common.Text
         private ParagraphManagerList pManagerList;
         private Internal.CharMarker charMarker;
         private DefaultMarkers markers;
-        private System.Collections.Hashtable conditions;
+        private HashSet<string> conditions;
         private System.Collections.ArrayList stories;
         private TextStyle defaultParaStyle;
         private TextStyle defaultTextStyle;

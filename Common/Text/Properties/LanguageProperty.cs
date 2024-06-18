@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe LanguageProperty définit la langue utilisée pour un fragment
     /// de texte.
     /// </summary>
-    public class LanguageProperty : Property
+    public class LanguageProperty : Property, Common.Support.IXMLSerializable<LanguageProperty>
     {
         public LanguageProperty() { }
 
@@ -49,6 +50,32 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.locale),
                 /**/SerializerSupport.SerializeDouble(this.hyphenation)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            LanguageProperty other = (LanguageProperty)otherWritable;
+            return this.locale == other.locale && this.hyphenation == other.hyphenation;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "LanguageProperty",
+                new XAttribute("Locale", this.locale),
+                new XAttribute("Hyphenation", this.hyphenation)
+            );
+        }
+
+        public static LanguageProperty FromXML(XElement xml)
+        {
+            return new LanguageProperty(xml);
+        }
+
+        private LanguageProperty(XElement xml)
+        {
+            this.locale = xml.Attribute("Locale").Value;
+            this.hyphenation = (double)xml.Attribute("Hyphenation");
         }
 
         public override void DeserializeFromText(

@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe FontColorProperty définit la couleur à appliquer au corps
     /// du texte.
     /// </summary>
-    public class FontColorProperty : Property
+    public class FontColorProperty : Property, Common.Support.IXMLSerializable<FontColorProperty>
     {
         public FontColorProperty() { }
 
@@ -42,6 +43,27 @@ namespace Epsitec.Common.Text.Properties
                 buffer,
                 /**/SerializerSupport.SerializeString(this.textColor)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            FontColorProperty other = (FontColorProperty)otherWritable;
+            return this.textColor == other.textColor;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("FontColorProperty", new XAttribute("TextColor", this.textColor));
+        }
+
+        public static FontColorProperty FromXML(XElement xml)
+        {
+            return new FontColorProperty(xml);
+        }
+
+        private FontColorProperty(XElement xml)
+        {
+            this.textColor = xml.Attribute("TextColor").Value;
         }
 
         public override void DeserializeFromText(

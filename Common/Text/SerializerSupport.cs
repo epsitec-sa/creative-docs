@@ -193,7 +193,7 @@ namespace Epsitec.Common.Text
         public static void DeserializeStringStringHash(
             string[] args,
             ref int offset,
-            System.Collections.Hashtable hash
+            System.Collections.Generic.Dictionary<string, string> hash
         )
         {
             int count = SerializerSupport.DeserializeInt(args[offset++]);

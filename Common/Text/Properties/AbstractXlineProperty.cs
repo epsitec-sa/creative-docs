@@ -1,5 +1,7 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe AbstractXlineProperty sert de base aux propriétés "souligné",
     /// "biffé", "surligné", etc.
     /// </summary>
-    public abstract class AbstractXlineProperty : Property
+    public abstract class AbstractXlineProperty : Property, Common.Support.IXMLWritable
     {
         public AbstractXlineProperty() { }
 
@@ -178,6 +180,40 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.drawClass),
                 /**/SerializerSupport.SerializeString(this.drawStyle)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            AbstractXlineProperty other = (AbstractXlineProperty)otherWritable;
+            return this.isDisabled == other.isDisabled
+                && this.positionUnits == other.positionUnits
+                && this.thicknessUnits == other.thicknessUnits
+                && this.position == other.position
+                && this.thickness == other.thickness
+                && this.drawClass == other.drawClass
+                && this.drawStyle == other.drawStyle;
+        }
+
+        public IEnumerable<XObject> IterXMLParts()
+        {
+            yield return new XAttribute("IsDisabled", this.isDisabled);
+            yield return new XAttribute("PositionUnits", this.positionUnits);
+            yield return new XAttribute("ThicknessUnits", this.thicknessUnits);
+            yield return new XAttribute("Position", this.position);
+            yield return new XAttribute("Thickness", this.thickness);
+            yield return new XAttribute("DrawClass", this.drawClass);
+            yield return new XAttribute("DrawStyle", this.drawStyle);
+        }
+
+        protected AbstractXlineProperty(XElement xml)
+        {
+            this.isDisabled = (bool)xml.Attribute("IsDisabled");
+            System.Enum.TryParse(xml.Attribute("PositionUnits").Value, out this.positionUnits);
+            System.Enum.TryParse(xml.Attribute("ThicknessUnits").Value, out this.thicknessUnits);
+            this.position = (double)xml.Attribute("Position");
+            this.thickness = (double)xml.Attribute("Thickness");
+            this.drawClass = xml.Attribute("DrawClass").Value;
+            this.drawStyle = xml.Attribute("DrawStyle").Value;
         }
 
         public override void DeserializeFromText(

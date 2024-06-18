@@ -3977,6 +3977,8 @@ namespace Epsitec.Common.Document.Objects
         #endregion
 
 
+        #region Serialization
+
         public bool HasEquivalentData(IXMLWritable other)
         {
             Abstract otherAbstract = (Abstract)other;
@@ -4000,8 +4002,6 @@ namespace Epsitec.Common.Document.Objects
             }
             return true;
         }
-
-        #region Serialization
 
         public abstract XElement ToXML();
 

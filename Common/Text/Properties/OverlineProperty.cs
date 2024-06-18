@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,9 @@ namespace Epsitec.Common.Text.Properties
     /// La classe OverlineProperty permet de régler les détails relatifs au
     /// surlignement du texte.
     /// </summary>
-    public class OverlineProperty : AbstractXlineProperty
+    public class OverlineProperty
+        : AbstractXlineProperty,
+            Common.Support.IXMLSerializable<OverlineProperty>
     {
         public OverlineProperty() { }
 
@@ -42,5 +45,13 @@ namespace Epsitec.Common.Text.Properties
         {
             return new OverlineProperty();
         }
+
+        public static OverlineProperty FromXML(XElement xml)
+        {
+            return new OverlineProperty(xml);
+        }
+
+        private OverlineProperty(XElement xml)
+            : base(xml) { }
     }
 }

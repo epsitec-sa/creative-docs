@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe OpenTypeProperty donne accès aux glyphes supplémentaires d'une
     /// fonte OpenType (variantes, etc.)
     /// </summary>
-    public class OpenTypeProperty : Property
+    public class OpenTypeProperty : Property, Common.Support.IXMLSerializable<OpenTypeProperty>
     {
         public OpenTypeProperty() { }
 
@@ -81,6 +82,36 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.fontStyle),
                 /**/SerializerSupport.SerializeInt(this.glyphIndex)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            OpenTypeProperty other = (OpenTypeProperty)otherWritable;
+            return this.fontFace == other.fontFace
+                && this.fontStyle == other.fontStyle
+                && this.glyphIndex == other.glyphIndex;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "OpenTypeProperty",
+                new XAttribute("FontFace", this.fontFace),
+                new XAttribute("FontStyle", this.fontStyle),
+                new XAttribute("GlyphIndex", this.glyphIndex)
+            );
+        }
+
+        public static OpenTypeProperty FromXML(XElement xml)
+        {
+            return new OpenTypeProperty(xml);
+        }
+
+        private OpenTypeProperty(XElement xml)
+        {
+            this.fontFace = xml.Attribute("FontFace").Value;
+            this.fontStyle = xml.Attribute("FontStyle").Value;
+            this.glyphIndex = (int)xml.Attribute("GlyphIndex");
         }
 
         public override void DeserializeFromText(

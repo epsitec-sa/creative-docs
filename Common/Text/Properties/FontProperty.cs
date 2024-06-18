@@ -1,12 +1,14 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
     /// <summary>
     /// La classe FontProperty décrit une fonte (famille + style).
     /// </summary>
-    public class FontProperty : Property
+    public class FontProperty : Property, Common.Support.IXMLSerializable<FontProperty>
     {
         public FontProperty() { }
 
@@ -66,6 +68,45 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.styleName),
                 /**/SerializerSupport.SerializeStringArray(this.features)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            FontProperty other = (FontProperty)otherWritable;
+            return this.faceName == other.faceName
+                && this.styleName == other.styleName
+                && this.features.SequenceEqual(other.features);
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "FontProperty",
+                new XAttribute("FaceName", this.faceName),
+                new XAttribute("StyleName", this.styleName),
+                new XElement(
+                    "Features",
+                    this.features.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Value", item)
+                    ))
+                )
+            );
+        }
+
+        public static FontProperty FromXML(XElement xml)
+        {
+            return new FontProperty(xml);
+        }
+
+        private FontProperty(XElement xml)
+        {
+            this.faceName = xml.Attribute("FaceName").Value;
+            this.styleName = xml.Attribute("StyleName").Value;
+            this.features = xml.Element("Features")
+                .Elements()
+                .Select(item => item.Attribute("Value").Value)
+                .ToArray();
         }
 
         public override void DeserializeFromText(

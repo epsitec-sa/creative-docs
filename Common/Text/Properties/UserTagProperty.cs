@@ -1,4 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+using System.Xml.Linq;
+
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -7,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe UserTagProperty permet de stocker des informations supplémentaires,
     /// ainsi que des commentaires, à des fragments de texte.
     /// </summary>
-    public class UserTagProperty : Property
+    public class UserTagProperty : Property, Common.Support.IXMLSerializable<UserTagProperty>
     {
         public UserTagProperty() { }
 
@@ -66,6 +68,36 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.tagData),
                 /**/SerializerSupport.SerializeLong(this.id)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            UserTagProperty other = (UserTagProperty)otherWritable;
+            return this.tagType == other.tagType
+                && this.tagData == other.tagData
+                && this.id == other.id;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "UserTagProperty",
+                new XAttribute("TagType", this.tagType),
+                new XAttribute("TagData", this.tagData),
+                new XAttribute("Id", this.id)
+            );
+        }
+
+        public static UserTagProperty FromXML(XElement xml)
+        {
+            return new UserTagProperty(xml);
+        }
+
+        private UserTagProperty(XElement xml)
+        {
+            this.tagType = xml.Attribute("TagType").Value;
+            this.tagData = xml.Attribute("TagData").Value;
+            this.id = (long)xml.Attribute("Id");
         }
 
         public override void DeserializeFromText(

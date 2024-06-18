@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -10,7 +11,7 @@ namespace Epsitec.Common.Text.Properties
     /// Attention: cette propriété requiert un traitement spécial de la part
     /// de TextContext.GetPropertiesQuickAndDirty.
     /// </summary>
-    public class AutoTextProperty : Property
+    public class AutoTextProperty : Property, Common.Support.IXMLSerializable<AutoTextProperty>
     {
         public AutoTextProperty()
         {
@@ -68,6 +69,32 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.tag),
                 /**/SerializerSupport.SerializeLong(this.uniqueId)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            AutoTextProperty other = (AutoTextProperty)otherWritable;
+            return this.tag == other.tag && this.uniqueId == other.uniqueId;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "AutoTextProperty",
+                new XAttribute("Tag", this.tag),
+                new XAttribute("UniqueId", this.uniqueId)
+            );
+        }
+
+        public static AutoTextProperty FromXML(XElement xml)
+        {
+            return new AutoTextProperty(xml);
+        }
+
+        private AutoTextProperty(XElement xml)
+        {
+            this.tag = xml.Attribute("Tag").Value;
+            this.uniqueId = (long)xml.Attribute("UniqueId");
         }
 
         public override void DeserializeFromText(

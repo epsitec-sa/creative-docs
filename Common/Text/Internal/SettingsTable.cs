@@ -1,5 +1,8 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Internal
 {
@@ -8,7 +11,7 @@ namespace Epsitec.Common.Text.Internal
     /// caractère. De manière interne, SettingsTable gère une liste avec les réglages
     /// fondamentaux (core settings).
     /// </summary>
-    internal sealed class SettingsTable
+    internal sealed class SettingsTable : Common.Support.IXMLSerializable<SettingsTable>
     {
         public SettingsTable()
         {
@@ -146,7 +149,7 @@ namespace Epsitec.Common.Text.Internal
             }
             else
             {
-                Styles.CoreSettings coreSettings = this.cores[coreIndex - 1] as Styles.CoreSettings;
+                Styles.CoreSettings coreSettings = this.cores[coreIndex - 1];
 
                 Debug.Assert.IsNotNull(coreSettings);
 
@@ -177,7 +180,7 @@ namespace Epsitec.Common.Text.Internal
 
             for (int i = 0; i < n; i++)
             {
-                Styles.CoreSettings coreSettings = this.cores[i] as Styles.CoreSettings;
+                Styles.CoreSettings coreSettings = this.cores[i];
 
                 buffer.Append("/");
                 buffer.Append(coreSettings == null ? "0" : "1");
@@ -193,6 +196,27 @@ namespace Epsitec.Common.Text.Internal
             buffer.Append("\n");
         }
 
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            SettingsTable otherTable = (SettingsTable)other;
+            return this.cores.SequenceEqual(otherTable.cores);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement("SettingsTable", this.cores.Select(item => item.ToXML()));
+        }
+
+        public static SettingsTable FromXML(XElement xml)
+        {
+            return new SettingsTable(xml);
+        }
+
+        private SettingsTable(XElement xml)
+        {
+            this.cores = xml.Elements().Select(item => Styles.CoreSettings.FromXML(item)).ToList();
+        }
+
         public void Deserialize(TextContext context, int version, string[] args, ref int offset)
         {
             int count = SerializerSupport.DeserializeInt(args[offset++]);
@@ -201,7 +225,7 @@ namespace Epsitec.Common.Text.Internal
 
             if (count > 0)
             {
-                this.cores = new System.Collections.ArrayList();
+                this.cores = new();
 
                 for (int i = 0; i < count; i++)
                 {
@@ -236,7 +260,7 @@ namespace Epsitec.Common.Text.Internal
                 return null;
             }
 
-            return this.cores[index - 1] as Styles.CoreSettings;
+            return this.cores[index - 1];
         }
 
         public Styles.CoreSettings GetCore(ulong code)
@@ -321,7 +345,7 @@ namespace Epsitec.Common.Text.Internal
 
             if (this.cores == null)
             {
-                this.cores = new System.Collections.ArrayList();
+                this.cores = new();
             }
 
             for (int i = 0; i < this.cores.Count; i++)
@@ -333,8 +357,8 @@ namespace Epsitec.Common.Text.Internal
                     return;
                 }
             }
-
-            coreSettings.CoreIndex = this.cores.Add(coreSettings) + 1;
+            this.cores.Add(coreSettings);
+            coreSettings.CoreIndex = this.cores.Count;
         }
 
         private void Remove(Styles.CoreSettings coreSettings)
@@ -435,6 +459,6 @@ namespace Epsitec.Common.Text.Internal
 
         public delegate bool CoreMatcher(Styles.CoreSettings coreSettings);
 
-        private System.Collections.ArrayList cores;
+        private List<Styles.CoreSettings> cores;
     }
 }

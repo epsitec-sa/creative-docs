@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
     /// plomb qui se rajoutaient entre les lignes de caractères), l'alignement
     /// sur une grille et les espacements avant/après un paragraphe.
     /// </summary>
-    public class LeadingProperty : Property
+    public class LeadingProperty : Property, Common.Support.IXMLSerializable<LeadingProperty>
     {
         public LeadingProperty()
             : this(double.NaN, SizeUnits.None, AlignMode.None) { }
@@ -153,6 +154,51 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeSizeUnits(this.spaceAfterUnits),
                 /**/SerializerSupport.SerializeEnum(this.alignMode)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            LeadingProperty other = (LeadingProperty)otherWritable;
+            return this.leading == other.leading
+                && this.spaceBefore == other.spaceBefore
+                && this.spaceAfter == other.spaceAfter
+                && this.leadingUnits == other.leadingUnits
+                && this.spaceBeforeUnits == other.spaceBeforeUnits
+                && this.spaceAfterUnits == other.spaceAfterUnits
+                && this.alignMode == other.alignMode;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "LeadingProperty",
+                new XAttribute("Leading", this.leading),
+                new XAttribute("SpaceBefore", this.spaceBefore),
+                new XAttribute("SpaceAfter", this.spaceAfter),
+                new XAttribute("LeadingUnits", this.leadingUnits),
+                new XAttribute("SpaceBeforeUnits", this.spaceBeforeUnits),
+                new XAttribute("SpaceAfterUnits", this.spaceAfterUnits),
+                new XAttribute("AlignMode", this.alignMode)
+            );
+        }
+
+        public static LeadingProperty FromXML(XElement xml)
+        {
+            return new LeadingProperty(xml);
+        }
+
+        private LeadingProperty(XElement xml)
+        {
+            this.leading = (double)xml.Attribute("Leading");
+            this.spaceBefore = (double)xml.Attribute("SpaceBefore");
+            this.spaceAfter = (double)xml.Attribute("SpaceAfter");
+            System.Enum.TryParse(xml.Attribute("LeadingUnits").Value, out this.leadingUnits);
+            System.Enum.TryParse(
+                xml.Attribute("SpaceBeforeUnits").Value,
+                out this.spaceBeforeUnits
+            );
+            System.Enum.TryParse(xml.Attribute("SpaceAfterUnits").Value, out this.spaceAfterUnits);
+            System.Enum.TryParse(xml.Attribute("AlignMode").Value, out this.alignMode);
         }
 
         public override void DeserializeFromText(

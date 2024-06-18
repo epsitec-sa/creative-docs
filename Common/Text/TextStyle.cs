@@ -1,5 +1,7 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text
 {
@@ -7,7 +9,10 @@ namespace Epsitec.Common.Text
     /// La classe TextStyle définit un style de texte de haut niveau. Il s'agit
     /// d'une collection de propriétés.
     /// </summary>
-    public sealed class TextStyle : Styles.PropertyContainer, IContentsComparer
+    public sealed class TextStyle
+        : Styles.PropertyContainer,
+            IContentsComparer,
+            Common.Support.IXMLSerializable<TextStyle>
     {
         internal TextStyle() { }
 
@@ -329,16 +334,9 @@ namespace Epsitec.Common.Text
 
         internal void Serialize(System.Text.StringBuilder buffer)
         {
-            Property[] properties = this.styleProperties;
+            Property[] properties = this.styleProperties ?? [];
 
-            if (properties == null)
-            {
-                properties = new Property[0];
-            }
-
-            int nStyles;
-
-            nStyles = this.parentStyles == null ? 0 : this.parentStyles.Length;
+            int nStyles = this.parentStyles?.Length ?? 0;
             nStyles += this.nextStyle == null ? 0 : 1;
 
             buffer.Append(SerializerSupport.SerializeString(this.name));
@@ -351,46 +349,104 @@ namespace Epsitec.Common.Text
             buffer.Append("/");
             buffer.Append(SerializerSupport.SerializeInt(nStyles));
             buffer.Append("/");
-            buffer.Append(
-                SerializerSupport.SerializeInt(properties == null ? 0 : properties.Length)
-            );
-
+            buffer.Append(SerializerSupport.SerializeInt(properties.Length));
             if (this.parentStyles != null)
             {
                 for (int i = 0; i < this.parentStyles.Length; i++)
                 {
                     TextStyle parent = this.parentStyles[i] as TextStyle;
                     string name = TextStyle.GetStyleNameAndFilterDeletedStyles(parent);
-
                     buffer.Append("/");
                     buffer.Append(SerializerSupport.SerializeString(name));
                 }
             }
-
             //	S'il y a un style de paragraphe suivant chaîné à ce style, on le
             //	sérialise en utilisant le même principe que pour les styles parents,
             //	avec un préfixe "=>" :
-
             if (this.nextStyle != null)
             {
                 string name = TextStyle.GetStyleNameAndFilterDeletedStyles(this.nextStyle);
-
                 System.Diagnostics.Debug.Assert(name != null);
-
                 buffer.Append("/");
                 buffer.Append(SerializerSupport.SerializeString(string.Concat("=>", name)));
             }
-
-            if (properties != null)
+            foreach (Property property in properties)
             {
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    Property property = properties[i];
-
-                    buffer.Append("/");
-                    buffer.Append(SerializerSupport.SerializeString(Property.Serialize(property)));
-                }
+                buffer.Append("/");
+                buffer.Append(SerializerSupport.SerializeString(Property.Serialize(property)));
             }
+        }
+
+        public XElement ToXML()
+        {
+            var root = new XElement(
+                "TextStyle",
+                new XAttribute("Name", this.name),
+                new XAttribute("MetaId", this.metaId),
+                new XAttribute("Priority", this.priority),
+                new XAttribute("TextStyleClass", this.TextStyleClass),
+                new XElement(
+                    "ParentStyles",
+                    this.parentStyles.Select(style => new XElement(
+                        "TextStyle",
+                        new XAttribute(
+                            "Name",
+                            TextStyle.GetStyleNameAndFilterDeletedStyles(style as TextStyle)
+                        )
+                    ))
+                ),
+                new XElement(
+                    "NextStyle",
+                    new XAttribute(
+                        "Name",
+                        TextStyle.GetStyleNameAndFilterDeletedStyles(this.nextStyle)
+                    )
+                )
+            );
+            if (this.styleProperties != null)
+            {
+                root.Add(
+                    new XElement(
+                        "StyleProperties",
+                        this.styleProperties.Select(prop => prop.ToXML())
+                    )
+                );
+            }
+            return root;
+        }
+
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            TextStyle otherContext = (TextStyle)other;
+            return this.name == otherContext.name
+                && this.metaId == otherContext.metaId
+                && this.priority == otherContext.priority
+                && this.TextStyleClass == otherContext.TextStyleClass
+                && this.parentStyles.HasEquivalentData(otherContext.parentStyles)
+                && this.nextStyle.HasEquivalentData(otherContext.nextStyle)
+                && this.styleProperties.HasEquivalentData(otherContext.styleProperties);
+        }
+
+        public static TextStyle FromXML(XElement xml)
+        {
+            return new TextStyle(xml);
+        }
+
+        private TextStyle(XElement xml)
+        {
+            this.name = xml.Attribute("Name").Value;
+            this.metaId = xml.Attribute("MetaId").Value;
+            this.priority = (int)xml.Attribute("Priority");
+            TextStyleClass.TryParse(xml.Attribute("TextStyleClass").Value, out this.textStyleClass);
+            this.parentStyles = xml.Element("ParentStyles")
+                .Elements()
+                .Select(item => item.Attribute("Name").Value)
+                .ToArray();
+            this.nextStyle = xml.Element("NextStyle").Attribute("Name").Value;
+            this.styleProperties = xml.Element("StyleProperties")
+                .Elements()
+                .Select(item => Property.FromXML(item))
+                .ToArray();
         }
 
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)

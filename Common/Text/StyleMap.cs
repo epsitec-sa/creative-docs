@@ -1,5 +1,8 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text
 {
@@ -7,14 +10,16 @@ namespace Epsitec.Common.Text
     /// La classe StyleMap permet de faire correspondre des styles à des noms
     /// de haut niveau, tels que vus par l'utilisateur.
     /// </summary>
-    public sealed class StyleMap : System.Collections.IEnumerable
+    public sealed class StyleMap
+        : System.Collections.IEnumerable,
+            Common.Support.IXMLSerializable<StyleMap>
     {
         internal StyleMap(StyleList list)
         {
             this.styleList = list;
-            this.tStyleHash = new System.Collections.Hashtable();
-            this.captionHash = new System.Collections.Hashtable();
-            this.rankHash = new System.Collections.Hashtable();
+            this.tStyleHash = new();
+            this.captionHash = new();
+            this.rankHash = new();
         }
 
         public void SetCaption(Common.Support.OpletQueue queue, TextStyle style, string caption)
@@ -37,7 +42,7 @@ namespace Epsitec.Common.Text
 
                 if (newCaption != null)
                 {
-                    if (this.captionHash.Contains(newCaption) == false)
+                    if (this.captionHash.ContainsKey(newCaption) == false)
                     {
                         this.captionHash[newCaption] = key;
                         this.tStyleHash[key] = newCaption;
@@ -81,7 +86,7 @@ namespace Epsitec.Common.Text
                         );
                     }
 
-                    if (this.rankHash.Contains(style))
+                    if (this.rankHash.ContainsKey(style))
                     {
                         this.rankHash.Remove(style);
                         this.ClearCache();
@@ -106,7 +111,7 @@ namespace Epsitec.Common.Text
         {
             string key = this.GetKeyName(style);
 
-            if (this.tStyleHash.Contains(key))
+            if (this.tStyleHash.ContainsKey(key))
             {
                 return this.tStyleHash[key] as string;
             }
@@ -116,7 +121,7 @@ namespace Epsitec.Common.Text
 
         public int GetRank(TextStyle style)
         {
-            if (this.rankHash.Contains(style))
+            if (this.rankHash.ContainsKey(style))
             {
                 return (int)this.rankHash[style];
             }
@@ -138,11 +143,11 @@ namespace Epsitec.Common.Text
 
         public TextStyle GetTextStyle(int rank)
         {
-            foreach (System.Collections.DictionaryEntry entry in this.rankHash)
+            foreach (var (key, value) in this.rankHash)
             {
-                if ((int)entry.Value == rank)
+                if (value == rank)
                 {
-                    return entry.Key as TextStyle;
+                    return key;
                 }
             }
 
@@ -157,29 +162,89 @@ namespace Epsitec.Common.Text
 
         internal void Serialize(System.Text.StringBuilder buffer)
         {
+            throw new System.NotImplementedException();
             System.Diagnostics.Debug.Assert(this.tStyleHash.Count == this.captionHash.Count);
 
-            SerializerSupport.SerializeStringStringHash(this.tStyleHash, buffer);
+            //SerializerSupport.SerializeStringStringHash(this.tStyleHash, buffer);
             buffer.Append("/");
 
             System.Collections.Hashtable hash = new System.Collections.Hashtable();
 
-            foreach (System.Collections.DictionaryEntry entry in this.rankHash)
+            foreach (var (key, value) in this.rankHash)
             {
-                TextStyle key = entry.Key as TextStyle;
                 string name = StyleList.GetFullName(key);
 
-                hash[name] = entry.Value;
+                hash[name] = value;
             }
 
             SerializerSupport.SerializeStringIntHash(hash, buffer);
         }
 
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            StyleMap otherStyleMap = (StyleMap)other;
+            return this.tStyleHash.SequenceEqual(otherStyleMap.tStyleHash)
+                && this.rankHash.SequenceEqual(otherStyleMap.rankHash);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "StyleMap",
+                new XElement(
+                    "StyleHash",
+                    this.tStyleHash.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Key", item.Key),
+                        new XAttribute("Value", item.Value)
+                    ))
+                ),
+                new XElement(
+                    "RankHash",
+                    this.rankHash.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Key", StyleList.GetFullName(item.Key)),
+                        new XAttribute("Value", item.Value)
+                    ))
+                )
+            );
+        }
+
+        public static StyleMap FromXML(XElement xml)
+        {
+            return new StyleMap(xml);
+        }
+
+        private StyleMap(XElement xml)
+        {
+            this.tStyleHash = xml.Element("StyleHash")
+                .Elements()
+                .Select(item => (item.Attribute("Key").Value, item.Attribute("Value").Value))
+                .ToDictionary();
+            this.rankHash = xml.Element("RankHash")
+                .Elements()
+                .Select(item =>
+                    (
+                        this.styleList.GetTextStyle(item.Attribute("Key").Value),
+                        (int)item.Attribute("Value")
+                    )
+                )
+                .ToDictionary();
+
+            //	Construit encore le dictionnaire inverse utilisé pour retrouver
+            //	rapidement un style d'après son nom (caption) :
+
+            foreach (var (key, value) in this.tStyleHash)
+            {
+                this.captionHash[value] = key;
+            }
+        }
+
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
         {
-            this.tStyleHash = new System.Collections.Hashtable();
-            this.captionHash = new System.Collections.Hashtable();
-            this.rankHash = new System.Collections.Hashtable();
+            this.tStyleHash = new();
+            this.captionHash = new();
+            this.rankHash = new();
             this.sortedList = null;
 
             System.Collections.Hashtable hash = new System.Collections.Hashtable();
@@ -192,17 +257,14 @@ namespace Epsitec.Common.Text
                 string name = entry.Key as string;
                 TextStyle key = this.styleList.GetTextStyle(name);
 
-                this.rankHash[key] = entry.Value;
+                this.rankHash[key] = (int)entry.Value;
             }
 
             //	Construit encore le dictionnaire inverse utilisé pour retrouver
             //	rapidement un style d'après son nom (caption) :
 
-            foreach (System.Collections.DictionaryEntry entry in this.tStyleHash)
+            foreach (var (key, value) in this.tStyleHash)
             {
-                string key = entry.Key as string;
-                string value = entry.Value as string;
-
                 this.captionHash[value] = key;
             }
         }
@@ -311,9 +373,9 @@ namespace Epsitec.Common.Text
         #endregion
 
         private StyleList styleList;
-        private System.Collections.Hashtable tStyleHash; //	text style -> caption
-        private System.Collections.Hashtable captionHash; //	caption -> text style
-        private System.Collections.Hashtable rankHash; //	rank -> text style
+        private Dictionary<string, string> tStyleHash; //	text style -> caption
+        private Dictionary<string, string> captionHash; //	caption -> text style
+        private Dictionary<TextStyle, int> rankHash; //	rank -> text style
         private TextStyle[] sortedList;
     }
 }

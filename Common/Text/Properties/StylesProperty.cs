@@ -1,5 +1,7 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe StylesProperty contient une liste de styles (cascadés)
     /// qui doivent s'appliquer au texte.
     /// </summary>
-    public class StylesProperty : Property
+    public class StylesProperty : Property, Common.Support.IXMLSerializable<StylesProperty>
     {
         public StylesProperty()
         {
@@ -81,6 +83,39 @@ namespace Epsitec.Common.Text.Properties
                 buffer,
                 /**/SerializerSupport.SerializeStringArray(this.styleNames)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            StylesProperty other = (StylesProperty)otherWritable;
+            return this.styleNames.SequenceEqual(other.styleNames);
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "StylesProperty",
+                new XElement(
+                    "StyleNames",
+                    this.styleNames.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Value", item)
+                    ))
+                )
+            );
+        }
+
+        public static StylesProperty FromXML(XElement xml)
+        {
+            return new StylesProperty(xml);
+        }
+
+        private StylesProperty(XElement xml)
+        {
+            this.styleNames = xml.Element("StyleNames")
+                .Elements()
+                .Select(item => item.Attribute("Value").Value)
+                .ToArray();
         }
 
         public override void DeserializeFromText(

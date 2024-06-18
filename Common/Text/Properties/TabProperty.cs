@@ -1,4 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+using System.Xml.Linq;
+
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -6,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
     /// <summary>
     /// La classe TabProperty décrit une tabulation.
     /// </summary>
-    public class TabProperty : Property
+    public class TabProperty : Property, Common.Support.IXMLSerializable<TabProperty>
     {
         public TabProperty() { }
 
@@ -51,6 +53,27 @@ namespace Epsitec.Common.Text.Properties
                 buffer,
                 /**/SerializerSupport.SerializeString(this.tabTag)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            TabProperty other = (TabProperty)otherWritable;
+            return this.tabTag == other.tabTag;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("TabProperty", new XAttribute("TabTag", this.tabTag));
+        }
+
+        public static TabProperty FromXML(XElement xml)
+        {
+            return new TabProperty(xml);
+        }
+
+        private TabProperty(XElement xml)
+        {
+            this.tabTag = xml.Attribute("TabTag").Value;
         }
 
         public override void DeserializeFromText(

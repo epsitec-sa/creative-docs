@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe FontOffsetProperty décrit un décalage vertical de la ligne
     /// de base d'un caractère.
     /// </summary>
-    public class FontOffsetProperty : Property
+    public class FontOffsetProperty : Property, Common.Support.IXMLSerializable<FontOffsetProperty>
     {
         public FontOffsetProperty()
             : this(0, SizeUnits.Points) { }
@@ -68,6 +69,32 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeDouble(this.offset),
                 /**/SerializerSupport.SerializeSizeUnits(this.units)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            FontOffsetProperty other = (FontOffsetProperty)otherWritable;
+            return this.offset == other.offset && this.units == other.units;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "FontOffsetProperty",
+                new XAttribute("Offset", this.offset),
+                new XAttribute("Units", this.units)
+            );
+        }
+
+        public static FontOffsetProperty FromXML(XElement xml)
+        {
+            return new FontOffsetProperty(xml);
+        }
+
+        private FontOffsetProperty(XElement xml)
+        {
+            this.offset = (double)xml.Attribute("Offset");
+            System.Enum.TryParse(xml.Attribute("Units").Value, out this.units);
         }
 
         public override void DeserializeFromText(

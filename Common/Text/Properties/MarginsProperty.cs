@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -9,7 +10,7 @@ namespace Epsitec.Common.Text.Properties
     /// (0 = aligné à gauche, 0.5 = centré, 1 = aligné à droite) et les réglages
     /// liés à la césure.
     /// </summary>
-    public class MarginsProperty : Property
+    public class MarginsProperty : Property, Common.Support.IXMLSerializable<MarginsProperty>
     {
         public MarginsProperty()
             : this(double.NaN, double.NaN, SizeUnits.None) { }
@@ -197,6 +198,69 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeInt(this.level),
                 /**/SerializerSupport.SerializeString(this.levelAttribute)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            MarginsProperty other = (MarginsProperty)otherWritable;
+            return this.leftMarginFirstLine == other.leftMarginFirstLine
+                && this.leftMarginBody == other.leftMarginBody
+                && this.rightMarginFirstLine == other.rightMarginFirstLine
+                && this.rightMarginBody == other.rightMarginBody
+                && this.units == other.units
+                && this.justificationBody == other.justificationBody
+                && this.justificationLastLine == other.justificationLastLine
+                && this.disposition == other.disposition
+                && this.breakFenceBefore == other.breakFenceBefore
+                && this.breakFenceAfter == other.breakFenceAfter
+                && this.enableHyphenation == other.enableHyphenation
+                && this.level == other.level
+                && this.levelAttribute == other.levelAttribute;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "MarginsProperty",
+                new XAttribute("LeftMarginFirstLine", this.leftMarginFirstLine),
+                new XAttribute("LeftMarginBody", this.leftMarginBody),
+                new XAttribute("RightMarginFirstLine", this.rightMarginFirstLine),
+                new XAttribute("RightMarginBody", this.rightMarginBody),
+                new XAttribute("Units", this.units),
+                new XAttribute("JustificationBody", this.justificationBody),
+                new XAttribute("JustificationLastLine", this.justificationLastLine),
+                new XAttribute("Disposition", this.disposition),
+                new XAttribute("BreakFenceBefore", this.breakFenceBefore),
+                new XAttribute("BreakFenceAfter", this.breakFenceAfter),
+                new XAttribute("EnableHyphenation", this.enableHyphenation),
+                new XAttribute("Level", this.level),
+                new XAttribute("LevelAttribute", this.levelAttribute)
+            );
+        }
+
+        public static MarginsProperty FromXML(XElement xml)
+        {
+            return new MarginsProperty(xml);
+        }
+
+        private MarginsProperty(XElement xml)
+        {
+            this.leftMarginFirstLine = (double)xml.Attribute("LeftMarginFirstLine");
+            this.leftMarginBody = (double)xml.Attribute("LeftMarginBody");
+            this.rightMarginFirstLine = (double)xml.Attribute("RightMarginFirstLine");
+            this.rightMarginBody = (double)xml.Attribute("RightMarginBody");
+            System.Enum.TryParse(xml.Attribute("Units").Value, out this.units);
+            this.justificationBody = (double)xml.Attribute("JustificationBody");
+            this.justificationLastLine = (double)xml.Attribute("JustificationLastLine");
+            this.disposition = (double)xml.Attribute("Disposition");
+            this.breakFenceBefore = (double)xml.Attribute("BreakFenceBefore");
+            this.breakFenceAfter = (double)xml.Attribute("BreakFenceAfter");
+            System.Enum.TryParse(
+                xml.Attribute("EnableHyphenation").Value,
+                out this.enableHyphenation
+            );
+            this.level = (int)xml.Attribute("Level");
+            this.levelAttribute = xml.Attribute("LevelAttribute").Value;
         }
 
         public override void DeserializeFromText(

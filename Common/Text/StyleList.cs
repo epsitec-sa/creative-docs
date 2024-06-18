@@ -1,6 +1,9 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Linq;
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Text
 {
     using EventHandler = Common.Support.EventHandler;
@@ -10,7 +13,7 @@ namespace Epsitec.Common.Text
     /// textes.
     /// Note: "StyleList" se prononce comme "stylist" :-)
     /// </summary>
-    public sealed class StyleList
+    public sealed class StyleList : Common.Support.IXMLSerializable<StyleList>
     {
         public StyleList(TextContext context)
         {
@@ -482,6 +485,41 @@ namespace Epsitec.Common.Text
             }
 
             this.StyleMap.Serialize(buffer);
+        }
+
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            StyleList otherContext = (StyleList)other;
+            return this.uniqueId == otherContext.uniqueId
+                && this.internalSettings.HasEquivalentData(otherContext.internalSettings)
+                && this.textStyleList.HasEquivalentData(otherContext.textStyleList)
+                && this.StyleMap.HasEquivalentData(otherContext.StyleMap);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "StyleList",
+                new XAttribute("UniqueId", this.uniqueId),
+                new XElement("InternalSettings", this.internalSettings.ToXML()),
+                new XElement("TextStyleList", this.textStyleList.Select()),
+                new XElement("StyleMap", this.styleMap.ToXML())
+            );
+        }
+
+        public static StyleList FromXML(XElement xml)
+        {
+            return new StyleList(xml);
+        }
+
+        private StyleList(XElement xml)
+        {
+            this.uniqueId = (long)xml.Attribute("UniqueId");
+            this.internalSettings = Internal.SettingsTable.FromXML(
+                xml.Element("InternalSettings").Element("SettingsTable")
+            );
+            this.textStyleList = xml.Element("TextStyleList").Elements().Select();
+            this.styleMap = Text.StyleMap.FromXML(xml.Element("StyleMap").Element("StyleMap"));
         }
 
         public void Deserialize(TextContext context, int version, string[] args, ref int offset)

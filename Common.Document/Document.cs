@@ -1820,9 +1820,9 @@ namespace Epsitec.Common.Document
                     ),
                     this.modifier?.ActiveViewer?.DrawingContext.GetRootStack()
                         == otherDoc.modifier?.ActiveViewer?.DrawingContext.GetRootStack(),
-                    //this.textContext?.SerializeToString()
-                    //    == otherDoc.textContext?.SerializeToString() // bl-converter better serialization
-                    //,
+                    this.textContext?.SerializeToString()
+                        == otherDoc.textContext?.SerializeToString() // bl-converter better serialization
+                    ,
                     this.textFlows.HasEquivalentData(otherDoc.textFlows),
                     this.fontList?.HasEquivalentData(otherDoc.fontList)
                         ?? this.fontList == otherDoc.fontList,

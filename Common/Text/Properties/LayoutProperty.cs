@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe LayoutProperty décrit quel moteur de layout utiliser pour
     /// un fragment de texte.
     /// </summary>
-    public class LayoutProperty : Property
+    public class LayoutProperty : Property, Common.Support.IXMLSerializable<LayoutProperty>
     {
         public LayoutProperty() { }
 
@@ -38,7 +39,28 @@ namespace Epsitec.Common.Text.Properties
 
         public override void SerializeToText(System.Text.StringBuilder buffer)
         {
-            buffer.Append(SerializerSupport.SerializeString(this.engineName));
+            SerializerSupport.Join(buffer, SerializerSupport.SerializeString(this.engineName));
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            LayoutProperty other = (LayoutProperty)otherWritable;
+            return this.engineName == other.engineName;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("LayoutProperty", new XAttribute("EngineName", this.engineName));
+        }
+
+        public static LayoutProperty FromXML(XElement xml)
+        {
+            return new LayoutProperty(xml);
+        }
+
+        private LayoutProperty(XElement xml)
+        {
+            this.engineName = xml.Attribute("EngineName").Value;
         }
 
         public override void DeserializeFromText(

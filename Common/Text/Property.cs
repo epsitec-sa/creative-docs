@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text
 {
@@ -12,7 +13,8 @@ namespace Epsitec.Common.Text
         : IContentsSignature,
             IContentsSignatureUpdater,
             IContentsComparer,
-            ISerializableAsText
+            ISerializableAsText,
+            Common.Support.IXMLWritable
     {
         protected Property() { }
 
@@ -114,6 +116,10 @@ namespace Epsitec.Common.Text
             int length
         );
         #endregion
+
+        public abstract bool HasEquivalentData(Common.Support.IXMLWritable other);
+
+        public abstract XElement ToXML();
 
         public string SerializeToText()
         {
