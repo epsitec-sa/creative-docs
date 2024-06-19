@@ -1,12 +1,15 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Styles
 {
     /// <summary>
     /// Summary description for LocalSettings.
     /// </summary>
-    public sealed class LocalSettings : AdditionalSettings
+    public sealed class LocalSettings
+        : AdditionalSettings,
+            Common.Support.IXMLSerializable<LocalSettings>
     {
         public LocalSettings() { }
 
@@ -58,5 +61,18 @@ namespace Epsitec.Common.Text.Styles
                 value as Styles.LocalSettings
             );
         }
+
+        public override XElement ToXML()
+        {
+            return new XElement("LocalSettings", base.IterXMLParts());
+        }
+
+        public static LocalSettings FromXML(XElement xml)
+        {
+            return new LocalSettings(xml);
+        }
+
+        private LocalSettings(XElement xml)
+            : base(xml) { }
     }
 }

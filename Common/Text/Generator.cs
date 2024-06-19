@@ -1,5 +1,9 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Text
 {
@@ -8,7 +12,7 @@ namespace Epsitec.Common.Text
     /// <summary>
     /// La classe Generator gère les générateurs de texte automatique.
     /// </summary>
-    public sealed class Generator
+    public sealed class Generator : Common.Support.IXMLSerializable<Generator>
     {
         internal Generator(string name)
         {
@@ -151,14 +155,14 @@ namespace Epsitec.Common.Text
             this.sequences.Add(sequence);
         }
 
-        public void AddRange(System.Collections.ICollection sequences)
+        public void AddRange(ICollection<Sequence> sequences)
         {
             this.sequences.AddRange(sequences);
         }
 
         public void Truncate(int count)
         {
-            object[] copy = this.sequences.ToArray();
+            Sequence[] copy = this.sequences.ToArray();
 
             this.sequences.Clear();
 
@@ -345,6 +349,102 @@ namespace Epsitec.Common.Text
             );
             buffer.Append("/");
             buffer.Append(SerializerSupport.SerializeStringArray(this.userData));
+        }
+
+        public bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            Generator other = (Generator)otherWritable;
+            return this.name == other.name
+                && this.globalPrefix == other.globalPrefix
+                && this.globalSuffix == other.globalSuffix
+                && this.sequences.HasEquivalentData(other.sequences)
+                && this.startVector.SequenceEqual(other.startVector)
+                && this.globalPrefixProperties.HasEquivalentData(other.globalPrefixProperties)
+                && this.globalSuffixProperties.HasEquivalentData(other.globalSuffixProperties)
+                && this.userData.SequenceEqual(other.userData);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Generator",
+                new XAttribute("Name", this.name),
+                new XAttribute("GlobalPrefix", this.globalPrefix),
+                new XAttribute("GlobalSuffix", this.globalSuffix),
+                new XElement(
+                    "StartVector",
+                    this.startVector.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Value", item)
+                    ))
+                ),
+                new XElement("Sequences", this.sequences.Select(item => item.ToXML())),
+                new XElement(
+                    "GlobalPrefixProperties",
+                    this.globalPrefixProperties.Select(item => item.ToXML())
+                ),
+                new XElement(
+                    "GlobalSuffixProperties",
+                    this.globalSuffixProperties.Select(item => item.ToXML())
+                ),
+                new XElement(
+                    "UserData",
+                    this.userData.Select(item => new XElement(
+                        "DataItem",
+                        new XAttribute("Name", item)
+                    ))
+                )
+            );
+        }
+
+        public static Generator FromXML(XElement xml)
+        {
+            return new Generator(xml);
+        }
+
+        private Generator(XElement xml)
+        {
+            this.name = xml.Attribute("Name").Value;
+            this.globalPrefix = xml.Attribute("GlobalPrefix").Value;
+            this.globalSuffix = xml.Attribute("GlobalSuffix").Value;
+            this.startVector = xml.Element("StartVector")
+                .Elements()
+                .Select(item => (int)item.Attribute("Value"))
+                .ToArray();
+            this.sequences = xml.Element("Sequences").Elements().Select(LoadSequence).ToList();
+            this.globalPrefixProperties = xml.Element("GlobalPrefixProperties")
+                .Elements()
+                .Select(Styles.PropertyContainer.LoadProperty)
+                .ToArray();
+            this.globalSuffixProperties = xml.Element("GlobalSuffixProperties")
+                .Elements()
+                .Select(Styles.PropertyContainer.LoadProperty)
+                .ToArray();
+            this.userData = xml.Element("UserData")
+                .Elements()
+                .Select(item => item.Attribute("Name").Value)
+                .ToArray();
+        }
+
+        private static Sequence LoadSequence(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                case "Alphabetic":
+                    return Internal.Sequences.Alphabetic.FromXML(xml);
+                case "Constant":
+                    return Internal.Sequences.Constant.FromXML(xml);
+                case "Empty":
+                    return Internal.Sequences.Empty.FromXML(xml);
+                case "Numeric":
+                    return Internal.Sequences.Numeric.FromXML(xml);
+                case "Roman":
+                    return Internal.Sequences.Roman.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Sequence type {xml.Name.LocalName}"
+                    );
+            }
         }
 
         public void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -802,7 +902,7 @@ namespace Epsitec.Common.Text
         #endregion
 
         #region Sequence Class
-        public abstract class Sequence : ISerializableAsText
+        public abstract class Sequence : ISerializableAsText, Common.Support.IXMLWritable
         {
             protected Sequence() { }
 
@@ -991,6 +1091,72 @@ namespace Epsitec.Common.Text
                         /**/SerializerSupport.SerializeStringArray(this.userData)
                     );
                 }
+            }
+
+            public bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+            {
+                Sequence other = (Sequence)otherWritable;
+                return this.prefix == other.prefix
+                    && this.suffix == other.suffix
+                    && this.casing == other.casing
+                    && this.suppressBefore == other.suppressBefore
+                    && this.userData.SequenceEqual(other.userData)
+                    && this.valueProperties.HasEquivalentData(other.valueProperties)
+                    && this.prefixProperties.HasEquivalentData(other.prefixProperties)
+                    && this.suffixProperties.HasEquivalentData(other.suffixProperties);
+            }
+
+            public abstract XElement ToXML();
+
+            public IEnumerable<XObject> IterXMLParts()
+            {
+                yield return new XAttribute("Prefix", this.prefix);
+                yield return new XAttribute("Suffix", this.suffix);
+                yield return new XAttribute("Casing", this.casing);
+                yield return new XAttribute("SuppressBefore", this.suppressBefore);
+                yield return new XElement(
+                    "UserData",
+                    this.userData.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Value", item)
+                    ))
+                );
+                yield return new XElement(
+                    "ValueProperties",
+                    this.valueProperties.Select(item => item.ToXML())
+                );
+                yield return new XElement(
+                    "PrefixProperties",
+                    this.prefixProperties.Select(item => item.ToXML())
+                );
+                yield return new XElement(
+                    "SuffixProperties",
+                    this.suffixProperties.Select(item => item.ToXML())
+                );
+            }
+
+            protected Sequence(XElement xml)
+            {
+                this.prefix = xml.Attribute("Prefix").Value;
+                this.suffix = xml.Attribute("Suffix").Value;
+                System.Enum.TryParse(xml.Attribute("Casing").Value, out this.casing);
+                this.suppressBefore = (bool)xml.Attribute("SuppressBefore");
+                this.userData = xml.Element("UserData")
+                    .Elements()
+                    .Select(item => item.Attribute("Value").Value)
+                    .ToArray();
+                this.valueProperties = xml.Element("ValueProperties")
+                    .Elements()
+                    .Select(Styles.PropertyContainer.LoadProperty)
+                    .ToArray();
+                this.prefixProperties = xml.Element("PrefixProperties")
+                    .Elements()
+                    .Select(Styles.PropertyContainer.LoadProperty)
+                    .ToArray();
+                this.suffixProperties = xml.Element("SuffixProperties")
+                    .Elements()
+                    .Select(Styles.PropertyContainer.LoadProperty)
+                    .ToArray();
             }
 
             public void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -1234,7 +1400,7 @@ namespace Epsitec.Common.Text
         }
         #endregion
 
-        private System.Collections.ArrayList sequences = new System.Collections.ArrayList();
+        private List<Sequence> sequences = new();
         private string name;
         private int[] startVector;
         private string globalPrefix;

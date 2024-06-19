@@ -1820,9 +1820,7 @@ namespace Epsitec.Common.Document
                     ),
                     this.modifier?.ActiveViewer?.DrawingContext.GetRootStack()
                         == otherDoc.modifier?.ActiveViewer?.DrawingContext.GetRootStack(),
-                    this.textContext?.SerializeToString()
-                        == otherDoc.textContext?.SerializeToString() // bl-converter better serialization
-                    ,
+                    this.textContext.HasEquivalentData(otherDoc.textContext),
                     this.textFlows.HasEquivalentData(otherDoc.textFlows),
                     this.fontList?.HasEquivalentData(otherDoc.fontList)
                         ?? this.fontList == otherDoc.fontList,
@@ -1831,8 +1829,7 @@ namespace Epsitec.Common.Document
                 ];
                 if (!(checks.All(x => x)))
                 {
-                    var a = this.textContext?.SerializeToString();
-                    var b = otherDoc.textContext?.SerializeToString();
+                    this.textContext.HasEquivalentData(otherDoc.textContext);
                     return false;
                 }
             }
@@ -1877,7 +1874,7 @@ namespace Epsitec.Common.Document
 
                 if (this.textContext != null)
                 {
-                    root.Add(new XElement("TextContextData", this.textContext.SerializeToString()));
+                    root.Add(this.textContext.ToXML());
                 }
 
                 root.Add(new XElement("TextFlows", this.textFlows.ToXML()));
@@ -1939,11 +1936,7 @@ namespace Epsitec.Common.Document
                     ?.Elements()
                     ?.Select(item => int.Parse(item.Value))
                     ?.ToList();
-                var textContextXML = xml.Element("TextContextData");
-                if (textContextXML != null)
-                {
-                    this.textContext.DeserializeFromString(textContextXML.Value);
-                }
+                this.textContext = TextContext.FromXML(xml.Element("TextContext"));
                 this.textFlows = SerializableUndoableList.FromXML(xml.Element("TextFlows"));
                 this.fontList = xml.Element("FontList")
                     ?.Elements()

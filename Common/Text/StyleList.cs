@@ -1,8 +1,10 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Text
 {
@@ -20,7 +22,7 @@ namespace Epsitec.Common.Text
             this.context = context;
             this.internalSettings = new Internal.SettingsTable();
 
-            this.textStyleList = new System.Collections.ArrayList();
+            this.textStyleList = new();
             this.textStyleHash = new System.Collections.Hashtable();
         }
 
@@ -455,10 +457,8 @@ namespace Epsitec.Common.Text
         {
             int n = this.textStyleList.Count;
 
-            for (int i = 0; i < this.textStyleList.Count; i++)
+            foreach (TextStyle style in this.textStyleList)
             {
-                TextStyle style = this.textStyleList[i] as TextStyle;
-
                 if (style.IsDeleted)
                 {
                     n--;
@@ -473,10 +473,8 @@ namespace Epsitec.Common.Text
             this.internalSettings.Serialize(buffer);
             buffer.Append("/");
 
-            for (int i = 0; i < this.textStyleList.Count; i++)
+            foreach (TextStyle style in this.textStyleList)
             {
-                TextStyle style = this.textStyleList[i] as TextStyle;
-
                 if (style.IsDeleted == false)
                 {
                     style.Serialize(buffer);
@@ -493,7 +491,7 @@ namespace Epsitec.Common.Text
             return this.uniqueId == otherContext.uniqueId
                 && this.internalSettings.HasEquivalentData(otherContext.internalSettings)
                 && this.textStyleList.HasEquivalentData(otherContext.textStyleList)
-                && this.StyleMap.HasEquivalentData(otherContext.StyleMap);
+                && this.styleMap.HasEquivalentData(otherContext.styleMap);
         }
 
         public XElement ToXML()
@@ -502,7 +500,7 @@ namespace Epsitec.Common.Text
                 "StyleList",
                 new XAttribute("UniqueId", this.uniqueId),
                 new XElement("InternalSettings", this.internalSettings.ToXML()),
-                new XElement("TextStyleList", this.textStyleList.Select()),
+                new XElement("TextStyleList", this.textStyleList.Select(item => item.ToXML())),
                 new XElement("StyleMap", this.styleMap.ToXML())
             );
         }
@@ -514,18 +512,23 @@ namespace Epsitec.Common.Text
 
         private StyleList(XElement xml)
         {
+            this.textStyleHash = new System.Collections.Hashtable();
             this.uniqueId = (long)xml.Attribute("UniqueId");
             this.internalSettings = Internal.SettingsTable.FromXML(
                 xml.Element("InternalSettings").Element("SettingsTable")
             );
-            this.textStyleList = xml.Element("TextStyleList").Elements().Select();
-            this.styleMap = Text.StyleMap.FromXML(xml.Element("StyleMap").Element("StyleMap"));
+            this.textStyleList = new();
+            xml.Element("TextStyleList")
+                .Elements()
+                .ToList()
+                .ForEach(item => this.Attach(TextStyle.FromXML(item)));
+            this.styleMap = new StyleMap(xml.Element("StyleMap").Element("StyleMap"), this);
         }
 
         public void Deserialize(TextContext context, int version, string[] args, ref int offset)
         {
             this.internalSettings = new Internal.SettingsTable();
-            this.textStyleList = new System.Collections.ArrayList();
+            this.textStyleList = new();
             this.textStyleHash = new System.Collections.Hashtable();
 
             long unique = SerializerSupport.DeserializeLong(args[offset++]);
@@ -1459,7 +1462,7 @@ namespace Epsitec.Common.Text
 
         private TextContext context;
         private Internal.SettingsTable internalSettings;
-        private System.Collections.ArrayList textStyleList;
+        private List<TextStyle> textStyleList;
         private System.Collections.Hashtable textStyleHash;
         private StyleMap styleMap;
         private long uniqueId;

@@ -8,6 +8,10 @@ namespace Epsitec.Common.Support.Serialization
         public static bool HasEquivalentData<T>(this T[] first, T[] other)
             where T : IXMLWritable
         {
+            if (first == null && other == null)
+            {
+                return true;
+            }
             if (first.Count() != other.Count())
             {
                 return false;

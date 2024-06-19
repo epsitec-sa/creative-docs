@@ -1,5 +1,7 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe PropertiesProperty contient une liste de propriétés sérialisées
     /// qui doivent s'appliquer au texte.
     /// </summary>
-    public class PropertiesProperty : Property
+    public class PropertiesProperty : Property, Common.Support.IXMLSerializable<PropertiesProperty>
     {
         public PropertiesProperty()
         {
@@ -191,6 +193,39 @@ namespace Epsitec.Common.Text.Properties
                 buffer,
                 /**/SerializerSupport.SerializeStringArray(this.serializedProperties)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            PropertiesProperty other = (PropertiesProperty)otherWritable;
+            return this.serializedProperties.SequenceEqual(other.serializedProperties);
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "PropertiesProperty",
+                new XElement(
+                    "SerializedProperties",
+                    this.serializedProperties.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Value", item)
+                    ))
+                )
+            );
+        }
+
+        public static PropertiesProperty FromXML(XElement xml)
+        {
+            return new PropertiesProperty(xml);
+        }
+
+        private PropertiesProperty(XElement xml)
+        {
+            this.serializedProperties = xml.Element("SerializedProperties")
+                .Elements()
+                .Select(item => item.Attribute("Value").Value)
+                .ToArray();
         }
 
         public override void DeserializeFromText(

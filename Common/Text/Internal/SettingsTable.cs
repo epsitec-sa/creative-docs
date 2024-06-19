@@ -199,12 +199,19 @@ namespace Epsitec.Common.Text.Internal
         public bool HasEquivalentData(Common.Support.IXMLWritable other)
         {
             SettingsTable otherTable = (SettingsTable)other;
+            if (
+                (this.cores == null || this.cores.Count == 0)
+                && (otherTable.cores == null || otherTable.cores.Count == 0)
+            )
+            {
+                return true;
+            }
             return this.cores.SequenceEqual(otherTable.cores);
         }
 
         public XElement ToXML()
         {
-            return new XElement("SettingsTable", this.cores.Select(item => item.ToXML()));
+            return new XElement("SettingsTable", this.cores?.Select(item => item.ToXML()));
         }
 
         public static SettingsTable FromXML(XElement xml)

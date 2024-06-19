@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,9 @@ namespace Epsitec.Common.Text.Properties
     /// La classe UnderlineProperty permet de régler les détails relatifs au
     /// soulignement du texte.
     /// </summary>
-    public class UnderlineProperty : AbstractXlineProperty
+    public class UnderlineProperty
+        : AbstractXlineProperty,
+            Common.Support.IXMLSerializable<UnderlineProperty>
     {
         public UnderlineProperty() { }
 
@@ -42,5 +45,18 @@ namespace Epsitec.Common.Text.Properties
         {
             return new UnderlineProperty();
         }
+
+        public override XElement ToXML()
+        {
+            return new XElement("UnderlineProperty", base.IterXMLParts());
+        }
+
+        public static UnderlineProperty FromXML(XElement xml)
+        {
+            return new UnderlineProperty(xml);
+        }
+
+        private UnderlineProperty(XElement xml)
+            : base(xml) { }
     }
 }

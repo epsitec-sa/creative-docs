@@ -46,6 +46,11 @@ namespace Epsitec.Common.Text.Properties
             return new OverlineProperty();
         }
 
+        public override XElement ToXML()
+        {
+            return new XElement("OverlineProperty", base.IterXMLParts());
+        }
+
         public static OverlineProperty FromXML(XElement xml)
         {
             return new OverlineProperty(xml);

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
@@ -787,7 +788,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
         {
             //	Le combo pour les polices va être ouvert.
             bool quickOnly = false;
-            System.Collections.ArrayList quickFonts = new System.Collections.ArrayList();
+            List<string> quickFonts = new();
             double height = 30;
             bool abc = false;
             if (this.editor.HasCurrentDocument)

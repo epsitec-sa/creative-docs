@@ -178,7 +178,7 @@ namespace Epsitec.Common.Text
                 new XElement("DefaultTextStyle", this.defaultTextStyle.ToXML()),
                 new XElement("TabList", this.tabList.ToXML()),
                 new XElement("GeneratorList", this.generatorList.ToXML()),
-                new XAttribute(
+                new XElement(
                     "Conditions",
                     this.conditions.Select(name => new XElement(
                         "Item",
@@ -198,10 +198,10 @@ namespace Epsitec.Common.Text
             this.uniqueId = (long)xml.Attribute("UniqueId");
             this.styleList = Text.StyleList.FromXML(xml.Element("StyleList").Element("StyleList"));
             this.defaultParaStyle = TextStyle.FromXML(
-                xml.Element("DefaultParaStyle").Element("DefaultParaStyle")
+                xml.Element("DefaultParaStyle").Element("TextStyle")
             );
             this.defaultTextStyle = TextStyle.FromXML(
-                xml.Element("DefaultTextStyle").Element("DefaultTextStyle")
+                xml.Element("DefaultTextStyle").Element("TextStyle")
             );
             this.tabList = Text.TabList.FromXML(xml.Element("TabList").Element("TabList"));
             this.generatorList = Text.GeneratorList.FromXML(

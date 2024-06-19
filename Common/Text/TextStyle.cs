@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Text
 {
@@ -377,32 +378,49 @@ namespace Epsitec.Common.Text
             }
         }
 
-        public XElement ToXML()
+        public override XElement ToXML()
         {
+            // bl-converter
+            // the original serialization does not serialize the data from the parent base class
+            // this is strange and probably the sign of some other issue
+
             var root = new XElement(
                 "TextStyle",
                 new XAttribute("Name", this.name),
-                new XAttribute("MetaId", this.metaId),
                 new XAttribute("Priority", this.priority),
-                new XAttribute("TextStyleClass", this.TextStyleClass),
-                new XElement(
-                    "ParentStyles",
-                    this.parentStyles.Select(style => new XElement(
-                        "TextStyle",
+                new XAttribute("TextStyleClass", this.TextStyleClass)
+            );
+            if (this.metaId != null)
+            {
+                root.Add(new XAttribute("MetaId", this.metaId));
+            }
+            if (this.parentStyles != null)
+            {
+                root.Add(
+                    new XElement(
+                        "ParentStyles",
+                        this.parentStyles.Select(style => new XElement(
+                            "TextStyle",
+                            new XAttribute(
+                                "Name",
+                                TextStyle.GetStyleNameAndFilterDeletedStyles(style as TextStyle)
+                            )
+                        ))
+                    )
+                );
+            }
+            if (this.nextStyle != null)
+            {
+                root.Add(
+                    new XElement(
+                        "NextStyle",
                         new XAttribute(
                             "Name",
-                            TextStyle.GetStyleNameAndFilterDeletedStyles(style as TextStyle)
+                            TextStyle.GetStyleNameAndFilterDeletedStyles(this.nextStyle)
                         )
-                    ))
-                ),
-                new XElement(
-                    "NextStyle",
-                    new XAttribute(
-                        "Name",
-                        TextStyle.GetStyleNameAndFilterDeletedStyles(this.nextStyle)
                     )
-                )
-            );
+                );
+            }
             if (this.styleProperties != null)
             {
                 root.Add(
@@ -415,16 +433,25 @@ namespace Epsitec.Common.Text
             return root;
         }
 
-        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        public new bool HasEquivalentData(Common.Support.IXMLWritable other)
         {
             TextStyle otherContext = (TextStyle)other;
             return this.name == otherContext.name
                 && this.metaId == otherContext.metaId
                 && this.priority == otherContext.priority
                 && this.TextStyleClass == otherContext.TextStyleClass
-                && this.parentStyles.HasEquivalentData(otherContext.parentStyles)
-                && this.nextStyle.HasEquivalentData(otherContext.nextStyle)
-                && this.styleProperties.HasEquivalentData(otherContext.styleProperties);
+                && (
+                    this.parentStyles?.HasEquivalentData(otherContext.parentStyles)
+                    ?? otherContext.parentStyles == null
+                )
+                && (
+                    this.nextStyle?.HasEquivalentData(otherContext.nextStyle)
+                    ?? otherContext.nextStyle == null
+                )
+                && (
+                    this.styleProperties?.HasEquivalentData(otherContext.styleProperties)
+                    ?? otherContext.styleProperties == null
+                );
         }
 
         public static TextStyle FromXML(XElement xml)
@@ -435,18 +462,18 @@ namespace Epsitec.Common.Text
         private TextStyle(XElement xml)
         {
             this.name = xml.Attribute("Name").Value;
-            this.metaId = xml.Attribute("MetaId").Value;
+            this.metaId = xml.Attribute("MetaId")?.Value;
             this.priority = (int)xml.Attribute("Priority");
             TextStyleClass.TryParse(xml.Attribute("TextStyleClass").Value, out this.textStyleClass);
-            this.parentStyles = xml.Element("ParentStyles")
-                .Elements()
-                .Select(item => item.Attribute("Name").Value)
-                .ToArray();
-            this.nextStyle = xml.Element("NextStyle").Attribute("Name").Value;
+            this.parentStylesNames = xml.Element("ParentStyles")
+                ?.Elements()
+                ?.Select(item => item.Attribute("Name").Value)
+                ?.ToArray();
+            this.nextStyleName = xml.Element("NextStyle")?.Attribute("Name")?.Value;
             this.styleProperties = xml.Element("StyleProperties")
-                .Elements()
-                .Select(item => Property.FromXML(item))
-                .ToArray();
+                ?.Elements()
+                ?.Select(Styles.PropertyContainer.LoadProperty)
+                ?.ToArray();
         }
 
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -473,11 +500,11 @@ namespace Epsitec.Common.Text
 
             if (nStyles > 0)
             {
-                this.parentStyles = new string[nStyles];
+                this.parentStylesNames = new string[nStyles];
 
                 for (int i = 0; i < nStyles; i++)
                 {
-                    this.parentStyles[i] = SerializerSupport.DeserializeString(args[offset++]);
+                    this.parentStylesNames[i] = SerializerSupport.DeserializeString(args[offset++]);
                 }
             }
 
@@ -506,7 +533,7 @@ namespace Epsitec.Common.Text
                 if ((this.parentStyles != null) && (this.parentStyles.Length > 0))
                 {
                     int n = this.parentStyles.Length;
-                    string lastName = this.parentStyles[n - 1] as string;
+                    string lastName = this.parentStylesNames[n - 1];
 
                     if ((lastName != null) && (lastName.StartsWith("=>")))
                     {
@@ -520,7 +547,7 @@ namespace Epsitec.Common.Text
 
                     for (int i = 0; i < parentStyles.Length; i++)
                     {
-                        string fullName = this.parentStyles[i] as string;
+                        string fullName = this.parentStylesNames[i];
 
                         if (fullName != null)
                         {
@@ -760,8 +787,10 @@ namespace Epsitec.Common.Text
         private int priority;
         private string metaId;
         private TextStyleClass textStyleClass;
-        private object[] parentStyles;
+        private TextStyle[] parentStyles;
+        private string[] parentStylesNames;
         private TextStyle nextStyle;
+        private string nextStyleName;
         private Property[] styleProperties;
         private System.Collections.ArrayList wrappers;
 

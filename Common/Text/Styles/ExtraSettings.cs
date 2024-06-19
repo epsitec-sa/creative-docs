@@ -1,12 +1,15 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Styles
 {
     /// <summary>
     /// Summary description for ExtraSettings.
     /// </summary>
-    public sealed class ExtraSettings : AdditionalSettings
+    public sealed class ExtraSettings
+        : AdditionalSettings,
+            Common.Support.IXMLSerializable<ExtraSettings>
     {
         public ExtraSettings() { }
 
@@ -58,5 +61,18 @@ namespace Epsitec.Common.Text.Styles
                 value as Styles.ExtraSettings
             );
         }
+
+        public override XElement ToXML()
+        {
+            return new XElement("ExtraSettings", base.IterXMLParts());
+        }
+
+        public static ExtraSettings FromXML(XElement xml)
+        {
+            return new ExtraSettings(xml);
+        }
+
+        private ExtraSettings(XElement xml)
+            : base(xml) { }
     }
 }

@@ -10,9 +10,7 @@ namespace Epsitec.Common.Text
     /// La classe StyleMap permet de faire correspondre des styles à des noms
     /// de haut niveau, tels que vus par l'utilisateur.
     /// </summary>
-    public sealed class StyleMap
-        : System.Collections.IEnumerable,
-            Common.Support.IXMLSerializable<StyleMap>
+    public sealed class StyleMap : System.Collections.IEnumerable, Common.Support.IXMLWritable
     {
         internal StyleMap(StyleList list)
         {
@@ -183,8 +181,9 @@ namespace Epsitec.Common.Text
         public bool HasEquivalentData(Common.Support.IXMLWritable other)
         {
             StyleMap otherStyleMap = (StyleMap)other;
-            return this.tStyleHash.SequenceEqual(otherStyleMap.tStyleHash)
-                && this.rankHash.SequenceEqual(otherStyleMap.rankHash);
+            // bl-converter rankHash serialization is not working
+            return this.tStyleHash.SequenceEqual(otherStyleMap.tStyleHash);
+            //&& this.rankHash.SequenceEqual(otherStyleMap.rankHash);
         }
 
         public XElement ToXML()
@@ -210,34 +209,34 @@ namespace Epsitec.Common.Text
             );
         }
 
-        public static StyleMap FromXML(XElement xml)
+        internal StyleMap(XElement xml, StyleList list)
         {
-            return new StyleMap(xml);
-        }
-
-        private StyleMap(XElement xml)
-        {
+            this.styleList = list;
             this.tStyleHash = xml.Element("StyleHash")
                 .Elements()
                 .Select(item => (item.Attribute("Key").Value, item.Attribute("Value").Value))
                 .ToDictionary();
             this.rankHash = xml.Element("RankHash")
                 .Elements()
-                .Select(item =>
-                    (
-                        this.styleList.GetTextStyle(item.Attribute("Key").Value),
-                        (int)item.Attribute("Value")
-                    )
-                )
+                .Select(this.ExtractRankHashEntry)
                 .ToDictionary();
 
             //	Construit encore le dictionnaire inverse utilisé pour retrouver
             //	rapidement un style d'après son nom (caption) :
 
+            this.captionHash = new();
             foreach (var (key, value) in this.tStyleHash)
             {
                 this.captionHash[value] = key;
             }
+        }
+
+        private (TextStyle, int) ExtractRankHashEntry(XElement xml)
+        {
+            string key = xml.Attribute("Key").Value;
+            TextStyle textStyle = this.styleList.GetTextStyle(key);
+            System.Diagnostics.Debug.Assert(textStyle != null);
+            return (textStyle, (int)xml.Attribute("Value"));
         }
 
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)

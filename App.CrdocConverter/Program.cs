@@ -1,11 +1,9 @@
 ﻿using System.IO;
 using Epsitec.Common.Document;
 
-string root =
-    "C:\\devel\\cresus-core-dev-converter\\cresus-core\\App.CrdocConverter\\old_format_files";
-
-string outputDir =
-    "C:\\devel\\cresus-core-dev-converter\\cresus-core\\App.CrdocConverter\\output_files";
+string root = "C:\\Users\\Baptiste\\cresus-core-dev-converter\\cresus-core\\App.CrdocConverter";
+string inputDir = Path.Join(root, "old_format_files");
+string outputDir = Path.Join(root, "output_files");
 
 bool verbose = false;
 int failed = 0;
@@ -63,14 +61,14 @@ void TestConvert(string oldFile)
 {
     Console.WriteLine($"Convert {Path.GetFileName(oldFile)}");
     string newFile = Path.GetFileNameWithoutExtension(oldFile) + ".xml";
-    string inputFilePath = Path.Join(root, oldFile);
+    string inputFilePath = Path.Join(inputDir, oldFile);
     string outputFilePath = Path.Join(outputDir, newFile);
     Document originalDocument = LoadOriginalDocument(inputFilePath);
     ExportToNewFormat(originalDocument, outputFilePath);
     CheckReadBackDocument(originalDocument, outputFilePath);
 }
 
-foreach (string file in Directory.GetFiles(root))
+foreach (string file in Directory.GetFiles(inputDir))
 {
     TestConvert(file);
 }
