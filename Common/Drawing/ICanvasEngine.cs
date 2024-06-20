@@ -6,15 +6,19 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public interface ICanvasEngine
     {
-        bool IsDataCompatible(byte[] data);
-        Canvas.IconKey[] GetIconKeys(byte[] data);
-        void GetSizeAndOrigin(byte[] data, out Drawing.Size size, out Drawing.Point origin);
+        bool TryLoadData(byte[] data);
+
+        Canvas.IconKey[] IconKeys { get; }
+
+        Size Size { get; }
+
+        Point Origin { get; }
+
         void Paint(
-            Drawing.Graphics graphics,
-            Drawing.Size size,
-            byte[] data,
+            Graphics graphics,
+            Size size,
             GlyphPaintStyle style,
-            Drawing.Color color,
+            Color color,
             int page,
             object adorner
         );

@@ -19,7 +19,7 @@ namespace Epsitec.Common.Drawing
 
             ICanvasEngine engine = Canvas.FindEngine(this.data);
             System.Diagnostics.Debug.Assert(engine != null);
-            IconKey[] iks = engine.GetIconKeys(this.data);
+            IconKey[] iks = engine.IconKeys;
             System.Diagnostics.Debug.Assert(iks != null && iks.Length > 0);
 
             this.debugDeep = 0;
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Drawing
             {
                 ICanvasEngine engine = Canvas.engines[i];
 
-                if (engine.IsDataCompatible(data))
+                if (engine.TryLoadData(data))
                 {
                     return engine;
                 }
@@ -351,15 +351,7 @@ namespace Epsitec.Common.Drawing
                     {
                         page = this.key.PageRank;
                     }
-                    engine.Paint(
-                        graphics,
-                        size,
-                        this.data,
-                        this.paintStyle,
-                        this.color,
-                        page,
-                        this.adorner
-                    );
+                    engine.Paint(graphics, size, this.paintStyle, this.color, page, this.adorner);
 
                     int width,
                         height,
@@ -424,8 +416,8 @@ namespace Epsitec.Common.Drawing
                 ICanvasEngine engine = Canvas.FindEngine(this.data);
                 System.Diagnostics.Debug.Assert(engine != null);
 
-                engine.GetSizeAndOrigin(this.data, out this.size, out this.origin);
-
+                this.size = engine.Size;
+                this.origin = engine.Origin;
                 this.isGeomOk = true;
             }
         }
