@@ -1,7 +1,8 @@
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -9,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe TextBox est la classe de l'objet graphique "pavé de texte".
     /// </summary>
     [System.Serializable()]
-    public class TextBox : Objects.Abstract
+    public class TextBox : Objects.Abstract, Support.IXMLSerializable<TextBox>
     {
         public TextBox(Document document, Objects.Abstract model)
             : base(document, model)
@@ -642,6 +643,27 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            TextBox otherTextBox = (TextBox)other;
+            return base.HasEquivalentData(other)
+                && this.textLayout.Text == otherTextBox.textLayout.Text
+                && this.textLayout.Style.GetTabs() == otherTextBox.textLayout.Style.GetTabs();
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("TextBox", this.IterXMLParts());
+        }
+
+        public static TextBox FromXML(XElement xml)
+        {
+            return new TextBox(xml);
+        }
+
+        private TextBox(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

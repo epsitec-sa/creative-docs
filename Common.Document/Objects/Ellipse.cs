@@ -1,6 +1,7 @@
-using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Ellipse est la classe de l'objet graphique "ellipse".
     /// </summary>
     [System.Serializable()]
-    public class Ellipse : Objects.Abstract
+    public class Ellipse : Objects.Abstract, Support.IXMLSerializable<Ellipse>
     {
         public Ellipse(Document document, Objects.Abstract model)
             : base(document, model)
@@ -351,6 +352,19 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Serialization", this.IterXMLParts());
+        }
+
+        public static Ellipse FromXML(XElement xml)
+        {
+            return new Ellipse(xml);
+        }
+
+        private Ellipse(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

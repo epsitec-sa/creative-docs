@@ -1,7 +1,8 @@
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -9,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Dimension est la classe de l'objet graphique "cotation".
     /// </summary>
     [System.Serializable()]
-    public class Dimension : Objects.Abstract
+    public class Dimension : Objects.Abstract, Support.IXMLSerializable<Dimension>
     {
         public Dimension(Document document, Objects.Abstract model)
             : this(document, model, false) { }
@@ -1308,6 +1309,19 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Dimension", this.IterXMLParts());
+        }
+
+        public static Dimension FromXML(XElement xml)
+        {
+            return new Dimension(xml);
+        }
+
+        private Dimension(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

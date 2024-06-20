@@ -335,7 +335,7 @@ namespace Epsitec.Common.Document
                 case MessageType.MouseDown:
                     if (!this.mouseDragging)
                     {
-                        //?this.document.SetDirtySerialize(DirtyMode.Local);
+                        //?this.document.SetDocumentDirtySerialize(DirtyMode.Local);
                         this.AutoScrollTimerStart(message);
                         this.RestartMiniBar();
                         this.ProcessMouseDown(message, pos);
@@ -4110,7 +4110,10 @@ namespace Epsitec.Common.Document
         protected bool GuideDetect(Point pos, out int rank)
         {
             //	Détecte le guide pointé par la souris.
-            if (!this.drawingContext.GuidesMouse || !this.drawingContext.GuidesShow)
+            if (
+                !this.document.Settings.DrawingSettings.GuidesMouse
+                || !this.document.Settings.DrawingSettings.GuidesShow
+            )
             {
                 rank = -1;
                 return false;
@@ -4154,7 +4157,10 @@ namespace Epsitec.Common.Document
         protected void GuideHilite(int rank)
         {
             //	Met en évidence le guide survolé par la souris.
-            if (!this.drawingContext.GuidesMouse || !this.drawingContext.GuidesShow)
+            if (
+                !this.document.Settings.DrawingSettings.GuidesMouse
+                || !this.document.Settings.DrawingSettings.GuidesShow
+            )
                 return;
 
             bool changed = false;
@@ -4184,7 +4190,7 @@ namespace Epsitec.Common.Document
 
             this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideCreateAndMove);
             this.drawingContext.GuidesShow = true;
-            this.drawingContext.GuidesMouse = true;
+            this.document.Settings.DrawingSettings.GuidesMouse = true;
 
             Settings.Guide guide = new Settings.Guide(this.document);
             guide.Type = horizontal
@@ -4629,7 +4635,7 @@ namespace Epsitec.Common.Document
             }
         }
 
-        protected void DrawGuides(Graphics graphics, UndoableList guides, bool editable)
+        protected void DrawGuides(Graphics graphics, SerializableUndoableList guides, bool editable)
         {
             //	Dessine tous les repères d'une liste.
             double ix = 0.5 / this.drawingContext.ScaleX;
@@ -5230,7 +5236,10 @@ namespace Epsitec.Common.Document
             return Drawing.Rectangle.Empty;
         }
 
-        protected void GuidesSearchAdd(System.Collections.ArrayList list, UndoableList guides)
+        protected void GuidesSearchAdd(
+            System.Collections.ArrayList list,
+            SerializableUndoableList guides
+        )
         {
             //	Ajoute tous les guides dans une liste unique.
             int total = guides.Count;

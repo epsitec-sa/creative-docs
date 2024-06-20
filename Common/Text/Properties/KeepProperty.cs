@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
     /// par rapport aux autres (paragraphes liés) et comment les veuves et les
     /// orphelines sont gérées.
     /// </summary>
-    public class KeepProperty : Property
+    public class KeepProperty : Property, Common.Support.IXMLSerializable<KeepProperty>
     {
         public KeepProperty() { }
 
@@ -82,6 +83,51 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeEnum(this.paragraphStartMode),
                 /**/SerializerSupport.SerializeThreeState(this.withNextParagraph),
                 /**/SerializerSupport.SerializeThreeState(this.withPrevParagraph)
+            );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            KeepProperty other = (KeepProperty)otherWritable;
+            return this.startLines == other.startLines
+                && this.endLines == other.endLines
+                && this.paragraphStartMode == other.paragraphStartMode
+                && this.withNextParagraph == other.withNextParagraph
+                && this.withPrevParagraph == other.withPrevParagraph;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "KeepProperty",
+                new XAttribute("StartLines", this.startLines),
+                new XAttribute("EndLines", this.endLines),
+                new XAttribute("ParagraphStartMode", this.paragraphStartMode),
+                new XAttribute("WithNextParagraph", this.withNextParagraph),
+                new XAttribute("WithPrevParagraph", this.withPrevParagraph)
+            );
+        }
+
+        public static KeepProperty FromXML(XElement xml)
+        {
+            return new KeepProperty(xml);
+        }
+
+        private KeepProperty(XElement xml)
+        {
+            this.startLines = (int)xml.Attribute("StartLines");
+            this.endLines = (int)xml.Attribute("EndLines");
+            System.Enum.TryParse(
+                xml.Attribute("ParagraphStartMode").Value,
+                out this.paragraphStartMode
+            );
+            System.Enum.TryParse(
+                xml.Attribute("WithNextParagraph").Value,
+                out this.withNextParagraph
+            );
+            System.Enum.TryParse(
+                xml.Attribute("WithPrevParagraph").Value,
+                out this.withPrevParagraph
             );
         }
 

@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.TextPanels
 {
@@ -624,7 +624,7 @@ namespace Epsitec.Common.Document.TextPanels
         private void HandleFontFaceComboOpening(object sender, CancelEventArgs e)
         {
             //	Le combo pour les polices va être ouvert.
-            bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+            bool quickOnly = this.document.Settings.DrawingSettings.TextFontFilter;
             string selectedFontFace = this.TextWrapper.Active.FontFace;
             int quickCount;
             System.Collections.ArrayList fontList = Misc.MergeFontList(
@@ -638,15 +638,10 @@ namespace Epsitec.Common.Document.TextPanels
             this.fontFace.FontList = fontList;
             this.fontFace.QuickCount = quickCount;
             this.fontFace.SampleHeight = this.document
-                .Modifier
-                .ActiveViewer
-                .DrawingContext
+                .Settings
+                .DrawingSettings
                 .TextFontSampleHeight;
-            this.fontFace.SampleAbc = this.document
-                .Modifier
-                .ActiveViewer
-                .DrawingContext
-                .TextFontSampleAbc;
+            this.fontFace.SampleAbc = this.document.Settings.DrawingSettings.TextFontSampleAbc;
         }
 
         private void HandleFontFaceTextChanged(object sender)

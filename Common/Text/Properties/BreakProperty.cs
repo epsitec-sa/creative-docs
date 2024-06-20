@@ -1,12 +1,13 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
     /// <summary>
     /// La classe BreakProperty décrit un saut vertical (de page, section, etc.)
     /// </summary>
-    public class BreakProperty : Property
+    public class BreakProperty : Property, Common.Support.IXMLSerializable<BreakProperty>
     {
         public BreakProperty()
             : this(ParagraphStartMode.Anywhere) { }
@@ -62,6 +63,27 @@ namespace Epsitec.Common.Text.Properties
                 buffer,
                 /**/SerializerSupport.SerializeInt((int)this.startMode)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            BreakProperty other = (BreakProperty)otherWritable;
+            return this.startMode == other.startMode;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("BreakProperty", new XAttribute("StartMode", this.startMode));
+        }
+
+        public static BreakProperty FromXML(XElement xml)
+        {
+            return new BreakProperty(xml);
+        }
+
+        private BreakProperty(XElement xml)
+        {
+            System.Enum.TryParse(xml.Attribute("StartMode").Value, out this.startMode);
         }
 
         public override void DeserializeFromText(

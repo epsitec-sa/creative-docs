@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,10 @@ namespace Epsitec.Common.Text.Properties
     /// La propriété ImageProperty décrit quelle image associer avec un
     /// caractère Unicode ObjectReplacement (uFFFC).
     /// </summary>
-    public class ImageProperty : Property, IGlyphRenderer
+    public class ImageProperty
+        : Property,
+            IGlyphRenderer,
+            Common.Support.IXMLSerializable<ImageProperty>
     {
         public ImageProperty() { }
 
@@ -68,6 +72,27 @@ namespace Epsitec.Common.Text.Properties
                 buffer,
                 /**/SerializerSupport.SerializeString(this.imageTag)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            ImageProperty other = (ImageProperty)otherWritable;
+            return this.imageTag == other.imageTag;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("ImageProperty", new XAttribute("ImageTag", this.imageTag));
+        }
+
+        public static ImageProperty FromXML(XElement xml)
+        {
+            return new ImageProperty(xml);
+        }
+
+        private ImageProperty(XElement xml)
+        {
+            this.imageTag = xml.Attribute("ImageTag").Value;
         }
 
         public override void DeserializeFromText(

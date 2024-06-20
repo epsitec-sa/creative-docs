@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Volume est la classe de l'objet graphique volume 3d.
     /// </summary>
     [System.Serializable()]
-    public class Volume : Objects.Abstract
+    public class Volume : Objects.Abstract, Support.IXMLSerializable<Volume>
     {
         public Volume(Document document, Objects.Abstract model)
             : base(document, model)
@@ -554,6 +555,20 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+
+        public static Volume FromXML(XElement xml)
+        {
+            return new Volume(xml);
+        }
+
+        private Volume(XElement xml)
+            : base(xml) { }
+
+        public override XElement ToXML()
+        {
+            return new XElement("Volume", this.IterXMLParts());
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

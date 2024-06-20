@@ -1,12 +1,14 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Text.Internal.Sequences
 {
     /// <summary>
     /// La classe Empty produit des séquences vides.
     /// </summary>
-    public class Empty : Generator.Sequence
+    public class Empty : Generator.Sequence, Common.Support.IXMLSerializable<Empty>
     {
         public Empty() { }
 
@@ -25,5 +27,18 @@ namespace Epsitec.Common.Text.Internal.Sequences
         {
             return "";
         }
+
+        public override XElement ToXML()
+        {
+            return new XElement("Empty", base.IterXMLParts());
+        }
+
+        public static Empty FromXML(XElement xml)
+        {
+            return new Empty(xml);
+        }
+
+        private Empty(XElement xml)
+            : base(xml) { }
     }
 }

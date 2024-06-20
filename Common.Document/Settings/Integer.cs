@@ -1,6 +1,7 @@
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Integer contient un réglage numérique.
     /// </summary>
     [System.Serializable()]
-    public class Integer : Abstract
+    public class Integer : Abstract, Support.IXMLSerializable<Integer>
     {
         public Integer(Document document, string name)
             : base(document, name)
@@ -160,8 +161,7 @@ namespace Epsitec.Common.Document.Settings
                         return (int)this.document.Settings.ExportICOInfo.Format;
 
                     case "ConstrainAngle":
-                        return (int)
-                            this.document.Modifier.ActiveViewer.DrawingContext.ConstrainAngle;
+                        return (int)this.document.Settings.DrawingSettings.ConstrainAngle;
                 }
 
                 return 0;
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Document.Settings
                         break;
 
                     case "ConstrainAngle":
-                        this.document.Modifier.ActiveViewer.DrawingContext.ConstrainAngle =
+                        this.document.Settings.DrawingSettings.ConstrainAngle =
                             (ConstrainAngle)value;
                         break;
                 }
@@ -641,6 +641,42 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Integer otherInteger = (Integer)other;
+            return base.HasEquivalentData(other) && this.Value == otherInteger.Value;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Integer",
+                base.IterXMLParts(),
+                new XAttribute("Value", this.Value)
+            );
+        }
+
+        public static Integer FromXML(XElement xml)
+        {
+            return new Integer(xml);
+        }
+
+        private Integer(XElement xml)
+            : base(xml)
+        {
+            int value = int.Parse(xml.Attribute("Value").Value);
+            if (this.name == "DefaultUnit")
+            {
+                RealUnitType unit = (RealUnitType)value;
+                this.document.Modifier.SetRealUnitDimension(unit, false);
+            }
+            else
+            {
+                this.Value = value;
+            }
+            this.Initialize();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

@@ -1,5 +1,6 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -8,7 +9,9 @@ namespace Epsitec.Common.Text.Properties
     /// propriété ManagedParagraphProperty une information spécifique utilisée
     /// pour modifier le fonctionnement du générateur.
     /// </summary>
-    public class ManagedInfoProperty : Property
+    public class ManagedInfoProperty
+        : Property,
+            Common.Support.IXMLSerializable<ManagedInfoProperty>
     {
         public ManagedInfoProperty() { }
 
@@ -60,6 +63,32 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.managerName),
                 /**/SerializerSupport.SerializeString(this.managerInfo)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            ManagedInfoProperty other = (ManagedInfoProperty)otherWritable;
+            return this.managerName == other.managerName && this.managerInfo == other.managerInfo;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "ManagedInfoProperty",
+                new XAttribute("ManagerName", this.managerName),
+                new XAttribute("ManagerInfo", this.managerInfo)
+            );
+        }
+
+        public static ManagedInfoProperty FromXML(XElement xml)
+        {
+            return new ManagedInfoProperty(xml);
+        }
+
+        private ManagedInfoProperty(XElement xml)
+        {
+            this.managerName = xml.Attribute("ManagerName").Value;
+            this.managerInfo = xml.Attribute("ManagerInfo").Value;
         }
 
         public override void DeserializeFromText(

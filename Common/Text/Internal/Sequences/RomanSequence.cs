@@ -1,12 +1,14 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Text.Internal.Sequences
 {
     /// <summary>
     /// La classe Roman produit des numéros i, ii, iii, iv, etc.
     /// </summary>
-    public class Roman : Generator.Sequence
+    public class Roman : Generator.Sequence, Common.Support.IXMLSerializable<Roman>
     {
         public Roman() { }
 
@@ -84,6 +86,19 @@ namespace Epsitec.Common.Text.Internal.Sequences
                 buffer.Append(letter);
             }
         }
+
+        public override XElement ToXML()
+        {
+            return new XElement("Roman", base.IterXMLParts());
+        }
+
+        public static Roman FromXML(XElement xml)
+        {
+            return new Roman(xml);
+        }
+
+        private Roman(XElement xml)
+            : base(xml) { }
 
         static System.Collections.Hashtable inverseLookup = new System.Collections.Hashtable();
     }

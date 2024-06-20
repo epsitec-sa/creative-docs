@@ -1,7 +1,8 @@
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -9,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe TextLine est la classe de l'objet graphique "texte simple".
     /// </summary>
     [System.Serializable()]
-    public class TextLine : Objects.Abstract
+    public class TextLine : Objects.Abstract, Support.IXMLSerializable<TextLine>
     {
         public TextLine(Document document, Objects.Abstract model)
             : base(document, model)
@@ -2185,6 +2186,26 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            TextLine otherTextLine = (TextLine)other;
+            return base.HasEquivalentData(other)
+                && this.textLayout.Text == otherTextLine.textLayout.Text;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("TextLine", this.IterXMLParts());
+        }
+
+        public static TextLine FromXML(XElement xml)
+        {
+            return new TextLine(xml);
+        }
+
+        private TextLine(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

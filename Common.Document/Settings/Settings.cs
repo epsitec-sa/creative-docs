@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -6,21 +10,25 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Settings contient tous les réglages.
     /// </summary>
     [System.Serializable()]
-    public class Settings : ISerializable
+    public class Settings : ISerializable, Support.IXMLSerializable<Settings>
     {
         public Settings(Document document)
         {
             this.document = document;
 
-            this.settings = new System.Collections.ArrayList();
+            // bl-net8-cross refactor
+            // Use a hashtable instead of a list for the settings
+            this.settings = new();
+            this.settings = new();
             this.CreateDefault();
 
             this.globalGuides = true;
-            this.guides = new UndoableList(this.document, UndoableListType.Guides);
+            this.guides = new SerializableUndoableList(this.document, UndoableListType.Guides);
 
-            this.quickFonts = new System.Collections.ArrayList();
+            this.quickFonts = new();
             Settings.DefaultQuickFonts(this.quickFonts);
 
+            this.drawingSettings = new DrawingSettings(document);
             this.printInfo = new PrintInfo(document);
             this.exportPDFInfo = new ExportPDFInfo(document);
             this.exportICOInfo = new ExportICOInfo(document);
@@ -216,6 +224,11 @@ namespace Epsitec.Common.Document.Settings
             return dialog;
         }
 
+        public DrawingSettings DrawingSettings
+        {
+            get { return this.drawingSettings; }
+        }
+
         public PrintInfo PrintInfo
         {
             //	Donne les réglages de l'impression.
@@ -249,7 +262,7 @@ namespace Epsitec.Common.Document.Settings
         public Abstract Get(int index)
         {
             //	Donne un réglage d'après son index.
-            return this.settings[index] as Abstract;
+            return this.settings[index];
         }
 
         public Abstract Get(string name)
@@ -349,7 +362,7 @@ namespace Epsitec.Common.Document.Settings
             this.document.SetDirtySerialize(CacheBitmapChanging.None);
         }
 
-        protected UndoableList GuidesList
+        protected SerializableUndoableList GuidesList
         {
             //	Retourne la liste des repères.
             get
@@ -367,7 +380,7 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
-        protected UndoableList GuidesListOther
+        protected SerializableUndoableList GuidesListOther
         {
             //	Retourne l'autre (global/local) liste des repères.
             get
@@ -385,7 +398,7 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
-        public UndoableList GuidesListGlobal
+        public SerializableUndoableList GuidesListGlobal
         {
             //	Retourne la liste des repères globaux.
             get { return this.guides; }
@@ -394,14 +407,14 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region QuickFonts
-        public System.Collections.ArrayList QuickFonts
+        public List<string> QuickFonts
         {
             //	Liste des polices rapides.
             get { return this.quickFonts; }
             set { this.quickFonts = value; }
         }
 
-        public static void DefaultQuickFonts(System.Collections.ArrayList list)
+        public static void DefaultQuickFonts(List<string> list)
         {
             //	Donne la liste des polices rapides par défaut.
             list.Clear();
@@ -415,6 +428,93 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Settings otherSettings = (Settings)other;
+            List<bool> checks =
+            [
+                otherSettings.settings.HasEquivalentData(this.settings),
+                otherSettings.globalGuides == this.globalGuides,
+                otherSettings.guides.HasEquivalentData(this.guides),
+                otherSettings.quickFonts.SequenceEqual(this.quickFonts),
+                otherSettings.printInfo.HasEquivalentData(this.printInfo),
+                otherSettings.exportPDFInfo.HasEquivalentData(this.exportPDFInfo),
+                otherSettings.exportICOInfo.HasEquivalentData(this.exportICOInfo)
+            ];
+            if (!checks.All(x => x))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Settings",
+                new XAttribute("GlobalGuides", this.globalGuides),
+                new XElement("Settings", this.settings.Select(item => item.ToXML())),
+                new XElement(
+                    "QuickFonts",
+                    this.quickFonts.Select(fontname => new XElement(
+                        "Font",
+                        new XAttribute("Name", fontname)
+                    ))
+                ),
+                new XElement("Guides", this.guides.ToXML()),
+                this.printInfo.ToXML(),
+                this.exportPDFInfo.ToXML(),
+                this.exportICOInfo.ToXML()
+            );
+        }
+
+        public static Settings FromXML(XElement xml)
+        {
+            return new Settings(xml);
+        }
+
+        private Settings(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            this.drawingSettings = new DrawingSettings(this.document);
+            this.settings = xml.Element("Settings")
+                .Elements()
+                .Select(Settings.LoadSettingFromXML)
+                .ToList();
+            this.globalGuides = bool.Parse(xml.Attribute("GlobalGuides").Value);
+            this.guides = SerializableUndoableList.FromXML(xml.Element("Guides"));
+            this.quickFonts = xml.Element("QuickFonts")
+                .Elements()
+                .Select(item => item.Attribute("Name").Value)
+                .ToList();
+            this.printInfo = PrintInfo.FromXML(xml.Element("PrintInfo"));
+            this.exportPDFInfo = ExportPDFInfo.FromXML(xml.Element("ExportPDFInfo"));
+            this.exportICOInfo = ExportICOInfo.FromXML(xml.Element("ExportICOInfo"));
+        }
+
+        private static Abstract LoadSettingFromXML(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                case "Bool":
+                    return Bool.FromXML(xml);
+                case "Double":
+                    return Double.FromXML(xml);
+                case "Integer":
+                    return Integer.FromXML(xml);
+                case "Point":
+                    return Point.FromXML(xml);
+                case "Range":
+                    return Range.FromXML(xml);
+                case "String":
+                    return String.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Setting type '{xml.Name.LocalName}'"
+                    );
+            }
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise les réglages.
@@ -431,9 +531,9 @@ namespace Epsitec.Common.Document.Settings
         {
             //	Constructeur qui désérialise les réglages.
             this.document = Document.ReadDocument;
-            this.settings = (System.Collections.ArrayList)
-                info.GetValue("Settings", typeof(System.Collections.ArrayList));
-            this.guides = (UndoableList)info.GetValue("GuidesList", typeof(UndoableList));
+            this.settings = (List<Abstract>)info.GetValue("Settings", typeof(List<Abstract>));
+            this.guides = (SerializableUndoableList)
+                info.GetValue("GuidesList", typeof(SerializableUndoableList));
             this.printInfo = (PrintInfo)info.GetValue("PrintInfo", typeof(PrintInfo));
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 10))
@@ -447,12 +547,11 @@ namespace Epsitec.Common.Document.Settings
 
             if (this.document.IsRevisionGreaterOrEqual(1, 2, 5))
             {
-                this.quickFonts = (System.Collections.ArrayList)
-                    info.GetValue("QuickFonts", typeof(System.Collections.ArrayList));
+                this.quickFonts = (List<string>)info.GetValue("QuickFonts", typeof(List<string>));
             }
             else
             {
-                this.quickFonts = new System.Collections.ArrayList();
+                this.quickFonts = new();
                 Settings.DefaultQuickFonts(this.quickFonts);
             }
 
@@ -486,11 +585,12 @@ namespace Epsitec.Common.Document.Settings
 
 
         protected Document document;
-        protected System.Collections.ArrayList settings;
+        protected List<Abstract> settings;
         protected System.Collections.Hashtable owners;
         protected bool globalGuides;
-        protected UndoableList guides;
-        protected System.Collections.ArrayList quickFonts;
+        protected SerializableUndoableList guides;
+        protected List<string> quickFonts;
+        protected DrawingSettings drawingSettings;
         protected PrintInfo printInfo;
         protected ExportPDFInfo exportPDFInfo;
         protected ExportICOInfo exportICOInfo;

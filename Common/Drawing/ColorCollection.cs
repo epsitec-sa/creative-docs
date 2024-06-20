@@ -2,7 +2,9 @@
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Drawing
 {
@@ -15,7 +17,8 @@ namespace Epsitec.Common.Drawing
         : ISerializable,
             System.Collections.ICollection,
             ICollection<RichColor>,
-            Types.INotifyChanged
+            Types.INotifyChanged,
+            Support.IXMLSerializable<ColorCollection>
     {
         public ColorCollection()
             : this(ColorCollectionType.Default) { }
@@ -189,6 +192,27 @@ namespace Epsitec.Common.Drawing
         #endregion
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            ColorCollection otherCollection = (ColorCollection)other;
+            return this.colors.Zip(otherCollection.colors).All(item => item.First == item.Second);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement("ColorCollection", this.colors.Select(color => color.ToXML()));
+        }
+
+        public static ColorCollection FromXML(XElement xml)
+        {
+            return new ColorCollection(xml);
+        }
+
+        private ColorCollection(XElement xml)
+        {
+            var root = xml.Element("ColorCollection");
+            this.colors = root.Elements().Select(color => RichColor.FromXML(color)).ToArray();
+        }
 
         private ColorCollection(SerializationInfo info, StreamingContext context)
         {

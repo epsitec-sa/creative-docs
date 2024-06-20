@@ -1,17 +1,21 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Text
 {
     /// <summary>
     /// La classe TabList gère la liste globale des tabulateurs.
     /// </summary>
-    public sealed class TabList
+    public sealed class TabList : Common.Support.IXMLSerializable<TabList>
     {
         public TabList(TextContext context)
         {
             this.context = context;
-            this.tagHash = new System.Collections.Hashtable();
+            this.tagHash = new();
             this.autoTabHash = new System.Collections.Hashtable();
             this.sharedTabHash = new System.Collections.Hashtable();
         }
@@ -391,7 +395,7 @@ namespace Epsitec.Common.Text
 
         public Properties.TabProperty GetTabProperty(string tag)
         {
-            if (this.tagHash.Contains(tag))
+            if (this.tagHash.ContainsKey(tag))
             {
                 return new Properties.TabProperty(tag);
             }
@@ -608,13 +612,47 @@ namespace Epsitec.Common.Text
             }
         }
 
+        public bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            TabList other = (TabList)otherWritable;
+            return this.uniqueId == other.uniqueId
+                && this.tagHash.Values.HasEquivalentData(other.tagHash.Values);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "TabList",
+                new XAttribute("UniqueId", this.uniqueId),
+                new XElement("Tabs", this.tagHash.Values.Select(tab => tab.ToXML()))
+            );
+        }
+
+        public static TabList FromXML(XElement xml)
+        {
+            return new TabList(xml);
+        }
+
+        private TabList(XElement xml)
+        {
+            this.uniqueId = (long)xml.Attribute("UniqueId");
+            this.tagHash = xml.Element("Tabs")
+                .Elements()
+                .Select(item =>
+                {
+                    TabRecord tab = TabRecord.FromXML(item);
+                    return (tab.Tag, tab);
+                })
+                .ToDictionary();
+        }
+
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
         {
             this.uniqueId = SerializerSupport.DeserializeLong(args[offset++]);
 
             int count = SerializerSupport.DeserializeInt(args[offset++]);
 
-            this.tagHash = new System.Collections.Hashtable();
+            this.tagHash = new();
             this.autoTabHash = new System.Collections.Hashtable();
             this.sharedTabHash = new System.Collections.Hashtable();
 
@@ -878,7 +916,10 @@ namespace Epsitec.Common.Text
         #endregion
 
         #region TabRecord Class
-        internal class TabRecord : IContentsSignature, IContentsComparer
+        internal class TabRecord
+            : IContentsSignature,
+                IContentsComparer,
+                Common.Support.IXMLSerializable<TabRecord>
         {
             public TabRecord() { }
 
@@ -994,19 +1035,58 @@ namespace Epsitec.Common.Text
 
             public void Serialize(System.Text.StringBuilder buffer)
             {
-                buffer.Append(SerializerSupport.SerializeString(this.tag));
-                buffer.Append("/");
-                buffer.Append(SerializerSupport.SerializeDouble(this.position));
-                buffer.Append("/");
-                buffer.Append(SerializerSupport.SerializeSizeUnits(this.units));
-                buffer.Append("/");
-                buffer.Append(SerializerSupport.SerializeDouble(this.disposition));
-                buffer.Append("/");
-                buffer.Append(SerializerSupport.SerializeString(this.dockingMark));
-                buffer.Append("/");
-                buffer.Append(SerializerSupport.SerializeEnum(this.positionMode));
-                buffer.Append("/");
-                buffer.Append(SerializerSupport.SerializeString(this.attribute));
+                SerializerSupport.Join(
+                    buffer,
+                    SerializerSupport.SerializeString(this.tag),
+                    SerializerSupport.SerializeDouble(this.position),
+                    SerializerSupport.SerializeSizeUnits(this.units),
+                    SerializerSupport.SerializeDouble(this.disposition),
+                    SerializerSupport.SerializeString(this.dockingMark),
+                    SerializerSupport.SerializeEnum(this.positionMode),
+                    SerializerSupport.SerializeString(this.attribute)
+                );
+            }
+
+            public bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+            {
+                TabRecord other = (TabRecord)otherWritable;
+                return this.tag == other.tag
+                    && this.position == other.position
+                    && this.units == other.units
+                    && this.disposition == other.disposition
+                    && this.dockingMark == other.dockingMark
+                    && this.positionMode == other.positionMode
+                    && this.attribute == other.attribute;
+            }
+
+            public XElement ToXML()
+            {
+                return new XElement(
+                    "TabRecord",
+                    new XAttribute("Tag", this.tag),
+                    new XAttribute("Position", this.position),
+                    new XAttribute("Units", this.units),
+                    new XAttribute("Disposition", this.disposition),
+                    new XAttribute("DockingMark", this.dockingMark),
+                    new XAttribute("PositionMode", this.positionMode),
+                    new XAttribute("Attribute", this.attribute)
+                );
+            }
+
+            public static TabRecord FromXML(XElement xml)
+            {
+                return new TabRecord(xml);
+            }
+
+            private TabRecord(XElement xml)
+            {
+                this.tag = xml.Attribute("Tag").Value;
+                this.position = (double)xml.Attribute("Position");
+                System.Enum.TryParse(xml.Attribute("Units").Value, out this.units);
+                this.disposition = (double)xml.Attribute("Disposition");
+                this.dockingMark = xml.Attribute("DockingMark").Value;
+                System.Enum.TryParse(xml.Attribute("PositionMode").Value, out this.positionMode);
+                this.attribute = xml.Attribute("Attribute").Value;
             }
 
             public void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -1211,7 +1291,7 @@ namespace Epsitec.Common.Text
         {
             string tag = record.Tag;
 
-            if (this.tagHash.Contains(tag))
+            if (this.tagHash.ContainsKey(tag))
             {
                 throw new System.ArgumentException(
                     string.Format("TabProperty named {0} already exists", tag),
@@ -1245,7 +1325,7 @@ namespace Epsitec.Common.Text
                 );
             }
 
-            System.Diagnostics.Debug.Assert(this.tagHash.Contains(tag));
+            System.Diagnostics.Debug.Assert(this.tagHash.ContainsKey(tag));
 
             this.tagHash.Remove(tag);
 
@@ -1266,7 +1346,7 @@ namespace Epsitec.Common.Text
         public event Common.Support.EventHandler Changed;
 
         private TextContext context;
-        private System.Collections.Hashtable tagHash;
+        private Dictionary<string, TabRecord> tagHash;
         private System.Collections.Hashtable autoTabHash;
         private System.Collections.Hashtable sharedTabHash;
         private long uniqueId;

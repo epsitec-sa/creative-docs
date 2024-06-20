@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Name représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Name : Abstract
+    public class Name : Abstract, Support.IXMLSerializable<Name>
     {
         public Name(Document document, Type type)
             : base(document, type) { }
@@ -66,6 +67,33 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Name otherName = (Name)other;
+            return base.HasEquivalentData(other) && this.stringValue == otherName.stringValue;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Name",
+                base.IterXMLParts(),
+                new XAttribute("StringValue", this.stringValue)
+            );
+            ;
+        }
+
+        public static Name FromXML(XElement xml)
+        {
+            return new Name(xml);
+        }
+
+        private Name(XElement xml)
+            : base(xml)
+        {
+            this.stringValue = xml.Attribute("StringValue").Value;
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

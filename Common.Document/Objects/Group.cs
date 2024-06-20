@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Group est la classe de l'objet graphique "groupe".
     /// </summary>
     [System.Serializable()]
-    public class Group : Objects.Abstract
+    public class Group : Objects.Abstract, Support.IXMLSerializable<Group>
     {
         public Group(Document document, Objects.Abstract model)
             : base(document, model)
@@ -15,7 +16,10 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new UndoableList(this.document, UndoableListType.ObjectsInsideDocument);
+            this.objects = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideDocument
+            );
         }
 
         protected override bool ExistingProperty(Properties.Type type)
@@ -157,7 +161,7 @@ namespace Epsitec.Common.Document.Objects
             this.document.Notifier.NotifyArea(this.BoundingBox);
         }
 
-        protected void MoveHandleSoon(UndoableList objects, Selector selector)
+        protected void MoveHandleSoon(SerializableUndoableList objects, Selector selector)
         {
             //	Déplace tous les objets du groupe.
             foreach (Objects.Abstract obj in this.document.Deep(this))
@@ -304,6 +308,19 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Group", this.IterXMLParts());
+        }
+
+        public static Group FromXML(XElement xml)
+        {
+            return new Group(xml);
+        }
+
+        private Group(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

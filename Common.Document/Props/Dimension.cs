@@ -1,5 +1,6 @@
-using Epsitec.Common.Widgets;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -22,7 +23,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Dimension représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Dimension : Abstract
+    public class Dimension : Abstract, Support.IXMLSerializable<Dimension>
     {
         public Dimension(Document document, Type type)
             : base(document, type) { }
@@ -300,6 +301,54 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Dimension otherDimension = (Dimension)other;
+            return base.HasEquivalentData(other)
+                && this.dimensionJustif == otherDimension.dimensionJustif
+                && this.dimensionForm == otherDimension.dimensionForm
+                && this.addLength == otherDimension.addLength
+                && this.outLength == otherDimension.outLength
+                && this.fontOffset == otherDimension.fontOffset
+                && this.dimensionText == otherDimension.dimensionText
+                && this.rotateText == otherDimension.rotateText;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Dimension",
+                base.IterXMLParts(),
+                new XAttribute("DimensionJustif", this.dimensionJustif),
+                new XAttribute("DimensionForm", this.dimensionForm),
+                new XAttribute("AddLength", this.addLength),
+                new XAttribute("OutLength", this.outLength),
+                new XAttribute("FontOffset", this.fontOffset),
+                new XAttribute("DimensionText", this.dimensionText),
+                new XAttribute("RotateText", this.rotateText)
+            );
+        }
+
+        public static Dimension FromXML(XElement xml)
+        {
+            return new Dimension(xml);
+        }
+
+        private Dimension(XElement xml)
+            : base(xml)
+        {
+            DimensionJustif.TryParse(
+                xml.Attribute("DimensionJustif").Value,
+                out this.dimensionJustif
+            );
+            DimensionForm.TryParse(xml.Attribute("DimensionForm").Value, out this.dimensionForm);
+            this.addLength = (double)xml.Attribute("AddLength");
+            this.outLength = (double)xml.Attribute("OutLength");
+            this.fontOffset = (double)xml.Attribute("FontOffset");
+            this.dimensionText = xml.Attribute("DimensionText").Value;
+            this.rotateText = (bool)xml.Attribute("RotateText");
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

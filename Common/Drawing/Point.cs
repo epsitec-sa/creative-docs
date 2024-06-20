@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Drawing
 {
@@ -10,7 +11,7 @@ namespace Epsitec.Common.Drawing
 
     [System.Serializable]
     [System.ComponentModel.TypeConverter(typeof(Point.Converter))]
-    public struct Point
+    public struct Point : Support.IXMLSerializable<Point>
     {
         public Point(double x, double y)
         {
@@ -531,6 +532,28 @@ namespace Epsitec.Common.Drawing
             i.Y = a.Y + (x - a.X) * ((b.Y - a.Y) / (b.X - a.X));
 
             return true;
+        }
+
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            return this == (Point)other;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement("Point", new XAttribute("x", this.X), new XAttribute("y", this.Y));
+        }
+
+        public static Point FromXML(XElement xml)
+        {
+            return new Point(xml);
+        }
+
+        private Point(XElement xml)
+        {
+            XElement root = xml.Element("Point");
+            this.x = (double)root.Attribute("x");
+            this.y = (double)root.Attribute("y");
         }
 
         #region Converter Class

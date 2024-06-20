@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -29,7 +30,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Corner représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Corner : Abstract
+    public class Corner : Abstract, Support.IXMLSerializable<Corner>
     {
         public Corner(Document document, Type type)
             : base(document, type) { }
@@ -803,6 +804,57 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Corner otherCorner = (Corner)other;
+            if (!(base.HasEquivalentData(other) && this.cornerType == otherCorner.cornerType))
+            {
+                return false;
+            }
+            if (this.cornerType != CornerType.Right)
+            {
+                return this.radius == otherCorner.radius
+                    && this.effect1 == otherCorner.effect1
+                    && this.effect2 == otherCorner.effect2;
+            }
+            return true;
+        }
+
+        public override XElement ToXML()
+        {
+            var root = new XElement(
+                "Corner",
+                base.IterXMLParts(),
+                new XAttribute("CornerType", this.cornerType)
+            );
+            if (this.cornerType != CornerType.Right)
+            {
+                root.Add(
+                    new XAttribute("Radius", this.radius),
+                    new XAttribute("Effect1", this.effect1),
+                    new XAttribute("Effect2", this.effect2)
+                );
+            }
+            return root;
+        }
+
+        public static Corner FromXML(XElement xml)
+        {
+            return new Corner(xml);
+        }
+
+        private Corner(XElement xml)
+            : base(xml)
+        {
+            CornerType.TryParse(xml.Attribute("CornerType").Value, out this.cornerType);
+            if (this.cornerType != CornerType.Right)
+            {
+                this.radius = (double)xml.Attribute("Radius");
+                this.effect1 = (double)xml.Attribute("Effect1");
+                this.effect2 = (double)xml.Attribute("Effect2");
+            }
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

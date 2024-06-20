@@ -1,13 +1,15 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Text.Internal.Sequences
 {
     /// <summary>
     /// La classe Constant produit des séquences de puces prédéfinies. Chaque
     /// niveau possède sa puce.
     /// </summary>
-    public class Constant : Generator.Sequence
+    public class Constant : Generator.Sequence, Common.Support.IXMLSerializable<Constant>
     {
         public Constant()
             : this("\u25CF") { }
@@ -50,6 +52,26 @@ namespace Epsitec.Common.Text.Internal.Sequences
         protected override void Setup(string argument)
         {
             this.constant = argument;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Constant",
+                base.IterXMLParts(),
+                new XAttribute("Constant", this.constant)
+            );
+        }
+
+        public static Constant FromXML(XElement xml)
+        {
+            return new Constant(xml);
+        }
+
+        private Constant(XElement xml)
+            : base(xml)
+        {
+            this.constant = xml.Attribute("Constant").Value;
         }
 
         private string constant;

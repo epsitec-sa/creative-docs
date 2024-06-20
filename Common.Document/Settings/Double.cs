@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Double contient un réglage numérique.
     /// </summary>
     [System.Serializable()]
-    public class Double : Abstract
+    public class Double : Abstract, Support.IXMLSerializable<Double>
     {
         public Double(Document document, string name)
             : base(document, name)
@@ -359,20 +360,16 @@ namespace Epsitec.Common.Document.Settings
                         return this.document.Modifier.DimensionDecimal;
 
                     case "TextGridStep":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+                        return this.document.Settings.DrawingSettings.TextGridStep;
 
                     case "TextGridSubdiv":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextGridSubdiv;
+                        return this.document.Settings.DrawingSettings.TextGridSubdiv;
 
                     case "TextGridOffset":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
+                        return this.document.Settings.DrawingSettings.TextGridOffset;
 
                     case "TextFontSampleHeight":
-                        return this.document
-                            .Modifier
-                            .ActiveViewer
-                            .DrawingContext
-                            .TextFontSampleHeight;
+                        return this.document.Settings.DrawingSettings.TextFontSampleHeight;
                 }
 
                 return 0.0;
@@ -523,20 +520,19 @@ namespace Epsitec.Common.Document.Settings
                         break;
 
                     case "TextGridStep":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep = value;
+                        this.document.Settings.DrawingSettings.TextGridStep = value;
                         break;
 
                     case "TextGridSubdiv":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextGridSubdiv = value;
+                        this.document.Settings.DrawingSettings.TextGridSubdiv = value;
                         break;
 
                     case "TextGridOffset":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset = value;
+                        this.document.Settings.DrawingSettings.TextGridOffset = value;
                         break;
 
                     case "TextFontSampleHeight":
-                        this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight =
-                            value;
+                        this.document.Settings.DrawingSettings.TextFontSampleHeight = value;
                         break;
                 }
             }
@@ -667,6 +663,29 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Double otherDouble = (Double)other;
+            return base.HasEquivalentData(other) && this.Value == otherDouble.Value;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("Double", base.IterXMLParts(), new XAttribute("Value", this.Value));
+        }
+
+        public static Double FromXML(XElement xml)
+        {
+            return new Double(xml);
+        }
+
+        private Double(XElement xml)
+            : base(xml)
+        {
+            this.Value = double.Parse(xml.Attribute("Value").Value);
+            this.Initialize();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

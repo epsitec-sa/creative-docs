@@ -13,9 +13,6 @@ namespace Epsitec.Common.Document
     public delegate void BookPanelEventHandler(string page, string sub);
     public delegate void SettingsEventHandler(string book, string tab);
 
-    /// <summary>
-    /// Summary description for Notifier.
-    /// </summary>
     public class Notifier
     {
         public Notifier(Document document)
@@ -75,7 +72,7 @@ namespace Epsitec.Common.Document
             this.selNamesChanged = true;
 
             // (*REM1*)	Il ne faut surtout pas dire que le texte a changé, car DocumentEditor appelle
-            //			document.SetDirtySerialize lorsque cet événement arrive.
+            //			document.SetDocumentDirtySerialize lorsque cet événement arrive.
 
             this.NotifyArea();
         }

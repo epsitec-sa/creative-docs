@@ -1,13 +1,15 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Drawing
 {
     using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 
     [System.Serializable]
     [System.ComponentModel.TypeConverter(typeof(Size.Converter))]
-    public struct Size
+    public struct Size : Support.IXMLSerializable<Size>
     {
         public Size(double width, double height)
         {
@@ -206,6 +208,32 @@ namespace Epsitec.Common.Drawing
                 System.Math.Max(0, a.Width - b.Width),
                 System.Math.Max(0, a.Height - b.Height)
             );
+        }
+
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            return this == (Size)other;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Size",
+                new XAttribute("width", this.Width),
+                new XAttribute("height", this.Height)
+            );
+        }
+
+        public static Size FromXML(XElement xml)
+        {
+            return new Size(xml);
+        }
+
+        private Size(XElement xml)
+        {
+            XElement root = xml.Element("Size");
+            this.width = (double)root.Attribute("width");
+            this.height = (double)root.Attribute("height");
         }
 
         #region Converter Class

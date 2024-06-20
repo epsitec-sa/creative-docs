@@ -1,5 +1,7 @@
-using Epsitec.Common.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -7,7 +9,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe ExportPDFInfo contient tous les réglages pour l'exportation PDF.
     /// </summary>
     [System.Serializable()]
-    public class ExportPDFInfo : ISerializable
+    public class ExportPDFInfo : ISerializable, Support.IXMLSerializable<ExportPDFInfo>
     {
         public ExportPDFInfo(Document document)
         {
@@ -182,6 +184,97 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            ExportPDFInfo otherExportPDFInfo = (ExportPDFInfo)other;
+            return this.pageRange == otherExportPDFInfo.pageRange
+                && this.pageFrom == otherExportPDFInfo.pageFrom
+                && this.pageTo == otherExportPDFInfo.pageTo
+                && this.debord == otherExportPDFInfo.debord
+                && this.target == otherExportPDFInfo.target
+                && this.targetLength == otherExportPDFInfo.targetLength
+                && this.targetWidth == otherExportPDFInfo.targetWidth
+                && this.targetOffset == otherExportPDFInfo.targetOffset
+                && this.textCurve == otherExportPDFInfo.textCurve
+                && this.execute == otherExportPDFInfo.execute
+                && this.colorConversion == otherExportPDFInfo.colorConversion
+                && this.imageCompression == otherExportPDFInfo.imageCompression
+                && this.jpegQuality == otherExportPDFInfo.jpegQuality
+                && this.imageMinDpi == otherExportPDFInfo.imageMinDpi
+                && this.imageMaxDpi == otherExportPDFInfo.imageMaxDpi
+                && this.imageNameFilters.SequenceEqual(otherExportPDFInfo.imageNameFilters)
+                && this.bleedEvenMargins.HasEquivalentData(otherExportPDFInfo.bleedEvenMargins)
+                && this.bleedOddMargins.HasEquivalentData(otherExportPDFInfo.bleedOddMargins);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "ExportPDFInfo",
+                new XAttribute("PageRange", this.pageRange),
+                new XAttribute("PageFrom", this.pageFrom),
+                new XAttribute("PageTo", this.pageTo),
+                new XAttribute("Debord", this.debord),
+                new XAttribute("Target", this.target),
+                new XAttribute("TargetLength", this.targetLength),
+                new XAttribute("TargetWidth", this.targetWidth),
+                new XAttribute("TargetOffset", this.targetOffset),
+                new XAttribute("TextCurve", this.textCurve),
+                new XAttribute("Execute", this.execute),
+                new XAttribute("ColorConversion", this.colorConversion),
+                new XAttribute("ImageCompression", this.imageCompression),
+                new XAttribute("JpegQuality", this.jpegQuality),
+                new XAttribute("ImageMinDpi", this.imageMinDpi),
+                new XAttribute("ImageMaxDpi", this.imageMaxDpi),
+                new XElement(
+                    "ImageNameFilters",
+                    this.imageNameFilters.Select(filter => new XElement("Filter", filter))
+                ),
+                new XElement("BleedEvenMargins", this.bleedEvenMargins.ToXML()),
+                new XElement("BleedOddMargins", this.bleedOddMargins.ToXML())
+            );
+        }
+
+        public static ExportPDFInfo FromXML(XElement xml)
+        {
+            return new ExportPDFInfo(xml);
+        }
+
+        private ExportPDFInfo(XElement xml)
+        {
+            PrintRange.TryParse(xml.Attribute("PageRange").Value, out this.pageRange);
+            this.pageFrom = int.Parse(xml.Attribute("PageFrom").Value);
+            this.pageTo = int.Parse(xml.Attribute("PageTo").Value);
+            this.debord = double.Parse(xml.Attribute("Debord").Value);
+            this.target = bool.Parse(xml.Attribute("Target").Value);
+            this.targetLength = double.Parse(xml.Attribute("TargetLength").Value);
+            this.targetWidth = double.Parse(xml.Attribute("TargetWidth").Value);
+            this.targetOffset = double.Parse(xml.Attribute("TargetOffset").Value);
+            this.textCurve = bool.Parse(xml.Attribute("TextCurve").Value);
+            this.execute = bool.Parse(xml.Attribute("Execute").Value);
+            PDF.ColorConversion.TryParse(
+                xml.Attribute("ColorConversion").Value,
+                out this.colorConversion
+            );
+            PDF.ImageCompression.TryParse(
+                xml.Attribute("ImageCompression").Value,
+                out this.imageCompression
+            );
+            this.jpegQuality = (double)xml.Attribute("JpegQuality");
+            this.imageMinDpi = double.Parse(xml.Attribute("ImageMinDpi").Value);
+            this.imageMaxDpi = double.Parse(xml.Attribute("ImageMaxDpi").Value);
+            this.imageNameFilters = xml.Element("ImageNameFilters")
+                .Elements()
+                .Select(filter => filter.Value)
+                .ToArray();
+            this.bleedEvenMargins = Margins.FromXML(
+                xml.Element("BleedEvenMargins").Element("Margins")
+            );
+            this.bleedOddMargins = Margins.FromXML(
+                xml.Element("BleedOddMargins").Element("Margins")
+            );
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise les réglages.

@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe String contient un réglage numérique.
     /// </summary>
     [System.Serializable()]
-    public class String : Abstract
+    public class String : Abstract, Support.IXMLSerializable<String>
     {
         public String(Document document, string name)
             : base(document, name)
@@ -62,6 +63,29 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            String otherString = (String)other;
+            return base.HasEquivalentData(other) && this.Value == otherString.Value;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("String", base.IterXMLParts(), new XAttribute("Value", this.Value));
+        }
+
+        public static String FromXML(XElement xml)
+        {
+            return new String(xml);
+        }
+
+        private String(XElement xml)
+            : base(xml)
+        {
+            this.Value = xml.Attribute("Value").Value;
+            this.Initialize();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,9 @@ namespace Epsitec.Common.Text.Properties
     /// La classe ConditionalProperty définit la condition qui doit être remplie
     /// pour que le texte soit considéré comme visible.
     /// </summary>
-    public class ConditionalProperty : Property
+    public class ConditionalProperty
+        : Property,
+            Common.Support.IXMLSerializable<ConditionalProperty>
     {
         public ConditionalProperty() { }
 
@@ -57,6 +60,32 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeString(this.condition),
                 /**/SerializerSupport.SerializeBoolean(this.showIfTrue)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            ConditionalProperty other = (ConditionalProperty)otherWritable;
+            return this.condition == other.condition && this.showIfTrue == other.showIfTrue;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "ConditionalProperty",
+                new XAttribute("Condition", this.condition),
+                new XAttribute("ShowIfTrue", this.showIfTrue)
+            );
+        }
+
+        public static ConditionalProperty FromXML(XElement xml)
+        {
+            return new ConditionalProperty(xml);
+        }
+
+        private ConditionalProperty(XElement xml)
+        {
+            this.condition = xml.Attribute("Condition").Value;
+            this.showIfTrue = (bool)xml.Attribute("ShowIfTrue");
         }
 
         public override void DeserializeFromText(

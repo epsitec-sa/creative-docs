@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Tension représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Tension : Abstract
+    public class Tension : Abstract, Support.IXMLSerializable<Tension>
     {
         public Tension(Document document, Type type)
             : base(document, type) { }
@@ -86,6 +87,32 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Tension otherTension = (Tension)other;
+            return base.HasEquivalentData(other) && this.tensionValue == otherTension.tensionValue;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Tension",
+                base.IterXMLParts(),
+                new XAttribute("TensionValue", this.tensionValue)
+            );
+        }
+
+        public static Tension FromXML(XElement xml)
+        {
+            return new Tension(xml);
+        }
+
+        private Tension(XElement xml)
+            : base(xml)
+        {
+            this.tensionValue = (double)xml.Attribute("TensionValue");
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

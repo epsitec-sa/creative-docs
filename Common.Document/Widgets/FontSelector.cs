@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
@@ -98,7 +99,7 @@ namespace Epsitec.Common.Document.Widgets
             set { this.quickCount = value; }
         }
 
-        public System.Collections.ArrayList SelectedList
+        public List<string> SelectedList
         {
             //	Liste des FontFace (string) sélectionné (sélection multiple).
             get { return this.selectedList; }
@@ -642,7 +643,7 @@ namespace Epsitec.Common.Document.Widgets
         protected string fontFace;
         protected System.Collections.ArrayList fontList = null;
         protected int quickCount = 0;
-        protected System.Collections.ArrayList selectedList = null;
+        protected List<string> selectedList = null;
         protected Common.Document.Widgets.FontSample[] samples;
         protected VScroller scroller;
         protected int firstLine = 0;

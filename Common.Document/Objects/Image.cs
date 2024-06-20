@@ -1,6 +1,7 @@
-using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Image est la classe de l'objet graphique "image bitmap".
     /// </summary>
     [System.Serializable()]
-    public class Image : Objects.Abstract
+    public class Image : Objects.Abstract, Support.IXMLSerializable<Image>
     {
         public Image(Document document, Objects.Abstract model)
             : base(document, model)
@@ -910,6 +911,19 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Image", this.IterXMLParts());
+        }
+
+        public static Image FromXML(XElement xml)
+        {
+            return new Image(xml);
+        }
+
+        private Image(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -48,13 +50,16 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Property représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public abstract class Abstract : System.IComparable, ISerializable
+    public abstract class Abstract : System.IComparable, ISerializable, IXMLWritable
     {
         public Abstract(Document document, Type type)
         {
             this.document = document;
             this.type = type;
-            this.owners = new UndoableList(this.document, UndoableListType.ObjectsInsideProperty);
+            this.owners = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideProperty
+            );
             this.Initialize();
         }
 
@@ -258,7 +263,7 @@ namespace Epsitec.Common.Document.Properties
             return Type.None;
         }
 
-        public UndoableList Owners
+        public SerializableUndoableList Owners
         {
             //	Liste des propriétaires. Normalement, un propriétaire est un Objects.Abstract.
             //	Mais une propriété "isMulti" contient une liste de propriétaires de type
@@ -949,7 +954,36 @@ namespace Epsitec.Common.Document.Properties
         #endregion
 
 
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            Abstract otherAbstract = (Abstract)other;
+            if (this.type == otherAbstract.type && this.isStyle == otherAbstract.isStyle)
+            {
+                return true;
+            }
+            return false;
+        }
+
         #region Serialization
+        public abstract XElement ToXML();
+
+        public IEnumerable<XObject> IterXMLParts()
+        {
+            yield return new XAttribute("Type", this.type);
+            yield return new XAttribute("IsStyle", this.isStyle);
+        }
+
+        protected Abstract(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            Type.TryParse(xml.Attribute("Type").Value, out this.type);
+            this.isStyle = bool.Parse(xml.Attribute("IsStyle").Value);
+            this.owners = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideProperty
+            );
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.
@@ -968,14 +1002,17 @@ namespace Epsitec.Common.Document.Properties
             {
                 this.oldStyleName = info.GetString("StyleName");
             }
-            this.owners = new UndoableList(this.document, UndoableListType.ObjectsInsideProperty);
+            this.owners = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideProperty
+            );
         }
         #endregion
 
 
         protected Document document;
         protected Type type = Type.None;
-        protected UndoableList owners;
+        protected SerializableUndoableList owners;
         protected string oldStyleName = "";
         protected bool isOnlyForCreation = false;
         protected bool isStyle = false;

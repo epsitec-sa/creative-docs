@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Serialization;
 using Epsitec.Common.Text;
 using Epsitec.Common.Widgets;
 
@@ -66,7 +69,7 @@ namespace Epsitec.Common.Document
     /// Summary description for Document.
     /// </summary>
     [System.Serializable()]
-    public class Document : ISerializable
+    public class Document : ISerializable, IXMLSerializable<Document>
     {
         // ********************************************************************
         // TODO bl-net8-cross printing
@@ -150,11 +153,23 @@ namespace Epsitec.Common.Document
             }
 
             this.hotSpot = new Point(0, 0);
-            this.objects = new UndoableList(this, UndoableListType.ObjectsInsideDocument);
-            this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
-            this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
-            this.aggregates = new UndoableList(this, UndoableListType.AggregatesInsideDocument);
-            this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+            this.objects = new SerializableUndoableList(
+                this,
+                UndoableListType.ObjectsInsideDocument
+            );
+            this.propertiesAuto = new SerializableUndoableList(
+                this,
+                UndoableListType.PropertiesInsideDocument
+            );
+            this.propertiesSel = new SerializableUndoableList(
+                this,
+                UndoableListType.PropertiesInsideDocument
+            );
+            this.aggregates = new SerializableUndoableList(
+                this,
+                UndoableListType.AggregatesInsideDocument
+            );
+            this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
             this.exportDirectory = "";
             this.exportFilename = "";
             this.exportFilter = 0;
@@ -469,7 +484,7 @@ namespace Epsitec.Common.Document
             return state;
         }
 
-        public UndoableList DocumentObjects
+        public SerializableUndoableList DocumentObjects
         {
             //	Liste des objets de ce document.
             get { return this.objects; }
@@ -503,25 +518,25 @@ namespace Epsitec.Common.Document
             set { this.vRuler = value; }
         }
 
-        public UndoableList PropertiesAuto
+        public SerializableUndoableList PropertiesAuto
         {
             //	Liste des propriétés automatiques de ce document.
             get { return this.propertiesAuto; }
         }
 
-        public UndoableList PropertiesSel
+        public SerializableUndoableList PropertiesSel
         {
             //	Liste des propriétés sélectionnées de ce document.
             get { return this.propertiesSel; }
         }
 
-        public UndoableList Aggregates
+        public SerializableUndoableList Aggregates
         {
             //	Liste des aggrégats de ce document.
             get { return this.aggregates; }
         }
 
-        public UndoableList TextFlows
+        public SerializableUndoableList TextFlows
         {
             //	Liste des flux de textes de ce document.
             get { return this.textFlows; }
@@ -622,7 +637,7 @@ namespace Epsitec.Common.Document
                         this.modifier.InsertOpletSize();
                         this.size = value;
                         this.SetDirtySerialize(CacheBitmapChanging.All);
-                        this.modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
+                        this.modifier.ActiveViewer?.DrawingContext.ZoomPageAndCenter();
                         this.notifier.NotifyAllChanged();
                         this.modifier.OpletQueueValidateAction();
 
@@ -795,9 +810,12 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            foreach (TextFlow flow in this.textFlows)
+            if (this.textFlows != null)
             {
-                flow.NotifyAboutToExecuteCommand();
+                foreach (TextFlow flow in this.textFlows)
+                {
+                    flow.NotifyAboutToExecuteCommand();
+                }
             }
 
             this.SetDirtyCacheBitmap(changing);
@@ -912,12 +930,12 @@ namespace Epsitec.Common.Document
                     if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
                     {
                         this.Filename = filename;
-                        this.globalSettings.LastFilenameAdd(filename);
+                        this.globalSettings?.LastFilenameAdd(filename);
                         this.ClearDirtySerialize();
                     }
                     if (ext == DocumentFileExtension.CrMod || ext == DocumentFileExtension.IconMod)
                     {
-                        this.globalSettings.LastModelAdd(filename);
+                        this.globalSettings?.LastModelAdd(filename);
                     }
                 }
                 else
@@ -1162,7 +1180,7 @@ namespace Epsitec.Common.Document
                 if (this.Modifier != null && doc.readRootStack != null)
                 {
                     int pageNumber = this.Modifier.PrintablePageRank(0); // numéro de la première page non modèle du document
-                    this.Modifier.ActiveViewer.DrawingContext.InternalPageLayer(pageNumber, 0);
+                    this.Modifier.ActiveViewer?.DrawingContext.InternalPageLayer(pageNumber, 0);
                 }
             }
 
@@ -1184,7 +1202,7 @@ namespace Epsitec.Common.Document
 
         //	Utilisé par les constructeurs de désérialisation du genre:
         //	protected Toto(SerializationInfo info, StreamingContext context)
-        public static Document ReadDocument = null;
+        private static Document readDocument = null;
         public static long ReadRevision = 0;
 
         private void ReadFinalize()
@@ -1310,7 +1328,7 @@ namespace Epsitec.Common.Document
             if (this.Modifier != null)
             {
                 this.Modifier.UpdatePageAfterChanging();
-                this.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+                this.Modifier.ActiveViewer?.DrawingContext.UpdateAfterPageChanged();
                 modQueueCtx.RestorePreviousState();
                 this.Modifier.OpletQueuePurge();
             }
@@ -1470,113 +1488,115 @@ namespace Epsitec.Common.Document
             int undoCount = this.modifier.OpletQueue.UndoActionCount;
             DocumentFileExtension ext = Document.GetDocumentFileExtension(filename);
 
-            try
-            {
-                this.Modifier.DeselectAll();
+            XDocument xmlDocument = new XDocument(this.ToXML());
+            xmlDocument.Save(filename);
+            //try
+            //{
+            //    this.Modifier.DeselectAll();
 
-                this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
+            //    this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
 
-                if (this.ioDocumentManager == null)
-                {
-                    this.ioDocumentManager = new DocumentManager();
-                }
+            //    if (this.ioDocumentManager == null)
+            //    {
+            //        this.ioDocumentManager = new DocumentManager();
+            //    }
 
-                if (this.type == DocumentType.Pictogram)
-                {
-                    string err = this.PictogramCheckBeforeWrite();
-                    if (err != "")
-                    {
-                        return err;
-                    }
+            //    if (this.type == DocumentType.Pictogram)
+            //    {
+            //        string err = this.PictogramCheckBeforeWrite();
+            //        if (err != "")
+            //        {
+            //            return err;
+            //        }
 
-                    this.ioDocumentManager.Save(
-                        filename,
-                        delegate(System.IO.Stream stream)
-                        {
-                            Document.WriteIdentifier(stream, this.ioType);
+            //        this.ioDocumentManager.Save(
+            //            filename,
+            //            delegate(System.IO.Stream stream)
+            //            {
+            //                Document.WriteIdentifier(stream, this.ioType);
 
-                            if (this.ioType == IOType.BinaryCompress)
-                            {
-                                //?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
-                                Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
-                                BinaryFormatter formatter = new BinaryFormatter();
-                                formatter.Serialize(compressor, this);
-                                compressor.Close();
-                                return true;
-                            }
-                            else if (this.ioType == IOType.SoapUncompress)
-                            {
-                                SoapFormatter formatter = new SoapFormatter();
-                                formatter.Serialize(stream, this);
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                    );
-                }
-                else
-                {
-                    this.FontUpdate();
-                    this.ImageFlushUnused();
-                    if (this.imageCache != null)
-                    {
-                        this.imageCache.GenerateShortNames();
-                    }
-                    this.ImageUpdate();
+            //                if (this.ioType == IOType.BinaryCompress)
+            //                {
+            //                    //?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
+            //                    Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
+            //                    BinaryFormatter formatter = new BinaryFormatter();
+            //                    formatter.Serialize(compressor, this);
+            //                    compressor.Close();
+            //                    return true;
+            //                }
+            //                else if (this.ioType == IOType.SoapUncompress)
+            //                {
+            //                    SoapFormatter formatter = new SoapFormatter();
+            //                    formatter.Serialize(stream, this);
+            //                    return true;
+            //                }
+            //                else
+            //                {
+            //                    return false;
+            //                }
+            //            }
+            //        );
+            //    }
+            //    else
+            //    {
+            //        this.FontUpdate();
+            //        this.ImageFlushUnused();
+            //        if (this.imageCache != null)
+            //        {
+            //            this.imageCache.GenerateShortNames();
+            //        }
+            //        this.ImageUpdate();
 
-                    byte[] data;
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        Document.WriteIdentifier(stream, this.ioType);
+            //        byte[] data;
+            //        using (MemoryStream stream = new MemoryStream())
+            //        {
+            //            Document.WriteIdentifier(stream, this.ioType);
 
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        formatter.Serialize(stream, this);
-                        data = stream.ToArray();
-                    }
+            //            BinaryFormatter formatter = new BinaryFormatter();
+            //            formatter.Serialize(stream, this);
+            //            data = stream.ToArray();
+            //        }
 
-                    ZipFile zip = new ZipFile();
-                    zip.AddEntry("document.data", data, 0);
-                    this.WriteMiniature(zip, 1, ext == DocumentFileExtension.CrMod);
-                    this.WriteStatistics(zip, 2);
-                    if (this.imageCache != null)
-                    {
-                        this.imageCache.WriteData(zip, this.imageIncludeMode);
-                    }
-                    this.FontWriteAll(zip);
-                    zip.CompressionLevel = 6;
+            //        ZipFile zip = new ZipFile();
+            //        zip.AddEntry("document.data", data, 0);
+            //        this.WriteMiniature(zip, 1, ext == DocumentFileExtension.CrMod);
+            //        this.WriteStatistics(zip, 2);
+            //        if (this.imageCache != null)
+            //        {
+            //            this.imageCache.WriteData(zip, this.imageIncludeMode);
+            //        }
+            //        this.FontWriteAll(zip);
+            //        zip.CompressionLevel = 6;
 
-                    this.ioDocumentManager.Save(
-                        filename,
-                        delegate(System.IO.Stream stream)
-                        {
-                            zip.SaveFile(stream);
-                            return true;
-                        }
-                    );
-                }
-            }
-            catch (System.Exception e)
-            {
-                return e.Message;
-            }
-            finally
-            {
-                while (undoCount < this.modifier.OpletQueue.UndoActionCount)
-                {
-                    this.modifier.OpletQueue.UndoAction();
-                }
+            //        this.ioDocumentManager.Save(
+            //            filename,
+            //            delegate(System.IO.Stream stream)
+            //            {
+            //                zip.SaveFile(stream);
+            //                return true;
+            //            }
+            //        );
+            //    }
+            //}
+            //catch (System.Exception e)
+            //{
+            //    return e.Message;
+            //}
+            //finally
+            //{
+            //    while (undoCount < this.modifier.OpletQueue.UndoActionCount)
+            //    {
+            //        this.modifier.OpletQueue.UndoAction();
+            //    }
 
-                this.modifier.OpletQueue.PurgeRedo();
-            }
+            //    this.modifier.OpletQueue.PurgeRedo();
+            //}
 
-            if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
-            {
-                this.Filename = filename;
-                this.ClearDirtySerialize();
-            }
+            //if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
+            //{
+            //    this.Filename = filename;
+            //    this.ClearDirtySerialize();
+            //}
             DocumentCache.Remove(filename);
             return "";
         }
@@ -1781,6 +1801,195 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
+        public static Document LoadFromXMLFile(string filename)
+        {
+            XDocument xdoc = XDocument.Load(filename);
+            return Document.FromXML(xdoc.Root);
+        }
+
+        public static Document FromXML(XElement root)
+        {
+            return new Document(root);
+        }
+
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            var otherDoc = (Document)other;
+            if (
+                !(
+                    this.Type == otherDoc.Type
+                    && this.Name == otherDoc.Name
+                    && this.uniqueObjectId == otherDoc.uniqueObjectId
+                    && this.uniqueAggregateId == otherDoc.uniqueAggregateId
+                    && this.uniqueParagraphStyleId == otherDoc.uniqueParagraphStyleId
+                    && this.uniqueCharacterStyleId == otherDoc.uniqueCharacterStyleId
+                )
+            )
+            {
+                return false;
+            }
+
+            if (this.type == DocumentType.Pictogram)
+            {
+                if (this.size != otherDoc.size || this.hotSpot != otherDoc.hotSpot)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                List<bool> checks =
+                [
+                    this.settings.HasEquivalentData(otherDoc.settings),
+                    this.exportFilename == otherDoc.exportFilename,
+                    this.exportFilter == otherDoc.exportFilter,
+                    this.modifier.ObjectMemory.HasEquivalentData(otherDoc.modifier.ObjectMemory),
+                    this.modifier.ObjectMemoryText.HasEquivalentData(
+                        otherDoc.modifier.ObjectMemoryText
+                    ),
+                    this.modifier?.ActiveViewer?.DrawingContext.GetRootStack()
+                        == otherDoc.modifier?.ActiveViewer?.DrawingContext.GetRootStack(),
+                    this.textContext.HasEquivalentData(otherDoc.textContext),
+                    this.textFlows.HasEquivalentData(otherDoc.textFlows),
+                    this.fontList?.HasEquivalentData(otherDoc.fontList)
+                        ?? this.fontList == otherDoc.fontList,
+                    this.fontIncludeMode == otherDoc.fontIncludeMode,
+                    this.imageIncludeMode == otherDoc.imageIncludeMode
+                ];
+                if (!(checks.All(x => x)))
+                {
+                    this.textContext.HasEquivalentData(otherDoc.textContext);
+                    return false;
+                }
+            }
+            return this.objects.HasEquivalentData(otherDoc.objects)
+                && this.propertiesAuto.HasEquivalentData(otherDoc.propertiesAuto)
+                && this.aggregates.HasEquivalentData(otherDoc.aggregates);
+        }
+
+        public XElement ToXML()
+        {
+            XElement root = new XElement("Document");
+            root.Add(new XAttribute("Type", this.type));
+            if (this.name != null)
+            {
+                root.Add(new XAttribute("Name", this.name));
+            }
+
+            if (this.type == DocumentType.Pictogram)
+            {
+                root.Add(new XElement("Size", this.size.ToXML()));
+                root.Add(new XElement("HotSpot", this.hotSpot.ToXML()));
+            }
+            else
+            {
+                root.Add(this.settings.ToXML());
+                root.Add(new XAttribute("ExportFilename", this.exportFilename));
+                root.Add(new XAttribute("ExportFilter", this.exportFilter));
+
+                root.Add(new XElement("ObjectMemory", this.modifier.ObjectMemory.ToXML()));
+                root.Add(new XElement("ObjectMemoryText", this.modifier.ObjectMemoryText.ToXML()));
+
+                if (this.modifier.ActiveViewer != null)
+                {
+                    root.Add(
+                        new XElement(
+                            "RootStack",
+                            this.modifier.ActiveViewer.DrawingContext.GetRootStack()
+                                .Select(value => new XElement("Item", value))
+                        )
+                    );
+                }
+
+                if (this.textContext != null)
+                {
+                    root.Add(this.textContext.ToXML());
+                }
+
+                root.Add(new XElement("TextFlows", this.textFlows.ToXML()));
+                if (this.fontList != null)
+                {
+                    root.Add(
+                        new XElement("FontList", this.fontList.Select(fontname => fontname.ToXML()))
+                    );
+                }
+                root.Add(new XAttribute("FontIncludeMode", this.fontIncludeMode));
+                root.Add(new XAttribute("ImageIncludeMode", this.imageIncludeMode));
+            }
+
+            root.Add(new XAttribute("UniqueObjectId", this.uniqueObjectId));
+            root.Add(new XAttribute("UniqueAggregateId", this.uniqueAggregateId));
+            root.Add(new XAttribute("UniqueParagraphStyleId", this.uniqueParagraphStyleId));
+            root.Add(new XAttribute("UniqueCharacterStyleId", this.uniqueCharacterStyleId));
+            root.Add(new XElement("Objects", this.objects.ToXML()));
+            root.Add(new XElement("Properties", this.propertiesAuto.ToXML()));
+            root.Add(new XElement("Aggregates", this.aggregates.ToXML()));
+            return root;
+        }
+
+        private Document(XElement xml)
+            : this(
+                (DocumentType)DocumentType.Parse(typeof(DocumentType), xml.Attribute("Type").Value),
+                DocumentMode.Modify,
+                InstallType.Full,
+                DebugMode.Release,
+                null,
+                null,
+                null,
+                null
+            )
+        {
+            Document.ReadDocument = this; // bl-converter ugly, refactor
+            this.name = xml.Attribute("Name")?.Value;
+
+            if (this.type == DocumentType.Pictogram)
+            {
+                this.size = Size.FromXML(xml.Element("Size"));
+                this.hotSpot = Point.FromXML(xml.Element("HotSpot"));
+
+                this.textContext = null;
+                this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
+            }
+            else
+            {
+                this.settings = Common.Document.Settings.Settings.FromXML(xml.Element("Settings"));
+                this.exportFilename = xml.Attribute("ExportFilename").Value;
+                this.exportFilter = (int)xml.Attribute("ExportFilter");
+                this.modifier.ObjectMemory = Objects.Memory.FromXML(
+                    xml.Element("ObjectMemory").Element("Memory")
+                );
+                this.modifier.ObjectMemoryText = Objects.Memory.FromXML(
+                    xml.Element("ObjectMemoryText").Element("Memory")
+                );
+                this.readRootStack = xml.Element("RootStack")
+                    ?.Elements()
+                    ?.Select(item => int.Parse(item.Value))
+                    ?.ToList();
+                this.textContext = TextContext.FromXML(xml.Element("TextContext"));
+                this.textFlows = SerializableUndoableList.FromXML(xml.Element("TextFlows"));
+                this.fontList = xml.Element("FontList")
+                    ?.Elements()
+                    ?.Select(OpenType.FontName.FromXML)
+                    ?.ToList();
+                FontIncludeMode.TryParse(
+                    xml.Attribute("FontIncludeMode").Value,
+                    out this.fontIncludeMode
+                );
+                ImageIncludeMode.TryParse(
+                    xml.Attribute("ImageIncludeMode").Value,
+                    out this.imageIncludeMode
+                );
+            }
+
+            this.uniqueObjectId = (int)xml.Attribute("UniqueObjectId");
+            this.uniqueAggregateId = (int)xml.Attribute("UniqueAggregateId");
+            this.uniqueParagraphStyleId = (int)xml.Attribute("UniqueParagraphStyleId");
+            this.uniqueCharacterStyleId = (int)xml.Attribute("UniqueCharacterStyleId");
+            this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
+            this.propertiesAuto = SerializableUndoableList.FromXML(xml.Element("Properties"));
+            this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le document.
@@ -1837,7 +2046,7 @@ namespace Epsitec.Common.Document
                 this.hotSpot = (Point)info.GetValue("HotSpot", typeof(Point));
 
                 this.textContext = null;
-                this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+                this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
             }
             else
             {
@@ -1872,8 +2081,7 @@ namespace Epsitec.Common.Document
 
                 if (this.IsRevisionGreaterOrEqual(1, 0, 8))
                 {
-                    this.readRootStack = (System.Collections.ArrayList)
-                        info.GetValue("RootStack", typeof(System.Collections.ArrayList));
+                    this.readRootStack = (List<int>)info.GetValue("RootStack", typeof(List<int>));
                 }
                 else
                 {
@@ -1891,11 +2099,12 @@ namespace Epsitec.Common.Document
                         this.textContext.Deserialize(textContextData);
                     }
 
-                    this.textFlows = (UndoableList)info.GetValue("TextFlows", typeof(UndoableList));
+                    this.textFlows = (SerializableUndoableList)
+                        info.GetValue("TextFlows", typeof(SerializableUndoableList));
                 }
                 else
                 {
-                    this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+                    this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
                 }
 
                 if (this.IsRevisionGreaterOrEqual(2, 0, 1))
@@ -1924,17 +2133,20 @@ namespace Epsitec.Common.Document
             }
 
             this.uniqueObjectId = info.GetInt32("UniqueObjectId");
-            this.objects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
-            this.propertiesAuto = (UndoableList)info.GetValue("Properties", typeof(UndoableList));
+            this.objects = (SerializableUndoableList)
+                info.GetValue("Objects", typeof(SerializableUndoableList));
+            this.propertiesAuto = (SerializableUndoableList)
+                info.GetValue("Properties", typeof(SerializableUndoableList));
 
             if (this.IsRevisionGreaterOrEqual(1, 0, 23))
             {
-                this.aggregates = (UndoableList)info.GetValue("Aggregates", typeof(UndoableList));
+                this.aggregates = (SerializableUndoableList)
+                    info.GetValue("Aggregates", typeof(SerializableUndoableList));
                 this.uniqueAggregateId = info.GetInt32("UniqueAggregateId");
             }
             else
             {
-                this.aggregates = new UndoableList(
+                this.aggregates = new SerializableUndoableList(
                     Document.ReadDocument,
                     UndoableListType.AggregatesInsideDocument
                 );
@@ -3075,7 +3287,7 @@ namespace Epsitec.Common.Document
 
             protected Document document;
             protected bool onlySelected;
-            protected UndoableList list;
+            protected SerializableUndoableList list;
             protected int index;
         }
         #endregion
@@ -3168,7 +3380,7 @@ namespace Epsitec.Common.Document
 
             protected Document document;
             protected bool onlySelected;
-            protected UndoableList list;
+            protected SerializableUndoableList list;
             protected int index;
         }
         #endregion
@@ -3212,7 +3424,7 @@ namespace Epsitec.Common.Document
                 //	Implémentation de IEnumerator:
                 this.stack = new System.Collections.Stack();
 
-                UndoableList list = this.document.DocumentObjects;
+                SerializableUndoableList list = this.document.DocumentObjects;
                 if (this.root != null)
                 {
                     list = this.root.Objects;
@@ -3359,7 +3571,7 @@ namespace Epsitec.Common.Document
                 //	Implémentation de IEnumerator:
                 this.stack = new System.Collections.Stack();
 
-                UndoableList list = this.document.DocumentObjects;
+                SerializableUndoableList list = this.document.DocumentObjects;
                 if (this.root != null)
                 {
                     list = this.root.Objects;
@@ -3477,13 +3689,13 @@ namespace Epsitec.Common.Document
         #region TreeInfo
         protected class TreeInfo
         {
-            public TreeInfo(UndoableList list, int parent)
+            public TreeInfo(SerializableUndoableList list, int parent)
             {
                 this.list = list;
                 this.parent = parent;
             }
 
-            public UndoableList List
+            public SerializableUndoableList List
             {
                 get { return this.list; }
             }
@@ -3493,7 +3705,7 @@ namespace Epsitec.Common.Document
                 get { return this.parent; }
             }
 
-            protected UndoableList list;
+            protected SerializableUndoableList list;
             protected int parent;
         }
         #endregion
@@ -3578,6 +3790,12 @@ namespace Epsitec.Common.Document
             }
         }
 
+        public static Document ReadDocument
+        {
+            get => readDocument;
+            set => readDocument = value;
+        }
+
         protected static int uniqueIDGenerator = 0;
         protected int uniqueID;
         #endregion
@@ -3607,11 +3825,11 @@ namespace Epsitec.Common.Document
         protected string exportFilename;
         protected int exportFilter;
         protected bool isDirtySerialize;
-        protected UndoableList objects;
-        protected UndoableList propertiesAuto;
-        protected UndoableList propertiesSel;
-        protected UndoableList aggregates;
-        protected UndoableList textFlows;
+        protected SerializableUndoableList objects;
+        protected SerializableUndoableList propertiesAuto;
+        protected SerializableUndoableList propertiesSel;
+        protected SerializableUndoableList aggregates;
+        protected SerializableUndoableList textFlows;
         protected Settings.Settings settings;
         protected Modifier modifier;
         protected ImageCache imageCache;
@@ -3629,7 +3847,7 @@ namespace Epsitec.Common.Document
         protected DocumentManager ioDocumentManager;
         protected Objects.Memory readObjectMemory;
         protected Objects.Memory readObjectMemoryText;
-        protected System.Collections.ArrayList readRootStack;
+        protected List<int> readRootStack;
         protected bool isSurfaceRotation;
         protected double surfaceRotationAngle;
         protected int uniqueObjectId;

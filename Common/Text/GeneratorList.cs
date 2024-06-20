@@ -1,6 +1,11 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
+
 namespace Epsitec.Common.Text
 {
     using EventHandler = Epsitec.Common.Support.EventHandler;
@@ -9,17 +14,17 @@ namespace Epsitec.Common.Text
     /// La classe GeneratorList gère la liste des générateurs, accessibles par
     /// leur nom.
     /// </summary>
-    public sealed class GeneratorList
+    public sealed class GeneratorList : Common.Support.IXMLSerializable<GeneratorList>
     {
         public GeneratorList(Text.TextContext context)
         {
             this.context = context;
-            this.generators = new System.Collections.Hashtable();
+            this.generators = new();
         }
 
         public Generator this[string name]
         {
-            get { return this.generators[name] as Generator; }
+            get { return this.generators[name]; }
         }
 
         public Generator this[Properties.GeneratorProperty property]
@@ -46,7 +51,7 @@ namespace Epsitec.Common.Text
 
         public Generator NewGenerator(string name)
         {
-            System.Diagnostics.Debug.Assert(this.generators.Contains(name) == false);
+            System.Diagnostics.Debug.Assert(this.generators.ContainsKey(name) == false);
             System.Diagnostics.Debug.Assert(name != null);
             System.Diagnostics.Debug.Assert(name.Length > 0);
             System.Diagnostics.Debug.Assert(name != "*");
@@ -65,7 +70,7 @@ namespace Epsitec.Common.Text
             Generator model
         )
         {
-            System.Diagnostics.Debug.Assert(this.generators.Contains(generator.Name));
+            System.Diagnostics.Debug.Assert(this.generators.ContainsKey(generator.Name));
 
             if (queue != null)
             {
@@ -81,7 +86,7 @@ namespace Epsitec.Common.Text
 
         public void DisposeGenerator(Generator generator)
         {
-            System.Diagnostics.Debug.Assert(this.generators.Contains(generator.Name));
+            System.Diagnostics.Debug.Assert(this.generators.ContainsKey(generator.Name));
 
             this.generators.Remove(generator.Name);
         }
@@ -142,6 +147,37 @@ namespace Epsitec.Common.Text
             }
         }
 
+        public bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            GeneratorList other = (GeneratorList)otherWritable;
+            return this.generators.Values.HasEquivalentData(other.generators.Values);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "GeneratorList",
+                new XElement("Generators", this.generators.Values.Select(tab => tab.ToXML()))
+            );
+        }
+
+        public static GeneratorList FromXML(XElement xml)
+        {
+            return new GeneratorList(xml);
+        }
+
+        private GeneratorList(XElement xml)
+        {
+            this.generators = xml.Element("Generators")
+                .Elements()
+                .Select(item =>
+                {
+                    Generator gen = Generator.FromXML(item);
+                    return (gen.Name, gen);
+                })
+                .ToDictionary();
+        }
+
         public void Deserialize(TextContext context, int version, string[] args, ref int offset)
         {
             int count = SerializerSupport.DeserializeInt(args[offset++]);
@@ -160,17 +196,17 @@ namespace Epsitec.Common.Text
 
         public void IncrementUserCount(string name)
         {
-            System.Diagnostics.Debug.Assert(this.generators.Contains(name));
+            System.Diagnostics.Debug.Assert(this.generators.ContainsKey(name));
 
-            Generator generator = this.generators[name] as Generator;
+            Generator generator = this.generators[name];
             generator.IncrementUserCount();
         }
 
         public void DecrementUserCount(string name)
         {
-            System.Diagnostics.Debug.Assert(this.generators.Contains(name));
+            System.Diagnostics.Debug.Assert(this.generators.ContainsKey(name));
 
-            Generator generator = this.generators[name] as Generator;
+            Generator generator = this.generators[name];
             generator.DecrementUserCount();
         }
 
@@ -181,7 +217,7 @@ namespace Epsitec.Common.Text
 
             foreach (string name in names)
             {
-                Generator generator = this.generators[name] as Generator;
+                Generator generator = this.generators[name];
 
                 System.Diagnostics.Debug.WriteLine(
                     string.Format("Generator '{0}' used {1} times.", name, generator.UserCount)
@@ -254,6 +290,6 @@ namespace Epsitec.Common.Text
         public event EventHandler Changed;
 
         private Text.TextContext context;
-        private System.Collections.Hashtable generators;
+        private Dictionary<string, Generator> generators;
     }
 }

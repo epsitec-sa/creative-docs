@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Text;
 
@@ -8,7 +9,10 @@ namespace Epsitec.Common.Document.Objects
     /// La classe TextBox2 est la classe de l'objet graphique "pavé de texte".
     /// </summary>
     [System.Serializable()]
-    public class TextBox2 : Objects.AbstractText, Text.ITextRenderer
+    public class TextBox2
+        : Objects.AbstractText,
+            Text.ITextRenderer,
+            Support.IXMLSerializable<TextBox2>
     {
         // ********************************************************************
         // TODO bl-net8-cross printing
@@ -1602,6 +1606,20 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+
+        public static TextBox2 FromXML(XElement xml)
+        {
+            return new TextBox2(xml);
+        }
+
+        private TextBox2(XElement xml)
+            : base(xml) { }
+
+        public override XElement ToXML()
+        {
+            return new XElement("TextBox2", this.IterXMLParts());
+        }
+
         protected TextBox2(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

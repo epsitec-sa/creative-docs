@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -37,7 +38,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Justif représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Justif : Abstract
+    public class Justif : Abstract, Support.IXMLSerializable<Justif>
     {
         public Justif(Document document, Type type)
             : base(document, type) { }
@@ -405,6 +406,48 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Justif otherJustif = (Justif)other;
+            return base.HasEquivalentData(other)
+                && this.horizontal == otherJustif.horizontal
+                && this.vertical == otherJustif.vertical
+                && this.orientation == otherJustif.orientation
+                && this.marginH == otherJustif.marginH
+                && this.marginV == otherJustif.marginV
+                && this.offsetV == otherJustif.offsetV;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Justif",
+                base.IterXMLParts(),
+                new XAttribute("Horizontal", this.horizontal),
+                new XAttribute("Vertical", this.vertical),
+                new XAttribute("Orientation", this.orientation),
+                new XAttribute("MarginH", this.marginH),
+                new XAttribute("MarginV", this.marginV),
+                new XAttribute("OffsetV", this.offsetV)
+            );
+        }
+
+        public static Justif FromXML(XElement xml)
+        {
+            return new Justif(xml);
+        }
+
+        private Justif(XElement xml)
+            : base(xml)
+        {
+            JustifHorizontal.TryParse(xml.Attribute("Horizontal").Value, out this.horizontal);
+            JustifVertical.TryParse(xml.Attribute("Vertical").Value, out this.vertical);
+            JustifOrientation.TryParse(xml.Attribute("Orientation").Value, out this.orientation);
+            this.marginH = (double)xml.Attribute("MarginH");
+            this.marginV = (double)xml.Attribute("MarginV");
+            this.offsetV = (double)xml.Attribute("OffsetV");
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

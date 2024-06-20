@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Bool représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Bool : Abstract
+    public class Bool : Abstract, Support.IXMLSerializable<Bool>
     {
         public Bool(Document document, Type type)
             : base(document, type) { }
@@ -85,6 +86,32 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Bool otherBool = (Bool)other;
+            return base.HasEquivalentData(other) && this.boolValue == otherBool.boolValue;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Bool",
+                base.IterXMLParts(),
+                new XAttribute("Value", this.boolValue)
+            );
+        }
+
+        public static Bool FromXML(XElement xml)
+        {
+            return new Bool(xml);
+        }
+
+        private Bool(XElement xml)
+            : base(xml)
+        {
+            this.boolValue = (bool)xml.Attribute("Value");
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

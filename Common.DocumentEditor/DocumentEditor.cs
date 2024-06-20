@@ -362,8 +362,8 @@ namespace Epsitec.Common.DocumentEditor
 
                 if (this.HasCurrentDocument)
                 {
-                    //?DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-                    //?context.ZoomPageAndCenter();
+                    //?DrawingContext settings = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+                    //?settings.ZoomPageAndCenter();
                     this.CurrentDocument.Modifier.ActiveViewer.Focus();
                 }
             }
@@ -2867,15 +2867,15 @@ namespace Epsitec.Common.DocumentEditor
         [Command("TextFontFilter")]
         void CommandTextFontFilter(CommandDispatcher dispatcher, CommandEventArgs e)
         {
-            DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-            context.TextFontFilter = !context.TextFontFilter;
+            Settings.DrawingSettings settings = this.CurrentDocument.Settings.DrawingSettings;
+            settings.TextFontFilter = !settings.TextFontFilter;
         }
 
         [Command("TextFontSampleAbc")]
         void CommandTextFontSampleAbc(CommandDispatcher dispatcher, CommandEventArgs e)
         {
-            DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-            context.TextFontSampleAbc = !context.TextFontSampleAbc;
+            Settings.DrawingSettings settings = this.CurrentDocument.Settings.DrawingSettings;
+            settings.TextFontSampleAbc = !settings.TextFontSampleAbc;
         }
 
         [Command("TextInsertQuad")]
@@ -3647,7 +3647,7 @@ namespace Epsitec.Common.DocumentEditor
         {
             //	Construit le menu pour choisir une page.
             DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-            UndoableList pages = this.CurrentDocument.DocumentObjects; // liste des pages
+            SerializableUndoableList pages = this.CurrentDocument.DocumentObjects; // liste des pages
             return Objects.Page.CreateMenu(pages, context.CurrentPage, "PageSelect", message);
         }
 
@@ -3656,7 +3656,7 @@ namespace Epsitec.Common.DocumentEditor
             //	Construit le menu pour choisir un calque.
             DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
             Objects.Abstract page = context.RootObject(1);
-            UndoableList layers = page.Objects; // liste des calques
+            SerializableUndoableList layers = page.Objects; // liste des calques
             return Objects.Layer.CreateMenu(layers, context.CurrentLayer, "LayerSelect", message);
         }
 
@@ -5362,9 +5362,9 @@ namespace Epsitec.Common.DocumentEditor
             //	Appelé par le document lorsque l'état de l'aperçu a changé.
             if (this.HasCurrentDocument)
             {
-                DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+                Settings.DrawingSettings settings = this.CurrentDocument.Settings.DrawingSettings;
                 this.previewState.Enable = true;
-                this.previewState.ActiveState = context.PreviewActive
+                this.previewState.ActiveState = settings.PreviewActive
                     ? ActiveState.Yes
                     : ActiveState.No;
             }
@@ -5389,15 +5389,15 @@ namespace Epsitec.Common.DocumentEditor
             //	Appelé par le document lorsque les réglages de police ont changés.
             if (this.HasCurrentDocument)
             {
-                DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+                Settings.DrawingSettings settings = this.CurrentDocument.Settings.DrawingSettings;
 
                 this.textFontFilterState.Enable = true;
-                this.textFontFilterState.ActiveState = context.TextFontFilter
+                this.textFontFilterState.ActiveState = settings.TextFontFilter
                     ? ActiveState.Yes
                     : ActiveState.No;
 
                 this.textFontSampleAbcState.Enable = true;
-                this.textFontSampleAbcState.ActiveState = context.TextFontSampleAbc
+                this.textFontSampleAbcState.ActiveState = settings.TextFontSampleAbc
                     ? ActiveState.Yes
                     : ActiveState.No;
 

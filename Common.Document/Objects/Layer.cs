@@ -1,7 +1,8 @@
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -29,7 +30,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Layer est la classe de l'objet graphique "calque".
     /// </summary>
     [System.Serializable()]
-    public class Layer : Objects.Abstract
+    public class Layer : Objects.Abstract, Support.IXMLSerializable<Layer>
     {
         public Layer(Document document, Objects.Abstract model)
             : base(document, model)
@@ -37,7 +38,10 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new UndoableList(this.document, UndoableListType.ObjectsInsideDocument);
+            this.objects = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideDocument
+            );
         }
 
         protected override bool ExistingProperty(Properties.Type type)
@@ -141,7 +145,7 @@ namespace Epsitec.Common.Document.Objects
 
         #region Menu
         public static VMenu CreateMenu(
-            UndoableList layers,
+            SerializableUndoableList layers,
             int currentLayer,
             string cmd,
             Support.EventHandler<MessageEventArgs> message
@@ -278,6 +282,39 @@ namespace Epsitec.Common.Document.Objects
 
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            var root = new XElement(
+                "Layer",
+                this.IterXMLParts(),
+                new XAttribute("LayerType", this.layerType)
+            );
+            if (this.document.Type != DocumentType.Pictogram)
+            {
+                root.Add(
+                    new XAttribute("LayerPrint", this.layerPrint),
+                    new XAttribute("Magnet", this.magnet)
+                );
+            }
+            return root;
+        }
+
+        public static Layer FromXML(XElement xml)
+        {
+            return new Layer(xml);
+        }
+
+        private Layer(XElement xml)
+            : base(xml)
+        {
+            LayerType.TryParse(xml.Attribute("LayerType").Value, out this.layerType);
+            if (this.document.Type != DocumentType.Pictogram)
+            {
+                LayerPrint.TryParse(xml.Attribute("LayerPrint").Value, out this.layerPrint);
+                this.magnet = bool.Parse(xml.Attribute("Magnet").Value);
+            }
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

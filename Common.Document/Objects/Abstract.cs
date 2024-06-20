@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Serialization;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document.Objects
@@ -18,7 +21,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Objects.Abstract est la classe de base des objets graphiques.
     /// </summary>
     [System.Serializable()]
-    public abstract class Abstract : ISerializable
+    public abstract class Abstract : ISerializable, IXMLWritable
     {
         public Abstract(Document document, Objects.Abstract model)
         {
@@ -32,12 +35,16 @@ namespace Epsitec.Common.Document.Objects
             {
                 this.uniqueId = this.document.GetNextUniqueObjectId();
             }
+            else
+            {
+                this.uniqueId = -111;
+            }
 
-            this.properties = new UndoableList(
+            this.properties = new SerializableUndoableList(
                 this.document,
                 UndoableListType.PropertiesInsideObject
             );
-            this.aggregates = new UndoableList(
+            this.aggregates = new SerializableUndoableList(
                 this.document,
                 UndoableListType.AggregatesInsideObject
             );
@@ -162,13 +169,13 @@ namespace Epsitec.Common.Document.Objects
             set { this.popupInterfaceFrame = value; }
         }
 
-        public System.Collections.ArrayList Handles
-        {
-            get { return this.handles; }
-            set { this.handles = value; }
-        }
+        //public System.Collections.ArrayList Handles
+        //{
+        //    get { return this.handles; }
+        //    set { this.handles = value; }
+        //}
 
-        public UndoableList Objects
+        public SerializableUndoableList Objects
         {
             get { return this.objects; }
             set { this.objects = value; }
@@ -2228,7 +2235,7 @@ namespace Epsitec.Common.Document.Objects
                 return; // on ne veut rien changer
 
             bool oqe;
-            UndoableList properties = this.document.PropertiesAuto;
+            SerializableUndoableList properties = this.document.PropertiesAuto;
             foreach (Properties.Abstract property in properties)
             {
                 Properties.Bool existing = property as Properties.Bool;
@@ -2367,7 +2374,7 @@ namespace Epsitec.Common.Document.Objects
         protected Properties.Abstract SearchProperty(Properties.Abstract item, bool selected)
         {
             //	Cherche une propriété identique dans une collection du document.
-            UndoableList properties = this.document.Modifier.PropertyList(selected);
+            SerializableUndoableList properties = this.document.Modifier.PropertyList(selected);
 
             foreach (Properties.Abstract property in properties)
             {
@@ -2382,7 +2389,7 @@ namespace Epsitec.Common.Document.Objects
             return null;
         }
 
-        public UndoableList Aggregates
+        public SerializableUndoableList Aggregates
         {
             //	Liste des agrégats utilisés par l'objet.
             get { return this.aggregates; }
@@ -3772,7 +3779,7 @@ namespace Epsitec.Common.Document.Objects
                 this.globalSelected = host.globalSelected;
                 this.allSelected = host.allSelected;
 
-                this.list = new System.Collections.ArrayList();
+                this.list = new();
                 foreach (Handle hObj in this.host.handles)
                 {
                     Handle hCopy = new Handle(host.document);
@@ -3814,7 +3821,7 @@ namespace Epsitec.Common.Document.Objects
                 }
                 else
                 {
-                    System.Collections.ArrayList temp = this.host.handles;
+                    List<Handle> temp = this.host.handles;
                     this.host.handles = this.list;
                     this.list = temp;
                 }
@@ -3842,7 +3849,7 @@ namespace Epsitec.Common.Document.Objects
             protected bool edited;
             protected bool globalSelected;
             protected bool allSelected;
-            protected System.Collections.ArrayList list;
+            protected List<Handle> list;
         }
         #endregion
 
@@ -3864,7 +3871,7 @@ namespace Epsitec.Common.Document.Objects
             public OpletGeometry(Objects.Abstract host)
             {
                 this.host = host;
-                this.list = new System.Collections.ArrayList();
+                this.list = new List<Handle>();
                 this.direction = host.direction;
 
                 foreach (Handle handle in this.host.handles)
@@ -3879,7 +3886,7 @@ namespace Epsitec.Common.Document.Objects
             {
                 this.host.document.Notifier.NotifyArea(this.host.BoundingBox);
 
-                System.Collections.ArrayList temp = this.host.handles;
+                List<Handle> temp = this.host.handles;
                 this.host.handles = this.list;
                 this.list = temp;
 
@@ -3908,7 +3915,7 @@ namespace Epsitec.Common.Document.Objects
             }
 
             protected Objects.Abstract host;
-            protected System.Collections.ArrayList list;
+            protected List<Handle> list;
             protected double direction;
         }
         #endregion
@@ -3965,6 +3972,81 @@ namespace Epsitec.Common.Document.Objects
 
 
         #region Serialization
+
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            Abstract otherAbstract = (Abstract)other;
+            List<bool> status =
+            [
+                this.uniqueId == otherAbstract.uniqueId,
+                this.name == otherAbstract.name,
+                this.direction == otherAbstract.direction,
+                this.properties.HasEquivalentData(otherAbstract.properties),
+                this.objects?.HasEquivalentData(otherAbstract.objects)
+                    ?? this.objects == otherAbstract.objects,
+                this.aggregates.HasEquivalentData(otherAbstract.aggregates),
+                this
+                    .handles.Slice(0, this.TotalMainHandle)
+                    .HasEquivalentData(otherAbstract.handles.Slice(0, this.TotalMainHandle))
+            ];
+            if (!status.All(x => x))
+            {
+                System.Console.WriteLine("Error in Objects.Abstract");
+                return false;
+            }
+            return true;
+        }
+
+        public abstract XElement ToXML();
+
+        public IEnumerable<XObject> IterXMLParts()
+        {
+            yield return new XAttribute("UniqueId", this.uniqueId);
+            yield return new XAttribute("Name", this.name);
+            yield return new XAttribute("Direction", this.direction);
+
+            yield return new XElement("Properties", this.properties.ToXML());
+
+            //	Ne sérialise que les poignées des objets, sans celles des propriétés.
+            var handles = new XElement("Handles");
+            for (int i = 0; i < this.TotalMainHandle; i++)
+            {
+                handles.Add(this.handles[i].ToXML());
+            }
+            yield return handles;
+            if (this.objects != null)
+            {
+                yield return new XElement("Objects", this.objects.ToXML());
+            }
+
+            yield return new XElement("Aggregates", this.aggregates.ToXML());
+        }
+
+        protected Abstract(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            this.uniqueId = int.Parse(xml.Attribute("UniqueId").Value);
+            this.name = xml.Attribute("Name").Value;
+            this.direction = double.Parse(xml.Attribute("Direction").Value);
+
+            this.properties = SerializableUndoableList.FromXML(xml.Element("Properties"));
+            this.surfaceAnchor = new SurfaceAnchor(this.document, this);
+
+            this.handles = xml.Element("Handles")
+                .Elements()
+                .Select(Common.Document.Objects.Handle.FromXML)
+                .ToList();
+            this.HandlePropertiesCreate(); // crée les poignées des propriétés
+
+            var objectsXML = xml.Element("Objects");
+            if (objectsXML != null)
+            {
+                this.objects = SerializableUndoableList.FromXML(objectsXML);
+            }
+            this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
+            this.CreateMissingProperties();
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.
@@ -3991,14 +4073,15 @@ namespace Epsitec.Common.Document.Objects
             this.document = Document.ReadDocument;
             this.uniqueId = info.GetInt32("UniqueId");
             this.name = info.GetString("Name");
-            this.properties = (UndoableList)info.GetValue("Properties", typeof(UndoableList));
+            this.properties = (SerializableUndoableList)
+                info.GetValue("Properties", typeof(SerializableUndoableList));
             this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
-            this.handles = (System.Collections.ArrayList)
-                info.GetValue("Handles", typeof(System.Collections.ArrayList));
+            this.handles = (List<Handle>)info.GetValue("Handles", typeof(List<Handle>));
             this.HandlePropertiesCreate(); // crée les poignées des propriétés
 
-            this.objects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
+            this.objects = (SerializableUndoableList)
+                info.GetValue("Objects", typeof(SerializableUndoableList));
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 17))
             {
@@ -4011,11 +4094,12 @@ namespace Epsitec.Common.Document.Objects
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 26))
             {
-                this.aggregates = (UndoableList)info.GetValue("Aggregates", typeof(UndoableList));
+                this.aggregates = (SerializableUndoableList)
+                    info.GetValue("Aggregates", typeof(SerializableUndoableList));
             }
             else if (this.document.IsRevisionGreaterOrEqual(1, 0, 24))
             {
-                this.aggregates = new UndoableList(
+                this.aggregates = new SerializableUndoableList(
                     this.document,
                     UndoableListType.AggregatesInsideObject
                 );
@@ -4028,7 +4112,7 @@ namespace Epsitec.Common.Document.Objects
             }
             else
             {
-                this.aggregates = new UndoableList(
+                this.aggregates = new SerializableUndoableList(
                     this.document,
                     UndoableListType.AggregatesInsideObject
                 );
@@ -4137,16 +4221,16 @@ namespace Epsitec.Common.Document.Objects
         protected Point moveHandlePos;
 
         protected string name = "";
-        protected UndoableList properties;
+        protected SerializableUndoableList properties;
         protected List<Properties.Abstract> additionnalProperties;
-        protected System.Collections.ArrayList handles = new System.Collections.ArrayList();
+        protected List<Handle> handles = new();
         protected UndoableList selectedSegments = null;
-        protected UndoableList objects = null;
+        protected SerializableUndoableList objects = null;
         protected int totalPropertyHandle;
         protected double direction = 0.0;
         protected double initialDirection = 0.0;
         protected SurfaceAnchor surfaceAnchor;
-        protected UndoableList aggregates = null;
+        protected SerializableUndoableList aggregates = null;
 
         protected bool isDirtyPageAndLayerNumbers = true;
         protected int pageNumber = -1;

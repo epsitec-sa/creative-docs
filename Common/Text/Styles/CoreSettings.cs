@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Styles
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Text.Styles
     /// La classe CoreSettings permet de décrire des propriétés fondamentales telles
     /// que défition de fonte et de paragraphe, plus quelques autres détails.
     /// </summary>
-    public sealed class CoreSettings : BaseSettings
+    public sealed class CoreSettings : BaseSettings, Common.Support.IXMLSerializable<CoreSettings>
     {
         public CoreSettings() { }
 
@@ -26,5 +27,18 @@ namespace Epsitec.Common.Text.Styles
                 value as Styles.CoreSettings
             );
         }
+
+        public override XElement ToXML()
+        {
+            return new XElement("CoreSettings", base.IterXMLParts());
+        }
+
+        public static CoreSettings FromXML(XElement xml)
+        {
+            return new CoreSettings(xml);
+        }
+
+        private CoreSettings(XElement xml)
+            : base(xml) { }
     }
 }

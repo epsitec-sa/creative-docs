@@ -1,5 +1,9 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Text.Styles
 {
@@ -10,7 +14,8 @@ namespace Epsitec.Common.Text.Styles
     public abstract class PropertyContainer
         : IContentsSignature,
             IContentsSignatureUpdater,
-            System.Collections.IEnumerable
+            System.Collections.IEnumerable,
+            Common.Support.IXMLWritable
     {
         public PropertyContainer() { }
 
@@ -601,6 +606,96 @@ namespace Epsitec.Common.Text.Styles
                 buffer.Append(
                     SerializerSupport.SerializeString(Property.Serialize(this.properties[i]))
                 );
+            }
+        }
+
+        public abstract XElement ToXML();
+
+        public bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            PropertyContainer other = (PropertyContainer)otherWritable;
+            return this.properties.HasEquivalentData(other.properties);
+        }
+
+        public IEnumerable<XObject> IterXMLParts()
+        {
+            yield return new XElement("Properties", this.properties.Select(item => item.ToXML()));
+        }
+
+        protected PropertyContainer(XElement xml)
+        {
+            this.properties = xml.Element("Properties").Elements().Select(LoadProperty).ToArray();
+        }
+
+        internal static Property LoadProperty(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                // bl-converter add the properties here
+                case "AutoTextPropertyProperty":
+                    return Properties.AutoTextProperty.FromXML(xml);
+                case "BreakProperty":
+                    return Properties.BreakProperty.FromXML(xml);
+                case "ConditionalProperty":
+                    return Properties.ConditionalProperty.FromXML(xml);
+                case "FontColorProperty":
+                    return Properties.FontColorProperty.FromXML(xml);
+                case "FontKernProperty":
+                    return Properties.FontKernProperty.FromXML(xml);
+                case "FontOffsetProperty":
+                    return Properties.FontOffsetProperty.FromXML(xml);
+                case "FontProperty":
+                    return Properties.FontProperty.FromXML(xml);
+                case "FontSizeProperty":
+                    return Properties.FontSizeProperty.FromXML(xml);
+                case "FontXScriptProperty":
+                    return Properties.FontXscriptProperty.FromXML(xml);
+                case "GeneratorProperty":
+                    return Properties.GeneratorProperty.FromXML(xml);
+                case "ImageProperty":
+                    return Properties.ImageProperty.FromXML(xml);
+                case "KeepProperty":
+                    return Properties.KeepProperty.FromXML(xml);
+                case "LanguageProperty":
+                    return Properties.LanguageProperty.FromXML(xml);
+                case "LayoutProperty":
+                    return Properties.LayoutProperty.FromXML(xml);
+                case "LeadingProperty":
+                    return Properties.LeadingProperty.FromXML(xml);
+                case "LinkProperty":
+                    return Properties.LinkProperty.FromXML(xml);
+                case "ManagedInfoProperty":
+                    return Properties.ManagedInfoProperty.FromXML(xml);
+                case "ManagedParagraphProperty":
+                    return Properties.ManagedParagraphProperty.FromXML(xml);
+                case "MarginsProperty":
+                    return Properties.MarginsProperty.FromXML(xml);
+                case "OpenTypeProperty":
+                    return Properties.OpenTypeProperty.FromXML(xml);
+                case "OverlineProperty":
+                    return Properties.OverlineProperty.FromXML(xml);
+                case "PropertiesProperty":
+                    return Properties.PropertiesProperty.FromXML(xml);
+                case "StrikeoutProperty":
+                    return Properties.StrikeoutProperty.FromXML(xml);
+                case "StylesProperty":
+                    return Properties.StylesProperty.FromXML(xml);
+                case "TabProperty":
+                    return Properties.TabProperty.FromXML(xml);
+                case "TabsProperty":
+                    return Properties.TabsProperty.FromXML(xml);
+                case "TextBoxProperty":
+                    return Properties.TextBoxProperty.FromXML(xml);
+                case "TextMarkerProperty":
+                    return Properties.TextMarkerProperty.FromXML(xml);
+                case "UnderlineProperty":
+                    return Properties.UnderlineProperty.FromXML(xml);
+                case "UserTagProperty":
+                    return Properties.UserTagProperty.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Property type '{xml.Name.LocalName}'"
+                    );
             }
         }
 

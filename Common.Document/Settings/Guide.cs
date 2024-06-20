@@ -1,6 +1,7 @@
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -21,7 +22,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Guide contient un repère magnétique.
     /// </summary>
     [System.Serializable()]
-    public class Guide : ISerializable
+    public class Guide : ISerializable, IXMLSerializable<Guide>
     {
         public Guide(Document document)
         {
@@ -229,6 +230,34 @@ namespace Epsitec.Common.Document.Settings
 
 
         #region Serialization
+
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            Guide otherGuide = (Guide)other;
+            return otherGuide.type == this.type && otherGuide.position == this.position;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Guide",
+                new XAttribute("Type", this.type),
+                new XAttribute("Pos", this.position)
+            );
+        }
+
+        public static Guide FromXML(XElement xml)
+        {
+            return new Guide(xml);
+        }
+
+        private Guide(XElement xml)
+        {
+            this.document = Document.ReadDocument;
+            GuideType.TryParse(xml.Attribute("Type").Value, out this.type);
+            this.position = double.Parse(xml.Attribute("Pos").Value);
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le repère.

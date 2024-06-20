@@ -1,5 +1,7 @@
-using Epsitec.Common.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -31,7 +33,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Surface représente une propriété d'un objet surface 2d.
     /// </summary>
     [System.Serializable()]
-    public class Surface : Abstract
+    public class Surface : Abstract, Support.IXMLSerializable<Surface>
     {
         public Surface(Document document, Type type)
             : base(document, type) { }
@@ -766,6 +768,50 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Surface otherSurface = (Surface)other;
+            return base.HasEquivalentData(other)
+                && this.surfaceType == otherSurface.surfaceType
+                && this.factors.SequenceEqual(otherSurface.factors)
+                && this.scalars.SequenceEqual(otherSurface.scalars);
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Surface",
+                base.IterXMLParts(),
+                new XAttribute("SurfaceType", this.surfaceType),
+                new XAttribute(
+                    "Factors",
+                    string.Join(
+                        " ",
+                        this.factors.Select(f =>
+                            f.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                        )
+                    )
+                ),
+                new XAttribute("Scalars", string.Join(" ", this.scalars.Select(f => f.ToString())))
+            );
+        }
+
+        public static Surface FromXML(XElement xml)
+        {
+            return new Surface(xml);
+        }
+
+        private Surface(XElement xml)
+            : base(xml)
+        {
+            SurfaceType.TryParse(xml.Attribute("SurfaceType").Value, out this.surfaceType);
+            this.factors = xml.Attribute("Factors")
+                .Value.Split(" ")
+                .Select(n => double.Parse(n, System.Globalization.CultureInfo.InvariantCulture))
+                .ToArray();
+            this.scalars = xml.Attribute("Scalars").Value.Split(" ").Select(int.Parse).ToArray();
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

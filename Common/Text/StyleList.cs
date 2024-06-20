@@ -1,6 +1,11 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
+
 namespace Epsitec.Common.Text
 {
     using EventHandler = Common.Support.EventHandler;
@@ -10,14 +15,14 @@ namespace Epsitec.Common.Text
     /// textes.
     /// Note: "StyleList" se prononce comme "stylist" :-)
     /// </summary>
-    public sealed class StyleList
+    public sealed class StyleList : Common.Support.IXMLSerializable<StyleList>
     {
         public StyleList(TextContext context)
         {
             this.context = context;
             this.internalSettings = new Internal.SettingsTable();
 
-            this.textStyleList = new System.Collections.ArrayList();
+            this.textStyleList = new();
             this.textStyleHash = new System.Collections.Hashtable();
         }
 
@@ -452,10 +457,8 @@ namespace Epsitec.Common.Text
         {
             int n = this.textStyleList.Count;
 
-            for (int i = 0; i < this.textStyleList.Count; i++)
+            foreach (TextStyle style in this.textStyleList)
             {
-                TextStyle style = this.textStyleList[i] as TextStyle;
-
                 if (style.IsDeleted)
                 {
                     n--;
@@ -470,10 +473,8 @@ namespace Epsitec.Common.Text
             this.internalSettings.Serialize(buffer);
             buffer.Append("/");
 
-            for (int i = 0; i < this.textStyleList.Count; i++)
+            foreach (TextStyle style in this.textStyleList)
             {
-                TextStyle style = this.textStyleList[i] as TextStyle;
-
                 if (style.IsDeleted == false)
                 {
                     style.Serialize(buffer);
@@ -484,10 +485,50 @@ namespace Epsitec.Common.Text
             this.StyleMap.Serialize(buffer);
         }
 
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            StyleList otherContext = (StyleList)other;
+            return this.uniqueId == otherContext.uniqueId
+                && this.internalSettings.HasEquivalentData(otherContext.internalSettings)
+                && this.textStyleList.HasEquivalentData(otherContext.textStyleList)
+                && this.styleMap.HasEquivalentData(otherContext.styleMap);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "StyleList",
+                new XAttribute("UniqueId", this.uniqueId),
+                new XElement("InternalSettings", this.internalSettings.ToXML()),
+                new XElement("TextStyleList", this.textStyleList.Select(item => item.ToXML())),
+                new XElement("StyleMap", this.styleMap.ToXML())
+            );
+        }
+
+        public static StyleList FromXML(XElement xml)
+        {
+            return new StyleList(xml);
+        }
+
+        private StyleList(XElement xml)
+        {
+            this.textStyleHash = new System.Collections.Hashtable();
+            this.uniqueId = (long)xml.Attribute("UniqueId");
+            this.internalSettings = Internal.SettingsTable.FromXML(
+                xml.Element("InternalSettings").Element("SettingsTable")
+            );
+            this.textStyleList = new();
+            xml.Element("TextStyleList")
+                .Elements()
+                .ToList()
+                .ForEach(item => this.Attach(TextStyle.FromXML(item)));
+            this.styleMap = new StyleMap(xml.Element("StyleMap").Element("StyleMap"), this);
+        }
+
         public void Deserialize(TextContext context, int version, string[] args, ref int offset)
         {
             this.internalSettings = new Internal.SettingsTable();
-            this.textStyleList = new System.Collections.ArrayList();
+            this.textStyleList = new();
             this.textStyleHash = new System.Collections.Hashtable();
 
             long unique = SerializerSupport.DeserializeLong(args[offset++]);
@@ -1421,7 +1462,7 @@ namespace Epsitec.Common.Text
 
         private TextContext context;
         private Internal.SettingsTable internalSettings;
-        private System.Collections.ArrayList textStyleList;
+        private List<TextStyle> textStyleList;
         private System.Collections.Hashtable textStyleHash;
         private StyleMap styleMap;
         private long uniqueId;

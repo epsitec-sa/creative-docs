@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe TextLine représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class TextLine : Abstract
+    public class TextLine : Abstract, Support.IXMLSerializable<TextLine>
     {
         public TextLine(Document document, Type type)
             : base(document, type) { }
@@ -123,6 +124,39 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            TextLine otherTextLine = (TextLine)other;
+            return base.HasEquivalentData(other)
+                && this.horizontal == otherTextLine.horizontal
+                && this.offset == otherTextLine.offset
+                && this.add == otherTextLine.add;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "TextLine",
+                base.IterXMLParts(),
+                new XAttribute("Horizontal", this.horizontal),
+                new XAttribute("Offset", this.offset),
+                new XAttribute("Add", this.add)
+            );
+        }
+
+        public static TextLine FromXML(XElement xml)
+        {
+            return new TextLine(xml);
+        }
+
+        private TextLine(XElement xml)
+            : base(xml)
+        {
+            JustifHorizontal.TryParse(xml.Attribute("Horizontal").Value, out this.horizontal);
+            this.offset = double.Parse(xml.Attribute("Offset").Value);
+            this.add = double.Parse(xml.Attribute("Add").Value);
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

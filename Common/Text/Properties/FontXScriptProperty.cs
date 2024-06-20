@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,9 @@ namespace Epsitec.Common.Text.Properties
     /// La classe FontXscriptProperty définit si un superscript ou un subscript
     /// est requis (exposant/indice en français).
     /// </summary>
-    public class FontXscriptProperty : Property
+    public class FontXscriptProperty
+        : Property,
+            Common.Support.IXMLSerializable<FontXscriptProperty>
     {
         public FontXscriptProperty() { }
 
@@ -79,6 +82,36 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeDouble(this.scale),
                 /**/SerializerSupport.SerializeDouble(this.offset)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            FontXscriptProperty other = (FontXscriptProperty)otherWritable;
+            return this.isDisabled == other.isDisabled
+                && this.scale == other.scale
+                && this.offset == other.offset;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "FontXscriptProperty",
+                new XAttribute("IsDisabled", this.isDisabled),
+                new XAttribute("Scale", this.scale),
+                new XAttribute("Offset", this.offset)
+            );
+        }
+
+        public static FontXscriptProperty FromXML(XElement xml)
+        {
+            return new FontXscriptProperty(xml);
+        }
+
+        private FontXscriptProperty(XElement xml)
+        {
+            this.isDisabled = (bool)xml.Attribute("IsDisabled");
+            this.scale = (double)xml.Attribute("Scale");
+            this.offset = (double)xml.Attribute("Offset");
         }
 
         public override void DeserializeFromText(

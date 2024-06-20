@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
     /// La classe FontKernProperty modifie la largeur d'un caractère (crénage
     /// manuel).
     /// </summary>
-    public class FontKernProperty : Property
+    public class FontKernProperty : Property, Common.Support.IXMLSerializable<FontKernProperty>
     {
         public FontKernProperty()
             : this(0, SizeUnits.Points) { }
@@ -68,6 +69,32 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeDouble(this.offset),
                 /**/SerializerSupport.SerializeSizeUnits(this.units)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            FontKernProperty other = (FontKernProperty)otherWritable;
+            return this.offset == other.offset && this.units == other.units;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "FontKernProperty",
+                new XAttribute("Offset", this.offset),
+                new XAttribute("Units", this.units)
+            );
+        }
+
+        public static FontKernProperty FromXML(XElement xml)
+        {
+            return new FontKernProperty(xml);
+        }
+
+        private FontKernProperty(XElement xml)
+        {
+            this.offset = (double)xml.Attribute("Offset");
+            System.Enum.TryParse(xml.Attribute("Units").Value, out this.units);
         }
 
         public override void DeserializeFromText(

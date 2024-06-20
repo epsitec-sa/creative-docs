@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe ModColor représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class ModColor : Abstract
+    public class ModColor : Abstract, Support.IXMLSerializable<ModColor>
     {
         public ModColor(Document document, Type type)
             : base(document, type) { }
@@ -290,6 +291,54 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            ModColor otherModColor = (ModColor)other;
+            return base.HasEquivalentData(other)
+                && this.h == otherModColor.h
+                && this.s == otherModColor.s
+                && this.v == otherModColor.v
+                && this.r == otherModColor.r
+                && this.g == otherModColor.g
+                && this.b == otherModColor.b
+                && this.a == otherModColor.a
+                && this.n == otherModColor.n;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "ModColor",
+                base.IterXMLParts(),
+                new XAttribute("H", this.h),
+                new XAttribute("S", this.s),
+                new XAttribute("V", this.v),
+                new XAttribute("R", this.r),
+                new XAttribute("G", this.g),
+                new XAttribute("B", this.b),
+                new XAttribute("A", this.a),
+                new XAttribute("N", this.n)
+            );
+        }
+
+        public static ModColor FromXML(XElement xml)
+        {
+            return new ModColor(xml);
+        }
+
+        private ModColor(XElement xml)
+            : base(xml)
+        {
+            this.h = (double)xml.Attribute("H");
+            this.s = (double)xml.Attribute("S");
+            this.v = (double)xml.Attribute("V");
+            this.r = (double)xml.Attribute("R");
+            this.g = (double)xml.Attribute("G");
+            this.b = (double)xml.Attribute("B");
+            this.a = (double)xml.Attribute("A");
+            this.n = (bool)xml.Attribute("N");
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

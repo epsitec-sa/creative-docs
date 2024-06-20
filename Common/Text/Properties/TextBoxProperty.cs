@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -7,7 +8,9 @@ namespace Epsitec.Common.Text.Properties
     /// La classe TextBoxProperty permet de régler les détails relatifs à
     /// l'encadrement du texte.
     /// </summary>
-    public class TextBoxProperty : AbstractXlineProperty
+    public class TextBoxProperty
+        : AbstractXlineProperty,
+            Common.Support.IXMLSerializable<TextBoxProperty>
     {
         public TextBoxProperty() { }
 
@@ -42,5 +45,18 @@ namespace Epsitec.Common.Text.Properties
         {
             return new TextBoxProperty();
         }
+
+        public override XElement ToXML()
+        {
+            return new XElement("TextBoxProperty", base.IterXMLParts());
+        }
+
+        public static TextBoxProperty FromXML(XElement xml)
+        {
+            return new TextBoxProperty(xml);
+        }
+
+        private TextBoxProperty(XElement xml)
+            : base(xml) { }
     }
 }

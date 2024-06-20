@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -6,7 +7,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Memory est un objet caché qui collectionne toutes les propriétés.
     /// </summary>
     [System.Serializable()]
-    public class Memory : Objects.Abstract
+    public class Memory : Objects.Abstract, Support.IXMLSerializable<Memory>
     {
         public Memory(Document document, Objects.Abstract model)
             : base(document, model)
@@ -39,6 +40,19 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Memory", this.IterXMLParts());
+        }
+
+        public static Memory FromXML(XElement xml)
+        {
+            return new Memory(xml);
+        }
+
+        private Memory(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

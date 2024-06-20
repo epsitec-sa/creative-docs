@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -17,7 +18,7 @@ namespace Epsitec.Common.Document.Properties
     /// La classe Regular représente une propriété d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Regular : Abstract
+    public class Regular : Abstract, Support.IXMLSerializable<Regular>
     {
         public Regular(Document document, Type type)
             : base(document, type) { }
@@ -525,6 +526,63 @@ namespace Epsitec.Common.Document.Properties
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Regular otherRegular = (Regular)other;
+            if (
+                this.regularType != RegularType.Norm
+                && !(
+                    this.deep == otherRegular.deep
+                    && this.e1 == otherRegular.e1
+                    && this.e2 == otherRegular.e2
+                    && this.i1 == otherRegular.i1
+                    && this.i2 == otherRegular.i2
+                )
+            ) { }
+            return base.HasEquivalentData(other)
+                && this.nbFaces == otherRegular.nbFaces
+                && this.regularType == otherRegular.regularType;
+        }
+
+        public override XElement ToXML()
+        {
+            var root = new XElement(
+                "Regular",
+                base.IterXMLParts(),
+                new XAttribute("NbFaces", this.nbFaces),
+                new XAttribute("RegularType", this.regularType)
+            );
+            if (this.regularType != RegularType.Norm)
+            {
+                root.Add(new XElement("Deep", this.deep));
+                root.Add(new XElement("E1", this.e1));
+                root.Add(new XElement("E2", this.e2));
+                root.Add(new XElement("I1", this.i1));
+                root.Add(new XElement("I2", this.i2));
+            }
+            return root;
+        }
+
+        public static Regular FromXML(XElement xml)
+        {
+            return new Regular(xml);
+        }
+
+        private Regular(XElement xml)
+            : base(xml)
+        {
+            this.nbFaces = (int)xml.Attribute("NbFaces");
+            RegularType.TryParse(xml.Attribute("RegularType").Value, out this.regularType);
+            if (this.regularType != RegularType.Norm)
+            {
+                this.deep = Polar.FromXML(xml.Element("Deep").Element("Polar"));
+                this.e1 = Polar.FromXML(xml.Element("E1").Element("Polar"));
+                this.e2 = Polar.FromXML(xml.Element("E2").Element("Polar"));
+                this.i1 = Polar.FromXML(xml.Element("I1").Element("Polar"));
+                this.i2 = Polar.FromXML(xml.Element("I2").Element("Polar"));
+            }
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la propriété.

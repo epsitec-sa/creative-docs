@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.Containers
 {
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document.Containers
         protected Objects.Layer GetLayer(int rank)
         {
             //	Retourne un objet Layer du document.
-            UndoableList doc = this.document.DocumentObjects;
+            SerializableUndoableList doc = this.document.DocumentObjects;
             Objects.Page page = doc[this.CurrentPage] as Objects.Page;
 
             if (rank < page.Objects.Count)

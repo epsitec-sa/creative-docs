@@ -1,12 +1,13 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
     /// <summary>
     /// La classe FontSizeProperty décrit une taille de fonte.
     /// </summary>
-    public class FontSizeProperty : Property
+    public class FontSizeProperty : Property, Common.Support.IXMLSerializable<FontSizeProperty>
     {
         public FontSizeProperty()
             : this(double.NaN, SizeUnits.None) { }
@@ -76,6 +77,34 @@ namespace Epsitec.Common.Text.Properties
                 /**/SerializerSupport.SerializeSizeUnits(this.units),
                 /**/SerializerSupport.SerializeDouble(this.glue)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            FontSizeProperty other = (FontSizeProperty)otherWritable;
+            return this.size == other.size && this.units == other.units && this.glue == other.glue;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "FontSizeProperty",
+                new XAttribute("Size", this.size),
+                new XAttribute("Units", this.units),
+                new XAttribute("Glue", this.glue)
+            );
+        }
+
+        public static FontSizeProperty FromXML(XElement xml)
+        {
+            return new FontSizeProperty(xml);
+        }
+
+        private FontSizeProperty(XElement xml)
+        {
+            this.size = (double)xml.Attribute("Size");
+            System.Enum.TryParse(xml.Attribute("Units").Value, out this.units);
+            this.glue = (double)xml.Attribute("Glue");
         }
 
         public override void DeserializeFromText(

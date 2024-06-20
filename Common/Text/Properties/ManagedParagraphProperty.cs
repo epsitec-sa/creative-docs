@@ -1,5 +1,7 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -8,7 +10,9 @@ namespace Epsitec.Common.Text.Properties
     /// class implémentant IParagraphManager (en principe une liste à puces,
     /// par exemple) qui génère du texte automatique (AutoText).
     /// </summary>
-    public class ManagedParagraphProperty : Property
+    public class ManagedParagraphProperty
+        : Property,
+            Common.Support.IXMLSerializable<ManagedParagraphProperty>
     {
         public ManagedParagraphProperty() { }
 
@@ -59,6 +63,42 @@ namespace Epsitec.Common.Text.Properties
         public override Property EmptyClone()
         {
             return new ManagedParagraphProperty();
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            ManagedParagraphProperty other = (ManagedParagraphProperty)otherWritable;
+            return this.managerName == other.managerName
+                && this.managerParameters.SequenceEqual(other.managerParameters);
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "ManagedParagraphProperty",
+                new XAttribute("ManagerName", this.managerName),
+                new XElement(
+                    "ManagerParameters",
+                    this.managerParameters.Select(item => new XElement(
+                        "Item",
+                        new XAttribute("Value", item)
+                    ))
+                )
+            );
+        }
+
+        public static ManagedParagraphProperty FromXML(XElement xml)
+        {
+            return new ManagedParagraphProperty(xml);
+        }
+
+        private ManagedParagraphProperty(XElement xml)
+        {
+            this.managerName = xml.Attribute("ManagerName").Value;
+            this.managerParameters = xml.Element("ManagerParameters")
+                .Elements()
+                .Select(item => item.Attribute("Value").Value)
+                .ToArray();
         }
 
         public override void SerializeToText(System.Text.StringBuilder buffer)

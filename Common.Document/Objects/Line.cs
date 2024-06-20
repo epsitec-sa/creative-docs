@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Line est la classe de l'objet graphique "segment de ligne".
     /// </summary>
     [System.Serializable()]
-    public class Line : Objects.Abstract
+    public class Line : Objects.Abstract, Support.IXMLSerializable<Line>
     {
         public Line(Document document, Objects.Abstract model)
             : this(document, model, false) { }
@@ -386,6 +387,19 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Line", this.IterXMLParts());
+        }
+
+        public static Line FromXML(XElement xml)
+        {
+            return new Line(xml);
+        }
+
+        private Line(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

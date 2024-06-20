@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.OpenType
 {
@@ -11,19 +12,24 @@ namespace Epsitec.Common.OpenType
     /// single object.
     /// </summary>
     [System.Serializable]
-    public struct FontName : System.IComparable<FontName>, System.IEquatable<FontName>
+    public struct FontName
+        : System.IComparable<FontName>,
+            System.IEquatable<FontName>,
+            Common.Support.IXMLSerializable<FontName>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FontName"/> structure.
         /// </summary>
         /// <param name="face">The font face.</param>
         /// <param name="style">The font style.</param>
-        public FontName(string face, FontStyle style) {
+        public FontName(string face, FontStyle style)
+        {
             this.face = face;
             this.style = style;
         }
 
-        public FontName(string face, string style) : this(face, FontStyle.Normal)
+        public FontName(string face, string style)
+            : this(face, FontStyle.Normal)
         {
             foreach (string styleElement in style.ToLower().Split(' '))
             {
@@ -39,7 +45,8 @@ namespace Epsitec.Common.OpenType
             }
         }
 
-        public FontName(string face) : this(face, "") {}
+        public FontName(string face)
+            : this(face, "") { }
 
 #if false
         /// <summary>
@@ -73,14 +80,16 @@ namespace Epsitec.Common.OpenType
         /// <value>The name of the font style.</value>
         public string StyleName
         {
-            get {
-                switch (this.style) {
+            get
+            {
+                switch (this.style)
+                {
                     case FontStyle.Normal:
                     case FontStyle.Bold:
                     case FontStyle.Italic:
-                        return this.style.ToString(); 
+                        return this.style.ToString();
                     case FontStyle.BoldItalic:
-                        return "Bold Italic"; 
+                        return "Bold Italic";
                     default:
                         return null;
                 }
@@ -132,7 +141,8 @@ namespace Epsitec.Common.OpenType
 
             // As a tie-breaker rule, we prefer the Bold style over the Italic
 
-            switch (this.style) {
+            switch (this.style)
+            {
                 case FontStyle.Normal:
                     yield return FontStyle.Bold;
                     yield return FontStyle.Italic;
@@ -294,6 +304,32 @@ namespace Epsitec.Common.OpenType
         }
 
         #endregion
+
+        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        {
+            FontName otherFontName = (FontName)other;
+            return this.face == otherFontName.face && this.style == otherFontName.style;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "FontName",
+                new XAttribute("Face", this.face),
+                new XAttribute("Style", this.style)
+            );
+        }
+
+        public static FontName FromXML(XElement xml)
+        {
+            return new FontName(xml);
+        }
+
+        private FontName(XElement xml)
+        {
+            this.face = xml.Attribute("Face").Value;
+            FontStyle.TryParse(xml.Attribute("Style").Value, out this.style);
+        }
 
         private string face;
         private FontStyle style;

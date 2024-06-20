@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Handle représente une poignée d'un objet graphique.
     /// </summary>
     [System.Serializable()]
-    public class Handle : ISerializable
+    public class Handle : ISerializable, Support.IXMLSerializable<Handle>
     {
         public Handle(Document document)
         {
@@ -580,6 +581,39 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Handle otherHandle = (Handle)other;
+            return this.type == otherHandle.type
+                && this.constrainType == otherHandle.constrainType
+                && this.position == otherHandle.position;
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "Handle",
+                new XAttribute("Type", this.type),
+                new XAttribute("ConstrainType", this.constrainType),
+                new XElement("Position", this.position.ToXML())
+            );
+        }
+
+        public static Handle FromXML(XElement xml)
+        {
+            return new Handle(xml);
+        }
+
+        private Handle(XElement xml)
+        {
+            HandleType.TryParse(xml.Attribute("Type").Value, out this.type);
+            HandleConstrainType.TryParse(
+                xml.Attribute("ConstrainType").Value,
+                out this.constrainType
+            );
+            this.position = Point.FromXML(xml.Element("Position"));
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la poignée.

@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -30,7 +31,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Page est la classe de l'objet graphique "page".
     /// </summary>
     [System.Serializable()]
-    public class Page : Objects.Abstract
+    public class Page : Objects.Abstract, Support.IXMLSerializable<Page>
     {
         public Page(Document document, Objects.Abstract model)
             : base(document, model)
@@ -38,8 +39,11 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new UndoableList(this.document, UndoableListType.ObjectsInsideDocument);
-            this.guides = new UndoableList(this.document, UndoableListType.Guides);
+            this.objects = new SerializableUndoableList(
+                this.document,
+                UndoableListType.ObjectsInsideDocument
+            );
+            this.guides = new SerializableUndoableList(this.document, UndoableListType.Guides);
             this.rank = 0;
             this.shortName = "";
             this.masterType = MasterType.Slave;
@@ -284,7 +288,7 @@ namespace Epsitec.Common.Document.Objects
             }
         }
 
-        public UndoableList Guides
+        public SerializableUndoableList Guides
         {
             //	Liste de repères pour cette page.
             get { return this.guides; }
@@ -419,7 +423,7 @@ namespace Epsitec.Common.Document.Objects
 
         #region Menu
         public static VMenu CreateMenu(
-            UndoableList pages,
+            SerializableUndoableList pages,
             int currentPage,
             string cmd,
             Support.EventHandler<MessageEventArgs> message
@@ -474,7 +478,7 @@ namespace Epsitec.Common.Document.Objects
         }
 
         public static VMenu CreateMenu(
-            UndoableList pages,
+            SerializableUndoableList pages,
             List<int> currentsPage,
             string cmd,
             Support.EventHandler<MessageEventArgs> message
@@ -651,6 +655,20 @@ namespace Epsitec.Common.Document.Objects
 
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            // bl-convert add missing attributes
+            return new XElement("Page", this.IterXMLParts());
+        }
+
+        public static Page FromXML(XElement xml)
+        {
+            return new Page(xml);
+        }
+
+        private Page(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.
@@ -709,7 +727,8 @@ namespace Epsitec.Common.Document.Objects
                     this.masterType = (MasterType)info.GetValue("MasterType", typeof(MasterType));
                     this.masterUse = (MasterUse)info.GetValue("MasterUse", typeof(MasterUse));
                     this.masterPageToUse = (Page)info.GetValue("MasterPageToUse", typeof(Page));
-                    this.guides = (UndoableList)info.GetValue("GuidesList", typeof(UndoableList));
+                    this.guides = (SerializableUndoableList)
+                        info.GetValue("GuidesList", typeof(SerializableUndoableList));
                     master = true;
                 }
 
@@ -732,7 +751,7 @@ namespace Epsitec.Common.Document.Objects
 
             if (!master)
             {
-                this.guides = new UndoableList(this.document, UndoableListType.Guides);
+                this.guides = new SerializableUndoableList(this.document, UndoableListType.Guides);
                 this.masterType = MasterType.Slave;
                 this.masterUse = MasterUse.Default;
                 this.masterPageToUse = null;
@@ -750,7 +769,7 @@ namespace Epsitec.Common.Document.Objects
         protected bool masterAutoStop;
         protected bool masterSpecific;
         protected bool masterGuides;
-        protected UndoableList guides;
+        protected SerializableUndoableList guides;
         protected Size pageSize;
         protected Point hotSpot;
         protected Point glyphOrigin;

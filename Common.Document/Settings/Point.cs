@@ -1,5 +1,6 @@
-using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -7,7 +8,7 @@ namespace Epsitec.Common.Document.Settings
     /// La classe Point contient un réglage numérique.
     /// </summary>
     [System.Serializable()]
-    public class Point : Abstract
+    public class Point : Abstract, Support.IXMLSerializable<Point>
     {
         public Point(Document document, string name)
             : base(document, name)
@@ -156,13 +157,13 @@ namespace Epsitec.Common.Document.Settings
                         );
 
                     case "GridStep":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridStep;
+                        return this.document.Settings.DrawingSettings.GridStep;
 
                     case "GridSubdiv":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridSubdiv;
+                        return this.document.Settings.DrawingSettings.GridSubdiv;
 
                     case "GridOffset":
-                        return this.document.Modifier.ActiveViewer.DrawingContext.GridOffset;
+                        return this.document.Settings.DrawingSettings.GridOffset;
 
                     case "DuplicateMove":
                         return this.document.Modifier.DuplicateMove;
@@ -182,15 +183,15 @@ namespace Epsitec.Common.Document.Settings
                         break;
 
                     case "GridStep":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridStep = value;
+                        this.document.Settings.DrawingSettings.GridStep = value;
                         break;
 
                     case "GridSubdiv":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridSubdiv = value;
+                        this.document.Settings.DrawingSettings.GridSubdiv = value;
                         break;
 
                     case "GridOffset":
-                        this.document.Modifier.ActiveViewer.DrawingContext.GridOffset = value;
+                        this.document.Settings.DrawingSettings.GridOffset = value;
                         break;
 
                     case "DuplicateMove":
@@ -241,6 +242,38 @@ namespace Epsitec.Common.Document.Settings
         }
 
         #region Serialization
+        public new bool HasEquivalentData(Support.IXMLWritable other)
+        {
+            Point otherPoint = (Point)other;
+            return base.HasEquivalentData(other)
+                && this.Link == otherPoint.Link
+                && this.Value == otherPoint.Value;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement(
+                "Point",
+                base.IterXMLParts(),
+                new XAttribute("Link", this.Link),
+                new XElement("Value", this.Value.ToXML())
+            );
+        }
+
+        public static Point FromXML(XElement xml)
+        {
+            return new Point(xml);
+        }
+
+        private Point(XElement xml)
+            : base(xml)
+        {
+            this.link = false;
+            this.Value = Drawing.Point.FromXML(xml.Element("Value"));
+            this.Initialize();
+            this.link = bool.Parse(xml.Attribute("Link").Value);
+        }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise le réglage.

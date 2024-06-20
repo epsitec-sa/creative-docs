@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Styles
 {
@@ -28,6 +29,9 @@ namespace Epsitec.Common.Text.Styles
         public abstract bool CompareEqualContents(object value);
         #endregion
 
+
+        protected AdditionalSettings(XElement xml)
+            : base(xml) { }
 
         private byte settingsIndex;
     }

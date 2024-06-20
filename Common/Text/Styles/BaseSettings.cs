@@ -1,12 +1,19 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Text.Styles
 {
     /// <summary>
     /// La classe BaseSettings sert de base à CoreSettings.
     /// </summary>
-    public abstract class BaseSettings : PropertyContainer, IContentsComparer
+    public abstract class BaseSettings
+        : PropertyContainer,
+            IContentsComparer,
+            Common.Support.IXMLWritable
     {
         protected BaseSettings() { }
 
@@ -413,6 +420,44 @@ namespace Epsitec.Common.Text.Styles
             {
                 this.SerializeSettings(this.extraSettings, buffer);
             }
+        }
+
+        public new bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            BaseSettings other = (BaseSettings)otherWritable;
+            return this.coreIndex == other.coreIndex
+                && this.localSettings.HasEquivalentData(other.localSettings)
+                && this.extraSettings.HasEquivalentData(other.extraSettings);
+        }
+
+        public new IEnumerable<XObject> IterXMLParts()
+        {
+            foreach (XObject item in base.IterXMLParts())
+            {
+                yield return item;
+            }
+            yield return new XAttribute("CoreIndex", this.coreIndex);
+            yield return new XElement(
+                "LocalSettings",
+                this.localSettings.Select(item => item.ToXML())
+            );
+            yield return new XElement(
+                "ExtraSettings",
+                this.extraSettings.Select(item => item.ToXML())
+            );
+        }
+
+        protected BaseSettings(XElement xml)
+        {
+            this.coreIndex = (int)xml.Attribute("CoreIndex");
+            this.localSettings = xml.Element("LocalSettings")
+                .Elements()
+                .Select(item => LocalSettings.FromXML(item))
+                .ToArray();
+            this.extraSettings = xml.Element("ExtraSettings")
+                .Elements()
+                .Select(item => ExtraSettings.FromXML(item))
+                .ToArray();
         }
 
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)

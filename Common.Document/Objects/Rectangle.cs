@@ -1,6 +1,7 @@
-using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Document.Objects
     /// La classe Rectangle est la classe de l'objet graphique "rectangle".
     /// </summary>
     [System.Serializable()]
-    public class Rectangle : Objects.Abstract
+    public class Rectangle : Objects.Abstract, Support.IXMLSerializable<Rectangle>
     {
         public Rectangle(Document document, Objects.Abstract model)
             : base(document, model)
@@ -316,6 +317,19 @@ namespace Epsitec.Common.Document.Objects
         }
 
         #region Serialization
+        public override XElement ToXML()
+        {
+            return new XElement("Rectangle", this.IterXMLParts());
+        }
+
+        public static Rectangle FromXML(XElement xml)
+        {
+            return new Rectangle(xml);
+        }
+
+        private Rectangle(XElement xml)
+            : base(xml) { }
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise l'objet.

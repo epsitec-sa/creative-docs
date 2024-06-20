@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
     /// lien hypertexte (mais pas l'aspect graphique qui est géré par un
     /// soulignement via UnderlineProperty).
     /// </summary>
-    public class LinkProperty : Property
+    public class LinkProperty : Property, Common.Support.IXMLSerializable<LinkProperty>
     {
         public LinkProperty() { }
 
@@ -53,6 +54,27 @@ namespace Epsitec.Common.Text.Properties
                 buffer,
                 /**/SerializerSupport.SerializeString(this.link)
             );
+        }
+
+        public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
+        {
+            LinkProperty other = (LinkProperty)otherWritable;
+            return this.link == other.link;
+        }
+
+        public override XElement ToXML()
+        {
+            return new XElement("LinkProperty", new XAttribute("Link", this.link));
+        }
+
+        public static LinkProperty FromXML(XElement xml)
+        {
+            return new LinkProperty(xml);
+        }
+
+        private LinkProperty(XElement xml)
+        {
+            this.link = xml.Attribute("Link").Value;
         }
 
         public override void DeserializeFromText(

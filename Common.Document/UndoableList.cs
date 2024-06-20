@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Document
 {
@@ -20,18 +24,21 @@ namespace Epsitec.Common.Document
         SelectedSegments, // segments sélectionnés pour le modeleur
     }
 
-    /// <summary>
-    /// La classe UndoableList implémente un ArrayList avec possibilité de undo/redo.
-    /// </summary>
-    [System.Serializable()]
-    public class UndoableList : System.Collections.IEnumerable, ISerializable
+    public class UndoableList : AbstractUndoableList<object>
     {
         public UndoableList(Document document, UndoableListType type)
+            : base(document, type) { }
+    }
+
+    public abstract class AbstractUndoableList<T> : System.Collections.IEnumerable
+        where T : class?
+    {
+        public AbstractUndoableList(Document document, UndoableListType type)
         {
             //	Crée une nouvelle liste vide.
             this.document = document;
             this.type = type;
-            this.arrayList = new System.Collections.ArrayList();
+            this.objectList = new();
             this.selected = -1;
         }
 
@@ -47,8 +54,8 @@ namespace Epsitec.Common.Document
 
         public void Dispose()
         {
-            this.arrayList.Clear();
-            this.arrayList = null;
+            this.objectList.Clear();
+            this.objectList = null;
         }
 
         public void Clear()
@@ -56,44 +63,44 @@ namespace Epsitec.Common.Document
             //	Vide toute la liste.
             if (this.IsOpletQueueEnable) // mémorise l'opération ?
             {
-                int total = this.arrayList.Count;
+                int total = this.objectList.Count;
                 for (int i = 0; i < total; i++)
                 {
                     this.RemoveAt(0);
                 }
             }
 
-            this.arrayList.Clear();
+            this.objectList.Clear();
             this.Selected = -1;
         }
 
         public int Count
         {
             //	Nombre d'objets dans la liste.
-            get { return this.arrayList.Count; }
+            get { return this.objectList.Count; }
         }
 
-        public bool Contains(object item)
+        public bool Contains(T item)
         {
             //	Indique si la liste contient un objet.
-            return this.arrayList.Contains(item);
+            return this.objectList.Contains(item);
         }
 
-        public int IndexOf(object value)
+        public int IndexOf(T value)
         {
             //	Retourne l'index d'un objet.
-            return this.arrayList.IndexOf(value);
+            return this.objectList.IndexOf(value);
         }
 
-        public object this[int index]
+        public T this[int index]
         {
             //	Accès à un objet quelconque.
-            get { return this.arrayList[index]; }
+            get { return this.objectList[index]; }
             set
             {
                 if (this.IsOpletQueueEnable) // mémorise l'opération ?
                 {
-                    object obj = this.arrayList[index];
+                    T obj = this.objectList[index];
                     OpletUndoableList operation = new OpletUndoableList(
                         this,
                         OperationType.Change,
@@ -104,19 +111,19 @@ namespace Epsitec.Common.Document
                     this.document.Notifier.NotifyUndoRedoChanged();
                 }
 
-                this.arrayList[index] = value;
+                this.objectList[index] = value;
             }
         }
 
-        public int Add(object value)
+        public int Add(T value)
         {
             //	Ajoute un objet à la fin de la liste.
-            int index = this.arrayList.Count;
+            int index = this.objectList.Count;
             this.Insert(index, value); // insère à la fin
             return index;
         }
 
-        public void Insert(int index, object value)
+        public void Insert(int index, T value)
         {
             //	Ajoute un objet dans la liste.
             if (this.IsOpletQueueEnable) // mémorise l'opération ?
@@ -131,13 +138,13 @@ namespace Epsitec.Common.Document
                 this.document.Notifier.NotifyUndoRedoChanged();
             }
 
-            this.arrayList.Insert(index, value);
+            this.objectList.Insert(index, value);
         }
 
-        public void Remove(object value)
+        public void Remove(T value)
         {
             //	Supprime un objet de la liste.
-            int index = this.arrayList.IndexOf(value);
+            int index = this.objectList.IndexOf(value);
             System.Diagnostics.Debug.Assert(index != -1);
             this.RemoveAt(index);
         }
@@ -147,7 +154,7 @@ namespace Epsitec.Common.Document
             //	Supprime un objet de la liste.
             if (this.IsOpletQueueEnable) // mémorise l'opération ?
             {
-                object obj = this.arrayList[index];
+                T obj = this.objectList[index];
                 OpletUndoableList operation = new OpletUndoableList(
                     this,
                     OperationType.Remove,
@@ -158,7 +165,7 @@ namespace Epsitec.Common.Document
                 this.document.Notifier.NotifyUndoRedoChanged();
             }
 
-            this.arrayList.RemoveAt(index);
+            this.objectList.RemoveAt(index);
         }
 
         public int Selected
@@ -190,9 +197,9 @@ namespace Epsitec.Common.Document
         {
             for (int i = 0; i < this.Count; i++)
             {
-                if (predicate(this.arrayList[i]))
+                if (predicate(this.objectList[i]))
                 {
-                    return this.arrayList[i];
+                    return this.objectList[i];
                 }
             }
 
@@ -203,9 +210,9 @@ namespace Epsitec.Common.Document
         {
             for (int i = this.Count - 1; i >= 0; i--)
             {
-                if (predicate(this.arrayList[i]))
+                if (predicate(this.objectList[i]))
                 {
-                    return this.arrayList[i];
+                    return this.objectList[i];
                 }
             }
 
@@ -216,7 +223,7 @@ namespace Epsitec.Common.Document
         {
             for (int i = 0; i < this.Count; i++)
             {
-                if (predicate(this.arrayList[i]))
+                if (predicate(this.objectList[i]))
                 {
                     return i;
                 }
@@ -229,7 +236,7 @@ namespace Epsitec.Common.Document
         {
             for (int i = this.Count - 1; i >= 0; i--)
             {
-                if (predicate(this.arrayList[i]))
+                if (predicate(this.objectList[i]))
                 {
                     return i;
                 }
@@ -238,23 +245,23 @@ namespace Epsitec.Common.Document
             return -1;
         }
 
-        public void UndoableCopyTo(UndoableList dst)
+        public void UndoableCopyTo(AbstractUndoableList<T> dst)
         {
             //	Copie toute la liste, avec possibilité d'annulation.
             dst.Clear();
-            foreach (object obj in this.arrayList)
+            foreach (T obj in this.objectList)
             {
                 dst.Add(obj);
             }
         }
 
-        public void CopyTo(UndoableList dst)
+        public void CopyTo(AbstractUndoableList<T> dst)
         {
             //	Copie toute la liste, sans possibilité d'annulation.
-            dst.arrayList.Clear();
-            foreach (object obj in this.arrayList)
+            dst.objectList.Clear();
+            foreach (T obj in this.objectList)
             {
-                dst.arrayList.Add(obj);
+                dst.objectList.Add(obj);
             }
         }
 
@@ -272,36 +279,36 @@ namespace Epsitec.Common.Document
         public System.Collections.IEnumerator GetEnumerator()
         {
             //	Retourne l'énumérateur, pour pouvoir utiliser foreach.
-            return this.arrayList.GetEnumerator();
+            return this.objectList.GetEnumerator();
         }
 
         protected static void UndoRedoOperation(OpletUndoableList operation)
         {
-            //	Défait une opération dans une UndoableList.
+            //	Défait une opération dans une SerializableUndoableList.
             //	Une prochaine exécution de UndoRedoOperation refera l'opération.
             Document document = operation.List.document;
             UndoableListType listType = operation.List.type;
-            System.Collections.ArrayList arrayList = operation.List.arrayList;
+            List<T> objectList = operation.List.objectList;
             int index = operation.Index;
             //?System.Diagnostics.Debug.WriteLine(string.Format("{0} {1}", operation.Type.ToString(), operation.Object.ToString()));
 
             int incSelect = 0;
             if (operation.Type == OperationType.Insert)
             {
-                arrayList.RemoveAt(index);
+                objectList.RemoveAt(index);
                 operation.Type = OperationType.Remove;
                 incSelect = -1;
             }
             else if (operation.Type == OperationType.Remove)
             {
-                arrayList.Insert(index, operation.Object);
+                objectList.Insert(index, operation.Object);
                 operation.Type = OperationType.Insert;
                 incSelect = 1;
             }
             else if (operation.Type == OperationType.Change)
             {
-                object temp = arrayList[index];
-                arrayList[index] = operation.Object;
+                T temp = objectList[index];
+                objectList[index] = operation.Object;
                 operation.Object = temp;
             }
             else if (operation.Type == OperationType.Selected)
@@ -363,7 +370,7 @@ namespace Epsitec.Common.Document
             )
             {
                 Properties.Abstract prop1 = operation.Object as Properties.Abstract;
-                Properties.Abstract prop2 = arrayList[index] as Properties.Abstract;
+                Properties.Abstract prop2 = objectList[index] as Properties.Abstract;
 
                 if (prop1.Owners.Count > 0)
                 {
@@ -386,15 +393,20 @@ namespace Epsitec.Common.Document
 
         protected enum OperationType
         {
-            Insert, // ajout d'un nouvel objet dans une UndoableList
-            Remove, // suppression d'un objet dans une UndoableList
-            Change, // changement d'un objet dans une UndoableList
-            Selected, // sélection d'un objet dans une UndoableList
+            Insert,
+            Remove,
+            Change,
+            Selected,
         }
 
         protected class OpletUndoableList : AbstractOplet
         {
-            public OpletUndoableList(UndoableList list, OperationType type, int index, object obj)
+            public OpletUndoableList(
+                AbstractUndoableList<T> list,
+                OperationType type,
+                int index,
+                T obj
+            )
             {
                 this.list = list;
                 this.type = type;
@@ -402,7 +414,7 @@ namespace Epsitec.Common.Document
                 this.obj = obj;
             }
 
-            public UndoableList List
+            public AbstractUndoableList<T> List
             {
                 get { return this.list; }
             }
@@ -419,7 +431,7 @@ namespace Epsitec.Common.Document
                 set { this.index = value; }
             }
 
-            public object Object
+            public T Object
             {
                 get { return this.obj; }
                 set { this.obj = value; }
@@ -427,46 +439,221 @@ namespace Epsitec.Common.Document
 
             public override IOplet Undo()
             {
-                UndoableList.UndoRedoOperation(this);
+                AbstractUndoableList<T>.UndoRedoOperation(this);
                 return this;
             }
 
             public override IOplet Redo()
             {
-                UndoableList.UndoRedoOperation(this);
+                AbstractUndoableList<T>.UndoRedoOperation(this);
                 return this;
             }
 
-            protected UndoableList list;
+            protected AbstractUndoableList<T> list;
             protected OperationType type;
             protected int index;
-            protected object obj;
+            protected T obj;
         }
 
+        protected AbstractUndoableList() { }
+
+        protected Document document;
+        protected UndoableListType type;
+        protected List<T> objectList;
+        protected int selected;
+    }
+
+    [System.Serializable()]
+    public class SerializableUndoableList
+        : AbstractUndoableList<IXMLWritable>,
+            ISerializable,
+            IXMLSerializable<SerializableUndoableList>
+    {
+        public SerializableUndoableList(Document document, UndoableListType type)
+            : base(document, type) { }
+
         #region Serialization
+        public bool HasEquivalentData(IXMLWritable other)
+        {
+            SerializableUndoableList otherList = (SerializableUndoableList)other;
+            if (this.type != otherList.type || this.selected != otherList.selected)
+            {
+                return false;
+            }
+            if (this.objectList.Count != otherList.objectList.Count)
+            {
+                return false;
+            }
+            return this.objectList.HasEquivalentData(otherList.objectList);
+        }
+
+        public XElement ToXML()
+        {
+            return new XElement(
+                "UndoableList",
+                new XAttribute("Type", this.type),
+                new XAttribute("Selected", this.selected),
+                new XElement("List", this.objectList.ToArray().Select(o => o.ToXML()))
+            );
+        }
+
+        public static SerializableUndoableList FromXML(XElement xml)
+        {
+            return new SerializableUndoableList(xml);
+        }
+
+        private SerializableUndoableList(XElement xml)
+        {
+            var root = xml.Element("UndoableList");
+            UndoableListType.TryParse(root.Attribute("Type").Value, out this.type);
+            var itemLoader = GetListItemLoader(this.type);
+            this.selected = int.Parse(root.Attribute("Selected").Value);
+            this.objectList = root.Element("List").Elements().Select(itemLoader).ToList();
+        }
+
+        private static System.Func<XElement, IXMLWritable> GetListItemLoader(
+            UndoableListType listType
+        )
+        {
+            switch (listType)
+            {
+                case UndoableListType.ObjectsInsideProperty:
+                case UndoableListType.ObjectsInsideDocument:
+                    return LoadObjectFromXML;
+                case UndoableListType.PropertiesInsideObject:
+                case UndoableListType.PropertiesInsideDocument:
+                    return LoadPropertyFromXML;
+                case UndoableListType.AggregatesInsideDocument:
+                case UndoableListType.AggregatesInsideObject:
+                    return Properties.Aggregate.FromXML;
+                case UndoableListType.Guides:
+                    return Settings.Guide.FromXML;
+                case UndoableListType.TextFlows:
+                    return TextFlow.FromXML;
+                default:
+                    throw new System.ArgumentException(
+                        $"No item loader for list type '{listType}'"
+                    );
+            }
+        }
+
+        private static IXMLWritable LoadObjectFromXML(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                case "Bezier":
+                    return Objects.Bezier.FromXML(xml);
+                case "Circle":
+                    return Objects.Circle.FromXML(xml);
+                case "Dimension":
+                    return Objects.Dimension.FromXML(xml);
+                case "Ellipse":
+                    return Objects.Ellipse.FromXML(xml);
+                case "Free":
+                    return Objects.Free.FromXML(xml);
+                case "Group":
+                    return Objects.Group.FromXML(xml);
+                case "Image":
+                    return Objects.Image.FromXML(xml);
+                case "Layer":
+                    return Objects.Layer.FromXML(xml);
+                case "Line":
+                    return Objects.Line.FromXML(xml);
+                case "Memory":
+                    return Objects.Memory.FromXML(xml);
+                case "Page":
+                    return Objects.Page.FromXML(xml);
+                case "Poly":
+                    return Objects.Poly.FromXML(xml);
+                case "Rectangle":
+                    return Objects.Rectangle.FromXML(xml);
+                case "Regular":
+                    return Objects.Regular.FromXML(xml);
+                case "Surface":
+                    return Objects.Surface.FromXML(xml);
+                case "TextBox":
+                    return Objects.TextBox.FromXML(xml);
+                case "TextBox2":
+                    return Objects.TextBox2.FromXML(xml);
+                case "TextLine":
+                    return Objects.TextLine.FromXML(xml);
+                case "TextLine2":
+                    return Objects.TextLine2.FromXML(xml);
+                case "Volume":
+                    return Objects.Volume.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Object type '{xml.Name.LocalName}'"
+                    );
+            }
+        }
+
+        private static IXMLWritable LoadPropertyFromXML(XElement xml)
+        {
+            switch (xml.Name.LocalName)
+            {
+                case "Arc":
+                    return Properties.Arc.FromXML(xml);
+                case "Arrow":
+                    return Properties.Arrow.FromXML(xml);
+                case "Bool":
+                    return Properties.Bool.FromXML(xml);
+                case "Color":
+                    return Properties.Color.FromXML(xml);
+                case "Corner":
+                    return Properties.Corner.FromXML(xml);
+                case "Dimension":
+                    return Properties.Dimension.FromXML(xml);
+                case "Font":
+                    return Properties.Font.FromXML(xml);
+                case "Frame":
+                    return Properties.Frame.FromXML(xml);
+                case "Gradient":
+                    return Properties.Gradient.FromXML(xml);
+                case "Image":
+                    return Properties.Image.FromXML(xml);
+                case "Justif":
+                    return Properties.Justif.FromXML(xml);
+                case "Line":
+                    return Properties.Line.FromXML(xml);
+                case "ModColor":
+                    return Properties.ModColor.FromXML(xml);
+                case "Name":
+                    return Properties.Name.FromXML(xml);
+                case "Regular":
+                    return Properties.Regular.FromXML(xml);
+                case "Shadow":
+                    return Properties.Shadow.FromXML(xml);
+                case "Surface":
+                    return Properties.Surface.FromXML(xml);
+                case "Tension":
+                    return Properties.Tension.FromXML(xml);
+                case "TextLine":
+                    return Properties.TextLine.FromXML(xml);
+                case "Volume":
+                    return Properties.Volume.FromXML(xml);
+                default:
+                    throw new System.ArgumentException(
+                        $"Unknown Property type '{xml.Name.LocalName}'"
+                    );
+            }
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //	Sérialise la liste.
             info.AddValue("Type", this.type);
-            info.AddValue("List", this.arrayList);
             info.AddValue("Selected", this.selected);
         }
 
-        protected UndoableList(SerializationInfo info, StreamingContext context)
+        protected SerializableUndoableList(SerializationInfo info, StreamingContext context)
         {
             //	Constructeur qui désérialise la liste.
             this.document = Document.ReadDocument;
             this.type = (UndoableListType)info.GetValue("Type", typeof(UndoableListType));
-            this.arrayList = (System.Collections.ArrayList)
-                info.GetValue("List", typeof(System.Collections.ArrayList));
+            this.objectList = (List<IXMLWritable>)info.GetValue("List", typeof(List<IXMLWritable>));
             this.selected = info.GetInt32("Selected");
         }
         #endregion
-
-
-        protected Document document;
-        protected UndoableListType type;
-        protected System.Collections.ArrayList arrayList;
-        protected int selected;
     }
 }
