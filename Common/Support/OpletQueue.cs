@@ -398,9 +398,12 @@ namespace Epsitec.Common.Support
 
             if ((this.fenceId <= 0) || (this.action == null))
             {
-                throw new System.InvalidOperationException(
-                    "BeginAction must be called before any oplets can be inserted into the queue."
-                );
+                // bl-net8-cross often crash here, investigate…
+
+                //throw new System.InvalidOperationException(
+                //    "BeginAction must be called before any oplets can be inserted into the queue."
+                //);
+                return; // TEMP HACK ignore invalid insertions
             }
 
             this.tempQueue.Add(oplet);

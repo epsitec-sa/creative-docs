@@ -10,12 +10,9 @@ namespace Epsitec.Common.Drawing
     {
         internal Canvas(byte[] data)
         {
-            this.data = new byte[data.Length];
-            data.CopyTo(this.data, 0);
-
-            ICanvasEngine engine = Canvas.FindEngine(this.data);
-            System.Diagnostics.Debug.Assert(engine != null);
-            IconKey[] iks = engine.GetIconKeys(this.data);
+            this.engine = Canvas.FindEngine(data);
+            System.Diagnostics.Debug.Assert(this.engine != null);
+            IconKey[] iks = this.engine.IconKeys;
             System.Diagnostics.Debug.Assert(iks != null && iks.Length > 0);
 
             this.debugDeep = 0;
@@ -36,7 +33,7 @@ namespace Epsitec.Common.Drawing
         {
             //	Version selon IconKey du même dessin.
             //	On partage les données avec le modèle original.
-            this.data = original.data;
+            this.engine = original.engine;
             this.debugDeep = 1;
 
             this.key = key;
@@ -56,7 +53,7 @@ namespace Epsitec.Common.Drawing
         {
             //	Version "normal", "disabled" ou "selected" du même dessin.
             //	On partage les données avec le modèle original.
-            this.data = original.data;
+            this.engine = original.engine;
             this.debugDeep = 2;
 
             this.key = original.key;
@@ -273,25 +270,18 @@ namespace Epsitec.Common.Drawing
 
         public static void RegisterEngine(ICanvasEngine engine)
         {
-            int n = Canvas.engines.Length;
-            ICanvasEngine[] engines = new ICanvasEngine[n + 1];
-            Canvas.engines.CopyTo(engines, 0);
-            engines[n] = engine;
-            Canvas.engines = engines;
+            Canvas.engines.Add(engine);
         }
 
         public static ICanvasEngine FindEngine(byte[] data)
         {
-            for (int i = 0; i < Canvas.engines.Length; i++)
+            foreach (ICanvasEngine engine in Canvas.engines)
             {
-                ICanvasEngine engine = Canvas.engines[i];
-
-                if (engine.IsDataCompatible(data))
+                if (engine.TryLoadData(data))
                 {
                     return engine;
                 }
             }
-
             return null;
         }
 
@@ -345,12 +335,7 @@ namespace Epsitec.Common.Drawing
             uint width = (uint)(size.Width * this.zoom);
             uint height = (uint)(size.Height * this.zoom);
             size = new Size(width, height);
-
-            ICanvasEngine engine = Canvas.FindEngine(this.data);
-            System.Diagnostics.Debug.Assert(engine != null);
-
             this.cache = new DrawingBitmap(width, height);
-
             using (Graphics graphics = new Graphics(this.cache.GraphicContext))
             {
                 int page = 0;
@@ -358,40 +343,29 @@ namespace Epsitec.Common.Drawing
                 {
                     page = this.key.PageRank;
                 }
-                engine.Paint(
-                    graphics,
-                    size,
-                    this.data,
-                    this.paintStyle,
-                    this.color,
-                    page,
-                    this.adorner
-                );
+                this.engine.Paint(graphics, size, this.paintStyle, this.color, page, this.adorner);
             }
         }
 
         protected void ValidateGeometry()
         {
-            if (this.isGeomOk == false)
+            if (this.isGeomOk != false)
             {
-                ICanvasEngine engine = Canvas.FindEngine(this.data);
-                System.Diagnostics.Debug.Assert(engine != null);
-
-                Point origin;
-                engine.GetSizeAndOrigin(this.data, out this.size, out origin);
-                this.origin = origin;
-
-                this.isGeomOk = true;
+                return;
             }
+            this.size = this.engine.Size;
+            this.origin = this.engine.Origin;
+            this.isGeomOk = true;
         }
 
         protected void DestroyCache()
         {
-            if (this.cache != null)
+            if (this.cache == null)
             {
-                this.cache.Dispose();
-                this.cache = null;
+                return;
             }
+            this.cache.Dispose();
+            this.cache = null;
         }
 
         public override void Dispose()
@@ -632,7 +606,7 @@ namespace Epsitec.Common.Drawing
         protected GlyphPaintStyle paintStyle = GlyphPaintStyle.Invalid;
         protected EffectTable effects;
 
-        protected byte[] data;
+        protected readonly ICanvasEngine engine;
         protected Point origin;
         protected Size size;
         protected double zoom = 1.0;
@@ -642,7 +616,7 @@ namespace Epsitec.Common.Drawing
         protected DrawingBitmap cache;
         protected int debugDeep = -1;
 
-        static ICanvasEngine[] engines = new ICanvasEngine[0];
+        static List<ICanvasEngine> engines = new();
         static System.Collections.ArrayList globalIconCache = new System.Collections.ArrayList();
     }
 }

@@ -1807,6 +1807,12 @@ namespace Epsitec.Common.Document
             return Document.FromXML(xdoc.Root);
         }
 
+        public static Document LoadFromXMLStream(Stream stream)
+        {
+            XDocument xdoc = XDocument.Load(stream);
+            return Document.FromXML(xdoc.Root);
+        }
+
         public static Document FromXML(XElement root)
         {
             return new Document(root);
@@ -2661,7 +2667,11 @@ namespace Epsitec.Common.Document
             {
                 Objects.Page p = page as Objects.Page;
                 Rectangle initialClip = Rectangle.Empty;
-                if (this.Modifier != null && !drawingContext.Viewer.IsMiniature)
+                bool doMiniatureClip =
+                    this.Modifier != null
+                    && drawingContext.Viewer != null
+                    && !drawingContext.Viewer.IsMiniature;
+                if (doMiniatureClip)
                 {
                     initialClip = graphics.SaveClippingRectangle();
                     clipRect = Rectangle.Intersection(clipRect, this.Modifier.PageArea);
@@ -2700,7 +2710,7 @@ namespace Epsitec.Common.Document
                     graphics.PopColorModifier();
                 }
 
-                if (this.Modifier != null && !drawingContext.Viewer.IsMiniature)
+                if (doMiniatureClip)
                 {
                     graphics.RestoreClippingRectangle(initialClip);
                 }

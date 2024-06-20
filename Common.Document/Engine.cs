@@ -7,33 +7,41 @@ namespace Epsitec.Common.Document
     /// </summary>
     public class Engine : ICanvasEngine
     {
-        private Engine()
+        private Engine() { }
+
+        public bool TryLoadData(byte[] data)
         {
-            Res.Initialize();
-            Drawing.Canvas.RegisterEngine(this);
+            //if (!this.IsDataCompatible(data))
+            //{
+            //    return false;
+            //}
+            using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
+            {
+                this.document = Document.LoadFromXMLStream(stream);
+            }
+            return true;
         }
 
         public static void Initialize()
         {
+            Res.Initialize();
+            Common.Widgets.Widget.Initialize();
             if (Engine.current == null)
             {
-                Epsitec.Common.Widgets.Widget.Initialize();
                 Engine.current = new Engine();
+                Drawing.Canvas.RegisterEngine(Engine.current);
             }
         }
 
         #region ICanvasEngine Members
-        public bool IsDataCompatible(byte[] data)
+        private bool IsDataCompatible(byte[] data)
         {
             if (
                 (data[0] == (byte)'<')
                 && (data[1] == (byte)'?')
-                && (data[2] == (byte)'i')
-                && (data[3] == (byte)'c')
-                && (data[4] == (byte)'o')
-                && (data[5] == (byte)'n')
-                && (data[6] == (byte)'?')
-                && (data[7] == (byte)'>')
+                && (data[2] == (byte)'x')
+                && (data[3] == (byte)'m')
+                && (data[4] == (byte)'l')
             )
             {
                 return true;
@@ -42,103 +50,49 @@ namespace Epsitec.Common.Document
             return false;
         }
 
-        public Canvas.IconKey[] GetIconKeys(byte[] data)
+        public Canvas.IconKey[] IconKeys
         {
-            Canvas.IconKey[] keys = null;
-
-            using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
-            {
-                Document doc = new Document(
-                    DocumentType.Pictogram,
-                    DocumentMode.ReadOnly,
-                    InstallType.Full,
-                    DebugMode.Release,
-                    null,
-                    null,
-                    null,
-                    null
-                );
-
-                if (doc.Read(stream, "") == "")
-                {
-                    keys = doc.IconKeys;
-                }
-            }
-
-            return keys;
+            get => this.document.IconKeys;
         }
 
-        public void GetSizeAndOrigin(byte[] data, out Size size, out Point origin)
+        public Size Size
         {
-            size = new Size(20, 20);
-            origin = new Point(0, 0);
+            get => this.document.DocumentSize;
+        }
 
-            using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
-            {
-                Document doc = new Document(
-                    DocumentType.Pictogram,
-                    DocumentMode.ReadOnly,
-                    InstallType.Full,
-                    DebugMode.Release,
-                    null,
-                    null,
-                    null,
-                    null
-                );
-
-                if (doc.Read(stream, "") == "")
-                {
-                    size = doc.DocumentSize;
-                    origin = doc.HotSpot;
-                }
-            }
+        public Point Origin
+        {
+            get => this.document.HotSpot;
         }
 
         public void Paint(
             Graphics graphics,
             Size size,
-            byte[] data,
             GlyphPaintStyle style,
             Color color,
             int page,
             object adornerObject
         )
         {
-            using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
-            {
-                Document doc = new Document(
-                    DocumentType.Pictogram,
-                    DocumentMode.ReadOnly,
-                    InstallType.Full,
-                    DebugMode.Release,
-                    null,
-                    null,
-                    null,
-                    null
-                );
-                DrawingContext context = new DrawingContext(doc, null);
+            DrawingContext context = new DrawingContext(this.document, null);
 
-                if (doc.Read(stream, "") == "")
-                {
-                    this.adorner = adornerObject as Common.Widgets.IAdorner;
-                    this.glyphPaintStyle = style;
-                    this.uniqueColor = color;
-                    graphics.PushColorModifier(new ColorModifierCallback(this.ColorModifier));
+            this.adorner = adornerObject as Common.Widgets.IAdorner;
+            this.glyphPaintStyle = style;
+            this.uniqueColor = color;
+            graphics.PushColorModifier(new ColorModifierCallback(this.ColorModifier));
 
-                    context.ContainerSize = size;
-                    context.PreviewActive = true;
-                    context.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-                    context.RootStackPush(page); // première page
-                    context.RootStackPush(0); // premier calque
+            context.ContainerSize = size;
+            context.PreviewActive = true;
+            context.LayerDrawingMode = LayerDrawingMode.ShowInactive;
+            context.RootStackPush(page); // première page
+            context.RootStackPush(0); // premier calque
 
-                    Point scale = context.Scale;
-                    graphics.ScaleTransform(scale.X, scale.Y, 0, 0);
+            Point scale = context.Scale;
+            graphics.ScaleTransform(scale.X, scale.Y, 0, 0);
 
-                    doc.Paint(graphics, context, Rectangle.MaxValue);
+            this.document.Paint(graphics, context, Rectangle.MaxValue);
 
-                    graphics.PopColorModifier();
-                }
-            }
+            graphics.PopColorModifier();
         }
 
         protected RichColor ColorModifier(RichColor color)
@@ -162,5 +116,7 @@ namespace Epsitec.Common.Document
         protected Common.Widgets.IAdorner adorner;
         protected GlyphPaintStyle glyphPaintStyle;
         protected Color uniqueColor;
+
+        private Document document;
     }
 }
