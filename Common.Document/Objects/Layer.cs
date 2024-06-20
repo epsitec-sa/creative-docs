@@ -38,10 +38,7 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new SerializableUndoableList(
-                this.document,
-                UndoableListType.ObjectsInsideDocument
-            );
+            this.objects = new UndoableList(this.document, UndoableListType.ObjectsInsideDocument);
         }
 
         protected override bool ExistingProperty(Properties.Type type)
@@ -145,7 +142,7 @@ namespace Epsitec.Common.Document.Objects
 
         #region Menu
         public static VMenu CreateMenu(
-            SerializableUndoableList layers,
+            UndoableList layers,
             int currentLayer,
             string cmd,
             Support.EventHandler<MessageEventArgs> message

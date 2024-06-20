@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document.Widgets
         public AggregateList()
             : base() { }
 
-        public SerializableUndoableList List
+        public UndoableList List
         {
             //	Liste des aggrégats représentés dans la liste.
             get { return this.list; }
@@ -79,6 +79,6 @@ namespace Epsitec.Common.Document.Widgets
             sm.Invalidate();
         }
 
-        protected SerializableUndoableList list;
+        protected UndoableList list;
     }
 }

@@ -29,10 +29,7 @@ namespace Epsitec.Common.Document
             this.InitializeNavigator();
             this.InitializeEmptyTextStory();
 
-            this.objectsChain = new SerializableUndoableList(
-                this.document,
-                UndoableListType.ObjectsChain
-            );
+            this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
         }
 
         protected void InitializeNavigator()
@@ -264,7 +261,7 @@ namespace Epsitec.Common.Document
             return this.objectsChain.IndexOf(obj);
         }
 
-        public SerializableUndoableList Chain
+        public UndoableList Chain
         {
             //	Donne la chaîne des pavés de texte.
             get { return this.objectsChain; }
@@ -340,7 +337,7 @@ namespace Epsitec.Common.Document
         public void NotifyAreaFlow()
         {
             //	Notifie "à repeindre" toute la chaîne des pavés.
-            SerializableUndoableList chain = this.Chain;
+            UndoableList chain = this.Chain;
 
             foreach (Viewer viewer in this.document.Modifier.Viewers)
             {
@@ -474,7 +471,7 @@ namespace Epsitec.Common.Document
 
         public static void StatisticFonts(
             List<OpenType.FontName> list,
-            SerializableUndoableList textFlows,
+            UndoableList textFlows,
             TextStats.FontNaming fontNaming
         )
         {
@@ -496,7 +493,7 @@ namespace Epsitec.Common.Document
         }
 
         public static void ReadCheckWarnings(
-            SerializableUndoableList textFlows,
+            UndoableList textFlows,
             System.Collections.ArrayList warnings
         )
         {
@@ -662,7 +659,7 @@ namespace Epsitec.Common.Document
         private TextFlow(XElement xml)
         {
             var root = xml.Element("TextFlow");
-            this.objectsChain = SerializableUndoableList.FromXML(root.Element("ObjectsChain"));
+            this.objectsChain = UndoableList.FromXML(root.Element("ObjectsChain"));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -680,8 +677,7 @@ namespace Epsitec.Common.Document
             //	Constructeur qui désérialise l'objet.
             this.document = Document.ReadDocument;
 
-            this.objectsChain = (SerializableUndoableList)
-                info.GetValue("ObjectsChain", typeof(SerializableUndoableList));
+            this.objectsChain = (UndoableList)info.GetValue("ObjectsChain", typeof(UndoableList));
             this.textStoryData = (byte[])info.GetValue("TextStoryData", typeof(byte[]));
         }
 
@@ -735,6 +731,6 @@ namespace Epsitec.Common.Document
         protected Text.TextNavigator textNavigator;
         protected TextNavigator2 metaNavigator;
         protected Objects.AbstractText activeTextBox;
-        protected SerializableUndoableList objectsChain;
+        protected UndoableList objectsChain;
     }
 }

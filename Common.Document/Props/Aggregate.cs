@@ -13,14 +13,8 @@ namespace Epsitec.Common.Document.Properties
         public Aggregate(Document document)
         {
             this.document = document;
-            this.styles = new SerializableUndoableList(
-                this.document,
-                UndoableListType.StylesInsideAggregate
-            );
-            this.children = new SerializableUndoableList(
-                this.document,
-                UndoableListType.AggregatesChildren
-            );
+            this.styles = new UndoableList(this.document, UndoableListType.StylesInsideAggregate);
+            this.children = new UndoableList(this.document, UndoableListType.AggregatesChildren);
         }
 
         public string AggregateName
@@ -37,13 +31,13 @@ namespace Epsitec.Common.Document.Properties
             }
         }
 
-        public SerializableUndoableList Styles
+        public UndoableList Styles
         {
             //	Liste des styles de l'agrégat.
             get { return this.styles; }
         }
 
-        public SerializableUndoableList Children
+        public UndoableList Children
         {
             //	Liste des fils de l'agrégat.
             get { return this.children; }
@@ -115,7 +109,7 @@ namespace Epsitec.Common.Document.Properties
             if (deep > 10)
                 return false;
 
-            SerializableUndoableList list = obj.Aggregates;
+            UndoableList list = obj.Aggregates;
             for (int i = 0; i < list.Count; i++)
             {
                 Properties.Aggregate agg = list[i] as Properties.Aggregate;
@@ -172,10 +166,7 @@ namespace Epsitec.Common.Document.Properties
             }
         }
 
-        public static int UniqueId(
-            SerializableUndoableList aggregates,
-            Properties.Abstract property
-        )
+        public static int UniqueId(UndoableList aggregates, Properties.Abstract property)
         {
             //	Donne un identificateur unique pour une propriété.
             int id = (int)property.Type;
@@ -272,8 +263,8 @@ namespace Epsitec.Common.Document.Properties
         private Aggregate(XElement xml)
         {
             this.aggregateName = xml.Attribute("Name").Value;
-            this.styles = SerializableUndoableList.FromXML(xml.Element("Styles"));
-            this.children = SerializableUndoableList.FromXML(xml.Element("Children"));
+            this.styles = UndoableList.FromXML(xml.Element("Styles"));
+            this.children = UndoableList.FromXML(xml.Element("Children"));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -289,22 +280,19 @@ namespace Epsitec.Common.Document.Properties
             //	Constructeur qui désérialise l'agrégat.
             this.document = Document.ReadDocument;
             this.aggregateName = info.GetString("AggregateName");
-            this.styles = (SerializableUndoableList)
-                info.GetValue("Styles", typeof(SerializableUndoableList));
+            this.styles = (UndoableList)info.GetValue("Styles", typeof(UndoableList));
 
             if (this.document.IsRevisionGreaterOrEqual(2, 0, 0))
             {
-                this.children = (SerializableUndoableList)
-                    info.GetValue("Children", typeof(SerializableUndoableList));
+                this.children = (UndoableList)info.GetValue("Children", typeof(UndoableList));
             }
             else if (this.document.IsRevisionGreaterOrEqual(1, 0, 27))
             {
-                this.children = (SerializableUndoableList)
-                    info.GetValue("Childrens", typeof(SerializableUndoableList));
+                this.children = (UndoableList)info.GetValue("Childrens", typeof(UndoableList));
             }
             else
             {
-                this.children = new SerializableUndoableList(
+                this.children = new UndoableList(
                     this.document,
                     UndoableListType.AggregatesChildren
                 );
@@ -315,7 +303,7 @@ namespace Epsitec.Common.Document.Properties
 
         protected Document document;
         protected string aggregateName = "";
-        protected SerializableUndoableList styles;
-        protected SerializableUndoableList children;
+        protected UndoableList styles;
+        protected UndoableList children;
     }
 }

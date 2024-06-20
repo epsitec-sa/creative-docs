@@ -30,7 +30,11 @@ Document LoadOriginalDocument(string inputFile)
     {
         Console.WriteLine("    - read old");
     }
-    document.Read(inputFile);
+    string error = document.Read(inputFile);
+    if (error != "")
+    {
+        throw new System.InvalidOperationException(error);
+    }
     return document;
 }
 
@@ -61,12 +65,13 @@ void TestConvert(string oldFile)
 {
     Console.WriteLine($"Convert {Path.GetFileName(oldFile)}");
     string newFile = Path.GetFileNameWithoutExtension(oldFile) + ".xml";
-    string inputFilePath = Path.Join(inputDir, oldFile);
     string outputFilePath = Path.Join(outputDir, newFile);
-    Document originalDocument = LoadOriginalDocument(inputFilePath);
+    Document originalDocument = LoadOriginalDocument(oldFile);
     ExportToNewFormat(originalDocument, outputFilePath);
     CheckReadBackDocument(originalDocument, outputFilePath);
 }
+
+//TestConvert("Save.icon");
 
 foreach (string file in Directory.GetFiles(inputDir))
 {

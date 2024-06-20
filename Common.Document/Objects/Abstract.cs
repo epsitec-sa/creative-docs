@@ -40,11 +40,11 @@ namespace Epsitec.Common.Document.Objects
                 this.uniqueId = -111;
             }
 
-            this.properties = new SerializableUndoableList(
+            this.properties = new UndoableList(
                 this.document,
                 UndoableListType.PropertiesInsideObject
             );
-            this.aggregates = new SerializableUndoableList(
+            this.aggregates = new UndoableList(
                 this.document,
                 UndoableListType.AggregatesInsideObject
             );
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document.Objects
         //    set { this.handles = value; }
         //}
 
-        public SerializableUndoableList Objects
+        public UndoableList Objects
         {
             get { return this.objects; }
             set { this.objects = value; }
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Document.Objects
             //	Crée toutes les poignées pour les propriétés.
             foreach (Properties.Abstract property in this.properties)
             {
-                int total = property.TotalHandle(this);
+                int total = property?.TotalHandle(this) ?? 0;
                 for (int i = 0; i < total; i++)
                 {
                     Handle handle = new Handle(this.document);
@@ -689,7 +689,7 @@ namespace Epsitec.Common.Document.Objects
 
             if (this.selectedSegments == null)
             {
-                this.selectedSegments = new UndoableList(
+                this.selectedSegments = new BasicUndoableList(
                     this.document,
                     UndoableListType.SelectedSegments
                 );
@@ -2237,7 +2237,7 @@ namespace Epsitec.Common.Document.Objects
                 return; // on ne veut rien changer
 
             bool oqe;
-            SerializableUndoableList properties = this.document.PropertiesAuto;
+            UndoableList properties = this.document.PropertiesAuto;
             foreach (Properties.Abstract property in properties)
             {
                 Properties.Bool existing = property as Properties.Bool;
@@ -2380,7 +2380,7 @@ namespace Epsitec.Common.Document.Objects
         protected Properties.Abstract SearchProperty(Properties.Abstract item, bool selected)
         {
             //	Cherche une propriété identique dans une collection du document.
-            SerializableUndoableList properties = this.document.Modifier.PropertyList(selected);
+            UndoableList properties = this.document.Modifier.PropertyList(selected);
 
             foreach (Properties.Abstract property in properties)
             {
@@ -2395,7 +2395,7 @@ namespace Epsitec.Common.Document.Objects
             return null;
         }
 
-        public SerializableUndoableList Aggregates
+        public UndoableList Aggregates
         {
             //	Liste des agrégats utilisés par l'objet.
             get { return this.aggregates; }
@@ -4035,7 +4035,7 @@ namespace Epsitec.Common.Document.Objects
             this.name = xml.Attribute("Name").Value;
             this.direction = double.Parse(xml.Attribute("Direction").Value);
 
-            this.properties = SerializableUndoableList.FromXML(xml.Element("Properties"));
+            this.properties = UndoableList.FromXML(xml.Element("Properties"));
             this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
             this.handles = xml.Element("Handles")
@@ -4047,9 +4047,9 @@ namespace Epsitec.Common.Document.Objects
             var objectsXML = xml.Element("Objects");
             if (objectsXML != null)
             {
-                this.objects = SerializableUndoableList.FromXML(objectsXML);
+                this.objects = UndoableList.FromXML(objectsXML);
             }
-            this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
+            this.aggregates = UndoableList.FromXML(xml.Element("Aggregates"));
             this.CreateMissingProperties();
         }
 
@@ -4079,15 +4079,15 @@ namespace Epsitec.Common.Document.Objects
             this.document = Document.ReadDocument;
             this.uniqueId = info.GetInt32("UniqueId");
             this.name = info.GetString("Name");
-            this.properties = (SerializableUndoableList)
-                info.GetValue("Properties", typeof(SerializableUndoableList));
+            this.properties = (UndoableList)info.GetValue("Properties", typeof(UndoableList));
             this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
-            this.handles = (List<Handle>)info.GetValue("Handles", typeof(List<Handle>));
+            System.Collections.ArrayList handles = (System.Collections.ArrayList)
+                info.GetValue("Handles", typeof(System.Collections.ArrayList));
+            this.handles = handles.Cast<Handle>().ToList();
             this.HandlePropertiesCreate(); // crée les poignées des propriétés
 
-            this.objects = (SerializableUndoableList)
-                info.GetValue("Objects", typeof(SerializableUndoableList));
+            this.objects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 17))
             {
@@ -4100,12 +4100,11 @@ namespace Epsitec.Common.Document.Objects
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 26))
             {
-                this.aggregates = (SerializableUndoableList)
-                    info.GetValue("Aggregates", typeof(SerializableUndoableList));
+                this.aggregates = (UndoableList)info.GetValue("Aggregates", typeof(UndoableList));
             }
             else if (this.document.IsRevisionGreaterOrEqual(1, 0, 24))
             {
-                this.aggregates = new SerializableUndoableList(
+                this.aggregates = new UndoableList(
                     this.document,
                     UndoableListType.AggregatesInsideObject
                 );
@@ -4118,7 +4117,7 @@ namespace Epsitec.Common.Document.Objects
             }
             else
             {
-                this.aggregates = new SerializableUndoableList(
+                this.aggregates = new UndoableList(
                     this.document,
                     UndoableListType.AggregatesInsideObject
                 );
@@ -4227,16 +4226,16 @@ namespace Epsitec.Common.Document.Objects
         protected Point moveHandlePos;
 
         protected string name = "";
-        protected SerializableUndoableList properties;
+        protected UndoableList properties;
         protected List<Properties.Abstract> additionnalProperties;
         protected List<Handle> handles = new();
-        protected UndoableList selectedSegments = null;
-        protected SerializableUndoableList objects = null;
+        protected BasicUndoableList selectedSegments = null;
+        protected UndoableList objects = null;
         protected int totalPropertyHandle;
         protected double direction = 0.0;
         protected double initialDirection = 0.0;
         protected SurfaceAnchor surfaceAnchor;
-        protected SerializableUndoableList aggregates = null;
+        protected UndoableList aggregates = null;
 
         protected bool isDirtyPageAndLayerNumbers = true;
         protected int pageNumber = -1;

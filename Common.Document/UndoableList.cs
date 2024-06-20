@@ -24,9 +24,9 @@ namespace Epsitec.Common.Document
         SelectedSegments, // segments sélectionnés pour le modeleur
     }
 
-    public class UndoableList : AbstractUndoableList<object>
+    public class BasicUndoableList : AbstractUndoableList<object>
     {
-        public UndoableList(Document document, UndoableListType type)
+        public BasicUndoableList(Document document, UndoableListType type)
             : base(document, type) { }
     }
 
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document
 
         protected static void UndoRedoOperation(OpletUndoableList operation)
         {
-            //	Défait une opération dans une SerializableUndoableList.
+            //	Défait une opération dans une UndoableList.
             //	Une prochaine exécution de UndoRedoOperation refera l'opération.
             Document document = operation.List.document;
             UndoableListType listType = operation.List.type;
@@ -459,18 +459,18 @@ namespace Epsitec.Common.Document
     }
 
     [System.Serializable()]
-    public class SerializableUndoableList
+    public class UndoableList
         : AbstractUndoableList<IXMLWritable>,
             ISerializable,
-            IXMLSerializable<SerializableUndoableList>
+            IXMLSerializable<UndoableList>
     {
-        public SerializableUndoableList(Document document, UndoableListType type)
+        public UndoableList(Document document, UndoableListType type)
             : base(document, type) { }
 
         #region Serialization
         public bool HasEquivalentData(IXMLWritable other)
         {
-            SerializableUndoableList otherList = (SerializableUndoableList)other;
+            UndoableList otherList = (UndoableList)other;
             if (this.type != otherList.type || this.selected != otherList.selected)
             {
                 return false;
@@ -485,21 +485,24 @@ namespace Epsitec.Common.Document
         public XElement ToXML()
         {
             return new XElement(
-                "UndoableList",
+                "BasicUndoableList",
                 new XAttribute("Type", this.type),
                 new XAttribute("Selected", this.selected),
-                new XElement("List", this.objectList.ToArray().Select(o => o.ToXML()))
+                new XElement(
+                    "List",
+                    this.objectList.ToArray().Where(o => o != null).Select(o => o.ToXML())
+                )
             );
         }
 
-        public static SerializableUndoableList FromXML(XElement xml)
+        public static UndoableList FromXML(XElement xml)
         {
-            return new SerializableUndoableList(xml);
+            return new UndoableList(xml);
         }
 
-        private SerializableUndoableList(XElement xml)
+        private UndoableList(XElement xml)
         {
-            var root = xml.Element("UndoableList");
+            var root = xml.Element("BasicUndoableList");
             UndoableListType.TryParse(root.Attribute("Type").Value, out this.type);
             var itemLoader = GetListItemLoader(this.type);
             this.selected = int.Parse(root.Attribute("Selected").Value);
@@ -641,12 +644,14 @@ namespace Epsitec.Common.Document
             info.AddValue("Selected", this.selected);
         }
 
-        protected SerializableUndoableList(SerializationInfo info, StreamingContext context)
+        protected UndoableList(SerializationInfo info, StreamingContext context)
         {
             //	Constructeur qui désérialise la liste.
             this.document = Document.ReadDocument;
             this.type = (UndoableListType)info.GetValue("Type", typeof(UndoableListType));
-            this.objectList = (List<IXMLWritable>)info.GetValue("List", typeof(List<IXMLWritable>));
+            System.Collections.ArrayList objectList = (System.Collections.ArrayList)
+                info.GetValue("List", typeof(System.Collections.ArrayList));
+            this.objectList = objectList.Cast<IXMLWritable>().ToList();
             this.selected = info.GetInt32("Selected");
         }
         #endregion

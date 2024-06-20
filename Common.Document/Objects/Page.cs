@@ -39,11 +39,8 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new SerializableUndoableList(
-                this.document,
-                UndoableListType.ObjectsInsideDocument
-            );
-            this.guides = new SerializableUndoableList(this.document, UndoableListType.Guides);
+            this.objects = new UndoableList(this.document, UndoableListType.ObjectsInsideDocument);
+            this.guides = new UndoableList(this.document, UndoableListType.Guides);
             this.rank = 0;
             this.shortName = "";
             this.masterType = MasterType.Slave;
@@ -288,7 +285,7 @@ namespace Epsitec.Common.Document.Objects
             }
         }
 
-        public SerializableUndoableList Guides
+        public UndoableList Guides
         {
             //	Liste de repères pour cette page.
             get { return this.guides; }
@@ -423,7 +420,7 @@ namespace Epsitec.Common.Document.Objects
 
         #region Menu
         public static VMenu CreateMenu(
-            SerializableUndoableList pages,
+            UndoableList pages,
             int currentPage,
             string cmd,
             Support.EventHandler<MessageEventArgs> message
@@ -478,7 +475,7 @@ namespace Epsitec.Common.Document.Objects
         }
 
         public static VMenu CreateMenu(
-            SerializableUndoableList pages,
+            UndoableList pages,
             List<int> currentsPage,
             string cmd,
             Support.EventHandler<MessageEventArgs> message
@@ -727,8 +724,7 @@ namespace Epsitec.Common.Document.Objects
                     this.masterType = (MasterType)info.GetValue("MasterType", typeof(MasterType));
                     this.masterUse = (MasterUse)info.GetValue("MasterUse", typeof(MasterUse));
                     this.masterPageToUse = (Page)info.GetValue("MasterPageToUse", typeof(Page));
-                    this.guides = (SerializableUndoableList)
-                        info.GetValue("GuidesList", typeof(SerializableUndoableList));
+                    this.guides = (UndoableList)info.GetValue("GuidesList", typeof(UndoableList));
                     master = true;
                 }
 
@@ -751,7 +747,7 @@ namespace Epsitec.Common.Document.Objects
 
             if (!master)
             {
-                this.guides = new SerializableUndoableList(this.document, UndoableListType.Guides);
+                this.guides = new UndoableList(this.document, UndoableListType.Guides);
                 this.masterType = MasterType.Slave;
                 this.masterUse = MasterUse.Default;
                 this.masterPageToUse = null;
@@ -769,7 +765,7 @@ namespace Epsitec.Common.Document.Objects
         protected bool masterAutoStop;
         protected bool masterSpecific;
         protected bool masterGuides;
-        protected SerializableUndoableList guides;
+        protected UndoableList guides;
         protected Size pageSize;
         protected Point hotSpot;
         protected Point glyphOrigin;

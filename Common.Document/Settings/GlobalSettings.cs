@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Settings
         public void SetWindowBounds(string name, Drawing.Point location, Drawing.Size size)
         {
             //	Ajoute une définition de fenêtre.
-            WindowBounds wb = this.windowBounds[name];
+            this.windowBounds.TryGetValue(name, out WindowBounds wb);
             if (wb == null)
             {
                 wb = new WindowBounds(location, size);
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Document.Settings
         public bool GetWindowBounds(string name, out Drawing.Point location, out Drawing.Size size)
         {
             //	Cherche une définition de fenêtre.
-            WindowBounds wb = this.windowBounds[name];
+            this.windowBounds.TryGetValue(name, out WindowBounds wb);
             if (wb == null)
             {
                 location = Drawing.Point.Zero;
@@ -1009,9 +1009,12 @@ namespace Epsitec.Common.Document.Settings
                 info.GetValue("WindowLocation", typeof(Drawing.Point));
             this.windowSize = (Drawing.Size)info.GetValue("WindowSize", typeof(Drawing.Size));
             this.isFullScreen = info.GetBoolean("IsFullScreen");
-            this.windowBounds =
-                (Dictionary<string, WindowBounds>)
-                    info.GetValue("WindowBounds", typeof(Dictionary<string, WindowBounds>));
+            System.Collections.Hashtable windowBounds = (System.Collections.Hashtable)
+                info.GetValue("WindowBounds", typeof(System.Collections.Hashtable));
+            this.windowBounds = Support.Serialization.Casting.HashtableToDictionary<
+                string,
+                WindowBounds
+            >(windowBounds);
 
             this.screenDpi = info.GetDouble("ScreenDpi");
             this.adorner = info.GetString("Adorner");
@@ -1021,7 +1024,9 @@ namespace Epsitec.Common.Document.Settings
             this.fineCursor = info.GetBoolean("FineCursor");
             this.splashScreen = info.GetBoolean("SplashScreen");
             this.firstAction = (FirstAction)info.GetValue("FirstAction", typeof(FirstAction));
-            this.lastFilename = (List<string>)info.GetValue("LastFilename", typeof(List<string>));
+            System.Collections.ArrayList lastFilename = (System.Collections.ArrayList)
+                info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
+            this.lastFilename = lastFilename.Cast<string>().ToList();
             this.initialDirectory = info.GetString("InitialDirectory");
 
             if (version >= 2)
@@ -1042,8 +1047,9 @@ namespace Epsitec.Common.Document.Settings
 
             if (version >= 4)
             {
-                this.quickCommands =
-                    (List<string>)info.GetValue("QuickCommands", typeof(List<string>));
+                System.Collections.ArrayList quickCommands = (System.Collections.ArrayList)
+                    info.GetValue("QuickCommands", typeof(System.Collections.ArrayList));
+                this.quickCommands = quickCommands.Cast<string>().ToList();
                 this.UpdateQuickCommands();
             }
             else
@@ -1062,7 +1068,9 @@ namespace Epsitec.Common.Document.Settings
 
             if (version >= 7)
             {
-                this.lastModel = (List<string>)info.GetValue("LastModel", typeof(List<string>));
+                System.Collections.ArrayList lastModel = (System.Collections.ArrayList)
+                    info.GetValue("LastModel", typeof(System.Collections.ArrayList));
+                this.lastModel = lastModel.Cast<string>().ToList();
             }
             else
             {

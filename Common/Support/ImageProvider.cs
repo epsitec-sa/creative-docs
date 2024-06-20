@@ -1,10 +1,10 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support
 {
@@ -23,7 +23,10 @@ namespace Epsitec.Common.Support
         {
             string path = System.IO.Directory.GetCurrentDirectory();
             string otherPath = IO.PathTools.RemoveUntilDir("Common.Tests", path);
-            string thirdPath = System.IO.Path.Join(IO.PathTools.RemoveUntilDir("cresus-core", path), "External");
+            string thirdPath = System.IO.Path.Join(
+                IO.PathTools.RemoveUntilDir("cresus-core", path),
+                "External"
+            );
 
             ImageProvider.defaultProvider = new ImageProvider();
             ImageProvider.defaultPaths = new string[5];

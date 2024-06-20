@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Widgets
             this.CloseCombo(CloseMode.Accept);
         }
 
-        protected int GetSelectedStyle(SerializableUndoableList aggregates, string currentStyle)
+        protected int GetSelectedStyle(UndoableList aggregates, string currentStyle)
         {
             //	Cherche le rang du style graphique actuellement en édition.
             for (int i = 0; i < aggregates.Count; i++)

@@ -66,6 +66,11 @@ namespace Epsitec.Common.Drawing
             this.effects = original.effects;
         }
 
+        public static Canvas FromData(byte[] buffer)
+        {
+            return new Canvas(buffer);
+        }
+
         public int DebugDeep
         {
             //	Profondeur 0..2 pour la mise au point.

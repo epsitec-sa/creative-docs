@@ -1,9 +1,9 @@
 //	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Runtime.InteropServices;
 using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Support.Extensions;
-using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Drawing
 {
@@ -1004,7 +1004,7 @@ namespace Epsitec.Common.Drawing
 
                         return image;
                     }
-                    catch
+                    catch (System.OutOfMemoryException)
                     {
                         System.Diagnostics.Debug.WriteLine(
                             "Out of memory in GDI - attempt " + attempt
@@ -1202,7 +1202,12 @@ namespace Epsitec.Common.Drawing
             Size size
         )
         {
-            using (System.IO.Stream stream = assembly.GetManifestResourceStream(resourceName))
+            bool useNewFormatIcons = false;
+            string res =
+                useNewFormatIcons && resourceName.EndsWith("icon")
+                    ? resourceName.StripSuffix("icon") + "xml"
+                    : resourceName;
+            using (System.IO.Stream stream = assembly.GetManifestResourceStream(res))
             {
                 if (stream == null)
                 {
@@ -1213,6 +1218,11 @@ namespace Epsitec.Common.Drawing
                 byte[] buffer = new byte[length];
                 stream.Read(buffer, 0, (int)length);
 
+                if (resourceName.EndsWith(".icon"))
+                {
+                    // image au format vectoriel "maison" EPSITEC
+                    return Canvas.FromData(buffer);
+                }
                 return Bitmap.FromData(buffer, origin, size);
             }
         }

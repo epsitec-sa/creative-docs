@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Objects
         #endregion
 
 
-        public static int Search(UndoableList list, int rank)
+        public static int Search(BasicUndoableList list, int rank)
         {
             //	Cherche un segment sélectionné dans une liste.
             for (int i = 0; i < list.Count; i++)
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Objects
             return -1;
         }
 
-        public static int[] Sort(UndoableList list)
+        public static int[] Sort(BasicUndoableList list)
         {
             //	Retourne un index trié de tous les segments sélectionnés pour que ceux ayant
             //	un rang élévé soient traités en premier.
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document.Objects
             }
         }
 
-        public static void InsertOpletGeometry(UndoableList list, Objects.Abstract obj)
+        public static void InsertOpletGeometry(BasicUndoableList list, Objects.Abstract obj)
         {
             //	Mémorise pour le undo.
             for (int i = 0; i < list.Count; i++)
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Objects
             }
         }
 
-        public static void Update(UndoableList list, Objects.Abstract obj)
+        public static void Update(BasicUndoableList list, Objects.Abstract obj)
         {
             //	Mise à jour après un changement de géométrie.
             Path path = obj.GetShaperPath();
