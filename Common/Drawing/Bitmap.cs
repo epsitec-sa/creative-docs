@@ -1202,11 +1202,13 @@ namespace Epsitec.Common.Drawing
             Size size
         )
         {
-            bool useNewFormatIcons = false;
             string res =
-                useNewFormatIcons && resourceName.EndsWith("icon")
+                !Debug.Settings.UseOldIconFormat && resourceName.EndsWith("icon")
                     ? resourceName.StripSuffix("icon") + "xml"
                     : resourceName;
+            System.Console.WriteLine(
+                $"Load resource {resourceName} from manifest, at location {res}"
+            );
             using (System.IO.Stream stream = assembly.GetManifestResourceStream(res))
             {
                 if (stream == null)

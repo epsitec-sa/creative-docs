@@ -632,7 +632,7 @@ namespace Epsitec.Common.Text.Styles
             switch (xml.Name.LocalName)
             {
                 // bl-converter add the properties here
-                case "AutoTextPropertyProperty":
+                case "AutoTextProperty":
                     return Properties.AutoTextProperty.FromXML(xml);
                 case "BreakProperty":
                     return Properties.BreakProperty.FromXML(xml);

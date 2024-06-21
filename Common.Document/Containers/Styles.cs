@@ -1766,7 +1766,7 @@ namespace Epsitec.Common.Document.Containers
             return menu;
         }
 
-        protected bool MenuTypesExist(UndoableList styles, Properties.Type type)
+        protected bool MenuTypesExist(NewUndoableList styles, Properties.Type type)
         {
             foreach (Properties.Abstract property in styles)
             {

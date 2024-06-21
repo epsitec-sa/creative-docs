@@ -220,7 +220,7 @@ namespace Epsitec.Common.Text.Properties
 
         public override XElement ToXML()
         {
-            return new XElement(
+            var root = new XElement(
                 "MarginsProperty",
                 new XAttribute("LeftMarginFirstLine", this.leftMarginFirstLine),
                 new XAttribute("LeftMarginBody", this.leftMarginBody),
@@ -233,9 +233,13 @@ namespace Epsitec.Common.Text.Properties
                 new XAttribute("BreakFenceBefore", this.breakFenceBefore),
                 new XAttribute("BreakFenceAfter", this.breakFenceAfter),
                 new XAttribute("EnableHyphenation", this.enableHyphenation),
-                new XAttribute("Level", this.level),
-                new XAttribute("LevelAttribute", this.levelAttribute)
+                new XAttribute("Level", this.level)
             );
+            if (this.levelAttribute != null)
+            {
+                root.Add(new XAttribute("LevelAttribute", this.levelAttribute));
+            }
+            return root;
         }
 
         public static MarginsProperty FromXML(XElement xml)
@@ -260,7 +264,7 @@ namespace Epsitec.Common.Text.Properties
                 out this.enableHyphenation
             );
             this.level = (int)xml.Attribute("Level");
-            this.levelAttribute = xml.Attribute("LevelAttribute").Value;
+            this.levelAttribute = xml.Attribute("LevelAttribute")?.Value;
         }
 
         public override void DeserializeFromText(

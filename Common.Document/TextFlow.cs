@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document
             this.InitializeNavigator();
             this.InitializeEmptyTextStory();
 
-            this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
+            this.objectsChain = new NewUndoableList(this.document, UndoableListType.ObjectsChain);
         }
 
         protected void InitializeNavigator()
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Document
             return this.objectsChain.IndexOf(obj);
         }
 
-        public UndoableList Chain
+        public NewUndoableList Chain
         {
             //	Donne la chaîne des pavés de texte.
             get { return this.objectsChain; }
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Document
         public void NotifyAreaFlow()
         {
             //	Notifie "à repeindre" toute la chaîne des pavés.
-            UndoableList chain = this.Chain;
+            NewUndoableList chain = this.Chain;
 
             foreach (Viewer viewer in this.document.Modifier.Viewers)
             {
@@ -471,7 +471,7 @@ namespace Epsitec.Common.Document
 
         public static void StatisticFonts(
             List<OpenType.FontName> list,
-            UndoableList textFlows,
+            NewUndoableList textFlows,
             TextStats.FontNaming fontNaming
         )
         {
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Document
         }
 
         public static void ReadCheckWarnings(
-            UndoableList textFlows,
+            NewUndoableList textFlows,
             System.Collections.ArrayList warnings
         )
         {
@@ -659,7 +659,7 @@ namespace Epsitec.Common.Document
         private TextFlow(XElement xml)
         {
             var root = xml.Element("TextFlow");
-            this.objectsChain = UndoableList.FromXML(root.Element("ObjectsChain"));
+            this.objectsChain = NewUndoableList.FromXML(root.Element("ObjectsChain"));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -677,7 +677,8 @@ namespace Epsitec.Common.Document
             //	Constructeur qui désérialise l'objet.
             this.document = Document.ReadDocument;
 
-            this.objectsChain = (UndoableList)info.GetValue("ObjectsChain", typeof(UndoableList));
+            var objectsChain = (UndoableList)info.GetValue("ObjectsChain", typeof(UndoableList));
+            this.objectsChain = NewUndoableList.FromOld(objectsChain);
             this.textStoryData = (byte[])info.GetValue("TextStoryData", typeof(byte[]));
         }
 
@@ -731,6 +732,6 @@ namespace Epsitec.Common.Document
         protected Text.TextNavigator textNavigator;
         protected TextNavigator2 metaNavigator;
         protected Objects.AbstractText activeTextBox;
-        protected UndoableList objectsChain;
+        protected NewUndoableList objectsChain;
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -149,11 +150,17 @@ namespace Epsitec.Common.Document
             }
 
             this.hotSpot = new Point(0, 0);
-            this.objects = new UndoableList(this, UndoableListType.ObjectsInsideDocument);
-            this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
-            this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
-            this.aggregates = new UndoableList(this, UndoableListType.AggregatesInsideDocument);
-            this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+            this.objects = new NewUndoableList(this, UndoableListType.ObjectsInsideDocument);
+            this.propertiesAuto = new NewUndoableList(
+                this,
+                UndoableListType.PropertiesInsideDocument
+            );
+            this.propertiesSel = new NewUndoableList(
+                this,
+                UndoableListType.PropertiesInsideDocument
+            );
+            this.aggregates = new NewUndoableList(this, UndoableListType.AggregatesInsideDocument);
+            this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
             this.exportDirectory = "";
             this.exportFilename = "";
             this.exportFilter = 0;
@@ -468,7 +475,7 @@ namespace Epsitec.Common.Document
             return state;
         }
 
-        public UndoableList DocumentObjects
+        public NewUndoableList DocumentObjects
         {
             //	Liste des objets de ce document.
             get { return this.objects; }
@@ -502,25 +509,25 @@ namespace Epsitec.Common.Document
             set { this.vRuler = value; }
         }
 
-        public UndoableList PropertiesAuto
+        public NewUndoableList PropertiesAuto
         {
             //	Liste des propriétés automatiques de ce document.
             get { return this.propertiesAuto; }
         }
 
-        public UndoableList PropertiesSel
+        public NewUndoableList PropertiesSel
         {
             //	Liste des propriétés sélectionnées de ce document.
             get { return this.propertiesSel; }
         }
 
-        public UndoableList Aggregates
+        public NewUndoableList Aggregates
         {
             //	Liste des aggrégats de ce document.
             get { return this.aggregates; }
         }
 
-        public UndoableList TextFlows
+        public NewUndoableList TextFlows
         {
             //	Liste des flux de textes de ce document.
             get { return this.textFlows; }
@@ -1095,10 +1102,11 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            this.objects = doc.objects;
-            this.propertiesAuto = doc.propertiesAuto;
-            this.aggregates = doc.aggregates;
-            this.textFlows = doc.textFlows;
+            this.objects = doc.objects ?? NewUndoableList.FromOld(doc.oldobjects);
+            this.propertiesAuto =
+                doc.propertiesAuto ?? NewUndoableList.FromOld(doc.oldpropertiesAuto);
+            this.aggregates = doc.aggregates ?? NewUndoableList.FromOld(doc.oldaggregates);
+            this.textFlows = doc.textFlows ?? NewUndoableList.FromOld(doc.oldtextFlows);
             this.textContext = doc.textContext;
             this.uniqueObjectId = doc.uniqueObjectId;
             this.uniqueAggregateId = doc.uniqueAggregateId;
@@ -1207,18 +1215,17 @@ namespace Epsitec.Common.Document
             }
 
             this.containOldText = false;
-            // bl-converter ignore old text convertion
 
-            //foreach (Objects.Abstract obj in this.Deep(null))
-            //{
-            //    obj.ReadFinalize();
-            //    obj.ReadCheckWarnings(this.readWarnings);
+            foreach (Objects.Abstract obj in this.Deep(null))
+            {
+                obj.ReadFinalize();
+                obj.ReadCheckWarnings(this.readWarnings);
 
-            //    if ((obj is Objects.TextBox) || (obj is Objects.TextLine))
-            //    {
-            //        this.containOldText = true;
-            //    }
-            //}
+                if ((obj is Objects.TextBox) || (obj is Objects.TextLine))
+                {
+                    this.containOldText = true;
+                }
+            }
 
             if (this.type != DocumentType.Pictogram)
             {
@@ -1762,21 +1769,26 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
-        public static Document LoadFromXMLFile(string filename)
+        public static Document LoadFromXMLFile(string filename, DocumentMode mode)
         {
             XDocument xdoc = XDocument.Load(filename);
-            return Document.FromXML(xdoc.Root);
+            return Document.FromXML(xdoc.Root, mode);
         }
 
-        public static Document LoadFromXMLStream(Stream stream)
+        public static Document LoadFromXMLStream(Stream stream, DocumentMode mode)
         {
             XDocument xdoc = XDocument.Load(stream);
-            return Document.FromXML(xdoc.Root);
+            return Document.FromXML(xdoc.Root, mode);
         }
 
         public static Document FromXML(XElement root)
         {
-            return new Document(root);
+            return new Document(root, DocumentMode.Modify);
+        }
+
+        public static Document FromXML(XElement root, DocumentMode mode)
+        {
+            return new Document(root, mode);
         }
 
         public bool HasEquivalentData(IXMLWritable other)
@@ -1816,7 +1828,10 @@ namespace Epsitec.Common.Document
                     ),
                     this.modifier?.ActiveViewer?.DrawingContext.GetRootStack()
                         == otherDoc.modifier?.ActiveViewer?.DrawingContext.GetRootStack(),
-                    this.textContext.HasEquivalentData(otherDoc.textContext),
+                    (
+                        this.textContext == otherDoc.textContext
+                        || this.textContext.HasEquivalentData(otherDoc.textContext)
+                    ),
                     this.textFlows.HasEquivalentData(otherDoc.textFlows),
                     this.fontList?.HasEquivalentData(otherDoc.fontList)
                         ?? this.fontList == otherDoc.fontList,
@@ -1894,10 +1909,10 @@ namespace Epsitec.Common.Document
             return root;
         }
 
-        private Document(XElement xml)
+        private Document(XElement xml, DocumentMode mode)
             : this(
                 (DocumentType)DocumentType.Parse(typeof(DocumentType), xml.Attribute("Type").Value),
-                DocumentMode.Modify,
+                mode,
                 InstallType.Full,
                 DebugMode.Release,
                 null,
@@ -1915,7 +1930,7 @@ namespace Epsitec.Common.Document
                 this.hotSpot = Point.FromXML(xml.Element("HotSpot"));
 
                 this.textContext = null;
-                this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+                this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
             }
             else
             {
@@ -1932,8 +1947,10 @@ namespace Epsitec.Common.Document
                     ?.Elements()
                     ?.Select(item => int.Parse(item.Value))
                     ?.ToList();
-                this.textContext = TextContext.FromXML(xml.Element("TextContext"));
-                this.textFlows = UndoableList.FromXML(xml.Element("TextFlows"));
+                var textContextXML = xml.Element("TextContext");
+                this.textContext =
+                    textContextXML == null ? null : TextContext.FromXML(textContextXML);
+                this.textFlows = NewUndoableList.FromXML(xml.Element("TextFlows"));
                 this.fontList = xml.Element("FontList")
                     ?.Elements()
                     ?.Select(OpenType.FontName.FromXML)
@@ -1952,9 +1969,9 @@ namespace Epsitec.Common.Document
             this.uniqueAggregateId = (int)xml.Attribute("UniqueAggregateId");
             this.uniqueParagraphStyleId = (int)xml.Attribute("UniqueParagraphStyleId");
             this.uniqueCharacterStyleId = (int)xml.Attribute("UniqueCharacterStyleId");
-            this.objects = UndoableList.FromXML(xml.Element("Objects"));
-            this.propertiesAuto = UndoableList.FromXML(xml.Element("Properties"));
-            this.aggregates = UndoableList.FromXML(xml.Element("Aggregates"));
+            this.objects = NewUndoableList.FromXML(xml.Element("Objects"));
+            this.propertiesAuto = NewUndoableList.FromXML(xml.Element("Properties"));
+            this.aggregates = NewUndoableList.FromXML(xml.Element("Aggregates"));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -2013,7 +2030,7 @@ namespace Epsitec.Common.Document
                 this.hotSpot = (Point)info.GetValue("HotSpot", typeof(Point));
 
                 this.textContext = null;
-                this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+                this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
             }
             else
             {
@@ -2048,7 +2065,9 @@ namespace Epsitec.Common.Document
 
                 if (this.IsRevisionGreaterOrEqual(1, 0, 8))
                 {
-                    this.readRootStack = (List<int>)info.GetValue("RootStack", typeof(List<int>));
+                    System.Collections.ArrayList readRootStack = (System.Collections.ArrayList)
+                        info.GetValue("RootStack", typeof(System.Collections.ArrayList));
+                    this.readRootStack = readRootStack.Cast<int>().ToList();
                 }
                 else
                 {
@@ -2066,11 +2085,12 @@ namespace Epsitec.Common.Document
                         this.textContext.Deserialize(textContextData);
                     }
 
-                    this.textFlows = (UndoableList)info.GetValue("TextFlows", typeof(UndoableList));
+                    this.oldtextFlows = (UndoableList)
+                        info.GetValue("TextFlows", typeof(UndoableList));
                 }
                 else
                 {
-                    this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+                    this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
                 }
 
                 if (this.IsRevisionGreaterOrEqual(2, 0, 1))
@@ -2099,17 +2119,19 @@ namespace Epsitec.Common.Document
             }
 
             this.uniqueObjectId = info.GetInt32("UniqueObjectId");
-            this.objects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
-            this.propertiesAuto = (UndoableList)info.GetValue("Properties", typeof(UndoableList));
+            this.oldobjects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
+            this.oldpropertiesAuto = (UndoableList)
+                info.GetValue("Properties", typeof(UndoableList));
 
             if (this.IsRevisionGreaterOrEqual(1, 0, 23))
             {
-                this.aggregates = (UndoableList)info.GetValue("Aggregates", typeof(UndoableList));
+                this.oldaggregates = (UndoableList)
+                    info.GetValue("Aggregates", typeof(UndoableList));
                 this.uniqueAggregateId = info.GetInt32("UniqueAggregateId");
             }
             else
             {
-                this.aggregates = new UndoableList(
+                this.aggregates = new NewUndoableList(
                     Document.ReadDocument,
                     UndoableListType.AggregatesInsideDocument
                 );
@@ -3252,7 +3274,7 @@ namespace Epsitec.Common.Document
 
             protected Document document;
             protected bool onlySelected;
-            protected UndoableList list;
+            protected NewUndoableList list;
             protected int index;
         }
         #endregion
@@ -3345,7 +3367,7 @@ namespace Epsitec.Common.Document
 
             protected Document document;
             protected bool onlySelected;
-            protected UndoableList list;
+            protected NewUndoableList list;
             protected int index;
         }
         #endregion
@@ -3389,7 +3411,7 @@ namespace Epsitec.Common.Document
                 //	Implémentation de IEnumerator:
                 this.stack = new System.Collections.Stack();
 
-                UndoableList list = this.document.DocumentObjects;
+                NewUndoableList list = this.document.DocumentObjects;
                 if (this.root != null)
                 {
                     list = this.root.Objects;
@@ -3536,7 +3558,7 @@ namespace Epsitec.Common.Document
                 //	Implémentation de IEnumerator:
                 this.stack = new System.Collections.Stack();
 
-                UndoableList list = this.document.DocumentObjects;
+                NewUndoableList list = this.document.DocumentObjects;
                 if (this.root != null)
                 {
                     list = this.root.Objects;
@@ -3654,13 +3676,13 @@ namespace Epsitec.Common.Document
         #region TreeInfo
         protected class TreeInfo
         {
-            public TreeInfo(UndoableList list, int parent)
+            public TreeInfo(NewUndoableList list, int parent)
             {
                 this.list = list;
                 this.parent = parent;
             }
 
-            public UndoableList List
+            public NewUndoableList List
             {
                 get { return this.list; }
             }
@@ -3670,7 +3692,7 @@ namespace Epsitec.Common.Document
                 get { return this.parent; }
             }
 
-            protected UndoableList list;
+            protected NewUndoableList list;
             protected int parent;
         }
         #endregion
@@ -3790,11 +3812,21 @@ namespace Epsitec.Common.Document
         protected string exportFilename;
         protected int exportFilter;
         protected bool isDirtySerialize;
-        protected UndoableList objects;
-        protected UndoableList propertiesAuto;
-        protected UndoableList propertiesSel;
-        protected UndoableList aggregates;
-        protected UndoableList textFlows;
+
+        protected UndoableList oldobjects;
+        protected NewUndoableList objects;
+
+        protected UndoableList oldpropertiesAuto;
+        protected NewUndoableList propertiesAuto;
+
+        protected NewUndoableList propertiesSel; // not serialized
+
+        protected UndoableList oldaggregates;
+        protected NewUndoableList aggregates;
+
+        protected UndoableList oldtextFlows;
+        protected NewUndoableList textFlows;
+
         protected Settings.Settings settings;
         protected Modifier modifier;
         protected ImageCache imageCache;

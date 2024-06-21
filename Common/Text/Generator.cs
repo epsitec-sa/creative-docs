@@ -359,18 +359,22 @@ namespace Epsitec.Common.Text
                 && this.globalSuffix == other.globalSuffix
                 && this.sequences.HasEquivalentData(other.sequences)
                 && this.startVector.SequenceEqual(other.startVector)
-                && this.globalPrefixProperties.HasEquivalentData(other.globalPrefixProperties)
-                && this.globalSuffixProperties.HasEquivalentData(other.globalSuffixProperties)
-                && this.userData.SequenceEqual(other.userData);
+                && (
+                    this.globalPrefixProperties == other.globalPrefixProperties
+                    || this.globalPrefixProperties.HasEquivalentData(other.globalPrefixProperties)
+                )
+                && (
+                    this.globalSuffixProperties == other.globalSuffixProperties
+                    || this.globalSuffixProperties.HasEquivalentData(other.globalSuffixProperties)
+                )
+                && (this.userData == other.userData || this.userData.SequenceEqual(other.userData));
         }
 
         public XElement ToXML()
         {
-            return new XElement(
+            var root = new XElement(
                 "Generator",
                 new XAttribute("Name", this.name),
-                new XAttribute("GlobalPrefix", this.globalPrefix),
-                new XAttribute("GlobalSuffix", this.globalSuffix),
                 new XElement(
                     "StartVector",
                     this.startVector.Select(item => new XElement(
@@ -378,23 +382,41 @@ namespace Epsitec.Common.Text
                         new XAttribute("Value", item)
                     ))
                 ),
-                new XElement("Sequences", this.sequences.Select(item => item.ToXML())),
+                new XElement("Sequences", this.sequences.Select(item => item.ToXML()))
+            );
+            if (this.globalPrefixProperties != null)
+            {
                 new XElement(
                     "GlobalPrefixProperties",
                     this.globalPrefixProperties.Select(item => item.ToXML())
-                ),
+                );
+            }
+            if (this.globalSuffixProperties != null)
+            {
                 new XElement(
                     "GlobalSuffixProperties",
                     this.globalSuffixProperties.Select(item => item.ToXML())
-                ),
+                );
+            }
+            if (this.userData == null)
+            {
                 new XElement(
                     "UserData",
                     this.userData.Select(item => new XElement(
                         "DataItem",
                         new XAttribute("Name", item)
                     ))
-                )
-            );
+                );
+            }
+            if (this.globalPrefix != null)
+            {
+                root.Add(new XAttribute("GlobalPrefix", this.globalPrefix));
+            }
+            if (this.globalSuffix != null)
+            {
+                root.Add(new XAttribute("GlobalSuffix", this.globalSuffix));
+            }
+            return root;
         }
 
         public static Generator FromXML(XElement xml)
@@ -405,25 +427,25 @@ namespace Epsitec.Common.Text
         private Generator(XElement xml)
         {
             this.name = xml.Attribute("Name").Value;
-            this.globalPrefix = xml.Attribute("GlobalPrefix").Value;
-            this.globalSuffix = xml.Attribute("GlobalSuffix").Value;
+            this.globalPrefix = xml.Attribute("GlobalPrefix")?.Value;
+            this.globalSuffix = xml.Attribute("GlobalSuffix")?.Value;
             this.startVector = xml.Element("StartVector")
                 .Elements()
                 .Select(item => (int)item.Attribute("Value"))
                 .ToArray();
             this.sequences = xml.Element("Sequences").Elements().Select(LoadSequence).ToList();
             this.globalPrefixProperties = xml.Element("GlobalPrefixProperties")
-                .Elements()
-                .Select(Styles.PropertyContainer.LoadProperty)
-                .ToArray();
+                ?.Elements()
+                ?.Select(Styles.PropertyContainer.LoadProperty)
+                ?.ToArray();
             this.globalSuffixProperties = xml.Element("GlobalSuffixProperties")
-                .Elements()
-                .Select(Styles.PropertyContainer.LoadProperty)
-                .ToArray();
+                ?.Elements()
+                ?.Select(Styles.PropertyContainer.LoadProperty)
+                ?.ToArray();
             this.userData = xml.Element("UserData")
-                .Elements()
-                .Select(item => item.Attribute("Name").Value)
-                .ToArray();
+                ?.Elements()
+                ?.Select(item => item.Attribute("Name").Value)
+                ?.ToArray();
         }
 
         private static Sequence LoadSequence(XElement xml)
@@ -1101,62 +1123,75 @@ namespace Epsitec.Common.Text
                     && this.casing == other.casing
                     && this.suppressBefore == other.suppressBefore
                     && this.userData.SequenceEqual(other.userData)
-                    && this.valueProperties.HasEquivalentData(other.valueProperties)
-                    && this.prefixProperties.HasEquivalentData(other.prefixProperties)
-                    && this.suffixProperties.HasEquivalentData(other.suffixProperties);
+                    && (
+                        this.valueProperties == other.valueProperties
+                        || this.valueProperties.HasEquivalentData(other.valueProperties)
+                    )
+                    && (
+                        this.prefixProperties == other.prefixProperties
+                        || this.prefixProperties.HasEquivalentData(other.prefixProperties)
+                    )
+                    && (
+                        this.suffixProperties == other.suffixProperties
+                        || this.suffixProperties.HasEquivalentData(other.suffixProperties)
+                    );
             }
 
             public abstract XElement ToXML();
 
             public IEnumerable<XObject> IterXMLParts()
             {
-                yield return new XAttribute("Prefix", this.prefix);
-                yield return new XAttribute("Suffix", this.suffix);
+                if (this.prefix != null)
+                {
+                    yield return new XAttribute("Prefix", this.prefix);
+                }
+                if (this.suffix != null)
+                {
+                    yield return new XAttribute("Suffix", this.suffix);
+                }
                 yield return new XAttribute("Casing", this.casing);
                 yield return new XAttribute("SuppressBefore", this.suppressBefore);
-                yield return new XElement(
-                    "UserData",
-                    this.userData.Select(item => new XElement(
-                        "Item",
-                        new XAttribute("Value", item)
-                    ))
-                );
-                yield return new XElement(
-                    "ValueProperties",
-                    this.valueProperties.Select(item => item.ToXML())
-                );
-                yield return new XElement(
-                    "PrefixProperties",
-                    this.prefixProperties.Select(item => item.ToXML())
-                );
-                yield return new XElement(
-                    "SuffixProperties",
-                    this.suffixProperties.Select(item => item.ToXML())
-                );
+                if (this.valueProperties != null)
+                {
+                    yield return new XElement(
+                        "ValueProperties",
+                        this.valueProperties.Select(item => item.ToXML())
+                    );
+                }
+                if (this.prefixProperties != null)
+                {
+                    yield return new XElement(
+                        "PrefixProperties",
+                        this.prefixProperties.Select(item => item.ToXML())
+                    );
+                }
+                if (this.suffixProperties != null)
+                {
+                    yield return new XElement(
+                        "SuffixProperties",
+                        this.suffixProperties.Select(item => item.ToXML())
+                    );
+                }
             }
 
             protected Sequence(XElement xml)
             {
-                this.prefix = xml.Attribute("Prefix").Value;
-                this.suffix = xml.Attribute("Suffix").Value;
+                this.prefix = xml.Attribute("Prefix")?.Value;
+                this.suffix = xml.Attribute("Suffix")?.Value;
                 System.Enum.TryParse(xml.Attribute("Casing").Value, out this.casing);
                 this.suppressBefore = (bool)xml.Attribute("SuppressBefore");
-                this.userData = xml.Element("UserData")
-                    .Elements()
-                    .Select(item => item.Attribute("Value").Value)
-                    .ToArray();
                 this.valueProperties = xml.Element("ValueProperties")
-                    .Elements()
-                    .Select(Styles.PropertyContainer.LoadProperty)
-                    .ToArray();
+                    ?.Elements()
+                    ?.Select(Styles.PropertyContainer.LoadProperty)
+                    ?.ToArray();
                 this.prefixProperties = xml.Element("PrefixProperties")
-                    .Elements()
-                    .Select(Styles.PropertyContainer.LoadProperty)
-                    .ToArray();
+                    ?.Elements()
+                    ?.Select(Styles.PropertyContainer.LoadProperty)
+                    ?.ToArray();
                 this.suffixProperties = xml.Element("SuffixProperties")
-                    .Elements()
-                    .Select(Styles.PropertyContainer.LoadProperty)
-                    .ToArray();
+                    ?.Elements()
+                    ?.Select(Styles.PropertyContainer.LoadProperty)
+                    ?.ToArray();
             }
 
             public void DeserializeFromText(TextContext context, string text, int pos, int length)

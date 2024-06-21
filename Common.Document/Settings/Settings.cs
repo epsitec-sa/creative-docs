@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Settings
             this.CreateDefault();
 
             this.globalGuides = true;
-            this.guides = new UndoableList(this.document, UndoableListType.Guides);
+            this.guides = new NewUndoableList(this.document, UndoableListType.Guides);
 
             this.quickFonts = new();
             Settings.DefaultQuickFonts(this.quickFonts);
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Document.Settings
             this.document.SetDirtySerialize(CacheBitmapChanging.None);
         }
 
-        protected UndoableList GuidesList
+        protected NewUndoableList GuidesList
         {
             //	Retourne la liste des repères.
             get
@@ -380,7 +380,7 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
-        protected UndoableList GuidesListOther
+        protected NewUndoableList GuidesListOther
         {
             //	Retourne l'autre (global/local) liste des repères.
             get
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
-        public UndoableList GuidesListGlobal
+        public NewUndoableList GuidesListGlobal
         {
             //	Retourne la liste des repères globaux.
             get { return this.guides; }
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Document.Settings
                 .Select(Settings.LoadSettingFromXML)
                 .ToList();
             this.globalGuides = bool.Parse(xml.Attribute("GlobalGuides").Value);
-            this.guides = UndoableList.FromXML(xml.Element("Guides"));
+            this.guides = NewUndoableList.FromXML(xml.Element("Guides"));
             this.quickFonts = xml.Element("QuickFonts")
                 .Elements()
                 .Select(item => item.Attribute("Name").Value)
@@ -531,10 +531,11 @@ namespace Epsitec.Common.Document.Settings
         {
             //	Constructeur qui désérialise les réglages.
             this.document = Document.ReadDocument;
+            this.drawingSettings = new DrawingSettings(this.document);
             System.Collections.ArrayList settings = (System.Collections.ArrayList)
                 info.GetValue("Settings", typeof(System.Collections.ArrayList));
             this.settings = settings.Cast<Abstract>().ToList();
-            this.guides = (UndoableList)info.GetValue("GuidesList", typeof(UndoableList));
+            this.oldguides = (UndoableList)info.GetValue("GuidesList", typeof(UndoableList));
             this.printInfo = (PrintInfo)info.GetValue("PrintInfo", typeof(PrintInfo));
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 10))
@@ -582,6 +583,7 @@ namespace Epsitec.Common.Document.Settings
         public void ReadFinalize()
         {
             //	Adapte l'objet après une désérialisation.
+            this.guides = NewUndoableList.FromOld(this.oldguides);
             this.CreateDefault();
         }
         #endregion
@@ -591,7 +593,10 @@ namespace Epsitec.Common.Document.Settings
         protected List<Abstract> settings;
         protected System.Collections.Hashtable owners;
         protected bool globalGuides;
-        protected UndoableList guides;
+
+        protected UndoableList oldguides;
+        protected NewUndoableList guides;
+
         protected List<string> quickFonts;
         protected DrawingSettings drawingSettings;
         protected PrintInfo printInfo;

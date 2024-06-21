@@ -17,15 +17,38 @@ namespace Epsitec.Common.Document
             //}
             using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
             {
-                this.document = Document.LoadFromXMLStream(stream);
+                if (Debug.Settings.UseOldIconFormat)
+                {
+                    System.Console.WriteLine("Read old format stream");
+                    this.document = new Document(
+                        DocumentType.Pictogram,
+                        DocumentMode.ReadOnly,
+                        InstallType.Full,
+                        DebugMode.Release,
+                        null,
+                        null,
+                        null,
+                        null
+                    );
+                    string error = this.document.Read(stream, "");
+                    if (error != "")
+                    {
+                        throw new System.InvalidOperationException(error);
+                    }
+                }
+                else
+                {
+                    System.Console.WriteLine("Read new format stream");
+                    this.document = Document.LoadFromXMLStream(stream, DocumentMode.ReadOnly);
+                }
             }
             return true;
         }
 
         public static void Initialize()
         {
-            Res.Initialize();
             Common.Widgets.Widget.Initialize();
+            Res.Initialize();
             if (Engine.current == null)
             {
                 Engine.current = new Engine();

@@ -79,10 +79,8 @@ namespace Epsitec.Common.Text.Properties
                 new XAttribute("ManagerName", this.managerName),
                 new XElement(
                     "ManagerParameters",
-                    this.managerParameters.Select(item => new XElement(
-                        "Item",
-                        new XAttribute("Value", item)
-                    ))
+                    this.managerParameters.Where(item => item != null)
+                        .Select(item => new XElement("Item", new XAttribute("Value", item)))
                 )
             );
         }

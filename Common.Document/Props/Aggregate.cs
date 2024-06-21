@@ -13,8 +13,11 @@ namespace Epsitec.Common.Document.Properties
         public Aggregate(Document document)
         {
             this.document = document;
-            this.styles = new UndoableList(this.document, UndoableListType.StylesInsideAggregate);
-            this.children = new UndoableList(this.document, UndoableListType.AggregatesChildren);
+            this.styles = new NewUndoableList(
+                this.document,
+                UndoableListType.StylesInsideAggregate
+            );
+            this.children = new NewUndoableList(this.document, UndoableListType.AggregatesChildren);
         }
 
         public string AggregateName
@@ -31,13 +34,13 @@ namespace Epsitec.Common.Document.Properties
             }
         }
 
-        public UndoableList Styles
+        public NewUndoableList Styles
         {
             //	Liste des styles de l'agrégat.
             get { return this.styles; }
         }
 
-        public UndoableList Children
+        public NewUndoableList Children
         {
             //	Liste des fils de l'agrégat.
             get { return this.children; }
@@ -109,7 +112,7 @@ namespace Epsitec.Common.Document.Properties
             if (deep > 10)
                 return false;
 
-            UndoableList list = obj.Aggregates;
+            NewUndoableList list = obj.Aggregates;
             for (int i = 0; i < list.Count; i++)
             {
                 Properties.Aggregate agg = list[i] as Properties.Aggregate;
@@ -166,7 +169,7 @@ namespace Epsitec.Common.Document.Properties
             }
         }
 
-        public static int UniqueId(UndoableList aggregates, Properties.Abstract property)
+        public static int UniqueId(NewUndoableList aggregates, Properties.Abstract property)
         {
             //	Donne un identificateur unique pour une propriété.
             int id = (int)property.Type;
@@ -263,8 +266,8 @@ namespace Epsitec.Common.Document.Properties
         private Aggregate(XElement xml)
         {
             this.aggregateName = xml.Attribute("Name").Value;
-            this.styles = UndoableList.FromXML(xml.Element("Styles"));
-            this.children = UndoableList.FromXML(xml.Element("Children"));
+            this.styles = NewUndoableList.FromXML(xml.Element("Styles"));
+            this.children = NewUndoableList.FromXML(xml.Element("Children"));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -280,30 +283,38 @@ namespace Epsitec.Common.Document.Properties
             //	Constructeur qui désérialise l'agrégat.
             this.document = Document.ReadDocument;
             this.aggregateName = info.GetString("AggregateName");
-            this.styles = (UndoableList)info.GetValue("Styles", typeof(UndoableList));
+            this.oldstyles = (UndoableList)info.GetValue("Styles", typeof(UndoableList));
 
-            if (this.document.IsRevisionGreaterOrEqual(2, 0, 0))
+            if (this.document.IsRevisionGreaterOrEqual(1, 0, 27))
             {
-                this.children = (UndoableList)info.GetValue("Children", typeof(UndoableList));
-            }
-            else if (this.document.IsRevisionGreaterOrEqual(1, 0, 27))
-            {
-                this.children = (UndoableList)info.GetValue("Childrens", typeof(UndoableList));
+                string key = this.document.IsRevisionGreaterOrEqual(2, 0, 0)
+                    ? "Children"
+                    : "Childrens";
+                this.oldchildren = (UndoableList)info.GetValue(key, typeof(UndoableList));
             }
             else
             {
-                this.children = new UndoableList(
+                this.children = new NewUndoableList(
                     this.document,
                     UndoableListType.AggregatesChildren
                 );
             }
+        }
+
+        public void ReadFinalize()
+        {
+            // call this at the right place, after reading with the old format
+            this.children ??= NewUndoableList.FromOld(this.oldchildren);
+            this.styles ??= NewUndoableList.FromOld(this.oldstyles);
         }
         #endregion
 
 
         protected Document document;
         protected string aggregateName = "";
-        protected UndoableList styles;
-        protected UndoableList children;
+        protected UndoableList oldstyles;
+        protected NewUndoableList styles;
+        protected UndoableList oldchildren;
+        protected NewUndoableList children;
     }
 }

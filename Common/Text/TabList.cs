@@ -1065,16 +1065,20 @@ namespace Epsitec.Common.Text
 
             public XElement ToXML()
             {
-                return new XElement(
+                var root = new XElement(
                     "TabRecord",
                     new XAttribute("Tag", this.tag),
                     new XAttribute("Position", this.position),
                     new XAttribute("Units", this.units),
                     new XAttribute("Disposition", this.disposition),
-                    new XAttribute("DockingMark", this.dockingMark),
                     new XAttribute("PositionMode", this.positionMode),
                     new XAttribute("Attribute", this.attribute)
                 );
+                if (this.dockingMark != null)
+                {
+                    root.Add(new XAttribute("DockingMark", this.dockingMark));
+                }
+                return root;
             }
 
             public static TabRecord FromXML(XElement xml)
@@ -1088,7 +1092,7 @@ namespace Epsitec.Common.Text
                 this.position = (double)xml.Attribute("Position");
                 System.Enum.TryParse(xml.Attribute("Units").Value, out this.units);
                 this.disposition = (double)xml.Attribute("Disposition");
-                this.dockingMark = xml.Attribute("DockingMark").Value;
+                this.dockingMark = xml.Attribute("DockingMark")?.Value;
                 System.Enum.TryParse(xml.Attribute("PositionMode").Value, out this.positionMode);
                 this.attribute = xml.Attribute("Attribute").Value;
             }
