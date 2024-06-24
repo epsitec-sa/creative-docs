@@ -481,7 +481,7 @@ namespace Epsitec.Common.Document.Settings
                 .Elements()
                 .Select(Settings.LoadSettingFromXML)
                 .ToList();
-            this.globalGuides = bool.Parse(xml.Attribute("GlobalGuides").Value);
+            this.globalGuides = (bool)xml.Attribute("GlobalGuides");
             this.guides = NewUndoableList.FromXML(xml.Element("Guides"));
             this.quickFonts = xml.Element("QuickFonts")
                 .Elements()
@@ -580,10 +580,14 @@ namespace Epsitec.Common.Document.Settings
             }
         }
 
+        internal void FinishReadingOldObjects()
+        {
+            this.guides = NewUndoableList.FromOld(this.oldguides);
+        }
+
         public void ReadFinalize()
         {
             //	Adapte l'objet après une désérialisation.
-            this.guides = NewUndoableList.FromOld(this.oldguides);
             this.CreateDefault();
         }
         #endregion

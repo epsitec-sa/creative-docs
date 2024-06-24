@@ -663,11 +663,19 @@ namespace Epsitec.Common.Document.Objects
 
         public static Page FromXML(XElement xml)
         {
-            return new Page(xml);
+            return new Page(xml, null);
         }
 
-        private Page(XElement xml)
-            : base(xml) { }
+        public static Page FromXML(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
+        {
+            return new Page(xml, missingObjectSource);
+        }
+
+        private Page(XElement xml, System.Func<System.Type, int, IXMLWritable> missingObjectSource)
+            : base(xml, missingObjectSource) { }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -727,9 +735,8 @@ namespace Epsitec.Common.Document.Objects
                     this.masterType = (MasterType)info.GetValue("MasterType", typeof(MasterType));
                     this.masterUse = (MasterUse)info.GetValue("MasterUse", typeof(MasterUse));
                     this.masterPageToUse = (Page)info.GetValue("MasterPageToUse", typeof(Page));
-                    UndoableList guides = (UndoableList)
+                    this.oldguides = (UndoableList)
                         info.GetValue("GuidesList", typeof(UndoableList));
-                    this.guides = NewUndoableList.FromOld(guides);
                     master = true;
                 }
 
@@ -758,6 +765,12 @@ namespace Epsitec.Common.Document.Objects
                 this.masterPageToUse = null;
             }
         }
+
+        internal override void FinishReadingOldObjects()
+        {
+            base.FinishReadingOldObjects();
+            this.guides = NewUndoableList.FromOld(this.oldguides);
+        }
         #endregion
 
 
@@ -770,6 +783,7 @@ namespace Epsitec.Common.Document.Objects
         protected bool masterAutoStop;
         protected bool masterSpecific;
         protected bool masterGuides;
+        protected UndoableList oldguides;
         protected NewUndoableList guides;
         protected Size pageSize;
         protected Point hotSpot;

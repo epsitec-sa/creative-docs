@@ -243,15 +243,15 @@ namespace Epsitec.Common.Document.Settings
         private ExportPDFInfo(XElement xml)
         {
             PrintRange.TryParse(xml.Attribute("PageRange").Value, out this.pageRange);
-            this.pageFrom = int.Parse(xml.Attribute("PageFrom").Value);
-            this.pageTo = int.Parse(xml.Attribute("PageTo").Value);
-            this.debord = double.Parse(xml.Attribute("Debord").Value);
-            this.target = bool.Parse(xml.Attribute("Target").Value);
-            this.targetLength = double.Parse(xml.Attribute("TargetLength").Value);
-            this.targetWidth = double.Parse(xml.Attribute("TargetWidth").Value);
-            this.targetOffset = double.Parse(xml.Attribute("TargetOffset").Value);
-            this.textCurve = bool.Parse(xml.Attribute("TextCurve").Value);
-            this.execute = bool.Parse(xml.Attribute("Execute").Value);
+            this.pageFrom = (int)xml.Attribute("PageFrom");
+            this.pageTo = (int)xml.Attribute("PageTo");
+            this.debord = (double)xml.Attribute("Debord");
+            this.target = (bool)xml.Attribute("Target");
+            this.targetLength = (double)xml.Attribute("TargetLength");
+            this.targetWidth = (double)xml.Attribute("TargetWidth");
+            this.targetOffset = (double)xml.Attribute("TargetOffset");
+            this.textCurve = (bool)xml.Attribute("TextCurve");
+            this.execute = (bool)xml.Attribute("Execute");
             PDF.ColorConversion.TryParse(
                 xml.Attribute("ColorConversion").Value,
                 out this.colorConversion
@@ -261,8 +261,8 @@ namespace Epsitec.Common.Document.Settings
                 out this.imageCompression
             );
             this.jpegQuality = (double)xml.Attribute("JpegQuality");
-            this.imageMinDpi = double.Parse(xml.Attribute("ImageMinDpi").Value);
-            this.imageMaxDpi = double.Parse(xml.Attribute("ImageMaxDpi").Value);
+            this.imageMinDpi = (double)xml.Attribute("ImageMinDpi");
+            this.imageMaxDpi = (double)xml.Attribute("ImageMaxDpi");
             this.imageNameFilters = xml.Element("ImageNameFilters")
                 .Elements()
                 .Select(filter => filter.Value)

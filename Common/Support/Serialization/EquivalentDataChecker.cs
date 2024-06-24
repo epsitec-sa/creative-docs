@@ -38,5 +38,15 @@ namespace Epsitec.Common.Support.Serialization
             }
             return true;
         }
+
+        public static bool HasEquivalentDataOrNull<T>(ICollection<T> first, ICollection<T> other)
+            where T : IXMLWritable
+        {
+            if (first == null || other == null)
+            {
+                return first == null && other == null;
+            }
+            return first.HasEquivalentData(other);
+        }
     }
 }

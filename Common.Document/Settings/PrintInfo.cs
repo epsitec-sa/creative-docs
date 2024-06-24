@@ -339,24 +339,24 @@ namespace Epsitec.Common.Document.Settings
             this.printName = xml.Attribute("PrintName").Value;
             PrintRange.TryParse(xml.Attribute("PrintRange").Value, out this.printRange);
             PrintArea.TryParse(xml.Attribute("PrintArea").Value, out this.printArea);
-            this.printFrom = int.Parse(xml.Attribute("PrintFrom").Value);
-            this.printTo = int.Parse(xml.Attribute("PrintTo").Value);
-            this.copies = int.Parse(xml.Attribute("Copies").Value);
-            this.collate = bool.Parse(xml.Attribute("Collate").Value);
-            this.reverse = bool.Parse(xml.Attribute("Reverse").Value);
-            this.printToFile = bool.Parse(xml.Attribute("PrintToFile").Value);
+            this.printFrom = (int)xml.Attribute("PrintFrom");
+            this.printTo = (int)xml.Attribute("PrintTo");
+            this.copies = (int)xml.Attribute("Copies");
+            this.collate = (bool)xml.Attribute("Collate");
+            this.reverse = (bool)xml.Attribute("Reverse");
+            this.printToFile = (bool)xml.Attribute("PrintToFile");
             this.printFilename = xml.Attribute("PrintFilename").Value;
-            this.dpi = double.Parse(xml.Attribute("Dpi").Value);
-            this.gamma = double.Parse(xml.Attribute("Gamma").Value);
-            this.zoom = double.Parse(xml.Attribute("Zoom").Value);
-            this.autoZoom = bool.Parse(xml.Attribute("AutoZoom").Value);
-            this.autoLandscape = bool.Parse(xml.Attribute("AutoLandscape").Value);
-            this.forceSimply = bool.Parse(xml.Attribute("ForceSimply").Value);
-            this.forceComplex = bool.Parse(xml.Attribute("ForceComplex").Value);
+            this.dpi = (double)xml.Attribute("Dpi");
+            this.gamma = (double)xml.Attribute("Gamma");
+            this.zoom = (double)xml.Attribute("Zoom");
+            this.autoZoom = (bool)xml.Attribute("AutoZoom");
+            this.autoLandscape = (bool)xml.Attribute("AutoLandscape");
+            this.forceSimply = (bool)xml.Attribute("ForceSimply");
+            this.forceComplex = (bool)xml.Attribute("ForceComplex");
             PrintCentring.TryParse(xml.Attribute("Centring").Value, out this.centring);
-            this.margins = double.Parse(xml.Attribute("Margins").Value);
-            this.debord = double.Parse(xml.Attribute("Debord").Value);
-            this.target = bool.Parse(xml.Attribute("Target").Value);
+            this.margins = (double)xml.Attribute("Margins");
+            this.debord = (double)xml.Attribute("Debord");
+            this.target = (bool)xml.Attribute("Target");
             this.imageNameFilters = xml.Element("ImageNameFilters")
                 .Elements()
                 .Select(filter => filter.Value)

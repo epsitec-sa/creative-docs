@@ -977,7 +977,7 @@ namespace Epsitec.Common.Document.Properties
         {
             this.document = Document.ReadDocument;
             Type.TryParse(xml.Attribute("Type").Value, out this.type);
-            this.isStyle = bool.Parse(xml.Attribute("IsStyle").Value);
+            this.isStyle = (bool)xml.Attribute("IsStyle");
             this.owners = new NewUndoableList(
                 this.document,
                 UndoableListType.ObjectsInsideProperty

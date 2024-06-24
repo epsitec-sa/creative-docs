@@ -301,7 +301,7 @@ namespace Epsitec.Common.Document.Properties
             }
         }
 
-        public void ReadFinalize()
+        internal void FinishReadingOldObjects()
         {
             // call this at the right place, after reading with the old format
             this.children ??= NewUndoableList.FromOld(this.oldchildren);

@@ -870,11 +870,10 @@ namespace Epsitec.Common.Document.Properties
                 filename = System.IO.Path.GetFileName(filename);
             }
 
-            return new XElement(
+            var root = new XElement(
                 "Image",
                 base.IterXMLParts(),
                 new XAttribute("Filename", filename),
-                new XAttribute("ShortName", this.shortName),
                 new XAttribute("Date", this.date),
                 new XAttribute("InsideDoc", this.insideDoc),
                 new XAttribute("FromClipboard", this.fromClipboard),
@@ -888,6 +887,11 @@ namespace Epsitec.Common.Document.Properties
                 new XAttribute("CropBottom", this.cropMargins.Bottom),
                 new XAttribute("CropTop", this.cropMargins.Top)
             );
+            if (this.shortName != null)
+            {
+                root.Add(new XAttribute("ShortName", this.shortName));
+            }
+            return root;
         }
 
         public static Image FromXML(XElement xml)
@@ -911,7 +915,7 @@ namespace Epsitec.Common.Document.Properties
                 this.filename = string.Concat(this.document.IoDirectory, "\\", this.filename);
             }
 
-            this.shortName = xml.Attribute("ShortName").Value;
+            this.shortName = xml.Attribute("ShortName")?.Value;
             this.date = (System.DateTime)xml.Attribute("Date");
             this.insideDoc = (bool)xml.Attribute("InsideDoc");
             this.fromClipboard = (bool)xml.Attribute("FromClipboard");

@@ -488,10 +488,14 @@ namespace Epsitec.Common.Text
         public bool HasEquivalentData(Common.Support.IXMLWritable other)
         {
             StyleList otherContext = (StyleList)other;
-            return this.uniqueId == otherContext.uniqueId
-                && this.internalSettings.HasEquivalentData(otherContext.internalSettings)
-                && this.textStyleList.HasEquivalentData(otherContext.textStyleList)
-                && this.styleMap.HasEquivalentData(otherContext.styleMap);
+            List<bool> checks =
+            [
+                this.uniqueId == otherContext.uniqueId,
+                this.internalSettings.HasEquivalentData(otherContext.internalSettings),
+                this.textStyleList.HasEquivalentData(otherContext.textStyleList),
+                this.styleMap.HasEquivalentData(otherContext.styleMap)
+            ];
+            return checks.All(x => x);
         }
 
         public XElement ToXML()

@@ -354,7 +354,7 @@ namespace Epsitec.Common.Document.Objects
         #region Serialization
         public override XElement ToXML()
         {
-            return new XElement("Serialization", this.IterXMLParts());
+            return new XElement("Ellipse", this.IterXMLParts());
         }
 
         public static Ellipse FromXML(XElement xml)

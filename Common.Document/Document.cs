@@ -1043,6 +1043,7 @@ namespace Epsitec.Common.Document
                         )
                         {
                             doc = (Document)formatter.Deserialize(compressor);
+                            doc.FinishReadingOldObjects();
                             doc.ioDocumentManager = this.ioDocumentManager;
                             //-doc.imageCache = new ImageCache();
                             if (isCrDoc)
@@ -1054,6 +1055,7 @@ namespace Epsitec.Common.Document
                     else
                     {
                         doc = (Document)formatter.Deserialize(stream);
+                        doc.FinishReadingOldObjects();
                         doc.ioDocumentManager = this.ioDocumentManager;
                         doc.FontReadAll(zip);
                         doc.ImageCacheReadAll(zip, doc.imageIncludeMode);
@@ -1076,6 +1078,7 @@ namespace Epsitec.Common.Document
                 try
                 {
                     doc = (Document)formatter.Deserialize(stream);
+                    doc.FinishReadingOldObjects();
                 }
                 catch (System.Exception e)
                 {
@@ -1969,9 +1972,28 @@ namespace Epsitec.Common.Document
             this.uniqueAggregateId = (int)xml.Attribute("UniqueAggregateId");
             this.uniqueParagraphStyleId = (int)xml.Attribute("UniqueParagraphStyleId");
             this.uniqueCharacterStyleId = (int)xml.Attribute("UniqueCharacterStyleId");
-            this.objects = NewUndoableList.FromXML(xml.Element("Objects"));
+            this.objects = NewUndoableList.FromXML(
+                xml.Element("Objects"),
+                this.GetTextFlowFromReference
+            );
             this.propertiesAuto = NewUndoableList.FromXML(xml.Element("Properties"));
             this.aggregates = NewUndoableList.FromXML(xml.Element("Aggregates"));
+        }
+
+        private TextFlow GetTextFlowFromReference(System.Type objectType, int objectId)
+        {
+            if (objectType != typeof(TextFlow))
+            {
+                throw new System.ArgumentException();
+            }
+            foreach (TextFlow tf in this.textFlows)
+            {
+                if (tf.Id == objectId)
+                {
+                    return tf;
+                }
+            }
+            throw new System.ArgumentException($"TextFlow with id {objectId} does not exist");
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -2148,6 +2170,17 @@ namespace Epsitec.Common.Document
                 this.uniqueParagraphStyleId = 0;
                 this.uniqueCharacterStyleId = 0;
             }
+        }
+
+        private void FinishReadingOldObjects()
+        {
+            this.settings?.FinishReadingOldObjects();
+            this.readObjectMemory?.FinishReadingOldObjects();
+            this.readObjectMemoryText?.FinishReadingOldObjects();
+            this.objects ??= NewUndoableList.FromOld(this.oldobjects);
+            this.propertiesAuto ??= NewUndoableList.FromOld(this.oldpropertiesAuto);
+            this.aggregates ??= NewUndoableList.FromOld(this.oldaggregates);
+            this.textFlows ??= NewUndoableList.FromOld(this.oldtextFlows);
         }
 
         public string IoDirectory

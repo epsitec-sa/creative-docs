@@ -359,13 +359,13 @@ namespace Epsitec.Common.Text
                 && this.globalSuffix == other.globalSuffix
                 && this.sequences.HasEquivalentData(other.sequences)
                 && this.startVector.SequenceEqual(other.startVector)
-                && (
-                    this.globalPrefixProperties == other.globalPrefixProperties
-                    || this.globalPrefixProperties.HasEquivalentData(other.globalPrefixProperties)
+                && EquivalentDataChecker.HasEquivalentDataOrNull(
+                    this.globalPrefixProperties,
+                    other.globalPrefixProperties
                 )
-                && (
-                    this.globalSuffixProperties == other.globalSuffixProperties
-                    || this.globalSuffixProperties.HasEquivalentData(other.globalSuffixProperties)
+                && EquivalentDataChecker.HasEquivalentDataOrNull(
+                    this.globalSuffixProperties,
+                    other.globalSuffixProperties
                 )
                 && (this.userData == other.userData || this.userData.SequenceEqual(other.userData));
         }
@@ -386,26 +386,32 @@ namespace Epsitec.Common.Text
             );
             if (this.globalPrefixProperties != null)
             {
-                new XElement(
-                    "GlobalPrefixProperties",
-                    this.globalPrefixProperties.Select(item => item.ToXML())
+                root.Add(
+                    new XElement(
+                        "GlobalPrefixProperties",
+                        this.globalPrefixProperties.Select(item => item.ToXML())
+                    )
                 );
             }
             if (this.globalSuffixProperties != null)
             {
-                new XElement(
-                    "GlobalSuffixProperties",
-                    this.globalSuffixProperties.Select(item => item.ToXML())
+                root.Add(
+                    new XElement(
+                        "GlobalSuffixProperties",
+                        this.globalSuffixProperties.Select(item => item.ToXML())
+                    )
                 );
             }
-            if (this.userData == null)
+            if (this.userData != null)
             {
-                new XElement(
-                    "UserData",
-                    this.userData.Select(item => new XElement(
-                        "DataItem",
-                        new XAttribute("Name", item)
-                    ))
+                root.Add(
+                    new XElement(
+                        "UserData",
+                        this.userData.Select(item => new XElement(
+                            "DataItem",
+                            new XAttribute("Name", item)
+                        ))
+                    )
                 );
             }
             if (this.globalPrefix != null)
@@ -1122,18 +1128,17 @@ namespace Epsitec.Common.Text
                     && this.suffix == other.suffix
                     && this.casing == other.casing
                     && this.suppressBefore == other.suppressBefore
-                    && this.userData.SequenceEqual(other.userData)
-                    && (
-                        this.valueProperties == other.valueProperties
-                        || this.valueProperties.HasEquivalentData(other.valueProperties)
+                    && EquivalentDataChecker.HasEquivalentDataOrNull(
+                        this.valueProperties,
+                        other.valueProperties
                     )
-                    && (
-                        this.prefixProperties == other.prefixProperties
-                        || this.prefixProperties.HasEquivalentData(other.prefixProperties)
+                    && EquivalentDataChecker.HasEquivalentDataOrNull(
+                        this.prefixProperties,
+                        other.prefixProperties
                     )
-                    && (
-                        this.suffixProperties == other.suffixProperties
-                        || this.suffixProperties.HasEquivalentData(other.suffixProperties)
+                    && EquivalentDataChecker.HasEquivalentDataOrNull(
+                        this.suffixProperties,
+                        other.suffixProperties
                     );
             }
 

@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document
 
         public XElement ToXML()
         {
-            return new XElement("Polar", new XAttribute("r", this.r), new XAttribute("a", this.a));
+            return new XElement("Polar", new XAttribute("R", this.r), new XAttribute("A", this.a));
         }
 
         public static Polar FromXML(XElement xml)
@@ -99,8 +99,8 @@ namespace Epsitec.Common.Document
 
         private Polar(XElement xml)
         {
-            this.r = double.Parse(xml.Attribute("R").Value);
-            this.a = double.Parse(xml.Attribute("A").Value);
+            this.r = (double)xml.Attribute("R");
+            this.a = (double)xml.Attribute("A");
         }
 
         private double r;

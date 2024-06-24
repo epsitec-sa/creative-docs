@@ -905,7 +905,7 @@ namespace Epsitec.Common.Document.Settings
         {
             this.windowLocation = Drawing.Point.FromXML(xml.Element("WindowLocation"));
             this.windowSize = Drawing.Size.FromXML(xml.Element("WindowSize"));
-            this.isFullScreen = bool.Parse(xml.Attribute("IsFullScreen").Value);
+            this.isFullScreen = (bool)xml.Attribute("IsFullScreen");
             this.windowBounds = xml.Element("WindowBounds")
                 .Elements()
                 .Select(item =>
@@ -915,15 +915,15 @@ namespace Epsitec.Common.Document.Settings
                     )
                 )
                 .ToDictionary();
-            this.screenDpi = double.Parse(xml.Attribute("ScreenDpi").Value);
+            this.screenDpi = (double)xml.Attribute("ScreenDpi");
             this.adorner = xml.Attribute("Adorner").Value;
-            this.defaultZoom = double.Parse(xml.Attribute("DefaultZoom").Value);
+            this.defaultZoom = (double)xml.Attribute("DefaultZoom");
             MouseWheelAction.TryParse(
                 xml.Attribute("MouseWheelAction").Value,
                 out this.mouseWheelAction
             );
-            this.fineCursor = bool.Parse(xml.Attribute("FineCursor").Value);
-            this.splashScreen = bool.Parse(xml.Attribute("SplashScreen").Value);
+            this.fineCursor = (bool)xml.Attribute("FineCursor");
+            this.splashScreen = (bool)xml.Attribute("SplashScreen");
             FirstAction.TryParse(xml.Attribute("FirstAction").Value, out this.firstAction);
             this.newDocument = xml.Attribute("NewDocument").Value;
             this.lastModel = xml.Element("LastModel")
@@ -940,12 +940,12 @@ namespace Epsitec.Common.Document.Settings
                 .Select(favorite => favorite.Attribute("Name").Value)
                 .ToList();
             this.favoritesList = [.. favoritesList];
-            this.favoritesBig = bool.Parse(xml.Attribute("FavoritesBig").Value);
-            this.labelProperties = bool.Parse(xml.Attribute("LabelProperties").Value);
+            this.favoritesBig = (bool)xml.Attribute("FavoritesBig");
+            this.labelProperties = (bool)xml.Attribute("LabelProperties");
             this.colorCollection = ColorCollection.FromXML(xml.Element("ColorCollection"));
             this.colorCollectionDirectory = xml.Attribute("ColorCollectionDirectory").Value;
             this.colorCollectionFilename = xml.Attribute("ColorCollectionFilename").Value;
-            this.autoChecker = bool.Parse(xml.Attribute("AutoChecker").Value);
+            this.autoChecker = (bool)xml.Attribute("AutoChecker");
             this.dateChecker = new Types.Date(long.Parse(xml.Attribute("DateChecker").Value));
             this.quickCommands = xml.Element("QuickCommands")
                 .Elements()
@@ -955,7 +955,7 @@ namespace Epsitec.Common.Document.Settings
                 xml.Attribute("QuickExportFormat").Value,
                 out this.quickExportFormat
             );
-            this.quickExportDpi = double.Parse(xml.Attribute("QuickExportDpi").Value);
+            this.quickExportDpi = (double)xml.Attribute("QuickExportDpi");
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Epsitec.Common.Support.Serialization;
@@ -436,22 +437,26 @@ namespace Epsitec.Common.Text
         public new bool HasEquivalentData(Common.Support.IXMLWritable other)
         {
             TextStyle otherContext = (TextStyle)other;
-            return this.name == otherContext.name
-                && this.metaId == otherContext.metaId
-                && this.priority == otherContext.priority
-                && this.TextStyleClass == otherContext.TextStyleClass
-                && (
+            List<bool> checks =
+            [
+                this.name == otherContext.name,
+                this.metaId == otherContext.metaId,
+                this.priority == otherContext.priority,
+                this.TextStyleClass == otherContext.TextStyleClass,
+                (
                     this.parentStyles?.HasEquivalentData(otherContext.parentStyles)
                     ?? otherContext.parentStyles == null
-                )
-                && (
+                ),
+                (
                     this.nextStyle?.HasEquivalentData(otherContext.nextStyle)
                     ?? otherContext.nextStyle == null
-                )
-                && (
+                ),
+                (
                     this.styleProperties?.HasEquivalentData(otherContext.styleProperties)
                     ?? otherContext.styleProperties == null
-                );
+                )
+            ];
+            return checks.All(x => x);
         }
 
         public static TextStyle FromXML(XElement xml)

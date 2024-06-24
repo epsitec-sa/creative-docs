@@ -1,6 +1,7 @@
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Objects
@@ -3199,11 +3200,22 @@ namespace Epsitec.Common.Document.Objects
 
         public static TextLine2 FromXML(XElement xml)
         {
-            return new TextLine2(xml);
+            return new TextLine2(xml, null);
         }
 
-        private TextLine2(XElement xml)
-            : base(xml) { }
+        public static TextLine2 FromXML(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
+        {
+            return new TextLine2(xml, missingObjectSource);
+        }
+
+        private TextLine2(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
+            : base(xml, missingObjectSource) { }
 
         protected TextLine2(SerializationInfo info, StreamingContext context)
             : base(info, context)

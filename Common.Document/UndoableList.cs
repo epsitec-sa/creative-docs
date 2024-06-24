@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Document
@@ -471,6 +472,22 @@ namespace Epsitec.Common.Document
             {
                 return null;
             }
+            switch (oldList.type)
+            {
+                case UndoableListType.AggregatesChildren:
+                case UndoableListType.AggregatesInsideDocument:
+                case UndoableListType.AggregatesInsideObject:
+                    oldList.Cast<Properties.Aggregate>().ForEach(a => a.FinishReadingOldObjects());
+                    break;
+                case UndoableListType.ObjectsInsideProperty:
+                case UndoableListType.ObjectsInsideDocument:
+                    oldList.Cast<Objects.Abstract>().ForEach(o => o.FinishReadingOldObjects());
+                    break;
+                case UndoableListType.TextFlows:
+                    oldList.Cast<TextFlow>().ForEach(tf => tf.FinishReadingOldObjects());
+                    break;
+            }
+
             return new NewUndoableList(oldList);
         }
 
@@ -534,10 +551,7 @@ namespace Epsitec.Common.Document
                 "BasicUndoableList",
                 new XAttribute("Type", this.type),
                 new XAttribute("Selected", this.selected),
-                new XElement(
-                    "List",
-                    this.arrayList.ToArray().Where(o => o != null).Select(o => o.ToXML())
-                )
+                new XElement("List", this.arrayList.Where(o => o != null).Select(o => o.ToXML()))
             );
         }
 
@@ -546,30 +560,44 @@ namespace Epsitec.Common.Document
             return new NewUndoableList(xml);
         }
 
-        private NewUndoableList(XElement xml)
+        public static NewUndoableList FromXML(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
+        {
+            return new NewUndoableList(xml, missingObjectSource);
+        }
+
+        private NewUndoableList(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource = null
+        )
         {
             var root = xml.Element("BasicUndoableList");
             UndoableListType.TryParse(root.Attribute("Type").Value, out this.type);
-            var itemLoader = GetListItemLoader(this.type);
-            this.selected = int.Parse(root.Attribute("Selected").Value);
+            var itemLoader = GetListItemLoader(this.type, missingObjectSource);
+            this.selected = (int)root.Attribute("Selected");
             this.arrayList = root.Element("List").Elements().Select(itemLoader).ToList();
         }
 
         private static System.Func<XElement, IXMLWritable> GetListItemLoader(
-            UndoableListType listType
+            UndoableListType listType,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource = null
         )
         {
             switch (listType)
             {
                 case UndoableListType.ObjectsInsideProperty:
                 case UndoableListType.ObjectsInsideDocument:
-                    return LoadObjectFromXML;
+                case UndoableListType.ObjectsChain:
+                    return xml => LoadObjectFromXML(xml, missingObjectSource);
                 case UndoableListType.PropertiesInsideObject:
                 case UndoableListType.PropertiesInsideDocument:
                 case UndoableListType.StylesInsideAggregate:
                     return LoadPropertyFromXML;
                 case UndoableListType.AggregatesInsideDocument:
                 case UndoableListType.AggregatesInsideObject:
+                case UndoableListType.AggregatesChildren:
                     return Properties.Aggregate.FromXML;
                 case UndoableListType.Guides:
                     return Settings.Guide.FromXML;
@@ -582,7 +610,10 @@ namespace Epsitec.Common.Document
             }
         }
 
-        private static IXMLWritable LoadObjectFromXML(XElement xml)
+        private static IXMLWritable LoadObjectFromXML(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource = null
+        )
         {
             switch (xml.Name.LocalName)
             {
@@ -601,13 +632,13 @@ namespace Epsitec.Common.Document
                 case "Image":
                     return Objects.Image.FromXML(xml);
                 case "Layer":
-                    return Objects.Layer.FromXML(xml);
+                    return Objects.Layer.FromXML(xml, missingObjectSource);
                 case "Line":
                     return Objects.Line.FromXML(xml);
                 case "Memory":
                     return Objects.Memory.FromXML(xml);
                 case "Page":
-                    return Objects.Page.FromXML(xml);
+                    return Objects.Page.FromXML(xml, missingObjectSource);
                 case "Poly":
                     return Objects.Poly.FromXML(xml);
                 case "Rectangle":
@@ -619,11 +650,11 @@ namespace Epsitec.Common.Document
                 case "TextBox":
                     return Objects.TextBox.FromXML(xml);
                 case "TextBox2":
-                    return Objects.TextBox2.FromXML(xml);
+                    return Objects.TextBox2.FromXML(xml, missingObjectSource);
                 case "TextLine":
                     return Objects.TextLine.FromXML(xml);
                 case "TextLine2":
-                    return Objects.TextLine2.FromXML(xml);
+                    return Objects.TextLine2.FromXML(xml, missingObjectSource);
                 case "Volume":
                     return Objects.Volume.FromXML(xml);
                 default:
@@ -677,6 +708,8 @@ namespace Epsitec.Common.Document
                     return Properties.TextLine.FromXML(xml);
                 case "Volume":
                     return Properties.Volume.FromXML(xml);
+                case "Guide":
+                    return Settings.Guide.FromXML(xml);
                 default:
                     throw new System.ArgumentException(
                         $"Unknown Property type '{xml.Name.LocalName}'"

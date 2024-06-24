@@ -1629,7 +1629,8 @@ namespace Epsitec.Common.Document.Objects
         public new bool HasEquivalentData(Support.IXMLWritable other)
         {
             AbstractText otherAbstractText = (AbstractText)other;
-            return base.HasEquivalentData(other) && this.textFlow == otherAbstractText.textFlow;
+            return base.HasEquivalentData(other)
+                && this.textFlow.Id == otherAbstractText.textFlow.Id; // only check the id for textFlow which is serialized as a reference
         }
 
         public new IEnumerable<XObject> IterXMLParts()
@@ -1638,13 +1639,19 @@ namespace Epsitec.Common.Document.Objects
             {
                 yield return item;
             }
-            yield return new XElement("TextFlow", this.textFlow.ToXML());
+            yield return this.textFlow.ToXMLReference();
         }
 
-        protected AbstractText(XElement xml)
+        protected AbstractText(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
             : base(xml)
         {
-            throw new System.NotImplementedException();
+            this.textFlow = (TextFlow)missingObjectSource(
+                typeof(TextFlow),
+                (int)xml.Element("TextFlowRef").Attribute("id")
+            );
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -1676,6 +1683,12 @@ namespace Epsitec.Common.Document.Objects
         {
             System.Diagnostics.Debug.Assert(this.textFlow == flow);
             this.UpdateTextFrame();
+        }
+
+        internal override void FinishReadingOldObjects()
+        {
+            base.FinishReadingOldObjects();
+            this.textFlow?.FinishReadingOldObjects();
         }
         #endregion
 

@@ -3997,6 +3997,7 @@ namespace Epsitec.Common.Document.Objects
             ];
             if (!status.All(x => x))
             {
+                this.properties.HasEquivalentData(otherAbstract.properties);
                 System.Console.WriteLine("Error in Objects.Abstract");
                 return false;
             }
@@ -4028,12 +4029,15 @@ namespace Epsitec.Common.Document.Objects
             yield return new XElement("Aggregates", this.aggregates.ToXML());
         }
 
-        protected Abstract(XElement xml)
+        protected Abstract(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource = null
+        )
         {
             this.document = Document.ReadDocument;
-            this.uniqueId = int.Parse(xml.Attribute("UniqueId").Value);
+            this.uniqueId = (int)xml.Attribute("UniqueId");
             this.name = xml.Attribute("Name").Value;
-            this.direction = double.Parse(xml.Attribute("Direction").Value);
+            this.direction = (double)xml.Attribute("Direction");
 
             this.properties = NewUndoableList.FromXML(xml.Element("Properties"));
             this.surfaceAnchor = new SurfaceAnchor(this.document, this);
@@ -4047,7 +4051,7 @@ namespace Epsitec.Common.Document.Objects
             var objectsXML = xml.Element("Objects");
             if (objectsXML != null)
             {
-                this.objects = NewUndoableList.FromXML(objectsXML);
+                this.objects = NewUndoableList.FromXML(objectsXML, missingObjectSource);
             }
             this.aggregates = NewUndoableList.FromXML(xml.Element("Aggregates"));
             this.CreateMissingProperties();
@@ -4079,17 +4083,14 @@ namespace Epsitec.Common.Document.Objects
             this.document = Document.ReadDocument;
             this.uniqueId = info.GetInt32("UniqueId");
             this.name = info.GetString("Name");
-            var properties = (UndoableList)info.GetValue("Properties", typeof(UndoableList));
-            this.properties = NewUndoableList.FromOld(properties);
+            this.oldproperties = (UndoableList)info.GetValue("Properties", typeof(UndoableList));
             this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
             System.Collections.ArrayList handles = (System.Collections.ArrayList)
                 info.GetValue("Handles", typeof(System.Collections.ArrayList));
             this.handles = handles.Cast<Handle>().ToList();
-            this.HandlePropertiesCreate(); // crée les poignées des propriétés
 
-            var objects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
-            this.objects = NewUndoableList.FromOld(objects);
+            this.oldobjects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 17))
             {
@@ -4102,8 +4103,8 @@ namespace Epsitec.Common.Document.Objects
 
             if (this.document.IsRevisionGreaterOrEqual(1, 0, 26))
             {
-                var aggregates = (UndoableList)info.GetValue("Aggregates", typeof(UndoableList));
-                this.aggregates = NewUndoableList.FromOld(aggregates);
+                this.oldaggregates = (UndoableList)
+                    info.GetValue("Aggregates", typeof(UndoableList));
             }
             else if (this.document.IsRevisionGreaterOrEqual(1, 0, 24))
             {
@@ -4125,7 +4126,14 @@ namespace Epsitec.Common.Document.Objects
                     UndoableListType.AggregatesInsideObject
                 );
             }
+        }
 
+        internal virtual void FinishReadingOldObjects()
+        {
+            this.properties ??= NewUndoableList.FromOld(this.oldproperties);
+            this.HandlePropertiesCreate(); // crée les poignées des propriétés
+            this.objects ??= NewUndoableList.FromOld(this.oldobjects);
+            this.aggregates ??= NewUndoableList.FromOld(this.oldaggregates);
             this.CreateMissingProperties();
         }
 
@@ -4229,15 +4237,19 @@ namespace Epsitec.Common.Document.Objects
         protected Point moveHandlePos;
 
         protected string name = "";
-        protected NewUndoableList properties;
         protected List<Properties.Abstract> additionnalProperties;
         protected List<Handle> handles = new();
         protected BasicUndoableList selectedSegments = null;
-        protected NewUndoableList objects = null;
         protected int totalPropertyHandle;
         protected double direction = 0.0;
         protected double initialDirection = 0.0;
         protected SurfaceAnchor surfaceAnchor;
+
+        protected UndoableList oldproperties;
+        protected NewUndoableList properties;
+        protected UndoableList oldobjects = null;
+        protected NewUndoableList objects = null;
+        protected UndoableList oldaggregates = null;
         protected NewUndoableList aggregates = null;
 
         protected bool isDirtyPageAndLayerNumbers = true;

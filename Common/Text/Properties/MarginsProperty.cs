@@ -203,19 +203,24 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             MarginsProperty other = (MarginsProperty)otherWritable;
-            return this.leftMarginFirstLine == other.leftMarginFirstLine
-                && this.leftMarginBody == other.leftMarginBody
-                && this.rightMarginFirstLine == other.rightMarginFirstLine
-                && this.rightMarginBody == other.rightMarginBody
-                && this.units == other.units
-                && this.justificationBody == other.justificationBody
-                && this.justificationLastLine == other.justificationLastLine
-                && this.disposition == other.disposition
-                && this.breakFenceBefore == other.breakFenceBefore
-                && this.breakFenceAfter == other.breakFenceAfter
+            return this.EquivalentDouble(this.leftMarginFirstLine, other.leftMarginFirstLine)
+                && this.EquivalentDouble(this.leftMarginBody, other.leftMarginBody)
+                && this.EquivalentDouble(this.rightMarginFirstLine, other.rightMarginFirstLine)
+                && this.EquivalentDouble(this.rightMarginBody, other.rightMarginBody)
+                && this.EquivalentDouble(this.justificationBody, other.justificationBody)
+                && this.EquivalentDouble(this.justificationLastLine, other.justificationLastLine)
+                && this.EquivalentDouble(this.disposition, other.disposition)
+                && this.EquivalentDouble(this.breakFenceBefore, other.breakFenceBefore)
+                && this.EquivalentDouble(this.breakFenceAfter, other.breakFenceAfter)
                 && this.enableHyphenation == other.enableHyphenation
                 && this.level == other.level
+                && this.units == other.units
                 && this.levelAttribute == other.levelAttribute;
+        }
+
+        private bool EquivalentDouble(double a, double b)
+        {
+            return a == b || (a.IsSafeNaN() && b.IsSafeNaN());
         }
 
         public override XElement ToXML()

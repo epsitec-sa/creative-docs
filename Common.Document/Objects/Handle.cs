@@ -606,6 +606,7 @@ namespace Epsitec.Common.Document.Objects
 
         private Handle(XElement xml)
         {
+            this.document = Document.ReadDocument;
             HandleType.TryParse(xml.Attribute("Type").Value, out this.type);
             HandleConstrainType.TryParse(
                 xml.Attribute("ConstrainType").Value,

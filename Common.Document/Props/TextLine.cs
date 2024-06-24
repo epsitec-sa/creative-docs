@@ -153,8 +153,8 @@ namespace Epsitec.Common.Document.Properties
             : base(xml)
         {
             JustifHorizontal.TryParse(xml.Attribute("Horizontal").Value, out this.horizontal);
-            this.offset = double.Parse(xml.Attribute("Offset").Value);
-            this.add = double.Parse(xml.Attribute("Add").Value);
+            this.offset = (double)xml.Attribute("Offset");
+            this.add = (double)xml.Attribute("Add");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

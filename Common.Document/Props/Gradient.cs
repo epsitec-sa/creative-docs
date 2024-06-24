@@ -1217,9 +1217,9 @@ namespace Epsitec.Common.Document.Properties
                     || this.fillType == GradientFillType.Squares
                 )
                 && !(
-                    this.hatchAngle == otherGradient.hatchAngle
-                    && this.hatchWidth == otherGradient.hatchWidth
-                    && this.hatchDistance == otherGradient.hatchDistance
+                    this.hatchAngle.SequenceEqual(otherGradient.hatchAngle)
+                    && this.hatchWidth.SequenceEqual(otherGradient.hatchWidth)
+                    && this.hatchDistance.SequenceEqual(otherGradient.hatchDistance)
                 )
             )
             {

@@ -132,5 +132,5 @@ void ConvertAllFiles()
 }
 
 //DebugBinaryFormatter();
-TestConvert(Path.Join(inputDir, "Save.icon"));
-//ConvertAllFiles();
+//TestConvert(Path.Join(inputDir, "aqua1.crdoc"));
+ConvertAllFiles();

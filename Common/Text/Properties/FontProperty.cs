@@ -1,5 +1,6 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -73,9 +74,14 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             FontProperty other = (FontProperty)otherWritable;
-            return this.faceName == other.faceName
-                && this.styleName == other.styleName
-                && (this.features == other.features || this.features.SequenceEqual(other.features));
+            List<bool> checks =
+            [
+                this.faceName == other.faceName,
+                this.styleName == other.styleName,
+                (this.features == other.features || this.features.SequenceEqual(other.features))
+            ];
+            bool all = checks.All(x => x);
+            return all;
         }
 
         public override XElement ToXML()
