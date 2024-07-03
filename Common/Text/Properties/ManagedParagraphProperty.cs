@@ -68,8 +68,12 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             ManagedParagraphProperty other = (ManagedParagraphProperty)otherWritable;
-            return this.managerName == other.managerName
-                && this.managerParameters.SequenceEqual(other.managerParameters);
+            bool allOk =
+                this.managerName == other.managerName
+                && this.managerParameters.SequenceEqual(
+                    other.managerParameters.Where(item => item != null)
+                );
+            return allOk;
         }
 
         public override XElement ToXML()

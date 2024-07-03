@@ -55,7 +55,11 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             LanguageProperty other = (LanguageProperty)otherWritable;
-            return this.locale == other.locale && this.hyphenation == other.hyphenation;
+            return this.locale == other.locale
+                && (
+                    this.hyphenation == other.hyphenation
+                    || this.hyphenation.IsSafeNaN() && other.hyphenation.IsSafeNaN()
+                );
         }
 
         public override XElement ToXML()

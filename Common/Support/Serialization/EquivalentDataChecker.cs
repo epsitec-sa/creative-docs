@@ -17,7 +17,15 @@ namespace Epsitec.Common.Support.Serialization
                 return false;
             }
 
-            return first.Zip(other).All(pair => pair.First.HasEquivalentData(pair.Second));
+            foreach (var (fst, snd) in first.Zip(other))
+            {
+                if (!fst.HasEquivalentData(snd))
+                {
+                    fst.HasEquivalentData(snd);
+                    return false;
+                }
+            }
+            return true;
         }
 
         public static bool HasEquivalentData<T>(this ICollection<T> first, ICollection<T> other)

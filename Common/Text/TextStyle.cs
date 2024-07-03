@@ -456,7 +456,8 @@ namespace Epsitec.Common.Text
                     ?? otherContext.styleProperties == null
                 )
             ];
-            return checks.All(x => x);
+            bool allOk = checks.All(x => x);
+            return allOk;
         }
 
         public static TextStyle FromXML(XElement xml)
@@ -479,6 +480,7 @@ namespace Epsitec.Common.Text
                 ?.Elements()
                 ?.Select(Styles.PropertyContainer.LoadProperty)
                 ?.ToArray();
+            this.isFixupRequired = true;
         }
 
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)

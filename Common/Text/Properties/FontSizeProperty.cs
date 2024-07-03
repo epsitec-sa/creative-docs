@@ -83,7 +83,7 @@ namespace Epsitec.Common.Text.Properties
         {
             FontSizeProperty other = (FontSizeProperty)otherWritable;
             bool all =
-                this.size == other.size
+                (this.size == other.size || this.size.IsSafeNaN() && other.size.IsSafeNaN())
                 && this.units == other.units
                 && (this.glue == other.glue || this.glue.IsSafeNaN() && other.glue.IsSafeNaN());
             return all;

@@ -485,15 +485,15 @@ namespace Epsitec.Common.Text
             this.StyleMap.Serialize(buffer);
         }
 
-        public bool HasEquivalentData(Common.Support.IXMLWritable other)
+        public bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
-            StyleList otherContext = (StyleList)other;
+            StyleList other = (StyleList)otherWritable;
             List<bool> checks =
             [
-                this.uniqueId == otherContext.uniqueId,
-                this.internalSettings.HasEquivalentData(otherContext.internalSettings),
-                this.textStyleList.HasEquivalentData(otherContext.textStyleList),
-                this.styleMap.HasEquivalentData(otherContext.styleMap)
+                this.uniqueId == other.uniqueId,
+                this.internalSettings.HasEquivalentData(other.internalSettings),
+                this.textStyleList.HasEquivalentData(other.textStyleList),
+                this.styleMap.HasEquivalentData(other.styleMap)
             ];
             return checks.All(x => x);
         }
@@ -526,6 +526,10 @@ namespace Epsitec.Common.Text
                 .Elements()
                 .ToList()
                 .ForEach(item => this.Attach(TextStyle.FromXML(item)));
+            foreach (TextStyle style in this.textStyleList)
+            {
+                style.DeserializeFixups(this);
+            }
             this.styleMap = new StyleMap(xml.Element("StyleMap").Element("StyleMap"), this);
         }
 

@@ -169,7 +169,13 @@ namespace Epsitec.Common.Text
                 this.generatorList.HasEquivalentData(otherContext.generatorList),
                 this.conditions.SequenceEqual(otherContext.conditions)
             ];
-            return checks.All(x => x);
+            bool allOk = checks.All(x => x);
+            if (!allOk)
+            {
+                this.styleList.HasEquivalentData(otherContext.styleList);
+                return false;
+            }
+            return true;
         }
 
         public XElement ToXML()

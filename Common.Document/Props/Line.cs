@@ -800,7 +800,10 @@ namespace Epsitec.Common.Document.Properties
             Line otherLine = (Line)other;
             if (
                 this.dash
-                && !(this.dashPen == otherLine.dashPen && this.dashGap == otherLine.dashGap)
+                && !(
+                    this.dashPen.SequenceEqual(otherLine.dashPen)
+                    && this.dashGap.SequenceEqual(otherLine.dashGap)
+                )
             )
             {
                 return false;

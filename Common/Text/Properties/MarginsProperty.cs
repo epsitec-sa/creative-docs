@@ -1,5 +1,7 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
@@ -203,19 +205,27 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             MarginsProperty other = (MarginsProperty)otherWritable;
-            return this.EquivalentDouble(this.leftMarginFirstLine, other.leftMarginFirstLine)
-                && this.EquivalentDouble(this.leftMarginBody, other.leftMarginBody)
-                && this.EquivalentDouble(this.rightMarginFirstLine, other.rightMarginFirstLine)
-                && this.EquivalentDouble(this.rightMarginBody, other.rightMarginBody)
-                && this.EquivalentDouble(this.justificationBody, other.justificationBody)
-                && this.EquivalentDouble(this.justificationLastLine, other.justificationLastLine)
-                && this.EquivalentDouble(this.disposition, other.disposition)
-                && this.EquivalentDouble(this.breakFenceBefore, other.breakFenceBefore)
-                && this.EquivalentDouble(this.breakFenceAfter, other.breakFenceAfter)
-                && this.enableHyphenation == other.enableHyphenation
-                && this.level == other.level
-                && this.units == other.units
-                && this.levelAttribute == other.levelAttribute;
+            List<bool> checks =
+            [
+                this.EquivalentDouble(this.leftMarginFirstLine, other.leftMarginFirstLine)
+                    && this.EquivalentDouble(this.leftMarginBody, other.leftMarginBody)
+                    && this.EquivalentDouble(this.rightMarginFirstLine, other.rightMarginFirstLine)
+                    && this.EquivalentDouble(this.rightMarginBody, other.rightMarginBody)
+                    && this.EquivalentDouble(this.justificationBody, other.justificationBody)
+                    && this.EquivalentDouble(
+                        this.justificationLastLine,
+                        other.justificationLastLine
+                    )
+                    && this.EquivalentDouble(this.disposition, other.disposition)
+                    && this.EquivalentDouble(this.breakFenceBefore, other.breakFenceBefore)
+                    && this.EquivalentDouble(this.breakFenceAfter, other.breakFenceAfter)
+                    && this.enableHyphenation == other.enableHyphenation
+                    && this.level == other.level
+                    && this.units == other.units
+                    && this.levelAttribute == other.levelAttribute
+            ];
+            bool all = checks.All(x => x);
+            return all;
         }
 
         private bool EquivalentDouble(double a, double b)
