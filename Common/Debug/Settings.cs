@@ -2,6 +2,6 @@
 {
     public class Settings
     {
-        public static readonly bool UseOldIconFormat = true;
+        public static readonly bool UseOldIconFormat = false;
     }
 }

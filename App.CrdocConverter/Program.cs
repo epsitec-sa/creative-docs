@@ -4,9 +4,17 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Epsitec.Common.Document;
 using Objects = Epsitec.Common.Document.Objects;
 
-string root = "C:\\devel\\cresus-core-dev-converter\\cresus-core\\App.CrdocConverter";
-string inputDir = Path.Join(root, "old_format_files");
-string outputDir = Path.Join(root, "output_files");
+string root = "C:\\devel\\cresus-core-dev-converter\\cresus-core";
+
+List<string> imageDirectories =
+[
+    "Common\\Widgets\\Images",
+    "Common\\Dialogs\\Images",
+    "Common.Tests\\Images",
+    "Common.DocumentEditor\\Images",
+];
+
+string debugOutputDir = Path.Join(root, "App.CrdocConverter\\output_files");
 
 bool verbose = false;
 int failed = 0;
@@ -68,8 +76,10 @@ void TestConvert(string oldFile)
 {
     Console.WriteLine($"Convert {Path.GetFileName(oldFile)}");
     string newFile = Path.GetFileNameWithoutExtension(oldFile) + ".xml";
-    string outputFilePath = Path.Join(outputDir, newFile);
+    string outputFilePath = Path.Join(Path.GetDirectoryName(oldFile), newFile);
+    string debugOutputFilePath = Path.Join(debugOutputDir, newFile);
     Document originalDocument = LoadOriginalDocument(oldFile);
+    ExportToNewFormat(originalDocument, debugOutputFilePath);
     ExportToNewFormat(originalDocument, outputFilePath);
     CheckReadBackDocument(originalDocument, outputFilePath);
 }
@@ -117,9 +127,15 @@ void DebugBinaryFormatter()
 
 void ConvertAllFiles()
 {
-    foreach (string file in Directory.GetFiles(inputDir))
+    failed = 0;
+    foreach (string directoryName in imageDirectories)
     {
-        TestConvert(file);
+        string directory = Path.Join(root, directoryName);
+        Console.WriteLine($"Convert files in directory {directory}");
+        foreach (string file in Directory.GetFiles(directory, "*.icon"))
+        {
+            TestConvert(file);
+        }
     }
     if (failed == 0)
     {

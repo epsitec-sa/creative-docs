@@ -35,6 +35,8 @@
     <EmbeddedResource Include="Widgets\Adorners\Resources\**\*" />
     <EmbeddedResource Include="Dialogs\Images\*.icon" />
     <EmbeddedResource Include="Widgets\Images\*.icon" />
+    <EmbeddedResource Include="Dialogs\Images\*.xml" />
+    <EmbeddedResource Include="Widgets\Images\*.xml" />
     <EmbeddedResource Include="Drawing\Resources\LineBreak.compressed" />
     <EmbeddedResource Include="Text\Resources\LineBreak.compressed" />
   </ItemGroup>

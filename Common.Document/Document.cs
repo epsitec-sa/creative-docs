@@ -536,7 +536,14 @@ namespace Epsitec.Common.Document
         public Settings.Settings Settings
         {
             //	Réglages de ce document.
-            get { return this.settings; }
+            get
+            {
+                if (this.settings == null)
+                {
+                    this.settings = new Settings.Settings(this);
+                }
+                return this.settings;
+            }
         }
 
         public Modifier Modifier
