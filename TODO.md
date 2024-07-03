@@ -26,3 +26,6 @@ I refactored most of those, there is still one such instance in Common.Tests.Dra
 ## Rename classes with same name
 There are several classes and files with the same name in different namespaces.
 It would probably be clearer to rename them.
+
+## Image serialization
+When saving a creativedoc file, we should zip the bitmap images inside the file so that the file can be opened elsewere.
