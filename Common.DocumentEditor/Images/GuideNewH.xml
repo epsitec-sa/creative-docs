@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document Type="Pictogram" UniqueObjectId="7" UniqueAggregateId="0" UniqueParagraphStyleId="0" UniqueCharacterStyleId="0">
+  <Size>
+    <Size width="20" height="20" />
+  </Size>
+  <HotSpot>
+    <Point x="0" y="0" />
+  </HotSpot>
+  <Objects>
+    <BasicUndoableList Type="ObjectsInsideDocument" Selected="-1">
+      <List>
+        <Page UniqueId="2" Name="" Direction="0">
+          <Properties>
+            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+              <List />
+            </BasicUndoableList>
+          </Properties>
+          <Handles />
+          <Objects>
+            <BasicUndoableList Type="ObjectsInsideDocument" Selected="-1">
+              <List>
+                <Layer UniqueId="3" Name="" Direction="0" LayerType="Dimmed">
+                  <Properties>
+                    <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                      <List>
+                        <ModColor Type="ModColor" IsStyle="false" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
+                      </List>
+                    </BasicUndoableList>
+                  </Properties>
+                  <Handles />
+                  <Objects>
+                    <BasicUndoableList Type="ObjectsInsideDocument" Selected="-1">
+                      <List>
+                        <Poly UniqueId="11" Name="" Direction="0">
+                          <Properties>
+                            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                              <List>
+                                <Name Type="Name" IsStyle="false" StringValue="" />
+                                <Gradient Type="LineColor" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.2862745098039214" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Line Type="LineMode" IsStyle="false" Width="1" Cap="Round" Join="Round" Limit="5" Dash="false" />
+                                <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+                                <Gradient Type="FillGradient" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.2862745098039213" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Bool Type="PolyClose" IsStyle="false" Value="true" />
+                                <Corner Type="Corner" IsStyle="false" CornerType="Right" />
+                              </List>
+                            </BasicUndoableList>
+                          </Properties>
+                          <Handles>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.5" y="10.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="7.5" y="10.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="7.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.5" y="7.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.5" y="7.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.5" y="10.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.5" y="10.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.5" y="12.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.5" y="12.5" />
+                              </Position>
+                            </Handle>
+                          </Handles>
+                          <Aggregates>
+                            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                              <List />
+                            </BasicUndoableList>
+                          </Aggregates>
+                        </Poly>
+                        <Line UniqueId="30" Name="" Direction="0">
+                          <Properties>
+                            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                              <List>
+                                <Name Type="Name" IsStyle="false" StringValue="" />
+                                <Gradient Type="LineColor" IsStyle="false" FillType="Linear" Smooth="0" Angle="0" Cx="0.5" Cy="0.5" Sx="-0.4166666666666667" Sy="-4.999994996263006E-07" Repeat="1" Middle="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0.3179320385644356" Value2="0.3179320385644356" Value3="0.5386661261072616" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                  <Color2>
+                                    <RichColor Alpha="1" Value1="0.52" Value2="0.52" Value3="0.8" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color2>
+                                </Gradient>
+                                <Line Type="LineMode" IsStyle="false" Width="1" Cap="Round" Join="Round" Limit="5" Dash="false" />
+                                <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+                              </List>
+                            </BasicUndoableList>
+                          </Properties>
+                          <Handles>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="0.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="5.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                          </Handles>
+                          <Aggregates>
+                            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                              <List />
+                            </BasicUndoableList>
+                          </Aggregates>
+                        </Line>
+                        <Line UniqueId="11" Name="" Direction="0">
+                          <Properties>
+                            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                              <List>
+                                <Name Type="Name" IsStyle="false" StringValue="" />
+                                <Gradient Type="LineColor" IsStyle="false" FillType="Linear" Smooth="0" Angle="0" Cx="0.5" Cy="0.5" Sx="-0.4166666666666667" Sy="-4.999994996263006E-07" Repeat="1" Middle="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0.3179320385644356" Value2="0.3179320385644356" Value3="0.5386661261072616" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                  <Color2>
+                                    <RichColor Alpha="1" Value1="0.52" Value2="0.52" Value3="0.8" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color2>
+                                </Gradient>
+                                <Line Type="LineMode" IsStyle="false" Width="1" Cap="Round" Join="Round" Limit="5" Dash="false" />
+                                <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+                              </List>
+                            </BasicUndoableList>
+                          </Properties>
+                          <Handles>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="14.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="19.5" y="9.5" />
+                              </Position>
+                            </Handle>
+                          </Handles>
+                          <Aggregates>
+                            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                              <List />
+                            </BasicUndoableList>
+                          </Aggregates>
+                        </Line>
+                      </List>
+                    </BasicUndoableList>
+                  </Objects>
+                  <Aggregates>
+                    <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                      <List />
+                    </BasicUndoableList>
+                  </Aggregates>
+                </Layer>
+              </List>
+            </BasicUndoableList>
+          </Objects>
+          <Aggregates>
+            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+              <List />
+            </BasicUndoableList>
+          </Aggregates>
+        </Page>
+      </List>
+    </BasicUndoableList>
+  </Objects>
+  <Properties>
+    <BasicUndoableList Type="PropertiesInsideDocument" Selected="-1">
+      <List>
+        <ModColor Type="ModColor" IsStyle="false" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
+        <Name Type="Name" IsStyle="false" StringValue="" />
+        <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+        <Line Type="LineMode" IsStyle="false" Width="1" Cap="Round" Join="Round" Limit="5" Dash="false" />
+        <Gradient Type="LineColor" IsStyle="false" FillType="None" Smooth="0">
+          <Color1>
+            <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.2862745098039214" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+          </Color1>
+        </Gradient>
+        <Gradient Type="FillGradient" IsStyle="false" FillType="None" Smooth="0">
+          <Color1>
+            <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.2862745098039213" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+          </Color1>
+        </Gradient>
+        <Bool Type="PolyClose" IsStyle="false" Value="true" />
+        <Corner Type="Corner" IsStyle="false" CornerType="Right" />
+        <Gradient Type="LineColor" IsStyle="false" FillType="Linear" Smooth="0" Angle="0" Cx="0.5" Cy="0.5" Sx="-0.4166666666666667" Sy="-4.999994996263006E-07" Repeat="1" Middle="0">
+          <Color1>
+            <RichColor Alpha="1" Value1="0.3179320385644356" Value2="0.3179320385644356" Value3="0.5386661261072616" Value4="0" ColorSpace="Rgb" IsValid="true" />
+          </Color1>
+          <Color2>
+            <RichColor Alpha="1" Value1="0.52" Value2="0.52" Value3="0.8" Value4="0" ColorSpace="Rgb" IsValid="true" />
+          </Color2>
+        </Gradient>
+      </List>
+    </BasicUndoableList>
+  </Properties>
+  <Aggregates>
+    <BasicUndoableList Type="AggregatesInsideDocument" Selected="-1">
+      <List />
+    </BasicUndoableList>
+  </Aggregates>
+</Document>

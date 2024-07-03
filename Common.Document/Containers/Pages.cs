@@ -452,7 +452,7 @@ namespace Epsitec.Common.Document.Containers
         {
             //	Effectue la mise à jour d'un objet.
             Objects.Page page = obj as Objects.Page;
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             int rank = pages.IndexOf(obj);
             this.TableUpdateRow(rank, page);
         }
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Document.Containers
             this.table.SetHeaderTextH(0, Res.Strings.Container.Pages.Header.Number);
             this.table.SetHeaderTextH(1, Res.Strings.Container.Pages.Header.Name);
 
-            SerializableUndoableList doc = this.document.DocumentObjects;
+            NewUndoableList doc = this.document.DocumentObjects;
             for (int i = 0; i < rows; i++)
             {
                 Objects.Page page = doc[i] as Objects.Page;
@@ -901,7 +901,7 @@ namespace Epsitec.Common.Document.Containers
             field.Items.Clear();
 
             DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-            SerializableUndoableList doc = this.document.DocumentObjects;
+            NewUndoableList doc = this.document.DocumentObjects;
             Objects.Page currentPage = context.RootObject(1) as Objects.Page;
             int total = context.TotalPages();
             for (int i = 0; i < total; i++)
@@ -923,7 +923,7 @@ namespace Epsitec.Common.Document.Containers
                 return;
             TextFieldCombo field = sender as TextFieldCombo;
             DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-            SerializableUndoableList doc = this.document.DocumentObjects;
+            NewUndoableList doc = this.document.DocumentObjects;
             int total = context.TotalPages();
             for (int i = 0; i < total; i++)
             {

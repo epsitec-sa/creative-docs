@@ -24,8 +24,8 @@ namespace Epsitec.Common.Document
 
         public static void Initialize()
         {
-            Res.Initialize();
             Common.Widgets.Widget.Initialize();
+            Res.Initialize();
             if (Engine.current == null)
             {
                 Engine.current = new Engine();

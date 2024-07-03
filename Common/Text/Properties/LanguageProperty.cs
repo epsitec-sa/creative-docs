@@ -55,16 +55,24 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             LanguageProperty other = (LanguageProperty)otherWritable;
-            return this.locale == other.locale && this.hyphenation == other.hyphenation;
+            return this.locale == other.locale
+                && (
+                    this.hyphenation == other.hyphenation
+                    || this.hyphenation.IsSafeNaN() && other.hyphenation.IsSafeNaN()
+                );
         }
 
         public override XElement ToXML()
         {
-            return new XElement(
+            var root = new XElement(
                 "LanguageProperty",
-                new XAttribute("Locale", this.locale),
                 new XAttribute("Hyphenation", this.hyphenation)
             );
+            if (this.locale != null)
+            {
+                root.Add(new XAttribute("Locale", this.locale));
+            }
+            return root;
         }
 
         public static LanguageProperty FromXML(XElement xml)
@@ -74,7 +82,7 @@ namespace Epsitec.Common.Text.Properties
 
         private LanguageProperty(XElement xml)
         {
-            this.locale = xml.Attribute("Locale").Value;
+            this.locale = xml.Attribute("Locale")?.Value;
             this.hyphenation = (double)xml.Attribute("Hyphenation");
         }
 

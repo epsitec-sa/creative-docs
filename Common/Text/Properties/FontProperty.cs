@@ -1,5 +1,6 @@
 //	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -73,25 +74,36 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             FontProperty other = (FontProperty)otherWritable;
-            return this.faceName == other.faceName
-                && this.styleName == other.styleName
-                && this.features.SequenceEqual(other.features);
+            List<bool> checks =
+            [
+                this.faceName == other.faceName,
+                this.styleName == other.styleName,
+                (this.features == other.features || this.features.SequenceEqual(other.features))
+            ];
+            bool all = checks.All(x => x);
+            return all;
         }
 
         public override XElement ToXML()
         {
-            return new XElement(
+            var root = new XElement(
                 "FontProperty",
                 new XAttribute("FaceName", this.faceName),
-                new XAttribute("StyleName", this.styleName),
-                new XElement(
-                    "Features",
-                    this.features.Select(item => new XElement(
-                        "Item",
-                        new XAttribute("Value", item)
-                    ))
-                )
+                new XAttribute("StyleName", this.styleName)
             );
+            if (this.features != null)
+            {
+                root.Add(
+                    new XElement(
+                        "Features",
+                        this.features.Select(item => new XElement(
+                            "Item",
+                            new XAttribute("Value", item)
+                        ))
+                    )
+                );
+            }
+            return root;
         }
 
         public static FontProperty FromXML(XElement xml)
@@ -104,9 +116,9 @@ namespace Epsitec.Common.Text.Properties
             this.faceName = xml.Attribute("FaceName").Value;
             this.styleName = xml.Attribute("StyleName").Value;
             this.features = xml.Element("Features")
-                .Elements()
-                .Select(item => item.Attribute("Value").Value)
-                .ToArray();
+                ?.Elements()
+                ?.Select(item => item.Attribute("Value").Value)
+                ?.ToArray();
         }
 
         public override void DeserializeFromText(

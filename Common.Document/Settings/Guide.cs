@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.Settings
         {
             this.document = Document.ReadDocument;
             GuideType.TryParse(xml.Attribute("Type").Value, out this.type);
-            this.position = double.Parse(xml.Attribute("Pos").Value);
+            this.position = (double)xml.Attribute("Pos");
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

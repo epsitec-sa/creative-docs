@@ -159,13 +159,23 @@ namespace Epsitec.Common.Text
         public bool HasEquivalentData(Common.Support.IXMLWritable other)
         {
             TextContext otherContext = (TextContext)other;
-            return this.uniqueId == otherContext.uniqueId
-                && this.styleList.HasEquivalentData(otherContext.styleList)
-                && this.defaultParaStyle.HasEquivalentData(otherContext.defaultParaStyle)
-                && this.defaultTextStyle.HasEquivalentData(otherContext.defaultTextStyle)
-                && this.tabList.HasEquivalentData(otherContext.tabList)
-                && this.generatorList.HasEquivalentData(otherContext.generatorList)
-                && this.conditions.SequenceEqual(otherContext.conditions);
+            List<bool> checks =
+            [
+                this.uniqueId == otherContext.uniqueId,
+                this.styleList.HasEquivalentData(otherContext.styleList),
+                this.defaultParaStyle.HasEquivalentData(otherContext.defaultParaStyle),
+                this.defaultTextStyle.HasEquivalentData(otherContext.defaultTextStyle),
+                this.tabList.HasEquivalentData(otherContext.tabList),
+                this.generatorList.HasEquivalentData(otherContext.generatorList),
+                this.conditions.SequenceEqual(otherContext.conditions)
+            ];
+            bool allOk = checks.All(x => x);
+            if (!allOk)
+            {
+                this.styleList.HasEquivalentData(otherContext.styleList);
+                return false;
+            }
+            return true;
         }
 
         public XElement ToXML()

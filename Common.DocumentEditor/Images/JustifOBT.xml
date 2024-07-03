@@ -1,0 +1,1083 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document Type="Pictogram" UniqueObjectId="20" UniqueAggregateId="0" UniqueParagraphStyleId="0" UniqueCharacterStyleId="0">
+  <Size>
+    <Size width="20" height="20" />
+  </Size>
+  <HotSpot>
+    <Point x="0" y="0" />
+  </HotSpot>
+  <Objects>
+    <BasicUndoableList Type="ObjectsInsideDocument" Selected="-1">
+      <List>
+        <Page UniqueId="3" Name="" Direction="0">
+          <Properties>
+            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+              <List />
+            </BasicUndoableList>
+          </Properties>
+          <Handles />
+          <Objects>
+            <BasicUndoableList Type="ObjectsInsideDocument" Selected="-1">
+              <List>
+                <Layer UniqueId="4" Name="" Direction="0" LayerType="Dimmed">
+                  <Properties>
+                    <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                      <List>
+                        <ModColor Type="ModColor" IsStyle="false" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
+                      </List>
+                    </BasicUndoableList>
+                  </Properties>
+                  <Handles />
+                  <Objects>
+                    <BasicUndoableList Type="ObjectsInsideDocument" Selected="-1">
+                      <List>
+                        <Bezier UniqueId="18" Name="" Direction="0">
+                          <Properties>
+                            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                              <List>
+                                <Name Type="Name" IsStyle="false" StringValue="" />
+                                <Gradient Type="LineColor" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0" Value2="0" Value3="0" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Line Type="LineMode" IsStyle="false" Width="0" Cap="Round" Join="Round" Limit="5" Dash="false" />
+                                <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+                                <Gradient Type="FillGradient" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.28627450980392155" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Bool Type="PolyClose" IsStyle="false" Value="true" />
+                              </List>
+                            </BasicUndoableList>
+                          </Properties>
+                          <Handles>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="1.4552137586805554" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Starting" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.5" y="1.4552137586805554" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="1.4552137586805554" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.831328667534718" y="3.7034830729166686" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="6.831328667534718" y="3.7034830729166686" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.831328667534718" y="3.7034830729166686" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.831328667534718" y="4.796267361111114" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="6.831328667534718" y="4.796267361111114" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.831328667534718" y="4.796267361111114" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="7.044536675347226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.5" y="7.044536675347226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="7.044536675347226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="6.108504231770836" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.5" y="6.108504231770836" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="6.108504231770836" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.63689236111111" y="5.503889973958335" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="11.63689236111111" y="5.503889973958335" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.63689236111111" y="5.503889973958335" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.63689236111111" y="2.9555528428819455" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="11.63689236111111" y="2.9555528428819455" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.63689236111111" y="2.9555528428819455" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="2.350938585069445" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.5" y="2.350938585069445" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="2.350938585069445" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.880004882812498" y="5.257565646701392" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Starting" ConstrainType="Corner">
+                              <Position>
+                                <Point x="10.880004882812498" y="5.257565646701392" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.880004882812498" y="5.257565646701392" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="7.736010742187497" y="4.227482096354168" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="7.736010742187497" y="4.227482096354168" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="7.736010742187497" y="4.227482096354168" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.880004882812498" y="3.20187717013889" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="10.880004882812498" y="3.20187717013889" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.880004882812498" y="3.20187717013889" />
+                              </Position>
+                            </Handle>
+                          </Handles>
+                          <Aggregates>
+                            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                              <List />
+                            </BasicUndoableList>
+                          </Aggregates>
+                        </Bezier>
+                        <Bezier UniqueId="19" Name="" Direction="0">
+                          <Properties>
+                            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                              <List>
+                                <Name Type="Name" IsStyle="false" StringValue="" />
+                                <Gradient Type="LineColor" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0" Value2="0" Value3="0" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Line Type="LineMode" IsStyle="false" Width="0" Cap="Round" Join="Round" Limit="5" Dash="false" />
+                                <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+                                <Gradient Type="FillGradient" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.28627450980392155" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Bool Type="PolyClose" IsStyle="false" Value="true" />
+                              </List>
+                            </BasicUndoableList>
+                          </Properties>
+                          <Handles>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.639878110532406" y="10.93646104600695" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Starting" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="10.98301323784722" y="10.93646104600695" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.385863353587961" y="10.93646104600695" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.932775878906249" y="10.845395688657414" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.623750813802081" y="10.66326497395834" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.314725748697914" y="10.481134259259266" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.16021321614583" y="10.188530815972229" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="9.16021321614583" y="9.785454644097229" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.16021321614583" y="9.555551938657413" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.213956705729164" y="9.323409921151626" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.321443684895831" y="9.089028591579867" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.428930664062499" y="8.854647262008108" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.56478226273148" y="8.641912615740745" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="9.728998480902776" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.728998480902776" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.59531792534722" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="12.59531792534722" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.699819155092593" y="8.66281286168982" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.773716453269676" y="8.850915075231487" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.817009819878471" y="9.015131293402783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.860303186487268" y="9.179347511574079" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.881949869791667" y="9.359985351562505" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="12.881949869791667" y="9.55704481336806" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.881949869791667" y="9.986992730034729" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.729676649305555" y="10.32438241464121" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.425130208333332" y="10.569213867187505" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.12058376736111" y="10.814045319733802" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.115653030960646" y="11.805314127604174" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Starting" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="10.915833875868053" y="11.805314127604174" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.73392921730324" y="11.805314127604174" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.392286964699073" y="11.606761791087969" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.890907118055555" y="11.209657118055562" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.389527271412037" y="10.812552445023154" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.638837348090277" y="10.31542516637732" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="13.638837348090277" y="9.71827528211806" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.638837348090277" y="9.446572084780097" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.605247667100693" y="9.21443006727431" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.538068305121527" y="9.021849229600699" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.470888943142361" y="8.829268391927087" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.380570023148147" y="8.63892686631945" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.267111545138889" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.267111545138889" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="8.397081163194448" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.5" y="8.397081163194448" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="8.397081163194448" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="7.608843315972226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.5" y="7.608843315972226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5" y="7.608843315972226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.53126085069444" y="7.608843315972226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="6.53126085069444" y="7.608843315972226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.53126085069444" y="7.608843315972226" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.53126085069444" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="6.53126085069444" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="6.53126085069444" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.021375868055554" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="9.021375868055554" y="8.450824652777783" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.830287905092591" y="8.66281286168982" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.672043185763886" y="8.892715567129635" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.54664171006944" y="9.140532769097227" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.421240234374997" y="9.38834997106482" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.358539496527776" y="9.669010416666671" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="8.358539496527776" y="9.982514105902784" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.358539496527776" y="10.546820746527784" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.58471001519097" y="10.991697410300931" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.03705105251736" y="11.31714409722223" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.489392089843749" y="11.642590784143525" />
+                              </Position>
+                            </Handle>
+                          </Handles>
+                          <Aggregates>
+                            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                              <List />
+                            </BasicUndoableList>
+                          </Aggregates>
+                        </Bezier>
+                        <Bezier UniqueId="20" Name="" Direction="0">
+                          <Properties>
+                            <BasicUndoableList Type="PropertiesInsideObject" Selected="-1">
+                              <List>
+                                <Name Type="Name" IsStyle="false" StringValue="" />
+                                <Gradient Type="LineColor" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0" Value2="0" Value3="0" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Line Type="LineMode" IsStyle="false" Width="0" Cap="Round" Join="Round" Limit="5" Dash="false" />
+                                <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+                                <Gradient Type="FillGradient" IsStyle="false" FillType="None" Smooth="0">
+                                  <Color1>
+                                    <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.28627450980392155" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+                                  </Color1>
+                                </Gradient>
+                                <Bool Type="PolyClose" IsStyle="false" Value="true" />
+                              </List>
+                            </BasicUndoableList>
+                          </Properties>
+                          <Handles>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.61196560329861" y="14.846299913194454" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Starting" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="13.61196560329861" y="14.667154947916675" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.61196560329861" y="14.3237937644676" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.5589685510706" y="14.008797200520842" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.452974446614583" y="13.722165256076398" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.346980342158565" y="13.435533311631954" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.186496310763888" y="13.189208984375009" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.971522352430554" y="12.983192274305564" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.756548394097221" y="12.777175564236119" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.485591634114583" y="12.617437970196766" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.158652072482639" y="12.503979492187508" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.831712510850693" y="12.39052101417825" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.447297272858794" y="12.33379177517362" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="11.005406358506942" y="12.33379177517362" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.566501193576388" y="12.33379177517362" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.187311017071757" y="12.392760326244222" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.867835828993053" y="12.510697428385425" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.54836064091435" y="12.628634530526629" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.279643192997682" y="12.786132812500007" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.061683485243053" y="12.983192274305564" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.843723777488425" y="13.18025173611112" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.675775372540507" y="13.42582962601274" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.557838270399301" y="13.719925944010425" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.439901168258098" y="14.014022262008112" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.380932617187497" y="14.329765263310195" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="8.380932617187497" y="14.667154947916677" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.380932617187497" y="14.941843894675936" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.419747359664349" y="15.206829155815981" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.497376844618053" y="15.462110731336816" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.575006329571757" y="15.717392306857649" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.664578812210646" y="15.94505570023149" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="8.766094292534719" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="8.766094292534719" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.711083984374998" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="9.711083984374998" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.711083984374998" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.711083984374998" y="16.095836046006955" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="9.711083984374998" y="16.095836046006955" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.66032624421296" y="16.036121057581028" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.602104130497683" y="15.959238009982649" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.536417643229164" y="15.865186903211816" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.470731155960646" y="15.771135796440984" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.40355179398148" y="15.656930881076399" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="9.334879557291664" y="15.522572157118065" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.275164568865739" y="15.40612792968751" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.222913953993052" y="15.268783456307881" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.178127712673607" y="15.110538736979176" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.133341471354164" y="14.952294017650472" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.110948350694443" y="14.800020797164361" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="9.110948350694443" y="14.653719075520844" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.110948350694443" y="14.217799660011584" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.275911006221063" y="13.867720540364592" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.605836317274303" y="13.60348171657987" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="9.935761628327544" y="13.339242892795149" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="10.40228497540509" y="13.207123480902787" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="11.005406358506942" y="13.207123480902785" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="11.596584743923609" y="13.207123480902785" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.057136592158564" y="13.334764268663202" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.387061903211805" y="13.590045844184036" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.716987214265046" y="13.84532741970487" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.881949869791667" y="14.199885163483804" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Smooth">
+                              <Position>
+                                <Point x="12.881949869791667" y="14.653719075520844" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.881949869791667" y="14.928408022280102" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.825220630787037" y="15.189661096643528" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.711762152777778" y="15.43747829861112" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.598303674768518" y="15.685295500578714" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.452001953124999" y="15.904748083043993" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="12.272856987847222" y="16.095836046006955" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.272856987847222" y="16.095836046006955" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.272856987847222" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="12.272856987847222" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="12.272856987847222" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Hide" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.2178466796875" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.2178466796875" y="16.145100911458343" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.256661422164353" y="16.061499927662044" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.30368697554977" y="15.956998697916676" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.35892333984375" y="15.831597222222232" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.414159704137731" y="15.706195746527788" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.455213758680555" y="15.592737268518528" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Corner">
+                              <Position>
+                                <Point x="13.482085503472222" y="15.491221788194455" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.523885995370371" y="15.347905815972231" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.555982801649305" y="15.21951859085649" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Primary" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.578375922309029" y="15.106060112847231" />
+                              </Position>
+                            </Handle>
+                            <Handle Type="Bezier" ConstrainType="Symmetric">
+                              <Position>
+                                <Point x="13.60076904296875" y="14.992601634837973" />
+                              </Position>
+                            </Handle>
+                          </Handles>
+                          <Aggregates>
+                            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                              <List />
+                            </BasicUndoableList>
+                          </Aggregates>
+                        </Bezier>
+                      </List>
+                    </BasicUndoableList>
+                  </Objects>
+                  <Aggregates>
+                    <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+                      <List />
+                    </BasicUndoableList>
+                  </Aggregates>
+                </Layer>
+              </List>
+            </BasicUndoableList>
+          </Objects>
+          <Aggregates>
+            <BasicUndoableList Type="AggregatesInsideObject" Selected="-1">
+              <List />
+            </BasicUndoableList>
+          </Aggregates>
+        </Page>
+      </List>
+    </BasicUndoableList>
+  </Objects>
+  <Properties>
+    <BasicUndoableList Type="PropertiesInsideDocument" Selected="-1">
+      <List>
+        <ModColor Type="ModColor" IsStyle="false" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
+        <Name Type="Name" IsStyle="false" StringValue="" />
+        <Gradient Type="LineColor" IsStyle="false" FillType="None" Smooth="0">
+          <Color1>
+            <RichColor Alpha="1" Value1="0" Value2="0" Value3="0" Value4="0" ColorSpace="Rgb" IsValid="true" />
+          </Color1>
+        </Gradient>
+        <Line Type="LineMode" IsStyle="false" Width="0" Cap="Round" Join="Round" Limit="5" Dash="false" />
+        <Arrow Type="Arrow" IsStyle="false" ArrowType_0="Right" ArrowType_1="Right" />
+        <Gradient Type="FillGradient" IsStyle="false" FillType="None" Smooth="0">
+          <Color1>
+            <RichColor Alpha="1" Value1="0.14901960784313725" Value2="0.28627450980392155" Value3="0.5333333333333333" Value4="0" ColorSpace="Rgb" IsValid="true" />
+          </Color1>
+        </Gradient>
+        <Bool Type="PolyClose" IsStyle="false" Value="true" />
+      </List>
+    </BasicUndoableList>
+  </Properties>
+  <Aggregates>
+    <BasicUndoableList Type="AggregatesInsideDocument" Selected="-1">
+      <List />
+    </BasicUndoableList>
+  </Aggregates>
+</Document>

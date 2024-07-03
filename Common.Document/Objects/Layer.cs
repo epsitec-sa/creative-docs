@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new SerializableUndoableList(
+            this.objects = new NewUndoableList(
                 this.document,
                 UndoableListType.ObjectsInsideDocument
             );
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Document.Objects
 
         #region Menu
         public static VMenu CreateMenu(
-            SerializableUndoableList layers,
+            NewUndoableList layers,
             int currentLayer,
             string cmd,
             Support.EventHandler<MessageEventArgs> message
@@ -301,17 +301,25 @@ namespace Epsitec.Common.Document.Objects
 
         public static Layer FromXML(XElement xml)
         {
-            return new Layer(xml);
+            return new Layer(xml, null);
         }
 
-        private Layer(XElement xml)
-            : base(xml)
+        public static Layer FromXML(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
+        {
+            return new Layer(xml, missingObjectSource);
+        }
+
+        private Layer(XElement xml, System.Func<System.Type, int, IXMLWritable> missingObjectSource)
+            : base(xml, missingObjectSource)
         {
             LayerType.TryParse(xml.Attribute("LayerType").Value, out this.layerType);
             if (this.document.Type != DocumentType.Pictogram)
             {
                 LayerPrint.TryParse(xml.Attribute("LayerPrint").Value, out this.layerPrint);
-                this.magnet = bool.Parse(xml.Attribute("Magnet").Value);
+                this.magnet = (bool)xml.Attribute("Magnet");
             }
         }
 

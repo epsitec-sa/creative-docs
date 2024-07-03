@@ -824,7 +824,7 @@ namespace Epsitec.Common.Document
         }
 
         protected void SnapGuides(
-            SerializableUndoableList guides,
+            NewUndoableList guides,
             ref Point pos,
             Rectangle box,
             ref bool snapX,
@@ -2138,7 +2138,7 @@ namespace Epsitec.Common.Document
         public Objects.Abstract RootObject(int deepMax)
         {
             //	Retourne l'objet racine à une profondeur donnée.
-            SerializableUndoableList list = this.document.DocumentObjects;
+            NewUndoableList list = this.document.DocumentObjects;
             Objects.Abstract obj = null;
             int deep = System.Math.Min(this.rootStack.Count, deepMax);
             for (int i = 0; i < deep; i++)

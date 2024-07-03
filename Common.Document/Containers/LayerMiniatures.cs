@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document.Containers
         protected Objects.Layer GetLayer(int rank)
         {
             //	Retourne un objet Layer du document.
-            SerializableUndoableList doc = this.document.DocumentObjects;
+            NewUndoableList doc = this.document.DocumentObjects;
             Objects.Page page = doc[this.CurrentPage] as Objects.Page;
 
             if (rank < page.Objects.Count)

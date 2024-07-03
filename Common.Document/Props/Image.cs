@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Drawing;
@@ -839,21 +841,26 @@ namespace Epsitec.Common.Document.Properties
         public new bool HasEquivalentData(Support.IXMLWritable other)
         {
             Image otherImage = (Image)other;
-            return base.HasEquivalentData(other)
-                && this.filename == otherImage.filename
-                && this.shortName == otherImage.shortName
-                && this.date == otherImage.date
-                && this.insideDoc == otherImage.insideDoc
-                && this.fromClipboard == otherImage.fromClipboard
-                && this.rotation == otherImage.rotation
-                && this.mirrorH == otherImage.mirrorH
-                && this.mirrorV == otherImage.mirrorV
-                && this.homo == otherImage.homo
-                && this.filterCategory == otherImage.filterCategory
-                && this.cropMargins.Left == otherImage.cropMargins.Left
-                && this.cropMargins.Right == otherImage.cropMargins.Right
-                && this.cropMargins.Bottom == otherImage.cropMargins.Bottom
-                && this.cropMargins.Top == otherImage.cropMargins.Top;
+            List<bool> checks =
+            [
+                base.HasEquivalentData(other),
+                this.filename == otherImage.filename,
+                this.shortName == otherImage.shortName,
+                this.date == otherImage.date,
+                this.insideDoc == otherImage.insideDoc,
+                this.fromClipboard == otherImage.fromClipboard,
+                this.rotation == otherImage.rotation,
+                this.mirrorH == otherImage.mirrorH,
+                this.mirrorV == otherImage.mirrorV,
+                this.homo == otherImage.homo,
+                this.filterCategory == otherImage.filterCategory,
+                this.cropMargins.Left == otherImage.cropMargins.Left,
+                this.cropMargins.Right == otherImage.cropMargins.Right,
+                this.cropMargins.Bottom == otherImage.cropMargins.Bottom,
+                this.cropMargins.Top == otherImage.cropMargins.Top
+            ];
+            bool allOk = checks.All(x => x);
+            return allOk;
         }
 
         public override XElement ToXML()
@@ -870,11 +877,10 @@ namespace Epsitec.Common.Document.Properties
                 filename = System.IO.Path.GetFileName(filename);
             }
 
-            return new XElement(
+            var root = new XElement(
                 "Image",
                 base.IterXMLParts(),
                 new XAttribute("Filename", filename),
-                new XAttribute("ShortName", this.shortName),
                 new XAttribute("Date", this.date),
                 new XAttribute("InsideDoc", this.insideDoc),
                 new XAttribute("FromClipboard", this.fromClipboard),
@@ -888,6 +894,11 @@ namespace Epsitec.Common.Document.Properties
                 new XAttribute("CropBottom", this.cropMargins.Bottom),
                 new XAttribute("CropTop", this.cropMargins.Top)
             );
+            if (this.shortName != null)
+            {
+                root.Add(new XAttribute("ShortName", this.shortName));
+            }
+            return root;
         }
 
         public static Image FromXML(XElement xml)
@@ -899,19 +910,19 @@ namespace Epsitec.Common.Document.Properties
             : base(xml)
         {
             this.filename = xml.Attribute("Filename").Value;
-            //	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
-            //	ajoute le nom du dossier dans lequel est désérialisé le fichier
-            //	(pour le rendre absolu).
-            if (
-                this.filename != ""
-                && this.document.IoDirectory != ""
-                && System.IO.Path.GetDirectoryName(this.filename) == ""
-            )
-            {
-                this.filename = string.Concat(this.document.IoDirectory, "\\", this.filename);
-            }
+            ////	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
+            ////	ajoute le nom du dossier dans lequel est désérialisé le fichier
+            ////	(pour le rendre absolu).
+            //if (
+            //    this.filename != ""
+            //    && this.document.IoDirectory != ""
+            //    && System.IO.Path.GetDirectoryName(this.filename) == ""
+            //)
+            //{
+            //    this.filename = System.IO.Path.Join(this.document.IoDirectory, this.filename);
+            //}
 
-            this.shortName = xml.Attribute("ShortName").Value;
+            this.shortName = xml.Attribute("ShortName")?.Value;
             this.date = (System.DateTime)xml.Attribute("Date");
             this.insideDoc = (bool)xml.Attribute("InsideDoc");
             this.fromClipboard = (bool)xml.Attribute("FromClipboard");
@@ -978,17 +989,17 @@ namespace Epsitec.Common.Document.Properties
                 this.filterCategory = 1;
             }
 
-            //	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
-            //	ajoute le nom du dossier dans lequel est désérialisé le fichier
-            //	(pour le rendre absolu).
-            if (
-                this.filename != ""
-                && this.document.IoDirectory != ""
-                && System.IO.Path.GetDirectoryName(this.filename) == ""
-            )
-            {
-                this.filename = string.Concat(this.document.IoDirectory, "\\", this.filename);
-            }
+            ////	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
+            ////	ajoute le nom du dossier dans lequel est désérialisé le fichier
+            ////	(pour le rendre absolu).
+            //if (
+            //    this.filename != ""
+            //    && this.document.IoDirectory != ""
+            //    && System.IO.Path.GetDirectoryName(this.filename) == ""
+            //)
+            //{
+            //    this.filename = System.IO.Path.Join(this.document.IoDirectory, this.filename);
+            //}
 
             if (this.document.IsRevisionGreaterOrEqual(2, 0, 1))
             {

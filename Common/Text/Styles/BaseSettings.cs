@@ -437,27 +437,33 @@ namespace Epsitec.Common.Text.Styles
                 yield return item;
             }
             yield return new XAttribute("CoreIndex", this.coreIndex);
-            yield return new XElement(
-                "LocalSettings",
-                this.localSettings.Select(item => item.ToXML())
-            );
-            yield return new XElement(
-                "ExtraSettings",
-                this.extraSettings.Select(item => item.ToXML())
-            );
+            if (this.localSettings != null)
+            {
+                yield return new XElement(
+                    "LocalSettings",
+                    this.localSettings.Where(item => item != null).Select(item => item.ToXML())
+                );
+            }
+            if (this.extraSettings != null)
+            {
+                yield return new XElement(
+                    "ExtraSettings",
+                    this.extraSettings.Where(item => item != null).Select(item => item.ToXML())
+                );
+            }
         }
 
         protected BaseSettings(XElement xml)
         {
             this.coreIndex = (int)xml.Attribute("CoreIndex");
             this.localSettings = xml.Element("LocalSettings")
-                .Elements()
-                .Select(item => LocalSettings.FromXML(item))
-                .ToArray();
+                ?.Elements()
+                ?.Select(item => LocalSettings.FromXML(item))
+                ?.ToArray();
             this.extraSettings = xml.Element("ExtraSettings")
-                .Elements()
-                .Select(item => ExtraSettings.FromXML(item))
-                .ToArray();
+                ?.Elements()
+                ?.Select(item => ExtraSettings.FromXML(item))
+                ?.ToArray();
         }
 
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)

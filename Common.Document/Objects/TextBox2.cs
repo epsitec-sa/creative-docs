@@ -1,6 +1,7 @@
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Objects
@@ -1609,11 +1610,22 @@ namespace Epsitec.Common.Document.Objects
 
         public static TextBox2 FromXML(XElement xml)
         {
-            return new TextBox2(xml);
+            return new TextBox2(xml, null);
         }
 
-        private TextBox2(XElement xml)
-            : base(xml) { }
+        public static TextBox2 FromXML(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
+        {
+            return new TextBox2(xml, missingObjectSource);
+        }
+
+        private TextBox2(
+            XElement xml,
+            System.Func<System.Type, int, IXMLWritable> missingObjectSource
+        )
+            : base(xml, missingObjectSource) { }
 
         public override XElement ToXML()
         {

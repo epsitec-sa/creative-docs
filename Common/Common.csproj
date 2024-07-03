@@ -42,6 +42,8 @@
     <EmbeddedResource Include="Widgets\Adorners\Resources\**\*" />
     <EmbeddedResource Include="Dialogs\Images\*.icon" />
     <EmbeddedResource Include="Widgets\Images\*.icon" />
+    <EmbeddedResource Include="Dialogs\Images\*.xml" />
+    <EmbeddedResource Include="Widgets\Images\*.xml" />
     <Compile Remove="OpenType_old\**" />
     <EmbeddedResource Remove="OpenType_old\**" />
     <None Remove="OpenType_old\**" />

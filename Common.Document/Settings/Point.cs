@@ -271,7 +271,7 @@ namespace Epsitec.Common.Document.Settings
             this.link = false;
             this.Value = Drawing.Point.FromXML(xml.Element("Value"));
             this.Initialize();
-            this.link = bool.Parse(xml.Attribute("Link").Value);
+            this.link = (bool)xml.Attribute("Link");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

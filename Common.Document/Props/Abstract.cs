@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Properties
         {
             this.document = document;
             this.type = type;
-            this.owners = new SerializableUndoableList(
+            this.owners = new NewUndoableList(
                 this.document,
                 UndoableListType.ObjectsInsideProperty
             );
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Document.Properties
             return Type.None;
         }
 
-        public SerializableUndoableList Owners
+        public NewUndoableList Owners
         {
             //	Liste des propriétaires. Normalement, un propriétaire est un Objects.Abstract.
             //	Mais une propriété "isMulti" contient une liste de propriétaires de type
@@ -977,8 +977,8 @@ namespace Epsitec.Common.Document.Properties
         {
             this.document = Document.ReadDocument;
             Type.TryParse(xml.Attribute("Type").Value, out this.type);
-            this.isStyle = bool.Parse(xml.Attribute("IsStyle").Value);
-            this.owners = new SerializableUndoableList(
+            this.isStyle = (bool)xml.Attribute("IsStyle");
+            this.owners = new NewUndoableList(
                 this.document,
                 UndoableListType.ObjectsInsideProperty
             );
@@ -1002,7 +1002,7 @@ namespace Epsitec.Common.Document.Properties
             {
                 this.oldStyleName = info.GetString("StyleName");
             }
-            this.owners = new SerializableUndoableList(
+            this.owners = new NewUndoableList(
                 this.document,
                 UndoableListType.ObjectsInsideProperty
             );
@@ -1012,7 +1012,7 @@ namespace Epsitec.Common.Document.Properties
 
         protected Document document;
         protected Type type = Type.None;
-        protected SerializableUndoableList owners;
+        protected NewUndoableList owners;
         protected string oldStyleName = "";
         protected bool isOnlyForCreation = false;
         protected bool isStyle = false;

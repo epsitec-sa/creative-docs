@@ -877,7 +877,7 @@ namespace Epsitec.Common.Document
         public void UpdateCounters()
         {
             //	Met à jour tous les compteurs.
-            if (!this.dirtyCounters)
+            if (!this.dirtyCounters || this.ActiveViewer == null)
                 return;
 
             DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -2231,10 +2231,10 @@ namespace Epsitec.Common.Document
         {
             //	Duplique d'un document dans un autre.
             DrawingContext srcContext = srcDoc.Modifier.ActiveViewer.DrawingContext;
-            SerializableUndoableList srcList = srcContext.RootObject().Objects;
+            NewUndoableList srcList = srcContext.RootObject().Objects;
 
             DrawingContext dstContext = dstDoc.Modifier.ActiveViewer.DrawingContext;
-            SerializableUndoableList dstList = dstContext.RootObject().Objects;
+            NewUndoableList dstList = dstContext.RootObject().Objects;
 
             Modifier.Duplicate(srcDoc, dstDoc, srcList, dstList, false, move, onlySelected);
         }
@@ -2242,8 +2242,8 @@ namespace Epsitec.Common.Document
         public static void Duplicate(
             Document srcDoc,
             Document dstDoc,
-            SerializableUndoableList srcList,
-            SerializableUndoableList dstList,
+            NewUndoableList srcList,
+            NewUndoableList dstList,
             bool deselect,
             Point move,
             bool onlySelected
@@ -3505,8 +3505,8 @@ namespace Epsitec.Common.Document
                 return;
             Objects.Abstract layer = context.RootObject();
             Objects.Abstract parent = context.RootObject(context.RootStackDeep - 1);
-            SerializableUndoableList src = layer.Objects;
-            SerializableUndoableList dst = parent.Objects;
+            NewUndoableList src = layer.Objects;
+            NewUndoableList dst = parent.Objects;
 
             Modifier.Duplicate(
                 this.document,
@@ -4893,7 +4893,7 @@ namespace Epsitec.Common.Document
                 this.OpletQueue.Insert(new OpletPageUpdate(this, true, false));
                 this.InitiateChangingPage();
 
-                SerializableUndoableList list = this.document.DocumentObjects; // liste des pages
+                NewUndoableList list = this.document.DocumentObjects; // liste des pages
                 rank = System.Math.Max(rank, 0);
                 rank = System.Math.Min(rank, list.Count);
 
@@ -4928,7 +4928,7 @@ namespace Epsitec.Common.Document
                 this.OpletQueue.Insert(new OpletPageUpdate(this, true, false));
                 this.InitiateChangingPage();
 
-                SerializableUndoableList list = this.document.DocumentObjects; // liste des pages
+                NewUndoableList list = this.document.DocumentObjects; // liste des pages
                 original = System.Math.Max(original, 0);
                 original = System.Math.Min(original, list.Count - 1);
                 rank = System.Math.Max(rank, 0);
@@ -4948,8 +4948,8 @@ namespace Epsitec.Common.Document
                 }
                 list.Insert(rank, page);
 
-                SerializableUndoableList src = srcPage.Objects;
-                SerializableUndoableList dst = page.Objects;
+                NewUndoableList src = srcPage.Objects;
+                NewUndoableList dst = page.Objects;
                 Modifier.Duplicate(
                     this.document,
                     this.document,
@@ -4984,13 +4984,13 @@ namespace Epsitec.Common.Document
                 this.OpletQueue.Insert(new OpletPageUpdate(this, true, false));
                 this.InitiateChangingPage();
 
-                SerializableUndoableList list = this.document.DocumentObjects; // liste des pages
+                NewUndoableList list = this.document.DocumentObjects; // liste des pages
                 if (list.Count <= 1)
                     return; // il doit rester une page
                 rank = System.Math.Max(rank, 0);
                 rank = System.Math.Min(rank, list.Count - 1);
 
-                SerializableUndoableList pages = this.document.DocumentObjects;
+                NewUndoableList pages = this.document.DocumentObjects;
                 Objects.Page page = pages[rank] as Objects.Page;
                 this.UpdatePageDelete(page);
                 this.DeleteGroup(page);
@@ -5022,17 +5022,17 @@ namespace Epsitec.Common.Document
             {
                 //	Ajoute un oplet pour permettre de forcer une mise à jour des
                 //	informations liées aux pages après un Undo (l'oplet s'exécute
-                //	en dernier, après les modifications faites aux SerializableUndoableList).
+                //	en dernier, après les modifications faites aux NewUndoableList).
                 this.OpletQueue.Insert(new OpletPageUpdate(this, true, false));
                 this.InitiateChangingPage();
 
-                SerializableUndoableList list = this.document.DocumentObjects; // liste des pages
+                NewUndoableList list = this.document.DocumentObjects; // liste des pages
                 rank1 = System.Math.Max(rank1, 0);
                 rank1 = System.Math.Min(rank1, list.Count - 1);
                 rank2 = System.Math.Max(rank2, 0);
                 rank2 = System.Math.Min(rank2, list.Count - 1);
 
-                SerializableUndoableList pages = this.document.DocumentObjects;
+                NewUndoableList pages = this.document.DocumentObjects;
                 Objects.Page temp = pages[rank1] as Objects.Page;
                 pages.RemoveAt(rank1);
                 pages.Insert(rank2, temp);
@@ -5040,7 +5040,7 @@ namespace Epsitec.Common.Document
                 this.TerminateChangingPage(rank2);
                 //	Ajoute un oplet pour permettre de forcer une mise à jour des
                 //	informations liées aux pages après un Redo (l'oplet s'exécute
-                //	en dernier, après les modifications faites aux SerializableUndoableList).
+                //	en dernier, après les modifications faites aux NewUndoableList).
                 this.OpletQueue.Insert(new OpletPageUpdate(this, false, true));
 
                 this.UpdatePageAfterChanging();
@@ -5092,7 +5092,7 @@ namespace Epsitec.Common.Document
         public string PageShortName(int rank)
         {
             //	Retourne le nom court d'une page ("n" ou "Mn").
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             Objects.Page page = pages[rank] as Objects.Page;
             return page.ShortName;
         }
@@ -5100,7 +5100,7 @@ namespace Epsitec.Common.Document
         public string PageName(int rank)
         {
             //	Retourne le nom d'une page.
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             Objects.Page page = pages[rank] as Objects.Page;
             return page.Name;
         }
@@ -5108,7 +5108,7 @@ namespace Epsitec.Common.Document
         public int PageLocalRank(int rank)
         {
             //	Retourne le rang d'une page, en fonction de son type.
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             Objects.Page page = pages[rank] as Objects.Page;
             return page.Rank;
         }
@@ -5119,7 +5119,7 @@ namespace Epsitec.Common.Document
             this.document.SetDirtySerialize(CacheBitmapChanging.All);
             using (this.OpletQueueBeginAction(Res.Strings.Action.PageName, "ChangePageName"))
             {
-                SerializableUndoableList pages = this.document.DocumentObjects;
+                NewUndoableList pages = this.document.DocumentObjects;
                 Objects.Page page = pages[rank] as Objects.Page;
                 page.Name = name;
 
@@ -5132,7 +5132,7 @@ namespace Epsitec.Common.Document
         public int PrintableTotalPages()
         {
             //	Retourne le nombre total de pages imprimables.
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             int total = pages.Count;
             int printable = 0;
             for (int i = 0; i < total; i++)
@@ -5150,7 +5150,7 @@ namespace Epsitec.Common.Document
         public int PrintablePageRank(int index)
         {
             //	Retourne le rang d'une page imprimable.
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             int total = pages.Count;
             int rank = 0;
             for (int i = 0; i < total; i++)
@@ -5170,7 +5170,7 @@ namespace Epsitec.Common.Document
         protected void UpdatePageDelete(Objects.Page deletedPage)
         {
             //	Met à jour après une suppression de page.
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             int total = pages.Count;
             for (int i = 0; i < total; i++)
             {
@@ -5195,13 +5195,17 @@ namespace Epsitec.Common.Document
         public void UpdatePageShortNames()
         {
             //	Met à jour tous les noms courts des pages ("n" ou "Mn").
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
             int total = pages.Count;
             int slaveNumber = 0;
             int masterNumber = 0;
             for (int i = 0; i < total; i++)
             {
                 Objects.Page page = pages[i] as Objects.Page;
+                if (page == null)
+                {
+                    continue;
+                }
 
                 if (page.MasterType == Objects.MasterType.Slave)
                 {
@@ -5231,6 +5235,10 @@ namespace Epsitec.Common.Document
             for (int p = 0; p < pTotal; p++)
             {
                 Objects.Page page = this.document.DocumentObjects[p] as Objects.Page;
+                if (page == null)
+                {
+                    continue;
+                }
                 page.PageNumber = p;
 
                 int lTotal = page.Objects.Count;
@@ -5252,7 +5260,7 @@ namespace Epsitec.Common.Document
         public IList<Objects.Page> GetSlavePageList()
         {
             List<Objects.Page> pageList = new List<Objects.Page>();
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
 
             foreach (Objects.Page page in pages)
             {
@@ -5268,7 +5276,7 @@ namespace Epsitec.Common.Document
         public IList<Objects.Page> GetMasterPageList()
         {
             List<Objects.Page> pageList = new List<Objects.Page>();
-            SerializableUndoableList pages = this.document.DocumentObjects;
+            NewUndoableList pages = this.document.DocumentObjects;
 
             foreach (Objects.Page page in pages)
             {
@@ -5521,9 +5529,7 @@ namespace Epsitec.Common.Document
                 this.InitiateChangingLayer();
 
                 //	Liste des calques:
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 rank = System.Math.Max(rank, 0);
                 rank = System.Math.Min(rank, list.Count);
 
@@ -5553,9 +5559,7 @@ namespace Epsitec.Common.Document
                 this.InsertOpletDirtyCounters();
 
                 //	Liste des calques:
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 rank = System.Math.Max(rank, 0);
                 rank = System.Math.Min(rank, list.Count - 1);
 
@@ -5575,8 +5579,8 @@ namespace Epsitec.Common.Document
                     layer.Name = name;
                 }
 
-                SerializableUndoableList src = srcLayer.Objects;
-                SerializableUndoableList dst = layer.Objects;
+                NewUndoableList src = srcLayer.Objects;
+                NewUndoableList dst = layer.Objects;
                 Modifier.Duplicate(
                     this.document,
                     this.document,
@@ -5613,9 +5617,7 @@ namespace Epsitec.Common.Document
                 this.InitiateChangingLayer();
 
                 //	Liste des calques:
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 original = System.Math.Max(original, 0);
                 original = System.Math.Min(original, list.Count - 1);
                 rank = System.Math.Max(rank, 0);
@@ -5634,8 +5636,8 @@ namespace Epsitec.Common.Document
                 }
                 list.Insert(rank, layer);
 
-                SerializableUndoableList src = srcLayer.Objects;
-                SerializableUndoableList dst = layer.Objects;
+                NewUndoableList src = srcLayer.Objects;
+                NewUndoableList dst = layer.Objects;
                 Modifier.Duplicate(
                     this.document,
                     this.document,
@@ -5668,17 +5670,13 @@ namespace Epsitec.Common.Document
                 this.InitiateChangingLayer();
 
                 //	Liste des calques:
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 if (list.Count <= 1)
                     return; // il doit rester un calque
                 rank = System.Math.Max(rank, 0);
                 rank = System.Math.Min(rank, list.Count - 1);
 
-                SerializableUndoableList layers = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList layers = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 Objects.Layer layer = layers[rank] as Objects.Layer;
                 this.DeleteGroup(layer);
                 layer.Dispose();
@@ -5707,9 +5705,7 @@ namespace Epsitec.Common.Document
                 this.InitiateChangingLayer();
 
                 //	Liste des calques:
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 rankSrc = System.Math.Max(rankSrc, 0);
                 rankSrc = System.Math.Min(rankSrc, list.Count - 1);
                 rankDst = System.Math.Max(rankDst, 0);
@@ -5732,8 +5728,8 @@ namespace Epsitec.Common.Document
                     dstLayer.Name = srcLayer.Name;
                 }
 
-                SerializableUndoableList src = srcLayer.Objects;
-                SerializableUndoableList dst = dstLayer.Objects;
+                NewUndoableList src = srcLayer.Objects;
+                NewUndoableList dst = dstLayer.Objects;
                 Modifier.Duplicate(
                     this.document,
                     this.document,
@@ -5768,17 +5764,13 @@ namespace Epsitec.Common.Document
                 this.InitiateChangingLayer();
 
                 //	Liste des calques:
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 rank1 = System.Math.Max(rank1, 0);
                 rank1 = System.Math.Min(rank1, list.Count - 1);
                 rank2 = System.Math.Max(rank2, 0);
                 rank2 = System.Math.Min(rank2, list.Count - 1);
 
-                SerializableUndoableList layers = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList layers = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 Objects.Layer temp = layers[rank1] as Objects.Layer;
                 layers.RemoveAt(rank1);
                 layers.Insert(rank2, temp);
@@ -5795,7 +5787,7 @@ namespace Epsitec.Common.Document
         public string LayerName(int rank)
         {
             //	Retourne le nom d'un calque.
-            SerializableUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+            NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
             Objects.Layer layer = list[rank] as Objects.Layer;
             return layer.Name;
         }
@@ -5806,9 +5798,7 @@ namespace Epsitec.Common.Document
             this.document.SetDirtySerialize(CacheBitmapChanging.All);
             using (this.OpletQueueBeginAction(Res.Strings.Action.LayerName, "ChangeLayerName"))
             {
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 Objects.Layer layer = list[rank] as Objects.Layer;
                 layer.Name = name;
 
@@ -5828,7 +5818,7 @@ namespace Epsitec.Common.Document
         protected int GetLayerRank(Objects.Abstract search)
         {
             //	Indique le numéro du calque auquel appartient un objet.
-            SerializableUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+            NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
             for (int rank = 0; rank < list.Count; rank++)
             {
                 Objects.Layer layer = list[rank] as Objects.Layer;
@@ -5849,9 +5839,7 @@ namespace Epsitec.Common.Document
             this.document.SetDirtySerialize(CacheBitmapChanging.None);
             using (this.OpletQueueBeginAction(Res.Strings.Action.LayerChangeMagnet))
             {
-                SerializableUndoableList list = this
-                    .ActiveViewer.DrawingContext.RootObject(1)
-                    .Objects;
+                NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
                 Objects.Layer layer = list[rank] as Objects.Layer;
                 layer.Magnet = !layer.Magnet;
 
@@ -5864,7 +5852,7 @@ namespace Epsitec.Common.Document
         public bool MagnetLayerState(int rank)
         {
             //	Donne l'état "objets magnétiques" d'un calque.
-            SerializableUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+            NewUndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
             Objects.Layer layer = list[rank] as Objects.Layer;
             return layer.Magnet;
         }
@@ -6003,13 +5991,13 @@ namespace Epsitec.Common.Document
             }
         }
 
-        public SerializableUndoableList PropertyList(Properties.Abstract property)
+        public NewUndoableList PropertyList(Properties.Abstract property)
         {
             //	Donne la liste à utiliser pour une propriété.
             return this.PropertyList(property.IsSelected);
         }
 
-        public SerializableUndoableList PropertyList(bool selected)
+        public NewUndoableList PropertyList(bool selected)
         {
             if (selected)
             {
@@ -6416,7 +6404,7 @@ namespace Epsitec.Common.Document
         public bool AggregateIsFreeName(Properties.Aggregate agg, string name)
         {
             //	Vérifie si un nom est possible pour un agrégat donné.
-            SerializableUndoableList aggregates = this.document.Aggregates;
+            NewUndoableList aggregates = this.document.Aggregates;
             foreach (Properties.Aggregate existing in aggregates)
             {
                 if (existing == agg)
@@ -6436,7 +6424,7 @@ namespace Epsitec.Common.Document
 
             Properties.Aggregate agg = this.AggregateCreate(name, false);
 
-            SerializableUndoableList list = this.document.Aggregates;
+            NewUndoableList list = this.document.Aggregates;
             if (putToList && list.IndexOf(agg) == -1)
             {
                 using (this.OpletQueueBeginAction(Res.Strings.Action.AggregateNew3))
@@ -6463,7 +6451,7 @@ namespace Epsitec.Common.Document
 
             Properties.Aggregate agg = this.AggregateCreate(name, true);
 
-            SerializableUndoableList list = this.document.Aggregates;
+            NewUndoableList list = this.document.Aggregates;
             if (putToList && list.IndexOf(agg) == -1)
             {
                 using (this.OpletQueueBeginAction(Res.Strings.Action.AggregateNew3))
@@ -6509,7 +6497,7 @@ namespace Epsitec.Common.Document
 
             Properties.Aggregate agg = this.AggregateCreate(name, model);
 
-            SerializableUndoableList list = this.document.Aggregates;
+            NewUndoableList list = this.document.Aggregates;
             if (putToList && list.IndexOf(agg) == -1)
             {
                 using (this.OpletQueueBeginAction(Res.Strings.Action.AggregateNew3))
@@ -6688,7 +6676,7 @@ namespace Epsitec.Common.Document
         public void AggregateToDocument(Properties.Aggregate agg)
         {
             //	Ajoute l'agrégat dans la liste du document, si nécessaire.
-            SerializableUndoableList list = this.document.Aggregates;
+            NewUndoableList list = this.document.Aggregates;
             int index = list.IndexOf(agg);
             if (index == -1)
             {
@@ -6764,7 +6752,7 @@ namespace Epsitec.Common.Document
 
             using (this.OpletQueueBeginAction(Res.Strings.Action.AggregateDuplicate))
             {
-                SerializableUndoableList list = this.document.Aggregates;
+                NewUndoableList list = this.document.Aggregates;
                 rank = System.Math.Max(rank, 0);
                 rank = System.Math.Min(rank, list.Count - 1);
                 Properties.Aggregate srcAgg = list[rank] as Properties.Aggregate;
@@ -6789,7 +6777,7 @@ namespace Epsitec.Common.Document
 
             using (this.OpletQueueBeginAction(Res.Strings.Action.AggregateDelete))
             {
-                SerializableUndoableList list = this.document.Aggregates;
+                NewUndoableList list = this.document.Aggregates;
                 rank = System.Math.Max(rank, 0);
                 rank = System.Math.Min(rank, list.Count - 1);
                 Properties.Aggregate agg = list[rank] as Properties.Aggregate;
@@ -6833,7 +6821,7 @@ namespace Epsitec.Common.Document
 
             using (this.OpletQueueBeginAction(Res.Strings.Action.AggregateSwap))
             {
-                SerializableUndoableList list = this.document.Aggregates;
+                NewUndoableList list = this.document.Aggregates;
                 rank1 = System.Math.Max(rank1, 0);
                 rank1 = System.Math.Min(rank1, list.Count - 1);
                 rank2 = System.Math.Max(rank2, 0);
@@ -6971,7 +6959,7 @@ namespace Epsitec.Common.Document
 
             using (this.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrenNew))
             {
-                SerializableUndoableList aggregates = this.document.Aggregates;
+                NewUndoableList aggregates = this.document.Aggregates;
                 int ins = aggregates.IndexOf(newAgg);
                 int rank = 0;
                 while (rank < agg.Children.Count)

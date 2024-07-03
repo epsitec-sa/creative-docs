@@ -338,7 +338,15 @@ namespace Epsitec.Common.Support
 
         public Image GetImageFromManifestResource(string name, System.Reflection.Assembly assembly)
         {
-            using (System.IO.Stream stream = assembly.GetManifestResourceStream(name))
+            bool isIcon = false;
+            string resName = name;
+            // new format hack, we change the extension here
+            if (name.EndsWith(".icon"))
+            {
+                isIcon = true;
+                resName = System.IO.Path.GetFileNameWithoutExtension(name) + ".xml";
+            }
+            using (System.IO.Stream stream = assembly.GetManifestResourceStream(resName))
             {
                 if (stream == null)
                 {
@@ -350,7 +358,7 @@ namespace Epsitec.Common.Support
                 stream.Read(buffer, 0, (int)length);
 
                 Image outputImage;
-                if (name.EndsWith(".icon"))
+                if (isIcon)
                 {
                     // image au format vectoriel "maison" EPSITEC
                     outputImage = Canvas.FromData(buffer);

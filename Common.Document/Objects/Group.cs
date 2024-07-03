@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Objects
             if (this.document == null)
                 return; // objet factice ?
             this.CreateProperties(model, false);
-            this.objects = new SerializableUndoableList(
+            this.objects = new NewUndoableList(
                 this.document,
                 UndoableListType.ObjectsInsideDocument
             );
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.Objects
             this.document.Notifier.NotifyArea(this.BoundingBox);
         }
 
-        protected void MoveHandleSoon(SerializableUndoableList objects, Selector selector)
+        protected void MoveHandleSoon(NewUndoableList objects, Selector selector)
         {
             //	Déplace tous les objets du groupe.
             foreach (Objects.Abstract obj in this.document.Deep(this))

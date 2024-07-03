@@ -1217,9 +1217,9 @@ namespace Epsitec.Common.Document.Properties
                     || this.fillType == GradientFillType.Squares
                 )
                 && !(
-                    this.hatchAngle == otherGradient.hatchAngle
-                    && this.hatchWidth == otherGradient.hatchWidth
-                    && this.hatchDistance == otherGradient.hatchDistance
+                    this.hatchAngle.SequenceEqual(otherGradient.hatchAngle)
+                    && this.hatchWidth.SequenceEqual(otherGradient.hatchWidth)
+                    && this.hatchDistance.SequenceEqual(otherGradient.hatchDistance)
                 )
             )
             {
@@ -1299,18 +1299,18 @@ namespace Epsitec.Common.Document.Properties
         {
             GradientFillType.TryParse(xml.Attribute("FillType").Value, out this.fillType);
             this.color1 = RichColor.FromXML(xml.Element("Color1").Element("RichColor"));
-            this.smooth = double.Parse(xml.Attribute("Smooth").Value);
+            this.smooth = (double)xml.Attribute("Smooth");
 
             if (this.fillType != GradientFillType.None)
             {
                 this.color2 = RichColor.FromXML(xml.Element("Color2").Element("RichColor"));
-                this.angle = double.Parse(xml.Attribute("Angle").Value);
-                this.cx = double.Parse(xml.Attribute("Cx").Value);
-                this.cy = double.Parse(xml.Attribute("Cy").Value);
-                this.sx = double.Parse(xml.Attribute("Sx").Value);
-                this.sy = double.Parse(xml.Attribute("Sy").Value);
-                this.repeat = int.Parse(xml.Attribute("Repeat").Value);
-                this.middle = double.Parse(xml.Attribute("Middle").Value);
+                this.angle = (double)xml.Attribute("Angle");
+                this.cx = (double)xml.Attribute("Cx");
+                this.cy = (double)xml.Attribute("Cy");
+                this.sx = (double)xml.Attribute("Sx");
+                this.sy = (double)xml.Attribute("Sy");
+                this.repeat = (int)xml.Attribute("Repeat");
+                this.middle = (double)xml.Attribute("Middle");
             }
             if (
                 this.fillType == GradientFillType.Hatch

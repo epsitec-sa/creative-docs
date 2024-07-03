@@ -1,5 +1,7 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
@@ -203,24 +205,37 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             MarginsProperty other = (MarginsProperty)otherWritable;
-            return this.leftMarginFirstLine == other.leftMarginFirstLine
-                && this.leftMarginBody == other.leftMarginBody
-                && this.rightMarginFirstLine == other.rightMarginFirstLine
-                && this.rightMarginBody == other.rightMarginBody
-                && this.units == other.units
-                && this.justificationBody == other.justificationBody
-                && this.justificationLastLine == other.justificationLastLine
-                && this.disposition == other.disposition
-                && this.breakFenceBefore == other.breakFenceBefore
-                && this.breakFenceAfter == other.breakFenceAfter
-                && this.enableHyphenation == other.enableHyphenation
-                && this.level == other.level
-                && this.levelAttribute == other.levelAttribute;
+            List<bool> checks =
+            [
+                this.EquivalentDouble(this.leftMarginFirstLine, other.leftMarginFirstLine)
+                    && this.EquivalentDouble(this.leftMarginBody, other.leftMarginBody)
+                    && this.EquivalentDouble(this.rightMarginFirstLine, other.rightMarginFirstLine)
+                    && this.EquivalentDouble(this.rightMarginBody, other.rightMarginBody)
+                    && this.EquivalentDouble(this.justificationBody, other.justificationBody)
+                    && this.EquivalentDouble(
+                        this.justificationLastLine,
+                        other.justificationLastLine
+                    )
+                    && this.EquivalentDouble(this.disposition, other.disposition)
+                    && this.EquivalentDouble(this.breakFenceBefore, other.breakFenceBefore)
+                    && this.EquivalentDouble(this.breakFenceAfter, other.breakFenceAfter)
+                    && this.enableHyphenation == other.enableHyphenation
+                    && this.level == other.level
+                    && this.units == other.units
+                    && this.levelAttribute == other.levelAttribute
+            ];
+            bool all = checks.All(x => x);
+            return all;
+        }
+
+        private bool EquivalentDouble(double a, double b)
+        {
+            return a == b || (a.IsSafeNaN() && b.IsSafeNaN());
         }
 
         public override XElement ToXML()
         {
-            return new XElement(
+            var root = new XElement(
                 "MarginsProperty",
                 new XAttribute("LeftMarginFirstLine", this.leftMarginFirstLine),
                 new XAttribute("LeftMarginBody", this.leftMarginBody),
@@ -233,9 +248,13 @@ namespace Epsitec.Common.Text.Properties
                 new XAttribute("BreakFenceBefore", this.breakFenceBefore),
                 new XAttribute("BreakFenceAfter", this.breakFenceAfter),
                 new XAttribute("EnableHyphenation", this.enableHyphenation),
-                new XAttribute("Level", this.level),
-                new XAttribute("LevelAttribute", this.levelAttribute)
+                new XAttribute("Level", this.level)
             );
+            if (this.levelAttribute != null)
+            {
+                root.Add(new XAttribute("LevelAttribute", this.levelAttribute));
+            }
+            return root;
         }
 
         public static MarginsProperty FromXML(XElement xml)
@@ -260,7 +279,7 @@ namespace Epsitec.Common.Text.Properties
                 out this.enableHyphenation
             );
             this.level = (int)xml.Attribute("Level");
-            this.levelAttribute = xml.Attribute("LevelAttribute").Value;
+            this.levelAttribute = xml.Attribute("LevelAttribute")?.Value;
         }
 
         public override void DeserializeFromText(

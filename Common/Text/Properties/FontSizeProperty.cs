@@ -82,7 +82,11 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             FontSizeProperty other = (FontSizeProperty)otherWritable;
-            return this.size == other.size && this.units == other.units && this.glue == other.glue;
+            bool all =
+                (this.size == other.size || this.size.IsSafeNaN() && other.size.IsSafeNaN())
+                && this.units == other.units
+                && (this.glue == other.glue || this.glue.IsSafeNaN() && other.glue.IsSafeNaN());
+            return all;
         }
 
         public override XElement ToXML()

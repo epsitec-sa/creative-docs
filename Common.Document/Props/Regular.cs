@@ -554,11 +554,11 @@ namespace Epsitec.Common.Document.Properties
             );
             if (this.regularType != RegularType.Norm)
             {
-                root.Add(new XElement("Deep", this.deep));
-                root.Add(new XElement("E1", this.e1));
-                root.Add(new XElement("E2", this.e2));
-                root.Add(new XElement("I1", this.i1));
-                root.Add(new XElement("I2", this.i2));
+                root.Add(new XElement("Deep", this.deep.ToXML()));
+                root.Add(new XElement("E1", this.e1.ToXML()));
+                root.Add(new XElement("E2", this.e2.ToXML()));
+                root.Add(new XElement("I1", this.i1.ToXML()));
+                root.Add(new XElement("I2", this.i2.ToXML()));
             }
             return root;
         }

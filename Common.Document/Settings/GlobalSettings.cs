@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Settings
         public void SetWindowBounds(string name, Drawing.Point location, Drawing.Size size)
         {
             //	Ajoute une définition de fenêtre.
-            WindowBounds wb = this.windowBounds[name];
+            this.windowBounds.TryGetValue(name, out WindowBounds wb);
             if (wb == null)
             {
                 wb = new WindowBounds(location, size);
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Document.Settings
         public bool GetWindowBounds(string name, out Drawing.Point location, out Drawing.Size size)
         {
             //	Cherche une définition de fenêtre.
-            WindowBounds wb = this.windowBounds[name];
+            this.windowBounds.TryGetValue(name, out WindowBounds wb);
             if (wb == null)
             {
                 location = Drawing.Point.Zero;
@@ -899,7 +899,7 @@ namespace Epsitec.Common.Document.Settings
         {
             this.windowLocation = Drawing.Point.FromXML(xml.Element("WindowLocation"));
             this.windowSize = Drawing.Size.FromXML(xml.Element("WindowSize"));
-            this.isFullScreen = bool.Parse(xml.Attribute("IsFullScreen").Value);
+            this.isFullScreen = (bool)xml.Attribute("IsFullScreen");
             this.windowBounds = xml.Element("WindowBounds")
                 .Elements()
                 .Select(item =>
@@ -909,15 +909,15 @@ namespace Epsitec.Common.Document.Settings
                     )
                 )
                 .ToDictionary();
-            this.screenDpi = double.Parse(xml.Attribute("ScreenDpi").Value);
+            this.screenDpi = (double)xml.Attribute("ScreenDpi");
             this.adorner = xml.Attribute("Adorner").Value;
-            this.defaultZoom = double.Parse(xml.Attribute("DefaultZoom").Value);
+            this.defaultZoom = (double)xml.Attribute("DefaultZoom");
             MouseWheelAction.TryParse(
                 xml.Attribute("MouseWheelAction").Value,
                 out this.mouseWheelAction
             );
-            this.fineCursor = bool.Parse(xml.Attribute("FineCursor").Value);
-            this.splashScreen = bool.Parse(xml.Attribute("SplashScreen").Value);
+            this.fineCursor = (bool)xml.Attribute("FineCursor");
+            this.splashScreen = (bool)xml.Attribute("SplashScreen");
             FirstAction.TryParse(xml.Attribute("FirstAction").Value, out this.firstAction);
             this.newDocument = xml.Attribute("NewDocument").Value;
             this.lastModel = xml.Element("LastModel")
@@ -934,12 +934,12 @@ namespace Epsitec.Common.Document.Settings
                 .Select(favorite => favorite.Attribute("Name").Value)
                 .ToList();
             this.favoritesList = [.. favoritesList];
-            this.favoritesBig = bool.Parse(xml.Attribute("FavoritesBig").Value);
-            this.labelProperties = bool.Parse(xml.Attribute("LabelProperties").Value);
+            this.favoritesBig = (bool)xml.Attribute("FavoritesBig");
+            this.labelProperties = (bool)xml.Attribute("LabelProperties");
             this.colorCollection = ColorCollection.FromXML(xml.Element("ColorCollection"));
             this.colorCollectionDirectory = xml.Attribute("ColorCollectionDirectory").Value;
             this.colorCollectionFilename = xml.Attribute("ColorCollectionFilename").Value;
-            this.autoChecker = bool.Parse(xml.Attribute("AutoChecker").Value);
+            this.autoChecker = (bool)xml.Attribute("AutoChecker");
             this.dateChecker = new Types.Date(long.Parse(xml.Attribute("DateChecker").Value));
             this.quickCommands = xml.Element("QuickCommands")
                 .Elements()
@@ -949,7 +949,7 @@ namespace Epsitec.Common.Document.Settings
                 xml.Attribute("QuickExportFormat").Value,
                 out this.quickExportFormat
             );
-            this.quickExportDpi = double.Parse(xml.Attribute("QuickExportDpi").Value);
+            this.quickExportDpi = (double)xml.Attribute("QuickExportDpi");
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -1003,9 +1003,12 @@ namespace Epsitec.Common.Document.Settings
                 info.GetValue("WindowLocation", typeof(Drawing.Point));
             this.windowSize = (Drawing.Size)info.GetValue("WindowSize", typeof(Drawing.Size));
             this.isFullScreen = info.GetBoolean("IsFullScreen");
-            this.windowBounds =
-                (Dictionary<string, WindowBounds>)
-                    info.GetValue("WindowBounds", typeof(Dictionary<string, WindowBounds>));
+            System.Collections.Hashtable windowBounds = (System.Collections.Hashtable)
+                info.GetValue("WindowBounds", typeof(System.Collections.Hashtable));
+            this.windowBounds = Support.Serialization.Casting.HashtableToDictionary<
+                string,
+                WindowBounds
+            >(windowBounds);
 
             this.screenDpi = info.GetDouble("ScreenDpi");
             this.adorner = info.GetString("Adorner");
@@ -1015,7 +1018,9 @@ namespace Epsitec.Common.Document.Settings
             this.fineCursor = info.GetBoolean("FineCursor");
             this.splashScreen = info.GetBoolean("SplashScreen");
             this.firstAction = (FirstAction)info.GetValue("FirstAction", typeof(FirstAction));
-            this.lastFilename = (List<string>)info.GetValue("LastFilename", typeof(List<string>));
+            System.Collections.ArrayList lastFilename = (System.Collections.ArrayList)
+                info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
+            this.lastFilename = lastFilename.Cast<string>().ToList();
             this.initialDirectory = info.GetString("InitialDirectory");
 
             if (version >= 2)
@@ -1036,8 +1041,9 @@ namespace Epsitec.Common.Document.Settings
 
             if (version >= 4)
             {
-                this.quickCommands =
-                    (List<string>)info.GetValue("QuickCommands", typeof(List<string>));
+                System.Collections.ArrayList quickCommands = (System.Collections.ArrayList)
+                    info.GetValue("QuickCommands", typeof(System.Collections.ArrayList));
+                this.quickCommands = quickCommands.Cast<string>().ToList();
                 this.UpdateQuickCommands();
             }
             else
@@ -1056,7 +1062,9 @@ namespace Epsitec.Common.Document.Settings
 
             if (version >= 7)
             {
-                this.lastModel = (List<string>)info.GetValue("LastModel", typeof(List<string>));
+                System.Collections.ArrayList lastModel = (System.Collections.ArrayList)
+                    info.GetValue("LastModel", typeof(System.Collections.ArrayList));
+                this.lastModel = lastModel.Cast<string>().ToList();
             }
             else
             {

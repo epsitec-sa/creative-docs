@@ -4635,7 +4635,7 @@ namespace Epsitec.Common.Document
             }
         }
 
-        protected void DrawGuides(Graphics graphics, SerializableUndoableList guides, bool editable)
+        protected void DrawGuides(Graphics graphics, NewUndoableList guides, bool editable)
         {
             //	Dessine tous les repères d'une liste.
             double ix = 0.5 / this.drawingContext.ScaleX;
@@ -5236,10 +5236,7 @@ namespace Epsitec.Common.Document
             return Drawing.Rectangle.Empty;
         }
 
-        protected void GuidesSearchAdd(
-            System.Collections.ArrayList list,
-            SerializableUndoableList guides
-        )
+        protected void GuidesSearchAdd(System.Collections.ArrayList list, NewUndoableList guides)
         {
             //	Ajoute tous les guides dans une liste unique.
             int total = guides.Count;

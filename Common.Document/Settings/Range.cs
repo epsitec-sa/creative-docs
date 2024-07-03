@@ -183,8 +183,8 @@ namespace Epsitec.Common.Document.Settings
         {
             PrintRange.TryParse(xml.Attribute("PrintRange").Value, out PrintRange printRange);
             this.PrintRange = printRange;
-            this.From = int.Parse(xml.Attribute("From").Value);
-            this.To = int.Parse(xml.Attribute("To").Value);
+            this.From = (int)xml.Attribute("From");
+            this.To = (int)xml.Attribute("To");
             this.Initialize();
         }
 

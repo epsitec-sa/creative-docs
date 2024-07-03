@@ -419,7 +419,7 @@ namespace Epsitec.Common.Document.Settings
         private Bool(XElement xml)
             : base(xml)
         {
-            this.Value = bool.Parse(xml.Attribute("Value").Value);
+            this.Value = (bool)xml.Attribute("Value");
             this.Initialize();
         }
 

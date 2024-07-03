@@ -664,7 +664,7 @@ namespace Epsitec.Common.Document.Settings
         private Integer(XElement xml)
             : base(xml)
         {
-            int value = int.Parse(xml.Attribute("Value").Value);
+            int value = (int)xml.Attribute("Value");
             if (this.name == "DefaultUnit")
             {
                 RealUnitType unit = (RealUnitType)value;

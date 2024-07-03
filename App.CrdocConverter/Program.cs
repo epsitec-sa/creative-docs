@@ -1,9 +1,20 @@
 ﻿using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Epsitec.Common.Document;
+using Objects = Epsitec.Common.Document.Objects;
 
-string root = "C:\\Users\\Baptiste\\cresus-core-dev-converter\\cresus-core\\App.CrdocConverter";
-string inputDir = Path.Join(root, "old_format_files");
-string outputDir = Path.Join(root, "output_files");
+string root = "C:\\devel\\cresus-core-dev-converter\\cresus-core";
+
+List<string> imageDirectories =
+[
+    "Common\\Widgets\\Images",
+    "Common\\Dialogs\\Images",
+    "Common.Tests\\Images",
+    "Common.DocumentEditor\\Images",
+];
+
+string debugOutputDir = Path.Join(root, "App.CrdocConverter\\output_files");
 
 bool verbose = false;
 int failed = 0;
@@ -30,7 +41,11 @@ Document LoadOriginalDocument(string inputFile)
     {
         Console.WriteLine("    - read old");
     }
-    document.Read(inputFile);
+    string error = document.Read(inputFile);
+    if (error != "")
+    {
+        throw new System.InvalidOperationException(error);
+    }
     return document;
 }
 
@@ -49,7 +64,7 @@ void CheckReadBackDocument(Document original, string filepath)
     {
         Console.WriteLine("    - check reading back from xml");
     }
-    Document newDocument = Document.LoadFromXMLFile(filepath);
+    Document newDocument = Document.LoadFromXMLFile(filepath, DocumentMode.Modify);
     if (!newDocument.HasEquivalentData(original))
     {
         Console.WriteLine(WithColor($"    Error: ", 31));
@@ -61,22 +76,77 @@ void TestConvert(string oldFile)
 {
     Console.WriteLine($"Convert {Path.GetFileName(oldFile)}");
     string newFile = Path.GetFileNameWithoutExtension(oldFile) + ".xml";
-    string inputFilePath = Path.Join(inputDir, oldFile);
-    string outputFilePath = Path.Join(outputDir, newFile);
-    Document originalDocument = LoadOriginalDocument(inputFilePath);
+    string outputFilePath = Path.Join(Path.GetDirectoryName(oldFile), newFile);
+    string debugOutputFilePath = Path.Join(debugOutputDir, newFile);
+    Document originalDocument = LoadOriginalDocument(oldFile);
+    ExportToNewFormat(originalDocument, debugOutputFilePath);
     ExportToNewFormat(originalDocument, outputFilePath);
     CheckReadBackDocument(originalDocument, outputFilePath);
 }
 
-foreach (string file in Directory.GetFiles(inputDir))
+void DebugBinaryFormatter()
 {
-    TestConvert(file);
+    Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache();
+    var doc = new Document(
+        DocumentType.Pictogram,
+        DocumentMode.ReadOnly,
+        InstallType.Full,
+        DebugMode.Release,
+        null,
+        null,
+        null,
+        null
+    );
+    Document.ReadDocument = doc;
+    var data = new UndoableList(doc, UndoableListType.ObjectsInsideDocument);
+    var page = new Objects.Page(doc, null);
+    data.Add(page);
+
+    using (Stream stream = new MemoryStream())
+    {
+        BinaryFormatter formatter = new BinaryFormatter();
+        formatter.Serialize(stream, data);
+
+        stream.Position = 0;
+
+        BinaryFormatter bformatter = new BinaryFormatter();
+        var data_back = (UndoableList)bformatter.Deserialize(stream);
+        //if (data.HasEquivalentData(data_back))
+        var a = (Objects.Page)data[0];
+        var b = (Objects.Page)data_back[0];
+        if (a.HasEquivalentData(b))
+        {
+            Console.WriteLine("Data matches.");
+        }
+        else
+        {
+            Console.WriteLine("Data DOES NOT MATCH !!!");
+        }
+    }
 }
-if (failed == 0)
+
+void ConvertAllFiles()
 {
-    Console.WriteLine(WithColor($"All conversions succeeded !", 32));
+    failed = 0;
+    foreach (string directoryName in imageDirectories)
+    {
+        string directory = Path.Join(root, directoryName);
+        Console.WriteLine($"Convert files in directory {directory}");
+        foreach (string file in Directory.GetFiles(directory, "*.icon"))
+        {
+            TestConvert(file);
+        }
+    }
+    if (failed == 0)
+    {
+        Console.WriteLine(WithColor($"All conversions succeeded !", 32));
+    }
+    else
+    {
+        Console.WriteLine(WithColor($"{failed} conversions failed !", 31));
+    }
 }
-else
-{
-    Console.WriteLine(WithColor($"{failed} conversions failed !", 31));
-}
+
+//DebugBinaryFormatter();
+//TestConvert(Path.Join(inputDir, "aqua1.crdoc"));
+ConvertAllFiles();

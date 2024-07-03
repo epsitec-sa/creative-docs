@@ -1,5 +1,7 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Epsitec.Common.Text.Properties
@@ -159,13 +161,27 @@ namespace Epsitec.Common.Text.Properties
         public override bool HasEquivalentData(Common.Support.IXMLWritable otherWritable)
         {
             LeadingProperty other = (LeadingProperty)otherWritable;
-            return this.leading == other.leading
-                && this.spaceBefore == other.spaceBefore
-                && this.spaceAfter == other.spaceAfter
-                && this.leadingUnits == other.leadingUnits
-                && this.spaceBeforeUnits == other.spaceBeforeUnits
-                && this.spaceAfterUnits == other.spaceAfterUnits
-                && this.alignMode == other.alignMode;
+            List<bool> checks =
+            [
+                (
+                    this.leading == other.leading
+                    || this.leading.IsSafeNaN() && other.leading.IsSafeNaN()
+                ),
+                (
+                    this.spaceBefore == other.spaceBefore
+                    || this.spaceBefore.IsSafeNaN() && other.spaceBefore.IsSafeNaN()
+                ),
+                (
+                    this.spaceAfter == other.spaceAfter
+                    || this.spaceAfter.IsSafeNaN() && other.spaceAfter.IsSafeNaN()
+                ),
+                this.leadingUnits == other.leadingUnits,
+                this.spaceBeforeUnits == other.spaceBeforeUnits,
+                this.spaceAfterUnits == other.spaceAfterUnits,
+                this.alignMode == other.alignMode
+            ];
+            bool allOk = checks.All(x => x);
+            return allOk;
         }
 
         public override XElement ToXML()

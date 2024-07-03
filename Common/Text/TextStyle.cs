@@ -1,5 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Epsitec.Common.Support.Serialization;
@@ -436,22 +437,27 @@ namespace Epsitec.Common.Text
         public new bool HasEquivalentData(Common.Support.IXMLWritable other)
         {
             TextStyle otherContext = (TextStyle)other;
-            return this.name == otherContext.name
-                && this.metaId == otherContext.metaId
-                && this.priority == otherContext.priority
-                && this.TextStyleClass == otherContext.TextStyleClass
-                && (
+            List<bool> checks =
+            [
+                this.name == otherContext.name,
+                this.metaId == otherContext.metaId,
+                this.priority == otherContext.priority,
+                this.TextStyleClass == otherContext.TextStyleClass,
+                (
                     this.parentStyles?.HasEquivalentData(otherContext.parentStyles)
                     ?? otherContext.parentStyles == null
-                )
-                && (
+                ),
+                (
                     this.nextStyle?.HasEquivalentData(otherContext.nextStyle)
                     ?? otherContext.nextStyle == null
-                )
-                && (
+                ),
+                (
                     this.styleProperties?.HasEquivalentData(otherContext.styleProperties)
                     ?? otherContext.styleProperties == null
-                );
+                )
+            ];
+            bool allOk = checks.All(x => x);
+            return allOk;
         }
 
         public static TextStyle FromXML(XElement xml)
@@ -474,6 +480,7 @@ namespace Epsitec.Common.Text
                 ?.Elements()
                 ?.Select(Styles.PropertyContainer.LoadProperty)
                 ?.ToArray();
+            this.isFixupRequired = true;
         }
 
         internal void Deserialize(TextContext context, int version, string[] args, ref int offset)

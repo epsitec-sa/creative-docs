@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Support.Serialization;
 
 namespace Epsitec.Common.Text.Internal
 {
@@ -206,7 +207,7 @@ namespace Epsitec.Common.Text.Internal
             {
                 return true;
             }
-            return this.cores.SequenceEqual(otherTable.cores);
+            return this.cores.HasEquivalentData(otherTable.cores);
         }
 
         public XElement ToXML()

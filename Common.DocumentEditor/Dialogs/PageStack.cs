@@ -316,7 +316,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
         public VMenu CreatePagesMenu()
         {
             //	Construit le menu pour choisir une page.
-            SerializableUndoableList pages = this.editor.CurrentDocument.DocumentObjects; // liste des pages
+            NewUndoableList pages = this.editor.CurrentDocument.DocumentObjects; // liste des pages
             return Objects.Page.CreateMenu(pages, this.showedPage, null, this.HandleMenuPressed);
         }
 

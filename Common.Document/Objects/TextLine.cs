@@ -2195,7 +2195,11 @@ namespace Epsitec.Common.Document.Objects
 
         public override XElement ToXML()
         {
-            return new XElement("TextLine", this.IterXMLParts());
+            return new XElement(
+                "TextLine",
+                this.IterXMLParts(),
+                new XAttribute("Text", this.textLayout.Text)
+            );
         }
 
         public static TextLine FromXML(XElement xml)
@@ -2204,7 +2208,11 @@ namespace Epsitec.Common.Document.Objects
         }
 
         private TextLine(XElement xml)
-            : base(xml) { }
+            : base(xml)
+        {
+            this.Initialize();
+            this.textLayout.Text = xml.Attribute("Text")?.Value;
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

@@ -188,8 +188,14 @@ namespace Epsitec.Common.Text.Properties
             return this.isDisabled == other.isDisabled
                 && this.positionUnits == other.positionUnits
                 && this.thicknessUnits == other.thicknessUnits
-                && this.position == other.position
-                && this.thickness == other.thickness
+                && (
+                    this.position == other.position
+                    || this.position.IsSafeNaN() && other.position.IsSafeNaN()
+                )
+                && (
+                    this.thickness == other.thickness
+                    || this.thickness.IsSafeNaN() && other.thickness.IsSafeNaN()
+                )
                 && this.drawClass == other.drawClass
                 && this.drawStyle == other.drawStyle;
         }

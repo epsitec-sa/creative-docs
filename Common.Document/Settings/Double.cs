@@ -682,7 +682,7 @@ namespace Epsitec.Common.Document.Settings
         private Double(XElement xml)
             : base(xml)
         {
-            this.Value = double.Parse(xml.Attribute("Value").Value);
+            this.Value = (double)xml.Attribute("Value");
             this.Initialize();
         }
 

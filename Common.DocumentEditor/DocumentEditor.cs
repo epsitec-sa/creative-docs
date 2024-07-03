@@ -3647,7 +3647,7 @@ namespace Epsitec.Common.DocumentEditor
         {
             //	Construit le menu pour choisir une page.
             DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-            SerializableUndoableList pages = this.CurrentDocument.DocumentObjects; // liste des pages
+            NewUndoableList pages = this.CurrentDocument.DocumentObjects; // liste des pages
             return Objects.Page.CreateMenu(pages, context.CurrentPage, "PageSelect", message);
         }
 
@@ -3656,7 +3656,7 @@ namespace Epsitec.Common.DocumentEditor
             //	Construit le menu pour choisir un calque.
             DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
             Objects.Abstract page = context.RootObject(1);
-            SerializableUndoableList layers = page.Objects; // liste des calques
+            NewUndoableList layers = page.Objects; // liste des calques
             return Objects.Layer.CreateMenu(layers, context.CurrentLayer, "LayerSelect", message);
         }
 

@@ -88,8 +88,11 @@ namespace Epsitec.Common.Text.Properties
         {
             FontXscriptProperty other = (FontXscriptProperty)otherWritable;
             return this.isDisabled == other.isDisabled
-                && this.scale == other.scale
-                && this.offset == other.offset;
+                && (this.scale == other.scale || this.scale.IsSafeNaN() && other.scale.IsSafeNaN())
+                && (
+                    this.offset == other.offset
+                    || this.offset.IsSafeNaN() && other.offset.IsSafeNaN()
+                );
         }
 
         public override XElement ToXML()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -153,23 +154,17 @@ namespace Epsitec.Common.Document
             }
 
             this.hotSpot = new Point(0, 0);
-            this.objects = new SerializableUndoableList(
-                this,
-                UndoableListType.ObjectsInsideDocument
-            );
-            this.propertiesAuto = new SerializableUndoableList(
+            this.objects = new NewUndoableList(this, UndoableListType.ObjectsInsideDocument);
+            this.propertiesAuto = new NewUndoableList(
                 this,
                 UndoableListType.PropertiesInsideDocument
             );
-            this.propertiesSel = new SerializableUndoableList(
+            this.propertiesSel = new NewUndoableList(
                 this,
                 UndoableListType.PropertiesInsideDocument
             );
-            this.aggregates = new SerializableUndoableList(
-                this,
-                UndoableListType.AggregatesInsideDocument
-            );
-            this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
+            this.aggregates = new NewUndoableList(this, UndoableListType.AggregatesInsideDocument);
+            this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
             this.exportDirectory = "";
             this.exportFilename = "";
             this.exportFilter = 0;
@@ -484,7 +479,7 @@ namespace Epsitec.Common.Document
             return state;
         }
 
-        public SerializableUndoableList DocumentObjects
+        public NewUndoableList DocumentObjects
         {
             //	Liste des objets de ce document.
             get { return this.objects; }
@@ -518,25 +513,25 @@ namespace Epsitec.Common.Document
             set { this.vRuler = value; }
         }
 
-        public SerializableUndoableList PropertiesAuto
+        public NewUndoableList PropertiesAuto
         {
             //	Liste des propriétés automatiques de ce document.
             get { return this.propertiesAuto; }
         }
 
-        public SerializableUndoableList PropertiesSel
+        public NewUndoableList PropertiesSel
         {
             //	Liste des propriétés sélectionnées de ce document.
             get { return this.propertiesSel; }
         }
 
-        public SerializableUndoableList Aggregates
+        public NewUndoableList Aggregates
         {
             //	Liste des aggrégats de ce document.
             get { return this.aggregates; }
         }
 
-        public SerializableUndoableList TextFlows
+        public NewUndoableList TextFlows
         {
             //	Liste des flux de textes de ce document.
             get { return this.textFlows; }
@@ -545,7 +540,14 @@ namespace Epsitec.Common.Document
         public Settings.Settings Settings
         {
             //	Réglages de ce document.
-            get { return this.settings; }
+            get
+            {
+                if (this.settings == null)
+                {
+                    this.settings = new Settings.Settings(this);
+                }
+                return this.settings;
+            }
         }
 
         public Modifier Modifier
@@ -1053,6 +1055,7 @@ namespace Epsitec.Common.Document
                         )
                         {
                             doc = (Document)formatter.Deserialize(compressor);
+                            doc.FinishReadingOldObjects();
                             doc.ioDocumentManager = this.ioDocumentManager;
                             //-doc.imageCache = new ImageCache();
                             if (isCrDoc)
@@ -1064,6 +1067,7 @@ namespace Epsitec.Common.Document
                     else
                     {
                         doc = (Document)formatter.Deserialize(stream);
+                        doc.FinishReadingOldObjects();
                         doc.ioDocumentManager = this.ioDocumentManager;
                         doc.FontReadAll(zip);
                         doc.ImageCacheReadAll(zip, doc.imageIncludeMode);
@@ -1086,6 +1090,7 @@ namespace Epsitec.Common.Document
                 try
                 {
                     doc = (Document)formatter.Deserialize(stream);
+                    doc.FinishReadingOldObjects();
                 }
                 catch (System.Exception e)
                 {
@@ -1112,10 +1117,11 @@ namespace Epsitec.Common.Document
                 }
             }
 
-            this.objects = doc.objects;
-            this.propertiesAuto = doc.propertiesAuto;
-            this.aggregates = doc.aggregates;
-            this.textFlows = doc.textFlows;
+            this.objects = doc.objects ?? NewUndoableList.FromOld(doc.oldobjects);
+            this.propertiesAuto =
+                doc.propertiesAuto ?? NewUndoableList.FromOld(doc.oldpropertiesAuto);
+            this.aggregates = doc.aggregates ?? NewUndoableList.FromOld(doc.oldaggregates);
+            this.textFlows = doc.textFlows ?? NewUndoableList.FromOld(doc.oldtextFlows);
             this.textContext = doc.textContext;
             this.uniqueObjectId = doc.uniqueObjectId;
             this.uniqueAggregateId = doc.uniqueAggregateId;
@@ -1225,6 +1231,7 @@ namespace Epsitec.Common.Document
             }
 
             this.containOldText = false;
+
             foreach (Objects.Abstract obj in this.Deep(null))
             {
                 obj.ReadFinalize();
@@ -1801,10 +1808,16 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
-        public static Document LoadFromXMLFile(string filename)
+        public static Document LoadFromXMLFile(string filename, DocumentMode mode)
         {
             XDocument xdoc = XDocument.Load(filename);
-            return Document.FromXML(xdoc.Root);
+            return Document.FromXML(xdoc.Root, mode);
+        }
+
+        public static Document LoadFromXMLStream(Stream stream, DocumentMode mode)
+        {
+            XDocument xdoc = XDocument.Load(stream);
+            return Document.FromXML(xdoc.Root, mode);
         }
 
         public static Document LoadFromXMLStream(Stream stream)
@@ -1815,7 +1828,12 @@ namespace Epsitec.Common.Document
 
         public static Document FromXML(XElement root)
         {
-            return new Document(root);
+            return new Document(root, DocumentMode.Modify);
+        }
+
+        public static Document FromXML(XElement root, DocumentMode mode)
+        {
+            return new Document(root, mode);
         }
 
         public bool HasEquivalentData(IXMLWritable other)
@@ -1855,7 +1873,10 @@ namespace Epsitec.Common.Document
                     ),
                     this.modifier?.ActiveViewer?.DrawingContext.GetRootStack()
                         == otherDoc.modifier?.ActiveViewer?.DrawingContext.GetRootStack(),
-                    this.textContext.HasEquivalentData(otherDoc.textContext),
+                    (
+                        this.textContext == otherDoc.textContext
+                        || this.textContext.HasEquivalentData(otherDoc.textContext)
+                    ),
                     this.textFlows.HasEquivalentData(otherDoc.textFlows),
                     this.fontList?.HasEquivalentData(otherDoc.fontList)
                         ?? this.fontList == otherDoc.fontList,
@@ -1933,10 +1954,10 @@ namespace Epsitec.Common.Document
             return root;
         }
 
-        private Document(XElement xml)
+        private Document(XElement xml, DocumentMode mode)
             : this(
                 (DocumentType)DocumentType.Parse(typeof(DocumentType), xml.Attribute("Type").Value),
-                DocumentMode.Modify,
+                mode,
                 InstallType.Full,
                 DebugMode.Release,
                 null,
@@ -1954,7 +1975,7 @@ namespace Epsitec.Common.Document
                 this.hotSpot = Point.FromXML(xml.Element("HotSpot"));
 
                 this.textContext = null;
-                this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
+                this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
             }
             else
             {
@@ -1971,8 +1992,10 @@ namespace Epsitec.Common.Document
                     ?.Elements()
                     ?.Select(item => int.Parse(item.Value))
                     ?.ToList();
-                this.textContext = TextContext.FromXML(xml.Element("TextContext"));
-                this.textFlows = SerializableUndoableList.FromXML(xml.Element("TextFlows"));
+                var textContextXML = xml.Element("TextContext");
+                this.textContext =
+                    textContextXML == null ? null : TextContext.FromXML(textContextXML);
+                this.textFlows = NewUndoableList.FromXML(xml.Element("TextFlows"));
                 this.fontList = xml.Element("FontList")
                     ?.Elements()
                     ?.Select(OpenType.FontName.FromXML)
@@ -1991,9 +2014,28 @@ namespace Epsitec.Common.Document
             this.uniqueAggregateId = (int)xml.Attribute("UniqueAggregateId");
             this.uniqueParagraphStyleId = (int)xml.Attribute("UniqueParagraphStyleId");
             this.uniqueCharacterStyleId = (int)xml.Attribute("UniqueCharacterStyleId");
-            this.objects = SerializableUndoableList.FromXML(xml.Element("Objects"));
-            this.propertiesAuto = SerializableUndoableList.FromXML(xml.Element("Properties"));
-            this.aggregates = SerializableUndoableList.FromXML(xml.Element("Aggregates"));
+            this.objects = NewUndoableList.FromXML(
+                xml.Element("Objects"),
+                this.GetTextFlowFromReference
+            );
+            this.propertiesAuto = NewUndoableList.FromXML(xml.Element("Properties"));
+            this.aggregates = NewUndoableList.FromXML(xml.Element("Aggregates"));
+        }
+
+        private TextFlow GetTextFlowFromReference(System.Type objectType, int objectId)
+        {
+            if (objectType != typeof(TextFlow))
+            {
+                throw new System.ArgumentException();
+            }
+            foreach (TextFlow tf in this.textFlows)
+            {
+                if (tf.Id == objectId)
+                {
+                    return tf;
+                }
+            }
+            throw new System.ArgumentException($"TextFlow with id {objectId} does not exist");
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -2052,7 +2094,7 @@ namespace Epsitec.Common.Document
                 this.hotSpot = (Point)info.GetValue("HotSpot", typeof(Point));
 
                 this.textContext = null;
-                this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
+                this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
             }
             else
             {
@@ -2087,7 +2129,9 @@ namespace Epsitec.Common.Document
 
                 if (this.IsRevisionGreaterOrEqual(1, 0, 8))
                 {
-                    this.readRootStack = (List<int>)info.GetValue("RootStack", typeof(List<int>));
+                    System.Collections.ArrayList readRootStack = (System.Collections.ArrayList)
+                        info.GetValue("RootStack", typeof(System.Collections.ArrayList));
+                    this.readRootStack = readRootStack.Cast<int>().ToList();
                 }
                 else
                 {
@@ -2105,12 +2149,12 @@ namespace Epsitec.Common.Document
                         this.textContext.Deserialize(textContextData);
                     }
 
-                    this.textFlows = (SerializableUndoableList)
-                        info.GetValue("TextFlows", typeof(SerializableUndoableList));
+                    this.oldtextFlows = (UndoableList)
+                        info.GetValue("TextFlows", typeof(UndoableList));
                 }
                 else
                 {
-                    this.textFlows = new SerializableUndoableList(this, UndoableListType.TextFlows);
+                    this.textFlows = new NewUndoableList(this, UndoableListType.TextFlows);
                 }
 
                 if (this.IsRevisionGreaterOrEqual(2, 0, 1))
@@ -2139,20 +2183,19 @@ namespace Epsitec.Common.Document
             }
 
             this.uniqueObjectId = info.GetInt32("UniqueObjectId");
-            this.objects = (SerializableUndoableList)
-                info.GetValue("Objects", typeof(SerializableUndoableList));
-            this.propertiesAuto = (SerializableUndoableList)
-                info.GetValue("Properties", typeof(SerializableUndoableList));
+            this.oldobjects = (UndoableList)info.GetValue("Objects", typeof(UndoableList));
+            this.oldpropertiesAuto = (UndoableList)
+                info.GetValue("Properties", typeof(UndoableList));
 
             if (this.IsRevisionGreaterOrEqual(1, 0, 23))
             {
-                this.aggregates = (SerializableUndoableList)
-                    info.GetValue("Aggregates", typeof(SerializableUndoableList));
+                this.oldaggregates = (UndoableList)
+                    info.GetValue("Aggregates", typeof(UndoableList));
                 this.uniqueAggregateId = info.GetInt32("UniqueAggregateId");
             }
             else
             {
-                this.aggregates = new SerializableUndoableList(
+                this.aggregates = new NewUndoableList(
                     Document.ReadDocument,
                     UndoableListType.AggregatesInsideDocument
                 );
@@ -2169,6 +2212,17 @@ namespace Epsitec.Common.Document
                 this.uniqueParagraphStyleId = 0;
                 this.uniqueCharacterStyleId = 0;
             }
+        }
+
+        private void FinishReadingOldObjects()
+        {
+            this.settings?.FinishReadingOldObjects();
+            this.readObjectMemory?.FinishReadingOldObjects();
+            this.readObjectMemoryText?.FinishReadingOldObjects();
+            this.objects ??= NewUndoableList.FromOld(this.oldobjects);
+            this.propertiesAuto ??= NewUndoableList.FromOld(this.oldpropertiesAuto);
+            this.aggregates ??= NewUndoableList.FromOld(this.oldaggregates);
+            this.textFlows ??= NewUndoableList.FromOld(this.oldtextFlows);
         }
 
         public string IoDirectory
@@ -3297,7 +3351,7 @@ namespace Epsitec.Common.Document
 
             protected Document document;
             protected bool onlySelected;
-            protected SerializableUndoableList list;
+            protected NewUndoableList list;
             protected int index;
         }
         #endregion
@@ -3390,7 +3444,7 @@ namespace Epsitec.Common.Document
 
             protected Document document;
             protected bool onlySelected;
-            protected SerializableUndoableList list;
+            protected NewUndoableList list;
             protected int index;
         }
         #endregion
@@ -3434,7 +3488,7 @@ namespace Epsitec.Common.Document
                 //	Implémentation de IEnumerator:
                 this.stack = new System.Collections.Stack();
 
-                SerializableUndoableList list = this.document.DocumentObjects;
+                NewUndoableList list = this.document.DocumentObjects;
                 if (this.root != null)
                 {
                     list = this.root.Objects;
@@ -3581,7 +3635,7 @@ namespace Epsitec.Common.Document
                 //	Implémentation de IEnumerator:
                 this.stack = new System.Collections.Stack();
 
-                SerializableUndoableList list = this.document.DocumentObjects;
+                NewUndoableList list = this.document.DocumentObjects;
                 if (this.root != null)
                 {
                     list = this.root.Objects;
@@ -3699,13 +3753,13 @@ namespace Epsitec.Common.Document
         #region TreeInfo
         protected class TreeInfo
         {
-            public TreeInfo(SerializableUndoableList list, int parent)
+            public TreeInfo(NewUndoableList list, int parent)
             {
                 this.list = list;
                 this.parent = parent;
             }
 
-            public SerializableUndoableList List
+            public NewUndoableList List
             {
                 get { return this.list; }
             }
@@ -3715,7 +3769,7 @@ namespace Epsitec.Common.Document
                 get { return this.parent; }
             }
 
-            protected SerializableUndoableList list;
+            protected NewUndoableList list;
             protected int parent;
         }
         #endregion
@@ -3835,11 +3889,21 @@ namespace Epsitec.Common.Document
         protected string exportFilename;
         protected int exportFilter;
         protected bool isDirtySerialize;
-        protected SerializableUndoableList objects;
-        protected SerializableUndoableList propertiesAuto;
-        protected SerializableUndoableList propertiesSel;
-        protected SerializableUndoableList aggregates;
-        protected SerializableUndoableList textFlows;
+
+        protected UndoableList oldobjects;
+        protected NewUndoableList objects;
+
+        protected UndoableList oldpropertiesAuto;
+        protected NewUndoableList propertiesAuto;
+
+        protected NewUndoableList propertiesSel; // not serialized
+
+        protected UndoableList oldaggregates;
+        protected NewUndoableList aggregates;
+
+        protected UndoableList oldtextFlows;
+        protected NewUndoableList textFlows;
+
         protected Settings.Settings settings;
         protected Modifier modifier;
         protected ImageCache imageCache;
