@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="2003" name="Assets.App" layer="A" textMode="FormattedText" assemblies="Assets.App" namespace="Epsitec.Cresus.Assets.App">
-  <Versions>
-    <Version id="1" build="1" date="2014-09-02T18:20:04.2995679Z" />
-    <Version id="2" build="419" date="2016-10-25T09:53:55.8958309Z" />
-  </Versions>
-</ModuleInfo>

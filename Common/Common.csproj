@@ -19,12 +19,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\grafix\AggUI\AntigrainSharp.csproj" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <Content Include="..\External\Clipboard.Win32.dll">
       <Link>Clipboard.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <!-- Resources -->
   <ItemGroup>
@@ -2880,8 +2880,8 @@
   <!-- InternalsVisibleTo -->
   <ItemGroup>
     <InternalsVisibleTo Include="Common.Tests" />
-    <InternalsVisibleTo Include="Common.Tests.Vs" />
+    <!--<InternalsVisibleTo Include="Common.Tests.Vs" />
     <InternalsVisibleTo Include="Cresus.DataLayer" />
-    <InternalsVisibleTo Include="Cresus.DataLayer.Tests.Vs" />
+    <InternalsVisibleTo Include="Cresus.DataLayer.Tests.Vs" />-->
   </ItemGroup>
 </Project>

@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="1011" name="Cresus.Core.Library.Features" layer="A" textMode="FormattedText" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.Features">
-  <Versions>
-    <Version id="1" build="17" date="2011-06-28T12:31:14.7354070Z" />
-    <Version id="8" build="2" date="2013-03-06T13:30:06.0657155Z" />
-  </Versions>
-</ModuleInfo>

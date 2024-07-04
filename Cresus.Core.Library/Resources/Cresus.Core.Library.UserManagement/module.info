@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="1002" name="Cresus.Core.Library.UserManagement" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.UserManagement">
-  <Versions>
-    <Version id="2" build="4" date="2011-06-23T12:06:25.2588423Z" />
-    <Version id="8" build="10" date="2013-07-01T12:46:31.3803833Z" />
-    <Version id="1" build="37" date="2019-05-04T05:50:58.8274240Z" />
-  </Versions>
-</ModuleInfo>

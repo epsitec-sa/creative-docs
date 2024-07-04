@@ -1,1 +1,0 @@
-tlbimp.exe "c:\Program Files\Adobe\Adobe Acrobat 6.0\Distillr\acrodist.exe" /out:External\Adobe.AcrobatDistiller.dll /namespace:Adobe.AcrobatDistiller /keyfile:Epsitec.Cresus.snk /verbose
