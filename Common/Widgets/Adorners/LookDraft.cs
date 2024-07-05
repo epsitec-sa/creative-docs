@@ -8,11 +8,11 @@ namespace Epsitec.Common.Widgets.Adorners
         public LookDraft()
         {
             this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.ResourcesLookDraft.png",
+                "Common/Widgets/Adorners/Resources/LookDraft.png",
                 typeof(IAdorner).Assembly
             );
             this.paper = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resourcespaper1.png",
+                "Common/Widgets/Adorners/Resources/paper1.png",
                 typeof(IAdorner).Assembly
             );
         }

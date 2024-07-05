@@ -4622,8 +4622,7 @@ namespace Epsitec.Common.Widgets
                         {
                             tag = Tag.Image;
                             parameters = new Dictionary<string, string>();
-                            parameters["src"] =
-                                "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
+                            parameters["src"] = "manifest:Common/Widgets/Images/DefaultValue.icon";
                         }
 
                         switch (tag)
@@ -5773,7 +5772,7 @@ namespace Epsitec.Common.Widgets
             if (image == null)
             {
                 image = Support.ImageProvider.Instance.GetImage(
-                    "manifest:Epsitec.Common.Widgets.Images.Missing.icon",
+                    "manifest:Common/Widgets/Images/Missing.icon",
                     this.ResourceManager
                 );
                 System.Diagnostics.Debug.WriteLine(

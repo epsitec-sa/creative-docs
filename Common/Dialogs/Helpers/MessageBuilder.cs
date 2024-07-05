@@ -34,7 +34,7 @@ namespace Epsitec.Common.Dialogs.Helpers
             {
                 case DialogIcon.Warning:
                 case DialogIcon.Question:
-                    return string.Concat("manifest:Epsitec.Common.Dialogs.Images.", icon, ".icon");
+                    return string.Concat("manifest:Common/Dialogs/Images/", icon, ".icon");
 
                 default:
                     return null;

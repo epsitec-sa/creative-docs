@@ -1451,8 +1451,8 @@ namespace Epsitec.Common.OpenType
         //private string activeLanguage;
         //private string activeFeatures = "";
 
-        private bool mapDefaultLigatures;
-        private bool useKerning;
+        //private bool mapDefaultLigatures;
+        //private bool useKerning;
 
         //private bool useSystemGlyphSize;
 

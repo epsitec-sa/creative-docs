@@ -298,7 +298,7 @@ namespace Epsitec.Common.Widgets
             this.buttonRgb.AutoToggle = true;
             this.buttonRgb.Group = this.colorSpaceController.Group;
             this.buttonRgb.Index = 1;
-            this.buttonRgb.IconUri = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
+            this.buttonRgb.IconUri = "manifest:Common/Widgets/Images/ColorSpaceRGB.icon";
             this.buttonRgb.TabIndex = 21;
             this.buttonRgb.TabNavigationMode = TabNavigationMode.ActivateOnTab;
             ToolTip.Default.SetToolTip(this.buttonRgb, Res.Strings.ColorSelector.ColorSpace.Rgb);
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Widgets
             this.buttonCmyk.AutoToggle = true;
             this.buttonCmyk.Group = this.colorSpaceController.Group;
             this.buttonCmyk.Index = 2;
-            this.buttonCmyk.IconUri = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
+            this.buttonCmyk.IconUri = "manifest:Common/Widgets/Images/ColorSpaceCMYK.icon";
             this.buttonCmyk.TabIndex = 21;
             this.buttonCmyk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
             ToolTip.Default.SetToolTip(this.buttonCmyk, Res.Strings.ColorSelector.ColorSpace.Cmyk);
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets
             this.buttonGray.AutoToggle = true;
             this.buttonGray.Group = this.colorSpaceController.Group;
             this.buttonGray.Index = 3;
-            this.buttonGray.IconUri = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon";
+            this.buttonGray.IconUri = "manifest:Common/Widgets/Images/ColorSpaceGray.icon";
             this.buttonGray.TabIndex = 21;
             this.buttonGray.TabNavigationMode = TabNavigationMode.ActivateOnTab;
             ToolTip.Default.SetToolTip(this.buttonGray, Res.Strings.ColorSelector.ColorSpace.Gray);

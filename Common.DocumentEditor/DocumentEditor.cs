@@ -1305,7 +1305,7 @@ namespace Epsitec.Common.DocumentEditor
             this.dlgSplash.Hide();
 
             string title = Res.Strings.Application.TitleShort;
-            string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+            string icon = "manifest:Common/Dialogs/Images/Question.icon";
             string shortFilename = Misc.ExtractName(
                 this.CurrentDocument.Filename,
                 this.CurrentDocument.IsDirtySerialize
@@ -1345,7 +1345,7 @@ namespace Epsitec.Common.DocumentEditor
             warnings.Sort();
 
             string title = Res.Strings.Application.TitleShort;
-            string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+            string icon = "manifest:Common/Dialogs/Images/Warning.icon";
 
             string chip = "<list type=\"fix\" width=\"1.5\"/>";
             System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -1418,7 +1418,7 @@ namespace Epsitec.Common.DocumentEditor
             this.dlgSplash.Hide();
 
             string title = Res.Strings.Application.TitleShort;
-            string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+            string icon = "manifest:Common/Dialogs/Images/Question.icon";
 
             Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(
                 title,

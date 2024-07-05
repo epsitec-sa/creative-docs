@@ -79,15 +79,15 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
             string res;
             if (docType == DocumentType.Pictogram)
             {
-                res = "manifest:Epsitec.App.Pictogram.SplashScreen.png";
+                res = "manifest:App.Pictogram/SplashScreen.png";
             }
             else if (type == InstallType.Freeware)
             {
-                res = "manifest:Epsitec.App.CreativeDocs.SplashScreen.png";
+                res = "manifest:App.CreativeDocs/SplashScreen.png";
             }
             else
             {
-                res = "manifest:Epsitec.App.CresusDocuments.SplashScreen.png";
+                res = "manifest:App.CresusDocuments/SplashScreen.png";
             }
             string text = string.Format("<img src=\"{0}\"/>", res);
             StaticText image = new StaticText(parent);

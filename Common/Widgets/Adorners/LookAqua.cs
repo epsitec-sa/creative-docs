@@ -8,15 +8,15 @@ namespace Epsitec.Common.Widgets.Adorners
         public LookAqua()
         {
             this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.ResourcesLookAqua.png",
+                "Common/Widgets/Adorners/Resources/LookAqua.png",
                 typeof(IAdorner).Assembly
             );
             this.metal1 = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resourcesmetal1.png",
+                "Common/Widgets/Adorners/Resources/metal1.png",
                 typeof(IAdorner).Assembly
             );
             this.metal2 = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resourcesmetal2.png",
+                "Common/Widgets/Adorners/Resources/metal2.png",
                 typeof(IAdorner).Assembly
             );
             this.metalRenderer = false;

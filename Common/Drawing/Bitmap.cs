@@ -312,7 +312,7 @@ namespace Epsitec.Common.Drawing
             throw new System.NotImplementedException();
         }
 
-        public Bitmap GetImageForPaintStyle(GlyphPaintStyle style)
+        public override Bitmap GetImageForPaintStyle(GlyphPaintStyle style)
         {
             /*
             switch (style)

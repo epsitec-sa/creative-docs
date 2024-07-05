@@ -24,11 +24,9 @@ namespace Epsitec.Common.Support
         static ImageProvider()
         {
             string path = System.IO.Directory.GetCurrentDirectory();
+            ImageProvider.manifestRoot = IO.PathTools.RemoveUntilDir("cresus-core", path);
             string otherPath = IO.PathTools.RemoveUntilDir("Common.Tests", path);
-            string thirdPath = System.IO.Path.Join(
-                IO.PathTools.RemoveUntilDir("cresus-core", path),
-                "External"
-            );
+            string thirdPath = System.IO.Path.Join(ImageProvider.manifestRoot, "External");
 
             ImageProvider.defaultProvider = new ImageProvider();
             ImageProvider.defaultPaths = new string[5];
@@ -87,7 +85,7 @@ namespace Epsitec.Common.Support
         {
             if (string.IsNullOrEmpty(name))
             {
-                return null;
+                throw new System.ArgumentException("name should not be empty");
             }
 
             if (name.StartsWith("stockicon:"))
@@ -132,7 +130,7 @@ namespace Epsitec.Common.Support
                 return this.GetImageFromManifestResource(name);
             }
 
-            return null;
+            throw new System.ArgumentException($"invalid image name {name}");
         }
 
         public Image GetImageFromFolderIcon(string name)
@@ -155,10 +153,8 @@ namespace Epsitec.Common.Support
                     return PrivilegeManager.Current.GetShieldIcon(IconSize.Small);
 
                 default:
-                    break;
+                    throw new System.ArgumentException($"invalid stockicon image {name}");
             }
-
-            return null;
         }
 
         public Image GetDynamicImage(string name)
@@ -169,7 +165,7 @@ namespace Epsitec.Common.Support
 
             if (pos < 0)
             {
-                return null;
+                throw new System.ArgumentException($"no '/' in dynamic image name {name}");
             }
 
             string baseName = fullName.Substring(0, pos);
@@ -182,6 +178,10 @@ namespace Epsitec.Common.Support
                 image = image.GetImageForArgument(argument);
             }
 
+            if (image == null)
+            {
+                throw new System.ArgumentException($"invalid dynamic image {name}");
+            }
             return image;
         }
 
@@ -249,6 +249,7 @@ namespace Epsitec.Common.Support
                 {
                     System.Diagnostics.Debug.WriteLine(string.Format("  here: {0}", attempt));
                 }
+                throw new System.ArgumentException($"could not find image from file {name}");
             }
 
             this.StoreImageToCache(name, image);
@@ -298,42 +299,23 @@ namespace Epsitec.Common.Support
 
             this.StoreImageToCache(name, image);
 
+            if (image == null)
+            {
+                throw new System.ArgumentException(
+                    $"could not find image from resource manager {name}"
+                );
+            }
             return image;
         }
 
         public Image GetImageFromManifestResource(string name)
         {
-            //	L'image décrite est stockée dans les ressources du manifeste de l'assembly .NET.
-            //	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiés par
-            //	.NET et des transformations futures pourraient ne pas fonctionner.
-
-            var assemblies = ImageProvider.GetAssemblies();
             var resourceName = name.Remove(0, 9).ToLowerInvariant();
 
-            Image image = null;
+            Image image = this.GetImageFromManifestResource(resourceName, null);
+            this.StoreImageToCache(name, image);
 
-            foreach (var assembly in assemblies)
-            {
-                var resourceNames = assembly.GetManifestResourceNames();
-                string matchingName = resourceNames
-                    .Where(x => x.ToLowerInvariant() == resourceName)
-                    .FirstOrDefault();
-
-                if (matchingName == null)
-                {
-                    continue;
-                }
-
-                image = this.GetImageFromManifestResource(matchingName, assembly);
-
-                this.StoreImageToCache(name, image);
-
-                if (image != null)
-                {
-                    return image;
-                }
-            }
-            return null;
+            return image;
         }
 
         public Image GetImageFromManifestResource(string name, System.Reflection.Assembly assembly)
@@ -344,13 +326,19 @@ namespace Epsitec.Common.Support
             if (name.EndsWith(".icon"))
             {
                 isIcon = true;
-                resName = System.IO.Path.GetFileNameWithoutExtension(name) + ".xml";
+                resName = System.IO.Path.Join(
+                    System.IO.Path.GetDirectoryName(name),
+                    System.IO.Path.GetFileNameWithoutExtension(name) + ".xml"
+                );
             }
-            using (System.IO.Stream stream = assembly.GetManifestResourceStream(resName))
+            string resPath = System.IO.Path.Join(ImageProvider.manifestRoot, resName);
+            using (System.IO.Stream stream = System.IO.File.OpenRead(resPath))
             {
                 if (stream == null)
                 {
-                    return null;
+                    throw new System.ArgumentException(
+                        $"could not find image from manifest resource {name}"
+                    );
                 }
 
                 long length = stream.Length;
@@ -366,6 +354,12 @@ namespace Epsitec.Common.Support
                 else
                 {
                     outputImage = NativeBitmap.FromData(buffer);
+                }
+                if (outputImage == null)
+                {
+                    throw new System.ArgumentException(
+                        $"error loading image {name} from manifest resource"
+                    );
                 }
                 return outputImage;
             }
@@ -668,6 +662,7 @@ namespace Epsitec.Common.Support
         private bool checkPath = true;
 
         private static readonly ImageProvider defaultProvider;
+        private static readonly string manifestRoot;
         private static readonly string[] defaultPaths;
     }
 }

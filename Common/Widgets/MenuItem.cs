@@ -181,8 +181,8 @@ namespace Epsitec.Common.Widgets
         {
             MenuItem item = new MenuItem(command, "", text, shortcut, name);
 
-            item.IconUriActiveNo = "manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon";
-            item.IconUriActiveYes = "manifest:Epsitec.Common.Widgets.Images.ActiveYes.icon";
+            item.IconUriActiveNo = "manifest:Common/Widgets/Images/ActiveNo.icon";
+            item.IconUriActiveYes = "manifest:Common/Widgets/Images/ActiveYes.icon";
 
             return item;
         }

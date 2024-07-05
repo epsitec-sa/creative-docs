@@ -8,11 +8,11 @@ namespace Epsitec.Common.Widgets.Adorners
         public LookRusty()
         {
             this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.ResourcesLookRusty.png",
+                "Common/Widgets/Adorners/Resources/LookRusty.png",
                 typeof(IAdorner).Assembly
             );
             this.metal3 = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.Resourcesmetal3.png",
+                "Common/Widgets/Adorners/Resources/metal3.png",
                 typeof(IAdorner).Assembly
             );
         }

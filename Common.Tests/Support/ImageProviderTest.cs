@@ -52,7 +52,7 @@ namespace Epsitec.Common.Tests.Support
                 ImageProvider.Instance.GetImageNames("manifest", Resources.DefaultManager)
             );
 
-            Assert.AreEqual(@"manifest:Epsitec.Common.Dialogs.Images.FavoritesAdd.icon", names[0]);
+            Assert.AreEqual(@"manifest:Common/Dialogs/Images/FavoritesAdd.icon", names[0]);
         }
 
         [Test]

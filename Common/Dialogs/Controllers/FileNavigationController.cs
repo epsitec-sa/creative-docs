@@ -1,10 +1,10 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs.Controllers
 {
@@ -216,8 +216,8 @@ namespace Epsitec.Common.Dialogs.Controllers
                 if (!isNext)
                 {
                     icon = isCurrent
-                        ? "manifest:Epsitec.Common.Widgets.Images.ActiveCurrent.icon"
-                        : "manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon";
+                        ? "manifest:Common/Widgets/Images/ActiveCurrent.icon"
+                        : "manifest:Common/Widgets/Images/ActiveNo.icon";
                 }
 
                 string text = TextLayout.ConvertToTaggedText(folder.DisplayName);

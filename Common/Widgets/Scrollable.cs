@@ -673,7 +673,7 @@ namespace Epsitec.Common.Widgets
                         {
                             this.mouseCursorHand = MouseCursor.FromImage(
                                 Support.ImageProvider.Instance.GetImage(
-                                    "manifest:Epsitec.Common.Widgets.Images.Cursor.Hand.icon",
+                                    "manifest:Common/Widgets/Images/Cursor/Hand.icon",
                                     Support.Resources.DefaultManager
                                 )
                             );

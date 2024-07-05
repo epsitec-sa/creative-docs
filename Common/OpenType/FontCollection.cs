@@ -113,7 +113,6 @@ namespace Epsitec.Common.OpenType
             }
             */
             throw new System.NotImplementedException();
-            return false;
         }
 
         /// <summary>
@@ -391,7 +390,7 @@ namespace Epsitec.Common.OpenType
 
         #endregion
 
-        public event FontIdentityCallback FontIdentityDefined;
+        //public event FontIdentityCallback FontIdentityDefined;
 
         private Dictionary<string, FontIdentity> fontDict;
         private FontIdentity fallbackFontIdentity;

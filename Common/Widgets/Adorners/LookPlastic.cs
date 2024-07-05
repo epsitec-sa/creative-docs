@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets.Adorners
         public LookPlastic()
         {
             this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.ResourcesLookPlastic.png",
+                "Common/Widgets/Adorners/Resources/LookPlastic.png",
                 typeof(IAdorner).Assembly
             );
         }

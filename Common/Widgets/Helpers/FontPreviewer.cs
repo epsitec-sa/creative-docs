@@ -11,9 +11,9 @@ namespace Epsitec.Common.Widgets.Helpers
     {
         static FontPreviewer()
         {
-            OpenType.FontIdentity.Serializing += new Epsitec.Common.OpenType.FontIdentityCallback(
-                FontPreviewer.HandleFontIdentitySerializing
-            );
+            //OpenType.FontIdentity.Serializing += new Epsitec.Common.OpenType.FontIdentityCallback(
+            //    FontPreviewer.HandleFontIdentitySerializing
+            //);
         }
 
         public static void Initialize()

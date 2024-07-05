@@ -386,7 +386,7 @@ namespace Epsitec.Common.OpenType
             }
         }
 
-        public static event FontIdentityCallback Serializing;
+        //public static event FontIdentityCallback Serializing;
 
         /// <summary>
         /// Gets the name of the specified glyph.

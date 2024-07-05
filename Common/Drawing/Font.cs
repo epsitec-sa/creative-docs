@@ -656,7 +656,7 @@ namespace Epsitec.Common.Drawing
                     "Epsitec.Common.Drawing.Font"
                 );
             }
-            Font.fontCollection.FontIdentityDefined += Font.HandleFontCollectionFontIdentityDefined;
+            //Font.fontCollection.FontIdentityDefined += Font.HandleFontCollectionFontIdentityDefined;
         }
 
         private static void HandleFontCollectionFontIdentityDefined(

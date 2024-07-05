@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets.Adorners
         public LookPastel()
         {
             this.bitmap = Support.ImageProvider.Instance.GetImageFromManifestResource(
-                "Epsitec.Common.Widgets.Adorners.ResourcesLookPastel.png",
+                "Common/Widgets/Adorners/Resources/LookPastel.png",
                 typeof(IAdorner).Assembly
             );
         }

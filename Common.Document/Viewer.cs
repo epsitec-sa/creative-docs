@@ -4312,7 +4312,7 @@ namespace Epsitec.Common.Document
                 return;
 
             string title = Res.Strings.Dialog.Title;
-            string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+            string icon = "manifest:Common/Dialogs/Images/Warning.icon";
             string message = error;
 
             Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(
@@ -4330,7 +4330,7 @@ namespace Epsitec.Common.Document
         {
             //	Affiche un dialogue pour poser une question oui/non.
             string title = Res.Strings.Dialog.Title;
-            string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+            string icon = "manifest:Common/Dialogs/Images/Question.icon";
             string message = question;
 
             Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(
