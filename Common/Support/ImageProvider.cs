@@ -310,7 +310,7 @@ namespace Epsitec.Common.Support
 
         public Image GetImageFromManifestResource(string name)
         {
-            var resourceName = name.Remove(0, 9).ToLowerInvariant();
+            var resourceName = name.Remove(0, 9);
 
             Image image = this.GetImageFromManifestResource(resourceName, null);
             this.StoreImageToCache(name, image);
@@ -350,6 +350,13 @@ namespace Epsitec.Common.Support
                 {
                     // image au format vectoriel "maison" EPSITEC
                     outputImage = Canvas.FromData(buffer);
+
+                    // DEBUG CODE
+                    if (name.EndsWith("Application.icon"))
+                    {
+                        outputImage.DebugTag = "tag";
+                    }
+                    // DEBUG CODE
                 }
                 else
                 {

@@ -10,6 +10,22 @@ namespace Epsitec.Common.Drawing
     {
         public abstract Size Size { get; }
 
+        public string DebugTag
+        {
+            get => this.debugTag;
+            set
+            {
+                if (this.debugTag == null)
+                {
+                    this.debugTag = value;
+                }
+                else
+                {
+                    throw new System.InvalidOperationException("DebugTag already set");
+                }
+            }
+        }
+
         public double Width
         {
             get { return this.Size.Width; }
@@ -50,5 +66,7 @@ namespace Epsitec.Common.Drawing
         #region IDisposable Members
         public abstract void Dispose();
         #endregion
+
+        private string debugTag;
     }
 }
