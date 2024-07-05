@@ -6,11 +6,21 @@ Note: this software was written long ago and as I am not the original author of 
 
 ## Philosophy and design principles
 
-### No external dependencies
+### Avoid external dependencies
 
 External dependencies are avoided or minimized as much as possible. This has the benefit that the software can be ported more easily. For instance, the old version of creativedocs was drawing all it's UI in a memory buffer, which was then displayed on screen in a Windows Form. This low dependency on WinForms made it easier to adapt this part of the software, simply replacing the WinForms with a cross-platform alternative (I chose to use SDL). If all the UI had been made with WinForm widgets, I would have had to replace a lot more things.
 
 The drawback of this philosophy is that it leads to a lot of "reinventing the wheel". This additional code needs to be maintained and will generaly be less robust than a popular library that is used in hundreds of other projects. Note that said library did not necessarly exist when Creativedocs was first written.
+
+I chose to deviate from this principle when a decent library existed for the task and implementing the functionality myself would have taken too long.
+
+Currently, Creativedocs has the following dependencies:
+- `SharpZipLib` to read and write zip files (this dependency was originaly present)
+- `NativeFileDialogSharp` to have cross-platform file chooser dialog windows
+- `SDL2` to create graphical windows and get user inputs
+- `Imagemagick` to read and write images in different formats
+- `antigrain` (via the grafix submodule) to draw various shapes
+- `freetype` (via the grafix submodule) to draw text and read fonts
 
 
 ## Structure of the project

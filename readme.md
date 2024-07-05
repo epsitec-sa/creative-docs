@@ -13,18 +13,23 @@ This open-source release is an attempt to modernise this software and port it to
 
 This project is not in active development.
 
+## Building
 
-## Usage
+- clone this repository and it's submodules
+- follow the build instructions in `grafix`
+- open `cresus-core/App.CreativeDocs` and build `App.CreativeDocs.sln` with Visual Studio or from the command line `dotnet build App.CreativeDocs.csproj`
+- the other projects ("App.CresusDocuments" and "App.CresusPictogrammes") can be built in a similar way
 
-## Build instructions
+## Running
 
-See [INSTALL.md](INSTALL.md)
+- run from Visual Studio or from the command line `dotnet run App.CreativeDocs.csproj`
 
 ## Contributing
 
 If you are very motivated and want to build on this project, you might find the following documents usefull:
 
 - [DESIGN.md](DESIGN.md) an overview of the main components that make creativedocs
+- [TODO.md](TODO.md) a list of improvement ideas you could work on
 
 ## Authors and acknowledgment
 Show your appreciation to those who have contributed to the project.
