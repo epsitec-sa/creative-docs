@@ -4,7 +4,6 @@
     <AssemblyDescription>Creative Documents Application Engine</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj" />
     <ProjectReference Include="..\Common.Document\Common.Document.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>

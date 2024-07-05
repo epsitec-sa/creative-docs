@@ -1,25 +1,38 @@
-# Crésus Core
+# Creativedocs
 
-Crésus Core is used as a base for several projects.
+## Overview
 
-## General
+Creativedocs is a vector graphics editor originaly developed at Epsitec SA between 2004 and 2014.
+It supports creating images from simple vector shapes, adding text and bitmap images, multiple layers and pages and various export formats.
 
-### Build instructions (using signed assemblies)
+![Screenshot of the interface of Creativedocs](./creativedocs_new_interface.png)
 
-- Make sure that project `Epsitec.CresusToolkit` can be compiled, by providing the signing
-  password required for file `CresusToolkit.pfx` (it is set to `Smaky400`).
+This open-source release is an attempt to modernise this software and port it to new platforms (macos and linux).
 
-### Firebird setup
+## Project status
 
-- Select Firebird 2.5 x64 Superserver when installing the server; all code has been
-  tested with version 2.5 only and the database used with project AIDER uses the 2.5
-  data structure.
+This project is not in active development.
 
-- Database files are expected in `C:\ProgramData\Epsitec\Firebird Databases`
+## Building
 
-- Edit the `aliases.conf` file in `C:\Program Files\Firebird\Firebird_2_5` and add
-  following alias:
+- clone this repository and it's submodules
+- follow the build instructions in `grafix`
+- open `cresus-core/App.CreativeDocs` and build `App.CreativeDocs.sln` with Visual Studio or from the command line `dotnet build App.CreativeDocs.csproj`
+- the other projects ("App.CresusDocuments" and "App.CresusPictogrammes") can be built in a similar way
 
-  ```.conf
-  aider = C:\ProgramData\Epsitec\Firebird Databases\AIDER.FIREBIRD
-  ```
+## Running
+
+- run from Visual Studio or from the command line `dotnet run App.CreativeDocs.csproj`
+
+## Contributing
+
+If you are very motivated and want to build on this project, you might find the following documents usefull:
+
+- [DESIGN.md](DESIGN.md) an overview of the main components that make creativedocs
+- [TODO.md](TODO.md) a list of improvement ideas you could work on
+
+## Authors and acknowledgment
+Show your appreciation to those who have contributed to the project.
+
+## License
+For open source projects, say how it is licensed.

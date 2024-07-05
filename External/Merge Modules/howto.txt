@@ -1,4 +1,0 @@
-
-Copy the merge modules (*.msm) into the "c:\Program Files (x86)\Common Files\Merge Modules"
-or "c:\Program Files\Common Files\Merge Modules" folder, so that Visual Studio finds them
-when it builds the installers.
