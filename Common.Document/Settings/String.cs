@@ -71,7 +71,12 @@ namespace Epsitec.Common.Document.Settings
 
         public override XElement ToXML()
         {
-            return new XElement("String", base.IterXMLParts(), new XAttribute("Value", this.Value));
+            var root = new XElement("String", base.IterXMLParts());
+            if (this.Value != null)
+            {
+                root.Add(new XAttribute("Value", this.Value));
+            }
+            return root;
         }
 
         public static String FromXML(XElement xml)
@@ -82,7 +87,7 @@ namespace Epsitec.Common.Document.Settings
         private String(XElement xml)
             : base(xml)
         {
-            this.Value = xml.Attribute("Value").Value;
+            this.Value = xml.Attribute("Value")?.Value;
             this.Initialize();
         }
 
