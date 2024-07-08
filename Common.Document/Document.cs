@@ -1495,115 +1495,39 @@ namespace Epsitec.Common.Document
             int undoCount = this.modifier.OpletQueue.UndoActionCount;
             DocumentFileExtension ext = Document.GetDocumentFileExtension(filename);
 
-            XDocument xmlDocument = new XDocument(this.ToXML());
-            xmlDocument.Save(filename);
-            //try
-            //{
-            //    this.Modifier.DeselectAll();
+            try
+            {
+                this.Modifier.DeselectAll();
 
-            //    this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
+                this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
 
-            //    if (this.ioDocumentManager == null)
-            //    {
-            //        this.ioDocumentManager = new DocumentManager();
-            //    }
+                if (this.ioDocumentManager == null)
+                {
+                    this.ioDocumentManager = new DocumentManager();
+                }
+                XDocument xmlDocument = new XDocument(this.ToXML());
+                xmlDocument.Save(filename);
+            }
+            catch (System.Exception e)
+            {
+                return e.Message;
+            }
+            finally
+            {
+                while (undoCount < this.modifier.OpletQueue.UndoActionCount)
+                {
+                    this.modifier.OpletQueue.UndoAction();
+                }
 
-            //    if (this.type == DocumentType.Pictogram)
-            //    {
-            //        string err = this.PictogramCheckBeforeWrite();
-            //        if (err != "")
-            //        {
-            //            return err;
-            //        }
+                this.modifier.OpletQueue.PurgeRedo();
+            }
 
-            //        this.ioDocumentManager.Save(
-            //            filename,
-            //            delegate(System.IO.Stream stream)
-            //            {
-            //                Document.WriteIdentifier(stream, this.ioType);
+            if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
+            {
+                this.Filename = filename;
+                this.ClearDirtySerialize();
+            }
 
-            //                if (this.ioType == IOType.BinaryCompress)
-            //                {
-            //                    //?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
-            //                    Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
-            //                    BinaryFormatter formatter = new BinaryFormatter();
-            //                    formatter.Serialize(compressor, this);
-            //                    compressor.Close();
-            //                    return true;
-            //                }
-            //                else if (this.ioType == IOType.SoapUncompress)
-            //                {
-            //                    SoapFormatter formatter = new SoapFormatter();
-            //                    formatter.Serialize(stream, this);
-            //                    return true;
-            //                }
-            //                else
-            //                {
-            //                    return false;
-            //                }
-            //            }
-            //        );
-            //    }
-            //    else
-            //    {
-            //        this.FontUpdate();
-            //        this.ImageFlushUnused();
-            //        if (this.imageCache != null)
-            //        {
-            //            this.imageCache.GenerateShortNames();
-            //        }
-            //        this.ImageUpdate();
-
-            //        byte[] data;
-            //        using (MemoryStream stream = new MemoryStream())
-            //        {
-            //            Document.WriteIdentifier(stream, this.ioType);
-
-            //            BinaryFormatter formatter = new BinaryFormatter();
-            //            formatter.Serialize(stream, this);
-            //            data = stream.ToArray();
-            //        }
-
-            //        ZipFile zip = new ZipFile();
-            //        zip.AddEntry("document.data", data, 0);
-            //        this.WriteMiniature(zip, 1, ext == DocumentFileExtension.CrMod);
-            //        this.WriteStatistics(zip, 2);
-            //        if (this.imageCache != null)
-            //        {
-            //            this.imageCache.WriteData(zip, this.imageIncludeMode);
-            //        }
-            //        this.FontWriteAll(zip);
-            //        zip.CompressionLevel = 6;
-
-            //        this.ioDocumentManager.Save(
-            //            filename,
-            //            delegate(System.IO.Stream stream)
-            //            {
-            //                zip.SaveFile(stream);
-            //                return true;
-            //            }
-            //        );
-            //    }
-            //}
-            //catch (System.Exception e)
-            //{
-            //    return e.Message;
-            //}
-            //finally
-            //{
-            //    while (undoCount < this.modifier.OpletQueue.UndoActionCount)
-            //    {
-            //        this.modifier.OpletQueue.UndoAction();
-            //    }
-
-            //    this.modifier.OpletQueue.PurgeRedo();
-            //}
-
-            //if (ext == DocumentFileExtension.CrDoc || ext == DocumentFileExtension.Icon)
-            //{
-            //    this.Filename = filename;
-            //    this.ClearDirtySerialize();
-            //}
             DocumentCache.Remove(filename);
             return "";
         }
@@ -1633,24 +1557,6 @@ namespace Epsitec.Common.Document
             return filename;
         }
 
-        private string PictogramCheckBeforeWrite()
-        {
-            foreach (Objects.Abstract obj in this.Deep(null))
-            {
-                if (
-                    obj is Objects.TextBox
-                    || obj is Objects.TextBox2
-                    || obj is Objects.TextLine
-                    || obj is Objects.TextLine2
-                )
-                {
-                    return Res.Strings.Error.ExistingText;
-                }
-            }
-
-            return ""; // ok
-        }
-
         private static IOType ReadIdentifier(Stream stream)
         {
             //	Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
@@ -1676,25 +1582,6 @@ namespace Epsitec.Common.Document
             if (buffer[5] == (byte)'x')
                 return IOType.SoapUncompress;
             return IOType.Unknown;
-        }
-
-        private static void WriteIdentifier(Stream stream, IOType type)
-        {
-            //	Ecrit les 8 bytes d'en-tête "<?icon?>".
-            byte[] buffer = new byte[8];
-            buffer[0] = (byte)'<';
-            buffer[1] = (byte)'?';
-            buffer[2] = (byte)'i';
-            buffer[3] = (byte)'c';
-            buffer[4] = (byte)'o';
-            buffer[5] = (byte)'-';
-            if (type == IOType.BinaryCompress)
-                buffer[5] = (byte)'n';
-            if (type == IOType.SoapUncompress)
-                buffer[5] = (byte)'x';
-            buffer[6] = (byte)'?';
-            buffer[7] = (byte)'>';
-            stream.Write(buffer, 0, 8);
         }
 
         public static DocumentFileExtension GetDocumentFileExtension(string path)
@@ -1808,22 +1695,48 @@ namespace Epsitec.Common.Document
         }
 
         #region Serialization
-        public static Document LoadFromXMLFile(string filename, DocumentMode mode)
+        public static Document LoadFromXMLFile(
+            string filename,
+            DocumentMode mode,
+            DebugMode debugMode = DebugMode.Release,
+            Settings.GlobalSettings globalSettings = null,
+            CommandDispatcher commandDispatcher = null,
+            CommandContext commandContext = null,
+            Window mainWindow = null
+        )
         {
             XDocument xdoc = XDocument.Load(filename);
-            return Document.FromXML(xdoc.Root, mode);
+            return Document.FromXML(
+                xdoc.Root,
+                mode,
+                debugMode,
+                globalSettings,
+                commandDispatcher,
+                commandContext,
+                mainWindow
+            );
         }
 
-        public static Document LoadFromXMLStream(Stream stream, DocumentMode mode)
+        public static Document LoadFromXMLStream(
+            Stream stream,
+            DocumentMode mode,
+            DebugMode debugMode = DebugMode.Release,
+            Settings.GlobalSettings globalSettings = null,
+            CommandDispatcher commandDispatcher = null,
+            CommandContext commandContext = null,
+            Window mainWindow = null
+        )
         {
             XDocument xdoc = XDocument.Load(stream);
-            return Document.FromXML(xdoc.Root, mode);
-        }
-
-        public static Document LoadFromXMLStream(Stream stream)
-        {
-            XDocument xdoc = XDocument.Load(stream);
-            return Document.FromXML(xdoc.Root);
+            return Document.FromXML(
+                xdoc.Root,
+                mode,
+                debugMode,
+                globalSettings,
+                commandDispatcher,
+                commandContext,
+                mainWindow
+            );
         }
 
         public static Document FromXML(XElement root)
@@ -1831,9 +1744,25 @@ namespace Epsitec.Common.Document
             return new Document(root, DocumentMode.Modify);
         }
 
-        public static Document FromXML(XElement root, DocumentMode mode)
+        public static Document FromXML(
+            XElement root,
+            DocumentMode mode,
+            DebugMode debugMode = DebugMode.Release,
+            Settings.GlobalSettings globalSettings = null,
+            CommandDispatcher commandDispatcher = null,
+            CommandContext commandContext = null,
+            Window mainWindow = null
+        )
         {
-            return new Document(root, mode);
+            return new Document(
+                root,
+                mode,
+                debugMode,
+                globalSettings,
+                commandDispatcher,
+                commandContext,
+                mainWindow
+            );
         }
 
         public bool HasEquivalentData(IXMLWritable other)
@@ -1954,16 +1883,24 @@ namespace Epsitec.Common.Document
             return root;
         }
 
-        private Document(XElement xml, DocumentMode mode)
+        private Document(
+            XElement xml,
+            DocumentMode mode,
+            DebugMode debugMode = DebugMode.Release,
+            Settings.GlobalSettings globalSettings = null,
+            CommandDispatcher commandDispatcher = null,
+            CommandContext commandContext = null,
+            Window mainWindow = null
+        )
             : this(
                 (DocumentType)DocumentType.Parse(typeof(DocumentType), xml.Attribute("Type").Value),
                 mode,
                 InstallType.Full,
-                DebugMode.Release,
-                null,
-                null,
-                null,
-                null
+                debugMode,
+                globalSettings,
+                commandDispatcher,
+                commandContext,
+                mainWindow
             )
         {
             Document.ReadDocument = this; // bl-converter ugly, refactor

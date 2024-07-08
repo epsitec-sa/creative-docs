@@ -578,6 +578,7 @@ namespace Epsitec.Common.Document
             System.Func<System.Type, int, IXMLWritable> missingObjectSource = null
         )
         {
+            this.document = Document.ReadDocument;
             var root = xml.Element("BasicUndoableList");
             UndoableListType.TryParse(root.Attribute("Type").Value, out this.type);
             var itemLoader = GetListItemLoader(this.type, missingObjectSource);

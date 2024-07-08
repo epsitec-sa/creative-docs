@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document
         {
             using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
             {
-                this.document = Document.LoadFromXMLStream(stream);
+                this.document = Document.LoadFromXMLStream(stream, DocumentMode.Modify);
             }
         }
 

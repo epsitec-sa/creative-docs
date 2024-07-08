@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Soap;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
@@ -1533,7 +1534,7 @@ namespace Epsitec.Common.DocumentEditor
                 {
                     this.CreateDocument(this.Window);
                 }
-                err = this.CurrentDocument.Read(filename);
+                this.ReplaceCurrentDocument(filename);
                 this.initializationInProgress = true;
                 this.CurrentDocument.InitializationInProgress = true;
                 this.UpdateAfterRead();
@@ -5679,7 +5680,11 @@ namespace Epsitec.Common.DocumentEditor
                 return;
 
             Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
-            DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+            if (viewer == null)
+            {
+                return;
+            }
+            DrawingContext context = viewer.DrawingContext;
             DocumentInfo di = this.CurrentDocumentInfo;
             if (di.hRuler == null)
                 return;
@@ -5964,6 +5969,29 @@ namespace Epsitec.Common.DocumentEditor
             this.ConnectEvents();
             this.CurrentDocument.Modifier.New();
             this.bookDocuments.ActivePage = di.tabPage; // (*)
+            this.UpdateCloseCommand();
+            this.PrepareOpenDocument();
+
+            // (*)	Le Modifier.New doit avoir été fait, car certains panneaux accèdent aux dimensions
+            //		de la page. Pour cela, DrawingContext doit avoir un rootStack initialisé, ce qui
+            //		est fait par Modifier.New.
+        }
+
+        protected void ReplaceCurrentDocument(string filename)
+        {
+            this.CurrentDocumentInfo.document = Document.LoadFromXMLFile(
+                filename,
+                DocumentMode.Modify,
+                this.debugMode,
+                this.globalSettings,
+                this.CommandDispatcher,
+                this.CommandContext,
+                this.Window
+            );
+            this.CreateDocumentLayout(this.CurrentDocument);
+            this.ConnectEvents();
+            this.CurrentDocument.Modifier.New();
+            this.bookDocuments.ActivePage = this.CurrentDocumentInfo.tabPage; // (*)
             this.UpdateCloseCommand();
             this.PrepareOpenDocument();
 
