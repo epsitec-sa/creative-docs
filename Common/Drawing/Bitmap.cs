@@ -12,7 +12,10 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public abstract class Bitmap : Image
     {
-        public override Bitmap BitmapImage => this;
+        public override Bitmap BitmapImage
+        {
+            get { return this; }
+        }
 
         public abstract int Stride { get; }
 

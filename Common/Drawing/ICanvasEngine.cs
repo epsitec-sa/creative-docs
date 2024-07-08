@@ -6,8 +6,6 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public interface ICanvasEngine
     {
-        bool TryLoadData(byte[] data);
-
         Canvas.IconKey[] IconKeys { get; }
 
         Size Size { get; }

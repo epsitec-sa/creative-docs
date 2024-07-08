@@ -7,48 +7,27 @@ namespace Epsitec.Common.Document
     /// </summary>
     public class Engine : ICanvasEngine
     {
-        private Engine() { }
-
-        public bool TryLoadData(byte[] data)
+        private Engine(byte[] data)
         {
-            //if (!this.IsDataCompatible(data))
-            //{
-            //    return false;
-            //}
             using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
             {
                 this.document = Document.LoadFromXMLStream(stream);
             }
-            return true;
+        }
+
+        public static Engine CreateEngine(byte[] data)
+        {
+            return new Engine(data);
         }
 
         public static void Initialize()
         {
             Common.Widgets.Widget.Initialize();
             Res.Initialize();
-            if (Engine.current == null)
-            {
-                Engine.current = new Engine();
-                Drawing.Canvas.RegisterEngine(Engine.current);
-            }
+            Drawing.Canvas.RegisterEngineFactory(Engine.CreateEngine);
         }
 
         #region ICanvasEngine Members
-        private bool IsDataCompatible(byte[] data)
-        {
-            if (
-                (data[0] == (byte)'<')
-                && (data[1] == (byte)'?')
-                && (data[2] == (byte)'x')
-                && (data[3] == (byte)'m')
-                && (data[4] == (byte)'l')
-            )
-            {
-                return true;
-            }
-
-            return false;
-        }
 
         public Canvas.IconKey[] IconKeys
         {
@@ -110,8 +89,6 @@ namespace Epsitec.Common.Document
             return color;
         }
         #endregion
-
-        protected static Engine current;
 
         protected Common.Widgets.IAdorner adorner;
         protected GlyphPaintStyle glyphPaintStyle;

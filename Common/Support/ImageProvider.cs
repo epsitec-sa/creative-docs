@@ -349,18 +349,19 @@ namespace Epsitec.Common.Support
                 if (isIcon)
                 {
                     // image au format vectoriel "maison" EPSITEC
-                    outputImage = Canvas.FromData(buffer);
 
                     // DEBUG CODE
-                    if (name.EndsWith("Application.icon"))
-                    {
-                        outputImage.DebugTag = "tag";
-                    }
+                    string tag = name.EndsWith("Application.icon") ? "application" : name;
                     // DEBUG CODE
+                    outputImage = Canvas.FromData(buffer, tag);
                 }
                 else
                 {
                     outputImage = NativeBitmap.FromData(buffer);
+
+                    // DEBUG CODE
+                    outputImage.DebugTag = name;
+                    // DEBUG CODE
                 }
                 if (outputImage == null)
                 {

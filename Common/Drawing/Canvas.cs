@@ -8,14 +8,15 @@ namespace Epsitec.Common.Drawing
     /// </summary>
     public class Canvas : Image
     {
-        internal Canvas(byte[] data)
+        internal Canvas(byte[] data, string debugTag)
         {
-            this.engine = Canvas.FindEngine(data);
+            this.engine = Canvas.engineFactory(data);
             System.Diagnostics.Debug.Assert(this.engine != null);
             IconKey[] iks = this.engine.IconKeys;
             System.Diagnostics.Debug.Assert(iks != null && iks.Length > 0);
 
             this.debugDeep = 0;
+            this.DebugTag = $"{debugTag}[{data.Length}]";
             this.firstPageKey = iks[0]; // clé pour la première page
 
             this.keys = new KeyTable();
@@ -24,7 +25,6 @@ namespace Epsitec.Common.Drawing
                 this.keys[ik] = new Canvas(this, ik);
             }
 
-            Canvas.globalIconCache.Add(this);
             this.size = Size.Empty;
             this.origin = new Point(0, 0);
         }
@@ -33,6 +33,7 @@ namespace Epsitec.Common.Drawing
         {
             //	Version selon IconKey du même dessin.
             //	On partage les données avec le modèle original.
+            this.DebugTag = original.DebugTag;
             this.engine = original.engine;
             this.debugDeep = 1;
 
@@ -53,6 +54,7 @@ namespace Epsitec.Common.Drawing
         {
             //	Version "normal", "disabled" ou "selected" du même dessin.
             //	On partage les données avec le modèle original.
+            this.DebugTag = original.DebugTag;
             this.engine = original.engine;
             this.debugDeep = 2;
 
@@ -70,9 +72,9 @@ namespace Epsitec.Common.Drawing
             this.Dispose();
         }
 
-        public static Canvas FromData(byte[] buffer)
+        public static Canvas FromData(byte[] buffer, string debugTag = null)
         {
-            return new Canvas(buffer);
+            return new Canvas(buffer, debugTag);
         }
 
         public int DebugDeep
@@ -268,21 +270,9 @@ namespace Epsitec.Common.Drawing
             return this.effects[style];
         }
 
-        public static void RegisterEngine(ICanvasEngine engine)
+        public static void RegisterEngineFactory(Func<byte[], ICanvasEngine> factory)
         {
-            Canvas.engines.Add(engine);
-        }
-
-        public static ICanvasEngine FindEngine(byte[] data)
-        {
-            foreach (ICanvasEngine engine in Canvas.engines)
-            {
-                if (engine.TryLoadData(data))
-                {
-                    return engine;
-                }
-            }
-            return null;
+            Canvas.engineFactory = factory;
         }
 
         public override Bitmap BitmapImage
@@ -336,6 +326,7 @@ namespace Epsitec.Common.Drawing
             uint height = (uint)(size.Height * this.zoom);
             size = new Size(width, height);
             this.cache = new DrawingBitmap(width, height);
+            this.cache.DebugTag = this.DebugTag ?? "* Canvas cache";
             using (Graphics graphics = new Graphics(this.cache.GraphicContext))
             {
                 int page = 0;
@@ -376,15 +367,8 @@ namespace Epsitec.Common.Drawing
             }
             this.isDisposed = true;
 
-            Canvas.globalIconCache.Remove(this);
             this.DestroyCache();
             GC.SuppressFinalize(this);
-        }
-
-        public void RemoveFromCache()
-        {
-            System.Diagnostics.Debug.WriteLine("Removed image from cache.");
-            Canvas.globalIconCache.Remove(this);
         }
 
         public class IconKey
@@ -616,7 +600,6 @@ namespace Epsitec.Common.Drawing
         protected DrawingBitmap cache;
         protected int debugDeep = -1;
 
-        static List<ICanvasEngine> engines = new();
-        static System.Collections.ArrayList globalIconCache = new System.Collections.ArrayList();
+        static Func<byte[], ICanvasEngine> engineFactory;
     }
 }
