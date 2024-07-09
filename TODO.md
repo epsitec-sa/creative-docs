@@ -6,12 +6,14 @@ They are not strictly necessary for the project to work but they would make the 
 
 ## Architecture
 
-### Singleton pattern with public static field
+#### High coupling / Singleton pattern with public static field
 There are several classes that implement a singleton pattern by having an instance of the class as a static field. Since those classes often also have a bunch of publicly settable properties, this is isomorphic to having a bunch of global variables.
 This is bad for many reasons:
 - it makes the code difficult to test: those singletons needs to be properly initialised
 - it makes the tests non-deterministic: tests will pass/fail depending in which order they are executed because of some state shared through those singletons. If we really want to keep those singletons, we should at least provide a way to reset them.
 - code using the singleton is tightly coupled to the singleton
+
+See also [Coupling (wikipedia)](https://en.wikipedia.org/wiki/Coupling_(computer_programming))
 
 ### Implicit assumptions
 Many methods have implicit assumptions about their parameters or their surrounding context.
@@ -22,7 +24,26 @@ For instance, imagine a method that takes an object of type `Foo` and expects it
 ### static constructors and Initialize()
 Several classes have a static constructor that initializes some state.
 The runtime calls these static constructors when needed, this is not user controlled.
-However, there are many Initialize() methods (most of which are empty) that are called to trigger the static constructors in a semi-deterministic way. This makes debugging harder, as the debugger does not always manages to step into those static constructors.
+However, there are many Initialize() methods (most of which are empty) that are called to trigger the static constructors in a semi-deterministic way. This makes debugging harder, as the debugger does not always manages to step into those static constructors
+
+### Duplication
+There are several classes or methods that seem to do similar things or have similar code.
+
+
+## Overengineering
+
+### Complex / hidden control flow
+There are different mechanisms that increase the difficulty of following the control flow:
+- C# events: when firing an event, it's difficult to know which handlers might have been registered and in which order they will be executed
+- callback queues: when adding a callback to such a queue, one does not know exactly when it will get executed
+
+### Wrong asynchronous code
+Asynchronous code is difficult to write properly.
+`TODO`
+
+### Caching
+`TODO`
+
 
 ## Maintainability
 
@@ -37,6 +58,7 @@ For instance, many paths to ressources are hardcoded.
 ### Classes with same name
 There are several classes and files with the same name in different namespaces.
 It would probably be clearer to rename them.
+
 
 ## Testing
 
