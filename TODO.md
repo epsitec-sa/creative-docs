@@ -3,42 +3,68 @@
 This is a list of possible improvements to the codebase of Creativedocs.
 They are not strictly necessary for the project to work but they would make the code easier to maintain.
 
-## Handling paths
-Paths are currently handled manually with strings.
-It would probably be better to use a standard library for that.
-Many paths to ressources are hardcoded or relative and break easily.
 
-## Serialization of data
-We should use a safe serialization format like json or xml instead of BinarySerializer.
-This would be a breaking change so there would be some UI work needed to warn the user when opening old files.
+## Architecture
 
-I started to work on a new serialization format (serialization to xml) on the wip/bl-format-converter branch. Ideally, we would use a serialization format that is compatible with svg (in a similar way to inkscape). This is a first step in this direction, as svg is a specialized xml.
-
-## static constructors and Initialize()
-Several classes have a static constructor that initializes some state.
-The runtime calls these static constructors when needed, this is not user controlled.
-However, there are many Initialize() methods (most of which are empty) that are called to trigger the static constructors in a semi-deterministic way. This makes debugging harder, as the debugger does not always manages to step into those static constructors.
-
-## Singleton pattern with static field
+### Singleton pattern with public static field
 There are several classes that implement a singleton pattern by having an instance of the class as a static field. Since those classes often also have a bunch of publicly settable properties, this is isomorphic to having a bunch of global variables.
 This is bad for many reasons:
 - it makes the code difficult to test: those singletons needs to be properly initialised
 - it makes the tests non-deterministic: tests will pass/fail depending in which order they are executed because of some state shared through those singletons. If we really want to keep those singletons, we should at least provide a way to reset them.
 - code using the singleton is tightly coupled to the singleton
 
-## Implicit assumptions
-(about state that should be initialized but is not checked early, fails later with NullReferenceException)
+### Implicit assumptions
+Many methods have implicit assumptions about their parameters or their surrounding context.
+They do not check for theses assumptions, which lead to crashes later down the chain.
 
-## Async
-A lot of asynchronous code is poorly tested with manual waiting loops of Thread.Sleep to wait for asynchronous callback completion.
+For instance, imagine a method that takes an object of type `Foo` and expects it to have a non-null attribute `bar`. That method should check its parameter before doing anything else, and through an error if the parameter is not correct. Otherwise, we get a NullReferenceException way later, debugging takes a lot more time. In several cases, the error will not even occur during this method call. In such cases, the method call responsible for the error is not in the stack trace, which takes even longer to debug.
 
-## Manual testing
+### static constructors and Initialize()
+Several classes have a static constructor that initializes some state.
+The runtime calls these static constructors when needed, this is not user controlled.
+However, there are many Initialize() methods (most of which are empty) that are called to trigger the static constructors in a semi-deterministic way. This makes debugging harder, as the debugger does not always manages to step into those static constructors.
+
+## Maintainability
+
+### Handling of paths
+Paths are currently handled manually with strings and concatenations.
+It would probably be better to use a standard library for that.
+
+### Magic numbers
+There are quite a few hardcoded values here and there in the codebase.
+For instance, many paths to ressources are hardcoded.
+
+### Classes with same name
+There are several classes and files with the same name in different namespaces.
+It would probably be clearer to rename them.
+
+## Testing
+
+### Non-deterministic test results
+Many tests will pass or fail at random, depending in which order they are executed.
+This is a direct consequence of the architectural issues of the codebase.
+
+### Lack of tests
+There is a general lack of tests. To a large extent, many classes are currently not properly testable anyway because of the great coupling between many classes. 
+
+### Tests without assert
+There are many tests that do not explicitly check anything (no assert). They only ensure that the code runs.
+
+### Manual grouping of tests
 Some tests are run together thourgh a RunTests method. They should be run separately by the test runner.
 I refactored most of those, there is still one such instance in Common.Tests.Drawing.OpenTypeTest
 
-## Rename classes with same name
-There are several classes and files with the same name in different namespaces.
-It would probably be clearer to rename them.
+### Async
+A lot of asynchronous code is poorly tested with manual waiting loops of Thread.Sleep to wait for asynchronous callback completion.
+
+
+## Nice to have improvements
+
+### Serialization of data
+We should use a safe serialization format like json or xml instead of BinarySerializer.
+This would be a breaking change so there would be some UI work needed to warn the user when opening old files.
+
+I started to work on a new serialization format (serialization to xml) on the wip/bl-format-converter branch. Ideally, we would use a serialization format that is compatible with svg (in a similar way to inkscape). This is a first step in this direction, as svg is a specialized xml.
 
 ## Image serialization
 When saving a creativedoc file, we should zip the bitmap images inside the file so that the file can be opened elsewere.

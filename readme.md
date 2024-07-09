@@ -18,7 +18,7 @@ This project is not in active development.
 - clone this repository and it's submodules
 - follow the build instructions in `grafix`
 - open `cresus-core/App.CreativeDocs` and build `App.CreativeDocs.sln` with Visual Studio or from the command line `dotnet build App.CreativeDocs.csproj`
-- the other projects ("App.CresusDocuments" and "App.CresusPictogrammes") can be built in a similar way
+- the other projects (`App.CresusDocuments` and `App.CresusPictogrammes`) can be built in a similar way
 
 ## Running
 
@@ -28,11 +28,13 @@ This project is not in active development.
 
 If you are very motivated and want to build on this project, you might find the following documents usefull:
 
+- [HISTORY_AND_FUTURE.md](HISTORY_AND_FUTURE.md) a summary of the history of creativedocs and a few guidelines on how to adapt it for the future
 - [DESIGN.md](DESIGN.md) an overview of the main components that make creativedocs
 - [TODO.md](TODO.md) a list of improvement ideas you could work on
 
 ## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+
+The original software was developed at Epsitec SA, mainly by Pierre Arnaud and Daniel Roux, between 2004 and 2014.
+In 2024, an attempt to port the software for macos and linux was started by Baptiste Lambert with the help of Roger Vuistiner.
 
 ## License
-For open source projects, say how it is licensed.

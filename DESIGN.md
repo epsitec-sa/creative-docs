@@ -1,6 +1,6 @@
 # The architecture of CreativeDocs
 
-This document will give you a broad overview of the design of creativedocs.
+This document will give you a broad overview of the current design of creativedocs.
 
 Note: this software was written long ago and as I am not the original author of the software, I had to guess things at times. Some of my assumptions described here may be wrong. The opinions I express here are solely mine and do not necessarly reflect those of the original authors.
 
@@ -34,3 +34,6 @@ Most of the code is located in those folders:
 - `Common` the lowest level building blocks of the app. This is mostly a library to build GUI applications.
 - `Common.Document` a library of building blocks specific to Creativedocs
 - `Common.DocumentEditor` the application made from the above building blocks
+
+There are also some tests located in `Common.Tests`.
+
