@@ -31,6 +31,7 @@ If you are very motivated and want to build on this project, you might find the 
 - [HISTORY_AND_FUTURE.md](HISTORY_AND_FUTURE.md) a summary of the history of creativedocs and a few guidelines on how to adapt it for the future
 - [DESIGN.md](DESIGN.md) an overview of the main components that make creativedocs
 - [TODO.md](TODO.md) a list of improvement ideas you could work on
+- `lstodos.py` a python script to find todo comments and unimplemented methods in the creativedocs project
 
 ## Authors and acknowledgment
 

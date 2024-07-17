@@ -4,6 +4,8 @@ from pathlib import Path
 from collections import defaultdict, Counter
 
 PROJECT_ROOT = "./"
+
+# put the folders to be scanned in this list
 FOLDERS = [
     "App.CreativeDocs",
     "Common",
@@ -12,11 +14,13 @@ FOLDERS = [
     "Common.Tests",
 ]
 
-
-TODO_STRING = r"bl-net8-cross *(\w+)?"
+# strings and regexes used to scan the files
+TODO_STRING = r"bl-net8-cross"
+TODO_REGEX = rf"{TODO_STRING} *(\w+)?"
 NOT_IMPLEMENTED_STRING = r"throw new .*NotImplementedException"
 IGNOREFILE_STRING = r"IGNOREFILE"
 
+# some ansi color codes for the terminal
 RED = 31
 GREEN = 32
 YELLOW = 33
@@ -25,6 +29,9 @@ PURPLE = 35
 CYAN = 36
 BLUE = 94
 
+# definition of the categories
+FALLBACK_CATEGORY = "default"
+NOT_IMPLEMENTED_CATEGORY = "notimplemented"
 TODO_DISPLAY = {
     "default": ("*", CYAN),
     "important": ("/!\\", BRIGHT_YELLOW),
@@ -34,7 +41,6 @@ TODO_DISPLAY = {
     "maybedelete": ("#", PURPLE),
     "cleanup": ("~", PURPLE),
 }
-
 DEFAULT_CATEGORIES = ["default", "important", "notimplemented", "maybedelete"]
 
 def color(text, color):
@@ -46,10 +52,10 @@ def extract_todos(file, autoignore):
     if autoignore and IGNOREFILE_STRING in content:
         print(f"Ignore file {file}")
         return
-    for todo in re.finditer(TODO_STRING, content):
-        yield todo.group(1) if todo.group(1) in TODO_DISPLAY.keys() else "default"
+    for todo in re.finditer(TODO_REGEX, content):
+        yield todo.group(1) if todo.group(1) in TODO_DISPLAY.keys() else FALLBACK_CATEGORY
     for _ in re.finditer(NOT_IMPLEMENTED_STRING, content):
-        yield "notimplemented"
+        yield NOT_IMPLEMENTED_CATEGORY
 
 def enum_todos_by_file(todo_filter, autoignore):
     for folder in FOLDERS:
@@ -93,7 +99,10 @@ def print_tree(tree, depth=0):
     for file, todos in sorted(files.items()):
         filename = file.ljust(align_column)
         todo_count = len(todos)
-        todo_line = "".join([color(*TODO_DISPLAY.get(t, TODO_DISPLAY["default"])) for t in todos])
+        todo_line = "".join([
+            color(*TODO_DISPLAY.get(t, TODO_DISPLAY[FALLBACK_CATEGORY]))
+            for t in todos
+        ])
         print(f"{indent}{color(filename, GREEN)} ({todo_count}) {color(todo_line, RED)}")
 
 def filter_tree(tree, search):
@@ -123,22 +132,38 @@ def make_todo_filter(categories_desc):
         return [t for t in todos if t in filtered_categories]
     return todo_filter
 
+def present_categories(count_by_category):
+    print("Todo categories:")
+    for category, (char, c) in TODO_DISPLAY.items():
+        count = count_by_category.get(category, 0)
+        print(color(f"    {char} {category} ({count})", c))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="lstodos",
-        description="list todos in CreativeDocs",
+        description="""
+List todos and unimplemented methods in CreativeDocs.
+
+Todos are comments starting with the string "{TODO_STRING}" and optionnaly followed by a category.
+""",
     )
-    parser.add_argument("-s", "--search",
-                        help="display only some part of the tree")
+    parser.add_argument(
+        "-s", "--search",
+        metavar="NAME",
+        help="display only files or folders matching %(metavar)s",
+    )
 
-    parser.add_argument("-c", "--category",
-                        help="display only some categories")
+    parser.add_argument(
+        "-c", "--category",
+        help='a list of comma-separated categories to display or "all"',
+    )
 
-    parser.add_argument("--show-ignored",
-                        help=f"display ignored file (containing the magic string {IGNOREFILE_STRING}",
-                        action="store_true",
-                        )
+    parser.add_argument(
+        "--show-ignored",
+        help=f'display ignored file (by default, files containing the string "{IGNOREFILE_STRING}" are not shown in the report)',
+        action="store_true",
+    )
     args = parser.parse_args()
 
     todos_by_file = list(enum_todos_by_file(make_todo_filter(args.category), not args.show_ignored))
@@ -146,11 +171,8 @@ if __name__ == "__main__":
     if args.search:
         tree = filter_tree(tree, args.search)
     print()
-    print("Todo categories:")
     count_by_category = get_todo_count(tree)
-    for category, (char, c) in TODO_DISPLAY.items():
-        count = count_by_category.get(category, 0)
-        print(color(f"    {char} {category} ({count})", c))
+    present_categories(count_by_category)
     print()
     files_count = count_files(tree)
     print(f"There are {files_count} files matching your request.")
