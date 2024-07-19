@@ -5,7 +5,7 @@ They are not strictly necessary for the project to work but they would make the 
 
 ## Architecture
 
-#### High coupling / Singleton pattern with public static field
+### High coupling / Singleton pattern with public static field
 There are several classes that implement a singleton pattern by having an instance of the class as a static field. Since those classes often also have a bunch of publicly settable properties, this is isomorphic to having a bunch of global variables.
 This is bad for many reasons:
 - it makes the code difficult to test: those singletons needs to be properly initialised
@@ -13,6 +13,9 @@ This is bad for many reasons:
 - code using the singleton is tightly coupled to the singleton
 
 See also [Coupling (wikipedia)](https://en.wikipedia.org/wiki/Coupling_(computer_programming))
+
+### Wrong dependencies between modules
+Some modules depend on each other in a strange way. For instance, some classes that are clearly part of the business logic of the application have dependencies on the UI, which makes it impossible to use them in isolation.
 
 ### Implicit assumptions
 Many methods have implicit assumptions about their parameters or their surrounding context.
@@ -53,8 +56,8 @@ Paths are currently handled manually with strings and concatenations.
 It would probably be better to use a standard library for that.
 
 ### Magic numbers
-There are quite a few hardcoded values here and there in the codebase.
-For instance, many paths to ressources are hardcoded.
+There are quite a few hard-coded values here and there in the codebase.
+For instance, many paths to resources are hard-coded.
 
 ### Classes with same name
 There are several classes and files with the same name in different namespaces.
@@ -74,7 +77,7 @@ There is a general lack of tests. To a large extent, many classes are currently 
 There are many tests that do not explicitly check anything (no assert). They only ensure that the code runs.
 
 ### Manual grouping of tests
-Some tests are run together thourgh a RunTests method. They should be run separately by the test runner.
+Some tests are run together through a RunTests method. They should be run separately by the test runner.
 I refactored most of those, there is still one such instance in Common.Tests.Drawing.OpenTypeTest
 
 ### Async
@@ -87,7 +90,14 @@ A lot of asynchronous code is poorly tested with manual waiting loops of Thread.
 We should use a safe serialization format like json or xml instead of BinarySerializer.
 This would be a breaking change so there would be some UI work needed to warn the user when opening old files.
 
-I started to work on a new serialization format (serialization to xml) on the wip/bl-format-converter branch. Ideally, we would use a serialization format that is compatible with svg (in a similar way to inkscape). This is a first step in this direction, as svg is a specialized xml.
+I started to work on a new serialization format (serialization to xml).
+This work is not entirely done: the application data is serialized to xml but embedded images and fonts are currently not serialized.
+Ideally, we would use a serialization format that is compatible with svg (in a similar way to inkscape). This is a first step in this direction, as svg is a specialized xml.
 
-## Image serialization
-When saving a creativedoc file, we should zip the bitmap images inside the file so that the file can be opened elsewere.
+#### Image serialization
+When saving a creativedocs file, we should embed the bitmap images inside the file so that it can be opened elsewhere.
+We could have a file format that is a zip of the xml application data and the bitmap images.
+Another possibility would be to encode the bitmap image in base64 and store it in the xml directly (the svg format does that)
+
+#### Font serialization
+As with the bitmap image, we could embed the fonts inside the file by zipping thew with the data or encode them in some way (the svg standard does not support embedding fonts, but some applications like inkscape have defined a way to embed fonts in svg)
