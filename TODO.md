@@ -3,7 +3,6 @@
 This is a list of possible improvements to the codebase of Creativedocs.
 They are not strictly necessary for the project to work but they would make the code easier to maintain.
 
-
 ## Architecture
 
 #### High coupling / Singleton pattern with public static field
@@ -38,11 +37,13 @@ There are different mechanisms that increase the difficulty of following the con
 - callback queues: when adding a callback to such a queue, one does not know exactly when it will get executed
 
 ### Wrong asynchronous code
-Asynchronous code is difficult to write properly.
-`TODO`
+Managing the synchronization between multiple threads or processes is not easy.
+Asynchronous code can quickly introduce data races or deadlocks.
+Use threads only when strictly necessary.
+I removed a lot of asynchronous code that had incorrect synchronization and was adding unnecessary complexity.
 
 ### Caching
-`TODO`
+Caches add complexity to a codebase, it is difficult to invalidate them properly and they can create data duplication. If you need to implement one, follow the single responsibility principle and make the caching behavior an individual component.
 
 
 ## Maintainability
