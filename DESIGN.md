@@ -37,3 +37,24 @@ Most of the code is located in those folders:
 
 There are also some tests located in `Common.Tests`.
 
+
+## Serialization of data
+The original software used a `BinarySerializer` to serialize the application data.
+This kind of serialization is difficult to debug and evolve and has been deprecated.
+
+I started to work on a new serialization format, replacing the binary serialization with xml.
+
+As this is a breaking change, there would be some UI work needed to warn the user when opening files in the old format.
+For now, the new version only supports the new xml format.
+I made a tool to convert old files to the new format, which can be found on the branch `wip/bl-format-converter`.
+
+This work with the new format is not entirely done: the application data is serialized to xml but embedded images and fonts are currently not serialized.
+Ideally, we would use a serialization format that is compatible with svg (in a similar way to inkscape). This is a first step in this direction, as svg is a specialized xml.
+
+### Image serialization
+When saving a creativedocs file, we should embed the bitmap images inside the file so that it can be opened elsewhere.
+We could have a file format that is a zip of the xml application data and the bitmap images.
+Another possibility would be to encode the bitmap image in base64 and store it in the xml directly (the svg format does that)
+
+### Font serialization
+As with the bitmap image, we could embed the fonts inside the file by zipping thew with the data or encode them in some way (the svg standard does not support embedding fonts, but some applications like inkscape have defined a way to embed fonts in svg)

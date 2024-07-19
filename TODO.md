@@ -82,22 +82,3 @@ I refactored most of those, there is still one such instance in Common.Tests.Dra
 
 ### Async
 A lot of asynchronous code is poorly tested with manual waiting loops of Thread.Sleep to wait for asynchronous callback completion.
-
-
-## Nice to have improvements
-
-### Serialization of data
-We should use a safe serialization format like json or xml instead of BinarySerializer.
-This would be a breaking change so there would be some UI work needed to warn the user when opening old files.
-
-I started to work on a new serialization format (serialization to xml).
-This work is not entirely done: the application data is serialized to xml but embedded images and fonts are currently not serialized.
-Ideally, we would use a serialization format that is compatible with svg (in a similar way to inkscape). This is a first step in this direction, as svg is a specialized xml.
-
-#### Image serialization
-When saving a creativedocs file, we should embed the bitmap images inside the file so that it can be opened elsewhere.
-We could have a file format that is a zip of the xml application data and the bitmap images.
-Another possibility would be to encode the bitmap image in base64 and store it in the xml directly (the svg format does that)
-
-#### Font serialization
-As with the bitmap image, we could embed the fonts inside the file by zipping thew with the data or encode them in some way (the svg standard does not support embedding fonts, but some applications like inkscape have defined a way to embed fonts in svg)
