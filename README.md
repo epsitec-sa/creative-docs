@@ -39,3 +39,5 @@ The original software was developed at Epsitec SA, mainly by Pierre Arnaud and D
 In 2024, an attempt to port the software for macOS and Linux was started by Baptiste Lambert with the help of Roger Vuistiner.
 
 ## License
+This software is licensed under the GNU GPLv3.
+See [LICENSE.txt](LICENSE.txt) for the full license text.
