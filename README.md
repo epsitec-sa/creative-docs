@@ -1,11 +1,11 @@
-# Creativedocs
+# Creative Docs .NET
 
 ## Overview
 
-Creativedocs is a vector graphics editor originaly developed at Epsitec SA between 2004 and 2014.
+Creative Docs .NET is a vector graphics editor originaly developed at Epsitec SA between 2004 and 2014.
 It supports creating images from simple vector shapes, adding text and bitmap images, multiple layers and pages and various export formats.
 
-![Screenshot of the interface of Creativedocs](./creativedocs_new_interface.png)
+![Screenshot of the interface of Creative Docs .NET](./creativedocs_new_interface.png)
 
 This open-source release is an attempt to modernise this software and port it to new platforms (macos and linux).
 
@@ -28,14 +28,14 @@ This project is not in active development.
 
 If you are very motivated and want to build on this project, you might find the following documents usefull:
 
-- [HISTORY_AND_FUTURE.md](HISTORY_AND_FUTURE.md) a summary of the history of creativedocs and a few guidelines on how to adapt it for the future
-- [DESIGN.md](DESIGN.md) an overview of the main components that make creativedocs
+- [HISTORY_AND_FUTURE.md](HISTORY_AND_FUTURE.md) a summary of the history of Creative Docs .NET and a few guidelines on how to adapt it for the future
+- [DESIGN.md](DESIGN.md) an overview of the main components that make Creative Docs .NET
 - [TODO.md](TODO.md) a list of improvement ideas you could work on
-- `lstodos.py` a python script to find todo comments and unimplemented methods in the creativedocs project
+- `lstodos.py` a python script to find todo comments and unimplemented methods in the Creative Docs .NET project
 
 ## Authors and acknowledgment
 
 The original software was developed at Epsitec SA, mainly by Pierre Arnaud and Daniel Roux, between 2004 and 2014.
-In 2024, an attempt to port the software for macos and linux was started by Baptiste Lambert with the help of Roger Vuistiner.
+In 2024, an attempt to port the software for macOS and Linux was started by Baptiste Lambert with the help of Roger Vuistiner.
 
 ## License
