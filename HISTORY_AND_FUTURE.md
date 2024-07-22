@@ -1,8 +1,8 @@
-# History and future of Creativedocs
+# History and future of Creative Docs .NET
 
-The first version of Creativedocs was developed at Epsitec SA between 2004 and 2014. It was designed to run on Windows only (supporting other operating systems was not really a concern at the time).
+The first version of Creative Docs .NET was developed at Epsitec SA between 2004 and 2014. It was designed to run on Windows only (supporting other operating systems was not really a concern at the time).
 
-In 2024, I (Baptiste) was hired as an intern at Epsitec SA with the task to adapt Creativedocs to make it cross-platform. In our case, that meant adding support for macos and linux to target the majority of desktop computers (mobile / touch devices were not a target) and with the distant dream of running it inside a webbrowser.
+In 2024, I (Baptiste) was hired as an intern at Epsitec SA with the task to adapt Creative Docs .NET to make it cross-platform. In our case, that meant adding support for macos and linux to target the majority of desktop computers (mobile / touch devices were not a target) and with the distant dream of running it inside a webbrowser.
 
 During six months, I replaced Windows-specific code by cross-platform equivalents and tried to improve the overall maintainability of the codebase by cleaning up unnecessary parts, refactoring or documenting the issues I noticed. Bit after bit, I managed to get a basic prototype on which I iterated, reimplementing features one after the other.
 
