@@ -1,6 +1,6 @@
-# Creativedocs improvement ideas
+# Creative Docs .NET improvement ideas
 
-This is a list of possible improvements to the codebase of Creativedocs.
+This is a list of possible improvements to the codebase of Creative Docs .NET.
 They are not strictly necessary for the project to work but they would make the code easier to maintain.
 
 ## Architecture
