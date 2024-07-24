@@ -16,12 +16,12 @@ This project is not in active development.
 ## Building
 
 - clone this repository and it's submodules
-- open `cresus-core/App.CreativeDocs` and build `App.CreativeDocs.sln` with Visual Studio or from the command line `dotnet build App.CreativeDocs.csproj`
+- open `cresus-core/App.CreativeDocs` and build `App.CreativeDocs.sln` with Visual Studio or from the command line `dotnet build -p:Configuration=Release App.CreativeDocs.sln`
 - the other projects (`App.CresusDocuments` and `App.CresusPictogrammes`) can be built in a similar way
 
 ## Running
 
-- run from Visual Studio or from the command line `dotnet run App.CreativeDocs.csproj`
+- run from Visual Studio or from the command line `dotnet run -p:Configuration=Release App.CreativeDocs.sln`
 
 ## Contributing
 
