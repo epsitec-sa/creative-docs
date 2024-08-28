@@ -20,10 +20,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 using System.Linq;
+
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Types;
-using static Epsitec.Common.Support.Res.Fields;
 
 namespace Epsitec.Common.Support
 {
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Support
         static ImageProvider()
         {
             string path = System.IO.Directory.GetCurrentDirectory();
-            ImageProvider.manifestRoot = IO.PathTools.RemoveUntilDir("cresus-core", path);
+            ImageProvider.manifestRoot = IO.PathTools.RemoveUntilDir("creative-docs", path);
             string otherPath = IO.PathTools.RemoveUntilDir("Common.Tests", path);
             string thirdPath = System.IO.Path.Join(ImageProvider.manifestRoot, "External");
 
@@ -337,6 +337,8 @@ namespace Epsitec.Common.Support
 
         public Image GetImageFromManifestResource(string name, System.Reflection.Assembly assembly)
         {
+            assembly ??= System.Reflection.Assembly.GetExecutingAssembly();
+
             bool isIcon = false;
             string resName = name;
             // new format hack, we change the extension here
@@ -348,7 +350,8 @@ namespace Epsitec.Common.Support
                     System.IO.Path.GetFileNameWithoutExtension(name) + ".xml"
                 );
             }
-            string resPath = System.IO.Path.Join(ImageProvider.manifestRoot, resName);
+            string exeDir  = System.IO.Path.GetDirectoryName(assembly.Location);
+            string resPath = System.IO.Path.Join(exeDir, resName);
             using (System.IO.Stream stream = System.IO.File.OpenRead(resPath))
             {
                 if (stream == null)

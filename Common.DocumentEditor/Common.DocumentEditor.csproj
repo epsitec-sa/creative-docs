@@ -16,8 +16,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\*.icon" />
-    <EmbeddedResource Include="Images\*.xml" />
+    <Content Include="Images\*.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Common.DocumentEditor\Images\%(FileName)%(Extension)</Link>
+    </Content>
   </ItemGroup>
 
 
