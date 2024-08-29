@@ -745,11 +745,11 @@ namespace Epsitec.Common.Drawing
             {
                 if (Font.useSegoe)
                 {
-                    return 10.8;
+                    return 12;
                 }
                 else
                 {
-                    return 10.8;
+                    return 12;
                 }
             }
         }
