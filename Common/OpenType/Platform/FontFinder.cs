@@ -50,7 +50,7 @@ namespace Epsitec.Common.OpenType.Platform
                 // TODO bl-net8-cross
                 // we should detect the font name and style using freetype
                 FontStyle fontStyle = FontStyle.Normal;
-                FontName fontName = new FontName(Path.GetFileName(fontpath), fontStyle);
+                FontName fontName = new FontName(Path.GetFileNameWithoutExtension(fontpath), fontStyle);
                 yield return new FontIdentity(fontpath, fontName);
             }
         }
