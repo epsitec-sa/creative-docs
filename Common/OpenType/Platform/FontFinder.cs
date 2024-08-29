@@ -35,7 +35,7 @@ namespace Epsitec.Common.OpenType.Platform
                 {
                     continue;
                 }
-                foreach (string file in Directory.GetFiles(directory, "*.ttf"))
+                foreach (string file in Directory.GetFiles(directory, "*.ttf", SearchOption.AllDirectories))
                 {
                     yield return file;
                 }
