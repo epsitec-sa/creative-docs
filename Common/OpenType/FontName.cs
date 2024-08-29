@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Xml.Linq;
 
 namespace Epsitec.Common.OpenType
@@ -336,6 +337,8 @@ namespace Epsitec.Common.OpenType
                 new XAttribute("Style", this.style)
             );
         }
+
+        public override string ToString() => this.FullName;
 
         public static FontName FromXML(XElement xml)
         {

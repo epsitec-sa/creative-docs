@@ -17,9 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System;
+using System.Runtime.Serialization;
+
 namespace Epsitec.Common.OpenType
 {
-    public class NoMatchingFontException : System.Exception { }
+    public class NoMatchingFontException : System.Exception
+    {
+        public NoMatchingFontException() { }
+        public NoMatchingFontException(string message) : base(message) { }
+    }
 
     public class FontFileNotFoundException : System.IO.FileNotFoundException { }
 }

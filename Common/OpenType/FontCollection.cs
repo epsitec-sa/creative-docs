@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Epsitec.Common.OpenType
 {
@@ -151,7 +152,7 @@ namespace Epsitec.Common.OpenType
             fid ??= this.fallbackFontIdentity;
             if (fid == null)
             {
-                throw new NoMatchingFontException();
+                throw new NoMatchingFontException($"No matching font found for {fontName} (fallbacks: {string.Join(", ", fallbacks.Select(f => f.ToString()))}");
             }
             return this.CreateFont(fid);
         }
