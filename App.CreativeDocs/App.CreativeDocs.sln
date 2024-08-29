@@ -42,6 +42,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntigrainSharp", "..\..\gra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafix", "grafix", "{B18A41B8-0430-46CF-BBB1-D992F8E3AA5A}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\grafix\.gitignore = ..\..\grafix\.gitignore
+		..\..\grafix\AggUI\aggcpp\aggcpp.targets = ..\..\grafix\AggUI\aggcpp\aggcpp.targets
 		..\..\grafix\BUILDING.md = ..\..\grafix\BUILDING.md
 		..\..\grafix\DESIGN.md = ..\..\grafix\DESIGN.md
 		..\..\grafix\Directory.Build.props = ..\..\grafix\Directory.Build.props
