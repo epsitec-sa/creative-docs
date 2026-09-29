@@ -1,9 +1,7 @@
-<Project>
+﻿<Project>
   <Import Project="Version.props" />
   <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
   <PropertyGroup>
-    <TargetFramework>$(CoreTargetFramework)</TargetFramework>
-
     <!--
     TODO: NOT RECOMMENDED
     warning SYSLIB0011: 'BinaryFormatter' is obsolete: 'BinaryFormatter serialization is obsolete and should not be used.

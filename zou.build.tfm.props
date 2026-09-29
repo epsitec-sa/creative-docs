@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">$(CoreTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
+</Project>
